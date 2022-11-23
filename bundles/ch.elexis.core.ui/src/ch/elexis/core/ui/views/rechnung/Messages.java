@@ -196,7 +196,7 @@ public class Messages {
 	public static String RnControlFieldProvider_dateFrom = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dateFrom;
 	public static String RnControlFieldProvider_dateUntil = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dateUntil;
 	public static String RnControlFieldProvider_dontRemind = ch.elexis.core.l10n.Messages.RnControlFieldProvider_dontRemind;
-	public static String Core_in_progress = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
+	public static String ProcessStatus_IN_PROGRESS = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
 	public static String Core_Error_is_defective = ch.elexis.core.l10n.Messages.InvoiceState_DEFECTIVE;
 	public static String RnControlFieldProvider_invoideNr = ch.elexis.core.l10n.Messages.RnControlFieldProvider_invoideNr;
 
@@ -204,7 +204,7 @@ public class Messages {
 	public static String InvoiceState_EXCESSIVE_PAYMENT = ch.elexis.core.l10n.Messages.InvoiceState_EXCESSIVE_PAYMENT;
 	public static String Invoice_Paid = ch.elexis.core.l10n.Messages.InvoiceState_PAID;
 	public static String Invoice_Partial_Loss = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_LOSS;
-	public static String InvoiceState_PARTIAL_PAYMENT = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_PAYMENT;
+	public static String Invoice_Partially_paid = ch.elexis.core.l10n.Messages.InvoiceState_PARTIAL_PAYMENT;
 	public static String RnControlFieldProvider_patient2 = ch.elexis.core.l10n.Messages.RnControlFieldProvider_patient2;
 	public static String Core_Invoice_Reminder = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder;
 
@@ -218,7 +218,7 @@ public class Messages {
 	public static String InvoiceState_CANCELLED = ch.elexis.core.l10n.Messages.InvoiceState_CANCELLED;
 	public static String RnControlFieldProvider_toBePaid = ch.elexis.core.l10n.Messages.RnControlFieldProvider_toBePaid;
 	public static String RnControlFieldProvider_toPrint = ch.elexis.core.l10n.Messages.RnControlFieldProvider_toPrint;
-	public static String Invoice_total_lost = ch.elexis.core.l10n.Messages.InvoiceState_TOTAL_LOSS;
+	public static String InvoiceState_TOTAL_LOSS = ch.elexis.core.l10n.Messages.InvoiceState_TOTAL_LOSS;
 	public static String RnControlFieldProvider_writtenOff = ch.elexis.core.l10n.Messages.RnControlFieldProvider_writtenOff;
 	public static String RnControlFieldProvider_rejected = ch.elexis.core.l10n.Messages.RnControlFieldProvider_rejected;
 	public static String RnDialogs_35 = ch.elexis.core.l10n.Messages.RnDialogs_35;

@@ -77,7 +77,7 @@ public class Messages {
 	public static String BestellView_SavelIst = ch.elexis.core.l10n.Messages.BestellView_SavelIst;
 	public static String BestellView_SelectOrder = ch.elexis.core.l10n.Messages.BestellView_SelectOrder;
 	public static String BestellView_SendOrder = ch.elexis.core.l10n.Messages.BestellView_SendOrder;
-	public static String Core_Unknown = ch.elexis.core.l10n.Messages.Core_Unknown;
+	public static String Core_Unknown = ch.elexis.core.l10n.Messages.ArticleSubTyp_UNKNOWN;
 	public static String BestellView_copyToClipBioardForGalexis = ch.elexis.core.l10n.Messages.BestellView_copyToClipBioardForGalexis;
 	public static String BestellView_copyToClipboard = ch.elexis.core.l10n.Messages.BestellView_copyToClipboard;
 	public static String BestellView_loadEarlierOrder = ch.elexis.core.l10n.Messages.BestellView_loadEarlierOrder;

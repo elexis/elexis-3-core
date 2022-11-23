@@ -229,8 +229,6 @@ public class Messages extends NLS {
 	public static String AgendaAnzeige_options;
 	public static String AgendaAnzeige_saveColumnSize;
 	public static String AgendaAnzeige_showReason;
-	public static String AgendaDefinitionPreferencePage_lblAreaTypeLabel_text;
-	public static String AgendaDefinitionPreferencePage_mntmNewItem_text;
 	public static String AgendaDefinitionen_AvoidPatientDoubleBooking;
 	public static String AgendaDefinitionen_CurrentMappings;
 	public static String AgendaDefinitionen_areaTypeLabel;
@@ -876,7 +874,6 @@ public class Messages extends NLS {
 	public static String Core_Financial_Institution;
 	public static String Core_Findings;
 	public static String Core_Firstname;
-	public static String Core_Fixed;
 	public static String Core_Fixed_medication;
 	public static String Core_Fonts;
 	public static String Core_Formula;
@@ -1092,7 +1089,7 @@ public class Messages extends NLS {
 	public static String Core_Unable_to_start_file;
 	public static String Core_Unable_to_start_file_0;
 	public static String Core_Unit;
-	public static String Core_Unknown;
+	public static String ArticleSubTyp_UNKNOWN;
 	public static String Core_Until;
 	public static String Core_Update;
 	public static String Core_Upload_Directory;
@@ -1110,7 +1107,6 @@ public class Messages extends NLS {
 	public static String Core_Warning;
 	public static String Core_Wednesday;
 	public static String Core_Wednesday_Short;
-	public static String Core_Wontfix;
 	public static String Core_XID_Domain;
 	public static String Core_Yes;
 	public static String Core_Zoom;
@@ -2374,9 +2370,7 @@ public class Messages extends NLS {
 	public static String Invoice_amount_billed;
 	public static String Invoice_amount_due;
 	public static String Invoice_date_paid;
-	public static String Invoice_overDue;
 	public static String Invoice_reminder_automatism;
-	public static String Invoice_reminder_due;
 	public static String Invoices_Error_Fetching;
 	public static String Invoices_Error_Loading;
 	public static String Invoices_export;
@@ -3730,6 +3724,12 @@ public class Messages extends NLS {
 	public static String Printing_System_Template;
 	public static String Printing_Template;
 	public static String Printing_User_Template;
+	public static String ProcessStatus_CLOSED;
+	public static String ProcessStatus_DUE;
+	public static String ProcessStatus_IN_PROGRESS;
+	public static String ProcessStatus_OPEN;
+	public static String ProcessStatus_ON_HOLD;
+	public static String ProcessStatus_OVERDUE;
 	public static String ProImmunComposite_anzahl_lebensmittel;
 	public static String Provisioner_Check_Updates;
 	public static String Provisioner_Load_Repository;

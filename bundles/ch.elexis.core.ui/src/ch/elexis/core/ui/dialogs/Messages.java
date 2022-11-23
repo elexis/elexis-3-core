@@ -67,21 +67,19 @@ public class Messages {
 	public static String EditReminderDialog_assigTo = ch.elexis.core.l10n.Messages.EditReminderDialog_assigTo;
 	public static String EditReminderDialog_betrifft = ch.elexis.core.l10n.Messages.EditReminderDialog_betrifft;
 	public static String EditReminderDialog_createReminder = ch.elexis.core.l10n.Messages.EditReminderDialog_createReminder;
-	public static String Invoice_reminder_due = ch.elexis.core.l10n.Messages.Invoice_reminder_due;
+	public static String Invoice_reminder_due = ch.elexis.core.l10n.Messages.ProcessStatus_DUE;
 	public static String EditReminderDialog_dueOn = ch.elexis.core.l10n.Messages.EditReminderDialog_dueOn;
 	public static String EditReminderDialog_editReminder = ch.elexis.core.l10n.Messages.EditReminderDialog_editReminder;
 	public static String EditReminderDialog_enterDataForReminder = ch.elexis.core.l10n.Messages.EditReminderDialog_enterDataForReminder;
-	public static String Core_Fixed = ch.elexis.core.l10n.Messages.Core_Fixed;
+	public static String Core_Fixed = ch.elexis.core.l10n.Messages.ProcessStatus_CLOSED;
 	public static String EditReminderDialog_noPatient = ch.elexis.core.l10n.Messages.EditReminderDialog_noPatient;
 	public static String Core_No_patient_selected = ch.elexis.core.l10n.Messages.Core_No_patient_selected;
 	public static String Core_Is_Open = ch.elexis.core.l10n.Messages.InvoiceState_OPEN;
-	public static String Invoice_overDue = ch.elexis.core.l10n.Messages.Invoice_overDue;
 
 	public static String EditReminderDialog_reminderShellTitle = ch.elexis.core.l10n.Messages.EditReminderDialog_reminderShellTitle;
 	public static String Agenda_Planned_Appointement = ch.elexis.core.l10n.Messages.Agenda_Planned_Appointement;
 	public static String Core_Status = ch.elexis.core.l10n.Messages.Core_Status;
 	public static String EditReminderDialog_unknown = ch.elexis.core.l10n.Messages.EditReminderDialog_unknown;
-	public static String Core_Wontfix = ch.elexis.core.l10n.Messages.Core_Wontfix;
 	public static String Core_Salution = ch.elexis.core.l10n.Messages.Core_Salution;
 	public static String Core_E_Mail = ch.elexis.core.l10n.Messages.Core_E_Mail;
 	public static String ErsterMandantDialog_Firma = ch.elexis.core.l10n.Messages.ErsterMandantDialog_Firma;
@@ -104,7 +102,6 @@ public class Messages {
 	public static String ErsterMandantDialog_passwordErrorBody = ch.elexis.core.l10n.Messages.ErsterMandantDialog_passwordErrorBody;
 	public static String ErsterMandantDialog_passwordErrorCaption = ch.elexis.core.l10n.Messages.ErsterMandantDialog_passwordErrorCaption;
 	public static String Core_Phone = ch.elexis.core.l10n.Messages.Core_Phone;
-
 
 	public static String ImageChooser_PleaseChooseFile = ch.elexis.core.l10n.Messages.ImageChooser_PleaseChooseFile;
 	public static String Core_All_Files = ch.elexis.core.l10n.Messages.Core_All_Files;
@@ -145,12 +142,9 @@ public class Messages {
 	public static String Core_Enter_Birthdate = ch.elexis.core.l10n.Messages.Core_Enter_Birthdate;
 	public static String Core_Fax = ch.elexis.core.l10n.Messages.Core_Fax;
 
-
-
 	public static String KontaktDetailDialog_labelPhone = ch.elexis.core.l10n.Messages.KontaktDetailDialog_labelPhone;
 
 	public static String Sex = ch.elexis.core.l10n.Messages.Sex;
-
 
 	public static String Core_Additional = ch.elexis.core.l10n.Messages.Core_Additional;
 	public static String KontaktDetailDialog_newContact = ch.elexis.core.l10n.Messages.KontaktDetailDialog_newContact;
@@ -195,7 +189,6 @@ public class Messages {
 
 	public static String Core_Kuerzel = ch.elexis.core.l10n.Messages.Core_Kuerzel;
 
-
 	public static String Core_Select_Contact = ch.elexis.core.l10n.Messages.Core_Select_Contact;
 
 	public static String KontaktSelector_clearField = ch.elexis.core.l10n.Messages.KontaktSelector_clearField;
@@ -222,8 +215,6 @@ public class Messages {
 	public static String Core_Edit_Case = ch.elexis.core.l10n.Messages.Core_Edit_Case;
 	public static String FallEditDialog_enterCaseData = ch.elexis.core.l10n.Messages.FallEditDialog_enterCaseData;
 
-
-
 	public static String PatientErfassenDialog_enterData = ch.elexis.core.l10n.Messages.PatientErfassenDialog_enterData;
 	public static String PatientErfassenDialog_enterPatient = ch.elexis.core.l10n.Messages.PatientErfassenDialog_enterPatient;
 	public static String PatientErfassenDialog_female = ch.elexis.core.l10n.Messages.Patient_female_short;
@@ -232,8 +223,6 @@ public class Messages {
 	public static String PatientErfassenDialog_personWithThisNameExists = ch.elexis.core.l10n.Messages.PatientErfassenDialog_personWithThisNameExists;
 
 	public static String PatientErfassenDialog_pleaseEnterPersonalia = ch.elexis.core.l10n.Messages.PatientErfassenDialog_pleaseEnterPersonalia;
-
-
 
 	public static String RnSucheDialog_enterCriteria = ch.elexis.core.l10n.Messages.RnSucheDialog_enterCriteria;
 	public static String RnSucheDialog_findBill = ch.elexis.core.l10n.Messages.RnSucheDialog_findBill;
@@ -271,8 +260,6 @@ public class Messages {
 
 	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 
-
-
 	public static String Benutzer_Name = ch.elexis.core.l10n.Messages.Benutzer_Name;
 
 	public static String LoginDialog_4 = ch.elexis.core.l10n.Messages.LoginDialog_4;
@@ -289,11 +276,9 @@ public class Messages {
 	public static String Core_Normal = ch.elexis.core.l10n.Messages.Core_Normal;
 	public static String ReminderDetailDialog_btnPriorityHigh_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnPriorityHigh_text;
 
-
 	public static String Core_in_progress = ch.elexis.core.l10n.Messages.InvoiceState_IN_EXECUTION;
 
 	public static String ReminderDetailDialog_btnOnHold_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_btnOnHold_text;
-
 
 	public static String ReminderDetailDialog_labelAction_text = ch.elexis.core.l10n.Messages.ReminderDetailDialog_labelAction_text;
 	public static String Core_Description = ch.elexis.core.l10n.Messages.Core_Description;
