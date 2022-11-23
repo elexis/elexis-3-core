@@ -340,6 +340,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		hlMandant.setEnabled(hlMandantEnabled);
 		boolean cbFallEnabled = actEncounter != null && BillingServiceHolder.get().isEditable(actEncounter).isOK()
 				&& unlocked;
+		hlDate.setEnabled(cbFallEnabled);
 		comboViewerFall.getCombo().setEnabled(cbFallEnabled);
 		text.setEditable(unlocked);
 
