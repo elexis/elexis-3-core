@@ -57,23 +57,5 @@
 			<version>1.9.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>ch.elexis.core</groupId>
-			<artifactId>ch.elexis.core.application.feature</artifactId>
-			<version>3.11.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.elexis.core</groupId>
-			<artifactId>ch.elexis.core.common.feature</artifactId>
-			<version>3.11.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.elexis.core</groupId>
-			<artifactId>ch.elexis.core.persistence.feature</artifactId>
-			<version>3.11.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>
