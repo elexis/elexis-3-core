@@ -7,7 +7,7 @@ Bundle-Vendor: ch.elexis
 Fragment-Host: ch.elexis.core.ui.importer.div;bundle-version="3.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="[4.0.0,5.0.0)",
- ch.elexis.core.application;bundle-version="3.0.0"
+ ch.elexis.core.application;bundle-version="3.11.0"
 Import-Package: ch.elexis.core.services.holder,
  org.apache.commons.io,
  org.apache.commons.lang3;version="3.12.0"
