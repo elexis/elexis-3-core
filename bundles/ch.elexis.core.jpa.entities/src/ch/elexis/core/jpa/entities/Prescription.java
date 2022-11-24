@@ -134,14 +134,10 @@ public class Prescription extends AbstractEntityWithId implements EntityWithId, 
 				// this is necessary due to a past impl. where self dispensed was
 				// not set as entry type
 				if (rezeptId.equals("Direktabgabe")) {
-					setEntryType(EntryType.SELF_DISPENSED);
-					setRezeptID("");
 					return EntryType.SELF_DISPENSED;
 				}
-				setEntryType(EntryType.RECIPE);
 				return EntryType.RECIPE;
 			}
-			setEntryType(EntryType.FIXED_MEDICATION);
 			return EntryType.FIXED_MEDICATION;
 		}
 		return entryType;
