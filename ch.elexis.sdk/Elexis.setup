@@ -183,14 +183,18 @@
     <requirement
         name="net.jeeeyul.pdetools.feature.feature.group"
         filter=""/>
+    <requirement
+        name="at.medbits.tools.launchtopom.feature.feature.group"/>
     <repository
         url="https://download.eclipse.org/technology/m2e/releases/2.0.5/"/>
     <repository
-        url="https://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
+        url="https://download.eclipse.org/cbi/updates/tpd/nightly/"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
         url="https://eclipse.jeeeyul.net/update/"/>
+    <repository
+        url="https://download.medelexis.ch/public/at.medbits.tools.launchtopom/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
