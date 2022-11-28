@@ -21,6 +21,6 @@ public enum MedicamentCoding {
 	}
 
 	public String getOid() {
-		return oid;
+		return "urn:oid:" + oid;
 	}
 }

@@ -30,6 +30,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
@@ -75,13 +76,13 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		String articelLabel = getArticleLabel(localObject);
 		if (gtin != null) {
 			Coding coding = medication.addCoding();
-			coding.setSystem("urn:oid:1.3.160");
+			coding.setSystem(MedicamentCoding.GTIN.getOid());
 			coding.setCode(gtin);
 			coding.setDisplay(articelLabel);
 		}
 		if (atc != null) {
 			Coding coding = medication.addCoding();
-			coding.setSystem("urn:oid:2.16.840.1.113883.6.73");
+			coding.setSystem(MedicamentCoding.ATC.getOid());
 			coding.setCode(atc);
 		}
 		medication.setText(articelLabel);
@@ -225,7 +226,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			LoggerFactory.getLogger(getClass()).error("MedicationOrder with no gtin");
 		}
 		// lookup patient
-		Optional<IPatient> patient = modelService.load(fhirObject.getSubject().getId(), IPatient.class);
+		Optional<IPatient> patient = modelService.load(FhirUtil.getId(fhirObject.getSubject()).get(), IPatient.class);
 		if (item.isPresent() && patient.isPresent()) {
 			IPrescription localObject = new IPrescriptionBuilder(modelService, contextService, item.get(),
 					patient.get(), getMedicationRequestDosage(fhirObject)).build();
@@ -326,7 +327,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			List<Coding> codings = ((CodeableConcept) medication).getCoding();
 			for (Coding coding : codings) {
 				String codeSystem = coding.getSystem();
-				if ("urn:oid:1.3.160".equals(codeSystem)) {
+				if (MedicamentCoding.GTIN.getUrl().equals(codeSystem)
+						|| MedicamentCoding.GTIN.getOid().equals(codeSystem)) {
 					return Optional.of(coding.getCode());
 				}
 			}
