@@ -124,6 +124,13 @@ public interface IModelService {
 	public void save(Identifiable identifiable);
 
 	/**
+	 * Update {@link Identifiable#getLastupdate()} to current
+	 * 
+	 * @param identifiable
+	 */
+	public void touch(Identifiable identifiable);
+
+	/**
 	 * Save the model objects.
 	 *
 	 * @param objects

@@ -36,6 +36,7 @@ public class ElexisEventTopics {
 	public static final String PROPKEY_CLASS = "class";
 	public static final String PROPKEY_USER = "user";
 	public static final String PROPKEY_OBJ = "object";
+	public static final String PROPKEY_PROPERTY = "property";
 
 	/**
 	 * A persistent object was added, thrown by PersistentObject implementations
