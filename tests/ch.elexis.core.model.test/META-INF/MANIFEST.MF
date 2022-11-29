@@ -4,7 +4,7 @@ Bundle-Name: Core Model Test
 Bundle-SymbolicName: ch.elexis.core.model.test
 Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.model;bundle-version="3.9.0"
+Fragment-Host: ch.elexis.core.model;bundle-version="3.11.0.qualifier"
 Automatic-Module-Name: ch.elexis.core.model.test
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit;bundle-version="4.12.0",

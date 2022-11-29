@@ -4,7 +4,7 @@ Bundle-Name: Elexis Core Ui Tests
 Bundle-SymbolicName: ch.elexis.core.ui.tests
 Bundle-Vendor: elexis.ch
 Bundle-Version: 3.11.0.qualifier
-Fragment-Host: ch.elexis.core.ui;bundle-version="3.11.0"
+Fragment-Host: ch.elexis.core.ui;bundle-version="3.11.0.qualifier"
 Require-Bundle: org.junit,
  ch.elexis.core.test;bundle-version="3.9.0",
  ch.elexis.core.application;bundle-version="3.11.0"
