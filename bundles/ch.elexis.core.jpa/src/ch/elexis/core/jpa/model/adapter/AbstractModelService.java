@@ -571,7 +571,8 @@ public abstract class AbstractModelService implements IModelService {
 				+ getTableName(getEntityManager(true), getEntityClass(clazz)));
 		Optional<?> result = nativeQuery.executeWithParameters(Collections.emptyMap()).findFirst();
 		if (result.isPresent()) {
-			return (Long) result.get();
+			// Native queries can return different objects based on the database driver
+			return ((Number) result.get()).longValue();
 		}
 		return 0;
 	}
