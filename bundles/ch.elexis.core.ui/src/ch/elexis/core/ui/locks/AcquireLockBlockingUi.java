@@ -91,7 +91,7 @@ public class AcquireLockBlockingUi {
 						}
 					});
 					monitor.beginTask("Releasing lock ...", IProgressMonitor.UNKNOWN);
-					LocalLockServiceHolder.get().releaseLock(lockPo);
+					LocalLockServiceHolder.get().releaseLock(result.getLockInfo());
 					monitor.done();
 				} else {
 					display.syncExec(new Runnable() {
