@@ -4,7 +4,7 @@ Bundle-Name: Core Services Test
 Bundle-SymbolicName: ch.elexis.core.services.test;singleton:=true
 Bundle-Version: 3.11.0.qualifier
 Bundle-Vendor: medevit.at
-Fragment-Host: ch.elexis.core.services;bundle-version="3.11.0.qualifier"
+Fragment-Host: ch.elexis.core.services;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.services.test
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
