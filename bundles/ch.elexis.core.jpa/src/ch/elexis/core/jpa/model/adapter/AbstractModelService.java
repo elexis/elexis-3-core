@@ -275,6 +275,21 @@ public abstract class AbstractModelService implements IModelService {
 		throw new IllegalStateException(message);
 	}
 
+	public void touch(Identifiable identifiable) {
+		Optional<EntityWithId> dbObject = getDbObject(identifiable);
+		if (dbObject.isPresent()) {
+			EntityManager em = getEntityManager(false);
+			try {
+				em.getTransaction().begin();
+				dbObject.get().setLastupdate(System.currentTimeMillis());
+				em.merge(dbObject.get());
+				em.getTransaction().commit();
+			} finally {
+				closeEntityManager(em);
+			}
+		}
+	}
+
 	protected List<? extends Identifiable> addChanged(List<? extends Identifiable> identifiables) {
 		List<Identifiable> ret = new ArrayList<Identifiable>();
 		ret.addAll(identifiables);

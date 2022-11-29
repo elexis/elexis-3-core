@@ -3,7 +3,9 @@ package ch.elexis.core.services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -12,7 +14,10 @@ import javax.persistence.TypedQuery;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.StickerClassLink;
 import ch.elexis.core.jpa.entities.StickerObjectLink;
@@ -31,7 +36,10 @@ public class StickerService implements IStickerService {
 	private IStoreToStringService storeToStringServcie;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService iModelService;
+	private IModelService coreModelService;
+
+	@Reference
+	private EventAdmin eventAdmin;
 
 	private List<StickerObjectLink> getStickerObjectLinksForId(String id) {
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
@@ -106,7 +114,7 @@ public class StickerService implements IStickerService {
 	}
 
 	private ISticker loadStickerForStickerObjectLink(StickerObjectLink stickerObjectLink, Identifiable identifiable) {
-		ISticker sticker = iModelService.load(stickerObjectLink.getEtikette(), ISticker.class, false, false)
+		ISticker sticker = coreModelService.load(stickerObjectLink.getEtikette(), ISticker.class, false, false)
 				.orElse(null);
 		if (sticker != null) {
 			sticker.setAttachedTo(identifiable);
@@ -141,6 +149,17 @@ public class StickerService implements IStickerService {
 			entityManager.closeEntityManager(em);
 		}
 
+		handleUpdate(identifiable);
+
+	}
+
+	private void handleUpdate(Identifiable identifiable) {
+		coreModelService.touch(identifiable);
+		Map<String, String> map = new HashMap<>(2);
+		map.put(ElexisEventTopics.ECLIPSE_E4_DATA, identifiable.getId());
+		map.put(ElexisEventTopics.PROPKEY_PROPERTY, "sticker");
+		Event event = new Event(ElexisEventTopics.EVENT_UPDATE, map);
+		eventAdmin.postEvent(event);
 	}
 
 	@Override
@@ -162,6 +181,7 @@ public class StickerService implements IStickerService {
 				entityManager.closeEntityManager(em);
 			}
 		}
+		handleUpdate(identifiable);
 	}
 
 	private List<StickerClassLink> getStickerClassLinksForSticker(String id) {
@@ -228,7 +248,7 @@ public class StickerService implements IStickerService {
 			List<String> stickerIds = results.parallelStream().map(item -> item.getSticker())
 					.collect(Collectors.toList());
 
-			return iModelService.findAllById(stickerIds, ISticker.class);
+			return coreModelService.findAllById(stickerIds, ISticker.class);
 		} else {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
 		}
