@@ -112,8 +112,7 @@ public class OsgiServiceUtil {
 		if (bundle == null || bundle.getBundleContext() == null) {
 			bundle = FrameworkUtil.getBundle(OsgiServiceUtil.class);
 		}
-		ServiceReference<T> serviceReference = bundle.getBundleContext().getServiceReference(clazz);
-		ServiceTracker<?, T> serviceTracker = new ServiceTracker<>(bundle.getBundleContext(), serviceReference, null);
+		ServiceTracker<T, T> serviceTracker = new ServiceTracker<>(bundle.getBundleContext(), clazz, null);
 		serviceTracker.open();
 		try {
 			T service = serviceTracker.waitForService(timeout);
