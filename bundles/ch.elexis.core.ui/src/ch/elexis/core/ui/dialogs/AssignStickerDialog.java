@@ -35,11 +35,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStickerService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -189,7 +187,6 @@ public class AssignStickerDialog extends TitleAreaDialog {
 						}
 					}
 				}
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, mine);
 				closeDialog(true);
 			}
 		});
