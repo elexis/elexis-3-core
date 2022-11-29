@@ -3,8 +3,9 @@
    <service>
       <provide interface="ch.elexis.core.services.IStickerService"/>
    </service>
+   <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="entityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="entityManager" target="(id=default)"/>
-   <reference cardinality="1..1" field="iModelService" interface="ch.elexis.core.services.IModelService" name="iModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
    <reference cardinality="1..1" field="storeToStringServcie" interface="ch.elexis.core.services.IStoreToStringService" name="storeToStringServcie"/>
    <implementation class="ch.elexis.core.services.StickerService"/>
 </scr:component>
