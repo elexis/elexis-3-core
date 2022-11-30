@@ -16,6 +16,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MSnippetContainer;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindowElement;
@@ -78,11 +79,24 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return null;
 	}
 
+	private void updateCloseablePlaceholder(MPerspective mPerspective) {
+		EModelService modelService = getService(EModelService.class);
+		List<MPlaceholder> foundMPlaceholders = modelService.findElements(mPerspective, null, MPlaceholder.class,
+				null);
+		for (MPlaceholder mPlaceholder : foundMPlaceholders) {
+			// set closeable true
+			if (!mPlaceholder.isCloseable()) {
+				mPlaceholder.setCloseable(true);
+			}
+		}
+	}
+
 	@SuppressWarnings("restriction")
 	private IPerspectiveDescriptor importPerspectiveFromStream(InputStream in, IStateCallback iStateHandle,
 			boolean openPerspectiveIfAdded) throws IOException {
 		MPerspective mPerspective = loadPerspectiveFromStream(in);
 		if (mPerspective != null) {
+			updateCloseablePlaceholder(mPerspective);
 			IPerspectiveRegistry iPerspectiveRegistry = PlatformUI.getWorkbench().getPerspectiveRegistry();
 
 			// the perspective id to import
