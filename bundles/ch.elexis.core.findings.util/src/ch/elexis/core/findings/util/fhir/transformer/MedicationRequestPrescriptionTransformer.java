@@ -42,10 +42,12 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.utils.CoreUtil;
 
 @Component
 public class MedicationRequestPrescriptionTransformer implements IFhirTransformer<MedicationRequest, IPrescription> {
@@ -58,6 +60,9 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 
 	@org.osgi.service.component.annotations.Reference
 	private IContextService contextService;
+
+	@org.osgi.service.component.annotations.Reference
+	private ICodeElementService codeElemetService;
 
 	private PrescriptionEntryTypeFactory entryTypeFactory = new PrescriptionEntryTypeFactory();
 
@@ -223,9 +228,12 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		Optional<String> gtin = getMedicationRequestGtin(fhirObject);
 		if (gtin.isPresent()) {
 			// lookup item
-			IQuery<IArticle> query = modelService.getQuery(IArticle.class);
-			query.and(ModelPackage.Literals.IARTICLE__GTIN, COMPARATOR.EQUALS, gtin.get());
-			item = query.executeSingleResult();
+			item = codeElemetService.findArticleByGtin(gtin.get());
+			if (item.isEmpty() && CoreUtil.isTestMode()) {
+				IQuery<IArticle> query = modelService.getQuery(IArticle.class);
+				query.and(ModelPackage.Literals.IARTICLE__GTIN, COMPARATOR.EQUALS, gtin.get());
+				item = query.executeSingleResult();
+			}
 		} else {
 			LoggerFactory.getLogger(getClass()).error("MedicationRequest with no gtin");
 		}
