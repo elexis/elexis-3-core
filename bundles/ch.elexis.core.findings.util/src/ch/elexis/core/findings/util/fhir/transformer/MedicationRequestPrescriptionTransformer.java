@@ -6,12 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import org.hl7.fhir.r4.model.Annotation;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Dosage;
+import org.hl7.fhir.r4.model.Dosage.DosageDoseAndRateComponent;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.MedicationRequest;
@@ -22,6 +24,8 @@ import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestStatus;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Timing.EventTiming;
+import org.hl7.fhir.r4.model.Timing.TimingRepeatComponent;
 import org.hl7.fhir.r4.model.Type;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
@@ -223,7 +227,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			query.and(ModelPackage.Literals.IARTICLE__GTIN, COMPARATOR.EQUALS, gtin.get());
 			item = query.executeSingleResult();
 		} else {
-			LoggerFactory.getLogger(getClass()).error("MedicationOrder with no gtin");
+			LoggerFactory.getLogger(getClass()).error("MedicationRequest with no gtin");
 		}
 		// lookup patient
 		Optional<IPatient> patient = modelService.load(FhirUtil.getId(fhirObject.getSubject()).get(), IPatient.class);
@@ -246,6 +250,9 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			modelService.save(localObject);
 
 			return Optional.of(localObject);
+		} else {
+			LoggerFactory.getLogger(getClass()).error(
+					"MedicationRequest with unknown patient [" + FhirUtil.getId(fhirObject.getSubject()).get() + "]");
 		}
 		return Optional.empty();
 	}
@@ -339,6 +346,10 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 	private String getMedicationRequestDosage(MedicationRequest fhirObject) {
 		List<Dosage> instructions = fhirObject.getDosageInstruction();
 		StringBuilder sb = new StringBuilder();
+		double morn = 0.0;
+		double noon = 0.0;
+		double aft = 0.0;
+		double eve = 0.0;
 		for (Dosage dosage : instructions) {
 			String text = dosage.getText();
 			if (text != null) {
@@ -347,8 +358,58 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 				} else {
 					sb.append(", ").append(text);
 				}
+			} else if (dosage.hasTiming() && dosage.getTiming().hasRepeat() && dosage.hasDoseAndRate()) {
+				List<DosageDoseAndRateComponent> doseAnRate = dosage.getDoseAndRate();
+				for (DosageDoseAndRateComponent doseAndRate : doseAnRate) {
+					double amount = 0.0;
+					if (doseAndRate.hasRateQuantity()) {
+						amount = doseAndRate.getRateQuantity().getValue().doubleValue();
+					}
+					if (doseAndRate.hasDoseQuantity()) {
+						amount = doseAndRate.getDoseQuantity().getValue().doubleValue();
+					}
+					if (isDosageAt(EventTiming.MORN, dosage)) {
+						morn = amount;
+					} else if (isDosageAt(EventTiming.NOON, dosage)) {
+						noon = amount;
+					} else if (isDosageAt(EventTiming.AFT, dosage)) {
+						aft = amount;
+					} else if (isDosageAt(EventTiming.EVE, dosage)) {
+						eve = amount;
+					}
+				}
+			}
+		}
+		if (morn > 0.0 || noon > 0.0 || aft > 0.0 || eve > 0.0) {
+			StringJoiner sj = new StringJoiner("-");
+			sj.add(getDoubleString(morn)).add(getDoubleString(noon)).add(getDoubleString(aft))
+					.add(getDoubleString(eve));
+			if (sb.length() == 0) {
+				sb.append(sj.toString());
+			} else {
+				sb.append(", ").append(sj.toString());
 			}
 		}
 		return sb.toString();
+	}
+
+	private String getDoubleString(Double value) {
+		if (value % 1 == 0) {
+			return Integer.toString(value.intValue());
+		} else {
+			return Double.toString(value);
+		}
+	}
+
+	private boolean isDosageAt(EventTiming eventTiming, Dosage dosage) {
+		TimingRepeatComponent repeat = dosage.getTiming().getRepeat();
+		if (repeat != null) {
+			for (Enumeration<EventTiming> when : repeat.getWhen()) {
+				if (when.getValue() == eventTiming) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

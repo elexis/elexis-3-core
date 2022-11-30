@@ -58,7 +58,7 @@ public class AbstractHelper {
 	}
 
 	public Reference getReference(String resourceType, Identifiable dbObject) {
-		return new Reference(new IdDt("Patient", dbObject.getId()));
+		return new Reference(new IdDt(resourceType, dbObject.getId()));
 	}
 
 	public static void acquireAndReleaseLock(Identifiable dbObj) {
