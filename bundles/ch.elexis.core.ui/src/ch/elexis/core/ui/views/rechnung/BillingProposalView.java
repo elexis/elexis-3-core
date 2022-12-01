@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -28,6 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.MenuManager;
@@ -532,7 +532,7 @@ public class BillingProposalView extends ViewPart {
 			}
 
 			private void resolveAccountingSystem() {
-				item.accountingSystem = item.fall.getAbrechnungsSystem();
+				item.accountingSystem = item.fall.getAbrechnungsSystem() + " " + item.fall.getGrund(); //$NON-NLS-1$
 			}
 
 			private void updateViewer() {
