@@ -525,7 +525,7 @@ public class BillingProposalView extends ViewPart {
 			}
 
 			private void resolveAccountingSystem() {
-				item.accountingSystem = item.fall.getAbrechnungsSystem();
+				item.accountingSystem = item.fall.getAbrechnungsSystem() + " " + item.fall.getGrund(); //$NON-NLS-1$
 			}
 
 			private void updateViewer() {
