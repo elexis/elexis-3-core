@@ -32,6 +32,7 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.status.ObjectStatus;
@@ -72,10 +73,8 @@ public class Desk implements IApplication {
 
 		if (System.getProperty(ElexisSystemPropertyConstants.OPEN_DB_WIZARD) != null) {
 			if (connectionStatus != null) {
-				cod.openInformation("Database connection overriden",
-						"You requested to configure the database,\n"
-								+ "but there is already a connection provided by a given setting.\n"
-								+ "You're setting won't have an effect:\n" + StatusUtil.printStatus(connectionStatus));
+				cod.openInformation(Messages.Core_db_connection_overridden,
+						Messages.Core_db_connection_reconfigured + StatusUtil.printStatus(connectionStatus));
 			}
 			cod.requestDatabaseConnectionConfiguration();
 		}
@@ -87,7 +86,7 @@ public class Desk implements IApplication {
 			if (!connection.isPresent()) {
 				// none found in CoreHub.localCfg - need to configure
 				CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();
-				MessageEvent.fireInformation("Datenbankverbindung geändert", "Bitte starten Sie Elexis erneut");
+				MessageEvent.fireInformation(Messages.Core_db_connection_changed, Messages.Core_please_restart_elexis);
 				System.exit(0);
 			}
 

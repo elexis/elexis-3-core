@@ -59,6 +59,7 @@ import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.Hub;
@@ -297,20 +298,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 								final Image image = GlobalActions.printVersionedEtikette.getImageDescriptor()
 										.createImage();
 								menuItem.setImage(image);
-								menuItem.setText("Mehrfach " + GlobalActions.printVersionedEtikette.getText());
+								menuItem.setText(Messages.Core_multiple + GlobalActions.printVersionedEtikette.getText());
 
 								menuItem.addSelectionListener(new SelectionAdapter() {
 									@Override
 									public void widgetSelected(SelectionEvent e) {
 										InputDialog inputDlg = new InputDialog(Display.getDefault().getActiveShell(),
-												menuItem.getText(), "Bitte die Anzahl eingeben", "1", //$NON-NLS-2$
+												menuItem.getText(), Messages.Core_please_enter_number, "1", //$NON-NLS-2$
 												new IInputValidator() {
 													@Override
 													public String isValid(String newText) {
 														try {
 															Integer.parseInt(newText);
 														} catch (NumberFormatException e) {
-															return newText + " ist keine gültige Anzahl";
+															return newText + Messages.Core_is_invalid_number;
 														}
 														return null;
 													}
