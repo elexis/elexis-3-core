@@ -8,7 +8,8 @@ Automatic-Module-Name: ch.elexis.core.jpa.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: ch.elexis.core.jpa;bundle-version="3.10.0",
  org.eclipse.swt;bundle-version="3.117.0",
- org.eclipse.jface
+ org.eclipse.jface,
+ ch.elexis.core.l10n
 Import-Package: org.osgi.service.component.annotations,
  org.slf4j;version="1.7.30"
 Bundle-ActivationPolicy: lazy

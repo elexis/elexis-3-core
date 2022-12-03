@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 
 @Component
@@ -32,7 +33,7 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 		} else {
 			shell = new Shell(display, SWT.TOOL | SWT.APPLICATION_MODAL);
 		}
-		shell.setText("Database Update");
+		shell.setText(ch.elexis.core.l10n.Messages.ElexisEntityManger_Database_Update);
 		shell.setLayout(new FillLayout());
 
 		Composite contentComposite = new Composite(shell, SWT.NONE);
