@@ -13,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
@@ -38,6 +39,8 @@ public class TaskLogFilterDialog {
 
 	private ITaskDescriptor openTaskSelectionDialog() {
 		IQuery<ITaskDescriptor> taskDescriptorQuery = TaskModelServiceHolder.get().getQuery(ITaskDescriptor.class);
+		taskDescriptorQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS,
+				false);
 		List<ITaskDescriptor> list = taskDescriptorQuery.execute();
 
 		LabelProvider lp = new LabelProvider() {
