@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewSite;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -399,6 +400,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				if (StringUtils.isNotBlank(namedSelection)) {
 					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
 				} else {
+					LoggerFactory.getLogger(getClass()).info("CommonViewer set context typed [" + sel[0] + "]");
 					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 				}
 			}
