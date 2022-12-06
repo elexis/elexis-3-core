@@ -80,6 +80,10 @@ public interface IXidService {
 	/**
 	 * Find a object with a {@link IXid} entry matching the provided domain
 	 * information.
+	 * 
+	 * Use this method if it is important that only one object is identified with
+	 * the domain information. If there is more than 1 object found with matching
+	 * domain information an {@link IllegalStateException} is thrown.
 	 *
 	 * @param domainName
 	 * @param domainId
@@ -87,6 +91,21 @@ public interface IXidService {
 	 * @return
 	 */
 	public <T> Optional<T> findObject(String domainName, String domainId, Class<T> clazz);
+
+	/**
+	 * Find all objects with a {@link IXid} entry matching the provided domain
+	 * information.
+	 * 
+	 * This is not the expected behaviour of an identifier, but there are use cases
+	 * in elexis where it is needed. E.g. multi contacts for same entity with
+	 * different addresses.
+	 *
+	 * @param domainName
+	 * @param domainId
+	 * @param clazz
+	 * @return
+	 */
+	public <T> List<T> findObjects(String domainName, String domainId, Class<T> clazz);
 
 	/**
 	 * Add an {@link IXid} to the provided {@link Identifiable} with the provided
