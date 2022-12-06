@@ -159,11 +159,21 @@ public class XidService implements IXidService {
 
 	@Override
 	public <T> Optional<T> findObject(String domainName, String domainId, Class<T> clazz) {
+		List<T> ret = findObjects(domainName, domainId, clazz);
+		if (ret.size() == 1) {
+			return Optional.of(ret.get(0));
+		} else if (ret.size() > 1) {
+			throw new IllegalStateException("Found more than one object for [" + domainName + "] [" + domainId + "]");
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public <T> List<T> findObjects(String domainName, String domainId, Class<T> clazz) {
 		String dom = domainMap.get(domainName);
 		if (dom != null) {
 			domainName = dom;
 		}
-
 		// the type is unknown here
 		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "domainid");
 		List<IXid> xids = query
@@ -171,12 +181,7 @@ public class XidService implements IXidService {
 		// filter results, getObject will filter by type
 		List<T> ret = xids.parallelStream().map(iXid -> iXid.getObject(clazz)).filter(Objects::nonNull)
 				.collect(Collectors.toList());
-		if (ret.size() == 1) {
-			return Optional.of(ret.get(0));
-		} else if (ret.size() > 1) {
-			throw new IllegalStateException("Found more than one object for [" + domainName + "] [" + domainId + "]");
-		}
-		return Optional.empty();
+		return ret;
 	}
 
 	@Override
