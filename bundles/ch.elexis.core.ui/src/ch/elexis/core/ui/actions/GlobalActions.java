@@ -284,7 +284,7 @@ public class GlobalActions {
 				if (partService != null) {
 					// refresh whole part model to get correct toolbar
 					for (MPart part : partService.getParts()) {
-						if (part.getWidget() instanceof Composite && ((Composite) part.getWidget()).isVisible()) {
+						if (part.getWidget() instanceof Composite) {
 							modelService.deleteModelElement(part);
 						}
 					}
