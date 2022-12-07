@@ -91,12 +91,9 @@ public class Person extends Kontakt {
 
 	/** Eine neue Person erstellen */
 	public Person(String Name, String Vorname, String Geburtsdatum, String s) {
-		create(null);
-		// String[] vals=new String[]{Name,Vorname,new
-		// TimeTool(Geburtsdatum).toString(TimeTool.DATE_COMPACT),s};
-		String[] vals = new String[] { Name, Vorname, Geburtsdatum, s };
 		String[] fields = new String[] { NAME, FIRSTNAME, BIRTHDATE, SEX };
-		set(fields, vals);
+		String[] values = new String[] { Name, Vorname, Geburtsdatum, s };
+		create(null, fields, values);
 	}
 
 	/**
