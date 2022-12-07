@@ -28,7 +28,7 @@ development environment we proceed as follows:
     as `Product` and select **Next\>** 
 4.  Now you see the list of `Projects`, here you have to add the setup
     file for Elexis. Save the link
-    <https://raw.githubusercontent.com/elexis/elexis-3-core/master/Elexis.setup>
+    <https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.sdk/Elexis.setup>
     . e.g as /tmp/Elexis.setup. Add it as follows <br>
     ![](images/addElexisUrlToOomph.png)  
     With OOMP 1.3.0 the https-URL did not work and you must add the
