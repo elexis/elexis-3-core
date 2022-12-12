@@ -158,13 +158,16 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	 *         if the given offset is before or after a line delimiter.
 	 */
 	private boolean isLineDelimiter(int offset) {
-		int line = text.getContent().getLineAtOffset(offset);
-		int lineOffset = text.getContent().getOffsetAtLine(line);
-		int offsetInLine = offset - lineOffset;
-		// offsetInLine will be greater than line length if the line
-		// delimiter is longer than one character and the offset is set
-		// in between parts of the line delimiter.
-		return offsetInLine > text.getContent().getLine(line).length();
+		if (text.getContent() != null && (offset <= text.getContent().getCharCount()) && (offset > 0)) {
+			int line = text.getContent().getLineAtOffset(offset);
+			int lineOffset = text.getContent().getOffsetAtLine(line);
+			int offsetInLine = offset - lineOffset;
+			// offsetInLine will be greater than line length if the line
+			// delimiter is longer than one character and the offset is set
+			// in between parts of the line delimiter.
+			return offsetInLine > text.getContent().getLine(line).length();
+		}
+		return false;
 	}
 
 	public void connectGlobalActions(IViewSite site) {
