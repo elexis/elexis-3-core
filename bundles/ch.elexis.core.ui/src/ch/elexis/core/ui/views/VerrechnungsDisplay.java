@@ -712,7 +712,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		actEncounter = encounter;
 		if (actEncounter != null) {
 			viewer.setInput(actEncounter.getBilled());
-			updatePartDisposalColumn(encounter.getBilled());
+			updatePartDisposalColumn(actEncounter.getBilled());
 			updateBilledLabel();
 			updateUi();
 		} else {
