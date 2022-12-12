@@ -289,7 +289,9 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	public void setEncounter(IEncounter encounter) {
 		actEncounter = encounter;
 		table.getColumn(0).setWidth(0);
-		viewer.setInput(encounter.getDiagnoses());
+		if (viewer != null && encounter != null) {
+			viewer.setInput(encounter.getDiagnoses());
+		}
 	}
 
 	private void createColumns() {

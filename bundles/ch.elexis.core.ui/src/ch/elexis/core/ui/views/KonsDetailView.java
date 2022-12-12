@@ -604,10 +604,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			boolean hlMandantEnabled = BillingServiceHolder.get().isEditable(encounter).isOK()
 					&& CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
 			hlMandant.setEnabled(hlMandantEnabled);
-			diagnosesDisplay
-					.setEncounter(CoreModelServiceHolder.get().load(encounter.getId(), IEncounter.class).orElse(null));
-			billedDisplay
-					.setEncounter(CoreModelServiceHolder.get().load(encounter.getId(), IEncounter.class).orElse(null));
+			diagnosesDisplay.setEncounter(encounter);
+			billedDisplay.setEncounter(encounter);
 			billedDisplay.setEnabled(true);
 			diagnosesDisplay.setEnabled(true);
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
