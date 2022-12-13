@@ -116,6 +116,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			if (reasonText != null && !reasonText.isEmpty()) {
 				Annotation note = fhirObject.addNote();
 				note.setText("Stop: " + reasonText);
+				statusEnum = MedicationRequestStatus.STOPPED;
 			}
 		}
 		dispenseRequest.setValidityPeriod(dispensePeriod);
@@ -123,7 +124,9 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 
 		if (dateUntil != null) {
 			if (dateUntil.isBefore(LocalDateTime.now()) || dateUntil.isEqual(dateFrom)) {
-				statusEnum = MedicationRequestStatus.COMPLETED;
+				if (statusEnum != MedicationRequestStatus.STOPPED) {
+					statusEnum = MedicationRequestStatus.COMPLETED;
+				}
 			}
 		}
 
@@ -188,14 +191,31 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 	public Optional<IPrescription> updateLocalObject(MedicationRequest fhirObject, IPrescription localObject) {
 		Optional<MedicationRequest> localFhirObject = getFhirObject(localObject);
 		if (!fhirObject.equalsDeep(localFhirObject.get())) {
-			// a change means we need to stop the current prescription
-			localObject.setDateTo(LocalDateTime.now());
-			localObject.setStopReason("Geändert durch FHIR Server");
-			modelService.save(localObject);
-			// and create a new one with the changed properties
-			return createLocalObject(fhirObject);
+			if (isStopUpdate(fhirObject, localObject)) {
+				Date dateTo = fhirObject.getDispenseRequest().getValidityPeriod().getEnd();
+				localObject.setDateTo(dateTo.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+				localObject.setStopReason("Gestoppt");
+				modelService.save(localObject);
+				return Optional.of(localObject);
+			} else {
+				// a change means we need to stop the current prescription
+				localObject.setDateTo(LocalDateTime.now());
+				localObject.setStopReason("Geändert durch FHIR Server");
+				modelService.save(localObject);
+				// and create a new one with the changed properties
+				return createLocalObject(fhirObject);
+			}
 		}
 		return Optional.empty();
+	}
+
+	private boolean isStopUpdate(MedicationRequest fhirObject, IPrescription localObject) {
+		if ((fhirObject.getStatus() == MedicationRequestStatus.STOPPED) && localObject.getDateTo() == null) {
+			if (fhirObject.hasDispenseRequest() && fhirObject.getDispenseRequest().hasValidityPeriod()) {
+				return fhirObject.getDispenseRequest().getValidityPeriod().hasEnd();
+			}
+		}
+		return false;
 	}
 
 	private String getArticleGtin(IPrescription localObject) {
