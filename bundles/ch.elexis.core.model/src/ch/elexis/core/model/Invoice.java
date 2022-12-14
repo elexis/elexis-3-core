@@ -269,16 +269,15 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 	@Override
 	public Money getDemandAmount() {
-		Money ret = new Money(0);
-		for (IPayment payment : getPayments()) {
-			String comment = payment.getRemark();
-			if (comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr1)
-					|| comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr2)
-					|| comment.equals(ch.elexis.core.l10n.Messages.Rechnung_Mahngebuehr3)) {
-				ret.addMoney(payment.getAmount());
+		List<IPayment> payments = getPayments();
+		Money total = new Money();
+		for (IPayment payment : payments) {
+			Money paymentAmount = payment.getAmount();
+			if (paymentAmount.isNegative()) {
+				total.addMoney(paymentAmount.negate());
 			}
 		}
-		return ret.isNegative() ? ret.multiply(-1d) : ret;
+		return total;
 	}
 
 	@Override
