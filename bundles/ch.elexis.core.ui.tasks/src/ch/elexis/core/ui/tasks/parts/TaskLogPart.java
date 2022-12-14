@@ -223,6 +223,19 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 		TableColumn tblclmnState = tvcState.getColumn();
 		tcLayout.setColumnData(tblclmnState, new ColumnPixelData(22, true, false));
 		tblclmnState.setText(StringUtils.EMPTY);
+		tblclmnState.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableResults.setSortColumn(tblclmnState);
+				if (tableResults.getSortDirection() == SWT.DOWN) {
+					contentProvider.setSortOrder(ITaskComparators.ofState());
+					tableResults.setSortDirection(SWT.UP);
+				} else {
+					contentProvider.setSortOrder(ITaskComparators.ofState().reversed());
+					tableResults.setSortDirection(SWT.DOWN);
+				}
+			}
+		});
 
 		// OWNER
 		TableViewerColumn tvcOwner = new TableViewerColumn(tableViewerResults, SWT.NONE);
@@ -307,10 +320,6 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS, false);
 			}
 
-			if (filterParameters.get("sft") != null) {
-				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__TASK_DESCRIPTOR,
-						COMPARATOR.EQUALS, filterParameters.get("sft"));
-			}
 			List<ITask> results = taskQuery.execute();
 			inputModel.set(results.toArray());
 		});

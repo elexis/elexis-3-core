@@ -29,4 +29,8 @@ public class ITaskComparators {
 	public static Comparator<ITask> ofOwner() {
 		return Comparator.comparing((task) -> task.getTaskDescriptor().getOwner().getId());
 	}
+
+	public static Comparator<ITask> ofState() {
+		return Comparator.comparing((task) -> task.getState());
+	}
 }
