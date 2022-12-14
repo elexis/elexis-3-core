@@ -12,6 +12,7 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -139,6 +140,20 @@ public class BillingProposalView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof BillingInformation) {
 					return ((BillingInformation) element).getAccountingSystem();
+				} else {
+					return super.getText(element);
+				}
+			}
+		});
+
+		TableViewerColumn seriesColumn = new TableViewerColumn(viewer, SWT.NONE);
+		seriesColumn.getColumn().setWidth(75);
+		seriesColumn.getColumn().setText("Behandlungsserie");
+		seriesColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof BillingInformation) {
+					return ((BillingInformation) element).getSeries();
 				} else {
 					return super.getText(element);
 				}
@@ -370,6 +385,8 @@ public class BillingProposalView extends ViewPart {
 		@XmlElement
 		private String checkResultMessage;
 		@XmlElement
+		private String series;
+		@XmlElement
 		private boolean checkResult;
 
 		public BillingInformation() {
@@ -474,6 +491,14 @@ public class BillingProposalView extends ViewPart {
 			}
 		}
 
+		public String getSeries() {
+			if (!isResolved()) {
+				return "..."; //$NON-NLS-1$
+			} else {
+				return series;
+			}
+		}
+
 		private static class ResolveLazyFieldsRunnable implements Runnable {
 			private BillingInformation item;
 			private StructuredViewer viewer;
@@ -489,6 +514,7 @@ public class BillingProposalView extends ViewPart {
 				resolveAccountingSystem();
 				resolveTotal();
 				resolveCheckResult();
+				resolveSeries();
 				item.resolved = true;
 				item.resolving = false;
 				if (viewer != null) {
@@ -533,6 +559,25 @@ public class BillingProposalView extends ViewPart {
 
 			private void resolveAccountingSystem() {
 				item.accountingSystem = item.fall.getAbrechnungsSystem() + " " + item.fall.getGrund(); //$NON-NLS-1$
+			}
+
+			private void resolveSeries() {
+				StringBuilder sb = new StringBuilder();
+				List<Konsultation> konsSeries = getSeries(item.fall);
+				Money total = getSeriesTotal(konsSeries);
+				sb.append(total);
+				item.series = sb.toString();
+			}
+
+			private List<Konsultation> getSeries(Fall fall) {
+				return Arrays.asList(fall.getBehandlungen(false)).parallelStream().filter(k -> k.isBillable())
+						.filter(k -> k.getRechnung() == null || !k.getRechnung().exists()).collect(Collectors.toList());
+			}
+
+			private Money getSeriesTotal(List<Konsultation> series) {
+				Money ret = new Money();
+				series.forEach(sk -> ret.addMoney(BillingUtil.getTotal(sk)));
+				return ret;
 			}
 
 			private void updateViewer() {
