@@ -1,6 +1,7 @@
 package ch.elexis.data.dto;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class LeistungDTO {
 		this.iVerrechenbar = iVerrechenbar;
 	}
 
-	public void calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO) {
+	public boolean calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO, Consumer<Result<IBilled>> showResult) {
 		if (verrechnet == null) {
 			@SuppressWarnings("unchecked")
 			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
@@ -82,12 +83,15 @@ public class LeistungDTO {
 				scale2 = result.get().getSecondaryScaleFactor();
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Adding billable failed [" + result.getMessages() + "]");
+				showResult.accept(result);
+				return false;
 			}
 		} else {
 			tpw = getFactor();
 			scale1 = verrechnet.getPrimaryScaleFactor();
 			scale2 = verrechnet.getSecondaryScaleFactor();
 		}
+		return true;
 	}
 
 	private double getFactor() {

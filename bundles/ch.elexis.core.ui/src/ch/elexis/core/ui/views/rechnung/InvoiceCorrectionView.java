@@ -17,6 +17,7 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -94,12 +95,14 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.FallSelectionDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
@@ -808,7 +811,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					if (triggersRecalc) {
 						for (KonsultationDTO konsultationDTO : invoiceCorrectionDTO.getKonsultationDTOs()) {
 							for (LeistungDTO leistungDTO : konsultationDTO.getLeistungDTOs()) {
-								leistungDTO.calcPrice(konsultationDTO, fallDTO);
+								leistungDTO.calcPrice(konsultationDTO, fallDTO, new ShowBilledResult());
 							}
 						}
 					}
@@ -830,12 +833,17 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 						if (object instanceof IBillable) {
 							LeistungDTO leistungDTO = new LeistungDTO((IBillable) object,
 									invoiceCorrectionDTO.getFallDTO());
-							konsultationDTO.getLeistungDTOs().add(leistungDTO);
-							leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO());
-							invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(OperationType.LEISTUNG_ADD,
-									konsultationDTO, leistungDTO));
-							tableViewer.refresh();
-							invoiceComposite.updateScrollBars();
+
+								konsultationDTO.getLeistungDTOs().add(leistungDTO);
+							if (leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO(),
+									new ShowBilledResult())) {
+								invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(OperationType.LEISTUNG_ADD,
+										konsultationDTO, leistungDTO));
+								tableViewer.refresh();
+								invoiceComposite.updateScrollBars();
+							} else {
+								konsultationDTO.getLeistungDTOs().remove(leistungDTO);
+							}
 						}
 					}
 				}
@@ -1493,5 +1501,15 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	private static class ShowBilledResult implements Consumer<Result<IBilled>> {
+
+		@Override
+		public void accept(Result<IBilled> result) {
+			Display.getDefault().syncExec(() -> {
+				ResultDialog.show(result);
+			});
+		}
 	}
 }
