@@ -25,9 +25,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +46,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.DaysOrDateSelectionComposite;
@@ -63,6 +69,7 @@ import ch.rgw.tools.TimeTool;
 public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 	private List<Konsultation> proposal;
+	private boolean series;
 
 	private Button insurerOnly;
 	private KontaktSelectionComposite insurerSelection;
@@ -72,7 +79,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 	private Button beforeTimeOnly;
 
-	private ExcludeKonsByMoneyComposite excludeKonsByMoneyComposite;
+	private FilterByMoneyComposite filterSeriesByMoneyComposite;
+
+	private FilterByMoneyComposite filterKonsByMoneyComposite;
 
 	private DaysOrDateSelectionComposite beforeDaysOrDate;
 
@@ -111,6 +120,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				if (timeSpanOnly.getSelection()) {
 					beforeTimeOnly.setSelection(false);
 				}
+				filterKonsByMoneyComposite.changeVisibility(timeSpanOnly.getSelection());
 			}
 		});
 		timeSpanSelection = new TimeSpanSelectionComposite(content, SWT.NONE);
@@ -129,6 +139,8 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		LocalDate dateNow = LocalDate.now();
 		timeSpanSelection.setTimeSpan(new TimeSpan(new TimeTool(dateNow.withDayOfMonth(1)), new TimeTool(dateNow)));
 
+		filterKonsByMoneyComposite = new FilterByMoneyComposite(content, false);
+
 		beforeTimeOnly = new Button(content, SWT.CHECK);
 		beforeTimeOnly.setText("Offene Behandlungsserien vor Tagen oder Datum");
 		beforeTimeOnly.addSelectionListener(new SelectionAdapter() {
@@ -137,7 +149,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				if (beforeTimeOnly.getSelection()) {
 					timeSpanOnly.setSelection(false);
 				}
-				excludeKonsByMoneyComposite.changeVisibility(beforeTimeOnly.getSelection());
+				filterSeriesByMoneyComposite.changeVisibility(beforeTimeOnly.getSelection());
 			}
 		});
 		beforeDaysOrDate = new DaysOrDateSelectionComposite(content, SWT.NONE);
@@ -155,7 +167,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		});
 		beforeDaysOrDate.setDate(LocalDate.now().minusDays(30));
 
-		excludeKonsByMoneyComposite = new ExcludeKonsByMoneyComposite(content);
+		filterSeriesByMoneyComposite = new FilterByMoneyComposite(content, true);
 
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
@@ -229,6 +241,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				return;
 			} else {
 				proposal = runnable.getProposal();
+				series = runnable.isSeries();
 			}
 		} catch (InvocationTargetException | InterruptedException e) {
 			LoggerFactory.getLogger(BillingProposalWizardDialog.class).error("Error running proposal query", e);
@@ -243,6 +256,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		return Optional.ofNullable(proposal);
 	}
 
+	public boolean isSeries() {
+		return series;
+	}
+
 	private class QueryProposalRunnable implements IRunnableWithProgress {
 
 		private boolean canceled = false;
@@ -254,7 +271,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private Query<Konsultation> query;
 
 		private boolean addSeries;
-		private Money excludeKonsByMoney;
+		private Money filterSeriesByMoney;
+		private Money filterKonsByMoney;
+		private boolean filterByMoneyHigher;
 
 		public QueryProposalRunnable() {
 			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false,
@@ -270,6 +289,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL, timeSpan.until.toString(TimeTool.DATE_COMPACT));
 				}
 			}
+			if (filterKonsByMoneyComposite.isSelected()) {
+				filterKonsByMoney = filterKonsByMoneyComposite.getMoney();
+				filterByMoneyHigher = filterKonsByMoneyComposite.isHigher();
+			}
 			if (beforeTimeOnly.getSelection()) {
 				addSeries = true;
 				IStructuredSelection selection = (IStructuredSelection) beforeDaysOrDate.getSelection();
@@ -277,8 +300,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					LocalDate fromDate = (LocalDate) selection.getFirstElement();
 					TimeTool fromTool = new TimeTool(fromDate);
 					query.add(Konsultation.DATE, Query.LESS_OR_EQUAL, fromTool.toString(TimeTool.DATE_COMPACT));
-					if (excludeKonsByMoneyComposite.isSelected()) {
-						excludeKonsByMoney = excludeKonsByMoneyComposite.getMoney();
+					if (filterSeriesByMoneyComposite.isSelected()) {
+						filterSeriesByMoney = filterSeriesByMoneyComposite.getMoney();
+						filterByMoneyHigher = filterSeriesByMoneyComposite.isHigher();
 					}
 				}
 			}
@@ -377,9 +401,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				proposalCopy.forEach(k -> {
 					List<Konsultation> series = getSeries(k.getFall());
 					// calculate money for kons series
-					if (excludeKonsByMoney != null) {
+					if (filterSeriesByMoney != null) {
 						Money totalForKonsSerie = getSeriesTotal(series);
-						if (excludeKonsByMoney.isMoreThan(totalForKonsSerie)) {
+						if ((filterByMoneyHigher && filterSeriesByMoney.isMoreThan(totalForKonsSerie))
+								|| (!filterByMoneyHigher && totalForKonsSerie.isMoreThan(filterSeriesByMoney))) {
 							// exclude whole series
 							knownIds.addAll(series.parallelStream().map(sk -> sk.getId()).collect(Collectors.toList()));
 							proposal.remove(k);
@@ -398,6 +423,19 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					if (progress.isCanceled()) {
 						canceled = true;
 						return;
+					}
+				});
+			}
+			if (filterKonsByMoney != null) {
+				ArrayList<Konsultation> proposalCopy = new ArrayList<>(proposal);
+				proposalCopy.forEach(k -> {
+					IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).orElse(null);
+					if (encounter != null) {
+						Money konsTotal = EncounterServiceHolder.get().getSales(encounter);
+						if ((filterByMoneyHigher && filterKonsByMoney.isMoreThan(konsTotal))
+								|| (!filterByMoneyHigher && konsTotal.isMoreThan(filterKonsByMoney))) {
+							proposal.remove(k);
+						}
 					}
 				});
 			}
@@ -452,29 +490,47 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		public List<Konsultation> getProposal() {
 			return proposal;
 		}
+
+		public boolean isSeries() {
+			return addSeries;
+		}
 	}
 
-	private class ExcludeKonsByMoneyComposite extends Composite {
-		private MoneyInput txtExcludeKonsByMoney;
-		private Button checkExcludeKonsByMoney;
+	private class FilterByMoneyComposite extends Composite {
+		private MoneyInput txtFilterKonsByMoney;
+		private Button filterKonsByMoney;
+		private ComboViewer lowerOrHigher;
+		private boolean series;
 
-		public ExcludeKonsByMoneyComposite(Composite parent) {
+		public FilterByMoneyComposite(Composite parent, boolean series) {
 			super(parent, SWT.NONE);
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
-			setLayout(SWTHelper.createGridLayout(true, 2));
+			setLayout(SWTHelper.createGridLayout(true, 3));
+			this.series = series;
 		}
 
 		private void createContents() {
-			checkExcludeKonsByMoney = new Button(this, SWT.CHECK);
-			checkExcludeKonsByMoney.setText("Offene Behandlungsserien ausschliessen");
+			filterKonsByMoney = new Button(this, SWT.CHECK);
+			if (series) {
+				filterKonsByMoney.setText("Offene Behandlungsserien");
+			} else {
+				filterKonsByMoney.setText("Offene Behandlungen");
+			}
+			lowerOrHigher = new ComboViewer(this, SWT.BORDER);
+			lowerOrHigher.setContentProvider(ArrayContentProvider.getInstance());
+			lowerOrHigher.setInput(
+					new String[] { ch.elexis.core.l10n.Messages.Core_Higher, ch.elexis.core.l10n.Messages.Core_Lower });
+			lowerOrHigher.setSelection(new StructuredSelection(ch.elexis.core.l10n.Messages.Core_Higher));
+			lowerOrHigher.getControl().setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+
 			Composite c = new Composite(this, SWT.NONE);
 			c.setLayout(new GridLayout(2, false));
 			c.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 			Label lblBeforeTimeOnlyValueLessThen = new Label(c, SWT.NONE);
-			lblBeforeTimeOnlyValueLessThen.setText("Betrag kleiner CHF");
+			lblBeforeTimeOnlyValueLessThen.setText("Betrag CHF");
 
-			txtExcludeKonsByMoney = new MoneyInput(c);
-			txtExcludeKonsByMoney.getControl().addListener(SWT.Verify, new Listener() {
+			txtFilterKonsByMoney = new MoneyInput(c);
+			txtFilterKonsByMoney.getControl().addListener(SWT.Verify, new Listener() {
 				public void handleEvent(Event e) {
 					// limits only the input the value validation happens at focus lost
 					String string = e.text;
@@ -508,13 +564,21 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		}
 
 		public boolean isSelected() {
-			return isVisible() && checkExcludeKonsByMoney != null && !checkExcludeKonsByMoney.isDisposed()
-					&& checkExcludeKonsByMoney.getSelection();
+			return isVisible() && filterKonsByMoney != null && !filterKonsByMoney.isDisposed()
+					&& filterKonsByMoney.getSelection();
+		}
+
+		public boolean isHigher() {
+			if (!lowerOrHigher.getStructuredSelection().isEmpty()) {
+				return ((String) lowerOrHigher.getStructuredSelection().getFirstElement())
+						.equals(ch.elexis.core.l10n.Messages.Core_Higher);
+			}
+			return true;
 		}
 
 		public Money getMoney() {
-			if (isVisible() && txtExcludeKonsByMoney != null && !txtExcludeKonsByMoney.isDisposed()) {
-				return txtExcludeKonsByMoney.getMoney(true);
+			if (isVisible() && txtFilterKonsByMoney != null && !txtFilterKonsByMoney.isDisposed()) {
+				return txtFilterKonsByMoney.getMoney(true);
 			}
 			return null;
 		}
