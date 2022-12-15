@@ -78,6 +78,10 @@ public class BillingProposalView extends ViewPart {
 	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d"); //$NON-NLS-1$
 	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa"); //$NON-NLS-1$
 
+	private TableViewerColumn seriesColumn;
+
+	private boolean showSeries;
+
 	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
@@ -146,7 +150,7 @@ public class BillingProposalView extends ViewPart {
 			}
 		});
 
-		TableViewerColumn seriesColumn = new TableViewerColumn(viewer, SWT.NONE);
+		seriesColumn = new TableViewerColumn(viewer, SWT.NONE);
 		seriesColumn.getColumn().setWidth(75);
 		seriesColumn.getColumn().setText("Behandlungsserie");
 		seriesColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -159,6 +163,7 @@ public class BillingProposalView extends ViewPart {
 				}
 			}
 		});
+		showSeries(false);
 
 		TableViewerColumn insurerColumn = new TableViewerColumn(viewer, SWT.NONE);
 		insurerColumn.getColumn().setWidth(175);
@@ -388,14 +393,17 @@ public class BillingProposalView extends ViewPart {
 		private String series;
 		@XmlElement
 		private boolean checkResult;
+		@XmlTransient
+		private boolean showSeries;
 
 		public BillingInformation() {
 		}
 
-		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation) {
+		public BillingInformation(StructuredViewer viewer, Fall fall, Konsultation konsultation, boolean showSeries) {
 			this.viewer = viewer;
 			this.fall = fall;
 			this.konsultation = konsultation;
+			this.showSeries = showSeries;
 
 			resolved = false;
 			resolving = false;
@@ -431,13 +439,13 @@ public class BillingProposalView extends ViewPart {
 		public synchronized boolean isResolved() {
 			if (!resolved && !resolving) {
 				resolving = true;
-				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
+				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this).resolveSeries(showSeries));
 			}
 			return resolved;
 		}
 
 		public void resolve() {
-			executorService.execute(new ResolveLazyFieldsRunnable(null, this));
+			executorService.execute(new ResolveLazyFieldsRunnable(null, this).resolveSeries(showSeries));
 			while (!isResolved()) {
 				try {
 					Thread.sleep(10);
@@ -503,9 +511,16 @@ public class BillingProposalView extends ViewPart {
 			private BillingInformation item;
 			private StructuredViewer viewer;
 
+			private boolean resolveSeries;
+
 			public ResolveLazyFieldsRunnable(StructuredViewer viewer, BillingInformation item) {
 				this.item = item;
 				this.viewer = viewer;
+			}
+
+			public ResolveLazyFieldsRunnable resolveSeries(boolean value) {
+				this.resolveSeries = value;
+				return this;
 			}
 
 			@Override
@@ -514,7 +529,9 @@ public class BillingProposalView extends ViewPart {
 				resolveAccountingSystem();
 				resolveTotal();
 				resolveCheckResult();
-				resolveSeries();
+				if (resolveSeries) {
+					resolveSeries();
+				}
 				item.resolved = true;
 				item.resolving = false;
 				if (viewer != null) {
@@ -650,7 +667,8 @@ public class BillingProposalView extends ViewPart {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof List<?>) {
 				currentContent = ((List<Konsultation>) newInput).parallelStream()
-						.map(k -> new BillingInformation(this.viewer, k.getFall(), k)).collect(Collectors.toList());
+						.map(k -> new BillingInformation(this.viewer, k.getFall(), k, showSeries))
+						.collect(Collectors.toList());
 			}
 		}
 
@@ -738,5 +756,16 @@ public class BillingProposalView extends ViewPart {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	public void showSeries(boolean series) {
+		showSeries = series;
+		if (showSeries) {
+			seriesColumn.getColumn().setWidth(75);
+			seriesColumn.getColumn().setResizable(true);
+		} else {
+			seriesColumn.getColumn().setWidth(0);
+			seriesColumn.getColumn().setResizable(false);
+		}
 	}
 }
