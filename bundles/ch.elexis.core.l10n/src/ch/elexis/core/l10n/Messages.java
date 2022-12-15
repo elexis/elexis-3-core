@@ -886,6 +886,8 @@ public class Messages extends NLS {
 	public static String Core_HL7_Z_automatic;
 	public static String Core_Help;
 	public static String Core_Horizontal;
+	public static String Core_Higher;
+	public static String Core_Lower;
 	public static String Core_Illness;
 	public static String Core_Import_Action;
 	public static String Core_Import_Data;
