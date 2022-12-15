@@ -41,6 +41,7 @@ public class StartBillingProposalHandler extends AbstractHandler implements IHan
 		if (view != null) {
 			BillingProposalWizardDialog dialog = new BillingProposalWizardDialog(HandlerUtil.getActiveShell(event));
 			if (dialog.open() == Dialog.OK) {
+				view.showSeries(dialog.isSeries());
 				view.setInput(dialog.getProposal().orElse(Collections.emptyList()));
 			}
 		}
