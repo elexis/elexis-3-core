@@ -2801,6 +2801,9 @@ public class Messages extends NLS {
 	public static String GenericSearchSelectionDialog_BillingSystemSelection;
 	public static String GenericSearchSelectionDialog_ChangeBillingSystemMessage;
 
+	public static String Core_Higher;
+	public static String Core_Lower;
+
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
