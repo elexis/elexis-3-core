@@ -37,7 +37,7 @@ public class Money extends Number implements Comparable<Money> {
 	private final static DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 
 	private static final long serialVersionUID = 7466555366749958L;
-	private static NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+	private static Locale locale = Locale.getDefault();
 	private int cents; // The value of this money
 	private double frac; // What rests after rounding
 
@@ -191,6 +191,7 @@ public class Money extends Number implements Comparable<Money> {
 
 	/** return the amount as "x.xx" */
 	public String getAmountAsString() {
+		NumberFormat nf = NumberFormat.getInstance(locale);
 		nf.setMinimumFractionDigits(2);
 		nf.setMaximumFractionDigits(2);
 		String frm = nf.format(getAmount());
@@ -282,7 +283,7 @@ public class Money extends Number implements Comparable<Money> {
 	 * @param locale
 	 */
 	public static void setLocale(Locale locale) {
-		nf = NumberFormat.getInstance(locale);
+		Money.locale = locale;
 	}
 
 	@Override
