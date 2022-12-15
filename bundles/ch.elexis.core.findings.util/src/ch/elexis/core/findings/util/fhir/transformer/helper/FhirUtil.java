@@ -9,6 +9,7 @@ import org.hl7.fhir.r4.model.Reference;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 
@@ -27,6 +28,8 @@ public class FhirUtil {
 			resourceType = "Encounter";
 		} else if (identifiable instanceof IBilled) {
 			resourceType = "ChargeItem";
+		} else if (identifiable instanceof IMandator) {
+			resourceType = "Practitioner";
 		}
 
 		if (resourceType != null) {

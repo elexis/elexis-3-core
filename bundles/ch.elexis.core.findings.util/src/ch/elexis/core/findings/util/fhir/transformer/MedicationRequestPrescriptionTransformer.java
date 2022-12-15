@@ -37,6 +37,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.ModelPackage;
@@ -47,6 +48,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 
 @Component
@@ -76,6 +78,12 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		fhirObject.addIdentifier(getElexisObjectIdentifier(localObject));
 
 		fhirObject.setSubject(FhirUtil.getReference(localObject.getPatient()));
+
+		if (localObject.getPrescriptor() != null && localObject.getPrescriptor().isMandator()) {
+			IMandator mandator = CoreModelServiceHolder.get()
+					.load(localObject.getPrescriptor().getId(), IMandator.class).get();
+			fhirObject.setRecorder(FhirUtil.getReference(mandator));
+		}
 
 		StringBuilder textBuilder = new StringBuilder();
 
@@ -191,7 +199,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 	public Optional<IPrescription> updateLocalObject(MedicationRequest fhirObject, IPrescription localObject) {
 		Optional<MedicationRequest> localFhirObject = getFhirObject(localObject);
 		if (!fhirObject.equalsDeep(localFhirObject.get())) {
-			if (isStopUpdate(fhirObject, localObject)) {
+			if (isStopUpdate(fhirObject)) {
 				Date dateTo = fhirObject.getDispenseRequest().getValidityPeriod().getEnd();
 				localObject.setDateTo(dateTo.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 				localObject.setStopReason("Gestoppt");
@@ -209,8 +217,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		return Optional.empty();
 	}
 
-	private boolean isStopUpdate(MedicationRequest fhirObject, IPrescription localObject) {
-		if ((fhirObject.getStatus() == MedicationRequestStatus.STOPPED) && localObject.getDateTo() == null) {
+	private boolean isStopUpdate(MedicationRequest fhirObject) {
+		if ((fhirObject.getStatus() == MedicationRequestStatus.STOPPED)) {
 			if (fhirObject.hasDispenseRequest() && fhirObject.getDispenseRequest().hasValidityPeriod()) {
 				return fhirObject.getDispenseRequest().getValidityPeriod().hasEnd();
 			}
