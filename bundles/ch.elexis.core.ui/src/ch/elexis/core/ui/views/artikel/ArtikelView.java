@@ -53,6 +53,7 @@ import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
+import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
@@ -277,7 +278,11 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
 			cv = new CommonViewer();
-			cv.create(master.createViewerConfigurer(cv), sash, SWT.NONE, getViewSite());
+			ViewerConfigurer vc = master.createViewerConfigurer(cv);
+			if (vc.getContentType() == ContentType.GENERICOBJECT) {
+				vc.setDoubleClickListener(master.getDoubleClickListener());
+			}
+			cv.create(vc, sash, SWT.NONE, getViewSite());
 			// cv.getViewerWidget().addSelectionChangedListener(
 			// GlobalEventDispatcher.getInstance().getDefaultListener());
 			/* Composite page= */detail.createDisplay(sash, getViewSite());
