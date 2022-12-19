@@ -517,7 +517,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	}
 
 	private boolean isNoScroll() {
-		if (viewer.getControl() instanceof Table) {
+		if (viewer.getControl() instanceof Table && !viewer.getControl().isDisposed()) {
 			// test if table elements do not reach bottom
 			Table table = (Table) viewer.getControl();
 			ScrollBar verticalBar = table.getVerticalBar();
