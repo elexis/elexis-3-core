@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 
 import org.slf4j.LoggerFactory;
 
@@ -34,14 +33,11 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
-import ch.rgw.tools.VersionInfo;
 
 public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public static final String TABLENAME = "LEISTUNGSBLOCK"; //$NON-NLS-1$
 	public static final String VERSION_ID = "Version";
-	private static final String VERSION = "1.0.0";
 
 	public static final String FLD_MANDANT_ID = "MandantID"; //$NON-NLS-1$
 	public static final String FLD_NAME = "Name"; //$NON-NLS-1$
@@ -54,52 +50,8 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 
 	private static final String SEPARATOR = ":=:";
 
-	// @formatter:off
-	@Deprecated(forRemoval = true)
-	private static final String upd100 =
-			"ALTER TABLE " + TABLENAME + " ADD " + FLD_CODEELEMENTS + " TEXT;"
-			+ "INSERT INTO " + TABLENAME + " (ID, " + FLD_NAME + ") VALUES (" + JdbcLink.wrap(Leistungsblock.VERSION_ID) + ", " + JdbcLink.wrap(VERSION) + ");";
-
-	@Deprecated(forRemoval = true)
-	public static final String createDB = "CREATE TABLE " + TABLENAME + " ("
-		+"ID 					VARCHAR(25) primary key, "
-		+"lastupdate 			BIGINT,"
-		+"deleted 				CHAR(1) default '0',"
-
-		+ "MandantID			VARCHAR(25),"
-		+ "Name		 			VARCHAR(30),"
-		+ "Macro				VARCHAR(30),"
-		+ "Leistungen			BLOB,"
-		+ "codeelements	 		TEXT"
-		+ ");"
-		+ "CREATE INDEX block1 on " + TABLENAME + " (" + FLD_NAME + ");"
-		+ "CREATE INDEX block2 on " + TABLENAME + " (" + FLD_MANDANT_ID + ");"
-		+ "CREATE INDEX block3 on " + TABLENAME + " (" + FLD_MACRO + ");"
-		+ "INSERT INTO " + TABLENAME + " (ID, " + FLD_NAME + ") VALUES (" + JdbcLink.wrap(Leistungsblock.VERSION_ID) + ", " + JdbcLink.wrap(VERSION) + ");";
-	//@formatter:on
-
 	static {
 		addMapping(TABLENAME, FLD_MANDANT_ID, FLD_NAME, FLD_LEISTUNGEN, FLD_MACRO, FLD_CODEELEMENTS);
-
-		if (!tableExists(TABLENAME)) {
-			createOrModifyTable(createDB);
-		} else {
-			Leistungsblock version = load(Leistungsblock.VERSION_ID);
-			if (!version.exists()) {
-				createOrModifyTable(upd100);
-				Executors.newSingleThreadExecutor().execute(new Runnable() {
-					@Override
-					public void run() {
-						updateToCodeelements();
-					}
-				});
-			}
-			VersionInfo vi = new VersionInfo(version.get(FLD_NAME));
-			if (vi.isOlder(VERSION)) {
-				// add update code here ...
-				version.set(FLD_NAME, VERSION);
-			}
-		}
 		// TODO move to NoPo initialisation
 		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, XIDDOMAIN_SIMPLENAME, Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
@@ -107,18 +59,6 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	@Override
 	protected String getTableName() {
 		return TABLENAME;
-	}
-
-	private static void updateToCodeelements() {
-		Query<Leistungsblock> query = new Query<Leistungsblock>(Leistungsblock.class);
-		query.add(Leistungsblock.FLD_ID, Query.NOT_EQUAL, Leistungsblock.VERSION_ID);
-		List<Leistungsblock> blocks = query.execute();
-		for (Leistungsblock leistungsblock : blocks) {
-			List<ICodeElement> leistungen = getLeistungen(leistungsblock);
-			for (ICodeElement iCodeElement : leistungen) {
-				leistungsblock.addElement(iCodeElement);
-			}
-		}
 	}
 
 	private static List<ICodeElement> getLeistungen(Leistungsblock leistungsblock) {

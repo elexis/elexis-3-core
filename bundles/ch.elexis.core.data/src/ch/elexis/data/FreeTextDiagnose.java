@@ -12,48 +12,15 @@
 package ch.elexis.data;
 
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.VersionInfo;
 
 public class FreeTextDiagnose extends PersistentObject implements IDiagnose {
 
 	public static final String TABLENAME = "at_medevit_elexis_freetextdiagnose"; //$NON-NLS-1$
-	public static final String VERSION = "1.0.0"; //$NON-NLS-1$
-
-	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 
 	public static final String FLD_TEXT = "text"; //$NON-NLS-1$
 
-	// @formatter:off
-	static final String create =
-			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
-			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$
-			"lastupdate BIGINT," + //$NON-NLS-1$
-			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
-
-			"text VARCHAR(255)" + //$NON-NLS-1$
-			");" + //$NON-NLS-1$
-			"INSERT INTO " + TABLENAME + " (ID," + FLD_TEXT + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-	// @formatter:on
-
 	static {
 		addMapping(TABLENAME, FLD_TEXT);
-
-		checkInitTable();
-	}
-
-	protected static void checkInitTable() {
-		if (!tableExists(TABLENAME)) {
-			createOrModifyTable(create);
-		} else {
-			FreeTextDiagnose version = load(VERSIONID);
-			VersionInfo vi = new VersionInfo(version.get(FLD_TEXT));
-			if (vi.isOlder(VERSION)) {
-				// we should update eg. with createOrModifyTable(update.sql);
-				// And then set the new version
-				version.set(FLD_TEXT, VERSION);
-			}
-		}
 	}
 
 	public FreeTextDiagnose() {

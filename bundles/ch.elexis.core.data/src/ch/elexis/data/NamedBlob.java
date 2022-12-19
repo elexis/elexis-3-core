@@ -11,11 +11,12 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
@@ -217,10 +218,4 @@ public class NamedBlob extends PersistentObject {
 		}
 	}
 
-	public static void createTable() {
-		String create = "CREATE TABLE HEAP(" + "ID			VARCHAR(80) primary key,"
-				+ "deleted		CHAR(1) default '0'," + "inhalt		BLOB," + "datum		CHAR(8),"
-				+ "lastupdate   BIGINT" + ");";
-		createOrModifyTable(create);
-	}
 }
