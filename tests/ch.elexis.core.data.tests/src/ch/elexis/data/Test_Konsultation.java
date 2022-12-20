@@ -35,8 +35,6 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		fall = new Fall(pat.getId(), "Bezeichnung", "Grund", "KVG");
 		assertEquals(BillingLaw.KVG, fall.getConfiguredBillingSystemLaw());
 		kons = new Konsultation(fall);
-
-		FreeTextDiagnose.checkInitTable();
 	}
 
 	@After
