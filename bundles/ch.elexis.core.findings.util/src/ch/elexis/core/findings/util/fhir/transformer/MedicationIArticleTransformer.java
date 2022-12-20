@@ -7,11 +7,15 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Medication;
+import org.hl7.fhir.r4.model.StringType;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import at.medevit.ch.artikelstamm.ArtikelstammConstants.TYPE;
+import at.medevit.ch.artikelstamm.IArtikelstammItem;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
@@ -25,6 +29,8 @@ import ch.elexis.core.types.ArticleTyp;
 
 @Component
 public class MedicationIArticleTransformer implements IFhirTransformer<Medication, IArticle> {
+
+	public static final String EXTENSION_MEDICATION_ARTIKELSTAMMTYPE_URL = "www.elexis.info/extensions/medication/artikelstamm/type";
 
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
@@ -62,6 +68,18 @@ public class MedicationIArticleTransformer implements IFhirTransformer<Medicatio
 
 		if (!localObject.isProduct()) {
 			medication.setAmount(medicationHelper.determineAmount(localObject));
+		}
+
+		if (localObject instanceof IArtikelstammItem) {
+			Extension elexisEntryType = new Extension();
+			elexisEntryType.setUrl(EXTENSION_MEDICATION_ARTIKELSTAMMTYPE_URL);
+			TYPE entryType = ((IArtikelstammItem) localObject).getType();
+			if (((IArtikelstammItem) localObject).isInSLList()) {
+				elexisEntryType.setValue(new StringType(entryType.name() + "_SL"));
+			} else {
+				elexisEntryType.setValue(new StringType(entryType.name()));
+			}
+			medication.addExtension(elexisEntryType);
 		}
 
 		return Optional.of(medication);
