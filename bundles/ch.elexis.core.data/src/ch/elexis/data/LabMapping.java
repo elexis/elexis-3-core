@@ -12,15 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.types.LabItemTyp;
-import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.VersionInfo;
 
 public class LabMapping extends PersistentObject {
 
 	private static Logger logger = LoggerFactory.getLogger(LabMapping.class);
 
 	public static final String TABLENAME = "at_medevit_elexis_labmap"; //$NON-NLS-1$
-	public static final String VERSION = "1.0.0"; //$NON-NLS-1$
 
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 
@@ -33,38 +30,9 @@ public class LabMapping extends PersistentObject {
 
 	private static int importerLabItemsCreated = 0;
 
-	// @formatter:off
-	@Deprecated(forRemoval = true)
-	static final String create =
-			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
-			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$
-			"lastupdate BIGINT," + //$NON-NLS-1$
-			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
-
-			"itemname VARCHAR(255)," + //$NON-NLS-1$
-			"originid VARCHAR(128)," + //$NON-NLS-1$
-			"labitemid VARCHAR(128)," + //$NON-NLS-1$
-			"charge CHAR(1)" + //$NON-NLS-1$
-			");" + //$NON-NLS-1$
-			"CREATE INDEX loincmap1 ON " + TABLENAME + " (" + FLD_ORIGINID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"CREATE INDEX loincmap2 ON " + TABLENAME + " (" + FLD_ITEMNAME + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"INSERT INTO " + TABLENAME + " (ID," + FLD_LABITEMID + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-	// @formatter:on
-
 	static {
 		addMapping(TABLENAME, FLD_ITEMNAME, FLD_ORIGINID, FLD_LABITEMID, FLD_CHARGE);
 
-		if (!tableExists(TABLENAME)) {
-			createOrModifyTable(create);
-		} else {
-			LabMapping version = load(VERSIONID);
-			VersionInfo vi = new VersionInfo(version.get(FLD_LABITEMID));
-			if (vi.isOlder(VERSION)) {
-				// we should update eg. with createOrModifyTable(update.sql);
-				// And then set the new version
-				version.set(FLD_LABITEMID, VERSION);
-			}
-		}
 	}
 
 	public LabMapping() {

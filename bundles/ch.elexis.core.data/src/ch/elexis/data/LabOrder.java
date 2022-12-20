@@ -21,7 +21,6 @@ import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.TimeTool;
-import ch.rgw.tools.VersionInfo;
 
 public class LabOrder extends PersistentObject implements Comparable<LabOrder>, ILabOrder {
 
@@ -38,19 +37,6 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 
 	public static final String VERSIONID = "VERSION"; //$NON-NLS-1$
 	private static final String TABLENAME = "LABORDER"; //$NON-NLS-1$
-	public static final String VERSION = "1.3.0"; //$NON-NLS-1$
-	public static final String VERSION110 = "1.1.0"; //$NON-NLS-1$
-	public static final String VERSION120 = "1.2.0"; //$NON-NLS-1$
-	public static final String VERSION130 = "1.3.0"; //$NON-NLS-1$
-	@Deprecated(forRemoval = true)
-	private static final String UPD110 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
-			+ " ADD IF NOT EXISTS groupname VARCHAR(255);"; //$NON-NLS-1$
-	@Deprecated(forRemoval = true)
-	private static final String UPD120 = "ALTER TABLE " + TABLENAME //$NON-NLS-1$
-			+ " ADD IF NOT EXISTS observationtime VARCHAR(24);"; //$NON-NLS-1$
-	@Deprecated(forRemoval = true)
-	private static final String UPD130 = "CREATE INDEX IF NOT EXISTS laborder4 ON " + TABLENAME + " (" + FLD_ORDERID //$NON-NLS-1$ //$NON-NLS-2$
-			+ ");";//$NON-NLS-1$
 
 	// do not change order, as we save the ordinal to the db, only adding new state
 	// is allowed
@@ -71,54 +57,9 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		}
 	}
 
-	// @formatter:off
-	@Deprecated(forRemoval = true)
-	static final String create =
-			"CREATE TABLE " + TABLENAME + " (" + //$NON-NLS-1$ //$NON-NLS-2$
-			"ID VARCHAR(25) primary key, " + //$NON-NLS-1$
-			"lastupdate BIGINT," + //$NON-NLS-1$
-			"deleted CHAR(1) default '0'," + //$NON-NLS-1$
-
-			"userid VARCHAR(128)," + //$NON-NLS-1$
-			"mandant VARCHAR(128)," + //$NON-NLS-1$
-			"patient VARCHAR(128)," + //$NON-NLS-1$
-			"item VARCHAR(128)," + //$NON-NLS-1$
-			"result VARCHAR(128)," + //$NON-NLS-1$
-			"orderid VARCHAR(128)," + //$NON-NLS-1$
-			"groupname VARCHAR(255)," + //$NON-NLS-1$
-			"time VARCHAR(24)," + //$NON-NLS-1$
-			"observationtime VARCHAR(24)," + //$NON-NLS-1$
-			"state CHAR(1)" + //$NON-NLS-1$
-			");" + //$NON-NLS-1$
-			"CREATE INDEX laborder1 ON " + TABLENAME + " (" + FLD_TIME + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"CREATE INDEX laborder2 ON " + TABLENAME + " (" + FLD_MANDANT + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"CREATE INDEX laborder3 ON " + TABLENAME + " (" + FLD_PATIENT + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"CREATE INDEX laborder4 ON " + TABLENAME + " (" + FLD_ORDERID + ");" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"INSERT INTO " + TABLENAME + " (ID," + FLD_USER + ") VALUES (" + JdbcLink.wrap(VERSIONID) + "," + JdbcLink.wrap(VERSION) + ");"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-	// @formatter:on
-
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_USER, FLD_MANDANT, FLD_PATIENT, FLD_ITEM, FLD_RESULT, FLD_ORDERID,
 				FLD_GROUPNAME, FLD_TIME, FLD_STATE, FLD_OBSERVATIONTIME);
-
-		if (!tableExists(TABLENAME)) {
-			createOrModifyTable(create);
-		} else {
-			LabOrder version = load(VERSIONID);
-			VersionInfo vi = new VersionInfo(version.get(FLD_USER));
-			if (vi.isOlder(VERSION)) {
-				if (vi.isOlder(new VersionInfo(VERSION110))) {
-					createOrModifyTable(UPD110);
-				}
-				if (vi.isOlder(new VersionInfo(VERSION120))) {
-					createOrModifyTable(UPD120);
-				}
-				if (vi.isOlder(new VersionInfo(VERSION130))) {
-					createOrModifyTable(UPD130);
-				}
-				version.set(FLD_USER, VERSION);
-			}
-		}
 	}
 
 	@Override
