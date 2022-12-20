@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -13,9 +14,8 @@ import org.hl7.fhir.r4.model.StringType;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
-import at.medevit.ch.artikelstamm.ArtikelstammConstants.TYPE;
-import at.medevit.ch.artikelstamm.IArtikelstammItem;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
@@ -70,19 +70,36 @@ public class MedicationIArticleTransformer implements IFhirTransformer<Medicatio
 			medication.setAmount(medicationHelper.determineAmount(localObject));
 		}
 
-		if (localObject instanceof IArtikelstammItem) {
+		if (localObject.getTyp() == ArticleTyp.ARTIKELSTAMM) {
 			Extension elexisEntryType = new Extension();
 			elexisEntryType.setUrl(EXTENSION_MEDICATION_ARTIKELSTAMMTYPE_URL);
-			TYPE entryType = ((IArtikelstammItem) localObject).getType();
-			if (((IArtikelstammItem) localObject).isInSLList()) {
-				elexisEntryType.setValue(new StringType(entryType.name() + "_SL"));
-			} else {
-				elexisEntryType.setValue(new StringType(entryType.name()));
-			}
-			medication.addExtension(elexisEntryType);
+			getArtikelstammType(localObject).ifPresent(type -> {
+				elexisEntryType.setValue(new StringType(type));
+				medication.addExtension(elexisEntryType);
+			});
 		}
-
 		return Optional.of(medication);
+	}
+
+	private Optional<String> getArtikelstammType(IArticle localObject) {
+		try {
+			Method method = localObject.getClass().getMethod("getType", (Class[]) null);
+			Object type = method.invoke(localObject, (Object[]) null);
+			if (type instanceof Enum) {
+				method = localObject.getClass().getMethod("isInSLList", (Class[]) null);
+				Object isSL = method.invoke(localObject, (Object[]) null);
+				if (isSL instanceof Boolean) {
+					if ((Boolean) isSL) {
+						return Optional.of(((Enum<?>) type).name() + "_SL");
+					} else {
+						return Optional.of(((Enum<?>) type).name());
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerFactory.getLogger(getClass()).error("Error getting artikelstamm type", e);
+		}
+		return Optional.empty();
 	}
 
 	@Override
