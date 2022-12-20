@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.agenda.Area;
@@ -31,9 +32,9 @@ public class IAppointmentSlotAttributeMapper implements IdentifiableDomainResour
 	@Override
 	public void elexisToFhir(IAppointment elexis, Slot fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
-		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Slot.class, fhir, elexis);
+		FhirUtil.setVersionedIdPartLastUpdatedMeta(Slot.class, fhir, elexis);
 
-		fhir.getMeta().setLastUpdated(appointmentHelper.getLastUpdateAsDate(elexis.getLastupdate()).orElse(null));
+		fhir.getMeta().setLastUpdated(FhirUtil.getLastUpdateAsDate(elexis.getLastupdate()).orElse(null));
 
 		Area area = appointmentService.getAreaByNameOrId(elexis.getSchedule());
 		if (area != null) {

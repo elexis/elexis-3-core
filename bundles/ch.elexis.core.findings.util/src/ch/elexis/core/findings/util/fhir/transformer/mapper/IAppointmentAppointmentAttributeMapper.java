@@ -24,6 +24,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
@@ -53,7 +54,7 @@ public class IAppointmentAppointmentAttributeMapper
 	public void elexisToFhir(IAppointment localObject, Appointment appointment, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 
-		appointmentHelper.setVersionedIdPartLastUpdatedMeta(Appointment.class, appointment, localObject);
+		FhirUtil.setVersionedIdPartLastUpdatedMeta(Appointment.class, appointment, localObject);
 
 		// narrative
 		appointmentHelper.setNarrative(appointment, localObject.getSubjectOrPatient());

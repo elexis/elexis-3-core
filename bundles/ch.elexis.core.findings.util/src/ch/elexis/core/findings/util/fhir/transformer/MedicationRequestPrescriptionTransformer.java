@@ -31,7 +31,6 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.MedicamentCoding;
@@ -72,9 +71,10 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 	public Optional<MedicationRequest> getFhirObject(IPrescription localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		MedicationRequest fhirObject = new MedicationRequest();
+		FhirUtil.setVersionedIdPartLastUpdatedMeta(MedicationRequest.class, fhirObject, localObject);
+
 		MedicationRequestStatus statusEnum = MedicationRequestStatus.ACTIVE;
 
-		fhirObject.setId(new IdDt("MedicationRequest", localObject.getId()));
 		fhirObject.addIdentifier(getElexisObjectIdentifier(localObject));
 
 		fhirObject.setSubject(FhirUtil.getReference(localObject.getPatient()));

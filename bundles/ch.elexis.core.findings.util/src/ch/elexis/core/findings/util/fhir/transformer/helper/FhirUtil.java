@@ -1,8 +1,13 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Money;
 import org.hl7.fhir.r4.model.Reference;
 
@@ -14,6 +19,30 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 
 public class FhirUtil {
+
+	public static void setVersionedIdPartLastUpdatedMeta(Class<?> resourceClass, DomainResource domainResource,
+			Identifiable localObject) {
+		domainResource.setId(new IdDt(resourceClass.getSimpleName(), localObject.getId(),
+				Long.toString(localObject.getLastupdate())));
+		domainResource.getMeta().setLastUpdated(getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
+	}
+
+	public static Optional<Date> getLastUpdateAsDate(Long lastUpdate) {
+		if (lastUpdate != null) {
+			Date lastUpdateDate = Date.from(getLastUpdateAsZonedDateTime(lastUpdate).get().toInstant());
+			return Optional.of(lastUpdateDate);
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<ZonedDateTime> getLastUpdateAsZonedDateTime(Long lastUpdate) {
+		if (lastUpdate != null) {
+			ZonedDateTime zonedDateTime = Instant.ofEpochMilli(lastUpdate).atZone(ZoneId.systemDefault());
+			return Optional.of(zonedDateTime);
+
+		}
+		return Optional.empty();
+	}
 
 	public static Reference getReference(Identifiable identifiable) {
 		if (identifiable == null) {

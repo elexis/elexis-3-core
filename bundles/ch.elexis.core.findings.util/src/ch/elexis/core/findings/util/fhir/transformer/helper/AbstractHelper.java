@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -40,23 +39,6 @@ public class AbstractHelper {
 		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 	}
 
-	public Optional<ZonedDateTime> getLastUpdateAsZonedDateTime(Long lastUpdate) {
-		if (lastUpdate != null) {
-			ZonedDateTime zonedDateTime = Instant.ofEpochMilli(lastUpdate).atZone(ZoneId.systemDefault());
-			return Optional.of(zonedDateTime);
-
-		}
-		return Optional.empty();
-	}
-
-	public Optional<Date> getLastUpdateAsDate(Long lastUpdate) {
-		if (lastUpdate != null) {
-			Date lastUpdateDate = Date.from(getLastUpdateAsZonedDateTime(lastUpdate).get().toInstant());
-			return Optional.of(lastUpdateDate);
-		}
-		return Optional.empty();
-	}
-
 	public Reference getReference(String resourceType, Identifiable dbObject) {
 		return new Reference(new IdDt(resourceType, dbObject.getId()));
 	}
@@ -79,13 +61,6 @@ public class AbstractHelper {
 
 	public static void releaseLock(LockInfo lockInfo) {
 		LocalLockServiceHolder.get().releaseLock(lockInfo);
-	}
-
-	public void setVersionedIdPartLastUpdatedMeta(Class<?> resourceClass, DomainResource domainResource,
-			Identifiable localObject) {
-		domainResource.setId(new IdDt(resourceClass.getSimpleName(), localObject.getId(),
-				Long.toString(localObject.getLastupdate())));
-		domainResource.getMeta().setLastUpdated(getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
 	}
 
 	public void setNarrative(DomainResource domainResource, String text) {
