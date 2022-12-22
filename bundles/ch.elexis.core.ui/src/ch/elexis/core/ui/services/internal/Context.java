@@ -2,6 +2,7 @@ package ch.elexis.core.ui.services.internal;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -98,6 +99,7 @@ public class Context implements IContext {
 		return ret;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void setNamed(String name, Object object) {
 		if (object == null) {
@@ -106,7 +108,11 @@ public class Context implements IContext {
 			// object is already in the context do nothing otherwise loop happens
 			return;
 		} else {
-			context.put(name, object);
+			if (context.get(name) instanceof Consumer) {
+				((Consumer) context.get(name)).accept(object);
+			} else {
+				context.put(name, object);
+			}
 		}
 		if (eclipseContext != null) {
 			eclipseContext.set(name, object);

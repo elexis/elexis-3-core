@@ -130,6 +130,7 @@ public class ContextService implements IContextService, EventHandler {
 		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
 
 		registerCoreUiSuppliers();
+		elexisEventDispatcher.registerFallbackConsumer(this);
 	}
 
 	private void registerCoreUiSuppliers() {

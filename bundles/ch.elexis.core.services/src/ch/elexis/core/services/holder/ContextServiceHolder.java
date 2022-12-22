@@ -8,6 +8,8 @@ import ch.elexis.core.services.IContextService;
 @Component
 public class ContextServiceHolder {
 
+	public static String SELECTIONFALLBACK = "selection.fallback"; //$NON-NLS-1$
+
 	private static IContextService contextService;
 
 	@Reference
@@ -17,7 +19,7 @@ public class ContextServiceHolder {
 
 	public static IContextService get() {
 		if (contextService == null) {
-			throw new IllegalStateException("No IContextService available");
+			throw new IllegalStateException("No IContextService available"); //$NON-NLS-1$
 		}
 		return contextService;
 	}

@@ -32,11 +32,24 @@ public class NoPoUtil {
 	 * Load {@link PersistentObject} implementation for the provided
 	 * {@link Identifiable} using the {@link PersistentObjectFactory} and the
 	 * {@link IStoreToStringService}.
-	 *
+	 * 
 	 * @param identifiable
 	 * @return
 	 */
 	public static PersistentObject loadAsPersistentObject(Identifiable identifiable) {
+		return loadAsPersistentObject(identifiable, true);
+	}
+
+	/**
+	 * Load {@link PersistentObject} implementation for the provided
+	 * {@link Identifiable} using the {@link PersistentObjectFactory} and the
+	 * {@link IStoreToStringService}.
+	 * 
+	 * @param identifiable
+	 * @param throwException
+	 * @return
+	 */
+	public static PersistentObject loadAsPersistentObject(Identifiable identifiable, boolean throwException) {
 		if (identifiable != null) {
 			Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(identifiable);
 			if (storeToString.isPresent()) {
@@ -45,8 +58,10 @@ public class NoPoUtil {
 					return ret;
 				}
 			}
-			throw new IllegalStateException(
-					"Could not load [" + identifiable + "] [" + storeToString.orElse("?") + "] as PersistentObject");
+			if (throwException) {
+				throw new IllegalStateException("Could not load [" + identifiable + "] [" + storeToString.orElse("?")
+						+ "] as PersistentObject");
+			}
 		}
 		return null;
 	}
@@ -64,7 +79,7 @@ public class NoPoUtil {
 		if (identifiables != null && !identifiables.isEmpty()) {
 			List<T> ret = new ArrayList<>();
 			for (Identifiable identifiable : identifiables) {
-				ret.add((T) loadAsPersistentObject(identifiable));
+				ret.add((T) loadAsPersistentObject(identifiable, true));
 			}
 			return ret;
 		}
@@ -84,7 +99,7 @@ public class NoPoUtil {
 		if (identifiables != null && identifiables.length > 0) {
 			T[] ret = (T[]) Array.newInstance(type, identifiables.length);
 			for (int i = 0; i < identifiables.length; i++) {
-				ret[i] = (T) loadAsPersistentObject(identifiables[i]);
+				ret[i] = (T) loadAsPersistentObject(identifiables[i], true);
 			}
 			return ret;
 		}
