@@ -63,7 +63,8 @@ public class MedicationTableComposite extends Composite {
 				medicationComposite.setSelectedMedication(presc);
 				if (presc != null) {
 					IPrescription selectedObj = presc.getPrescription();
-					ContextServiceHolder.get().getRootContext().setTyped(selectedObj);
+					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							selectedObj);
 				} else {
 					ContextServiceHolder.get().getRootContext().removeTyped(IPrescription.class);
 				}

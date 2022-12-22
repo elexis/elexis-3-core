@@ -512,7 +512,8 @@ public class DocumentsView extends ViewPart {
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof ISickCertificate) {
-						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
+						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+								createdAuf);
 						// print
 						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null);
 						if (cmd != null) {

@@ -8,7 +8,7 @@ import ch.elexis.core.services.IContextService;
 @Component
 public class ContextServiceHolder {
 
-	public static String SELECTIONFALLBACK = "selection.fallback"; //$NON-NLS-1$
+	public static String SELECTIONFALLBACK = "elexiseventdispatcher.selection.fallback"; //$NON-NLS-1$
 
 	private static IContextService contextService;
 

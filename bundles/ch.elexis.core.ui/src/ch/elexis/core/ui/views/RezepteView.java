@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -216,7 +217,8 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof IRecipe) {
 					ContextServiceHolder.get().getRootContext()
-							.setTyped(event.getStructuredSelection().getFirstElement());
+							.setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+									event.getStructuredSelection().getFirstElement());
 				}
 			}
 		});

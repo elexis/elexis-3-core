@@ -82,7 +82,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
@@ -100,6 +99,7 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
@@ -285,7 +285,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
-					ContextServiceHolder.get().getRootContext().setTyped(selection.getFirstElement());
+					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							selection.getFirstElement());
 				}
 			}
 		});
