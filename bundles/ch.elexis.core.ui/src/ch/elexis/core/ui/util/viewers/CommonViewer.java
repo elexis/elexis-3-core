@@ -40,9 +40,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewSite;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.GenericObjectDragSource;
@@ -399,7 +400,13 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				if (StringUtils.isNotBlank(namedSelection)) {
 					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
 				} else {
-					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
+					// fallback to ElexisEventDispatcher
+					if (sel[0] instanceof Identifiable) {
+						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+								sel[0]);
+					} else {
+						ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
+					}
 				}
 			}
 		}
