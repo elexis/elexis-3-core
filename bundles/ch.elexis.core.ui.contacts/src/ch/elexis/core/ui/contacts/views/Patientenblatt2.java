@@ -105,6 +105,7 @@ import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.settings.UserSettings;
+import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
 import ch.elexis.core.ui.util.InputPanel;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.IStructuredSelectionResolver;
@@ -723,7 +724,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
-			txExpandable.add(tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI));
+			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI);
+			FilterNonPrintableModifyListener.addTo(text);
+			txExpandable.add(text);
 			ec.get(i).setData(KEY_DBFIELD, dfExpandable.get(i));
 			ec.get(i).addExpansionListener(new ExpansionAdapter() {
 				@Override
