@@ -11,7 +11,7 @@
 package ch.elexis.core.data.events;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -52,20 +52,18 @@ public class ElexisContext {
 	/**
 	 * stores the current valid selection
 	 */
-	private HashMap<Class<?>, IPersistentObject> currentSelection;
+	private LinkedHashMap<Class<?>, IPersistentObject> currentSelection;
 	/**
 	 * stores the transition selection, which will result in the new
 	 * {@link #currentSelection}
 	 */
-	private HashMap<Class<?>, IPersistentObject> newSelection;
-
-	private List<ElexisEvent> events = new ArrayList<>();
+	private LinkedHashMap<Class<?>, IPersistentObject> newSelection;
 
 	private Logger log = LoggerFactory.getLogger(ElexisContext.class);
 
 	public ElexisContext() {
-		currentSelection = new HashMap<Class<?>, IPersistentObject>();
-		newSelection = new HashMap<Class<?>, IPersistentObject>();
+		currentSelection = new LinkedHashMap<Class<?>, IPersistentObject>();
+		newSelection = new LinkedHashMap<Class<?>, IPersistentObject>();
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class ElexisContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized List<ElexisEvent> setSelection(Class<?> typeClass, IPersistentObject object) {
-		newSelection = (HashMap<Class<?>, IPersistentObject>) currentSelection.clone();
+		newSelection = (LinkedHashMap<Class<?>, IPersistentObject>) currentSelection.clone();
 
 		if (typeClass.equals(Patient.class)) {
 			setPatientSelection((Patient) object);
@@ -100,7 +98,7 @@ public class ElexisContext {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<ElexisEvent> determineChangeEvents() {
-		events.clear();
+		List<ElexisEvent> events = new ArrayList<>();
 		Set<Class<?>> keySet = newSelection.keySet();
 
 		for (Class<?> clazz : keySet) {
@@ -120,7 +118,7 @@ public class ElexisContext {
 			}
 		}
 
-		currentSelection = (HashMap<Class<?>, IPersistentObject>) newSelection.clone();
+		currentSelection = (LinkedHashMap<Class<?>, IPersistentObject>) newSelection.clone();
 
 		return events;
 	}
