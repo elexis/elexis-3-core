@@ -94,6 +94,7 @@ import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.util.FindingsServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
@@ -103,7 +104,6 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.DocumentStatus;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -582,7 +582,8 @@ public class DocumentsView extends ViewPart {
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof ISickCertificate) {
-						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
+						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+								createdAuf);
 						// print
 						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null); //$NON-NLS-1$
 						if (cmd != null) {

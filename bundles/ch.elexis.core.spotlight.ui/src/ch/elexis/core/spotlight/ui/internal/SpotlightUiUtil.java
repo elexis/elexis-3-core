@@ -25,6 +25,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
@@ -75,7 +76,7 @@ public class SpotlightUiUtil {
 		switch (category) {
 		case PATIENT:
 			IPatient patient = CoreModelServiceHolder.get().load(objectId, IPatient.class).orElse(null);
-			contextService.setActivePatient(patient);
+			contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, patient);
 			return true;
 		case DOCUMENT:
 			IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
@@ -105,8 +106,8 @@ public class SpotlightUiUtil {
 
 	private boolean handleEnter(IEncounter encounter) {
 		if (encounter != null) {
-			contextService.getRootContext().setTyped(encounter.getPatient());
-			contextService.getRootContext().setTyped(encounter);
+			contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, encounter.getPatient());
+			contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, encounter);
 			partService.showPart("ch.elexis.Konsdetail", PartState.ACTIVATE);
 			return true;
 		}
@@ -118,7 +119,7 @@ public class SpotlightUiUtil {
 			IContact contact = appointment.getContact();
 			if (contact != null) {
 				IPatient patient = CoreModelServiceHolder.get().load(contact.getId(), IPatient.class).orElse(null);
-				contextService.setActivePatient(patient);
+				contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, patient);
 				return true;
 			}
 		}
@@ -132,7 +133,7 @@ public class SpotlightUiUtil {
 			if (patient == null) {
 				System.out.println("Could not load patient " + patientId);
 			}
-			contextService.setActivePatient(patient);
+			contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, patient);
 			return patient != null;
 		} else if (string.startsWith(ACTION_SHOW_BALANCE)) {
 			return performActionShowBalance(string.substring(ACTION_SHOW_BALANCE.length()));
