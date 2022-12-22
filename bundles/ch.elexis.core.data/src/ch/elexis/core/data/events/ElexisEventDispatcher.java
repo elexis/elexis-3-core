@@ -15,31 +15,29 @@ package ch.elexis.core.data.events;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.e4.core.di.annotations.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -73,7 +71,7 @@ public final class ElexisEventDispatcher implements Runnable {
 
 	private final ListenerList<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
-	private final PriorityQueue<ElexisEvent> eventQueue;
+	private final Queue<ElexisEvent> eventQueue;
 	private final ArrayList<ElexisEvent> eventCopy;
 	private transient boolean bStop = false;
 
@@ -94,7 +92,7 @@ public final class ElexisEventDispatcher implements Runnable {
 
 	private ElexisEventDispatcher() {
 		listeners = new ListenerList<ElexisEventListener>();
-		eventQueue = new PriorityQueue<ElexisEvent>(50);
+		eventQueue = new ConcurrentLinkedQueue<ElexisEvent>();
 		eventCopy = new ArrayList<ElexisEvent>(50);
 
 		elexisUIContext = new ElexisContext();
@@ -173,6 +171,9 @@ public final class ElexisEventDispatcher implements Runnable {
 	 */
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
+			log.info("EVENT -> " + ee);
+//			Throwable trace = new Throwable().fillInStackTrace();
+//			log.info("TRACE ", trace);
 			if (blockEventTypes != null && blockEventTypes.contains(ee.getType())) {
 				continue;
 			}
@@ -195,9 +196,9 @@ public final class ElexisEventDispatcher implements Runnable {
 				synchronized (eventQueue) {
 					eventsToThrow = elexisUIContext.setSelection(ee.getObjectClass(),
 							(eventType == ElexisEvent.EVENT_SELECTED) ? ee.getObject() : null);
-
 					for (ElexisEvent elexisEvent : eventsToThrow) {
 						removeExisting(elexisEvent);
+						log.info("EVENT OFFER -> " + elexisEvent);
 						eventQueue.offer(elexisEvent);
 					}
 				}
@@ -256,6 +257,22 @@ public final class ElexisEventDispatcher implements Runnable {
 	 */
 	public static IPersistentObject getSelected(final Class<?> template) {
 		return getInstance().elexisUIContext.getSelected(template);
+	}
+
+	/**
+	 * inform the system that an object has been selected, fallback to context
+	 * service if {@link Identifiable} could not be resolved to
+	 * {@link PersistentObject}.
+	 * 
+	 * @param identifiable
+	 */
+	public static void fireSelectionEvent(Identifiable identifiable) {
+		PersistentObject po = NoPoUtil.loadAsPersistentObject(identifiable, false);
+		if (po != null) {
+			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
+		} else {
+			ContextServiceHolder.get().getRootContext().setTyped(identifiable);
+		}
 	}
 
 	/**
@@ -461,21 +478,16 @@ public final class ElexisEventDispatcher implements Runnable {
 		void endCatchEvent(ElexisEvent ee, ElexisEventListener listener);
 	}
 
-	@Optional
-	@Inject
-	void activePatient(IPatient patient) {
-		fire(new ElexisEvent(Patient.load(patient.getId()), Patient.class, ElexisEvent.EVENT_SELECTED));
-	}
+	public void registerFallbackConsumer(IContextService contextService) {
+		contextService.getRootContext().setNamed(ch.elexis.core.services.holder.ContextServiceHolder.SELECTIONFALLBACK,
+				new Consumer<Identifiable>() { // $NON-NLS-1$
 
-	@Optional
-	@Inject
-	void activeCoverage(ICoverage coverage) {
-		fire(new ElexisEvent(Fall.load(coverage.getId()), Fall.class, ElexisEvent.EVENT_SELECTED));
-	}
-
-	@Optional
-	@Inject
-	void activeEncounter(IEncounter encounter) {
-		fire(new ElexisEvent(Konsultation.load(encounter.getId()), Konsultation.class, ElexisEvent.EVENT_SELECTED));
+			@Override
+			public void accept(Identifiable identifiable) {
+				if (identifiable != null) {
+					fireSelectionEvent(identifiable);
+				}
+			}
+		});
 	}
 }
