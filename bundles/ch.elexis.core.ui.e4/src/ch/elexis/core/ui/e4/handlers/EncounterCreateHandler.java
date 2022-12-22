@@ -18,6 +18,7 @@ import ch.elexis.core.services.IBillingSystemService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.dialog.UserDialog;
 
@@ -99,7 +100,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 
 		IEncounter enounter = new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, mandator).buildAndSave();
 		encounterService.addDefaultDiagnosis(enounter);
-		contextService.getRootContext().setTyped(enounter);
+		contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, enounter);
 	}
 
 }

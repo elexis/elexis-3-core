@@ -211,7 +211,8 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ContextServiceHolder.get().getRootContext().setTyped(getSelection());
+				ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+						(getSelection()));
 			}
 		});
 
