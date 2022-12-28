@@ -267,4 +267,9 @@ public class ElexisServerService implements IElexisServerService {
 		return connectionStatus;
 	}
 
+	@Override
+	public String getConnectionUrl() {
+		return restUrl;
+	}
+
 }
