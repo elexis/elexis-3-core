@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
-import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
@@ -82,12 +81,11 @@ public class LockStatusDialog extends TitleAreaDialog {
 		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid()); //$NON-NLS-1$
 
 		Label lblLockStatus = new Label(container, SWT.NONE);
-		ConnectionStatus connectinStatus = ElexisServerServiceHolder.get().getConnectionStatus();
+		ConnectionStatus connectionStatus = ElexisServerServiceHolder.get().getConnectionStatus();
 		StringBuilder statusString = new StringBuilder();
-		statusString.append("Lock-Service: " + connectinStatus.name()); //$NON-NLS-1$
-		if (connectinStatus != ConnectionStatus.STANDALONE) {
-			statusString
-					.append(" @ " + System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL)); //$NON-NLS-1$
+		statusString.append("Lock-Service: " + connectionStatus.name()); //$NON-NLS-1$
+		if (connectionStatus != ConnectionStatus.STANDALONE) {
+			statusString.append(" @ " + ElexisServerServiceHolder.get().getConnectionUrl()); //$NON-NLS-1$
 		}
 		lblLockStatus.setText(statusString.toString());
 

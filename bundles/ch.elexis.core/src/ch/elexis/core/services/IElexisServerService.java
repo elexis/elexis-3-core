@@ -19,7 +19,7 @@ public interface IElexisServerService {
 		STANDALONE,
 		/** Connected to an ES, and connection is live */
 		REMOTE,
-		/** Connected to an ES, but connection */
+		/** Connected to an ES, but connection is lost */
 		LOCAL
 	}
 
@@ -110,8 +110,14 @@ public interface IElexisServerService {
 	public boolean validateElexisServerConnection();
 
 	/**
-	 *
-	 * @return
+	 * @return the current connection status
 	 */
 	public ConnectionStatus getConnectionStatus();
+
+	/**
+	 * @return the url of the server connected to (only if
+	 *         {@link ConnectionStatus#LOCAL} or {@link ConnectionStatus#REMOTE}
+	 *         else <code>null</code>)
+	 */
+	public String getConnectionUrl();
 }
