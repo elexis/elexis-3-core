@@ -16,8 +16,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.equinox.console.completion.common.Completer;
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
 import org.slf4j.Logger;
@@ -32,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * treated same.
  *
  */
-public abstract class AbstractConsoleCommandProvider implements CommandProvider {
+public abstract class AbstractConsoleCommandProvider implements CommandProvider, Completer {
 
 	public final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -203,19 +205,8 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		help.append(StringUtils.LF);
 	}
 
-	public String getHelp(String... sub) {
-		StringBuilder sb = new StringBuilder();
-		if (sub == null) {
-			return printOverviewHelp();
-		}
-		if (StringUtils.isBlank(sub[0])) {
-			return StringUtils.EMPTY;
-		}
+	private Set<String> getSubCommands(String... sub) {
 		String[] methodSignatures = methods.keySet().toArray(new String[] {});
-
-		sb.append(StringUtils.join(sub, StringUtils.SPACE));
-		sb.append(StringUtils.SPACE);
-
 		Set<String> relevant = new HashSet<>();
 		for (int i = 0; i < methodSignatures.length; i++) {
 			String key = methodSignatures[i];
@@ -229,7 +220,22 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 				relevant.add(asList.get(0));
 			}
 		}
+		return relevant;
+	}
 
+	public String getHelp(String... sub) {
+		StringBuilder sb = new StringBuilder();
+		if (sub == null) {
+			return printOverviewHelp();
+		}
+		if (StringUtils.isBlank(sub[0])) {
+			return StringUtils.EMPTY;
+		}
+
+		sb.append(StringUtils.join(sub, StringUtils.SPACE));
+		sb.append(StringUtils.SPACE);
+
+		Set<String> relevant = getSubCommands(sub);
 		if (relevant.isEmpty()) {
 			return "Sub/Command not found: " + StringUtils.join(sub, StringUtils.SPACE);
 		}
@@ -254,6 +260,18 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider 
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public Map<String, Integer> getCandidates(String buffer, int cursor) {
+		Set<String> help = getSubCommands(buffer.split(" "));
+		TreeSet<String> helpSorted = new TreeSet<String>(help);
+
+		Map<String, Integer> map = new HashMap<>();
+		for (String s : helpSorted) {
+			map.put(s, buffer.length());
+		}
+		return map;
 	}
 
 	private String buildParamsBNFString(Parameter[] params) {

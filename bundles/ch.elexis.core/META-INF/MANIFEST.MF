@@ -10,6 +10,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.20.100";visibility:=reexport,
  org.eclipse.osgi.services;bundle-version="3.10.0";visibility:=reexport,
+ org.eclipse.equinox.console;bundle-version="1.4.500";visibility:=reexport,
  org.slf4j.api;bundle-version="1.7.30";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.23.0";visibility:=reexport,
  ch.elexis.core;visibility:=reexport,

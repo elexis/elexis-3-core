@@ -2,6 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="ch.elexis.core.console.internal.ConsoleCommandPovider">
    <service>
       <provide interface="org.eclipse.osgi.framework.console.CommandProvider"/>
+      <provide interface="org.eclipse.equinox.console.completion.common.Completer"/>
    </service>
    <implementation class="ch.elexis.core.console.internal.ConsoleCommandPovider"/>
 </scr:component>
