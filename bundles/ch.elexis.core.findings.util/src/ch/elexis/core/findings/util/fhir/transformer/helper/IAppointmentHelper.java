@@ -17,11 +17,7 @@ import ch.elexis.core.time.TimeUtil;
 public class IAppointmentHelper extends AbstractHelper {
 
 	public String getDescription(IAppointment localObject) {
-		String grund = localObject.getReason();
-		if (grund == null || grund.length() < 1) {
-			return localObject.getType();
-		}
-		return grund;
+		return localObject.getReason();
 	}
 
 	/**
