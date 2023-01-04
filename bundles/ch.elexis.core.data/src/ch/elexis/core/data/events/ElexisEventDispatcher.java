@@ -67,7 +67,7 @@ import ch.elexis.data.PersistentObject;
  * @since 3.8 must explicitly {@link #start()} queue execution
  */
 public final class ElexisEventDispatcher implements Runnable {
-	private Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
+	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
 
 	private final ListenerList<ElexisEventListener> listeners;
 	private static ElexisEventDispatcher theInstance;
@@ -271,6 +271,7 @@ public final class ElexisEventDispatcher implements Runnable {
 		if (po != null) {
 			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
 		} else {
+			log.info("Could not get PersistentObject for [" + identifiable + "]");
 			ContextServiceHolder.get().getRootContext().setTyped(identifiable);
 		}
 	}
@@ -482,12 +483,13 @@ public final class ElexisEventDispatcher implements Runnable {
 		contextService.getRootContext().setNamed(ch.elexis.core.services.holder.ContextServiceHolder.SELECTIONFALLBACK,
 				new Consumer<Identifiable>() { // $NON-NLS-1$
 
-			@Override
-			public void accept(Identifiable identifiable) {
-				if (identifiable != null) {
-					fireSelectionEvent(identifiable);
-				}
-			}
-		});
+					@Override
+					public void accept(Identifiable identifiable) {
+						log.info("Fallback Event consumer for [" + identifiable + "]");
+						if (identifiable != null) {
+							fireSelectionEvent(identifiable);
+						}
+					}
+				});
 	}
 }
