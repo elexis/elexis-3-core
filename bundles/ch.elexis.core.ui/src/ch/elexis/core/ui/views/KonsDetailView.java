@@ -212,7 +212,6 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	void activePatient(@Optional IPatient patient) {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
-				LoggerFactory.getLogger(getClass()).info("ActivePatient [" + patient + "]");
 				actPat = null; // make sure patient will be updated
 				setPatient(patient);
 			});
@@ -256,15 +255,12 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				if (encounter != null) {
-					LoggerFactory.getLogger(getClass())
-							.info("SelectedEncounter [" + encounter + "] of [" + encounter.getPatient() + "]");
 					// ElexisEvent.EVENT_SELECTED
 					IEncounter deselectedKons = actEncounter;
 					setKons(encounter);
 					releaseAndRefreshLock(deselectedKons);
 					setKons(encounter);
 				} else {
-					LoggerFactory.getLogger(getClass()).info("DeselectEncounter [" + actEncounter + "]");
 					// ElexisEvent.EVENT_DESELECTED
 					IEncounter deselectedKons = actEncounter;
 					setKons(null);

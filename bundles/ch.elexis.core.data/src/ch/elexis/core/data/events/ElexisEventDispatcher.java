@@ -170,7 +170,6 @@ public final class ElexisEventDispatcher implements Runnable {
 	 */
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
-			log.info("EVENT -> " + ee);
 //			Throwable trace = new Throwable().fillInStackTrace();
 //			log.info("TRACE ", trace);
 			if (blockEventTypes != null && blockEventTypes.contains(ee.getType())) {
@@ -197,7 +196,6 @@ public final class ElexisEventDispatcher implements Runnable {
 							(eventType == ElexisEvent.EVENT_SELECTED) ? ee.getObject() : null);
 					for (ElexisEvent elexisEvent : eventsToThrow) {
 						removeExisting(elexisEvent);
-						log.info("EVENT OFFER -> " + elexisEvent);
 						eventQueue.offer(elexisEvent);
 					}
 				}
@@ -484,7 +482,6 @@ public final class ElexisEventDispatcher implements Runnable {
 
 					@Override
 					public void accept(Identifiable identifiable) {
-						log.info("Fallback Event consumer for [" + identifiable + "]");
 						if (identifiable != null) {
 							fireSelectionEvent(identifiable);
 						}
