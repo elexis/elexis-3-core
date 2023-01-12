@@ -18,7 +18,7 @@ import ch.elexis.core.model.ICodeElement;
 public interface ICodeElementService {
 
 	public enum CodeElementTyp {
-		SERVICE, DIAGNOSE, ARTICLE, CONFIG
+		SERVICE, DIAGNOSE, ARTICLE, CONFIG, USERCONFIG
 	}
 
 	public enum ContextKeys {
