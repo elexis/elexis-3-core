@@ -35,23 +35,9 @@ public class IAppointmentHelper extends AbstractHelper {
 		Extension statusExtension = new Extension("state", new StringType(state));
 		extension.addExtension(statusExtension);
 
-		// see ch.elexis.agenda.preferences.PreferenceConstants
-		String color = configService.getActiveUserContact("agenda/farben/status/" + state, null);
-		if (color != null) {
-			Extension ucc = new Extension("status-user-configured-color", new StringType("#" + color));
-			extension.addExtension(ucc);
-		}
-
 		String type = source.getType();
 		Extension typeExtension = new Extension("type", new StringType(type));
 		extension.addExtension(typeExtension);
-
-		// see ch.elexis.agenda.preferences.PreferenceConstants
-		color = configService.getActiveUserContact("agenda/farben/typ/" + type, null);
-		if (color != null) {
-			Extension ucc = new Extension("type-user-configured-color", new StringType("#" + color));
-			extension.addExtension(ucc);
-		}
 
 		target.getExtension().add(extension);
 	}
