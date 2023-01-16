@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -236,5 +238,23 @@ public class CoverageService implements ICoverageService {
 			}
 		}
 		return keys;
+	}
+
+	@Override
+	public Optional<IEncounter> getLatestEncounter(ICoverage coverage) {
+		List<IEncounter> encounters = coverage.getEncounters();
+		if (encounters != null && !encounters.isEmpty()) {
+			if (encounters.size() > 1) {
+				Collections.sort(encounters, (l, r) -> {
+					int ret = r.getDate().compareTo(l.getDate());
+					if (ret == 0) {
+						ret = r.getTimeStamp().compareTo(l.getTimeStamp());
+					}
+					return ret;
+				});
+			}
+			return Optional.of(encounters.get(0));
+		}
+		return Optional.empty();
 	}
 }

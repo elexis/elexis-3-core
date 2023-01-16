@@ -19,6 +19,8 @@ public class Context implements IContext {
 
 	private IEclipseContext eclipseContext;
 
+	private TypedModifier typedModifier;
+
 	public Context() {
 		this(null, "root"); //$NON-NLS-1$
 	}
@@ -26,6 +28,7 @@ public class Context implements IContext {
 	public Context(Context parent, String name) {
 		context = new ConcurrentHashMap<>();
 		this.parent = parent;
+		this.typedModifier = new TypedModifier(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -40,6 +43,10 @@ public class Context implements IContext {
 
 	@Override
 	public void setTyped(Object object) {
+		setTyped(object, false);
+	}
+
+	protected void setTyped(Object object, boolean ignoreModifier) {
 		if (object != null) {
 			if (object instanceof IUser) {
 				// also set active user contact
@@ -62,6 +69,9 @@ public class Context implements IContext {
 				} else {
 					eclipseContext.set(object.getClass().getName(), object);
 				}
+			}
+			if (typedModifier != null && !ignoreModifier) {
+				typedModifier.modifyFor(object);
 			}
 		} else {
 			throw new IllegalArgumentException("object must not be null, use #removeTyped"); //$NON-NLS-1$

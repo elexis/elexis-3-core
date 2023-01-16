@@ -400,11 +400,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				if (StringUtils.isNotBlank(namedSelection)) {
 					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
 				} else {
-					// fallback to ElexisEventDispatcher
 					if (sel[0] instanceof Identifiable) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-								sel[0]);
-					} else {
 						ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 					}
 				}

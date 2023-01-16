@@ -1,7 +1,10 @@
 package ch.elexis.core.services;
 
+import java.util.Optional;
+
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 
 public interface ICoverageService {
 
@@ -77,4 +80,11 @@ public interface ICoverageService {
 	 * @return
 	 */
 	public ICoverage createCopy(ICoverage coverage);
+
+	/**
+	 * Finds the last non deleted {@link IEncounter} of the coverage.
+	 *
+	 * @return
+	 */
+	public Optional<IEncounter> getLatestEncounter(ICoverage coverage);
 }
