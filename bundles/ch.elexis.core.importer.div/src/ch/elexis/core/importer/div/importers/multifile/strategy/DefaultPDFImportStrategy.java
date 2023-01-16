@@ -224,8 +224,10 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		if (existing.isEmpty()) {
 			IDocument document = OmnivoreDocumentStoreServiceHolder.get().createDocument(patient.getId(), title,
 					iCategory.getName());
+			String extension = FileTool.getExtension(fileHandle.getName());
 			document.setCreated(dateTime.getTime());
-			document.setExtension(FileTool.getExtension(fileHandle.getName()));
+			document.setExtension(extension);
+			document.setMimeType(extension.toLowerCase());
 			document.setKeywords(keywords);
 			try (InputStream is = fileHandle.openInputStream()) {
 				OmnivoreDocumentStoreServiceHolder.get().saveDocument(document, is);
