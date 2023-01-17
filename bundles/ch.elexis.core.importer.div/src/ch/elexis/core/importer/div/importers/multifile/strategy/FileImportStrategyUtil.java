@@ -27,7 +27,10 @@ public class FileImportStrategyUtil {
 			// we are already in an import result subdirectory, switch to parent
 			baseDir = fileHandle.getParent().getParent();
 		}
-
-		return FileUtil.moveToDir(fileHandle, baseDir.subDir(ok ? DIRECTORY_NAME_ARCHIVE : DIRECTORY_NAME_ON_ERROR));
+		IVirtualFilesystemHandle subDir = baseDir.subDir(ok ? DIRECTORY_NAME_ARCHIVE : DIRECTORY_NAME_ON_ERROR);
+		if (!subDir.exists()) {
+			subDir.mkdir();
+		}
+		return FileUtil.moveToDir(fileHandle, subDir);
 	}
 }
