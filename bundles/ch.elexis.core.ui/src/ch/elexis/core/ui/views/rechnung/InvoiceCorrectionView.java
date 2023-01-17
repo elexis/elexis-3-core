@@ -26,6 +26,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -81,6 +82,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -97,6 +99,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -117,7 +120,6 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
@@ -196,18 +198,30 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		}
 	};
 
-	private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
-		public void runInUi(ElexisEvent ev) {
-			if (actualInvoice != null) {
-				ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
-			} else {
-				reload(null);
-			}
+	private void adaptForUser(IUser user) {
+		if (actualInvoice != null) {
+			ElexisEventDispatcher.getInstance()
+					.fire(new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+		} else {
+			reload(null);
 		}
-	};
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	private void reloadSameInvoice(Rechnung invoiceToReload) {
 		if (actualInvoice != null && invoiceToReload != null
@@ -252,7 +266,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		parent.setLayout(new GridLayout(1, false));
 		invoiceComposite = new InvoiceComposite(parent);
 		invoiceComposite.createComponents(invoiceCorrectionDTO);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_rn);
 		Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 		if (selected != null) {
 			reload(selected);
@@ -265,7 +279,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
 			LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
 		}
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn);
 		super.dispose();
 	}
 

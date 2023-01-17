@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
@@ -29,12 +28,17 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -52,6 +56,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
@@ -68,6 +73,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -84,6 +90,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
@@ -97,6 +104,7 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.controls.IIdentifiableModifiableListComposite;
 import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -106,7 +114,6 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
@@ -244,14 +251,25 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 	};
 
-	private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			display();
-		}
-	};
+	private void adaptForUser(IUser user) {
+		display();
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	private final ElexisEventListenerImpl eeli_patient = new ElexisUiEventListenerImpl(Patient.class,
 			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
@@ -669,6 +687,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 
 		GlobalEventDispatcher.addActivationListener(this, site.getPart());
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	private void saveExpandedState(String field, boolean state) {
@@ -713,13 +732,13 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Override
 	public void visible(boolean mode) {
 		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user, eeli_patient);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_patient);
 			Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 			if (selected != null) {
 				doSelect(selected);
 			}
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user, eeli_patient);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_patient);
 		}
 	}
 

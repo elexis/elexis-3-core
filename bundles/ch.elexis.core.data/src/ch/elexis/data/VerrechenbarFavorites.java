@@ -1,17 +1,14 @@
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICodeElementBlock;
@@ -24,19 +21,6 @@ public class VerrechenbarFavorites {
 	public static final String USER_CFG_FAVORITES = "verrechenbar/favoriten";
 	private static List<Favorite> favorites;
 	private static Logger log = LoggerFactory.getLogger(VerrechenbarFavorites.class);
-
-	private static ElexisEventListenerImpl eeli_pat = new ElexisEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
-
-		public void run(ElexisEvent ev) {
-			log.debug("User changed, nulling favorites.");
-			favorites = null;
-		};
-	};
-
-	static {
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
-	}
 
 	/**
 	 *
@@ -192,8 +176,13 @@ public class VerrechenbarFavorites {
 		 *
 		 * @return
 		 */
-		public Optional<Identifiable> getObject() {
+		public java.util.Optional<Identifiable> getObject() {
 			return StoreToStringServiceHolder.get().loadFromString(storeToString);
 		}
+	}
+
+	public static void reset() {
+		favorites = null;
+		ElexisEventDispatcher.reload(Favorite.class);
 	}
 }

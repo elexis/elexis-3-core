@@ -17,38 +17,52 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
 
 public class FallDetailView extends ViewPart {
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$
 	FallDetailBlatt2 fdb;
 
-	private final ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			fdb.reloadBillingSystemsMenu();
-		}
-	};
+	private void adaptForUser(IUser user) {
+		fdb.reloadBillingSystemsMenu();
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	private final ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 		@Override
@@ -96,7 +110,7 @@ public class FallDetailView extends ViewPart {
 		fdb = new FallDetailBlatt2(parent);
 		fdb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		fdb.setUnlocked(false);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_user);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_fall);
 	}
 
 	@Override
@@ -107,7 +121,7 @@ public class FallDetailView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_user);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_fall);
 		super.dispose();
 	}
 

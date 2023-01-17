@@ -19,6 +19,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -68,6 +69,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -81,6 +83,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -104,7 +107,6 @@ import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Reminder;
@@ -339,14 +341,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	};
 
-	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
-		public void runInUi(ElexisEvent ev) {
-			refreshUserConfiguration();
-			refresh();
-		}
-	};
+	private void adaptForUser(IUser user) {
+		refreshUserConfiguration();
+		refresh();
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	private ElexisEventListener eeli_reminder = new ElexisUiEventListenerImpl(Reminder.class,
 			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_UPDATE) {
@@ -490,12 +504,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
 		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_reminder);
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_reminder);
 	}
 
 	private void updateViewerSelection(StructuredSelection selection) {

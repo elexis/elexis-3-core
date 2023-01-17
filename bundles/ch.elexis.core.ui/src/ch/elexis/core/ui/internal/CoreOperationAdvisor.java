@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -45,7 +43,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.data.Anwender;
 
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
@@ -179,8 +176,6 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-			ElexisEventDispatcher.getInstance().fire(
-					new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();

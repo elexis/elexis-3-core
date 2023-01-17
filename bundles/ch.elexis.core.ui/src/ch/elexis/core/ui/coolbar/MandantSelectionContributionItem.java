@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,10 +39,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -91,15 +97,34 @@ public class MandantSelectionContributionItem {
 		}
 	};
 
-	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
-		public void runInUi(ElexisEvent ev) {
-			if (item != null) {
-				Anwender anwender = (Anwender) ev.getObject();
-				adaptForAnwender(anwender);
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		if (item != null) {
+			Display.getDefault().asyncExec(() -> {
+				adaptForUser(user);
+			});
+		}
+	}
+
+	@Inject
+	void changedUser(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		if (item != null) {
+			Display.getDefault().asyncExec(() -> {
+				adaptForUser(user);
+			});
+		}
+	}
+
+	private void adaptForUser(IUser user) {
+		if (user == null) {
+			user = ContextServiceHolder.get().getActiveUser().orElse(null);
+			if (user == null) {
+				return;
 			}
-		};
-	};
+		}
+		adaptForAnwender(Anwender.load(user.getAssignedContact().getId()));
+	}
 
 	private void adaptForAnwender(Anwender anwender) {
 		if (anwender == null) {
@@ -117,7 +142,7 @@ public class MandantSelectionContributionItem {
 	}
 
 	public MandantSelectionContributionItem() {
-		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant, eeli_user);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
 	}
 
 	@PostConstruct
@@ -176,7 +201,7 @@ public class MandantSelectionContributionItem {
 			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
 		}
 
-		adaptForAnwender(null);
+		adaptForUser(null);
 
 		toolbar.pack();
 		return toolbar;
@@ -223,6 +248,6 @@ public class MandantSelectionContributionItem {
 
 	@PreDestroy
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant, eeli_user);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant);
 	}
 }

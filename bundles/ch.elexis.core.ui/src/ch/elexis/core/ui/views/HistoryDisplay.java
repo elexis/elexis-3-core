@@ -12,34 +12,41 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.HistoryLoader;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.PagingComposite;
 import ch.elexis.data.Konsultation;
@@ -53,7 +60,7 @@ import ch.elexis.data.Konsultation;
  * @author Gerry
  *
  */
-public class HistoryDisplay extends Composite implements BackgroundJobListener, ElexisEventListener {
+public class HistoryDisplay extends Composite implements BackgroundJobListener {
 	FormText text;
 	ArrayList<IEncounter> lKons;
 	private HistoryLoader loader;
@@ -114,12 +121,11 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 			}
 
 		});
-		ElexisEventDispatcher.getInstance().addListeners(this);
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(this);
 		scrolledComposite.dispose();
 	}
 
@@ -254,23 +260,25 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener, 
 		});
 	}
 
-	@Override
-	public void catchElexisEvent(ElexisEvent ev) {
-		UiDesk.asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				if (text != null && (!text.isDisposed())) {
-					text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-			}
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
 		});
 	}
 
-	private final ElexisEvent eetemplate = new ElexisEvent(null, null, ElexisEvent.EVENT_USER_CHANGED);
+	private void adaptForUser(IUser user) {
+		if (text != null && (!text.isDisposed())) {
+			text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+		}
+	}
 
-	@Override
-	public ElexisEvent getElexisEventFilter() {
-		return eetemplate;
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
 	}
 }

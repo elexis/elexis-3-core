@@ -83,7 +83,7 @@ public class ContextService implements IContextService, EventHandler {
 	@Activate
 	public void activate() {
 		logger.info("ACTIVATE"); //$NON-NLS-1$
-		root = new Context();
+		root = new Context(this);
 		contexts = new ConcurrentHashMap<>();
 		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
 
@@ -151,7 +151,7 @@ public class ContextService implements IContextService, EventHandler {
 
 	@Override
 	public IContext createNamedContext(String name) {
-		Context context = new Context(root, name);
+		Context context = new Context(root, name, this);
 		contexts.put(name, context);
 		return context;
 	}

@@ -109,9 +109,20 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private boolean created = false;
 
+	@Optional
 	@Inject
-	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		if (created && user != null) {
+	void activeUser(IUser user) {
+		if (created) {
+			Display.getDefault().asyncExec(() -> {
+				userChanged();
+			});
+		}
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				userChanged();
 			});

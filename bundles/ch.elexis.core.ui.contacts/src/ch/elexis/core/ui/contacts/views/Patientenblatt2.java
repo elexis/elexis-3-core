@@ -30,9 +30,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -54,6 +58,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -71,6 +76,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.events.ElexisEvent;
@@ -83,6 +89,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -105,6 +112,7 @@ import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.settings.UserSettings;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
 import ch.elexis.core.ui.util.InputPanel;
 import ch.elexis.core.ui.util.LabeledInputField;
@@ -119,7 +127,6 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
@@ -193,13 +200,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	};
 
-	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
-		public void runInUi(ElexisEvent ev) {
-			setPatient(ElexisEventDispatcher.getSelectedPatient());
-			recreateUserpanel();
-		}
-	};
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
+
+	private void adaptForUser(IUser user) {
+		recreateUserpanel();
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
 			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Allergies,
@@ -790,7 +809,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
 		viewmenu.createToolbar(copySelectedAddressesToClipboardAction);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat, eeli_user);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat);
+		CoreUiUtil.injectServicesWithContext(this);
 		tk.paintBordersFor(form.getBody());
 	}
 
@@ -814,7 +834,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat, eeli_user);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat);
 		super.dispose();
 	}
 

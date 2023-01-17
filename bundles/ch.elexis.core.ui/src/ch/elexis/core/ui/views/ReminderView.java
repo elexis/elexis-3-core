@@ -26,6 +26,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -61,6 +62,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -70,6 +72,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
@@ -183,20 +186,30 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	};
 
-	private ElexisEventListener eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			refreshUserConfiguration();
+	private void adaptForUser(IUser user) {
+		refreshUserConfiguration();
 
-			Control control = cv.getViewerWidget().getControl();
-			if (control != null && !control.isDisposed() && control.isVisible()) {
-				cv.notify(CommonViewer.Message.update);
-			}
-
+		Control control = cv.getViewerWidget().getControl();
+		if (control != null && !control.isDisposed() && control.isVisible()) {
+			cv.notify(CommonViewer.Message.update);
 		}
-	};
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
 
 	public ReminderView() {
 		qbe = new Query<>(Reminder.class, null, null, Reminder.TABLENAME, new String[] { Reminder.FLD_DUE,
@@ -304,7 +317,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 		});
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user, eeli_reminder);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_reminder);
 	}
 
 	private List<IContributionItem> createActionList() {
@@ -367,7 +380,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user, eeli_reminder);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_reminder);
 		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyOwnDueReminderToggleAction.isChecked());
 	}
