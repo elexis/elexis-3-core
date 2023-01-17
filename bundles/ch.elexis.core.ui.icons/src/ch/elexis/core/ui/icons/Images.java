@@ -42,6 +42,8 @@ import ch.elexis.core.ui.icons.urihandler.IconURLConnection;
 public enum Images {
 	/** The Elexis logo **/
 	IMG_LOGO,
+	/** The EE logo **/
+	IMG_2E,
 	/** Returning to some home place */
 	IMG_HOME,
 	/** An Address label */
