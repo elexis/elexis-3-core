@@ -104,6 +104,12 @@ public class ElexisEventTopics {
 	public static final String STOCK_COMMISSIONING_PROPKEY_QUANTITY = "quantity";
 
 	/**
+	 * Message to a service
+	 */
+	public static final String SERVICE = BASE + "service/";
+	public static final String TASK_SERVICE = SERVICE + "task/";
+
+	/**
 	 * Perform a stock count (inventory) of the articles in the respective stock, or
 	 * all if {@link #STOCK_COMMISSIONING_PROPKEY_LIST_ARTICLE_ID} not provided
 	 */

@@ -40,6 +40,9 @@ public enum TaskTriggerType implements Enumerator {
 	 * The '<em><b>FILESYSTEM CHANGE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Watches a single directory non-recursively. Will trigger task once per file change (create/update). Will not trigger on delete. Currently implemented using polling, takes up to 30 seconds to trigger. 
+	 * <!-- end-model-doc -->
 	 * @see #FILESYSTEM_CHANGE_VALUE
 	 * @generated
 	 * @ordered
@@ -99,6 +102,9 @@ public enum TaskTriggerType implements Enumerator {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Watches a single directory non-recursively. Will trigger task once per file change (create/update). Will not trigger on delete. Currently implemented using polling, takes up to 30 seconds to trigger. 
+	 * <!-- end-model-doc -->
 	 * @see #FILESYSTEM_CHANGE
 	 * @model
 	 * @generated
