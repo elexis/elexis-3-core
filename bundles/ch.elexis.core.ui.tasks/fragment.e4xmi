@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_vnhVYA98EeqCRvaXdJ-ZfQ">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:basic_1="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_vnhVYA98EeqCRvaXdJ-ZfQ">
   <imports xsi:type="commands:Command" xmi:id="_hobvwIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.command.part.refresh"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yKaBgA9_EeqCRvaXdJ-ZfQ" featurename="descriptors" parentElementId="xpath:/">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_9ho_gA9_EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.parts.TaskLogPart" label="Task Log" iconURI="platform:/plugin/ch.elexis.core.ui.tasks/rsc/icons/screwdriver.png" category="General" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogPart">
@@ -44,5 +44,22 @@
     <elements xsi:type="commands:Command" xmi:id="_bF_IUIY0EeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.tasks.command.trigger.manual.taskdescriptor" commandName="Trigger TaskDescriptor" description="Manually trigger execution of task descriptor"/>
     <elements xsi:type="commands:Command" xmi:id="_FJbhsJWdEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.command.refresh.on.es" commandName="Refresh on ES" description="Notifies ES to refresh this TaskDescriptor (only if assigned to ES as runner)"/>
     <elements xsi:type="commands:Command" xmi:id="_9hL5wJWjEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.command.trigger.on.es" commandName="Trigger on ES" description="Manually trigger this task on ES"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_uYsS0IF4Eeuh_oRSm2ExFw" featurename="snippets" parentElementId="xpath:/">
+    <elements xsi:type="advanced:Perspective" xmi:id="_v64eUIF4Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.perspective" selectedElement="_-2PDUIF4Eeuh_oRSm2ExFw" label="Task Perspective" iconURI="platform:/plugin/ch.elexis.core.ui.tasks/rsc/icons/screwdriver.png">
+      <children xsi:type="basic_1:PartSashContainer" xmi:id="_-2PDUIF4Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partsashcontainer.0" horizontal="true">
+        <children xsi:type="basic_1:PartSashContainer" xmi:id="_o2lqQIF6Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partsashcontainer.log" selectedElement="_5vGl4IGCEeuh_oRSm2ExFw">
+          <children xsi:type="basic_1:PartStack" xmi:id="_5vGl4IGCEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partstack.top" containerData="600">
+            <children xsi:type="advanced:Placeholder" xmi:id="_6F1q4IGCEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.parts.TaskLogPart"/>
+          </children>
+          <children xsi:type="basic_1:PartStack" xmi:id="_FEDE4IGDEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partstack.details" containerData="400"/>
+        </children>
+        <children xsi:type="basic_1:PartSashContainer" xmi:id="_wdEZ0IGCEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partsashcontainer.config" selectedElement="_05QnYIF5Eeuh_oRSm2ExFw">
+          <children xsi:type="basic_1:PartStack" xmi:id="_05QnYIF5Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.partstack.configuration" selectedElement="_ShrdwIF6Eeuh_oRSm2ExFw">
+            <children xsi:type="advanced:Placeholder" xmi:id="_ShrdwIF6Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.parts.TaskConfigurationPart"/>
+          </children>
+        </children>
+      </children>
+    </elements>
   </fragments>
 </fragment:ModelFragments>
