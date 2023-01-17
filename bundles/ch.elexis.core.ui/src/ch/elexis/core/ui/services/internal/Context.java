@@ -10,10 +10,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.IContextService;
 
 public class Context implements IContext {
 
 	private ConcurrentHashMap<String, Object> context;
+
+	private IContextService service;
 
 	private Context parent;
 
@@ -21,13 +24,14 @@ public class Context implements IContext {
 
 	private TypedModifier typedModifier;
 
-	public Context() {
-		this(null, "root"); //$NON-NLS-1$
+	public Context(IContextService service) {
+		this(null, "root", service); //$NON-NLS-1$
 	}
 
-	public Context(Context parent, String name) {
+	public Context(Context parent, String name, IContextService service) {
 		context = new ConcurrentHashMap<>();
 		this.parent = parent;
+		this.service = service;
 		this.typedModifier = new TypedModifier(this);
 	}
 
@@ -146,5 +150,9 @@ public class Context implements IContext {
 	@Override
 	public String getStationIdentifier() {
 		return getNamed(STATION_IDENTIFIER).get().toString();
+	}
+
+	public IContextService getService() {
+		return service;
 	}
 }

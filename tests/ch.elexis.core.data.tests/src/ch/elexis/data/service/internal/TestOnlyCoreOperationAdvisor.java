@@ -12,15 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
-import ch.elexis.data.Anwender;
 
 @Component
 public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
@@ -84,8 +81,6 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-			ElexisEventDispatcher.getInstance().fire(
-					new ElexisEvent(CoreHub.getLoggedInContact(), Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();

@@ -11,10 +11,15 @@
 
 package ch.elexis.core.ui;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -28,19 +33,24 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.UiPatientEventListener;
-import ch.elexis.core.ui.events.UiUserEventListener;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
+import ch.elexis.data.VerrechenbarFavorites;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -72,11 +82,6 @@ public class Hub extends AbstractUIPlugin {
 	 */
 	private final UiPatientEventListener eeli_pat = new UiPatientEventListener();
 
-	/**
-	 * The listener for user change events
-	 */
-	private final UiUserEventListener eeli_user = new UiUserEventListener();
-
 	// Globale Variable
 	/**
 	 * Suche externe Config - poor mans dependency -> see
@@ -90,13 +95,49 @@ public class Hub extends AbstractUIPlugin {
 	/** Globale Aktionen */
 	public static GlobalActions mainActions;
 
+	@Optional
+	@Inject
+	void activeUser(IUser user) {
+		updateUser(user);
+	}
+
+	@Optional
+	@Inject
+	void changedUser(@EventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+		updateUser(user);
+	}
+
+	private void updateUser(IUser user) {
+		// reminder
+		if (CoreHub.getLoggedInContact() != null) {
+			Anwender loggedInContact = CoreHub.getLoggedInContact();
+			CompletableFuture.runAsync(() -> {
+				final List<Reminder> reminderList = Reminder.findToShowOnStartup(loggedInContact);
+
+				if (reminderList.size() > 0) {
+					// must be called inside display thread
+					Display.getDefault().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							new ReminderListSelectionDialog(reminderList,
+									Messages.ReminderView_importantRemindersOnLogin).open();
+						}
+					});
+				}
+			});
+		}
+		// favorites
+		VerrechenbarFavorites.reset();
+	}
+
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		log.debug("Starting " + this.getClass().getName()); //$NON-NLS-1$
 		plugin = this;
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_user);
+		CoreUiUtil.injectServicesWithContext(this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 
 		// add UI ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(Hub.class.getClassLoader());
@@ -107,7 +148,7 @@ public class Hub extends AbstractUIPlugin {
 		plugin = null;
 		log.debug("Stopping " + this.getClass().getName()); //$NON-NLS-1$
 
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_user);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 
 		super.stop(context);
 	}
