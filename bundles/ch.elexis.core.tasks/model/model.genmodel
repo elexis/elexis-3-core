@@ -122,7 +122,7 @@
         <genParameters ecoreParameter="model.ecore#//ITaskService/setActive/active"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITaskService/trigger.1">
-        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/taskDescriptorReferenceId"/>
+        <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/taskDescriptorIdOrReferenceId"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/progressMonitor"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/trigger"/>
         <genParameters ecoreParameter="model.ecore#//ITaskService/trigger.1/runContext"/>
@@ -150,6 +150,9 @@
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//ITaskService/unbindIIdentifiedRunnableFactory">
         <genParameters ecoreParameter="model.ecore#//ITaskService/unbindIIdentifiedRunnableFactory/factory"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/refresh">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/refresh/taskDescriptor"/>
       </genOperations>
     </genClasses>
   </genPackages>
