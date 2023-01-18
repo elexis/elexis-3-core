@@ -15,6 +15,7 @@ package ch.elexis.core.data.events;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -34,13 +35,26 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
+import ch.elexis.data.Prescription;
+import ch.elexis.data.User;
 
 /**
  * The Elexis event dispatcher system manages and distributes the information of
@@ -254,7 +268,38 @@ public final class ElexisEventDispatcher implements Runnable {
 	 *         selected
 	 */
 	public static IPersistentObject getSelected(final Class<?> template) {
-		return getInstance().elexisUIContext.getSelected(template);
+		Optional<Class<?>> ciOpt = getCoreModelInterfaceForElexisClass(template);
+		if (ciOpt.isPresent()) {
+			Optional<?> selected = ContextServiceHolder.get().getTyped(ciOpt.get());
+			if (selected.isPresent() && selected.get() instanceof Identifiable) {
+				return NoPoUtil.loadAsPersistentObject((Identifiable) selected.get());
+			}
+		} else {
+			LoggerFactory.getLogger(ElexisEventDispatcher.class)
+					.warn("Unknown code model interface for [" + template + "]");
+		}
+		return null;
+	}
+
+	private static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz) {
+		if (elexisClazz == User.class) {
+			return Optional.of(IUser.class);
+		} else if (elexisClazz == Anwender.class) {
+			return Optional.of(IContact.class);
+		} else if (elexisClazz == Mandant.class) {
+			return Optional.of(IMandator.class);
+		} else if (elexisClazz == Patient.class) {
+			return Optional.of(IPatient.class);
+		} else if (elexisClazz == Konsultation.class) {
+			return Optional.of(IEncounter.class);
+		} else if (elexisClazz == Fall.class) {
+			return Optional.of(ICoverage.class);
+		} else if (elexisClazz == Prescription.class) {
+			return Optional.of(IPrescription.class);
+		} else if (elexisClazz == Brief.class) {
+			return Optional.of(IDocumentLetter.class);
+		}
+		return Optional.empty();
 	}
 
 	/**
