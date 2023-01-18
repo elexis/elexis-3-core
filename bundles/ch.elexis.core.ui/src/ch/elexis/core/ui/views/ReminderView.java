@@ -71,7 +71,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -79,16 +81,15 @@ import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
-import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonContentProviderAdapter;
@@ -104,7 +105,7 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
-public class ReminderView extends ViewPart implements IActivationListener, HeartListener {
+public class ReminderView extends ViewPart implements IRefreshable, HeartListener {
 
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
 
@@ -129,6 +130,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+
 	private CommonViewer cv = new CommonViewer();
 	private ViewerConfigurer vc;
 	private Query<Reminder> qbe;
@@ -144,16 +147,15 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		}
 	};
 
-	// 1079 - nur wenn der View offen ist werden bei Patienten-Wechsel die Reminders
-	// abgefragt!
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-
-		@Override
-		public void runInUi(final ElexisEvent ev) {
-			if (((Patient) ev.getObject()).equals(actPatient)) {
+	@Optional
+	@Inject
+	void activePatient(IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+			if (((Patient) selectedPatient).equals(actPatient)) {
 				return;
 			}
-			actPatient = (Patient) ev.getObject();
+			actPatient = selectedPatient;
 			// clear selection before update
 			cv.getViewerWidget().setSelection(StructuredSelection.EMPTY);
 
@@ -171,7 +173,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					@Override
 					public void run() {
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
-								false, (Patient) ev.getObject(), true);
+								false, selectedPatient, true);
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
@@ -183,8 +185,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 					}
 				});
 			}
-		}
-	};
+		}, cv);
+	}
 
 	@Optional
 	@Inject
@@ -302,7 +304,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 		popupMenuActionList.addAll(createActionList());
 		menu.createViewerContextMenu(cv.getViewerWidget(), popupMenuActionList);
 		cv.getViewerWidget().addFilter(filter);
-		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
+		getSite().getPage().addPartListener(udpateOnVisible);
 
 		cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -317,7 +319,7 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			}
 		});
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_reminder);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_reminder);
 	}
 
 	private List<IContributionItem> createActionList() {
@@ -380,8 +382,8 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_reminder);
-		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_reminder);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyOwnDueReminderToggleAction.isChecked());
 	}
 
@@ -615,23 +617,6 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 			};
 			filterActionType[i].setChecked(filterActionSet.contains(type.numericValue()));
 			filterActionType[i].setImageDescriptor(determineActionTypeImage(type).getImageDescriptor());
-		}
-	}
-
-	@Override
-	public void activation(final boolean mode) {
-		/* egal */
-	}
-
-	@Override
-	public void visible(final boolean mode) {
-		if (mode) {
-			cv.notify(CommonViewer.Message.update);
-			CoreHub.heart.addListener(this);
-			heartbeat();
-			refreshUserConfiguration();
-		} else {
-			CoreHub.heart.removeListener(this);
 		}
 	}
 
@@ -916,5 +901,12 @@ public class ReminderView extends ViewPart implements IActivationListener, Heart
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	@Override
+	public void refresh() {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			cv.notify(CommonViewer.Message.update);
+		}, cv);
 	}
 }

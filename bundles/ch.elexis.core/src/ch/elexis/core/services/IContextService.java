@@ -140,6 +140,15 @@ public interface IContextService {
 	}
 
 	/**
+	 * Set an {@link Object} typed to the root context.
+	 * 
+	 * @param object
+	 */
+	default public void setTyped(Object object) {
+		getRootContext().setTyped(object);
+	}
+
+	/**
 	 * Get an {@link Object} identified by the name from the root context.
 	 *
 	 * @param name

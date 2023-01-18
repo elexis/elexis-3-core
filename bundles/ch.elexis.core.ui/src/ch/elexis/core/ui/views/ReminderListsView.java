@@ -98,20 +98,21 @@ import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
-import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Reminder;
 
-public class ReminderListsView extends ViewPart implements HeartListener, ISelectionProvider {
+public class ReminderListsView extends ViewPart implements HeartListener, IRefreshable, ISelectionProvider {
 	public static final String ID = "ch.elexis.core.ui.views.reminderlistsview"; //$NON-NLS-1$
 
 	private int filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
@@ -121,6 +122,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
 			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	private Composite viewParent;
 
@@ -307,13 +310,16 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	};
 
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
+	@Optional
+	@Inject
+	void activePatient(IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
 
-		public void runInUi(final ElexisEvent ev) {
-			if (((Patient) ev.getObject()).equals(actPatient)) {
+			if (selectedPatient.equals(actPatient)) {
 				return;
 			}
-			actPatient = (Patient) ev.getObject();
+			actPatient = selectedPatient;
 			clearSelection();
 			patientRefresh();
 
@@ -326,7 +332,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 
 					public void run() {
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
-								false, (Patient) ev.getObject(), true);
+								false, selectedPatient, true);
 						if (list.size() != 0) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
@@ -338,8 +344,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					}
 				});
 			}
-		}
-	};
+		}, viewersParent);
+	}
 
 	@Optional
 	@Inject
@@ -504,12 +510,14 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
 		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_reminder);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_reminder);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_reminder);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_reminder);
+		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 
 	private void updateViewerSelection(StructuredSelection selection) {
@@ -573,7 +581,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		}
 	}
 
-	private void refresh() {
+	@Override
+	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
 			patientRefresh();
 			generalRefresh();

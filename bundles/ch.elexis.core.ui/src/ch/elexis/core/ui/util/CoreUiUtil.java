@@ -17,6 +17,7 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -43,6 +44,7 @@ import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.views.codesystems.ContributionAction;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
@@ -348,6 +350,46 @@ public class CoreUiUtil implements EventHandler {
 			}
 		} else {
 			part.getTags().remove("NoMove"); //$NON-NLS-1$
+		}
+	}
+
+	private static Control getAsControl(Object object) {
+		if (object != null) {
+			if (object instanceof Control) {
+				return (Control) object;
+			}
+			if (object instanceof Viewer) {
+				return ((Viewer) object).getControl();
+			}
+			if (object instanceof CommonViewer) {
+				return ((CommonViewer) object).getViewerWidget() != null
+						? ((CommonViewer) object).getViewerWidget().getControl()
+						: null;
+			}
+			throw new IllegalArgumentException("Can not get Control from [" + object + "]");
+		}
+		return null;
+	}
+
+	public static void runAsyncIfActive(Runnable runnable, Object object) {
+		Control control = getAsControl(object);
+		if (control != null) {
+			Display.getDefault().asyncExec(() -> {
+				if (isActiveControl(control)) {
+					runnable.run();
+				}
+			});
+		}
+	}
+
+	public static void runIfActive(Runnable runnable, Object object) {
+		Control control = getAsControl(object);
+		if (control != null) {
+			Display.getDefault().syncExec(() -> {
+				if (isActiveControl(control)) {
+					runnable.run();
+				}
+			});
 		}
 	}
 }

@@ -14,11 +14,11 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +51,8 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -113,18 +115,17 @@ public class AccountView extends ViewPart implements IActivationListener {
 			160, // REMARKS
 			80 // ACCOUNT
 	};
-	private ElexisEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 
-		public void runInUi(ElexisEvent ev) {
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				Patient selectedPatient = (Patient) ev.getObject();
-				setPatient(selectedPatient);
-			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
+	@Inject
+	void activeUser(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			if (patient != null) {
+				setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			} else {
 				setPatient(null);
 			}
-
-		}
-	};
+		}, accountViewer);
+	}
 
 	private ElexisEventListenerImpl eeli_at = new ElexisUiEventListenerImpl(AccountTransaction.class) {
 
@@ -384,11 +385,11 @@ public class AccountView extends ViewPart implements IActivationListener {
 
 	public void visible(boolean mode) {
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_at, eeli_pat);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_at);
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			setPatient(patient);
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_at, eeli_pat);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_at);
 			setPatient(null);
 		}
 	};

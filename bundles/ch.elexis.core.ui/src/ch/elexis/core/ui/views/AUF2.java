@@ -39,7 +39,6 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -73,30 +72,9 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	private Action newAUF, delAUF, modAUF, printAUF;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
-	// private ElexisEventListener eli_auf = new
-	// ElexisUiEventListenerImpl(AUF.class) {
-	//
-	// @Override
-	// public void runInUi(ElexisEvent ev){
-	// boolean bSelect = (ev.getType() == ElexisEvent.EVENT_SELECTED);
-	// modAUF.setEnabled(bSelect);
-	// delAUF.setEnabled(bSelect);
-	//
-	// if (bSelect && tv != null) {
-	// // refresh & select only if not already selected
-	// if (ev.getObject() instanceof AUF &&
-	// !Objects.equals(tv.getStructuredSelection(),
-	// new StructuredSelection(ev.getObject()))) {
-	// tv.refresh(false);
-	// tv.setSelection(new StructuredSelection(ev.getObject()));
-	// }
-	// }
-	// }
-	// };
-
 	@Inject
 	void activeCertificate(@Optional ISickCertificate certificate) {
-		Display.getDefault().asyncExec(() -> {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			boolean bSelect = certificate != null;
 			modAUF.setEnabled(bSelect);
 			delAUF.setEnabled(bSelect);
@@ -108,30 +86,12 @@ public class AUF2 extends ViewPart implements IRefreshable {
 					tv.setSelection(new StructuredSelection(certificate));
 				}
 			}
-		});
+		}, tv);
 	}
-
-	// private ElexisEventListener eli_pat = new
-	// ElexisUiEventListenerImpl(Patient.class) {
-	//
-	// @Override
-	// public void runInUi(ElexisEvent ev){
-	// if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-	// tv.refresh();
-	// ElexisEventDispatcher.clearSelection(AUF.class);
-	// newAUF.setEnabled(true);
-	// } else {
-	// newAUF.setEnabled(false);
-	// modAUF.setEnabled(false);
-	// delAUF.setEnabled(false);
-	//
-	// }
-	// }
-	// };
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		Display.getDefault().asyncExec(() -> {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			if (patient != null) {
 				tv.refresh();
 				ContextServiceHolder.get().getRootContext().removeTyped(ISickCertificate.class);
@@ -140,9 +100,8 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				newAUF.setEnabled(false);
 				modAUF.setEnabled(false);
 				delAUF.setEnabled(false);
-
 			}
-		});
+		}, tv);
 	}
 
 	public AUF2() {

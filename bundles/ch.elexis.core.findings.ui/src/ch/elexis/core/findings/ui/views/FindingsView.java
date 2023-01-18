@@ -1,11 +1,14 @@
 package ch.elexis.core.findings.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -41,21 +44,24 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Patient;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.TimeTool;
 
-public class FindingsView extends ViewPart implements IActivationListener {
+public class FindingsView extends ViewPart implements IRefreshable {
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	private TableViewer viewer;
 
@@ -73,11 +79,12 @@ public class FindingsView extends ViewPart implements IActivationListener {
 
 	};
 
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev) {
+	@Inject
+	void activePatient(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-	};
+		}, viewer);
+	}
 
 	public FindingsView() {
 	}
@@ -169,16 +176,17 @@ public class FindingsView extends ViewPart implements IActivationListener {
 		// make the viewer selection available
 		getSite().setSelectionProvider(viewer);
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().addListeners(eeli_find);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
+	@Override
 	public void refresh() {
-		viewer.setInput(getFindings(ElexisEventDispatcher.getSelectedPatient()));
+		viewer.setInput(getFindings(ContextServiceHolder.get().getActivePatient().orElse(null)));
 	}
 
-	public List<IFinding> getFindings(Patient patient) {
-		if (patient != null && patient.exists()) {
+	public List<IFinding> getFindings(IPatient patient) {
+		if (patient != null) {
 			String patientId = patient.getId();
 			List<IFinding> items = getObservations(patientId);
 			/*
@@ -208,24 +216,13 @@ public class FindingsView extends ViewPart implements IActivationListener {
 
 	@Override
 	public void setFocus() {
-
-	}
-
-	@Override
-	public void activation(boolean mode) {
-	}
-
-	@Override
-	public void visible(boolean mode) {
-		if (!mode) {
-
-		}
+		viewer.getControl().setFocus();
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_find);
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		ElexisEventDispatcher.getInstance().removeListeners(eeli_find);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
 

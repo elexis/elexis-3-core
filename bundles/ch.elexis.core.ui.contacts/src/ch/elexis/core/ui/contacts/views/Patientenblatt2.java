@@ -79,9 +79,6 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
@@ -105,8 +102,6 @@ import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
-import ch.elexis.core.ui.events.ElexisUiSyncEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
@@ -159,27 +154,39 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID);
 
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev) {
-			Patient pat = (Patient) ev.getObject();
-
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_SELECTED:
-				Patient deselectedPatient = actPatient;
-				setPatient(pat);
-				releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
-				break;
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if (pat.equals(actPatient)) {
-					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
-				}
-				break;
-			default:
-				break;
-			}
+	@Inject
+	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		if (pat.equals(actPatient)) {
+			setUnlocked(true);
 		}
-	};
+	}
+
+	@Inject
+	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		if (pat.equals(actPatient)) {
+			setUnlocked(false);
+		}
+	}
+
+	@Inject
+	void lockPrereleasePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_PRERELEASE) IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		if (pat.equals(actPatient)) {
+			save();
+		}
+	}
+
+	@Optional
+	@Inject
+	void activePatient(IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			Patient deselectedPatient = actPatient;
+			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
+		}, form);
+	}
 
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
@@ -188,17 +195,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
-
-	private final ElexisEventListener eeli_pat_sync = new ElexisUiSyncEventListenerImpl(Patient.class,
-			ElexisEvent.EVENT_LOCK_PRERELEASE) {
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			Patient pat = (Patient) ev.getObject();
-			if (pat.equals(actPatient)) {
-				save();
-			}
-		}
-	};
 
 	@Optional
 	@Inject
@@ -809,7 +805,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
 		viewmenu.createToolbar(copySelectedAddressesToClipboardAction);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat_sync, eeli_pat);
 		CoreUiUtil.injectServicesWithContext(this);
 		tk.paintBordersFor(form.getBody());
 	}
@@ -830,12 +825,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat_sync, eeli_pat);
-		super.dispose();
 	}
 
 	/*

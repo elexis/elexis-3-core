@@ -69,11 +69,13 @@ public class KonsListe extends ViewPart implements IRefreshable {
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		if ((actPatient == null || liste.lKons.isEmpty())
-				|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
-			actPatient = patient;
-			restart(true);
-		}
+		CoreUiUtil.runIfActive(() -> {
+			if ((actPatient == null || liste.lKons.isEmpty())
+					|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
+				actPatient = patient;
+				restart(true);
+			}
+		}, liste);
 	}
 
 	@Inject

@@ -14,7 +14,6 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.actions.GlobalActions.delFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.delKonsAction;
 import static ch.elexis.core.ui.actions.GlobalActions.makeBillAction;
@@ -29,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -63,6 +63,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -105,15 +107,18 @@ public class FallListeView extends ViewPart implements IActivationListener {
 	private Patient actPatient;
 	private Fall actFall;
 	private Konsultation actBehandlung;
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 
-		@Override
-		public void runInUi(final ElexisEvent ev) {
-			actPatient = (Patient) ev.getObject();
-			form.setText(actPatient.getPersonalia());
-			fallViewer.getViewerWidget().refresh();
-		}
-	};
+	@Inject
+	void activeUser(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			if (patient != null) {
+				actPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+				form.setText(actPatient.getPersonalia());
+				fallViewer.getViewerWidget().refresh();
+			}
+		}, fallViewer);
+	}
+
 	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
 
 		@Override
@@ -434,7 +439,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 	@Override
 	public void visible(boolean mode) {
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
+			ElexisEventDispatcher.getInstance().addListeners(eeli_fall);
 			actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			// System.out.println(actPatient.getLabel());
@@ -471,7 +476,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 			setFall(actFall, actBehandlung);
 
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall, eeli_pat);
+			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall);
 		}
 
 	}
