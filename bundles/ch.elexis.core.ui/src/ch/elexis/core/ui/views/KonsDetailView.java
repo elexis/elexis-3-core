@@ -524,6 +524,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 	/** Aktuellen patient setzen */
 	private synchronized void setPatient(IPatient pat) {
+		LoggerFactory.getLogger(getClass()).info("Set patient [" + pat + "]");
 		if (pat != null && actPat != null) {
 			if (pat.getId().equals(actPat.getId())) {
 				if (!form.getText().equals(Messages.KonsDetailView_NoConsSelected)) {
@@ -563,6 +564,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	 * Aktuelle Konsultation setzen.
 	 */
 	private synchronized void setKons(final IEncounter encounter) {
+		LoggerFactory.getLogger(getClass()).info("Set encounter [" + encounter + "]");
 		if (actEncounter != null && text.isDirty()) {
 			EncounterServiceHolder.get().updateVersionedEntry(actEncounter, text.getContentsAsXML(),
 					getVersionRemark());
