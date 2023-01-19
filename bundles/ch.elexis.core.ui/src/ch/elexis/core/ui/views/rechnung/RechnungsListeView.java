@@ -20,7 +20,6 @@ import javax.inject.Named;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -32,15 +31,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.ui.constants.UiResourceConstants;
-import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -49,14 +45,10 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Fall;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.Tree;
 
 /**
@@ -76,57 +68,17 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	RnContentProvider cntp;
 	RnControlFieldProvider cfp;
 
-	private Settings rnStellerSettings;
-
 	private InvoiceListBottomComposite invoiceListeBottomComposite;
 
-	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
-			ElexisEvent.EVENT_MANDATOR_CHANGED) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			Mandant m = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-			if (m != null) {
-				rnStellerSettings = CoreHub.getUserSetting(m.getRechnungssteller());
-				checkRnStellerSettingsValidity(m);
-				// cv.notify(CommonViewer.Message.update);
-				if (invoiceListeBottomComposite != null) {
-					invoiceListeBottomComposite.updateMahnAutomatic();
-				}
-			}
+	@Optional
+	@Inject
+	public void activeMandator(IMandator mandator) {
+		if (invoiceListeBottomComposite != null) {
+			invoiceListeBottomComposite.updateMahnAutomatic();
 		}
-	};
-
-	public RechnungsListeView() {
-		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
-		checkRnStellerSettingsValidity(currMandant);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
 	}
 
-	private void checkRnStellerSettingsValidity(Mandant mandant) {
-		if (rnStellerSettings == null) {
-			Kontakt k = null;
-
-			KontaktSelektor ksDialog = new KontaktSelektor(UiDesk.getTopShell(), Anwender.class,
-					Messages.RechnungsListeView_selectRnSteller, Messages.RechnungsListeView_selectRnStellerMsg,
-					new String[] { Anwender.FLD_NAME1, Anwender.FLD_NAME2 });
-
-			if (ksDialog.open() == Dialog.OK) {
-				if (ksDialog.getSelection() != null) {
-					k = (Kontakt) ksDialog.getSelection();
-					if (k != null) {
-						mandant.setRechnungssteller(k);
-						rnStellerSettings = CoreHub.getUserSetting(k);
-					}
-				}
-			}
-		}
-
-		if (rnStellerSettings == null) {
-			MessageDialog.openError(UiDesk.getTopShell(), Messages.RechnungsListeView_error,
-					Messages.RechnungsListeView_errorNoRnStellerSelected);
-		}
+	public RechnungsListeView() {
 	}
 
 	@Override
@@ -176,7 +128,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 			}
 		});
 
-		invoiceListeBottomComposite = new InvoiceListBottomComposite(comp, SWT.NONE, rnStellerSettings);
+		invoiceListeBottomComposite = new InvoiceListBottomComposite(comp, SWT.NONE);
 
 		ElexisEventDispatcher.getInstance().addListeners(this);
 		cv.getViewerWidget().getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
@@ -200,7 +152,6 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	@Override
 	public void dispose() {
 		ElexisEventDispatcher.getInstance().removeListeners(this);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant);
 		cntp.stopListening();
 		super.dispose();
 	}

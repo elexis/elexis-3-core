@@ -28,7 +28,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +41,15 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.UiPatientEventListener;
+import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
@@ -77,11 +82,6 @@ public class Hub extends AbstractUIPlugin {
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final PreferenceInitializer pin = new PreferenceInitializer();
 
-	/**
-	 * The listener for patient events
-	 */
-	private final UiPatientEventListener eeli_pat = new UiPatientEventListener();
-
 	// Globale Variable
 	/**
 	 * Suche externe Config - poor mans dependency -> see
@@ -94,6 +94,28 @@ public class Hub extends AbstractUIPlugin {
 
 	/** Globale Aktionen */
 	public static GlobalActions mainActions;
+
+	@Inject
+	private ISourceProviderService sps;
+
+	@Inject
+	private ICommandService commandService;
+
+	@Inject
+	public void activePatient(@Optional IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		Hub.setWindowText(pat);
+
+		commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
+
+		PatientSelectionStatus provider = (PatientSelectionStatus) sps
+				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
+		if (provider == null) {
+			return;
+		}
+
+		provider.setState(pat != null);
+	}
 
 	@Optional
 	@Inject
@@ -137,7 +159,6 @@ public class Hub extends AbstractUIPlugin {
 		plugin = this;
 
 		CoreUiUtil.injectServicesWithContext(this);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 
 		// add UI ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(Hub.class.getClassLoader());
@@ -147,8 +168,6 @@ public class Hub extends AbstractUIPlugin {
 	public void stop(final BundleContext context) throws Exception {
 		plugin = null;
 		log.debug("Stopping " + this.getClass().getName()); //$NON-NLS-1$
-
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 
 		super.stop(context);
 	}

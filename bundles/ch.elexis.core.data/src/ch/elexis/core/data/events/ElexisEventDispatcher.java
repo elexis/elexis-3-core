@@ -272,7 +272,7 @@ public final class ElexisEventDispatcher implements Runnable {
 		if (ciOpt.isPresent()) {
 			Optional<?> selected = ContextServiceHolder.get().getTyped(ciOpt.get());
 			if (selected.isPresent() && selected.get() instanceof Identifiable) {
-				return NoPoUtil.loadAsPersistentObject((Identifiable) selected.get());
+				return NoPoUtil.loadAsPersistentObject((Identifiable) selected.get(), template);
 			}
 		} else {
 			LoggerFactory.getLogger(ElexisEventDispatcher.class)

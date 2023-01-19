@@ -13,12 +13,14 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
 public class InvoiceListBottomComposite extends Composite {
@@ -37,7 +39,6 @@ public class InvoiceListBottomComposite extends Composite {
 	private MoneyInput mi2nd;
 	private MoneyInput mi3rd;
 	private SelectionAdapter mahnWizardListener;
-	private Settings rnStellerSettings;
 	private FormToolkit tk = UiDesk.getToolkit();
 
 	/**
@@ -47,23 +48,23 @@ public class InvoiceListBottomComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public InvoiceListBottomComposite(Composite parent, int style, Settings rnStellerSettings) {
+	public InvoiceListBottomComposite(Composite parent, int style) {
 		super(parent, style);
-		this.rnStellerSettings = rnStellerSettings;
-
 		mahnWizardListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL1ST, niDaysTo1st.getValue());
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL2ND, niDaysTo2nd.getValue());
-				rnStellerSettings.set(Preferences.RNN_DAYSUNTIL3RD, niDaysTo3rd.getValue());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT1ST, mi1st.getMoney(false).getAmountAsString());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT2ND, mi2nd.getMoney(false).getAmountAsString());
-				rnStellerSettings.set(Preferences.RNN_AMOUNT3RD, mi3rd.getMoney(false).getAmountAsString());
-				rnStellerSettings.flush();
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_DAYSUNTIL1ST, niDaysTo1st.getValue());
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_DAYSUNTIL2ND, niDaysTo2nd.getValue());
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_DAYSUNTIL3RD, niDaysTo3rd.getValue());
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_AMOUNT1ST,
+						mi1st.getMoney(false).getAmountAsString());
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_AMOUNT2ND,
+						mi2nd.getMoney(false).getAmountAsString());
+				ConfigServiceHolder.get().set(getCurrentBiller(), Preferences.RNN_AMOUNT3RD,
+						mi3rd.getMoney(false).getAmountAsString());
 			}
 		};
-
+		
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = false;
 		rowLayout.pack = true;
@@ -103,25 +104,32 @@ public class InvoiceListBottomComposite extends Composite {
 		niDaysTo1st = new NumberInput(cW, REMINDER_1);
 		niDaysTo1st.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo1st.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
+		niDaysTo1st.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL1ST, 30));
 		niDaysTo2nd = new NumberInput(cW, REMINDER_2);
 		niDaysTo2nd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo2nd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
+		niDaysTo2nd.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL2ND, 10));
 		niDaysTo3rd = new NumberInput(cW, REMINDER_3);
 		niDaysTo3rd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		niDaysTo3rd.getControl().addSelectionListener(mahnWizardListener);
-		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
+		niDaysTo3rd.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL3RD, 5));
 		tk.createLabel(cW, Messages.RechnungsListeView_fine); // $NON-NLS-1$
 		mi1st = new MoneyInput(cW, REMINDER_1);
 		mi1st.addSelectionListener(mahnWizardListener);
-		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST, new Money().getAmountAsString()));
+		mi1st.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT1ST,
+				new Money().getAmountAsString()));
 		mi2nd = new MoneyInput(cW, REMINDER_2);
 		mi2nd.addSelectionListener(mahnWizardListener);
-		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND, new Money().getAmountAsString()));
+		mi2nd.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT2ND,
+				new Money().getAmountAsString()));
 		mi3rd = new MoneyInput(cW, REMINDER_3);
 		mi3rd.addSelectionListener(mahnWizardListener);
-		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD, new Money().getAmountAsString()));
+		mi3rd.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT3RD,
+				new Money().getAmountAsString()));
+	}
+
+	private IContact getCurrentBiller() {
+		return ContextServiceHolder.get().getActiveMandator().get().getBiller();
 	}
 
 	@Override
@@ -137,12 +145,15 @@ public class InvoiceListBottomComposite extends Composite {
 	}
 
 	public void updateMahnAutomatic() {
-		niDaysTo1st.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30));
-		niDaysTo2nd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10));
-		niDaysTo3rd.setValue(rnStellerSettings.get(Preferences.RNN_DAYSUNTIL3RD, 5));
-		mi1st.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT1ST, new Money().getAmountAsString()));
-		mi2nd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT2ND, new Money().getAmountAsString()));
-		mi3rd.setMoney(rnStellerSettings.get(Preferences.RNN_AMOUNT3RD, new Money().getAmountAsString()));
+		niDaysTo1st.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL1ST, 30));
+		niDaysTo2nd.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL2ND, 10));
+		niDaysTo3rd.setValue(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_DAYSUNTIL3RD, 5));
+		mi1st.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT1ST,
+				new Money().getAmountAsString()));
+		mi2nd.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT2ND,
+				new Money().getAmountAsString()));
+		mi3rd.setMoney(ConfigServiceHolder.get().get(getCurrentBiller(), Preferences.RNN_AMOUNT3RD,
+				new Money().getAmountAsString()));
 	}
 
 }

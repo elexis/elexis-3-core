@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -41,14 +40,12 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
@@ -68,11 +65,10 @@ public class MandantSelectionContributionItem {
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
 
-	private ElexisEventListener eeli_mandant = new ElexisUiEventListenerImpl(Mandant.class,
-			ElexisEvent.EVENT_MANDATOR_CHANGED) {
-		public void runInUi(ElexisEvent ev) {
-
-			Mandant m = (Mandant) ev.getObject();
+	@Inject
+	public void activeMandator(@Optional IMandator mandator) {
+		if (fParent != null) {
+			Mandant m = (Mandant) NoPoUtil.loadAsPersistentObject(mandator, Mandant.class);
 			if (m != null && item != null) {
 				item.setText(m.getMandantLabel());
 				fParent.setBackground(UiMandant.getColorForMandator(m));
@@ -95,7 +91,7 @@ public class MandantSelectionContributionItem {
 			}
 			fParent.getParent().layout();
 		}
-	};
+	}
 
 	@Optional
 	@Inject
@@ -142,7 +138,6 @@ public class MandantSelectionContributionItem {
 	}
 
 	public MandantSelectionContributionItem() {
-		ElexisEventDispatcher.getInstance().addListeners(eeli_mandant);
 	}
 
 	@PostConstruct
@@ -244,10 +239,5 @@ public class MandantSelectionContributionItem {
 		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
 		gc.dispose();
 		return image;
-	}
-
-	@PreDestroy
-	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_mandant);
 	}
 }

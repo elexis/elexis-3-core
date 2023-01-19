@@ -47,8 +47,10 @@ import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
@@ -361,6 +363,12 @@ public class CoreHub implements BundleActivator {
 
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+		if (newMandant != null) {
+			ContextServiceHolder.get()
+					.setActiveMandator(NoPoUtil.loadAsIdentifiable(newMandant, IMandator.class).get());
+		} else {
+			ContextServiceHolder.get().setActiveMandator(null);
+		}
 	}
 
 	/**
@@ -441,6 +449,7 @@ public class CoreHub implements BundleActivator {
 
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
+		ContextServiceHolder.get().setActiveMandator(null);
 		ContextServiceHolder.get().setActiveUser(null);
 	}
 
