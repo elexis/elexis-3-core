@@ -281,7 +281,7 @@ public final class ElexisEventDispatcher implements Runnable {
 		return null;
 	}
 
-	private static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz) {
+	public static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz) {
 		if (elexisClazz == User.class) {
 			return Optional.of(IUser.class);
 		} else if (elexisClazz == Anwender.class) {

@@ -60,16 +60,14 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -119,14 +117,14 @@ public class FallListeView extends ViewPart implements IActivationListener {
 		}, fallViewer);
 	}
 
-	private ElexisEventListener eeli_fall = new ElexisUiEventListenerImpl(Fall.class) {
-
-		@Override
-		public void runInUi(final ElexisEvent ev) {
-			Fall f = (Fall) ev.getObject();
+	@Inject
+	public void activeCoverage(@Optional ICoverage coverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			Fall f = (Fall) NoPoUtil.loadAsPersistentObject(coverage, Fall.class);
 			setFall(f, null);
-		}
-	};
+		}, fallViewer);
+	}
+
 	private IAction filterClosedAction = new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
 		private ViewerFilter closedFilter;
 		{
@@ -242,8 +240,6 @@ public class FallListeView extends ViewPart implements IActivationListener {
 		}, new DefaultControlFieldProvider(fallViewer, new String[] { Messages.Core_Description }), fallButton,
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TABLE, SWT.SINGLE, fallViewer));
 		fallViewer.create(fallCf, sash, SWT.NONE, getViewSite());
-		fallViewer.getViewerWidget()
-				.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		behandlViewer = new CommonViewer();
 		ButtonProvider behandlButton = new ButtonProvider() {
 			@Override
@@ -295,8 +291,6 @@ public class FallListeView extends ViewPart implements IActivationListener {
 		Composite cf = new Composite(sash, SWT.BORDER);
 		cf.setLayout(new GridLayout());
 		behandlViewer.create(behandlCf, cf, SWT.NONE, getViewSite());
-		behandlViewer.getViewerWidget()
-				.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		tk.adapt(sash, false, false);
 		GlobalEventDispatcher.addActivationListener(this, this);
 		sash.setWeights(new int[] { 50, 50 });
@@ -439,7 +433,6 @@ public class FallListeView extends ViewPart implements IActivationListener {
 	@Override
 	public void visible(boolean mode) {
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_fall);
 			actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 			actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			// System.out.println(actPatient.getLabel());
@@ -475,10 +468,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 			}
 			setFall(actFall, actBehandlung);
 
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_fall);
 		}
-
 	}
 
 	@Optional
