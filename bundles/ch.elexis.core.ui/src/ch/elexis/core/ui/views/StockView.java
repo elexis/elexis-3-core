@@ -75,7 +75,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;

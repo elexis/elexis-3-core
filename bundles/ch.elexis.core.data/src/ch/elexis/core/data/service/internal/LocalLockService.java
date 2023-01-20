@@ -1,6 +1,5 @@
 package ch.elexis.core.data.service.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +9,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -26,7 +26,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
@@ -38,6 +37,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -205,7 +205,7 @@ public class LocalLockService implements ILocalLockService {
 		if (elexisServerService == null) {
 			String message = "System not configured for standalone mode, and elexis-server not available!";
 			logger.error(message);
-			ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+			ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
 			return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 		}
@@ -276,7 +276,7 @@ public class LocalLockService implements ILocalLockService {
 				// deleted!!!
 				String message = "Error trying to acquireOrReleaseLocks.";
 				logger.error(message);
-				ElexisEventDispatcher.fireElexisStatusEvent(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+				ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
 				return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 			} finally {

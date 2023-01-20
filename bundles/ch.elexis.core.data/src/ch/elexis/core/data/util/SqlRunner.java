@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.events.ElexisStatusProgressMonitor;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
@@ -124,7 +124,7 @@ public class SqlRunner {
 						try {
 							ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, pluginId, ElexisStatus.CODE_NONE,
 									"Error " + e.getMessage() + " during db update", e);
-							ElexisEventDispatcher.getInstance().fireElexisStatusEvent(status);
+							ElexisStatus.fire(status);
 						} catch (AssertionFailedException appnotinit) {
 						}
 					}
@@ -134,7 +134,7 @@ public class SqlRunner {
 				try {
 					ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, pluginId, ElexisStatus.CODE_NONE,
 							"Error " + e.getMessage() + " during db update", e);
-					ElexisEventDispatcher.fireElexisStatusEvent(status);
+					ElexisStatus.fire(status);
 				} catch (AssertionFailedException appnotinit) {
 					log.error("Error " + e.getMessage() + " during db update", appnotinit);
 				}

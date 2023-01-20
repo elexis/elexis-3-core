@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDataAccess;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;

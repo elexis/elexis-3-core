@@ -78,6 +78,9 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_TITLE = "title";
 	public static final String NOTIFICATION_PROPKEY_MESSAGE = "message";
 
+	public static final String NOTIFICATION_STATUS = BASE_NOTIFICATION + "status";
+	public static final String NOTIFICATION_PROPKEY_STATUS = "status";
+
 	/**
 	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or
 	 * <code>null</code> on logout. (Re-Login events: <code>null</code> and the new

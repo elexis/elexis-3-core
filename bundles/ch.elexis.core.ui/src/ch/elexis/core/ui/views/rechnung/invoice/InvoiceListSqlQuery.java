@@ -10,16 +10,16 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung.invoice;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.DBConnection;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
@@ -104,7 +104,7 @@ public class InvoiceListSqlQuery {
 		} catch (SQLException e) {
 			ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
 					ElexisStatus.CODE_NONE, "Count stats failed", e); //$NON-NLS-1$
-			ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+			ElexisStatus.fire(elexisStatus);
 		} finally {
 			dbConnection.releasePreparedStatement(ps);
 		}

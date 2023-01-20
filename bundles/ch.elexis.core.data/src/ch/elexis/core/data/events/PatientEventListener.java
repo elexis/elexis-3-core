@@ -10,12 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.data.events;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;

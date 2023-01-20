@@ -28,14 +28,12 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
-import ch.elexis.core.ui.util.CoreUiUtil;
 
 /**
  * This {@link IContextService} implementation translates events from and to the
@@ -133,10 +131,7 @@ public class ContextService implements IContextService, EventHandler {
 				logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
-			CoreUiUtil.injectServices(ElexisEventDispatcher.getInstance(), applicationContext);
 		}
-		// set initial values for injection
-		applicationContext.set(IUser.class, getRootContext().getTyped(IUser.class).orElse(null));
 	}
 
 	@Override

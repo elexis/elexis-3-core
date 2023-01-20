@@ -30,11 +30,11 @@ import org.eclipse.swt.widgets.Control;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.rechnung.RnFilterDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry.QueryBuilder;
 import ch.elexis.data.DBConnection;
@@ -147,7 +147,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
 						ElexisStatus.CODE_NONE, "Count stats failed", e); //$NON-NLS-1$
-				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+				ElexisStatus.fire(elexisStatus);
 
 				System.out.println(ps); // to ease on-premise debugging
 				return;
@@ -203,7 +203,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			} catch (SQLException e) {
 				ElexisStatus elexisStatus = new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
 						ElexisStatus.CODE_NONE, "Fetch results failed", e); //$NON-NLS-1$
-				ElexisEventDispatcher.fireElexisStatusEvent(elexisStatus);
+				ElexisStatus.fire(elexisStatus);
 				System.out.println(ps); // to ease on-premise debugging
 			} finally {
 				dbConnection.releasePreparedStatement(ps);

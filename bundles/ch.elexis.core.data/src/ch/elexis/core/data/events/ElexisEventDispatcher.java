@@ -29,10 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
@@ -150,17 +148,6 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	/**
-	 *
-	 * @param me
-	 * @since 3.0.0
-	 */
-	public void fireMessageEvent(MessageEvent me) {
-		ElexisEvent ev = new ElexisEvent(me, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION,
-				ElexisEvent.PRIORITY_SYNC);
-		fire(ev);
-	}
-
-	/**
 	 * Set a list of {@link ElexisEvent} types that will be skipped when fired. Is
 	 * used for example on import when many new objects are created, and we are not
 	 * interest in calling the event listeners. Set to null to reset.
@@ -246,18 +233,6 @@ public final class ElexisEventDispatcher implements Runnable {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Synchronously fire an {@link ElexisStatus} event.
-	 *
-	 * @param es an {@link ElexisStatus} describing the problem
-	 * @since 3.0.0
-	 */
-	public static void fireElexisStatusEvent(ElexisStatus es) {
-		ElexisEvent statusEvent = new ElexisEvent(es, ElexisStatus.class, ElexisEvent.EVENT_ELEXIS_STATUS,
-				ElexisEvent.PRIORITY_SYNC);
-		getInstance().doDispatch(statusEvent);
 	}
 
 	/**

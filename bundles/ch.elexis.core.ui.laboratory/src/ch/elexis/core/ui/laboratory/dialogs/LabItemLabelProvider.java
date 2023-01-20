@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.PersistentObject;

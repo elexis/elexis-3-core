@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
+import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.StringTool;

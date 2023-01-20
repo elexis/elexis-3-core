@@ -33,7 +33,8 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;
 import ch.elexis.core.ui.contacts.Activator;
@@ -50,7 +51,6 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.PersistentObject;
@@ -105,7 +105,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				} catch (PartInitException e) {
 					ElexisStatus es = new ElexisStatus(ElexisStatus.ERROR, Activator.PLUGIN_ID, ElexisStatus.CODE_NONE,
 							"Fehler beim Öffnen", e);
-					ElexisEventDispatcher.fireElexisStatusEvent(es);
+					ElexisStatus.fire(es);
 				}
 
 			}

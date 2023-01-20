@@ -3,7 +3,7 @@ package ch.elexis.core.ui.text;
 import java.util.Optional;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICodeElementBlock;

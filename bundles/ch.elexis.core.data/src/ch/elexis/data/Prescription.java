@@ -25,13 +25,13 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.nopo.adapter.ArtikelAdapter;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;
+import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -599,7 +599,7 @@ public class Prescription extends PersistentObject {
 		} catch (NumberFormatException e) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.INFO, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					e.getLocalizedMessage(), e);
-			ElexisEventDispatcher.fireElexisStatusEvent(status);
+			ElexisStatus.fire(status);
 			return 0.0F;
 		}
 	}
