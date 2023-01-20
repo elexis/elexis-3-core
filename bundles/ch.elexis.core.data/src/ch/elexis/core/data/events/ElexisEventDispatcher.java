@@ -245,7 +245,12 @@ public final class ElexisEventDispatcher implements Runnable {
 	public static IPersistentObject getSelected(final Class<?> template) {
 		Optional<Class<?>> ciOpt = getCoreModelInterfaceForElexisClass(template);
 		if (ciOpt.isPresent()) {
-			Optional<?> selected = ContextServiceHolder.get().getTyped(ciOpt.get());
+			Optional<?> selected = Optional.empty();
+			if (Anwender.class == template) {
+				selected = ContextServiceHolder.get().getActiveUserContact();
+			} else {
+				selected = ContextServiceHolder.get().getTyped(ciOpt.get());
+			}
 			if (selected.isPresent() && selected.get() instanceof Identifiable) {
 				return NoPoUtil.loadAsPersistentObject((Identifiable) selected.get(), template);
 			}
