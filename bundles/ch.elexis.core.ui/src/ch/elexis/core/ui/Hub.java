@@ -205,6 +205,7 @@ public class Hub extends AbstractUIPlugin {
 	 * name, age and its code
 	 */
 	public static void setWindowText(Patient pat) {
+		LoggerFactory.getLogger(Hub.class).info("Set patient [" + pat + "]");
 		StringBuilder sb = new StringBuilder();
 		sb.append("Elexis ").append(Elexis.VERSION).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		if (CoreHub.getLoggedInContact() == null) {
