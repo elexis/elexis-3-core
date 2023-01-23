@@ -149,6 +149,15 @@ public interface IContextService {
 	}
 
 	/**
+	 * Remove the object set for the type clazz from the root context.
+	 * 
+	 * @param object
+	 */
+	default public void removeTyped(Class<?> clazz) {
+		getRootContext().removeTyped(clazz);
+	}
+
+	/**
 	 * Get an {@link Object} identified by the name from the root context.
 	 *
 	 * @param name

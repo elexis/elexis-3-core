@@ -35,12 +35,12 @@ import org.eclipse.ui.forms.widgets.FormText;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -49,7 +49,6 @@ import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.PagingComposite;
-import ch.elexis.data.Konsultation;
 
 /**
  * Anzeige der vergangenen Konsultationen. Es sollen einerseits "sofort" die
@@ -107,9 +106,12 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				String id = (String) e.getHref();
-				// @todo fire via contextservice ??
-				Konsultation k = Konsultation.load(id);
-				ElexisEventDispatcher.fireSelectionEvent(k);
+				java.util.Optional<IEncounter> loaded = CoreModelServiceHolder.get().load(id, IEncounter.class);
+				if (loaded.isPresent()) {
+					ContextServiceHolder.get().setTyped(loaded.get());
+				} else {
+					ContextServiceHolder.get().removeTyped(IEncounter.class);
+				}
 			}
 
 		});

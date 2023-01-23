@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -59,8 +58,6 @@ public class EncounterService implements IEncounterService {
 
 	@Reference
 	private IConfigService configService;
-
-	private Optional<?> fallBackConsumer;
 
 	@Override
 	public boolean isEditable(IEncounter encounter) {
@@ -124,13 +121,7 @@ public class EncounterService implements IEncounterService {
 		}
 		coreModelService.save(encounter);
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
-		fallBackConsumer = ContextServiceHolder.get().getRootContext()
-				.getNamed(ContextServiceHolder.SELECTIONFALLBACK);
-		if (fallBackConsumer.isPresent() && fallBackConsumer.get() instanceof Consumer) {
-			ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, coverage);
-		} else {
-			ContextServiceHolder.get().setActiveCoverage(coverage);
-		}
+		ContextServiceHolder.get().setActiveCoverage(coverage);
 		return result;
 	}
 

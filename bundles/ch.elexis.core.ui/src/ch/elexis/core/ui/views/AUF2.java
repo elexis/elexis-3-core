@@ -126,7 +126,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof ISickCertificate) {
 					ContextServiceHolder.get().getRootContext()
-							.setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							.setTyped(
 									event.getStructuredSelection().getFirstElement());
 				}
 			}
@@ -183,8 +183,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				try {
 					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
 					if (createdAuf instanceof ISickCertificate) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-								createdAuf);
+						ContextServiceHolder.get().getRootContext().setTyped(createdAuf);
 					}
 					refresh();
 				} catch (Exception e) {

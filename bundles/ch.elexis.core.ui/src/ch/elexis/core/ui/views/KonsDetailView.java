@@ -279,6 +279,15 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
+	void deleteEncounter(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) @Optional IEncounter encounter) {
+		if (created) {
+			if (encounter != null && encounter.equals(actEncounter)) {
+				setKons(null);
+			}
+		}
+	}
+
+	@Inject
 	void lockedEncounter(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IEncounter encounter) {
 		if (created) {
 			if (encounter != null && Objects.equals(encounter, actEncounter)) {

@@ -217,8 +217,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof IRecipe) {
 					ContextServiceHolder.get().getRootContext()
-							.setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-									event.getStructuredSelection().getFirstElement());
+							.setTyped(event.getStructuredSelection().getFirstElement());
 				}
 			}
 		});

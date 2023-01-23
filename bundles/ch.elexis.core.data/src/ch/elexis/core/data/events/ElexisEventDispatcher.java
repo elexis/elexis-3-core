@@ -21,13 +21,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -42,7 +42,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
@@ -189,6 +188,8 @@ public final class ElexisEventDispatcher implements Runnable {
 				return;
 			}
 
+			transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject());
+
 			int eventType = ee.getType();
 			if (eventType == ElexisEvent.EVENT_SELECTED || eventType == ElexisEvent.EVENT_DESELECTED) {
 
@@ -217,6 +218,34 @@ public final class ElexisEventDispatcher implements Runnable {
 				if (mapEvent != null) {
 					ElexisServerServiceHolder.get().postEvent(mapEvent);
 				}
+			}
+		}
+	}
+
+	public void transalteAndPostOsgiEvent(int eventType, Object object) {
+		if (object != null) {
+			Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(object.getClass());
+			if (modelInterface.isPresent() && object instanceof PersistentObject) {
+				Optional<?> identifiable = NoPoUtil.loadAsIdentifiable((PersistentObject) object, modelInterface.get());
+				if (identifiable.isPresent()) {
+					if (eventType == ElexisEvent.EVENT_CREATE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_CREATE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_UPDATE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_DELETE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_SELECTED) {
+						ContextServiceHolder.get().setTyped(identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+						ContextServiceHolder.get().removeTyped(modelInterface.get());
+					} else {
+						log.warn("Event typ [" + eventType + "] not mapped for [" + object + "]", new Throwable());
+					}
+				} else {
+					log.warn("Could not load [" + object + "] as [" + modelInterface.get() + "]");
+				}
+			} else {
+				log.warn("Unknown model class for [" + object + "]");
 			}
 		}
 	}
@@ -280,23 +309,6 @@ public final class ElexisEventDispatcher implements Runnable {
 			return Optional.of(IDocumentLetter.class);
 		}
 		return Optional.empty();
-	}
-
-	/**
-	 * inform the system that an object has been selected, fallback to context
-	 * service if {@link Identifiable} could not be resolved to
-	 * {@link PersistentObject}.
-	 * 
-	 * @param identifiable
-	 */
-	public static void fireSelectionEvent(Identifiable identifiable) {
-		PersistentObject po = NoPoUtil.loadAsPersistentObject(identifiable, false);
-		if (po != null) {
-			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
-		} else {
-			log.info("Could not get PersistentObject for [" + identifiable + "]");
-			ContextServiceHolder.get().getRootContext().setTyped(identifiable);
-		}
 	}
 
 	/**
@@ -501,18 +513,5 @@ public final class ElexisEventDispatcher implements Runnable {
 		void startCatchEvent(ElexisEvent ee, ElexisEventListener listener);
 
 		void endCatchEvent(ElexisEvent ee, ElexisEventListener listener);
-	}
-
-	public void registerFallbackConsumer(IContextService contextService) {
-		contextService.getRootContext().setNamed(ch.elexis.core.services.holder.ContextServiceHolder.SELECTIONFALLBACK,
-				new Consumer<Identifiable>() { // $NON-NLS-1$
-
-					@Override
-					public void accept(Identifiable identifiable) {
-						if (identifiable != null) {
-							fireSelectionEvent(identifiable);
-						}
-					}
-				});
 	}
 }

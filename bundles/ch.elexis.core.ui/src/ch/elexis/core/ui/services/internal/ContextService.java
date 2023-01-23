@@ -22,13 +22,9 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
@@ -36,18 +32,8 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 
 /**
- * This {@link IContextService} implementation translates events from and to the
- * {@link ElexisEventDispatcher} and the {@link IEclipseContext}.
- *
- * <p>
- * <b>{@link ElexisEventDispatcher}</b><br/>
- * Selection, Reload and Locking Events are translated to
- * {@link ElexisEventTopics} and posted using the {@link EventAdmin}. If the
- * event referrer to an object, the object is translated to an
- * {@link Identifiable} using the {@link StoreToStringServiceHolder}. Only
- * events from the {@link ElexisEventDispatcher} are consumed, no events are
- * sent.
- * </p>
+ * This {@link IContextService} implementation translates events from and
+ * manages selection with the {@link IEclipseContext}.
  *
  * <p>
  * <b>{@link IEclipseContext}</b><br/>

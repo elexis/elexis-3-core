@@ -98,6 +98,8 @@ public class KonsListe extends ViewPart implements IRefreshable {
 		if (iEncounter != null && !iEncounter.equals(actEncounter)) {
 			restart(false);
 			actEncounter = iEncounter;
+		} else if (iEncounter != null && iEncounter.isDeleted()) {
+			restart(false);
 		}
 	}
 
