@@ -12,6 +12,10 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -21,10 +25,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
@@ -33,10 +38,10 @@ public class SelectFallDialog extends TitleAreaDialog {
 	Fall[] faelle;
 	public Fall result;
 	List list;
-	private UpdateFallListListener updateFallListener = new UpdateFallListListener(Fall.class, 0xff);
 
 	public SelectFallDialog(Shell shell) {
 		super(shell);
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	@Override
@@ -57,8 +62,6 @@ public class SelectFallDialog extends TitleAreaDialog {
 		tbManager.add(GlobalActions.neuerFallAction);
 		tbManager.createControl(ret);
 
-		ElexisEventDispatcher.getInstance().addListeners(updateFallListener);
-
 		return ret;
 	}
 
@@ -78,14 +81,11 @@ public class SelectFallDialog extends TitleAreaDialog {
 		} else {
 			result = faelle[sel];
 		}
-
-		ElexisEventDispatcher.getInstance().removeListeners(updateFallListener);
 		super.okPressed();
 	}
 
 	@Override
 	protected void cancelPressed() {
-		ElexisEventDispatcher.getInstance().removeListeners(updateFallListener);
 		super.cancelPressed();
 	}
 
@@ -98,16 +98,20 @@ public class SelectFallDialog extends TitleAreaDialog {
 		}
 	}
 
-	private class UpdateFallListListener extends ElexisUiEventListenerImpl {
-
-		UpdateFallListListener(final Class<?> clazz, int mode) {
-			super(clazz, mode);
-		}
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	private void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			reloadFaelleList();
-		}
+		}, list);
+	}
+
+	@Optional
+	@Inject
+	private void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			reloadFaelleList();
+		}, list);
 	}
 
 	@Override

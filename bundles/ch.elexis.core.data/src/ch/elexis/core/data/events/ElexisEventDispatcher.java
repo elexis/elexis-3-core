@@ -188,7 +188,8 @@ public final class ElexisEventDispatcher implements Runnable {
 				return;
 			}
 
-			transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject());
+			transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject(),
+					ee.getObjectClass());
 
 			int eventType = ee.getType();
 			if (eventType == ElexisEvent.EVENT_SELECTED || eventType == ElexisEvent.EVENT_DESELECTED) {
@@ -222,7 +223,7 @@ public final class ElexisEventDispatcher implements Runnable {
 		}
 	}
 
-	public void transalteAndPostOsgiEvent(int eventType, Object object) {
+	public void transalteAndPostOsgiEvent(int eventType, Object object, Class<?> clazz) {
 		if (object != null) {
 			Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(object.getClass());
 			if (modelInterface.isPresent() && object instanceof PersistentObject) {
@@ -246,6 +247,12 @@ public final class ElexisEventDispatcher implements Runnable {
 				}
 			} else {
 				log.warn("Unknown model class for [" + object + "]");
+			}
+		} else if (clazz != null) {
+			if (eventType == ElexisEvent.EVENT_RELOAD) {
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, clazz);
+			} else {
+				log.warn("Event typ [" + eventType + "] not mapped for [" + clazz + "]", new Throwable());
 			}
 		}
 	}

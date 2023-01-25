@@ -67,7 +67,7 @@ public class MandantSelectionContributionItem {
 
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
-		if (fParent != null) {
+		if (fParent != null && !fParent.isDisposed()) {
 			Mandant m = (Mandant) NoPoUtil.loadAsPersistentObject(mandator, Mandant.class);
 			if (m != null && item != null) {
 				item.setText(m.getMandantLabel());
@@ -96,20 +96,20 @@ public class MandantSelectionContributionItem {
 	@Optional
 	@Inject
 	void activeUser(IUser user) {
-		if (item != null) {
-			Display.getDefault().asyncExec(() -> {
+		Display.getDefault().asyncExec(() -> {
+			if (item != null && !item.isDisposed()) {
 				adaptForUser(user);
-			});
-		}
+			}
+		});
 	}
 
 	@Inject
 	void changedUser(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		if (item != null) {
-			Display.getDefault().asyncExec(() -> {
+		Display.getDefault().asyncExec(() -> {
+			if (item != null && !item.isDisposed()) {
 				adaptForUser(user);
-			});
-		}
+			}
+		});
 	}
 
 	private void adaptForUser(IUser user) {

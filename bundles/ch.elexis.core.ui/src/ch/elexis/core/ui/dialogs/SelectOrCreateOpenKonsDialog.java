@@ -3,6 +3,10 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -24,13 +28,14 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
@@ -48,11 +53,13 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 	public SelectOrCreateOpenKonsDialog(Patient patient) {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.patient = patient;
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	public SelectOrCreateOpenKonsDialog(Patient patient, String title) {
 		this(patient);
 		this.title = title;
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	@Override
@@ -166,9 +173,6 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 			}
 		});
 
-		ElexisEventDispatcher.getInstance()
-				.addListeners(new UpdateKonsComboListener(openKonsCombo, Konsultation.class, 0xff));
-
 		fd = new FormData();
 		fd.top = new FormAttachment(toolbar, 5);
 		fd.left = new FormAttachment(0, 5);
@@ -226,21 +230,21 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		return konsultation;
 	}
 
-	private class UpdateKonsComboListener extends ElexisUiEventListenerImpl {
+	@Optional
+	@Inject
+	private void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			openKonsCombo.setInput(getOpenKons());
+			openKonsCombo.refresh();
+		}, openKonsCombo);
+	}
 
-		ComboViewer viewer;
-
-		UpdateKonsComboListener(ComboViewer viewer, final Class<?> clazz, int mode) {
-			super(clazz, mode);
-			this.viewer = viewer;
-		}
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-				viewer.setInput(getOpenKons());
-				viewer.refresh();
-			}
-		}
+	@Optional
+	@Inject
+	private void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			openKonsCombo.setInput(getOpenKons());
+			openKonsCombo.refresh();
+		}, openKonsCombo);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -36,8 +37,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
@@ -57,7 +57,6 @@ import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper.IDoubleClickLis
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -75,23 +74,19 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 	private IDataProvider headerDataProvider;
 	private IDataProvider rowDataProvider;
 
-	private final ElexisUiEventListenerImpl eeli_find = new ElexisUiEventListenerImpl(IFinding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IFinding encounter) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-	};
+		}, natTable);
+	}
 
-	private final ElexisUiEventListenerImpl eeli_code = new ElexisUiEventListenerImpl(ICoding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			codeRefresh();
-		}
-	};
+	@Optional
+	@Inject
+	void crudCoding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoding encounter) {
+		codeRefresh();
+	}
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
@@ -198,7 +193,6 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
 		atachTooltip();
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_find, eeli_code);
 		getSite().getPage().addPartListener(udpateOnVisible);
 
 		refresh();
@@ -277,7 +271,6 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_find, eeli_code);
 		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}

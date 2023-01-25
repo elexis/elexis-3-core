@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -42,8 +43,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
@@ -51,7 +51,6 @@ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -69,15 +68,13 @@ public class FindingsView extends ViewPart implements IRefreshable {
 
 	private String searchTitle;
 
-	private final ElexisUiEventListenerImpl eeli_find = new ElexisUiEventListenerImpl(IFinding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IFinding finding) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-
-	};
+		}, viewer);
+	}
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
@@ -176,7 +173,6 @@ public class FindingsView extends ViewPart implements IRefreshable {
 		// make the viewer selection available
 		getSite().setSelectionProvider(viewer);
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_find);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
@@ -221,7 +217,6 @@ public class FindingsView extends ViewPart implements IRefreshable {
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_find);
 		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}

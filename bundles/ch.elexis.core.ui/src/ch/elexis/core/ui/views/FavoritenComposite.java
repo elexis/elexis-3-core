@@ -1,8 +1,10 @@
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
-import java.util.Optional;
+import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -40,20 +42,19 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
-import ch.elexis.core.l10n.Messages;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 
@@ -65,13 +66,13 @@ public class FavoritenComposite extends Composite {
 	private Font defaultFont;
 	private Font boldFont;
 
-	private ElexisUiEventListenerImpl reloadListener = new ElexisUiEventListenerImpl(Favorite.class,
-			ElexisEvent.EVENT_RELOAD) {
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void reloadFavorites(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (Favorite.class.equals(clazz)) {
 			update();
 		}
-	};
+	}
 
 	/**
 	 * Create the composite.
@@ -114,7 +115,7 @@ public class FavoritenComposite extends Composite {
 				TableItem item = (TableItem) event.item;
 
 				Favorite fav = (Favorite) item.getData();
-				Optional<Identifiable> cfs = fav.getObject();
+				java.util.Optional<Identifiable> cfs = fav.getObject();
 
 				String simpleName = "?"; //$NON-NLS-1$
 				String label = "?"; //$NON-NLS-1$
@@ -158,7 +159,7 @@ public class FavoritenComposite extends Composite {
 					StructuredSelection ss = (StructuredSelection) tv.getSelection();
 					if (!ss.isEmpty()) {
 						Favorite fav = (Favorite) ss.getFirstElement();
-						Optional<Identifiable> po = fav.getObject();
+						java.util.Optional<Identifiable> po = fav.getObject();
 						if (po.isPresent()) {
 							target.codeSelected(po.get());
 						}
@@ -234,7 +235,7 @@ public class FavoritenComposite extends Composite {
 					event.data = null;
 				} else {
 					Favorite fav = (Favorite) ss.getFirstElement();
-					Optional<Identifiable> favObj = fav.getObject();
+					java.util.Optional<Identifiable> favObj = fav.getObject();
 					if (favObj.isPresent()) {
 						event.data = StoreToStringServiceHolder.getStoreToString(favObj.get());
 					}
@@ -266,12 +267,11 @@ public class FavoritenComposite extends Composite {
 		tv.setLabelProvider(new ColorizedLabelProvider());
 		tv.setInput(VerrechenbarFavorites.getFavorites());
 
-		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
 		if (defaultFont != null) {
 			defaultFont.dispose();
 		}
@@ -301,7 +301,7 @@ public class FavoritenComposite extends Composite {
 		@Override
 		public Color getBackground(Object element) {
 			Favorite fav = (Favorite) element;
-			Optional<Identifiable> v = fav.getObject();
+			java.util.Optional<Identifiable> v = fav.getObject();
 			if (!v.isPresent()) {
 				return null;
 			}
