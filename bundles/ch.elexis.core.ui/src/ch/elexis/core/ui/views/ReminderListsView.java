@@ -75,7 +75,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
@@ -98,7 +97,6 @@ import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -368,12 +366,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
-	private ElexisEventListener eeli_reminder = new ElexisUiEventListenerImpl(Reminder.class,
-			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_UPDATE) {
-		public void catchElexisEvent(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IReminder reminder) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-	};
+		}, viewerSelectionComposite);
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -510,13 +509,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
 		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_reminder);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_reminder);
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 

@@ -199,10 +199,11 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void reloadPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IPatient patient) {
-		if (patient != null && patient.equals(actPat) && created) {
+	@Optional
+	public void reloadPatient(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IPatient.class.equals(clazz) && created) {
 			actPat = null; // make sure patient will be updated
-			setPatient(patient);
+			setPatient(actPat);
 		}
 	}
 
@@ -226,8 +227,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void reloadCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) ICoverage coverage) {
-		if (created) {
+	@Optional
+	public void reloadCoverage(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (ICoverage.class.equals(clazz) && created) {
 			updateFallCombo();
 		}
 	}

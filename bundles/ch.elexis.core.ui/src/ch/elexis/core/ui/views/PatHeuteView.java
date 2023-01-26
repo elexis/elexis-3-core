@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_BILLING_LIST;
 
 import java.io.FileWriter;
@@ -28,6 +27,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -55,6 +55,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -72,21 +73,19 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.AbstractDataLoaderJob;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
@@ -117,7 +116,7 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
-public class PatHeuteView extends ViewPart implements IActivationListener, BackgroundJobListener {
+public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJobListener {
 	public static final String ID = "ch.elexis.PatHeuteView"; //$NON-NLS-1$
 	static final String LEISTUNG_HINZU = Messages.Core_Add_Caption; // $NON-NLS-1$
 	static final String STAT_LEEREN = Messages.PatHeuteView_empty; // $NON-NLS-1$
@@ -142,14 +141,17 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 	// private double sumSelected;
 	private final Query<Konsultation> qbe;
 	Composite parent;
-	private final ElexisEventListener eeli_kons = new ElexisUiEventListenerImpl(Konsultation.class) {
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			selection((Konsultation) ev.getObject());
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
-		}
-	};
+	@Inject
+	void activeEncounter(@Optional IEncounter encounter) {
+		Display.getDefault().syncExec(() -> {
+			CoreUiUtil.runIfActive(() -> {
+				selection((Konsultation) NoPoUtil.loadAsPersistentObject(encounter));
+			}, cv);
+		});
+	}
 
 	public PatHeuteView() {
 		super();
@@ -362,7 +364,6 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 
 		// setFocus();
 		cv.getConfigurer().getContentProvider().startListening();
-		GlobalEventDispatcher.addActivationListener(this, this);
 		kload.schedule();
 
 		cv.addDoubleClickListener(new PoDoubleClickListener() {
@@ -381,14 +382,15 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 				}
 			}
 		});
+
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	@Override
 	public void dispose() {
+		getSite().getPage().removePartListener(udpateOnVisible);
 		cv.getConfigurer().getContentProvider().stopListening();
 		kload.removeListener(this);
-		GlobalEventDispatcher.removeActivationListener(this, this);
-
 	}
 
 	@Override
@@ -423,20 +425,6 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			}
 			return 0;
 		}).sum();
-	}
-
-	@Override
-	public void activation(final boolean mode) { /* leer */
-	}
-
-	@Override
-	public void visible(final boolean mode) {
-		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_kons);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_kons);
-		}
-
 	}
 
 	@Optional
@@ -971,5 +959,12 @@ public class PatHeuteView extends ViewPart implements IActivationListener, Backg
 			}
 			return true;
 		}
+	}
+
+	@Override
+	public void refresh() {
+		selection(
+				(Konsultation) NoPoUtil
+						.loadAsPersistentObject(ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null)));
 	}
 }

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -62,15 +63,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.LoadTemplateCommand;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextTemplateRequirement;
@@ -100,19 +100,17 @@ public class TextTemplateView extends ViewPart {
 
 	static Logger log = LoggerFactory.getLogger(TextTemplateView.class);
 
-	private ElexisUiEventListenerImpl reloadListener = new ElexisUiEventListenerImpl(Brief.class,
-			ElexisEvent.EVENT_RELOAD) {
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void reloadLetter(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IDocumentLetter.class.isAssignableFrom(clazz)) {
 			refresh();
 		}
-	};
+	}
 
 	public TextTemplateView() {
 		initActiveTextPlugin();
 		loadRequiredAndExistingTemplates();
-
-		ElexisEventDispatcher.getInstance().addListeners(reloadListener);
 	}
 
 	private void loadRequiredAndExistingTemplates() {
@@ -581,11 +579,6 @@ public class TextTemplateView extends ViewPart {
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(reloadListener);
 	}
 
 	private void initActiveTextPlugin() {

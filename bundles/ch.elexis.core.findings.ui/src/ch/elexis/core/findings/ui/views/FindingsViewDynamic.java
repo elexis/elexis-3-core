@@ -76,7 +76,7 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
 	@Optional
 	@Inject
-	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IFinding encounter) {
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IFinding finding) {
 		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
 		}, natTable);
@@ -84,7 +84,7 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
 	@Optional
 	@Inject
-	void crudCoding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoding encounter) {
+	void crudCoding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoding coding) {
 		codeRefresh();
 	}
 

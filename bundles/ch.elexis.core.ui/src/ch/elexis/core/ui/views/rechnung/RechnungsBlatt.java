@@ -76,9 +76,7 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.documents.DocumentStore;
@@ -103,7 +101,6 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.controls.IIdentifiableModifiableListComposite;
 import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
@@ -226,30 +223,30 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			new InputData(Messages.Invoice_Amount_Unpaid, Rechnung.BILL_AMOUNT_CENTS, openAmountContentProvider) };
 	private LabeledInputField.AutoForm rnform;
 
-	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED
-					| ElexisEvent.EVENT_DESELECTED) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_UPDATE:
-				doSelect((Rechnung) ev.getObject());
-				break;
-			case ElexisEvent.EVENT_DESELECTED: // fall thru
-				doSelect(null);
-				break;
-			case ElexisEvent.EVENT_DELETE:
-				if (actRn != null && actRn.getId().equals(ev.getObject().getId())) {
-					doSelect(null);
-				}
-				break;
-			case ElexisEvent.EVENT_SELECTED:
-				doSelect((Rechnung) ev.getObject());
-				break;
-			}
+	@Optional
+	@Inject
+	void deletedInvoice(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IInvoice invoice) {
+		if (actRn != null && actRn.getId().equals(invoice.getId())) {
+			doSelect(null);
 		}
-	};
+	}
+
+	@Optional
+	@Inject
+	void updateInvoice(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IInvoice invoice) {
+		doSelect((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+	}
+
+	@Inject
+	void activeInvoice(@Optional IInvoice invoice) {
+		Display.getDefault().asyncExec(() -> {
+			if (invoice != null) {
+				doSelect((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+			} else {
+				doSelect(null);
+			}
+		});
+	}
 
 	@Optional
 	@Inject
@@ -271,30 +268,24 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 	}
 
-	private final ElexisEventListenerImpl eeli_patient = new ElexisUiEventListenerImpl(Patient.class,
-			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			Patient pat = (Patient) ev.getObject();
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_DESELECTED: // fall thru
-				doSelect(null);
-				break;
-			case ElexisEvent.EVENT_SELECTED:
+	@Inject
+	void activePatient(@Optional IPatient patient) {
+		Display.getDefault().asyncExec(() -> {
+			if (patient != null) {
 				if (actRn != null) {
 					Fall fall = actRn.getFall();
 					if (fall.exists()) {
-						Patient patient = fall.getPatient();
-						if (!Objects.equals(pat, patient)) {
+						Patient actPatient = fall.getPatient();
+						if (!Objects.equals(patient.getId(), actPatient.getId())) {
 							doSelect(null);
 						}
 					}
 				}
-				break;
+			} else {
+				doSelect(null);
 			}
-		}
-	};
+		});
+	}
 
 	@SuppressWarnings("unchecked")
 	public RechnungsBlatt(Composite parent, IViewSite site) {
@@ -732,13 +723,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Override
 	public void visible(boolean mode) {
 		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_patient);
 			Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 			if (selected != null) {
 				doSelect(selected);
 			}
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_patient);
 		}
 	}
 

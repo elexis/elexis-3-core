@@ -68,12 +68,12 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -83,7 +83,6 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.dialogs.ReminderDetailDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
@@ -139,13 +138,13 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	private Patient actPatient;
 	private Text txtSearch;
 
-	private ElexisEventListener eeli_reminder = new ElexisUiEventListenerImpl(Reminder.class,
-			ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_UPDATE) {
-		@Override
-		public void catchElexisEvent(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IReminder reminder) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			cv.notify(CommonViewer.Message.update);
-		}
-	};
+		}, cv);
+	}
 
 	@Optional
 	@Inject
@@ -318,8 +317,6 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				}
 			}
 		});
-
-		ElexisEventDispatcher.getInstance().addListeners(eeli_reminder);
 	}
 
 	private List<IContributionItem> createActionList() {
@@ -382,7 +379,6 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_reminder);
 		getSite().getPage().removePartListener(udpateOnVisible);
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyOwnDueReminderToggleAction.isChecked());
 	}

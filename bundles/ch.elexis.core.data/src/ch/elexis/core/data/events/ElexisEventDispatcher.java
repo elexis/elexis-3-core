@@ -33,16 +33,20 @@ import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
@@ -51,6 +55,8 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
+import ch.elexis.data.Rechnung;
+import ch.elexis.data.Reminder;
 import ch.elexis.data.User;
 
 /**
@@ -223,7 +229,11 @@ public final class ElexisEventDispatcher implements Runnable {
 		}
 	}
 
-	public void transalteAndPostOsgiEvent(int eventType, Object object, Class<?> clazz) {
+	private void transalteAndPostOsgiEvent(int eventType, Object object, Class<?> clazz) {
+		if (object instanceof Class && clazz == null) {
+			clazz = (Class<?>) object;
+			object = null;
+		}
 		if (object != null) {
 			Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(object.getClass());
 			if (modelInterface.isPresent() && object instanceof PersistentObject) {
@@ -250,7 +260,12 @@ public final class ElexisEventDispatcher implements Runnable {
 			}
 		} else if (clazz != null) {
 			if (eventType == ElexisEvent.EVENT_RELOAD) {
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, clazz);
+				Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(clazz);
+				if (modelInterface.isPresent()) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, modelInterface.get());
+				} else {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, clazz);
+				}
 			} else {
 				log.warn("Event typ [" + eventType + "] not mapped for [" + clazz + "]", new Throwable());
 			}
@@ -314,6 +329,12 @@ public final class ElexisEventDispatcher implements Runnable {
 			return Optional.of(IPrescription.class);
 		} else if (elexisClazz == Brief.class) {
 			return Optional.of(IDocumentLetter.class);
+		} else if (elexisClazz == Reminder.class) {
+			return Optional.of(IReminder.class);
+		} else if (elexisClazz == Rechnung.class) {
+			return Optional.of(IInvoice.class);
+		} else if (elexisClazz == AccountTransaction.class) {
+			return Optional.of(IAccountTransaction.class);
 		}
 		return Optional.empty();
 	}
