@@ -51,6 +51,7 @@ import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -335,6 +336,8 @@ public final class ElexisEventDispatcher implements Runnable {
 			return Optional.of(IInvoice.class);
 		} else if (elexisClazz == AccountTransaction.class) {
 			return Optional.of(IAccountTransaction.class);
+		} else if (elexisClazz == Kontakt.class) {
+			return Optional.of(IContact.class);
 		}
 		return Optional.empty();
 	}

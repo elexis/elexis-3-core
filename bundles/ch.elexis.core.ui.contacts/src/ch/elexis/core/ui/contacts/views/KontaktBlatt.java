@@ -14,7 +14,11 @@ package ch.elexis.core.ui.contacts.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,29 +40,28 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentKontaktLockHandler;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
@@ -68,7 +71,8 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
-public class KontaktBlatt extends Composite implements IActivationListener, IUnlockable {
+public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
+{
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
@@ -152,12 +156,11 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	private Kontakt actKontakt;
 	private final Label lbAnschrift;
 
-	private ElexisEventListener eeli_kontakt = new ElexisUiEventListenerImpl(Kontakt.class) {
-		public void runInUi(ElexisEvent ev) {
-			Kontakt kontakt = (Kontakt) ev.getObject();
-
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_SELECTED:
+	@Inject
+	void activeContact(@Optional IContact contact) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
+			if (kontakt != null) {
 				Kontakt deselectedKontakt = actKontakt;
 				setKontakt(kontakt);
 				if (deselectedKontakt != null) {
@@ -168,22 +171,29 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 							.getService(ICommandService.class);
 					commandService.refreshElements(ToggleCurrentKontaktLockHandler.COMMAND_ID, null);
 				}
-				break;
-			case ElexisEvent.EVENT_DESELECTED:
+			} else {
 				setEnabled(false);
-				break;
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if (kontakt.equals(actKontakt)) {
-					save();
-					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
-				}
-				break;
-			default:
-				break;
 			}
+		}, form);
+	}
+
+	@Inject
+	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IContact contact) {
+		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
+		if (kontakt != null && kontakt.equals(actKontakt)) {
+			save();
+			setUnlocked(true);
 		}
-	};
+	}
+
+	@Inject
+	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IContact contact) {
+		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
+		if (kontakt != null && kontakt.equals(actKontakt)) {
+			save();
+			setUnlocked(false);
+		}
+	}
 
 	public KontaktBlatt(Composite parent, int style, IViewSite vs) {
 		super(parent, style);
@@ -262,8 +272,9 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		lbAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		setOrganisationFieldsVisible(false);
 		def[19].getWidget().setVisible(false); // field is only added for UI presentation reasons
-		GlobalEventDispatcher.addActivationListener(this, site.getPart());
 		setUnlocked(false);
+
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	private List<Kontakt> queryContact() {
@@ -282,7 +293,6 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, site.getPart());
 		super.dispose();
 	}
 
@@ -429,23 +439,6 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 		}
 	}
 
-	public void visible(boolean mode) {
-		if (mode == true) {
-			setKontakt((Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class));
-			ElexisEventDispatcher.getInstance().addListeners(eeli_kontakt);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_kontakt);
-		}
-
-	}
-
-	private final ElexisEvent eetemplate = new ElexisEvent(null, Kontakt.class,
-			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
-
-	public ElexisEvent getElexisEventFilter() {
-		return eetemplate;
-	}
-
 	private void save() {
 		afDetails.save();
 	}
@@ -453,5 +446,11 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		afDetails.setUnlocked(unlocked);
+	}
+
+	@Override
+	public void refresh() {
+		setKontakt((Kontakt) NoPoUtil
+				.loadAsPersistentObject(ContextServiceHolder.get().getTyped(IContact.class).orElse(null)));
 	}
 }

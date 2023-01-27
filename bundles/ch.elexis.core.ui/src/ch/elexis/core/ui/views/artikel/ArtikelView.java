@@ -40,14 +40,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -57,7 +53,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.data.PersistentObject;
 
 public class ArtikelView extends ViewPart implements IActivationListener {
 	private static final String KEY_CE = "ce"; //$NON-NLS-1$
@@ -262,19 +257,8 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 		CommonViewer cv;
 		IDetailDisplay detailDisplay;
 
-		ElexisEventListenerImpl eeli_div;
-
 		MasterDetailsPage(Composite parent, CodeSelectorFactory master, IDetailDisplay detail) {
 			super(parent, SWT.NONE);
-			if (PersistentObject.class.isAssignableFrom(detail.getElementClass())) {
-				eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
-					@Override
-					public void runInUi(ElexisEvent ev) {
-						detailDisplay.display(ev.getObject());
-					}
-				};
-				ElexisEventDispatcher.getInstance().addListeners(eeli_div);
-			}
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
 			cv = new CommonViewer();
@@ -289,13 +273,6 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 			cv.getConfigurer().getContentProvider().startListening();
 			detailDisplay = detail;
 		}
-
-		public void dispose() {
-			if (eeli_div != null) {
-				ElexisEventDispatcher.getInstance().removeListeners(eeli_div);
-			}
-		}
-
 	}
 
 	@Override

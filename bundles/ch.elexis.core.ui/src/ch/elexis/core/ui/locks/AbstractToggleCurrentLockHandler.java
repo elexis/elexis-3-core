@@ -2,53 +2,48 @@ package ch.elexis.core.ui.locks;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 
-import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.CoreUiUtil;
 
 public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler implements IElementUpdater {
 
 	protected ICommandService commandService;
-	private ElexisEventListenerImpl eventListener;
 
 	public abstract String getCommandId();
 
 	public abstract Class<?> getTemplateClass();
 
-	public AbstractToggleCurrentLockHandler() {
-		eventListener = new ElexisUiEventListenerImpl(LockInfo.class, ElexisEvent.EVENT_RELOAD) {
-			@Override
-			public void runInUi(ElexisEvent ev) {
-				if (commandService == null) {
-					commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-				}
-				commandService.refreshElements(getCommandId(), null);
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (LockInfo.class.equals(clazz)) {
+			if (commandService == null) {
+				commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			}
-		};
-		ElexisEventDispatcher.getInstance().addListeners(eventListener);
+			commandService.refreshElements(getCommandId(), null);
+		}
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		ElexisEventDispatcher instance = ElexisEventDispatcher.getInstance();
-		if (instance != null) {
-			ElexisEventDispatcher.getInstance().removeListeners(eventListener);
-		}
-		super.finalize();
+	public AbstractToggleCurrentLockHandler() {
+		CoreUiUtil.injectServices(this);
 	}
 
 	@Override

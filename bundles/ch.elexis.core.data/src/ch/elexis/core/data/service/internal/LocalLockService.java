@@ -450,8 +450,7 @@ public class LocalLockService implements ILocalLockService {
 					}
 				}
 				if (publishUpdate) {
-					ElexisEventDispatcher.getInstance()
-							.fire(new ElexisEvent(null, LockInfo.class, ElexisEvent.EVENT_RELOAD));
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, LockInfo.class);
 				}
 			} catch (Exception e) {
 				LoggerFactory.getLogger(LockRefreshTask.class).error("Execution error", e);
