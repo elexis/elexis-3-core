@@ -157,7 +157,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		if (pat.equals(actPatient)) {
+		if (pat != null && pat.equals(actPatient)) {
 			setUnlocked(true);
 		}
 	}
