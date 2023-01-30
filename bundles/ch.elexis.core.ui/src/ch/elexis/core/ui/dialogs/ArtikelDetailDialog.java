@@ -32,11 +32,46 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
+import ch.elexis.core.ui.util.LabeledInputField.InputData;
+import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.artikel.Artikeldetail;
 import ch.elexis.data.Artikel;
 
 public class ArtikelDetailDialog extends TitleAreaDialog {
+
+	static final public InputData[] getFieldDefs(final Shell shell) {
+		InputData[] ret = new InputData[] {
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Type, Artikel.FLD_TYP, Typ.STRING, null),
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_EAN, Artikel.FLD_EAN, Typ.STRING,
+						null),
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Phamacode, Artikel.FLD_EXTINFO, Typ.STRING,
+						"Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Einkaufspreis,
+						Artikel.FLD_EK_PREIS, Typ.CURRENCY, null),
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Verkaufspreis,
+						Artikel.FLD_VK_PREIS, Typ.CURRENCY, null),
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_per_pack, Artikel.FLD_EXTINFO,
+						Typ.INT, "VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_by_dose, Artikel.FLD_EXTINFO,
+						Typ.INT, "Verkaufseinheit") }; //$NON-NLS-1$
+		return ret;
+	}
+
+	static final public InputData[] getModelFieldDefs(final Shell shell) {
+		InputData[] ret = new InputData[] {
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Type, "typ", Typ.STRING, null), //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_EAN, "gtin", Typ.STRING, null), //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Phamacode, "extInfo", Typ.STRING, //$NON-NLS-1$
+						"Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Einkaufspreis, "purchasePrice", //$NON-NLS-1$
+						Typ.CURRENCY, null), new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Verkaufspreis, "sellingPrice", //$NON-NLS-1$
+						Typ.CURRENCY, null), new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_per_pack, "extInfo", Typ.INT, //$NON-NLS-1$
+						"VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$
+				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_by_dose, "extInfo", Typ.INT, //$NON-NLS-1$
+						"Verkaufseinheit") }; //$NON-NLS-1$
+		return ret;
+	}
+
 	protected IArticle article;
 
 	public ArtikelDetailDialog(Shell shell, IPersistentObject o) {
@@ -67,9 +102,9 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 		cnt.setLayout(new FillLayout());
 		AutoForm tblArtikel = null;
 		if (article instanceof Identifiable) {
-			tblArtikel = new LabeledInputField.AutoForm(cnt, Artikeldetail.getModelFieldDefs(parent.getShell()));
+			tblArtikel = new LabeledInputField.AutoForm(cnt, getModelFieldDefs(parent.getShell()));
 		} else {
-			tblArtikel = new LabeledInputField.AutoForm(cnt, Artikeldetail.getFieldDefs(parent.getShell()));
+			tblArtikel = new LabeledInputField.AutoForm(cnt, getFieldDefs(parent.getShell()));
 		}
 		tblArtikel.reload(article);
 		ret.setMinSize(cnt.computeSize(SWT.DEFAULT, SWT.DEFAULT));

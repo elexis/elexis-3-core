@@ -165,7 +165,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@Inject
 	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		if (pat.equals(actPatient)) {
+		if (pat != null && pat.equals(actPatient)) {
 			setUnlocked(false);
 		}
 	}
@@ -173,7 +173,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@Inject
 	void lockPrereleasePatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_PRERELEASE) IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		if (actPatient != null && actPatient.equals(pat)) {
+		if (pat != null && pat.equals(actPatient)) {
 			save();
 		}
 	}

@@ -75,13 +75,6 @@
       </view>
       <view
             category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.artikel.Artikeldetail"
-            id="ch.elexis.ArtikelDetail"
-            inject="true"
-            name="%elexis.articleDetailView">
-      </view>
-      <view
-            category="ch.elexis.datenKategorie"
             class="ch.elexis.core.ui.views.FallDetailView"
             id="ch.elexis.FallDetailView"
             inject="true"
