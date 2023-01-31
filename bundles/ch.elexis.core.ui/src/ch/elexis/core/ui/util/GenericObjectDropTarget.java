@@ -11,11 +11,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -145,11 +145,12 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 	}
 
 	private void highlight(boolean bOn) {
+		Control highlightControl = getHighLightControl();
 		if (!mine.isDisposed()) {
 			if (bOn) {
-				mine.setBackground(highlightColor);
+				highlightControl.setBackground(highlightColor);
 			} else {
-				mine.setBackground(normalColor);
+				highlightControl.setBackground(normalColor);
 			}
 		}
 	}
