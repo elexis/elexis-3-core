@@ -4,12 +4,15 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
@@ -21,6 +24,9 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.LabItem;
+import ch.elexis.data.LabOrder;
+import ch.elexis.data.LabResult;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
@@ -57,6 +63,12 @@ public class CoreElexisClassToModelInterfaceContribution implements ElexisClassT
 			return Optional.of(IAccountTransaction.class);
 		} else if (elexisClazz == Kontakt.class) {
 			return Optional.of(IContact.class);
+		} else if (elexisClazz == LabItem.class) {
+			return Optional.of(ILabItem.class);
+		} else if (elexisClazz == LabResult.class) {
+			return Optional.of(ILabResult.class);
+		} else if (elexisClazz == LabOrder.class) {
+			return Optional.of(ILabOrder.class);
 		}
 		return Optional.empty();
 	}

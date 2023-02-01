@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -40,6 +41,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
@@ -48,17 +50,18 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
-import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
@@ -72,7 +75,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.LabItem;
-import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
@@ -118,63 +120,27 @@ public class LaborView extends ViewPart implements IRefreshable {
 		}, tabFolder);
 	}
 
-	private ElexisEventListener eeli_labitem = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabItem.class, ElexisEvent.EVENT_RELOAD);
-
-		@Override
-		public ElexisEvent getElexisEventFilter() {
-			return eetmpl;
-		}
-
-		@Override
-		public void catchElexisEvent(ElexisEvent ev) {
-			UiDesk.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (resultsComposite != null && !resultsComposite.isDisposed() && ordersComposite != null
+				&& !ordersComposite.isDisposed()) {
+			if (ILabItem.class.equals(clazz)) {
+				Display.getDefault().asyncExec(() -> {
 					resultsComposite.reload();
-				}
-			});
-		}
-	};
-
-	private ElexisEventListener eeli_labresult = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabResult.class, ElexisEvent.EVENT_RELOAD);
-
-		@Override
-		public ElexisEvent getElexisEventFilter() {
-			return eetmpl;
-		}
-
-		@Override
-		public void catchElexisEvent(ElexisEvent ev) {
-			UiDesk.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
+				});
+			} else if (ILabResult.class.equals(clazz)) {
+				Display.getDefault().asyncExec(() -> {
 					resultsComposite.reload();
 					ordersComposite.reload();
-				}
-			});
-		}
-	};
-
-	private ElexisEventListener eeli_laborder = new ElexisEventListener() {
-		private final ElexisEvent eetmpl = new ElexisEvent(null, LabOrder.class, ElexisEvent.EVENT_RELOAD);
-
-		@Override
-		public ElexisEvent getElexisEventFilter() {
-			return eetmpl;
-		}
-
-		@Override
-		public void catchElexisEvent(ElexisEvent ev) {
-			UiDesk.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
+				});
+			} else if (ILabOrder.class.equals(clazz)) {
+				Display.getDefault().asyncExec(() -> {
 					ordersComposite.reload();
-				}
-			});
+				});
+			}
 		}
-	};
+	}
 
 	@Override
 	public void createPartControl(final Composite parent) {
@@ -240,7 +206,6 @@ public class LaborView extends ViewPart implements IRefreshable {
 		tm.add(printAction);
 
 		// register event listeners
-		ElexisEventDispatcher.getInstance().addListeners(eeli_labitem, eeli_laborder, eeli_labresult);
 		Patient act = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 		if ((act != null && act != resultsComposite.getPatient())) {
 			resultsComposite.selectPatient(act);
@@ -251,7 +216,6 @@ public class LaborView extends ViewPart implements IRefreshable {
 	@Override
 	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_labitem, eeli_laborder, eeli_labresult);
 		super.dispose();
 	}
 
