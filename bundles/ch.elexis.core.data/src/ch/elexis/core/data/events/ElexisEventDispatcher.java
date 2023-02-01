@@ -33,32 +33,13 @@ import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.model.IAccountTransaction;
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
-import ch.elexis.core.model.IDocumentLetter;
-import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.model.IInvoice;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPrescription;
-import ch.elexis.core.model.IReminder;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
-import ch.elexis.data.AccountTransaction;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Brief;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Prescription;
-import ch.elexis.data.Rechnung;
-import ch.elexis.data.Reminder;
-import ch.elexis.data.User;
 
 /**
  * The Elexis event dispatcher system manages and distributes the information of
@@ -100,6 +81,20 @@ public final class ElexisEventDispatcher implements Runnable {
 	private volatile IPerformanceStatisticHandler performanceStatisticHandler;
 
 	private ScheduledExecutorService service;
+
+	private static ClassToModelInterfaceService classToModelInterfaceService;
+
+	private static ClassToModelInterfaceService getClassToModelInterfaceService() {
+		if (classToModelInterfaceService == null) {
+			classToModelInterfaceService = OsgiServiceUtil.getService(ClassToModelInterfaceService.class)
+					.orElseThrow(() -> new IllegalStateException("No ClassToModelInterfaceService"));
+		}
+		return classToModelInterfaceService;
+	}
+
+	public static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<? extends Object> clazz) {
+		return getClassToModelInterfaceService().getCoreModelInterfaceForElexisClass(clazz);
+	}
 
 	public static synchronized ElexisEventDispatcher getInstance() {
 		if (theInstance == null) {
@@ -236,7 +231,8 @@ public final class ElexisEventDispatcher implements Runnable {
 			object = null;
 		}
 		if (object != null) {
-			Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(object.getClass());
+			Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+					.getCoreModelInterfaceForElexisClass(object.getClass());
 			if (modelInterface.isPresent() && object instanceof PersistentObject) {
 				Optional<?> identifiable = NoPoUtil.loadAsIdentifiable((PersistentObject) object, modelInterface.get());
 				if (identifiable.isPresent()) {
@@ -261,11 +257,18 @@ public final class ElexisEventDispatcher implements Runnable {
 			}
 		} else if (clazz != null) {
 			if (eventType == ElexisEvent.EVENT_RELOAD) {
-				Optional<Class<?>> modelInterface = getCoreModelInterfaceForElexisClass(clazz);
+				Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+						.getCoreModelInterfaceForElexisClass(clazz);
 				if (modelInterface.isPresent()) {
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, modelInterface.get());
 				} else {
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, clazz);
+				}
+			} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+				Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+						.getCoreModelInterfaceForElexisClass(clazz);
+				if (modelInterface.isPresent()) {
+					ContextServiceHolder.get().removeTyped(modelInterface.get());
 				}
 			} else {
 				log.warn("Event typ [" + eventType + "] not mapped for [" + clazz + "]", new Throwable());
@@ -295,7 +298,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 *         selected
 	 */
 	public static IPersistentObject getSelected(final Class<?> template) {
-		Optional<Class<?>> ciOpt = getCoreModelInterfaceForElexisClass(template);
+		Optional<Class<?>> ciOpt = getClassToModelInterfaceService().getCoreModelInterfaceForElexisClass(template);
 		if (ciOpt.isPresent()) {
 			Optional<?> selected = Optional.empty();
 			if (Anwender.class == template) {
@@ -311,35 +314,6 @@ public final class ElexisEventDispatcher implements Runnable {
 					.warn("Unknown code model interface for [" + template + "]");
 		}
 		return null;
-	}
-
-	public static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<?> elexisClazz) {
-		if (elexisClazz == User.class) {
-			return Optional.of(IUser.class);
-		} else if (elexisClazz == Anwender.class) {
-			return Optional.of(IContact.class);
-		} else if (elexisClazz == Mandant.class) {
-			return Optional.of(IMandator.class);
-		} else if (elexisClazz == Patient.class) {
-			return Optional.of(IPatient.class);
-		} else if (elexisClazz == Konsultation.class) {
-			return Optional.of(IEncounter.class);
-		} else if (elexisClazz == Fall.class) {
-			return Optional.of(ICoverage.class);
-		} else if (elexisClazz == Prescription.class) {
-			return Optional.of(IPrescription.class);
-		} else if (elexisClazz == Brief.class) {
-			return Optional.of(IDocumentLetter.class);
-		} else if (elexisClazz == Reminder.class) {
-			return Optional.of(IReminder.class);
-		} else if (elexisClazz == Rechnung.class) {
-			return Optional.of(IInvoice.class);
-		} else if (elexisClazz == AccountTransaction.class) {
-			return Optional.of(IAccountTransaction.class);
-		} else if (elexisClazz == Kontakt.class) {
-			return Optional.of(IContact.class);
-		}
-		return Optional.empty();
 	}
 
 	/**
