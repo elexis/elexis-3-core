@@ -37,14 +37,17 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Elexis;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
@@ -114,7 +117,32 @@ public class Hub extends AbstractUIPlugin {
 			return;
 		}
 
+		showPatientChangeReminders(pat);
+
 		provider.setState(pat != null);
+	}
+
+	private void showPatientChangeReminders(Patient patient) {
+		if (patient != null) {
+			/**
+			 * ch.elexis.core.ui.views.ReminderView#eeli_pat will be called on opposite
+			 * Preferences.USR_SHOWPATCHGREMINDER condition.
+			 */
+			if (ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, false)) {
+				CompletableFuture.runAsync(() -> {
+					List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false,
+							patient, true);
+					if (list.size() != 0) {
+						StringBuilder sb = new StringBuilder();
+						for (Reminder r : list) {
+							sb.append(r.getSubject() + StringUtils.LF);
+							sb.append(r.getMessage() + "\n\n");
+						}
+						MessageEvent.fireInformation(Messages.PatientEventListener_0, sb.toString());
+					}
+				});
+			}
+		}
 	}
 
 	@Optional

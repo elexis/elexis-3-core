@@ -40,7 +40,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
-import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
@@ -136,11 +135,6 @@ public class CoreHub implements BundleActivator {
 	 */
 	@Deprecated(forRemoval = true)
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
-
-	/**
-	 * The listener for patient events
-	 */
-	private final PatientEventListener eeli_pat = new PatientEventListener();
 
 	/**
 	 * Returns the actual contact of the logged in User. Use it only for PO
@@ -267,8 +261,6 @@ public class CoreHub implements BundleActivator {
 
 		heart = Heartbeat.getInstance();
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
-
 		// add core ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(CoreHub.class.getClassLoader());
 
@@ -293,7 +285,6 @@ public class CoreHub implements BundleActivator {
 		CoreHub.logoffAnwender();
 
 		PersistentObject.disconnect();
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 		ElexisEventDispatcher.getInstance().dump();
 
 		globalCfg = null;
