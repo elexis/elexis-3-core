@@ -303,6 +303,9 @@
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/remove/billed"/>
         <genParameters ecoreParameter="model.ecore#//IBillableOptifier/remove/encounter"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IBillableOptifier/getFactor">
+        <genParameters ecoreParameter="model.ecore#//IBillableOptifier/getFactor/encounter"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IService">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/price"/>

@@ -457,6 +457,12 @@
       <eParameters name="billed" eType="#//IBilled"/>
       <eParameters name="encounter" eType="#//IEncounter"/>
     </eOperations>
+    <eOperations name="getFactor">
+      <eGenericType eClassifier="ecore:EDataType types.ecore#//Optional">
+        <eTypeArguments eClassifier="#//IBillingSystemFactor"/>
+      </eGenericType>
+      <eParameters name="encounter" eType="#//IEncounter"/>
+    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IService" abstract="true" interface="true"
       eSuperTypes="#//IBillable #//Identifiable #//Deleteable">
