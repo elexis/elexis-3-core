@@ -11,6 +11,7 @@
 package ch.elexis.core.model;
 
 import ch.rgw.tools.Result;
+import java.util.Optional;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IBillable
@@ -85,5 +86,13 @@ public interface IBillableOptifier<T extends IBillable> {
 	 * @generated
 	 */
 	Result<IBilled> remove(IBilled billed, IEncounter encounter);
-	
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model dataType="ch.elexis.core.types.Optional&lt;ch.elexis.core.model.IBillingSystemFactor&gt;"
+	 * @generated
+	 */
+	Optional<IBillingSystemFactor> getFactor(IEncounter encounter);
+
 } // IBillableOptifier
