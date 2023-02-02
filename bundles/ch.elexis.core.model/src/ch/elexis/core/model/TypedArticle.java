@@ -2,6 +2,7 @@ package ch.elexis.core.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -324,6 +325,11 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 						billed.setPoints((int) Math.round(vkPreis));
 					}
 
+				}
+
+				@Override
+				public Optional<IBillingSystemFactor> getFactor(IEncounter encounter) {
+					return Optional.empty();
 				}
 			};
 		}
