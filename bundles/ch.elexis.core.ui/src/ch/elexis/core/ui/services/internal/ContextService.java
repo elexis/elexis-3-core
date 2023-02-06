@@ -402,7 +402,6 @@ public class ContextService implements IContextService, EventHandler {
 
 		@Override
 		public void catchElexisEvent(ElexisEvent ev) {
-			logger.info("Translating selection event to context [" + ev + "]");
 			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
 				addObjectToRoot(getElexisEventObject(ev));
 			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
