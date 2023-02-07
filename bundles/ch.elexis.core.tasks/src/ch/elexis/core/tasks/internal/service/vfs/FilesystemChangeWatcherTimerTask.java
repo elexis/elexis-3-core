@@ -37,6 +37,13 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 		this.pollMap = Collections.synchronizedMap(new HashMap<String, String[]>());
 	}
 
+	/**
+	 * calls are idempotent
+	 * 
+	 * @param taskDescriptorId
+	 * @param url
+	 * @param fileExtensionFilter
+	 */
 	void incur(String taskDescriptorId, String url, String fileExtensionFilter) {
 		pollMap.put(taskDescriptorId, new String[] { url, fileExtensionFilter });
 	}

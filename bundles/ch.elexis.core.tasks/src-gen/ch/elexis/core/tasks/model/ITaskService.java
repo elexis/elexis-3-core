@@ -91,7 +91,7 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Trigger a task by its task descriptor id or reference id
+	 * Trigger a task by its task descriptor reference id
 	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
 	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
 	 * <!-- end-model-doc -->
@@ -190,5 +190,29 @@ public interface ITaskService {
 	 * @generated
 	 */
 	void unbindIIdentifiedRunnableFactory(IIdentifiedRunnableFactory factory);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Refreshes the info on this taskDescriptor, and acts on it.
+	 * <ul>
+	 *  <li>Is this taskDescriptor currently incurred? -> A
+	 *  <li>Is this station a designated runner for this taskDescriptor? -> B
+	 *  <li>Is this taskDescriptor marked as active and not deleted? -> C
+	 *  </ul>
+	 *  A,B,C: reload<br>
+	 *  A,B,!C: release<br>
+	 *  A,!B,C: release<br>
+	 *  A,!B,!C: release<br>
+	 *  !A,B,C: incur<br>
+	 * !A,B,!C: do nothing<br>
+	 * !A,!B,C: do nothing<br>
+	 *  !A,!B,!C: do nothing <br>
+	 * <!-- end-model-doc -->
+	 * @model exceptions="ch.elexis.core.tasks.model.TaskException" taskDescriptorRequired="true"
+	 * @generated
+	 */
+	void refresh(ITaskDescriptor taskDescriptor) throws TaskException;
 
 } // ITaskService

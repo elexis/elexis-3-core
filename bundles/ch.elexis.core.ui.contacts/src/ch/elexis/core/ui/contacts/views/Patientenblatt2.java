@@ -159,8 +159,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			switch (ev.getType()) {
 			case ElexisEvent.EVENT_SELECTED:
 				Patient deselectedPatient = actPatient;
-				setPatient(pat);
+				// release before change, triggers save via prerelease
 				releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
+				setPatient(pat);
 				break;
 			case ElexisEvent.EVENT_LOCK_AQUIRED:
 			case ElexisEvent.EVENT_LOCK_RELEASED:

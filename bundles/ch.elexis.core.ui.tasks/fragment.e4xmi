@@ -21,10 +21,15 @@
       <handlers xmi:id="_Ycc6QIY0EeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.tasks.handler.2" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.ManuallyTriggerTaskDescriptorHandler" command="_bF_IUIY0EeutVMzWpU7zdQ"/>
       <handlers xmi:id="_QvPtYIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handler.0" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.CreateTaskDescriptorHandler" command="_9LfTgIJOEeu-w48IYw7DTw"/>
       <handlers xmi:id="_nq0RQIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handler.1" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.DeleteTaskDescriptorHandler" command="_hNDjoIJXEeu-w48IYw7DTw"/>
+      <handlers xmi:id="_71Bk0JWhEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.handler.3" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.RefreshTaskDescriptorOnESHandler" command="_FJbhsJWdEe2RstvDzUh2sA"/>
+      <handlers xmi:id="_c-q3QJZHEe2uDrf0bbO3LQ" elementId="ch.elexis.core.ui.tasks.handler.4" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.TriggerTaskDescriptorOnESHandler" command="_9hL5wJWjEe2RstvDzUh2sA"/>
       <menus xsi:type="menu:PopupMenu" xmi:id="_-UuU4IF8Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.popupmenu.tabledescriptors">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_o7zooIY0EeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.tasks.handledmenuitem.2" iconURI="icon://IMG_HAND" command="_bF_IUIY0EeutVMzWpU7zdQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_NAqi0IJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handledmenuitem.0" iconURI="icon://IMG_ADD" command="_9LfTgIJOEeu-w48IYw7DTw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_lU4UoIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handledmenuitem.1" iconURI="icon://IMG_DELETE" command="_hNDjoIJXEeu-w48IYw7DTw"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_SkKBcJWdEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.menuseparator.0"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_TDnkoJWdEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.handledmenuitem.3" iconURI="icon://IMG_2E" command="_FJbhsJWdEe2RstvDzUh2sA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_YZn-wJZHEe2uDrf0bbO3LQ" elementId="ch.elexis.core.ui.tasks.handledmenuitem.4" iconURI="icon://IMG_2E" command="_9hL5wJWjEe2RstvDzUh2sA"/>
       </menus>
       <toolbar xmi:id="_v8gSUIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.toolbar.1">
         <children xsi:type="menu:HandledToolItem" xmi:id="_wVJb0IGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.config.handledtoolitem.part.refresh" iconURI="icon://IMG_REFRESH" command="_hobvwIGhEeuh_oRSm2ExFw"/>
@@ -37,6 +42,8 @@
     <elements xsi:type="commands:Command" xmi:id="_9LfTgIJOEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.command.create.taskdescriptor" commandName="Create TaskDescriptor" description="Creates a Task Descriptor in the database"/>
     <elements xsi:type="commands:Command" xmi:id="_hNDjoIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.command.delete.taskdescriptor" commandName="Delete TaskDescriptor" description="Mark a task descriptor as deleted"/>
     <elements xsi:type="commands:Command" xmi:id="_bF_IUIY0EeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.tasks.command.trigger.manual.taskdescriptor" commandName="Trigger TaskDescriptor" description="Manually trigger execution of task descriptor"/>
+    <elements xsi:type="commands:Command" xmi:id="_FJbhsJWdEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.command.refresh.on.es" commandName="Refresh on ES" description="Notifies ES to refresh this TaskDescriptor (only if assigned to ES as runner)"/>
+    <elements xsi:type="commands:Command" xmi:id="_9hL5wJWjEe2RstvDzUh2sA" elementId="ch.elexis.core.ui.tasks.command.trigger.on.es" commandName="Trigger on ES" description="Manually trigger this task on ES"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_uYsS0IF4Eeuh_oRSm2ExFw" featurename="snippets" parentElementId="xpath:/">
     <elements xsi:type="advanced:Perspective" xmi:id="_v64eUIF4Eeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.tasks.perspective" selectedElement="_-2PDUIF4Eeuh_oRSm2ExFw" label="Task Perspective" iconURI="platform:/plugin/ch.elexis.core.ui.tasks/rsc/icons/screwdriver.png">

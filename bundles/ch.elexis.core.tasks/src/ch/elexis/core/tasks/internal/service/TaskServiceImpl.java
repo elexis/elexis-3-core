@@ -198,6 +198,23 @@ public class TaskServiceImpl implements ITaskService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param taskDescriptor
+	 * @return to incur? only iff not delete, active, and this station is a
+	 *         designated runner
+	 */
+	private boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor) {
+		if (taskDescriptor != null && !taskDescriptor.isDeleted() && taskDescriptor.isActive()) {
+			String runner = taskDescriptor.getRunner();
+			if (StringUtils.isNotBlank(runner)) {
+				return StringUtils.equalsIgnoreCase(runner, contextService.getStationIdentifier());
+			}
+			return true;
+		}
+		return false;
+	}
+
 	// TODO: check - are there any TDs we are responsible for, and yet not loaded?
 	/**
 	 * Load a task descriptors we are responsible for and start (incur) them
@@ -243,13 +260,9 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private void incur(ITaskDescriptor taskDescriptor) throws TaskException {
 
-		String runner = taskDescriptor.getRunner();
-		if (StringUtils.isNotBlank(runner)) {
-			boolean isBoundToRunOnThisSystem = StringUtils.equalsIgnoreCase(runner,
-					contextService.getStationIdentifier());
-			if (!isBoundToRunOnThisSystem) {
-				return;
-			}
+		boolean isToIncurOnThisStation = assertIncurOnThisStation(taskDescriptor);
+		if (!isToIncurOnThisStation) {
+			return;
 		}
 
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
@@ -285,6 +298,53 @@ public class TaskServiceImpl implements ITaskService {
 			}
 		} else if (TaskTriggerType.SYSTEM_EVENT == taskDescriptor.getTriggerType()) {
 			sysEventWatcher.release(taskDescriptor);
+		}
+	}
+
+	/**
+	 * Refreshes the info on this taskDescriptor, and acts on it.
+	 * <ul>
+	 * <li>Is this taskDescriptor currently incurred? -> A
+	 * <li>Is this station a designated runner for this taskDescriptor? -> B
+	 * <li>Is this taskDescriptor marked as active and NOT deleted? -> C
+	 * </ul>
+	 * A,B,C: reload<br>
+	 * A,B,!C: release<br>
+	 * A,!B,C: release<br>
+	 * A,!B,!C: release<br>
+	 * !A,B,C: incur<br>
+	 * !A,B,!C: do nothing<br>
+	 * !A,!B,C: do nothing<br>
+	 * !A,!B,!C: do nothing <br>
+	 * 
+	 * @param taskDescriptor
+	 * @return
+	 * @throws TaskException
+	 */
+	public void refresh(ITaskDescriptor taskDescriptor) throws TaskException {
+		boolean toIncurOnThisStation = assertIncurOnThisStation(taskDescriptor);
+		Optional<ITaskDescriptor> incurredTask = getIncurredTasks().stream()
+				.filter(td -> td.getId().equals(taskDescriptor.getId())).findFirst();
+
+		if (incurredTask.isPresent()) {
+			if (toIncurOnThisStation) {
+				if (taskDescriptor.getLastupdate() > incurredTask.get().getLastupdate()) {
+					logger.info("(refresh) taskDesc change [{}/{}], rel/inc", taskDescriptor.getId(),
+							taskDescriptor.getReferenceId());
+					release(taskDescriptor);
+					incur(taskDescriptor);
+				}
+			} else {
+				logger.info("(refresh) taskDesc release [{}/{}], rel/inc", taskDescriptor.getId(),
+						taskDescriptor.getReferenceId());
+				release(taskDescriptor);
+			}
+		} else {
+			if (toIncurOnThisStation) {
+				logger.info("(refresh) taskDesc incur [{}/{}], rel/inc", taskDescriptor.getId(),
+						taskDescriptor.getReferenceId());
+				incur(taskDescriptor);
+			}
 		}
 	}
 

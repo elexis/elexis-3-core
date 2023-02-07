@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Eigenleistung;
@@ -68,6 +70,11 @@ public class CustomService extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 					billed.setFactor(1.0);
 					billed.setNetPrice(billable.getNetPrice());
 					billed.setPoints(billable.getPrice().getCents());
+				}
+
+				@Override
+				public Optional<IBillingSystemFactor> getFactor(IEncounter encounter) {
+					return Optional.empty();
 				}
 			};
 		}

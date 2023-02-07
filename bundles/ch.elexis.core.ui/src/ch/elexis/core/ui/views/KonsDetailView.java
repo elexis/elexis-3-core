@@ -192,8 +192,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	@Optional
 	@Inject
 	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient) {
-		// TODO the event update is not type safe
-		if (patient != null && created) {
+		if (patient != null && patient.equals(actPat) && created) {
 			actPat = null; // make sure patient will be updated
 			setPatient(patient);
 		}
@@ -201,7 +200,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 	@Inject
 	void reloadPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IPatient patient) {
-		if (created) {
+		if (patient != null && patient.equals(actPat) && created) {
 			actPat = null; // make sure patient will be updated
 			setPatient(patient);
 		}

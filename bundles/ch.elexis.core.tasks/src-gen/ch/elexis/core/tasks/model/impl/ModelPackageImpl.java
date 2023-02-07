@@ -851,7 +851,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEException(op, this.getTaskException());
 
 		op = addEOperation(iTaskServiceEClass, this.getITask(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "taskDescriptorReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "taskDescriptorIdOrReferenceId", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIProgressMonitor(), "progressMonitor", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getTaskTriggerType(), "trigger", 0, 1, IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(ecorePackage.getEMap());
@@ -918,6 +918,10 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iTaskServiceEClass, null, "unbindIIdentifiedRunnableFactory", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIIdentifiedRunnableFactory(), "factory", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iTaskServiceEClass, null, "refresh", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getTaskException());
 
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");
