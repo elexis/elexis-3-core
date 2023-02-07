@@ -1,11 +1,15 @@
 package ch.elexis.core.services;
 
+import static ch.elexis.core.constants.XidConstants.ASSIGNMENT_REGIONAL;
 import static ch.elexis.core.constants.XidConstants.CH_AHV;
 import static ch.elexis.core.constants.XidConstants.CH_AHV_QUALITY;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_BSVNUM;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_OID;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_RECIPIENT_EAN;
 import static ch.elexis.core.constants.XidConstants.ELEXIS;
 import static ch.elexis.core.constants.XidConstants.ELEXIS_QUALITY;
+import static ch.elexis.core.constants.XidConstants.QUALITY_GUID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,24 +29,29 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.XidQuality;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.TransientXid;
 
 @Component
 public class XidService implements IXidService {
 
-	private static Logger logger = LoggerFactory.getLogger(XidService.class);
+	private Logger logger = LoggerFactory.getLogger(XidService.class);
 
 	private HashMap<String, XidDomain> domains;
 	private HashMap<String, String> domainMap;
 
+	public XidService() {
+		domains = new HashMap<String, XidDomain>();
+		domainMap = new HashMap<String, String>();
+	}
+
 	@Reference
 	private IConfigService configService;
 
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+
 	@Activate
 	private void activate() {
-		domains = new HashMap<String, XidDomain>();
-		domainMap = new HashMap<String, String>();
 		loadDomains();
 	}
 
@@ -62,32 +71,40 @@ public class XidService implements IXidService {
 
 	private void loadDomains() {
 		String storedDomains = configService.get("LocalXIDDomains", null);
-		if (storedDomains == null) {
-			domains.put(ELEXIS, new XidDomain(ELEXIS, "UUID", ELEXIS_QUALITY, "ch.elexis.data.PersistentObject"));
-			domains.put(CH_AHV, new XidDomain(CH_AHV, "AHV", CH_AHV_QUALITY, "ch.elexis.data.Person"));
-			domains.put(DOMAIN_OID, new XidDomain(DOMAIN_OID, "OID",
-					XidConstants.ASSIGNMENT_GLOBAL | XidConstants.QUALITY_GUID, "ch.elexis.data.PersistentObject"));
-			domains.put(DOMAIN_EAN, new XidDomain(DOMAIN_EAN, "EAN", XidConstants.ASSIGNMENT_REGIONAL,
-					"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation"));
-			storeDomains();
-		} else {
-			for (String domainString : storedDomains.split(";")) {
-				String[] spl = domainString.split("#");
-				if (spl.length < 2) {
-					logger.error("Fehler in XID-Domain " + domainString);
-				}
-				String simpleName = StringUtils.EMPTY;
-				if (spl.length >= 3) {
-					simpleName = spl[2];
-				}
-				String displayOptions = "Kontakt";
-				if (spl.length >= 4) {
-					displayOptions = spl[3];
-				}
-				domains.put(spl[0], new XidDomain(spl[0], simpleName, Integer.parseInt(spl[1]), displayOptions));
-				domainMap.put(simpleName, spl[0]);
-			}
+		if (storedDomains != null) {
+			loadDomainsSplitString(storedDomains);
 		}
+
+		localRegisterXIDDomainIfNotExists(ELEXIS, "UUID", ELEXIS_QUALITY, "ch.elexis.data.PersistentObject");
+		localRegisterXIDDomainIfNotExists(CH_AHV, "AHV", CH_AHV_QUALITY, "ch.elexis.data.Person");
+		localRegisterXIDDomainIfNotExists(DOMAIN_OID, "OID", XidConstants.ASSIGNMENT_GLOBAL | QUALITY_GUID,
+				"ch.elexis.data.PersistentObject");
+		localRegisterXIDDomainIfNotExists(DOMAIN_EAN, "EAN", ASSIGNMENT_REGIONAL,
+				"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation");
+		localRegisterXIDDomainIfNotExists(DOMAIN_BSVNUM, "BSV-Nummer", ASSIGNMENT_REGIONAL,
+				"ch.elexis.data.Organisation");
+		localRegisterXIDDomainIfNotExists(DOMAIN_RECIPIENT_EAN, "rEAN", ASSIGNMENT_REGIONAL,
+				"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation");
+	}
+
+	private void loadDomainsSplitString(String storedDomains) {
+		for (String domainString : storedDomains.split(";")) {
+			String[] spl = domainString.split("#");
+			if (spl.length < 2) {
+				logger.error("Fehler in XID-Domain " + domainString);
+			}
+			String simpleName = StringUtils.EMPTY;
+			if (spl.length >= 3) {
+				simpleName = spl[2];
+			}
+			String displayOptions = "Kontakt";
+			if (spl.length >= 4) {
+				displayOptions = spl[3];
+			}
+			domains.put(spl[0], new XidDomain(spl[0], simpleName, Integer.parseInt(spl[1]), displayOptions));
+			domainMap.put(simpleName, spl[0]);
+		}
+
 	}
 
 	private void storeDomains() {
@@ -102,6 +119,11 @@ public class XidService implements IXidService {
 
 	@Override
 	public IXidDomain localRegisterXIDDomain(String domainName, String simpleName, int quality) {
+		return localRegisterXIDDomain(domainName, simpleName, quality, "");
+	}
+
+	private IXidDomain localRegisterXIDDomain(String domainName, String simpleName, int quality,
+			String displayOptions) {
 		if (domains.containsKey(domainName)) {
 			logger.error("XID Domain " + domainName + " bereits registriert");
 		} else {
@@ -109,7 +131,7 @@ public class XidService implements IXidService {
 				logger.error("XID Domain " + domainName + " ungültig");
 			} else {
 				XidDomain created = new XidDomain(domainName, simpleName == null ? StringUtils.EMPTY : simpleName,
-						quality, "Kontakt");
+						quality, displayOptions);
 				domains.put(domainName, created);
 				if (simpleName != null) {
 					domainMap.put(simpleName, domainName);
@@ -123,9 +145,14 @@ public class XidService implements IXidService {
 
 	@Override
 	public IXidDomain localRegisterXIDDomainIfNotExists(String domainName, String simpleName, int quality) {
+		return localRegisterXIDDomain(domainName, simpleName, quality, "");
+	}
+
+	private IXidDomain localRegisterXIDDomainIfNotExists(String domainName, String simpleName, int quality,
+			String displayOptions) {
 		XidDomain existing = domains.get(domainName);
 		if (existing == null) {
-			return localRegisterXIDDomain(domainName, simpleName, quality);
+			return localRegisterXIDDomain(domainName, simpleName, quality, displayOptions);
 		}
 		return existing;
 	}
@@ -148,7 +175,7 @@ public class XidService implements IXidService {
 			domainName = dom;
 		}
 		// the type is unknown here
-		INamedQuery<IXid> query = CoreModelServiceHolder.get().getNamedQuery(IXid.class, "domain", "domainid");
+		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "domainid");
 		List<IXid> xids = query
 				.executeWithParameters(query.getParameterMap("domain", domainName, "domainid", domainId));
 		// filter results, getObject will filter by type
@@ -176,11 +203,11 @@ public class XidService implements IXidService {
 				xid.setDomain(domain);
 				xid.setDomainId(id);
 				xid.setObject(identifiable);
-				CoreModelServiceHolder.get().save(xid);
+				coreModelService.save(xid);
 				return true;
 			}
 		} else {
-			IXid xid = CoreModelServiceHolder.get().create(IXid.class);
+			IXid xid = coreModelService.create(IXid.class);
 			xid.setDomain(domain);
 			xid.setDomainId(id);
 			xid.setObject(identifiable);
@@ -197,7 +224,7 @@ public class XidService implements IXidService {
 				return false;
 			}
 
-			CoreModelServiceHolder.get().save(xid);
+			coreModelService.save(xid);
 			return true;
 		}
 		return false;
@@ -211,7 +238,7 @@ public class XidService implements IXidService {
 		}
 		// ignore type here, as Kontakt and subtypes lead to not finding the Xid
 		// objectid should be unique
-		INamedQuery<IXid> query = CoreModelServiceHolder.get().getNamedQuery(IXid.class, "domain", "objectid");
+		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "objectid");
 		List<IXid> xids = query
 				.executeWithParameters(query.getParameterMap("domain", domain, "objectid", identifiable.getId()));
 		if (xids.size() > 0) {
@@ -228,7 +255,7 @@ public class XidService implements IXidService {
 	public List<IXid> getXids(Identifiable identifiable) {
 		// ignore type here, as Kontakt and subtypes lead to not finding the Xid
 		// objectid should be unique
-		INamedQuery<IXid> query = CoreModelServiceHolder.get().getNamedQuery(IXid.class, "objectid");
+		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "objectid");
 		return query.executeWithParameters(query.getParameterMap("objectid", identifiable.getId()));
 	}
 }
