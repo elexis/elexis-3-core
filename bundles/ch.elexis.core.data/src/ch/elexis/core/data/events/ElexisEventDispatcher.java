@@ -253,7 +253,18 @@ public final class ElexisEventDispatcher implements Runnable {
 					log.warn("Could not load [" + object + "] as [" + modelInterface.get() + "]");
 				}
 			} else {
-				log.warn("Unknown model class for [" + object + "]");
+				log.warn("Unknown model class for [" + object + "] using PersistentObject");
+				if (eventType == ElexisEvent.EVENT_CREATE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_CREATE, object);
+				} else if (eventType == ElexisEvent.EVENT_UPDATE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, object);
+				} else if (eventType == ElexisEvent.EVENT_DELETE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, object);
+				} else if (eventType == ElexisEvent.EVENT_SELECTED) {
+					ContextServiceHolder.get().setTyped(object);
+				} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+					ContextServiceHolder.get().removeTyped(object.getClass());
+				}
 			}
 		} else if (clazz != null) {
 			if (eventType == ElexisEvent.EVENT_RELOAD) {
