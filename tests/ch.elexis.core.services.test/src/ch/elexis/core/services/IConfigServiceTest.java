@@ -130,6 +130,22 @@ public class IConfigServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
+	public void getOrInsert() {
+		assertNull(configService.get("getOrInsert", null));
+		assertEquals("1234567890abcde", configService.getOrInsert(null, "getOrInsert", () -> "1234567890abcde"));
+		assertEquals("1234567890abcde", configService.getOrInsert(null, "getOrInsert", () -> "fghijklmnopqrst"));
+	}
+
+	@Test
+	public void getOrInsertContact() {
+		IPerson person = new IContactBuilder.PersonBuilder(coreModelService, "TestPersonGetOrInsert",
+				"TestPersonGetOrInsert", LocalDate.now(), Gender.FEMALE).mandator().buildAndSave();
+		assertNull(configService.get(person, "getOrInsert", null));
+		assertEquals("1234567890abcde", configService.getOrInsert(person, "getOrInsert", () -> "1234567890abcde"));
+		assertEquals("1234567890abcde", configService.getOrInsert(person, "getOrInsert", () -> "fghijklmnopqrst"));
+	}
+
+	@Test
 	public void getSetAsList() {
 		String TEST_KEY_SET = "TestKeySet";
 		List<String> values = Arrays.asList(new String[] { "TestValue", "TestValue2", "TestValue3" });
