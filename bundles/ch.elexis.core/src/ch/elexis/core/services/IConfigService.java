@@ -233,7 +233,7 @@ public interface IConfigService {
 	 * @param insertValue a Supplier to provide the value to insert, if no value
 	 *                    found for the key
 	 * @return
-	 * @since 3.10
+	 * @since 3.9
 	 */
 	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue);
 
