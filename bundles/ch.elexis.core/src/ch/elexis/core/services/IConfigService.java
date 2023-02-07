@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -221,6 +222,20 @@ public interface IConfigService {
 	 * @return
 	 */
 	public String get(String key, String defaultValue, boolean refreshCache);
+
+	/**
+	 * (SQL Transaction) Either get or insert the value if not found.
+	 * 
+	 * @param contact     if set: the contact the contact this configuration entry
+	 *                    is accounted to (userconfig);<br>
+	 *                    if <code>null</code> global config
+	 * @param key         identifying the configuration entry
+	 * @param insertValue a Supplier to provide the value to insert, if no value
+	 *                    found for the key
+	 * @return
+	 * @since 3.10
+	 */
+	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue);
 
 	/**
 	 * Get a stored value for a given local configuration entry, or return the value
