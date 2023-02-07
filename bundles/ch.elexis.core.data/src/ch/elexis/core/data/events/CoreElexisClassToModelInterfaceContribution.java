@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 
-import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -13,6 +12,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;

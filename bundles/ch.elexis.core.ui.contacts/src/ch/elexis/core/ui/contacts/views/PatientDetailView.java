@@ -113,7 +113,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		if (pat.equals(patientObservable.getValue())) {
+		if (pat != null && pat.equals(patientObservable.getValue())) {
 			setUnlocked(true);
 		}
 	}
@@ -121,7 +121,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	@Inject
 	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		if (pat.equals(patientObservable.getValue())) {
+		if (pat != null && pat.equals(patientObservable.getValue())) {
 			setUnlocked(false);
 		}
 	}
