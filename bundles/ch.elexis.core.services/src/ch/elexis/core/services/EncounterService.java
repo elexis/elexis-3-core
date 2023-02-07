@@ -164,10 +164,10 @@ public class EncounterService implements IEncounterService {
 				}
 
 			} else {
-				Optional<IBillingSystemFactor> systemFactor = billingService
-						.getBillingSystemFactor(billable.getCodeSystemName(), encounter.getDate());
-				if (systemFactor.isPresent()) {
-					billed.setFactor(systemFactor.get().getFactor());
+				@SuppressWarnings("unchecked")
+				Optional<IBillingSystemFactor> billableFactor = billable.getOptifier().getFactor(encounter);
+				if (billableFactor.isPresent()) {
+					billed.setFactor(billableFactor.get().getFactor());
 				} else {
 					billed.setFactor(1.0);
 				}

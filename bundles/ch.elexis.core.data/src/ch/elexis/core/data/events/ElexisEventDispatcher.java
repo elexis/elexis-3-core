@@ -424,7 +424,6 @@ public final class ElexisEventDispatcher implements Runnable {
 
 	private void doDispatch(final ElexisEvent ee) {
 		if (ee != null) {
-			log.info("Dispatch Event [" + ee + "]");
 			for (ElexisEventListener l : listeners) {
 				if (ee.matches(l.getElexisEventFilter())) {
 					// handle performance statistics if necessary

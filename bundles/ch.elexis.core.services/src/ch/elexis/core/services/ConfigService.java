@@ -14,7 +14,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.internal.app.CommandLineArgs;
@@ -27,6 +30,9 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.Desk;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.jpa.entities.Config;
+import ch.elexis.core.jpa.entities.Userconfig;
+import ch.elexis.core.jpa.entities.UserconfigId;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -34,10 +40,12 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SysSettings;
 import ch.rgw.tools.net.NetTool;
@@ -187,6 +195,43 @@ public class ConfigService implements IConfigService {
 	public String get(String key, String defaultValue, boolean refreshCache) {
 		Optional<IConfig> configEntry = modelService.load(key, IConfig.class, false, refreshCache);
 		return configEntry.map(IConfig::getValue).orElse(defaultValue);
+	}
+
+	@Override
+	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue) {
+		IElexisEntityManager elexisEntityManager = OsgiServiceUtil.getService(IElexisEntityManager.class, null).get();
+		EntityManager entityManager = (EntityManager) elexisEntityManager.getEntityManager(false);
+		String ret;
+		try {
+			entityManager.getTransaction().begin();
+
+			if (contact == null) {
+				Config config = entityManager.find(Config.class, key);
+				if (config == null) {
+					config = new Config();
+					config.setParam(key);
+					config.setWert(insertValue.get());
+					entityManager.persist(config);
+				}
+				ret = config.getWert();
+			} else {
+				Userconfig userconfig = entityManager.find(Userconfig.class, new UserconfigId(contact.getId(), key));
+				if (userconfig == null) {
+					userconfig = new Userconfig();
+					userconfig.setOwnerId(contact.getId());
+					userconfig.setParam(key);
+					userconfig.setValue(insertValue.get());
+					entityManager.persist(userconfig);
+				}
+				ret = userconfig.getValue();
+			}
+
+			entityManager.getTransaction().commit();
+			return ret;
+		} finally {
+			elexisEntityManager.closeEntityManager(entityManager);
+		}
+
 	}
 
 	@Override
