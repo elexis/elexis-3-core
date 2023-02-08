@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -126,7 +127,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 		// no locking required, PersistentObject create events are passed to server (RH)
 		for (int i = 0; i < amount; i++) {
 			Result<IBilled> addRes = BillingServiceHolder.get().bill((IBillable) matchingVerrechenbar.get(), encounter,
-					amount);
+					1);
 			if (!addRes.isOK()) {
 				addProblem("Could not add Verrechenbar [" + matchingVerrechenbar.get().getCode() + "]" + "["
 						+ addRes.toString() + "]", encounter);
