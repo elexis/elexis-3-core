@@ -248,9 +248,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		});
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -258,14 +257,6 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 	private void adaptForUser(IUser user) {
 		display();
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	@Inject

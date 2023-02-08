@@ -1087,6 +1087,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public void adaptMenus() {
-		table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
+		if (CoreUiUtil.isActiveControl(table)) {
+			table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
+		}
 	}
 }

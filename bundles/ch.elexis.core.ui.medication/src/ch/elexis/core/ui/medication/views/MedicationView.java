@@ -130,11 +130,11 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	}
 
 	public void refresh() {
-		if (CoreUiUtil.isActiveControl(tpc)) {
-			Display.getDefault().asyncExec(() -> {
+		Display.getDefault().asyncExec(() -> {
+			if (CoreUiUtil.isActiveControl(tpc)) {
 				updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), false);
-			});
-		}
+			}
+		});
 	}
 
 	public void resetSelection() {

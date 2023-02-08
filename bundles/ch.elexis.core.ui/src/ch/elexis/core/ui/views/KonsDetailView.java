@@ -218,7 +218,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser mandator) {
+	void activeUser(@Optional IUser user) {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				adaptMenus();
@@ -792,7 +792,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	public void adaptMenus() {
-		billedDisplay.adaptMenus();
+		if (CoreUiUtil.isActiveControl(billedDisplay)) {
+			billedDisplay.adaptMenus();
+		}
 	}
 
 	@Optional

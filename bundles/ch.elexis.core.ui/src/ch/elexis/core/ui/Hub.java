@@ -19,7 +19,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -35,7 +34,6 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -145,15 +143,8 @@ public class Hub extends AbstractUIPlugin {
 		}
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
-		updateUser(user);
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@EventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+	void activeUser(@Optional IUser user) {
 		updateUser(user);
 	}
 

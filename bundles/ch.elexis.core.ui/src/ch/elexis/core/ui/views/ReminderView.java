@@ -187,9 +187,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		}, cv);
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -202,14 +201,6 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		if (control != null && !control.isDisposed() && control.isVisible()) {
 			cv.notify(CommonViewer.Message.update);
 		}
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	public ReminderView() {

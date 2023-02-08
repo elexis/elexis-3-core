@@ -345,9 +345,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}, viewersParent);
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -356,14 +355,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private void adaptForUser(IUser user) {
 		refreshUserConfiguration();
 		refresh();
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	@Optional

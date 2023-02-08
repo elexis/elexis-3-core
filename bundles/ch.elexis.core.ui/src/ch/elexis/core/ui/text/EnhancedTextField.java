@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -115,18 +114,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private RangeTracker rangeTracker;
 	private boolean unlocked = false;
 
-	@Optional
-	@Inject
-	void activeUser(IUser user) {
-		if (text != null && !text.isDisposed()) {
-			Display.getDefault().asyncExec(() -> {
-				text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-			});
-		}
-	}
 
 	@Inject
-	void changedUser(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+	void activeUser(@Optional IUser user) {
 		if (text != null && !text.isDisposed()) {
 			Display.getDefault().asyncExec(() -> {
 				text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));

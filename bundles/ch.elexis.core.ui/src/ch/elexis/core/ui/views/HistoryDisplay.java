@@ -19,7 +19,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -32,7 +31,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.model.ICoverage;
@@ -262,9 +260,8 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 		});
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -274,13 +271,5 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 		if (text != null && (!text.isDisposed())) {
 			text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		}
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 }

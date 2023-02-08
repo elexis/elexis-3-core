@@ -196,9 +196,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		commandService.refreshElements(commandId, null);
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -206,14 +205,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	private void adaptForUser(IUser user) {
 		recreateUserpanel();
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,

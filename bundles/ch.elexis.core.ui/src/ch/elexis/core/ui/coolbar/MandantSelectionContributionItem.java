@@ -19,7 +19,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,7 +37,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -46,6 +44,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
@@ -68,43 +67,36 @@ public class MandantSelectionContributionItem {
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
 		if (fParent != null && !fParent.isDisposed()) {
-			Mandant m = (Mandant) NoPoUtil.loadAsPersistentObject(mandator, Mandant.class);
-			if (m != null && item != null) {
-				item.setText(m.getMandantLabel());
-				fParent.setBackground(UiMandant.getColorForMandator(m));
-				if (menuItems == null) {
-					// We have a read-only coolbar item entry
-					fParent.pack();
-					return;
-				}
-				for (int i = 0; i < menuItems.length; i++) {
-					String id = (String) menuItems[i].getData();
-					if (m.getId().equalsIgnoreCase(id)) {
+			CoreUiUtil.runAsyncIfActive(() -> {
+				Mandant m = (Mandant) NoPoUtil.loadAsPersistentObject(mandator, Mandant.class);
+				if (m != null && item != null) {
+					item.setText(m.getMandantLabel());
+					fParent.setBackground(UiMandant.getColorForMandator(m));
+					if (menuItems == null) {
+						// We have a read-only coolbar item entry
 						fParent.pack();
-						// TODO: Anordnung Elemente in Coolbar speicherbar?
-						// TODO: Programmatische Anordnung Elemente coolbar
-						menuItems[i].setSelection(true);
-					} else {
-						menuItems[i].setSelection(false);
+						return;
+					}
+					for (int i = 0; i < menuItems.length; i++) {
+						String id = (String) menuItems[i].getData();
+						if (m.getId().equalsIgnoreCase(id)) {
+							fParent.pack();
+							// TODO: Anordnung Elemente in Coolbar speicherbar?
+							// TODO: Programmatische Anordnung Elemente coolbar
+							menuItems[i].setSelection(true);
+						} else {
+							menuItems[i].setSelection(false);
+						}
 					}
 				}
-			}
-			fParent.getParent().layout();
+				fParent.getParent().layout();
+			}, fParent);
 		}
 	}
 
-	@Optional
-	@Inject
-	void activeUser(IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			if (item != null && !item.isDisposed()) {
-				adaptForUser(user);
-			}
-		});
-	}
 
 	@Inject
-	void changedUser(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			if (item != null && !item.isDisposed()) {
 				adaptForUser(user);

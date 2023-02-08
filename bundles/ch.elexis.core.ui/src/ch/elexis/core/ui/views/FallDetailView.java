@@ -47,9 +47,8 @@ public class FallDetailView extends ViewPart implements IRefreshable {
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -57,14 +56,6 @@ public class FallDetailView extends ViewPart implements IRefreshable {
 
 	private void adaptForUser(IUser user) {
 		fdb.reloadBillingSystemsMenu();
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	@Inject

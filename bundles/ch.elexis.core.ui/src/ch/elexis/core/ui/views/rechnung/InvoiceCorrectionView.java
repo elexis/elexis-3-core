@@ -212,9 +212,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		});
 	}
 
-	@Optional
 	@Inject
-	void activeUser(IUser user) {
+	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
 			adaptForUser(user);
 		});
@@ -227,14 +226,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		} else {
 			reload(null);
 		}
-	}
-
-	@Optional
-	@Inject
-	void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
-		});
 	}
 
 	private void reloadSameInvoice(Rechnung invoiceToReload) {

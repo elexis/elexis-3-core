@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -52,7 +51,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -306,9 +304,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		int[] sashWeights = null;
 		ResizeListener resizeListener;
 
-		@Optional
 		@Inject
-		void activeUser(IUser user) {
+		void activeUser(@Optional IUser user) {
 			Display.getDefault().asyncExec(() -> {
 				adaptForUser(user);
 			});
@@ -325,14 +322,6 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 			}
 			userStatistics.setContact(user.getAssignedContact());
-		}
-
-		@Optional
-		@Inject
-		void changedUser(@UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-			Display.getDefault().asyncExec(() -> {
-				adaptForUser(user);
-			});
 		}
 
 		cPage(final CTabItem ctab, final CodeSystemDescription description) {

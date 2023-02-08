@@ -1,6 +1,5 @@
 package ch.elexis.core.common;
 
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
 
 public class ElexisEventTopics {
@@ -80,14 +79,6 @@ public class ElexisEventTopics {
 
 	public static final String NOTIFICATION_STATUS = BASE_NOTIFICATION + "status";
 	public static final String NOTIFICATION_PROPKEY_STATUS = "status";
-
-	/**
-	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or
-	 * <code>null</code> on logout. (Re-Login events: <code>null</code> and the new
-	 * user). Please consider direct e4 injection see
-	 * https://redmine.medelexis.ch/issues/19669
-	 */
-	public static final String EVENT_USER_CHANGED = BASE + "user/changed";
 
 	/**
 	 * Topics concerning locking object events
