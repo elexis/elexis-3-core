@@ -40,11 +40,17 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.controls.ReminderVisibilityAndPopupComposite;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -124,6 +130,31 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		setTitleImage(Images.lookupImage("tick_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
 	}
 
+	private List<Anwender> getUsers() {
+		IQuery<IUser> userQuery = CoreModelServiceHolder.get().getQuery(IUser.class);
+		userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.NOT_EQUALS, null);
+		List<IUser> users = userQuery.execute();
+		return users.stream().filter(u -> isActive(u)).map(u -> Anwender.load(u.getAssignedContact().getId()))
+				.collect(Collectors.toList());
+	}
+
+	private boolean isActive(IUser user) {
+		if (user == null || user.getAssignedContact() == null) {
+			return false;
+		}
+		if (!user.isActive()) {
+			return false;
+		}
+		if (user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
+			IMandator mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class)
+					.orElse(null);
+			if (mandator != null && !mandator.isActive()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Create contents of the dialog.
 	 *
@@ -201,7 +232,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		});
 		List<Object> inputList = new ArrayList<Object>();
 		inputList.add(TX_ALL);
-		inputList.addAll(CoreHub.getUserList());
+		inputList.addAll(getUsers());
 		lvResponsible.setInput(inputList);
 
 		Composite compositeMessage = new Composite(container, SWT.NONE);
