@@ -12,6 +12,8 @@ package ch.elexis.core.model;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Identifiable</b></em>'.
@@ -144,5 +146,37 @@ public interface Identifiable {
 	 */
 	default void clearRefresh(){
 		
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated NOT
+	 */
+	default void addUpdated(EStructuralFeature feature) {
+		
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model kind="operation"
+	 *        type="ch.elexis.core.types.List&lt;org.eclipse.emf.ecore.EStructuralFeature&gt;"
+	 *        many="false"
+	 * @generated NOT
+	 */
+	default List<EStructuralFeature> getUpdated() {
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated NOT
+	 */
+	default void clearUpdated() {
+
 	}
 } // Identifiable

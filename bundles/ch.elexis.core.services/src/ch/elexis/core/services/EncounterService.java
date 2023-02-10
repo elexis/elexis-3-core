@@ -119,8 +119,8 @@ public class EncounterService implements IEncounterService {
 		if (encounterCovearage != null) {
 			result = reBillEncounter(encounter);
 		}
+		encounter.addUpdated(ModelPackage.Literals.IENCOUNTER__COVERAGE);
 		coreModelService.save(encounter);
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 		ContextServiceHolder.get().setActiveCoverage(coverage);
 		return result;
 	}

@@ -146,10 +146,13 @@ public class ContextService implements IContextService, EventHandler {
 		}
 	}
 
-	private void postEvent(String topic, Object object, boolean synchronous) {
+	private void postEvent(String topic, Object object, Map<String, Object> additionalProperties, boolean synchronous) {
 		if (eventAdmin != null) {
 			Map<String, Object> properites = new HashMap<>();
 			properites.put("org.eclipse.e4.data", object); //$NON-NLS-1$
+			if (additionalProperties != null) {
+				properites.putAll(additionalProperties);
+			}
 			Event event = new Event(topic, properites);
 			if (synchronous) {
 				eventAdmin.sendEvent(event);
@@ -162,12 +165,12 @@ public class ContextService implements IContextService, EventHandler {
 	}
 
 	@Override
-	public void postEvent(String topic, Object object) {
-		postEvent(topic, object, false);
+	public void postEvent(String topic, Object object, Map<String, Object> additionalProperties) {
+		postEvent(topic, object, additionalProperties, false);
 	}
 
 	@Override
-	public void sendEvent(String topic, Object object) {
-		postEvent(topic, object, true);
+	public void sendEvent(String topic, Object object, Map<String, Object> additionalProperties) {
+		postEvent(topic, object, additionalProperties, true);
 	}
 }

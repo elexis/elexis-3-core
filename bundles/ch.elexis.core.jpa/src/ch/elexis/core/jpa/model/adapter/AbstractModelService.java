@@ -208,6 +208,11 @@ public abstract class AbstractModelService implements IModelService {
 					}
 					identifiable.clearRefresh();
 				}
+				if (identifiable.getUpdated() != null) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable,
+							Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, identifiable.getUpdated()));
+					identifiable.clearUpdated();
+				}
 				if (newlyCreatedObject) {
 					ElexisEvent createEvent = getCreateEvent(identifiable);
 					if (createEvent != null) {
@@ -283,6 +288,11 @@ public abstract class AbstractModelService implements IModelService {
 								refresh(toRefresh, true);
 							}
 							i.clearRefresh();
+						}
+						if (i.getUpdated() != null) {
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, i,
+									Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, i.getUpdated()));
+							i.clearUpdated();
 						}
 					}
 				});

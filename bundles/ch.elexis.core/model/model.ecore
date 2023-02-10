@@ -38,6 +38,15 @@
       <eParameters name="changed" eType="#//Identifiable"/>
     </eOperations>
     <eOperations name="clearRefresh"/>
+    <eOperations name="addUpdated">
+      <eParameters name="feature" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
+    </eOperations>
+    <eOperations name="getUpdated">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//List">
+        <eTypeArguments eClassifier="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
+      </eGenericType>
+    </eOperations>
+    <eOperations name="clearUpdated"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastupdate" unique="false"
         lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
         changeable="false"/>

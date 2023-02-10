@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import ch.elexis.core.jpa.entities.EntityWithExtInfo;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.mixin.ExtInfoHandler;
@@ -19,6 +21,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 
 	protected List<Identifiable> refreshList;
 	protected List<Identifiable> changedList;
+	protected List<EStructuralFeature> updatedList;
 	protected ExtInfoHandler extInfoHandler;
 
 	/**
@@ -61,7 +64,8 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	 * Get the entity object and mark this model adapter as dirty. In dirty state
 	 * {@link AbstractIdModelAdapter#setEntity(EntityWithId)} will have no effect.
 	 * Dirty state is reset by {@link AbstractModelService#save(Identifiable)} and
-	 * {@link AbstractModelService#save(List)}.
+	 * {@link AbstractModelService#save(List)}.// TODO Auto-generated method stub
+	 * Identifiable.super.clearUpdated();
 	 *
 	 * @return
 	 */
@@ -100,6 +104,24 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public Long getLastupdate() {
 		return getEntity().getLastupdate() != null ? getEntity().getLastupdate() : 0L;
+	}
+
+	@Override
+	public void addUpdated(EStructuralFeature feature) {
+		if (updatedList == null) {
+			updatedList = new ArrayList<EStructuralFeature>();
+		}
+		updatedList.add(feature);
+	}
+
+	@Override
+	public List<EStructuralFeature> getUpdated() {
+		return updatedList;
+	}
+
+	@Override
+	public void clearUpdated() {
+		updatedList = null;
 	}
 
 	@Override
