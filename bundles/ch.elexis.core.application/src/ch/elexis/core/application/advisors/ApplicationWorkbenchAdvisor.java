@@ -23,7 +23,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -82,7 +81,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	@Override
 	public void preStartup() {
 		super.preStartup();
-		ElexisEventDispatcher.getInstance().start();
+		// since 3.11 do not start ElexisEventDispatcher, use IContextService instead
+		// ElexisEventDispatcher.getInstance().start();
 	}
 
 	@Override

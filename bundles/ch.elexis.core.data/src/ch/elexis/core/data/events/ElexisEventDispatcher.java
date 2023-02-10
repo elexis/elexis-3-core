@@ -34,6 +34,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
@@ -64,6 +65,9 @@ import ch.elexis.data.PersistentObject;
  * @since 3.4 switched listeners to {@link ListenerList}
  * @since 3.7 move from Eclipse job to ScheduledExecutorService
  * @since 3.8 must explicitly {@link #start()} queue execution
+ * @deprecated since 3.11, use {@link IContextService} to set active context or
+ *             post/send events
+ * 
  */
 public final class ElexisEventDispatcher implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
@@ -129,6 +133,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 *
 	 * @param el one ore more ElexisEventListeners that have to return valid values
 	 *           on el.getElexisEventFilter()
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void addListeners(final ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
@@ -141,6 +147,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * Otherwise nothing will happen
 	 *
 	 * @param el The Listener to remove
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void removeListeners(ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
@@ -154,6 +162,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * interest in calling the event listeners. Set to null to reset.
 	 *
 	 * @param blockEventTypes
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public synchronized void setBlockEventTypes(List<Integer> blockEventTypes) {
 		this.blockEventTypes = blockEventTypes;
@@ -170,6 +180,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * pushed into the queue, only the last entered will be dispatched.
 	 *
 	 * @param ee the event to fire.
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
@@ -302,7 +314,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	/**
-	 * find the last selected object of a given type
+	 * Find the last selected object of a given type, selection will be fetched from
+	 * {@link IContextService}.
 	 *
 	 * @param template tha class defining the object to find
 	 * @return the last object of the given type or null if no such object is
@@ -323,6 +336,10 @@ public final class ElexisEventDispatcher implements Runnable {
 		} else {
 			LoggerFactory.getLogger(ElexisEventDispatcher.class)
 					.warn("Unknown code model interface for [" + template + "]");
+			Optional<?> selected = ContextServiceHolder.get().getTyped(template);
+			if (selected.isPresent() && selected.get() instanceof IPersistentObject) {
+				return (IPersistentObject) selected.get();
+			}
 		}
 		return null;
 	}
@@ -331,6 +348,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * inform the system that an object has been selected
 	 *
 	 * @param po the object that is selected now
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void fireSelectionEvent(PersistentObject po) {
 		if (po != null) {
@@ -342,6 +361,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * inform the system, that several objects have been selected
 	 *
 	 * @param objects
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void fireSelectionEvents(PersistentObject... objects) {
 		if (objects != null) {
@@ -357,6 +378,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * inform the system, that no object of the specified type is selected anymore
 	 *
 	 * @param clazz the class of which selection was removed
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void clearSelection(Class<?> clazz) {
 		if (clazz != null) {
@@ -369,6 +392,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * from storage
 	 *
 	 * @param clazz the clazz whose objects are invalidated
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void reload(Class<?> clazz) {
 		if (clazz != null) {
@@ -381,6 +406,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * properties
 	 *
 	 * @param po the object that was modified
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void update(PersistentObject po) {
 		if (po != null) {
