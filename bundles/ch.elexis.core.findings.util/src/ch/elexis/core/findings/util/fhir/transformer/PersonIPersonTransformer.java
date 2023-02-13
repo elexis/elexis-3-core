@@ -8,7 +8,6 @@ import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Person;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -16,7 +15,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.IPersonHelper;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
@@ -34,11 +33,10 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 	@Reference
 	private IUserService userService;
 
-	private IContactHelper contactHelper;
+	private IPersonHelper personHelper;
 
-	@Activate
-	public void activate() {
-		contactHelper = new IContactHelper(modelService, xidService, userService);
+	public PersonIPersonTransformer() {
+		personHelper = new IPersonHelper();
 	}
 
 	@Override
@@ -47,16 +45,16 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 
 		person.setId(new IdDt("Person", localObject.getId()));
 
-		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
+		List<Identifier> identifiers = personHelper.getIdentifiers(localObject, xidService);
 		identifiers.add(getElexisObjectIdentifier(localObject));
 		person.setIdentifier(identifiers);
 
-		person.setName(contactHelper.getHumanNames(localObject));
-		List<Address> addresses = contactHelper.getAddresses(localObject);
+		person.setName(personHelper.getHumanNames(localObject));
+		List<Address> addresses = personHelper.getAddresses(localObject);
 		for (Address address : addresses) {
 			person.addAddress(address);
 		}
-		List<ContactPoint> contactPoints = contactHelper.getContactPoints(localObject);
+		List<ContactPoint> contactPoints = personHelper.getContactPoints(localObject);
 		for (ContactPoint contactPoint : contactPoints) {
 			person.addTelecom(contactPoint);
 		}

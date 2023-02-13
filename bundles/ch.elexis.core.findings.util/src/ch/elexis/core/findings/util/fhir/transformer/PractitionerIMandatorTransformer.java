@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Practitioner;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -14,7 +13,7 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.IPersonHelper;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
@@ -35,11 +34,10 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 	@Reference
 	private IUserService userService;
 
-	private IContactHelper contactHelper;
+	private IPersonHelper personHelper;
 
-	@Activate
-	private void activate() {
-		contactHelper = new IContactHelper(modelService, xidService, userService);
+	public PractitionerIMandatorTransformer() {
+		personHelper = new IPersonHelper();
 	}
 
 	@Override
@@ -48,15 +46,15 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 
 		practitioner.setId(new IdDt("Practitioner", localObject.getId(), Long.toString(localObject.getLastupdate())));
 
-		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
+		List<Identifier> identifiers = personHelper.getIdentifiers(localObject, xidService);
 		identifiers.add(getElexisObjectIdentifier(localObject));
 		practitioner.setIdentifier(identifiers);
 
 		if (localObject.isPerson()) {
 			IPerson mandatorPerson = modelService.load(localObject.getId(), IPerson.class).get();
-			practitioner.setName(contactHelper.getHumanNames(mandatorPerson));
-			practitioner.setGender(contactHelper.getGender(mandatorPerson.getGender()));
-			practitioner.setBirthDate(contactHelper.getBirthDate(mandatorPerson));
+			practitioner.setName(personHelper.getHumanNames(mandatorPerson));
+			practitioner.setGender(personHelper.getGender(mandatorPerson.getGender()));
+			practitioner.setBirthDate(personHelper.getBirthDate(mandatorPerson));
 
 			INamedQuery<IUser> query = modelService.getNamedQuery(IUser.class, "kontakt");
 			List<IUser> usersLocal = query.executeWithParameters(query.getParameterMap("kontakt", mandatorPerson));
@@ -65,8 +63,8 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 			}
 		}
 
-		practitioner.setAddress(contactHelper.getAddresses(localObject));
-		practitioner.setTelecom(contactHelper.getContactPoints(localObject));
+		practitioner.setAddress(personHelper.getAddresses(localObject));
+		practitioner.setTelecom(personHelper.getContactPoints(localObject));
 
 		return Optional.of(practitioner);
 	}
