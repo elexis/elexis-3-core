@@ -62,7 +62,7 @@ public class Person extends Contact implements IPerson {
 
 	@Override
 	public void setDateOfBirth(LocalDateTime value) {
-		getEntityMarkDirty().setDob(value.toLocalDate());
+		getEntityMarkDirty().setDob(value != null ? value.toLocalDate() : null);
 	}
 
 	@Override
