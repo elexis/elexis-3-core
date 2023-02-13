@@ -406,7 +406,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 								ContextServiceHolder.get().getRootContext().setTyped(indentifiable);
 							});
 				} else {
-					LoggerFactory.getLogger(getClass()).warn("Could not set selection [" + sel[0] + "] in context");
+					LoggerFactory.getLogger(getClass()).warn("PersistentObject selection [" + sel[0] + "] in context");
+					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 				}
 			} else {
 				if (StringUtils.isNotBlank(namedSelection)) {
