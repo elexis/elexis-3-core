@@ -2491,4 +2491,23 @@ WHERE kontakt.id IN (
 			<column name="LASTUPDATE" />
 		</createIndex>
 	</changeSet>
+	<changeSet author="thomas" id="manual_table_CH_ELEXIS_NOTES">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_NOTES" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_NOTES">
+			<column name="ID" type="VARCHAR(25)" />
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="PARENT" type="VARCHAR(25)" />
+			<column name="TITLE" type="VARCHAR(80)" />
+			<column name="DATE" type="CHAR(8)" />
+			<column name="CONTENTS" type="${blob_type}" />
+			<column name="KEYWORDS" type="VARCHAR(255)" />
+			<column name="MIMETYPE" type="VARCHAR(80)" />
+			<column name="REFS" type="CLOB" />
+		</createTable>
+	</changeSet>
 </databaseChangeLog>
