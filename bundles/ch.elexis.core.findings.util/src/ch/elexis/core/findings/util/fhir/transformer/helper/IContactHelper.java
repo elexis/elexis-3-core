@@ -1,8 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,74 +9,16 @@ import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
-import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
-import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
-import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IXid;
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
-import ch.elexis.core.types.Gender;
+import ch.elexis.core.types.Country;
 
 public class IContactHelper extends AbstractHelper {
-
-	private IModelService modelService;
-	private IXidService xidService;
-	private IUserService userService;
-
-	public IContactHelper(IModelService modelService, IXidService xidService, IUserService userService) {
-		this.modelService = modelService;
-		this.xidService = xidService;
-		this.userService = userService;
-	}
-
-	public List<HumanName> getHumanNames(IPerson person) {
-		List<HumanName> ret = new ArrayList<>();
-		if (person.isPerson()) {
-			HumanName humanName = new HumanName();
-			humanName.setFamily(person.getLastName());
-			humanName.addGiven(person.getFirstName());
-			humanName.addPrefix(person.getTitel());
-			humanName.addSuffix(person.getTitelSuffix());
-			humanName.setText(createLabel(person));
-			humanName.setUse(NameUse.OFFICIAL);
-			ret.add(humanName);
-		}
-//		if (person.isUser()) {
-//			List<IUser> userLocalObject = userService.getUsersByAssociatedContact(person);
-//			if (!userLocalObject.isEmpty()) {
-//				HumanName sysName = new HumanName();
-//				sysName.setText(userLocalObject.get(0).getId());
-//				sysName.setUse(NameUse..ANONYMOUS);
-//				ret.add(sysName);
-//			}
-//		}
-		return ret;
-	}
-
-	private String createLabel(IPerson person) {
-		StringBuilder sb = new StringBuilder();
-		String titel = person.getTitel();
-		String firstName = person.getFirstName();
-		String lastName = person.getLastName();
-		String titelSuffix = person.getTitelSuffix();
-
-		if (StringUtils.isNotBlank(titel)) {
-			sb.append(titel + StringUtils.SPACE);
-		}
-		sb.append(firstName);
-		sb.append(StringUtils.SPACE + lastName);
-		if (StringUtils.isNotBlank(titelSuffix)) {
-			sb.append(", " + titelSuffix);
-		}
-		return sb.toString();
-	}
 
 	public String getOrganizationName(IOrganization organization) {
 		StringBuilder sb = new StringBuilder();
@@ -94,26 +34,6 @@ public class IContactHelper extends AbstractHelper {
 			}
 		}
 		return sb.toString();
-	}
-
-	public AdministrativeGender getGender(Gender gender) {
-		if (gender == Gender.FEMALE) {
-			return AdministrativeGender.FEMALE;
-		} else if (gender == Gender.MALE) {
-			return AdministrativeGender.MALE;
-		} else if (gender == Gender.UNKNOWN) {
-			return AdministrativeGender.UNKNOWN;
-		} else {
-			return AdministrativeGender.OTHER;
-		}
-	}
-
-	public Date getBirthDate(IPerson kontakt) {
-		LocalDateTime dateOfBirth = kontakt.getDateOfBirth();
-		if (dateOfBirth != null) {
-			return getDate(dateOfBirth);
-		}
-		return null;
 	}
 
 	public List<Address> getAddresses(IContact contact) {
@@ -177,7 +97,7 @@ public class IContactHelper extends AbstractHelper {
 		return ret;
 	}
 
-	public List<Identifier> getIdentifiers(IContact contact) {
+	public List<Identifier> getIdentifiers(IContact contact, IXidService xidService) {
 		List<Identifier> ret = new ArrayList<>();
 		List<IXid> xids = xidService.getXids(contact);
 		for (IXid xid : xids) {
@@ -187,5 +107,58 @@ public class IContactHelper extends AbstractHelper {
 			ret.add(identifier);
 		}
 		return ret;
+	}
+
+	public void mapAddress(List<Address> sourceAdresses, IContact target) {
+		target.setCity(null);
+		target.setZip(null);
+		target.setStreet(null);
+		target.setCountry(null);
+
+		for (Address address : sourceAdresses) {
+			if (sourceAdresses.size() == 1 || AddressUse.HOME.equals(address.getUse())) {
+				target.setCity(address.getCity());
+				target.setZip(address.getPostalCode());
+				if (!address.getLine().isEmpty()) {
+					target.setStreet(address.getLine().get(0).asStringValue());
+				}
+				Country country = null;
+				try {
+					country = Country.valueOf(address.getCountry());
+				} catch (IllegalArgumentException | NullPointerException e) {
+					// ignore
+				}
+				target.setCountry(country);
+			}
+		}
+
+	}
+
+	public void mapTelecom(List<ContactPoint> sourceTelecoms, IContact target) {
+		target.setMobile(null);
+		target.setPhone1(null);
+		target.setPhone2(null);
+		target.setEmail(null);
+		target.setFax(null);
+		target.setWebsite(null);
+
+		for (ContactPoint contactPoint : sourceTelecoms) {
+			if (ContactPointSystem.PHONE.equals(contactPoint.getSystem())) {
+				if (ContactPointUse.MOBILE.equals(contactPoint.getUse())) {
+					target.setMobile(contactPoint.getValue());
+				} else if (0 == contactPoint.getRank() || 1 == contactPoint.getRank()) {
+					target.setPhone1(contactPoint.getValue());
+				} else if (2 == contactPoint.getRank()) {
+					target.setPhone2(contactPoint.getValue());
+				}
+			} else if (ContactPointSystem.EMAIL.equals(contactPoint.getSystem())) {
+				target.setEmail(contactPoint.getValue());
+			} else if (ContactPointSystem.FAX.equals(contactPoint.getSystem())) {
+				target.setFax(contactPoint.getValue());
+			} else if (ContactPointSystem.URL.equals(contactPoint.getSystem())) {
+				target.setWebsite(contactPoint.getValue());
+			}
+		}
+
 	}
 }

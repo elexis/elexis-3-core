@@ -13,6 +13,7 @@ import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
@@ -154,7 +155,7 @@ public class ICoverageHelper extends AbstractHelper {
 		String insuranceNumber = coverage.getInsuranceNumber();
 		if (insuranceNumber != null) {
 			Identifier identifier = new Identifier();
-			identifier.setSystem("urn:oid:2.16.756.5.30.1.123.100.1.1.1");
+			identifier.setSystem(FhirChConstants.OID_VERSICHERTENNUMMER_SYSTEM);
 			identifier.setValue(insuranceNumber);
 			return Optional.of(identifier);
 		}
@@ -174,5 +175,13 @@ public class ICoverageHelper extends AbstractHelper {
 			}
 		}
 		return Optional.empty();
+	}
+
+	public void setInsuranceNumber(Coverage source, ICoverage target) {
+		Optional<Identifier> insuranceNumberIdentifier = source.getIdentifier().stream()
+				.filter(id -> FhirChConstants.OID_VERSICHERTENNUMMER_SYSTEM.equals(id.getSystem())).findFirst();
+		if (insuranceNumberIdentifier.isPresent()) {
+			target.setInsuranceNumber(insuranceNumberIdentifier.get().getValue());
+		}
 	}
 }
