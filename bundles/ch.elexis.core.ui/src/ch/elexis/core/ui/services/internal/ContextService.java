@@ -1,12 +1,16 @@
 package ch.elexis.core.ui.services.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.contexts.RunAndTrack;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.dialogs.Dialog;
@@ -64,6 +68,16 @@ public class ContextService implements IContextService, EventHandler {
 	@Reference
 	private EventAdmin eventAdmin;
 
+	private Consumer<RunAndTrack> runAndTrackConsumer;
+
+	private List<RunAndTrack> delayedRunAndTrack = new ArrayList<>();
+
+	public void addDelayedRunAndTrack() {
+		synchronized (delayedRunAndTrack) {
+			delayedRunAndTrack.forEach(rt -> runAndTrackConsumer.accept(rt));
+		}
+	}
+	
 	@Activate
 	public void activate() {
 		logger.info("ACTIVATE"); //$NON-NLS-1$
@@ -71,10 +85,10 @@ public class ContextService implements IContextService, EventHandler {
 		contexts = new ConcurrentHashMap<>();
 		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
 
-		registerCoreUiSuppliers();
+		registerCoreUiFunctions();
 	}
 
-	private void registerCoreUiSuppliers() {
+	private void registerCoreUiFunctions() {
 		getRootContext().setNamed("SelectFallNoObligationDialog", new Supplier<ICoverage>() { //$NON-NLS-1$
 			private ICoverage ret;
 
@@ -99,6 +113,19 @@ public class ContextService implements IContextService, EventHandler {
 			}
 		});
 
+		runAndTrackConsumer = new Consumer<RunAndTrack>() {
+			@Override
+			public void accept(RunAndTrack runAndTrack) {
+				synchronized (delayedRunAndTrack) {
+					if (applicationContext != null) {
+						applicationContext.runAndTrack(runAndTrack);
+					} else {
+						delayedRunAndTrack.add(runAndTrack);
+					}
+				}
+			}
+		};
+		getRootContext().setNamed("AddRunAndTrackToE4Context", runAndTrackConsumer);
 	}
 
 	@Deactivate
@@ -117,6 +144,7 @@ public class ContextService implements IContextService, EventHandler {
 				logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
 				((Context) getRootContext()).setEclipseContext(applicationContext);
 			}
+			addDelayedRunAndTrack();
 		}
 	}
 

@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.contexts.RunAndTrack;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -41,21 +43,19 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
-import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -66,17 +66,23 @@ import ch.rgw.tools.StringTool;
  * @author gerry
  *
  */
-public class FieldDisplayView extends ViewPart implements IActivationListener, ElexisEventListener, HeartListener {
+public class FieldDisplayView extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.dbfielddisplay"; //$NON-NLS-1$
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+
 	private IAction newViewAction, editDataAction;
 	Text text;
 	Class<? extends PersistentObject> myClass;
+	Class<?> myModelInterface;
 	String myField;
 	boolean bCanEdit;
 	ScrolledForm form;
 	FormToolkit tk = UiDesk.getToolkit();
 	String subid;
 	String NODE = "FeldAnzeige"; //$NON-NLS-1$
+
+	private MyRunAndTrack currentRunAndTrack;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -123,86 +129,20 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		canEdit = ConfigServiceHolder.getUser("FieldDisplayViewCanEdit/" + subid, 0); //$NON-NLS-1$
 		setField(nx == null ? "Patient.Diagnosen" : nx, canEdit == null ? false //$NON-NLS-1$
 				: (canEdit != 0));
-		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
+		getSite().getPage().removePartListener(udpateOnVisible);
+		if (currentRunAndTrack != null) {
+			currentRunAndTrack.stop();
+		}
 	}
 
 	@Override
 	public void setFocus() {
 		text.setFocus();
-	}
-
-	@Override
-	public void activation(boolean mode) {
-
-	}
-
-	@Override
-	public void visible(boolean mode) {
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(this);
-			CoreHub.heart.addListener(this);
-			heartbeat();
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(this);
-			CoreHub.heart.removeListener(this);
-		}
-
-	}
-
-	@Override
-	public void catchElexisEvent(final ElexisEvent ev) {
-		final PersistentObject po = ev.getObject();
-		if (po != null && ev.getObjectClass().equals(myClass)) {
-			UiDesk.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-						String val = po.get(myField);
-						if (val == null) {
-							SWTHelper.showError(Messages.FieldDisplayView_ErrorFieldCaption, // $NON-NLS-1$
-									Messages.FieldDisplayView_ErrorFieldBody + myField);
-							text.setText(StringTool.leer);
-						} else {
-							text.setText(po.get(myField));
-						}
-					} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-						text.setText(StringUtils.EMPTY);
-
-					}
-
-				}
-			});
-		} else if (ev.getClass().equals(Anwender.class)) {
-			String nx = ConfigServiceHolder.getUser("FieldDisplayViewData/" + subid, null); //$NON-NLS-1$
-			Integer canEdit = ConfigServiceHolder.getUser("FieldDisplayViewCanEdit/" //$NON-NLS-1$
-					+ subid, 0);
-			setField(nx == null ? "Patient.Diagnosen" : nx, //$NON-NLS-1$
-					canEdit == null ? false : (canEdit != 0));
-
-		}
-	}
-
-	final private ElexisEvent template = new ElexisEvent(null, myClass,
-			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
-
-	@Override
-	public ElexisEvent getElexisEventFilter() {
-		return template;
-	}
-
-	@Override
-	public void heartbeat() {
-		IPersistentObject mine = ElexisEventDispatcher.getSelected(myClass);
-		if (mine == null) {
-			catchElexisEvent(new ElexisEvent(mine, myClass, ElexisEvent.EVENT_DESELECTED));
-		} else {
-			catchElexisEvent(new ElexisEvent(mine, myClass, ElexisEvent.EVENT_SELECTED));
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -222,6 +162,14 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				ConfigServiceHolder.setUser("FieldDisplayViewCanEdit/" + subid, canEdit); //$NON-NLS-1$
 
 			}
+		}
+		if (myClass != null) {
+			myModelInterface = ElexisEventDispatcher.getCoreModelInterfaceForElexisClass(myClass).orElse(null);
+			if (currentRunAndTrack != null) {
+				currentRunAndTrack.stop();
+			}
+			currentRunAndTrack = new MyRunAndTrack(myClass, myModelInterface);
+			ContextServiceHolder.get().getRootContext().setNamed("AddRunAndTrackToE4Context", currentRunAndTrack);
 		}
 	}
 
@@ -269,7 +217,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 					FieldDisplayView n = (FieldDisplayView) getViewSite().getPage().showView(ID,
 							ElexisIdGenerator.generateId(), IWorkbenchPage.VIEW_VISIBLE);
 					n.setField(fieldtype, false);
-					heartbeat();
+					refresh();
 				} catch (PartInitException e) {
 					ExHandler.handle(e);
 				}
@@ -286,7 +234,7 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 				SelectDataDialog sdd = new SelectDataDialog();
 				if (sdd.open() == Dialog.OK) {
 					setField(sdd.result, sdd.bEditable);
-					heartbeat();
+					refresh();
 				}
 			}
 		};
@@ -357,4 +305,59 @@ public class FieldDisplayView extends ViewPart implements IActivationListener, E
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
+	@Override
+	public void refresh() {
+		if (currentRunAndTrack != null) {
+			ContextServiceHolder.get().getTyped(IEclipseContext.class).ifPresent(ec -> currentRunAndTrack.changed(ec));
+		}
+	}
+
+	private class MyRunAndTrack extends RunAndTrack {
+
+		private Class<? extends PersistentObject> myClass;
+		private Class<?> myModelInterface;
+
+		private boolean stop;
+
+		public MyRunAndTrack(Class<? extends PersistentObject> myClass, Class<?> myModelInterface) {
+			this.myClass = myClass;
+			this.myModelInterface = myModelInterface;
+			stop = false;
+		}
+
+		@Override
+		public boolean changed(IEclipseContext context) {
+			PersistentObject po = null;
+			if (myModelInterface != null) {
+				Object identifiable = context.get(myModelInterface);
+				if (identifiable instanceof Identifiable) {
+					po = NoPoUtil.loadAsPersistentObject((Identifiable) identifiable);
+				}
+			}
+			if (po == null) {
+				po = context.get(myClass);
+			}
+			if (po != null) {
+				PersistentObject runnablePo = po;
+				UiDesk.asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						String val = runnablePo.get(myField);
+						if (val == null) {
+							SWTHelper.showError(Messages.FieldDisplayView_ErrorFieldCaption, // $NON-NLS-1$
+									Messages.FieldDisplayView_ErrorFieldBody + myField);
+							text.setText(StringTool.leer);
+						} else {
+							text.setText(runnablePo.get(myField));
+						}
+					}
+				});
+			}
+			return !stop;
+		}
+
+		public void stop() {
+			stop = true;
+		}
+	}
 }
