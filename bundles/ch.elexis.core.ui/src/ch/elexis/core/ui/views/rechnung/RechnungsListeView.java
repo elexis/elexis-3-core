@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -30,13 +31,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.ui.constants.UiResourceConstants;
-import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
+import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -44,6 +46,7 @@ import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FallDetailView;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
@@ -58,9 +61,11 @@ import ch.rgw.tools.Tree;
  * @author gerry
  *
  */
-public class RechnungsListeView extends ViewPart implements ElexisEventListener {
+public class RechnungsListeView extends ViewPart implements IRefreshable {
 
 	public final static String ID = "ch.elexis.RechnungsListeView"; //$NON-NLS-1$
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	CommonViewer cv;
 	ViewerConfigurer vc;
@@ -130,7 +135,6 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 
 		invoiceListeBottomComposite = new InvoiceListBottomComposite(comp, SWT.NONE);
 
-		ElexisEventDispatcher.getInstance().addListeners(this);
 		cv.getViewerWidget().getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		ViewMenus menu = new ViewMenus(getViewSite());
 		actions = new RnActions(this);
@@ -143,6 +147,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		mgr.addMenuListener(new RnMenuListener(this));
 		cv.setContextMenu(mgr);
 		cntp.startListening();
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	public InvoiceListBottomComposite getInvoiceListeBottomComposite() {
@@ -151,7 +156,7 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		cntp.stopListening();
 		super.dispose();
 	}
@@ -200,14 +205,19 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 		return ret;
 	}
 
-	public void catchElexisEvent(ElexisEvent ev) {
-		cv.notify(CommonViewer.Message.update);
+	@Override
+	public void refresh() {
+		reload(IInvoice.class);
 	}
 
-	private final ElexisEvent eetmpl = new ElexisEvent(null, Rechnung.class, ElexisEvent.EVENT_RELOAD);
-
-	public ElexisEvent getElexisEventFilter() {
-		return eetmpl;
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IInvoice.class.equals(clazz)) {
+			CoreUiUtil.runAsyncIfActive(() -> {
+				cv.notify(CommonViewer.Message.update);
+			}, cv);
+		}
 	}
 
 	@Optional
@@ -215,5 +225,4 @@ public class RechnungsListeView extends ViewPart implements ElexisEventListener 
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-
 }

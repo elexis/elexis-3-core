@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -46,16 +46,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.RnStatus;
@@ -66,12 +67,14 @@ import ch.rgw.tools.Money;
  * This view shows the current patient's account
  */
 
-public class BillSummary extends ViewPart implements IActivationListener, ElexisEventListener {
+public class BillSummary extends ViewPart implements IRefreshable {
 
 	public static final String ID = "ch.elexis.views.rechnung.BillSummary"; //$NON-NLS-1$
 
 	// command from org.eclipse.ui
 	private static final String COMMAND_COPY = "org.eclipse.ui.edit.copy"; //$NON-NLS-1$
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	private FormToolkit tk;
 	private Form form;
@@ -277,7 +280,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		makeActions();
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createMenu(exportToClipboardAction);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		getSite().getPage().addPartListener(udpateOnVisible);
 		billsViewer.addSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 	}
 
@@ -290,7 +293,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		billsViewer.removeSelectionChangedListener(GlobalEventDispatcher.getInstance().getDefaultListener());
 		super.dispose();
 	}
@@ -352,25 +355,6 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		openLabel.setText(openText);
 	}
 
-	/*
-	 * ActivationListener
-	 */
-
-	public void activation(boolean mode) {
-		// nothing to do
-	}
-
-	public void visible(boolean mode) {
-		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(this);
-			Patient patient = ElexisEventDispatcher.getSelectedPatient();
-			setPatient(patient);
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(this);
-			setPatient(null);
-		}
-	};
-
 	@Optional
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
@@ -416,7 +400,7 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 			sbHeader.append(COLUMN_TEXT[AMOUNT]);
 			sbHeader.append("\t"); //$NON-NLS-1$
 			sbHeader.append(COLUMN_TEXT[AMOUNT_DUE]);
-			sbHeader.append("\t"); //$NON-NLS-1$
+			sbHeader.append("\t"); //$NON-NLS-1$ null
 			sbHeader.append(COLUMN_TEXT[STATUS]);
 			sbHeader.append("\t"); //$NON-NLS-1$
 			sbHeader.append(COLUMN_TEXT[GARANT]);
@@ -453,23 +437,15 @@ public class BillSummary extends ViewPart implements IActivationListener, Elexis
 		clipboard.dispose();
 	}
 
-	public void catchElexisEvent(final ElexisEvent ev) {
-		UiDesk.asyncExec(new Runnable() {
-			public void run() {
-				if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-					setPatient((Patient) ev.getObject());
-				} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
-					setPatient(null);
-				}
-			}
-		});
+	@Inject
+	void activePatient(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+		}, billsViewer);
 	}
 
-	private final ElexisEvent eetmpl = new ElexisEvent(null, Patient.class,
-			ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_DESELECTED);
-
-	public ElexisEvent getElexisEventFilter() {
-		return eetmpl;
+	@Override
+	public void refresh() {
+		activePatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
-
 }
