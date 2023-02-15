@@ -21,7 +21,6 @@ import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.Result;
 
 public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Artikel>
 		implements IdentifiableWithXid, IArticle {
@@ -285,30 +284,6 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	public synchronized IBillableOptifier<TypedArticle> getOptifier() {
 		if (optifier == null) {
 			optifier = new AbstractOptifier<TypedArticle>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
-
-				@Override
-				public Result<IBilled> add(TypedArticle billable, IEncounter encounter, double amount) {
-					if (billable.getTyp() == ArticleTyp.EIGENARTIKEL
-							&& billable.getSubTyp() == ArticleSubTyp.COMPLEMENTARY) {
-						String law = encounter.getCoverage().getBillingSystem().getLaw().name();
-						String system = encounter.getCoverage().getBillingSystem().getName();
-						if (law.isEmpty()) {
-							if (!"vvg".equalsIgnoreCase(system)) {
-								return new Result<IBilled>(Result.SEVERITY.WARNING, 0,
-										"Komplementärmedizinische Artikel können nur auf eine Fall mit Gesetz oder Name VVG verrechnet werden.",
-										null, false);
-
-							}
-						} else {
-							if (!"vvg".equalsIgnoreCase(law)) {
-								return new Result<IBilled>(Result.SEVERITY.WARNING, 0,
-										"Komplementärmedizinische Artikel können nur auf eine Fall mit Gesetz oder Name VVG verrechnet werden.",
-										null, false);
-							}
-						}
-					}
-					return super.add(billable, encounter, amount);
-				}
 
 				@Override
 				protected void setPrice(TypedArticle billable, IBilled billed) {
