@@ -434,10 +434,10 @@ public class ContextService implements IContextService, EventHandler {
 		}
 
 		private void addObjectToRoot(Object object) {
-			root.setTyped(getModelObjectForPersistentObject(object));
 			if (object != null) {
 				logger.info("[SEL] " + object.getClass() + "  || " + toString(object));
 			}
+			root.setTyped(getModelObjectForPersistentObject(object));
 		}
 
 		private String toString(Object obj) {
