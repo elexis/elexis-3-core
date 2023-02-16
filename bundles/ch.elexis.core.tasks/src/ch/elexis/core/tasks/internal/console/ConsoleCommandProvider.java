@@ -1,6 +1,5 @@
 package ch.elexis.core.tasks.internal.console;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
@@ -10,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
 import org.osgi.service.component.annotations.Activate;
@@ -150,7 +150,8 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		List<ITaskDescriptor> taskDescriptors = tdQuery.execute();
 		taskDescriptors.removeAll(incurredTasks);
 		taskDescriptors.stream().forEach(td -> {
-			String state = td.isActive() ? "ACT" : "INACT";
+
+			String state = td.isActive() ? boundForThisStation(td.getRunner()) ? "!ACT!" : "ACT" : "INACT";
 			prflp(state, 8);
 			prflp(td.getTriggerType().getName(), 11);
 			prflp(StringUtils.EMPTY, 27);
@@ -162,11 +163,15 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 	}
 
 	private String formatRunner(String runner) {
-		if (contextService.getStationIdentifier().equalsIgnoreCase(runner)) {
-			return runner.toUpperCase();
+		if (boundForThisStation(runner)) {
+			return "*" + runner.toUpperCase();
 		} else {
 			return runner.toLowerCase();
 		}
+	}
+
+	private boolean boundForThisStation(String runner) {
+		return contextService.getStationIdentifier().equalsIgnoreCase(runner);
 	}
 
 	@CmdAdvisor(description = "Activate a task descriptor for execution")
@@ -177,6 +182,17 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			return "Invalid or ambiguous id argument";
 		}
 		taskService.setActive(taskDescriptor.get(), true);
+		return ok();
+	}
+
+	@CmdAdvisor(description = "Refresh system state on a taskDescriptor and act on it")
+	public String __task_refresh(@CmdParam(description = "taskId | tdIdOrTdRefId") String idOrReferenceId)
+			throws TaskException {
+		Optional<ITaskDescriptor> taskDescriptor = taskService.findTaskDescriptorByIdOrReferenceId(idOrReferenceId);
+		if (!taskDescriptor.isPresent()) {
+			return "Invalid or ambiguous id argument";
+		}
+		taskService.refresh(taskDescriptor.get());
 		return ok();
 	}
 
