@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Observation.ObservationReferenceRangeComponent;
+import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
 import org.hl7.fhir.r4.model.SimpleQuantity;
@@ -170,5 +171,10 @@ public class ILabResultHelper extends AbstractHelper {
 			ret.addCoding(new Coding("http://hl7.org/fhir/ValueSet/observation-interpretation", "N", "Normal"));
 		}
 		return Collections.singletonList(ret);
+	}
+
+	public ObservationStatus getStatus(ILabResult localObject) {
+		// currently only final status supported
+		return ObservationStatus.FINAL;
 	}
 }

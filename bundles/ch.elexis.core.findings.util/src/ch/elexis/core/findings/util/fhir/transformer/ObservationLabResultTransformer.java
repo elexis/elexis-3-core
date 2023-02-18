@@ -40,6 +40,8 @@ public class ObservationLabResultTransformer implements IFhirTransformer<Observa
 				ObservationCategory.LABORATORY.toCode(), ObservationCategory.LABORATORY.getDisplay())));
 		observation.addCategory(observationCode);
 
+		observation.setStatus(labResultHelper.getStatus(localObject));
+
 		observation.setSubject(labResultHelper.getReference("Patient", localObject.getPatient()));
 
 		observation.setEffective(labResultHelper.getEffectiveDateTime(localObject));
