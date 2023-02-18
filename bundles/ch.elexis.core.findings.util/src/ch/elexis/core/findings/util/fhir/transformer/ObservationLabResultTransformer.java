@@ -48,6 +48,8 @@ public class ObservationLabResultTransformer implements IFhirTransformer<Observa
 
 		observation.setReferenceRange(labResultHelper.getReferenceComponents(localObject));
 
+		observation.setInterpretation(labResultHelper.getInterpretationConcept(localObject));
+
 		observation.setCode(labResultHelper.getCodeableConcept(localObject));
 
 		observation.setNote(labResultHelper.getNote(localObject));
