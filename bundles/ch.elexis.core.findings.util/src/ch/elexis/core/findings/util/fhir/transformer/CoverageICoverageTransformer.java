@@ -113,35 +113,41 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 
 	@Override
 	public Optional<ICoverage> createLocalObject(Coverage fhirObject) {
-		if (fhirObject.hasBeneficiary()) {
-			Optional<IPatient> patient = modelService
-					.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
-			if (patient.isEmpty()) {
-				throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
-			}
-			Optional<String> type = coverageHelper.getType(fhirObject);
-			if (patient.isPresent() && type.isPresent()) {
-				ICoverage created = new ICoverageBuilder(modelService, patient.get(), "online created",
-						FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
-				String dependent = fhirObject.getDependent();
-				if (dependent != null) {
-					coverageHelper.setDependent(created, dependent);
-				}
-				Period period = fhirObject.getPeriod();
-				if (period != null && period.getStart() != null) {
-					coverageHelper.setPeriod(created, fhirObject.getPeriod());
-				} else {
-					created.setDateFrom(LocalDate.now());
-				}
-				modelService.save(created);
-				AbstractHelper.acquireAndReleaseLock(created);
-				return Optional.of(created);
-			} else {
-				LoggerFactory.getLogger(CoverageICoverageTransformer.class)
-						.warn("Could not create fall for patinet [" + patient + "] type [" + type + "]");
-			}
+		if (!fhirObject.hasBeneficiary()) {
+			return Optional.empty();
 		}
+
+		Optional<IPatient> patient = modelService.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(),
+				IPatient.class);
+		if (patient.isEmpty()) {
+			throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
+		}
+		Optional<String> type = coverageHelper.getType(fhirObject);
+		if (patient.isPresent() && type.isPresent()) {
+			ICoverage elexisObject = new ICoverageBuilder(modelService, patient.get(), "online created",
+					FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
+			String dependent = fhirObject.getDependent();
+			if (dependent != null) {
+				coverageHelper.setDependent(elexisObject, dependent);
+			}
+			Period period = fhirObject.getPeriod();
+			if (period != null && period.getStart() != null) {
+				coverageHelper.setPeriod(elexisObject, fhirObject.getPeriod());
+			} else {
+				elexisObject.setDateFrom(LocalDate.now());
+			}
+
+			coverageHelper.setInsuranceNumber(fhirObject, elexisObject);
+
+			modelService.save(elexisObject);
+			AbstractHelper.acquireAndReleaseLock(elexisObject);
+			return Optional.of(elexisObject);
+		}
+
+		LoggerFactory.getLogger(CoverageICoverageTransformer.class)
+				.warn("Could not create fall for patinet [" + patient + "] type [" + type + "]");
 		return Optional.empty();
+
 	}
 
 	@Override

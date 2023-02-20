@@ -12,13 +12,15 @@
 
 package ch.elexis.core.ui.actions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.StringJoiner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -189,7 +191,18 @@ public class HistoryLoader extends BackgroundJob {
 	}
 
 	private String maskHTML(String input) {
-		String s = input.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+		StringJoiner sj = new StringJoiner("\n");
+		Scanner scanner = new Scanner(input);
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			// abbreviate unreasonable long lines,
+			// eclipse forms have a problem with lines > 30000
+			sj.add(StringUtils.abbreviate(line, 10000));
+		}
+		scanner.close();
+		String safeInput = sj.toString();
+
+		String s = safeInput.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
 		return s;

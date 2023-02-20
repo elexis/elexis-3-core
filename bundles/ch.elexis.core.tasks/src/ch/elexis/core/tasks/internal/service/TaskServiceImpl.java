@@ -265,6 +265,9 @@ public class TaskServiceImpl implements ITaskService {
 			return;
 		}
 
+		// assert required runnable is available on this system
+		instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
+
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
 			assertFilesystemChangeWatcher();
 			fileSystemChangeWatcher.incur(taskDescriptor);

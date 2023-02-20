@@ -421,6 +421,9 @@ public class ContextService implements IContextService, EventHandler {
 		}
 
 		private void removeObjectFromRoot(Object object) {
+			if (object != null) {
+				logger.info("[DESEL] " + object.getClass() + "  || " + toString(object));
+			}
 			if (object instanceof Class<?>) {
 				root.removeTyped((Class<?>) object);
 				getCoreModelInterfaceForElexisClass((Class<?>) object).ifPresent(c -> root.removeTyped(c));
@@ -431,7 +434,25 @@ public class ContextService implements IContextService, EventHandler {
 		}
 
 		private void addObjectToRoot(Object object) {
+			if (object != null) {
+				logger.info("[SEL] " + object.getClass() + "  || " + toString(object));
+			}
 			root.setTyped(getModelObjectForPersistentObject(object));
+		}
+
+		private String toString(Object obj) {
+			if (obj == null) {
+				return "null";
+			}
+			if (obj instanceof PersistentObject) {
+				PersistentObject po = (PersistentObject) obj;
+				return po.getId();
+			}
+			if (obj instanceof Identifiable) {
+				Identifiable identifiable = (Identifiable) obj;
+				return identifiable.getId();
+			}
+			return obj.toString();
 		}
 	}
 
