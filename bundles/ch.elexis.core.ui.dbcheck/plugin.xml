@@ -34,6 +34,9 @@
       <ExternalMaintenance
             MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixPharmacodeLessSeven">
       </ExternalMaintenance>
+       <ExternalMaintenance
+            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.SetMobileOfContact">
+      </ExternalMaintenance>
       <ExternalMaintenance
             MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixBestellungen217">
       </ExternalMaintenance>
