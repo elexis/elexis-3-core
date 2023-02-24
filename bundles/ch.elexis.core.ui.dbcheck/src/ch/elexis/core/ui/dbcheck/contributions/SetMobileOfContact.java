@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
@@ -17,7 +18,7 @@ import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 public class SetMobileOfContact extends ExternalMaintenance {
 	private static final Pattern SWISS = Pattern.compile("^(07[5-9])(\\d{3})(\\d{2})(\\d{2})$");
 	private static final Pattern PREFIXSWISS = Pattern.compile("^((\\+|00)41)(7[5-9])(\\d{3})(\\d{2})(\\d{2})$");
-	int count;
+	int count, countLock;
 	String newPhone;
 
 	@Override
@@ -30,6 +31,7 @@ public class SetMobileOfContact extends ExternalMaintenance {
 		contactQuery.or(ModelPackage.Literals.ICONTACT__MOBILE, COMPARATOR.EQUALS, null);
 
 		count = 0;
+		countLock = 0;
 		try (IQueryCursor<IContact> cursor = contactQuery.executeAsCursor()) {
 			pm.beginTask("Kontaktdaten bearbeiten", cursor.size());
 			while (cursor.hasNext()) {
@@ -45,7 +47,7 @@ public class SetMobileOfContact extends ExternalMaintenance {
 			}
 		}
 		pm.done();
-		return count + " Kontake wurden erfolgreich bearbeitet";
+		return count + " Kontake wurden erfolgreich bearbeitet\n" + countLock + " Kontakte sind gesperrt";
 	}
 
 	@Override
@@ -57,10 +59,14 @@ public class SetMobileOfContact extends ExternalMaintenance {
 		newPhone = phone.replaceAll("[^0-9+]", "");
 		if (SWISS.matcher(newPhone).find() || PREFIXSWISS.matcher(newPhone).find()) {
 			patient.setMobile(newPhone);
-			LocalLockServiceHolder.get().acquireLock(patient);
-			CoreModelServiceHolder.get().save(patient);
-			LocalLockServiceHolder.get().releaseLock(patient);
-			count++;
+			LockResponse lock = LocalLockServiceHolder.get().acquireLock(patient);
+			if (lock.isOk()) {
+				CoreModelServiceHolder.get().save(patient);
+				LocalLockServiceHolder.get().releaseLock(patient);
+				count++;
+			} else {
+				countLock++;
+			}
 		}
 	}
 }
