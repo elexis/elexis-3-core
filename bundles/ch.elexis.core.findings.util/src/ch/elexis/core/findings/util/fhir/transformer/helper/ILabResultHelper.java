@@ -1,15 +1,16 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Annotation;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Observation.ObservationReferenceRangeComponent;
+import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Quantity.QuantityComparator;
 import org.hl7.fhir.r4.model.SimpleQuantity;
@@ -160,5 +161,20 @@ public class ILabResultHelper extends AbstractHelper {
 			return Collections.singletonList(annotation);
 		}
 		return Collections.emptyList();
+	}
+
+	public List<CodeableConcept> getInterpretationConcept(ILabResult localObject) {
+		CodeableConcept ret = new CodeableConcept();
+		if (localObject.isPathologic()) {
+			ret.addCoding(new Coding("http://hl7.org/fhir/ValueSet/observation-interpretation", "A", "Abnormal"));
+		} else {
+			ret.addCoding(new Coding("http://hl7.org/fhir/ValueSet/observation-interpretation", "N", "Normal"));
+		}
+		return Collections.singletonList(ret);
+	}
+
+	public ObservationStatus getStatus(ILabResult localObject) {
+		// currently only final status supported
+		return ObservationStatus.FINAL;
 	}
 }

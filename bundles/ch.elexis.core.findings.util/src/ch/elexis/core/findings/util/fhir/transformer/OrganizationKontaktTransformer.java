@@ -1,22 +1,18 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.r4.model.Address;
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.IOrganizationOrganizationAttributeMapper;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
@@ -34,53 +30,45 @@ public class OrganizationKontaktTransformer implements IFhirTransformer<Organiza
 	@Reference
 	private IUserService userService;
 
-	private IContactHelper contactHelper;
+	private IOrganizationOrganizationAttributeMapper attributeMapper;
 
 	@Activate
 	public void activate() {
-		contactHelper = new IContactHelper(modelService, xidService, userService);
+		attributeMapper = new IOrganizationOrganizationAttributeMapper(xidService);
 	}
 
 	@Override
 	public Optional<Organization> getFhirObject(IOrganization localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		Organization organization = new Organization();
-
-		organization.setId(new IdDt("Organization", localObject.getId()));
-
-		List<Identifier> identifiers = contactHelper.getIdentifiers(localObject);
-		identifiers.add(getElexisObjectIdentifier(localObject));
-		organization.setIdentifier(identifiers);
-
-		organization.setName(contactHelper.getOrganizationName(localObject));
-		List<Address> addresses = contactHelper.getAddresses(localObject);
-		for (Address address : addresses) {
-			organization.addAddress(address);
-		}
-		List<ContactPoint> contactPoints = contactHelper.getContactPoints(localObject);
-		for (ContactPoint contactPoint : contactPoints) {
-			organization.addTelecom(contactPoint);
-		}
-
+		attributeMapper.elexisToFhir(localObject, organization, summaryEnum, includes);
 		return Optional.of(organization);
 	}
 
 	@Override
 	public Optional<IOrganization> getLocalObject(Organization fhirObject) {
-		// TODO Auto-generated method stub
-		return null;
+		if (fhirObject != null && fhirObject.getId() != null) {
+			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
+			if (localId.isPresent()) {
+				return modelService.load(localId.get(), IOrganization.class);
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
 	public Optional<IOrganization> updateLocalObject(Organization fhirObject, IOrganization localObject) {
-		// TODO Auto-generated method stub
-		return null;
+		attributeMapper.fhirToElexis(fhirObject, localObject);
+		modelService.save(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override
 	public Optional<IOrganization> createLocalObject(Organization fhirObject) {
-		// TODO Auto-generated method stub
-		return null;
+		IOrganization create = modelService.create(IOrganization.class);
+		attributeMapper.fhirToElexis(fhirObject, create);
+		modelService.save(create);
+		return Optional.of(create);
 	}
 
 	@Override

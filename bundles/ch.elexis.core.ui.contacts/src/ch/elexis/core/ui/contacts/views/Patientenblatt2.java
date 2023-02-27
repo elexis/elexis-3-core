@@ -49,6 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -732,6 +734,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI);
 			FilterNonPrintableModifyListener.addTo(text);
+			text.setData("index", Integer.valueOf(i));
+			text.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					saveExpandable((Integer)text.getData("index"));
+				}
+			});
 			txExpandable.add(text);
 			ec.get(i).setData(KEY_DBFIELD, dfExpandable.get(i));
 			ec.get(i).addExpansionListener(new ExpansionAdapter() {
@@ -806,18 +814,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				ipp.save();
 			}
 			for (int i = 0; i < txExpandable.size(); i++) {
-				String field = dfExpandable.get(i);
-				String oldvalue = StringTool.unNull(actPatient.get(field));
-				String newvalue = txExpandable.get(i).getText();
-				if (bLocked) {
-					txExpandable.get(i).setText(oldvalue);
-				} else {
-					actPatient.set(field, newvalue);
-				}
+				saveExpandable(i);
 			}
 		}
 	}
 
+	protected void saveExpandable(Integer i) {
+		if(i != null) {
+			String field = dfExpandable.get(i);
+			String oldvalue = StringTool.unNull(actPatient.get(field));
+			String newvalue = txExpandable.get(i).getText();
+			if (bLocked) {
+				txExpandable.get(i).setText(oldvalue);
+			} else {
+				actPatient.set(field, newvalue);
+			}			
+		}
+	}
+
+	
 	/*
 	 * private Menu createZusatzAdressMenu() { Menu ret = new
 	 * Menu(inpZusatzAdresse); delZA = new MenuItem(ret, SWT.NONE);

@@ -436,15 +436,9 @@ public class HL7Parser {
 					}
 				}
 			}
-			// else {
-			// ResultAdapter.displayResult(ret,
-			// ch.elexis.core.ui.importer.div.importers.Messages.Core_Error_while_reading);
-			// }
-			// ElexisEventDispatcher.reload(LabItem.class);
 			return ret;
 		}
-		return null;
-//		return new Result<>("OK"); //$NON-NLS-1$
+		return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, "No reader for file", true); //$NON-NLS-1$
 	}
 
 	public void importFromDir(final IVirtualFilesystemHandle dir, final IVirtualFilesystemHandle archiveDir,

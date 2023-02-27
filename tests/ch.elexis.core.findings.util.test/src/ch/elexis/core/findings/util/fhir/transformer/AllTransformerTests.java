@@ -11,7 +11,7 @@ import ch.elexis.core.services.IModelService;
 
 @Component
 @RunWith(Suite.class)
-@SuiteClasses({ CoverageICoverageTransformerTest.class })
+@SuiteClasses({ CoverageICoverageTransformerTest.class, OrganizationIOrganizationTransformerTest.class })
 public class AllTransformerTests {
 
 	private static IFhirTransformerRegistry transformerRegistry;

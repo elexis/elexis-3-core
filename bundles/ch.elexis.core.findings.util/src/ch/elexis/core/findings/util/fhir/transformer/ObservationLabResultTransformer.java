@@ -40,6 +40,8 @@ public class ObservationLabResultTransformer implements IFhirTransformer<Observa
 				ObservationCategory.LABORATORY.toCode(), ObservationCategory.LABORATORY.getDisplay())));
 		observation.addCategory(observationCode);
 
+		observation.setStatus(labResultHelper.getStatus(localObject));
+
 		observation.setSubject(labResultHelper.getReference("Patient", localObject.getPatient()));
 
 		observation.setEffective(labResultHelper.getEffectiveDateTime(localObject));
@@ -47,6 +49,8 @@ public class ObservationLabResultTransformer implements IFhirTransformer<Observa
 		observation.setValue(labResultHelper.getResult(localObject));
 
 		observation.setReferenceRange(labResultHelper.getReferenceComponents(localObject));
+
+		observation.setInterpretation(labResultHelper.getInterpretationConcept(localObject));
 
 		observation.setCode(labResultHelper.getCodeableConcept(localObject));
 
