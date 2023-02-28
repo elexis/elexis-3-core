@@ -28,6 +28,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRole;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
@@ -94,6 +95,8 @@ public class TestDatabaseInitializer {
 	private static boolean isAgendaInitialized = false;
 	private static boolean isRemindersInitialized = false;
 	private static boolean isLeistungsblockInitialized = false;
+	private ISickCertificate sickCertificate;
+	private static boolean isAUFInitialized = false;
 
 	private IModelService modelService;
 	private IElexisEntityManager entityManager;
@@ -488,6 +491,28 @@ public class TestDatabaseInitializer {
 			modelService.save(behandlung);
 			isBehandlungInitialized = true;
 		}
+	}
+	
+	public void initializeAUF() throws IOException, SQLException {
+		if (!isFallInitialized) {
+			initializeFall();
+		}
+		if (!isAUFInitialized) {
+			sickCertificate = modelService.create(ISickCertificate.class);
+			sickCertificate.setPatient(patient);
+			sickCertificate.setCoverage(fall);
+			sickCertificate.setDate(LocalDate.now());
+			sickCertificate.setStart(LocalDate.now());
+			sickCertificate.setEnd(LocalDate.now().plusDays(7));
+			sickCertificate.setNote("note");
+			sickCertificate.setReason("Krankheit");
+			sickCertificate.setPercent(75);
+			modelService.save(sickCertificate);
+		}
+	}
+	
+	public ISickCertificate getAUFs() {
+		return sickCertificate;
 	}
 
 	public static IEncounter getBehandlung() {
