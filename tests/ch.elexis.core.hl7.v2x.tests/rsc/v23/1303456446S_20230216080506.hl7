@@ -1,0 +1,16 @@
+MSH|^~\&|LABCH007|13|MED|HL7|20230215173101||ORU^R01|30904268|P|2.3||||||8859/1
+PID||477|431063706^^^GLIMS||Popolizio^Larissa||19970315000000|F|||Waidackerstrasse 9^^Uttwil^^8592^CH
+ORC|NW|713853862|1303456446S^13||CM||^^^20230215081200|||||K110138^Wolf^Sabine^^^^^^^GLIMS|||20230215173101
+OBR|1|713853862|1303456446S^13||||20230215080900|||||||20230215130423||K110138^Wolf^Sabine^^^^^GLIMS||||K110138||20230215173101|||F|||431063706^Popolizio Larissa^^^^^^GLIMS
+OBX|1|SN|FERR^Ferritin^GLIMS||63|µg/l||N|||F||||||
+NTE|1|L|30-150\.br\Cut off <30µg/l ohne chronische Erkrankung. Bei chronischen Erkrankungen (CHI, CNI, RLLS usw) gelten andere Cut Offs, siehe Fried et al. Pipette, 03/2021, www.sulm.ch, auch im LabGUIDE hinterlegt.
+OBX|2|SN|VB12^Vitamin B12^GLIMS||524|pmol/l|145-569|N|||F||||||
+OBX|3|SN|TSH^TSH^GLIMS||3.20|mIU/l|0.27-4.20|N|||F||||||
+OBX|4|SN|FT3^Freies T3^GLIMS||4.87|pmol/l|3.10-6.80|N|||F||||||
+OBX|5|SN|FT4^Freies T4^GLIMS||13.7|pmol/l|12.0-22.0|N|||F||||||
+OBX|6|SN|TSHRAK^TSH Rezeptor-Ak (TSI)^GLIMS||1.7|U/l|<1.8|N|||F||||||
+OBX|7|SN|MIKAK^Thyreoidale Perox. Ak^GLIMS||240|IU/ml|<34|H|||F||||||
+OBX|8|SN|THAK^Thyreoglobulin Ak^GLIMS||68|IU/ml|<115|N|||F||||||
+OBX|9|SN|TEST^Testosteron^GLIMS||0.85|nmol/l|0.29-1.67|N|||F||||||
+OBX|10|SN|DHEPIS^DHEAS^GLIMS||2.80|µmol/l|2.68-9.23|N|||F||||||
+OBX|11|SN|CORT8^Cortisol morgens^GLIMS||343|nmol/l|133-537|N|||F||||||
