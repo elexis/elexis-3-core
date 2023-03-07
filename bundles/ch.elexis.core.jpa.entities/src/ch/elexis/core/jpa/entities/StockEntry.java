@@ -28,7 +28,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 @NamedQueries({
 		@NamedQuery(name = "StockEntry.articleId.articleType", query = "SELECT se FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
 		@NamedQuery(name = "StockEntry_SumCurrentStock.articleId.articleType", query = "SELECT SUM(se.currentStock) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false", hints = {
-				@QueryHint(name = QueryHints.CACHE_USAGE, value = CacheUsage.Invalidate) }),
+				@QueryHint(name = QueryHints.CACHE_USAGE, value = CacheUsage.DoNotCheckCache) }),
 		@NamedQuery(name = "StockEntry_AvailableCurrentStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >=0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false"),
 		@NamedQuery(name = "StockEntry_AvailableCurrentBelowStock.articleId.articleType", query = "SELECT MAX(CASE WHEN se.currentStock <= 0 THEN 0 WHEN (ABS(se.minimumStock)-se.currentStock) >0 THEN 1 ELSE 2 END) FROM StockEntry se WHERE se.articleId = :articleId AND se.articleType = :articleType AND se.deleted = false") })
 public class StockEntry extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
