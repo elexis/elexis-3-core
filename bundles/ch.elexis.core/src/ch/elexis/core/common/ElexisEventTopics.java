@@ -79,6 +79,12 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_MESSAGE = "message";
 
 	/**
+	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a model class.
+	 * 
+	 */
+	public static final String EVENT_INVALIDATE_CACHE = BASE_MODEL + "invalidatecache";
+	
+	/**
 	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or
 	 * <code>null</code> on logout. (Re-Login events: <code>null</code> and the new
 	 * user). Please consider direct e4 injection see
