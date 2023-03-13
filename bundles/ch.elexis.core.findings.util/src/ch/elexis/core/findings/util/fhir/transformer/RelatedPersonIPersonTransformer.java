@@ -6,16 +6,21 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.RelatedPerson;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonRelatedPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.services.IModelService;
 
 @Component
 public class RelatedPersonIPersonTransformer implements IFhirTransformer<RelatedPerson, IPerson> {
 
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService modelService;
+	
 	private IPersonRelatedPersonAttributeMapper attributeMapper;
 
 	@Activate
@@ -41,7 +46,10 @@ public class RelatedPersonIPersonTransformer implements IFhirTransformer<Related
 
 	@Override
 	public Optional<IPerson> createLocalObject(RelatedPerson fhirObject) {
-		return Optional.empty();
+		IPerson create = modelService.create(IPerson.class);
+		attributeMapper.fhirToElexis(fhirObject, create);
+		modelService.save(create);
+		return Optional.of(create);
 	}
 
 	@Override
