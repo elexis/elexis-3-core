@@ -12,7 +12,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -99,5 +101,26 @@ public class XidTest {
 
 		modelService.remove(xid1);
 		modelService.remove(xid2);
+	}
+
+	/**
+	 * AHV numbers may be stored in exact form like <code>756.1234.1234.56</code> or
+	 * in loose notation like <code>7561234123456</code>. They are semantically
+	 * equivalent, thus a search should be possible that considers this.
+	 */
+	@Test
+	public void queryAhvUnified() {
+		IXid xid1 = modelService.create(IXid.class);
+		xid1.setDomain(XidConstants.DOMAIN_AHV);
+		xid1.setDomainId("756.1234.1234.56");
+		xid1.setObject(contact1);
+		modelService.save(xid1);
+
+		INamedQuery<IXid> namedQuery = modelService.getNamedQuery(IXid.class, "ahvdomainid");
+		List<IXid> xids = namedQuery.executeWithParameters(namedQuery.getParameterMap("ahvdomainid", "7561234123456"));
+		assertEquals(contact1.getId(), xids.get(0).getObject(IContact.class).getId());
+
+		xids = namedQuery.executeWithParameters(namedQuery.getParameterMap("ahvdomainid", "756.1234.123456"));
+		assertEquals(contact1.getId(), xids.get(0).getObject(IContact.class).getId());
 	}
 }
