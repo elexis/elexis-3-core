@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui.documents.views;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,6 +41,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.util.FindingsServiceHolder;
 import ch.elexis.core.findings.util.ValueSetServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
@@ -47,7 +49,6 @@ import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktErfassenDialog;
-import ch.elexis.core.ui.documents.Messages;
 import ch.elexis.core.ui.documents.composites.CategorySelectionEditComposite;
 import ch.elexis.core.ui.documents.provider.AuthorContentProposalProvider;
 import ch.elexis.core.ui.documents.provider.ValueSetProposalProvider;
@@ -78,6 +79,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	private final boolean categoryCrudAllowed;
 
 	private CDateTime creationDate;
+	private CDateTime lastchangedDate;
 
 	public DocumentsMetaDataDialog(IDocument document, Shell parent) {
 		super(parent);
@@ -99,23 +101,39 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
-		ret.setLayout(new GridLayout());
+		ret.setLayout(new GridLayout(4, false));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
 		new Label(ret, SWT.None).setText(Messages.DocumentView_categoryColumn);
 		csec = new CategorySelectionEditComposite(ret, SWT.NONE, document, categoryCrudAllowed);
-		csec.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		csec.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Title);
 		tTitle = SWTHelper.createText(ret, 1, SWT.NONE);
 		tTitle.setText(document.getTitle());
+		tTitle.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
+		new Label(ret, SWT.NONE).setText("Datum");
+		lastchangedDate = new CDateTime(ret, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+		GridData gd_lastchangedDate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lastchangedDate.widthHint = 150;
+		lastchangedDate.setLayoutData(gd_lastchangedDate);
+		if(document.getLastchanged() != null) {
+			lastchangedDate.setSelection(document.getLastchanged());
+		} else {
+			lastchangedDate.setSelection(new Date());
+		}
+		
 		new Label(ret, SWT.NONE).setText("Erstelldatum");
 		creationDate = new CDateTime(ret, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		GridData gd_archivingDate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_archivingDate.widthHint = 150;
 		creationDate.setLayoutData(gd_archivingDate);
-		creationDate.setSelection(document.getCreated());
+		if(document.getCreated() != null) {
+			creationDate.setSelection(document.getCreated());
+		} else {
+			creationDate.setSelection(new Date());
+		}
 
 		createUIDocumentReferences(ret);
 		return ret;
@@ -126,9 +144,11 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
 		tKeywords.setText(Optional.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
 				.orElse(""));
+		tKeywords.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
 		tAuthor = SWTHelper.createText(ret, 1, SWT.NONE);
+		tAuthor.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		AutoCompleteTextUtil.addAutoCompleteSupport(tAuthor, new AuthorContentProposalProvider(),
 				Optional.ofNullable(documentReference.getAuthorId())
@@ -173,6 +193,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_DocumentClass);
 		tDocumentClass = SWTHelper.createText(ret, 1, SWT.NONE);
+		tDocumentClass.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		AutoCompleteTextUtil.addAutoCompleteSupport(tDocumentClass,
 				new ValueSetProposalProvider(ValueSetProposalProvider.EPRDOCUMENT_CLASSCODE),
@@ -180,6 +201,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_PracticeSetting);
 		tPracticeSetting = SWTHelper.createText(ret, 1, SWT.NONE);
+		tPracticeSetting.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		AutoCompleteTextUtil.addAutoCompleteSupport(tPracticeSetting,
 				new ValueSetProposalProvider(ValueSetProposalProvider.EPRDOCUMENT_PRACTICESETTINGCODE),
@@ -221,6 +243,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		document.setKeywords(keywords);
 		document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
 		document.setCreated(creationDate.getSelection());
+		document.setLastchanged(lastchangedDate.getSelection());
 
 		saveDocumentReference();
 		super.okPressed();

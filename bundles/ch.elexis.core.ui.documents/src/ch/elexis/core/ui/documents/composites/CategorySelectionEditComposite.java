@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -152,7 +153,14 @@ public class CategorySelectionEditComposite extends Composite {
 		Object cbSelection = document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
 			if (!categories.contains(cbSelection)) {
-				cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+				String categoryName = ((ICategory) cbSelection).getName();
+				Optional<ICategory> matchingName = categories.stream()
+						.filter(cat -> cat.getName() != null && cat.getName().equals(categoryName)).findFirst();
+				if (matchingName.isPresent()) {
+					cbSelection = matchingName.get();
+				} else {
+					cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+				}
 			}
 			cbCategories.setSelection(new StructuredSelection(cbSelection), true);
 		}
