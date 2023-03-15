@@ -1,11 +1,12 @@
 package ch.elexis.core.ui.documents.composites;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
@@ -31,7 +33,6 @@ import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.types.DocumentStatus;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -153,7 +154,14 @@ public class CategorySelectionEditComposite extends Composite {
 		Object cbSelection = document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
 			if (!categories.contains(cbSelection)) {
-				cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+				String categoryName = ((ICategory) cbSelection).getName();
+				Optional<ICategory> matchingName = categories.stream()
+						.filter(cat -> cat.getName() != null && cat.getName().equals(categoryName)).findFirst();
+				if (matchingName.isPresent()) {
+					cbSelection = matchingName.get();
+				} else {
+					cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+				}
 			}
 			cbCategories.setSelection(new StructuredSelection(cbSelection), true);
 		}
