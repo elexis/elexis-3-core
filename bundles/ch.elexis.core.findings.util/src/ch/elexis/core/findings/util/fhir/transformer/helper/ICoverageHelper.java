@@ -182,6 +182,9 @@ public class ICoverageHelper extends AbstractHelper {
 				.filter(id -> FhirChConstants.OID_VERSICHERTENNUMMER_SYSTEM.equals(id.getSystem())).findFirst();
 		if (insuranceNumberIdentifier.isPresent()) {
 			target.setInsuranceNumber(insuranceNumberIdentifier.get().getValue());
+
+			// compatibility - FallDetailBlatt etc. expect value to be contained in ExtInfo
+			target.setExtInfo(FallConstants.FLD_EXT_VERSICHERUNGSNUMMER, insuranceNumberIdentifier.get().getValue());
 		}
 	}
 }
