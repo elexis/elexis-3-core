@@ -1,7 +1,10 @@
 package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Annotation;
@@ -16,7 +19,10 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.fhir.FhirConstants;
 import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 
 public class ISickCertificateConditionAttributeMapper
@@ -63,7 +69,47 @@ public class ISickCertificateConditionAttributeMapper
 
 	@Override
 	public void fhirToElexis(Condition source, ISickCertificate target) {
-		throw new UnsupportedOperationException();
+		Optional<IPatient> patient = CoreModelServiceHolder.get()
+				.load(source.getSubject().getReferenceElement().getIdPart(), IPatient.class);
+		if (patient.isEmpty()) {
+			throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
+		}
+		target.setPatient(patient.get());
+		
+		if(source.hasRecordedDate()) {
+			target.setDate(TimeUtil.toLocalDate(source.getRecordedDate()));
+		}
+		if(source.hasOnsetDateTimeType()) {
+			target.setStart(TimeUtil.toLocalDate(source.getOnsetDateTimeType().getValue()));
+		}
+		if(source.hasAbatementDateTimeType()) {
+			target.setStart(TimeUtil.toLocalDate(source.getAbatementDateTimeType().getValue()));
+		}
+		
+		if(source.hasCode()) {
+			List<Coding> codings = source.getCode().getCoding();
+			List<Coding> reasonCodings = codings.stream().filter(c -> !FhirConstants.DE_EAU_SYSTEM.equals(c.getSystem())).collect(Collectors.toList());
+			if(!reasonCodings.isEmpty()) {
+				target.setReason(reasonCodings.get(0).getDisplay());
+			}
+		}
+		
+		if(source.hasStage() && source.getStageFirstRep().hasType()) {
+			CodeableConcept stageType = source.getStageFirstRep().getType();
+			for(Coding coding : stageType.getCoding()) {
+				if(coding.hasSystem() && (coding.getSystem().endsWith("degree") || coding.getSystem().endsWith("percent"))) {
+					String code = coding.getCode().replaceAll("%", "").trim();
+					if(StringUtils.isNotBlank(code) && StringUtils.isNumeric(code)) {
+						target.setPercent(Integer.valueOf(code));
+						break;
+					}
+				}
+			}
+		}
+		
+		if(source.hasNote()) {
+			target.setNote(source.getNote().stream().map(n -> n.getText()).collect(Collectors.joining("\n\n")));
+		}
 	}
 
 }
