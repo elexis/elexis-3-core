@@ -7,6 +7,7 @@ Bundle-Vendor: medevit.at
 Export-Package: ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.dialog,
  ch.elexis.core.ui.e4.events,
+ ch.elexis.core.ui.e4.fieldassist,
  ch.elexis.core.ui.e4.jface.preference,
  ch.elexis.core.ui.e4.locks,
  ch.elexis.core.ui.e4.parts,

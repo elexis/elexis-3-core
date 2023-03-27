@@ -41,6 +41,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 @NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid")
 @NamedQuery(name = "Xid.domain.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid AND xi.type = :type")
 @NamedQuery(name = "Xid.objectid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.object = :objectid")
+@NamedQuery(name = "Xid.ahvdomainid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = 'www.ahv.ch/xid' AND FUNCTION('REPLACE',xi.domainId,'.','') = FUNCTION('REPLACE',:ahvdomainid,'.','')")
 public class Xid extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
