@@ -453,6 +453,7 @@ public class Messages extends NLS {
 	public static String BestellView_OrderSentBody;
 	public static String BestellView_OrderSentCaption;
 	public static String BestellView_PrintOrder;
+	public static String BestellView_ListenToBarcode;
 	public static String BestellView_ReadOrder;
 	public static String BestellView_RemoveArticle;
 	public static String BestellView_SavelIst;

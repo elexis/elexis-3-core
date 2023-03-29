@@ -13,11 +13,11 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,10 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -59,6 +61,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
@@ -109,7 +112,8 @@ public class BestellView extends ViewPart {
 	private TableViewer tv;
 	private IOrder actOrder;
 	private ViewMenus viewmenus;
-	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction;
+	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction,
+			listenToBarcodeInputAction;
 	private IAction exportClipboardAction, checkInAction;
 
 	private BestellungLabelProvider blp;
@@ -254,7 +258,8 @@ public class BestellView extends ViewPart {
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
-		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction);
+		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction,
+				listenToBarcodeInputAction);
 		viewmenus.createMenu(exportClipboardAction);
 		viewmenus.createViewerContextMenu(tv, new IAction[] { removeAction });
 		form.getToolBarManager().add(checkInAction);
@@ -389,7 +394,10 @@ public class BestellView extends ViewPart {
 	}
 
 	private void makeActions() {
-		removeAction = new Action(Messages.BestellView_RemoveArticle) { // $NON-NLS-1$
+		listenToBarcodeInputAction = new Action(Messages.BestellView_ListenToBarcode, IAction.AS_CHECK_BOX) {
+			// we are only interested in the state
+		};
+		removeAction = new Action(Messages.BestellView_RemoveArticle) {
 			@Override
 			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
@@ -606,6 +614,8 @@ public class BestellView extends ViewPart {
 				}
 			}
 		};
+		listenToBarcodeInputAction.setImageDescriptor(Images.IMG_SCANNER_BARCODE.getImageDescriptor());
+		printAction.setToolTipText(Messages.BestellView_ListenToBarcode);
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		printAction.setToolTipText(Messages.BestellView_PrintOrder);
 		newAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
@@ -670,6 +680,13 @@ public class BestellView extends ViewPart {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	@org.eclipse.e4.core.di.annotations.Optional
+	@Inject
+	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event) {
+		if (listenToBarcodeInputAction.isChecked() && event instanceof IArticle)
+			addItemsToOrder(Collections.singletonList((IArticle) event));
 	}
 
 	public void addItemsToOrder(List<IArticle> articlesToOrder) {
