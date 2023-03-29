@@ -31,6 +31,10 @@ public class ElexisEventTopics {
 	 * Events to notify the user
 	 */
 	public static final String BASE_NOTIFICATION = BASE + "notification/";
+	/**
+	 * Generic system event
+	 */
+	public static final String BASE_EVENT = BASE + "event/";
 
 	public static final String PROPKEY_ID = "id";
 	public static final String PROPKEY_CLASS = "class";
