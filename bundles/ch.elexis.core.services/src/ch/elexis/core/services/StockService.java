@@ -287,6 +287,21 @@ public class StockService implements IStockService {
 		}
 	}
 
+	@Override
+	public IStock getMandatorDefaultStock(String mandatorId) {
+		IMandator mandator = coreModelService.load(mandatorId, IMandator.class).orElse(null);
+		if (mandator != null) {
+			IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true, false);
+			query.and(ModelPackage.Literals.ISTOCK__OWNER, COMPARATOR.EQUALS, mandator);
+			query.orderBy("PRIORITY", ORDER.DESC);
+			List<IStock> result = query.execute();
+			if (!result.isEmpty()) {
+				return result.get(0);
+			}
+		}
+		return getDefaultStock();
+	}
+
 	public Availability getArticleAvailabilityForStock(IStock stock, String article) {
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
 		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(), isTriggerStockAvailabilityOnBelow());
