@@ -10,6 +10,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
@@ -126,6 +127,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	}
 
 	private void updateUi(IPatient patient, boolean forceUpdate) {
+		LoggerFactory.getLogger(getClass()).info("[MEDI PAT] " + (patient != null ? patient.getId() : "null"));
 		tpc.updateUi(patient, forceUpdate);
 	}
 

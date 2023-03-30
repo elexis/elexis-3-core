@@ -252,7 +252,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 				return Optional.empty();
 			}
 		}
-		Path filePath = Paths.get(getDocumentCachePath() + File.separator, fileName);
+		Path filePath = Paths.get(getDocumentTempPath() + File.separator, fileName);
 		return Optional.ofNullable(writeFile(filePath, content, true, true));
 	}
 

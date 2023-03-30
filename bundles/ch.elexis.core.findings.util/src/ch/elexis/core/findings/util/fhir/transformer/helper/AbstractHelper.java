@@ -46,7 +46,7 @@ public class AbstractHelper {
 	public static void acquireAndReleaseLock(Identifiable dbObj) {
 		LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(dbObj, 5, new NullProgressMonitor());
 		if (lr.isOk()) {
-			LockResponse lrs = LocalLockServiceHolder.get().releaseLock(lr);
+			LockResponse lrs = LocalLockServiceHolder.get().releaseLock(lr.getLockInfo());
 			if (!lrs.isOk()) {
 				logger.warn("Could not release lock for [{}] [{}]", dbObj.getClass().getName(), dbObj.getId());
 			}

@@ -72,6 +72,7 @@ public class Messages {
 	public static String BestellView_OrderSentBody = ch.elexis.core.l10n.Messages.BestellView_OrderSentBody;
 	public static String BestellView_OrderSentCaption = ch.elexis.core.l10n.Messages.BestellView_OrderSentCaption;
 	public static String BestellView_PrintOrder = ch.elexis.core.l10n.Messages.BestellView_PrintOrder;
+	public static String BestellView_ListenToBarcode = ch.elexis.core.l10n.Messages.BestellView_ListenToBarcode;
 	public static String BestellView_ReadOrder = ch.elexis.core.l10n.Messages.BestellView_ReadOrder;
 	public static String BestellView_RemoveArticle = ch.elexis.core.l10n.Messages.BestellView_RemoveArticle;
 	public static String BestellView_SavelIst = ch.elexis.core.l10n.Messages.BestellView_SavelIst;
