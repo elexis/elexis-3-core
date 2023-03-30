@@ -711,7 +711,9 @@ public class BestellView extends ViewPart {
 
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
-			IOrderEntry orderEntry = actOrder.addEntry(article, null, null, 1);
+			String mandatorId = ContextServiceHolder.get().getActiveMandator().map(m -> m.getId()).orElse(null);
+			IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
+			IOrderEntry orderEntry = actOrder.addEntry(article, stock, null, 1);
 			CoreModelServiceHolder.get().save(orderEntry);
 		}
 		if (tv != null && !tv.getControl().isDisposed()) {
