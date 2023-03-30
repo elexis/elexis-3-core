@@ -29,9 +29,9 @@ import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.XRef;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.text.IRichTextDisplay;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.IKonsExtension;
 
 public class KonsExtension implements IKonsExtension {

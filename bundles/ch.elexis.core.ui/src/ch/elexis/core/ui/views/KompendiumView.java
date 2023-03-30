@@ -26,7 +26,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 /**
  * Diese View reichtet einen Browser aufs Arzneimittel-Kompendium ein.

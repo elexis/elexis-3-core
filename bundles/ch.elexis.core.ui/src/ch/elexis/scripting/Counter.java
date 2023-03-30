@@ -11,11 +11,12 @@
  *******************************************************************************/
 package ch.elexis.scripting;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.data.PersistentObject;
 

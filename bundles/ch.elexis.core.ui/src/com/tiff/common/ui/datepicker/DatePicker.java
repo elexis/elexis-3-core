@@ -12,11 +12,11 @@
  *******************************************************************************/
 package com.tiff.common.ui.datepicker;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.events.ControlAdapter;

@@ -36,7 +36,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Anwender;
-import ch.rgw.tools.StringTool;
 import ch.rgw.tools.Tree;
 
 /**

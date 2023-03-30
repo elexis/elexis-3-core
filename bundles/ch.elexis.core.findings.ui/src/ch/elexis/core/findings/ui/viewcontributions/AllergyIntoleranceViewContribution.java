@@ -7,7 +7,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.migration.IMigratorService;

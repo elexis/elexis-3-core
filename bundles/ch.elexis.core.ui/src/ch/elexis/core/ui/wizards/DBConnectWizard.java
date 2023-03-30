@@ -12,12 +12,12 @@
 
 package ch.elexis.core.ui.wizards;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;

@@ -10,12 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.textsystem;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -58,7 +58,7 @@ import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.data.interfaces.IDataAccess.Element;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.SortedList;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.views.TextView;
 
 public class PlatzhalterView extends ViewPart {

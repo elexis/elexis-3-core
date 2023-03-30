@@ -1,10 +1,10 @@
 package ch.elexis.core.ui.views.rechnung.invoice;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -29,12 +29,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.rechnung.InvoiceListView;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 

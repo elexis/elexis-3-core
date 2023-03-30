@@ -1,11 +1,11 @@
 package ch.elexis.core.findings.ui.composites;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;

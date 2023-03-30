@@ -13,11 +13,11 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.NumberInput;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 

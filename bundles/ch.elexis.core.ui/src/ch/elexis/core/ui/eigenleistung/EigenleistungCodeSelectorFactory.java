@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.localservice.Constants;
 import ch.elexis.core.services.IQuery;
@@ -48,7 +49,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.core.l10n.Messages;
 
 public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 
