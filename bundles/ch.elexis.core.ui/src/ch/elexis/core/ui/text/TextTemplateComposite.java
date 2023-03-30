@@ -1,12 +1,12 @@
 package ch.elexis.core.ui.text;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -25,7 +25,7 @@ import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class TextTemplateComposite extends Composite {
 

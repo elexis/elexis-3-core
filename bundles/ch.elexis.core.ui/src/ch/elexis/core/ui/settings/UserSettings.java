@@ -8,7 +8,6 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 /**

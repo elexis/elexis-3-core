@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2016, MEDEVIT and Elexis
+ * Copyright (c) 2005-2023, MEDEVIT and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,12 +93,12 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.KontaktSelektorDialogCellEditor;
 import ch.elexis.core.ui.editors.NumericCellEditorValidator;
 import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.dnd.IdentifiableDragSource;
@@ -124,7 +124,7 @@ public class StockView extends ViewPart implements IRefreshable {
 	private StockEntryLabelProvider labelProvider;
 
 	private ViewMenus viewMenus;
-	private IAction refreshAction, exportAction;
+	private IAction refreshAction, exportAction, scanInventoryAction;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
@@ -140,9 +140,9 @@ public class StockView extends ViewPart implements IRefreshable {
 
 	private StockViewComparator comparator;
 
-	String[] columns = { Messages.Core_Stock, Messages.Core_Phamacode, Messages.LagerView_gtin,
-			Messages.Core_Name, Messages.LagerView_vkPreis, Messages.LagerView_minBestand,
-			Messages.LagerView_istBestand, Messages.LagerView_maxBestand, Messages.Core_Article_provider };
+	String[] columns = { Messages.Core_Stock, Messages.Core_Phamacode, Messages.LagerView_gtin, Messages.Core_Name,
+			Messages.LagerView_vkPreis, Messages.LagerView_minBestand, Messages.LagerView_istBestand,
+			Messages.LagerView_maxBestand, Messages.Core_Article_provider };
 	int[] colwidth = { 50, 75, 90, 250, 50, 35, 35, 35, 150 };
 
 	@Override
@@ -357,7 +357,7 @@ public class StockView extends ViewPart implements IRefreshable {
 
 		makeActions();
 		viewMenus = new ViewMenus(getViewSite());
-		viewMenus.createToolbar(refreshAction);
+		viewMenus.createToolbar(refreshAction, scanInventoryAction);
 		viewMenus.createMenu(exportAction);
 
 		getSite().getPage().addPartListener(udpateOnVisible);
@@ -375,6 +375,17 @@ public class StockView extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
+		scanInventoryAction = new Action("SIA") {
+			{
+				setImageDescriptor(Images.IMG_SCANNER_BARCODE.getImageDescriptor());
+			}
+
+			@Override
+			public void run() {
+				new OrderImportDialog(UiDesk.getTopShell(), null).open();
+			}
+		};
+
 		refreshAction = new Action(Messages.StockView_reload) {
 			{
 				setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());

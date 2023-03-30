@@ -12,10 +12,10 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;

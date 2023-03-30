@@ -39,9 +39,9 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class AssignStickerDialog extends TitleAreaDialog {

@@ -1,8 +1,8 @@
 package ch.elexis.core.mail.ui.preference;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;

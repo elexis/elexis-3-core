@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

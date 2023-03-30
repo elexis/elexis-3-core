@@ -12,11 +12,11 @@
 
 package ch.elexis.core.ui.util.viewers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -34,12 +34,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.text.ElexisText;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldProvider;

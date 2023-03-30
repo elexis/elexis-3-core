@@ -1,8 +1,8 @@
 package ch.elexis.core.findings.ui.composites;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

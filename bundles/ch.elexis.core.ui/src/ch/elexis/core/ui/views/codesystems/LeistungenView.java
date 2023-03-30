@@ -40,7 +40,7 @@ import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FavoritenCTabItem;

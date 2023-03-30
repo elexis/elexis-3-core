@@ -1,8 +1,8 @@
 package ch.elexis.core.findings.ui.action;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;

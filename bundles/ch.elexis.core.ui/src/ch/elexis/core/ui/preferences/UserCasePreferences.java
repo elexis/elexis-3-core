@@ -12,11 +12,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;

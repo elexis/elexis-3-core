@@ -10,7 +10,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.OrganizationConstants;
 import ch.elexis.core.services.holder.StickerServiceHolder;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;

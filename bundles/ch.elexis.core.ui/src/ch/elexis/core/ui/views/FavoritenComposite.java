@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -44,13 +44,13 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;

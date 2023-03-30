@@ -1,8 +1,8 @@
 package ch.elexis.core.mail.ui.client;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

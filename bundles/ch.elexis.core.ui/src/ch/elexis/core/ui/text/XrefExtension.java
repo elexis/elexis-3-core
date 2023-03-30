@@ -33,11 +33,11 @@ import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.IKonsExtension;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.data.Brief;
 import ch.rgw.tools.ExHandler;

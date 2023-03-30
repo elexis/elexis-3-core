@@ -12,9 +12,9 @@
 
 package ch.elexis.core.ui.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;

@@ -10,11 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.textsystem;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.ui.util.Log;
 

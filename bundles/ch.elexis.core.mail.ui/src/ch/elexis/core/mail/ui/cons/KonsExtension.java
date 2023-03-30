@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.mail.ui.handlers.EncounterUtil;
 import ch.elexis.core.mail.ui.handlers.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.IRichTextDisplay;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.IKonsExtension;
 
 public class KonsExtension implements IKonsExtension {

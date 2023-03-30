@@ -11,10 +11,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.selectors;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;

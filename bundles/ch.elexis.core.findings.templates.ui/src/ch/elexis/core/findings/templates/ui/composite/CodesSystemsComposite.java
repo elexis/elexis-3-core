@@ -1,9 +1,9 @@
 package ch.elexis.core.findings.templates.ui.composite;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;

@@ -44,7 +44,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
