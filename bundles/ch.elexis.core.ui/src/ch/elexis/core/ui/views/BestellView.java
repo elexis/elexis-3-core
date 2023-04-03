@@ -13,11 +13,11 @@
 
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,10 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -59,6 +61,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
@@ -72,9 +75,11 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -86,12 +91,12 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TableViewerSorter;
 import ch.elexis.core.ui.util.TableViewerSorter.IColumnContentProvider;
@@ -109,7 +114,8 @@ public class BestellView extends ViewPart {
 	private TableViewer tv;
 	private IOrder actOrder;
 	private ViewMenus viewmenus;
-	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction;
+	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction,
+			listenToBarcodeInputAction;
 	private IAction exportClipboardAction, checkInAction;
 
 	private BestellungLabelProvider blp;
@@ -254,7 +260,8 @@ public class BestellView extends ViewPart {
 		});
 		makeActions();
 		viewmenus = new ViewMenus(getViewSite());
-		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction);
+		viewmenus.createToolbar(newAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction,
+				listenToBarcodeInputAction);
 		viewmenus.createMenu(exportClipboardAction);
 		viewmenus.createViewerContextMenu(tv, new IAction[] { removeAction });
 		form.getToolBarManager().add(checkInAction);
@@ -389,7 +396,14 @@ public class BestellView extends ViewPart {
 	}
 
 	private void makeActions() {
-		removeAction = new Action(Messages.BestellView_RemoveArticle) { // $NON-NLS-1$
+		listenToBarcodeInputAction = new Action(Messages.BestellView_ListenToBarcode, IAction.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				String valueToSet = listenToBarcodeInputAction.isChecked() ? BestellView.class.getName() : null;
+				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet);
+			}
+		};
+		removeAction = new Action(Messages.BestellView_RemoveArticle) {
 			@Override
 			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) tv.getSelection();
@@ -606,6 +620,8 @@ public class BestellView extends ViewPart {
 				}
 			}
 		};
+		listenToBarcodeInputAction.setImageDescriptor(Images.IMG_SCANNER_BARCODE.getImageDescriptor());
+		printAction.setToolTipText(Messages.BestellView_ListenToBarcode);
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		printAction.setToolTipText(Messages.BestellView_PrintOrder);
 		newAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
@@ -672,6 +688,16 @@ public class BestellView extends ViewPart {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
+	@org.eclipse.e4.core.di.annotations.Optional
+	@Inject
+	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event,
+			IContextService contextService) {
+		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
+				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
+			addItemsToOrder(Collections.singletonList((IArticle) event));
+		}
+	}
+
 	public void addItemsToOrder(List<IArticle> articlesToOrder) {
 		if (actOrder == null) {
 			NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
@@ -685,7 +711,9 @@ public class BestellView extends ViewPart {
 
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
-			IOrderEntry orderEntry = actOrder.addEntry(article, null, null, 1);
+			String mandatorId = ContextServiceHolder.get().getActiveMandator().map(m -> m.getId()).orElse(null);
+			IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
+			IOrderEntry orderEntry = actOrder.addEntry(article, stock, null, 1);
 			CoreModelServiceHolder.get().save(orderEntry);
 		}
 		if (tv != null && !tv.getControl().isDisposed()) {

@@ -12,10 +12,10 @@
 
 package org.iatrix.help.wiki.views;
 
-import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
@@ -27,7 +27,7 @@ import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.rgw.tools.StringTool;
 
 /**

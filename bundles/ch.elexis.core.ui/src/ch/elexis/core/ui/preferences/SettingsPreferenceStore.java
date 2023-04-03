@@ -11,11 +11,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
 import java.util.LinkedList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;

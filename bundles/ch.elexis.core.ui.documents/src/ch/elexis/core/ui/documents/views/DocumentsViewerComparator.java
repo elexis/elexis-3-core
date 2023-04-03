@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.documents.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;

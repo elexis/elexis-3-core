@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.util.GenericObjectDragSource;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.util.PersistentObjectDragSource.ISelectionRenderer;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;

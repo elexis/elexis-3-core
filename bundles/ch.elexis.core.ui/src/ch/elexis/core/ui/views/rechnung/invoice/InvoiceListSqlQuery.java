@@ -10,12 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.rechnung.invoice;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;

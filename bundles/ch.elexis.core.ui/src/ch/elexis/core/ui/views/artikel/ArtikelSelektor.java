@@ -45,7 +45,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;

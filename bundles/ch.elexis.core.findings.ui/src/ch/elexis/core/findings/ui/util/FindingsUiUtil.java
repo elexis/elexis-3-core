@@ -49,7 +49,7 @@ import ch.elexis.core.findings.util.commands.ILockingProvider;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.CommentAction;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class FindingsUiUtil {

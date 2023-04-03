@@ -1,7 +1,8 @@
 package ch.elexis.core.findings.ui.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;

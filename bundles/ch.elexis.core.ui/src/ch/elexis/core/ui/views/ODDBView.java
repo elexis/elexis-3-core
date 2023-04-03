@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +20,7 @@ import java.net.URLConnection;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
@@ -32,7 +32,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
 

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.PersistentObjectFactory;
 

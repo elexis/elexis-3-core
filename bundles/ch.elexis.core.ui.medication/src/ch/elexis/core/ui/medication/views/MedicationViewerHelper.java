@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.medication.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;

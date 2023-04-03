@@ -19,9 +19,9 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.medication.PreferenceConstants;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.views.IRefreshable;
 
 public class MedicationView extends ViewPart implements IRefreshable {

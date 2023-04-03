@@ -1,8 +1,8 @@
 package ch.elexis.core.findings.ui.views.nattable;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 

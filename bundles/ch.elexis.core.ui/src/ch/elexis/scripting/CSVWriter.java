@@ -10,6 +10,22 @@
  ******************************************************************************/
 package ch.elexis.scripting;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.sql.Clob;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  Copyright 2005 Bytecode Pty Ltd.
 
@@ -27,21 +43,6 @@ package ch.elexis.scripting;
  */
 
 import org.apache.commons.lang3.StringUtils;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.math.BigDecimal;
-import java.sql.Clob;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A very simple CSV writer released under a commercial-friendly license.

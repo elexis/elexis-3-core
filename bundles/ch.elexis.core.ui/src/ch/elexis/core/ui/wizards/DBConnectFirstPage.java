@@ -11,11 +11,11 @@
  *******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
+import java.util.Hashtable;
+
 // 17.5.2009: added H2
 
 import org.apache.commons.lang3.StringUtils;
-import java.util.Hashtable;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

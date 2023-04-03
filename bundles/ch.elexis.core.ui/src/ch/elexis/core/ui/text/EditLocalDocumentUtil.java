@@ -17,8 +17,8 @@ import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.data.Brief;
 
 public class EditLocalDocumentUtil {

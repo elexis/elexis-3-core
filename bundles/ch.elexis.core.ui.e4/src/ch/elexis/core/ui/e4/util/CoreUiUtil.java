@@ -1,34 +1,45 @@
 package ch.elexis.core.ui.e4.util;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.InjectionException;
-import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.services.IContextService;
+import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.ISticker;
 
-@Component(service = {})
-public class CoreUiUtil {
+@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
+public class CoreUiUtil implements EventHandler {
 
 	private static Logger logger = LoggerFactory.getLogger(CoreUiUtil.class);
 
@@ -36,30 +47,22 @@ public class CoreUiUtil {
 
 	private static List<Object> delayedInjection = new ArrayList<>();
 
-	private static IContextService contextService;
+	private static IEclipseContext applicationContext;
 
-	@Reference
-	public void setModelService(IContextService contextService) {
-		CoreUiUtil.contextService = contextService;
-	}
+	private static IEclipseContext serviceContext;
 
-	@Inject
-	@Optional
-	public void subscribeAppStartupComplete(@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) Event event,
-			UISynchronize sync) {
+	@Override
+	public void handleEvent(Event event) {
 		logger.info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
-
 		synchronized (lock) {
 			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
 			if (property instanceof MApplication) {
 				MApplication application = (MApplication) property;
-				// A RAP application has one application context per client
-				// the resp. context service implementation considers this
-				contextService.getRootContext().setNamed("applicationContext", application.getContext()); //$NON-NLS-1$
+				CoreUiUtil.applicationContext = application.getContext();
 
 				if (!delayedInjection.isEmpty()) {
 					for (Object object : delayedInjection) {
-						sync.asyncExec(() -> {
+						Display.getDefault().asyncExec(() -> {
 							injectServices(object);
 						});
 					}
@@ -69,18 +72,42 @@ public class CoreUiUtil {
 		}
 	}
 
-	private static java.util.Optional<IEclipseContext> getApplicationContext() {
-		if (contextService == null) {
-			return java.util.Optional.empty();
-		}
-		return java.util.Optional.ofNullable(
-				(IEclipseContext) contextService.getRootContext().getNamed("applicationContext").orElse(null)); //$NON-NLS-1$
+	private static IEclipseContext getServiceContext() {
+		BundleContext bundleContext = FrameworkUtil.getBundle(CoreUiUtil.class).getBundleContext();
+		return EclipseContextFactory.getServiceContext(bundleContext);
 	}
 
-	private static void injectServices(Object object) {
-		if (getApplicationContext().isPresent()) {
+	public static void injectServices(Object object) {
+		if (applicationContext != null) {
 			try {
-				ContextInjectionFactory.inject(object, getApplicationContext().get());
+				ContextInjectionFactory.inject(object, applicationContext);
+				return;
+			} catch (InjectionException e) {
+				logger.warn("Application context injection failure ", e); //$NON-NLS-1$
+			}
+		}
+		if (serviceContext == null) {
+			CoreUiUtil.serviceContext = getServiceContext();
+		}
+		try {
+			ContextInjectionFactory.inject(object, serviceContext);
+		} catch (InjectionException e) {
+			logger.warn("Service injection failure ", e); //$NON-NLS-1$
+		}
+	}
+
+	public static void uninjectServices(Object object) {
+		if (serviceContext == null) {
+			CoreUiUtil.serviceContext = getServiceContext();
+		}
+		try {
+			ContextInjectionFactory.uninject(object, serviceContext);
+		} catch (InjectionException e) {
+			logger.warn("Service injection failure ", e); //$NON-NLS-1$
+		}
+		if (applicationContext != null) {
+			try {
+				ContextInjectionFactory.uninject(object, applicationContext);
 			} catch (InjectionException e) {
 				logger.warn("Application context injection failure ", e); //$NON-NLS-1$
 			}
@@ -89,6 +116,10 @@ public class CoreUiUtil {
 
 	public static void injectServices(Object object, IEclipseContext context) {
 		ContextInjectionFactory.inject(object, context);
+	}
+	
+	public static void uninjectServices(Object object, IEclipseContext context) {
+		ContextInjectionFactory.uninject(object, context);
 	}
 
 	/**
@@ -109,7 +140,7 @@ public class CoreUiUtil {
 	 */
 	public static void injectServicesWithContext(Object object) {
 		synchronized (lock) {
-			if (getApplicationContext().isPresent()) {
+			if (applicationContext != null) {
 				injectServices(object);
 			} else {
 				delayedInjection.add(object);
@@ -159,4 +190,148 @@ public class CoreUiUtil {
 		}
 		return JFaceResources.getColorRegistry().get(colorString);
 	}
+
+	/**
+	 * Load the {@link Image} and scale it to 16x16px size.
+	 *
+	 * @param image
+	 * @return
+	 */
+	public static Image getImageAsIcon(IImage image) {
+		Image ret = JFaceResources.getImageRegistry().get(image.getId() + "_16x16"); //$NON-NLS-1$
+		if (ret == null) {
+			Image origImage = getImage(image);
+			ret = getImageScaledTo(origImage, 16, 16, false);
+			if (ret != null) {
+				JFaceResources.getImageRegistry().put(image.getId() + "_16x16", ret); //$NON-NLS-1$
+			}
+		}
+
+		return ret;
+	}
+
+	private static Image getImageScaledTo(Image orig, int width, int height, boolean bShrinkOnly) {
+		ImageData idata = orig.getImageData();
+		if (idata.width != width || idata.height != height) {
+			idata = idata.scaledTo(width, height);
+		}
+		Image ret = new Image(Display.getDefault(), idata);
+		return ret;
+	}
+
+	/**
+	 * Get the {@link Image} from the {@link IImage}.
+	 *
+	 * @param image
+	 * @return
+	 */
+	public static Image getImage(IImage image) {
+		Image ret = JFaceResources.getImageRegistry().get(image.getId());
+		if (ret == null) {
+			byte[] in = image.getImage();
+			ByteArrayInputStream bais = new ByteArrayInputStream(in);
+			try {
+				ImageData idata = new ImageData(bais);
+				ret = new Image(Display.getDefault(), idata);
+				if (ret != null) {
+					JFaceResources.getImageRegistry().put(image.getId(), ret);
+				}
+			} catch (Exception ex) {
+				logger.error("Error loading image [" + image.getId() + "]", ex); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
+		return ret;
+	}
+
+	public static Composite createForm(Composite parent, ISticker iSticker) {
+		Composite ret = new Composite(parent, SWT.NONE);
+		ret.setLayout(new GridLayout(2, false));
+
+		Image img = null;
+		if (iSticker.getImage() != null) {
+			img = getImageAsIcon(iSticker.getImage());
+		}
+		GridData gd1 = null;
+		GridData gd2 = null;
+
+		Composite cImg = new Composite(ret, SWT.NONE);
+		if (img != null) {
+			cImg.setBackgroundImage(img);
+			gd1 = new GridData(img.getBounds().width, img.getBounds().height);
+			gd2 = new GridData(SWT.DEFAULT, img.getBounds().height);
+		} else {
+			gd1 = new GridData(10, 10);
+			gd2 = new GridData(SWT.DEFAULT, SWT.DEFAULT);
+		}
+		cImg.setLayoutData(gd1);
+		Label lbl = new Label(ret, SWT.NONE);
+		lbl.setLayoutData(gd2);
+		lbl.setText(iSticker.getLabel());
+		lbl.setForeground(CoreUiUtil.getColorForString(iSticker.getForeground()));
+		lbl.setBackground(getColorForString(iSticker.getBackground()));
+		return ret;
+	}
+
+	/**
+	 * Retrieve the selection for the commandId (added by
+	 * {@link CoreUiUtil#addCommandContributions(IMenuManager, Object[], String)})
+	 * from the {@link IEclipseContext}. The named variable is removed from the
+	 * context.
+	 *
+	 * @param iEclipseContext
+	 * @param commandId
+	 * @return
+	 */
+	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext, String commandId) {
+		return getCommandSelection(iEclipseContext, commandId, true);
+	}
+
+	/**
+	 * Retrieve the selection for the commandId (added by
+	 * {@link CoreUiUtil#addCommandContributions(IMenuManager, Object[], String)})
+	 * from the {@link IEclipseContext}. If the named variable is removed is
+	 * specified with the remove parameter.
+	 *
+	 * @param iEclipseContext
+	 * @param commandId
+	 * @param remove
+	 * @return
+	 */
+	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext, String commandId,
+			boolean remove) {
+		StructuredSelection selection = (StructuredSelection) iEclipseContext.get(commandId.concat(".selection")); //$NON-NLS-1$
+		if (remove) {
+			iEclipseContext.remove(commandId.concat(".selection")); //$NON-NLS-1$
+		}
+		return selection;
+	}
+
+	/**
+	 * Set the selection for the commandId in the current {@link IEclipseContext}.
+	 * Retrievable via
+	 * {@link CoreUiUtil#getCommandSelection(IEclipseContext, String)}.
+	 *
+	 * @param commandId
+	 * @param selection
+	 */
+	public static void setCommandSelection(String commandId, Object[] selection) {
+		if (serviceContext == null) {
+			CoreUiUtil.serviceContext = getServiceContext();
+		}
+		serviceContext.set(commandId.concat(".selection"), //$NON-NLS-1$
+				new StructuredSelection(selection));
+	}
+
+	/**
+	 * Set the selection for the commandId in the current {@link IEclipseContext}.
+	 * Retrievable via
+	 * {@link CoreUiUtil#getCommandSelection(IEclipseContext, String)}.
+	 *
+	 * @param commandId
+	 * @param selection
+	 */
+	public static void setCommandSelection(String commandId, List<?> selection) {
+		setCommandSelection(commandId, selection.toArray());
+	}
+
 }

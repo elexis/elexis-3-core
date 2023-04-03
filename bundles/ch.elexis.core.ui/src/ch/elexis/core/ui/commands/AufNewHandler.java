@@ -9,6 +9,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.PlatformUI;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
@@ -16,7 +17,6 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
 
 public class AufNewHandler extends AbstractHandler implements IHandler {
 	public static final String CMD_ID = "ch.elexis.core.ui.commands.AufNew"; //$NON-NLS-1$

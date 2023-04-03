@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -46,7 +47,6 @@ import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
-import ch.elexis.core.l10n.Messages;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {

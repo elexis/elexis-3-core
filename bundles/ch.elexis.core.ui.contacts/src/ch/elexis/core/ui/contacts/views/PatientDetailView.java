@@ -10,13 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -57,6 +57,7 @@ import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -74,7 +75,6 @@ import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.views.controls.ClientCustomTextComposite;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.BezugsKontakt;

@@ -1,9 +1,9 @@
 package ch.elexis.core.findings.ui.composites;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
