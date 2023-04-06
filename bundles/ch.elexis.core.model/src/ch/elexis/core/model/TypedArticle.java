@@ -47,6 +47,12 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 				return "590";
 			} else if (subTyp == ArticleSubTyp.ADDITIVE || subTyp == ArticleSubTyp.COVID) {
 				return "406";
+			} else if (subTyp == ArticleSubTyp.PHARMA) {
+				return "402";
+			} else if (subTyp == ArticleSubTyp.NONPHARMA) {
+				return "406";
+			} else if (subTyp == ArticleSubTyp.MAGISTERY) {
+				return "410";
 			}
 		} else if (typ == ArticleTyp.MIGEL) {
 			return "452";
