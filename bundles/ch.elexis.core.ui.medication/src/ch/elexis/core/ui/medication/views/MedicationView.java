@@ -54,7 +54,10 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	@Inject
 	void udpatePatient(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IPatient patient) {
 		if (CoreUiUtil.isActiveControl(tpc)) {
-			updateUi(patient, false);
+			// only update with info of selected patient
+			if (patient != null && patient.equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
+				updateUi(patient, false);				
+			}
 		}
 	}
 

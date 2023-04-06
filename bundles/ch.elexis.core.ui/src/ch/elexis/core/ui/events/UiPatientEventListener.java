@@ -15,6 +15,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.ISourceProviderService;
 
 import ch.elexis.core.data.events.ElexisEvent;
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
@@ -38,6 +39,17 @@ public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 	@Override
 	public void runInUi(final ElexisEvent ev) {
 		Patient pat = (Patient) ev.getObject();
+		if (ev.getType() == ElexisEvent.EVENT_SELECTED || ev.getType() == ElexisEvent.EVENT_DESELECTED) {
+			updateSelectedPatient(pat);
+		} else if (ev.getType() == ElexisEvent.EVENT_UPDATE) {
+			// only update with info of selected patient
+			if (pat != null && pat.equals(ElexisEventDispatcher.getSelectedPatient())) {
+				updateSelectedPatient(pat);
+			}
+		}
+	}
+
+	private void updateSelectedPatient(Patient pat) {
 		Hub.setWindowText(pat);
 
 		if (sps == null) {
@@ -58,5 +70,4 @@ public class UiPatientEventListener extends ElexisUiEventListenerImpl {
 
 		provider.setState(pat != null);
 	}
-
 }
