@@ -2491,4 +2491,67 @@ WHERE kontakt.id IN (
 			<column name="LASTUPDATE" />
 		</createIndex>
 	</changeSet>
+
+	<changeSet author="thomas" id="manual_table_ESRRECORDS">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="ESRRECORDS" />
+			</not>
+		</preConditions>
+		<createTable tableName="ESRRECORDS">
+			<column name="ID" type="VARCHAR(8)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_ID_CSTGROUP_LABITEM_JOINT" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="DATUM" type="CHAR(8)" />
+			<column name="EINGELESEN" type="CHAR(8)" />
+			<column name="VERARBEITET" type="CHAR(8)" />
+			<column name="GUTSCHRIFT" type="CHAR(8)" />
+			<column name="BETRAGINRP" type="CHAR(8)" />
+			<column name="CODE" type="CHAR(3)" />
+			<column name="RECHNUNGSID" type="VARCHAR(25)" />
+			<column name="PATIENTID" type="VARCHAR(25)" />
+			<column name="MANDANTID" type="VARCHAR(25)" />
+			<column name="REJECTCODE" type="CHAR(3)" />
+			<column name="KOSTEN" type="CHAR(4)" />
+			<column name="GEBUCHT" type="CHAR(8)" />
+			<column name="FILE" type="VARCHAR(80)" />
+		</createTable>
+		<insert tableName="ESRRECORDS">
+			<column name="ID" value="1" />
+			<column name="FILE" value="2" />
+		</insert>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx1_ESRRECORDS">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="ESRRECORDS" indexName="ESR1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ESR1" tableName="ESRRECORDS">
+			<column name="DATUM" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx2_ESRRECORDS">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="ESRRECORDS" indexName="ESR2" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ESR2" tableName="ESRRECORDS">
+			<column name="PATIENTID" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx3_ESRRECORDS">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="ESRRECORDS" indexName="ESR3" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ESR3" tableName="ESRRECORDS">
+			<column name="REJECTCODE" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
