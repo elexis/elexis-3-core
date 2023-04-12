@@ -59,11 +59,11 @@ public class EsrRecord extends AbstractEntityWithId implements EntityWithId, Ent
 	@Convert(converter = IntegerStringConverter.class)
 	private int betraginrp;
 
-	@Column(length = 3, name = "code")
+	@Column(length = 3)
 	@Convert(converter = ERSCodeTypeConverter.class)
 	private ESRCode code;
 
-	@Column(length = 3, name = "code")
+	@Column(length = 3)
 	@Convert(converter = ERSRejectCodeTypeConverter.class)
 	private ESRRejectCode rejectcode;
 
