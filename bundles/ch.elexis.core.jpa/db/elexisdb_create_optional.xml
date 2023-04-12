@@ -2501,7 +2501,7 @@ WHERE kontakt.id IN (
 		<createTable tableName="ESRRECORDS">
 			<column name="ID" type="VARCHAR(8)">
 				<constraints primaryKey="true"
-					primaryKeyName="CONSTRAINT_ID_CSTGROUP_LABITEM_JOINT" />
+					primaryKeyName="CONSTRAINT_ID_ESRRECORDS" />
 			</column>
 			<column name="LASTUPDATE" type="BIGINT" />
 			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
