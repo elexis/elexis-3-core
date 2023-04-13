@@ -49,4 +49,14 @@ public class FhirChConstants {
 	 */
 	public static final String BSV_NUMMER_SYSTEM = "https://www.bag.admin.ch/bag/bsv-nummer";
 
+	/**
+	 * @see http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode
+	 */
+	public static final String HEALTHCARE_FACILITY_TYPE_CODE_SYSTEM = "http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode";
+	
+	/**
+	 * SNOMED CT Code for a Laboratory environment
+	 * @see https://browser.ihtsdotools.org/?perspective=full&conceptId1=261904005&edition=MAIN/SNOMEDCT-CH/2022-12-07&release=&languages=en,fr,de,it
+	 */
+	public static final String SCTID_LABORATORY_ENVIRONMENT = "261904005";
 }
