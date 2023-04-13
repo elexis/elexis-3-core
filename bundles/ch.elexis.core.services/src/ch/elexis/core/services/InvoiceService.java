@@ -339,6 +339,13 @@ public class InvoiceService implements IInvoiceService {
 	}
 
 	@Override
+	public Optional<IAccountTransaction> getAccountTransaction(IPayment payment) {
+		IQuery<IAccountTransaction> query = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		query.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PAYMENT, COMPARATOR.EQUALS, payment);
+		return query.executeSingleResult();
+	}
+
+	@Override
 	public void removePayment(IPayment payment) {
 		IQuery<IAccountTransaction> query = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
 		query.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PAYMENT, COMPARATOR.EQUALS, payment);

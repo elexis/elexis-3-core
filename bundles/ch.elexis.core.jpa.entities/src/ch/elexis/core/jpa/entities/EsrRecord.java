@@ -114,4 +114,88 @@ public class EsrRecord extends AbstractEntityWithId implements EntityWithId, Ent
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
 	}
+
+	public LocalDate getDatum() {
+		return datum;
+	}
+
+	public void setDatum(LocalDate value) {
+		this.datum = value;
+	}
+
+	public LocalDate getEingelesen() {
+		return eingelesen;
+	}
+
+	public void setEingelesen(LocalDate eingelesen) {
+		this.eingelesen = eingelesen;
+	}
+
+	public LocalDate getVerarbeitet() {
+		return verarbeitet;
+	}
+
+	public void setVerarbeitet(LocalDate verarbeitet) {
+		this.verarbeitet = verarbeitet;
+	}
+
+	public LocalDate getGutschrift() {
+		return gutschrift;
+	}
+
+	public void setGutschrift(LocalDate gutschrift) {
+		this.gutschrift = gutschrift;
+	}
+
+	public LocalDate getGebucht() {
+		return gebucht;
+	}
+
+	public void setGebucht(LocalDate gebucht) {
+		this.gebucht = gebucht;
+	}
+
+	public Invoice getRechnung() {
+		return rechnung;
+	}
+
+	public void setRechnung(Invoice rechnung) {
+		this.rechnung = rechnung;
+	}
+
+	public Kontakt getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Kontakt patient) {
+		this.patient = patient;
+	}
+
+	public Kontakt getMandant() {
+		return mandant;
+	}
+
+	public void setMandant(Kontakt mandant) {
+		this.mandant = mandant;
+	}
+
+	public int getBetraginrp() {
+		return betraginrp;
+	}
+
+	public void setBetraginrp(int betraginrp) {
+		this.betraginrp = betraginrp;
+	}
+
+	public ESRCode getCode() {
+		return code;
+	}
+
+	public ESRRejectCode getRejectcode() {
+		return rejectcode;
+	}
+
+	public String getFile() {
+		return file;
+	}
 }
