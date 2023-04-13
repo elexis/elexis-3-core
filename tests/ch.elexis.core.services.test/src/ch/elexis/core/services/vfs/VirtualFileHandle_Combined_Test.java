@@ -9,6 +9,7 @@ import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
@@ -80,5 +81,24 @@ public class VirtualFileHandle_Combined_Test extends AbstractVirtualFileHandleTe
 			assertFalse(_target.exists());
 		}
 	}
+	
+	@Test
+	public void copyFromFileToWebdav() {
+		
+	}
+	
+	public void copyFromSmbToWebav() {
+		
+	}
+
+	@Test
+	public void testCreateAndMoveToBetweenHosts() throws UnknownHostException, IOException {
+
+	}
+
+	@Test
+	public void testCopyToAndDelete() throws IOException {
+	}
+
 
 }

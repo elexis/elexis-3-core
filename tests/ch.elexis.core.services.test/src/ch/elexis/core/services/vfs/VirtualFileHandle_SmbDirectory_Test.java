@@ -63,8 +63,6 @@ public class VirtualFileHandle_SmbDirectory_Test {
 
 	@Test
 	public void testCreateAndMoveToAndDelete() throws IOException {
-		assumeTrue(serviceIsReachable());
-
 		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
 		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
 		assertEquals(0, subFile.getContentLenght());
