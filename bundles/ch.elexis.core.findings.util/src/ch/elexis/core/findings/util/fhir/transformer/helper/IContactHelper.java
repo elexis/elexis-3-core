@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
@@ -13,8 +14,10 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.IXidService;
 import ch.elexis.core.types.Country;
 
@@ -159,6 +162,19 @@ public class IContactHelper extends AbstractHelper {
 				target.setWebsite(contactPoint.getValue());
 			}
 		}
-
 	}
+
+	public Attachment mapContactImage(IContact source) {
+		IImage image = source.getImage();
+		Attachment contactImage = null;
+		if (image != null) {
+			Attachment _image = new Attachment();
+			MimeType mimeType = image.getMimeType();
+			_image.setContentType((mimeType != null) ? mimeType.getContentType() : null);
+			_image.setData(image.getImage());
+			contactImage = _image;
+		}
+		return contactImage;
+	}
+	
 }
