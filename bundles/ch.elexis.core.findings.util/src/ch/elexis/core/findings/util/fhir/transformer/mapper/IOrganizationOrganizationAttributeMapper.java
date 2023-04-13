@@ -3,7 +3,9 @@ package ch.elexis.core.findings.util.fhir.transformer.mapper;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Address;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
@@ -13,6 +15,7 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.fhir.FhirChConstants;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IXidService;
@@ -49,6 +52,11 @@ public class IOrganizationOrganizationAttributeMapper
 			target.addTelecom(contactPoint);
 		}
 
+		if (source.isLaboratory()) {
+			target.addType().addCoding().setSystem(FhirChConstants.HEALTHCARE_FACILITY_TYPE_CODE_SYSTEM)
+					.setCode(FhirChConstants.SCTID_LABORATORY_ENVIRONMENT).setDisplay("Laboratory");
+		}
+
 	}
 
 	@Override
@@ -56,6 +64,12 @@ public class IOrganizationOrganizationAttributeMapper
 		mapIdentifiers(source, target);
 		mapNameContactData(source, target);
 		contactHelper.mapTelecom(source.getTelecom(), target);
+
+		Coding hftcs = ModelUtil
+				.getCodeableConceptBySystem(source.getType(), FhirChConstants.HEALTHCARE_FACILITY_TYPE_CODE_SYSTEM)
+				.map(e -> e.getCodingFirstRep()).orElse(null);
+		target.setLaboratory(StringUtils.equals(hftcs != null ? hftcs.getCode() : null,
+				FhirChConstants.SCTID_LABORATORY_ENVIRONMENT));
 	}
 
 	private void mapNameContactData(Organization source, IOrganization target) {
