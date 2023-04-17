@@ -286,15 +286,6 @@
       <handler
             class="ch.elexis.core.ui.documents.handler.DocumentExportHandler"
             commandId="ch.elexis.core.ui.documents.commandExport">
-         <enabledWhen>
-            <iterate
-                  ifEmpty="false"
-                  operator="and">
-               <instanceof
-                     value="ch.elexis.core.model.IDocument">
-               </instanceof>
-            </iterate>
-         </enabledWhen>
       </handler>
       <handler
             class="ch.elexis.core.ui.documents.handler.DocumentSendAsMailHandler"
