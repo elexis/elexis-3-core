@@ -65,11 +65,15 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		target.setName(personHelper.getHumanNames(source));
 		target.setGender(personHelper.getGender(source.getGender()));
 		target.setBirthDate(personHelper.getBirthDate(source));
-		mapAddressTelecom(source, target);
+		target.setAddress(personHelper.getAddresses(source));
+		target.setTelecom(personHelper.getContactPoints(source));
+
 		mapComments(source, target);
 		mapMaritalStatus(source, target);
 		mapRelatedContacts(source, target);
-		mapContactImage(source, target);
+
+		Attachment contactImage = personHelper.mapContactImage(source);
+		target.setPhoto(contactImage != null ? Collections.singletonList(contactImage) : null);
 	}
 
 	@Override
@@ -118,17 +122,6 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		target.setContact(contacts);
 	}
 
-	private void mapContactImage(IPatient source, Patient target) {
-		IImage image = source.getImage();
-		if (image != null) {
-			Attachment _image = new Attachment();
-			MimeType mimeType = image.getMimeType();
-			_image.setContentType((mimeType != null) ? mimeType.getContentType() : null);
-			_image.setData(image.getImage());
-			target.setPhoto(Collections.singletonList(_image));
-		}
-	}
-
 	private void mapContactImage(Patient source, IPatient target) {
 		if (!source.getPhoto().isEmpty()) {
 			Attachment fhirImage = source.getPhoto().get(0);
@@ -171,13 +164,6 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		elexisPatientNote.setUrl("www.elexis.info/extensions/patient/notes");
 		elexisPatientNote.setValue(new StringType(source.getComment()));
 		target.addExtension(elexisPatientNote);
-	}
-
-	private void mapAddressTelecom(IPatient source, Patient target) {
-		List<Address> addresses = personHelper.getAddresses(source);
-		target.setAddress(addresses);
-		List<ContactPoint> contactPoints = personHelper.getContactPoints(source);
-		target.setTelecom(contactPoints);
 	}
 
 	private void mapIdentifiersAndPatientNumber(IPatient source, Patient target) {

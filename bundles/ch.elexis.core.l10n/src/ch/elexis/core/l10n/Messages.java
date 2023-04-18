@@ -986,7 +986,8 @@ public class Messages extends NLS {
 	public static String Core_Patientdetails;
 	public static String Core_Patients;
 	public static String Core_Person;
-	public static String Core_Perspective;
+	public static String Core_ArchiveDir;
+	public static String Core_ArchiePerspective;
 	public static String Core_Perspectives;
 	public static String Core_Phamacode;
 	public static String Core_Phone;

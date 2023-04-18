@@ -12,9 +12,12 @@
 
 package ch.elexis.core.data.interfaces;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Properties;
 
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Result;
@@ -109,5 +112,9 @@ public interface IRnOutputter {
 	 */
 	public default void customizeDialog(Object rnOutputDialog) {
 		// do no customization
+	}
+
+	public default void openOutput(IInvoice invoice, LocalDateTime timestamp, InvoiceState invoiceState) {
+		// outputter specific lookup of the output to open
 	}
 }

@@ -86,4 +86,13 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public IPayment addPayment(IInvoice invoice, Money amount, String remark);
+
+	/**
+	 * Get the an {@link IAccountTransaction} matching the {@link IPayment}.
+	 * 
+	 * 
+	 * @param payment
+	 * @return
+	 */
+	public Optional<IAccountTransaction> getAccountTransaction(IPayment payment);
 }

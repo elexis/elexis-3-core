@@ -77,8 +77,12 @@
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
         <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
+        <setEntry value="org.apache.commons.commons-text@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging*1.2.0.v20180409-1502@default:default"/>
+        <setEntry value="org.apache.felix.gogo.command@default:default"/>
+        <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
+        <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
         <setEntry value="org.apache.geronimo.specs.geronimo-jta_1.1_spec@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
@@ -96,6 +100,7 @@
         <setEntry value="org.eclipse.emf.ecore@default:default"/>
         <setEntry value="org.eclipse.equinox.app@default:default"/>
         <setEntry value="org.eclipse.equinox.common@2:true"/>
+        <setEntry value="org.eclipse.equinox.console@default:default"/>
         <setEntry value="org.eclipse.equinox.event@2:true"/>
         <setEntry value="org.eclipse.equinox.preferences@default:default"/>
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
@@ -163,6 +168,7 @@
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
+        <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
     </setAttribute>

@@ -101,6 +101,14 @@ public interface IVirtualFilesystemService {
 		public byte[] readAllBytes() throws IOException;
 
 		/**
+		 * Write the given content into the file, fails if directory
+		 * 
+		 * @throws IOException
+		 * @since 3.10
+		 */
+		public void writeAllBytes(byte[] content) throws IOException;
+
+		/**
 		 * Return the length of the of the content
 		 *
 		 * @return
@@ -151,8 +159,17 @@ public interface IVirtualFilesystemService {
 		public void delete() throws IOException;
 
 		/**
-		 *
-		 * @return is the underlying resource of type directory
+		 * if the URL ends with "/" - does not check the underlying resource for its
+		 * actual type
+		 */
+		public boolean isDirectoryUrl() throws IOException;
+
+		/**
+		 * Checks a possibly existing file entry if it is a directory
+		 * 
+		 * @return <code>false</code> if not found or not a directory
+		 * @throws IOException
+		 * @since 3.10
 		 */
 		public boolean isDirectory() throws IOException;
 
@@ -187,8 +204,7 @@ public interface IVirtualFilesystemService {
 		public boolean exists() throws IOException;
 
 		/**
-		 *
-		 * @return
+		 * @return the name including the extension
 		 */
 		public String getName();
 
@@ -213,7 +229,12 @@ public interface IVirtualFilesystemService {
 		/**
 		 * Move this to the handle. If this is a file and handle is a directory, the
 		 * filename is kept and return references a file handle in the provided
-		 * directory.
+		 * directory.<br>
+		 * If this is a file, and the handle is a file, then it will be moved and
+		 * possibly renamed to the target file. Required parent directories are not
+		 * validated. <br>
+		 * If a file with the same name exists in the target directory, it will be
+		 * overwritten.
 		 *
 		 * @param handle the target handle of this
 		 * @throws IOException
@@ -239,7 +260,8 @@ public interface IVirtualFilesystemService {
 		public IVirtualFilesystemHandle subFile(String name) throws IOException;
 
 		/**
-		 * Create a directory. Does not fail if directory already exists.
+		 * Create a directory. Does not fail if directory already exists. This operation
+		 * is valid both for directory-, and file-representing urls.
 		 *
 		 * @return its own handle
 		 * @throws IOException
