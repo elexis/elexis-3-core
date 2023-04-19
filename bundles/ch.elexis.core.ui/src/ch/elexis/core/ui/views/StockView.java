@@ -375,14 +375,14 @@ public class StockView extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		scanInventoryAction = new Action("SIA") {
+		scanInventoryAction = new Action(Messages.StockView_InventoryMode) {
 			{
 				setImageDescriptor(Images.IMG_SCANNER_BARCODE.getImageDescriptor());
 			}
 
 			@Override
 			public void run() {
-				new OrderImportDialog(UiDesk.getTopShell(), null).open();
+				new OrderImportDialog(UiDesk.getTopShell(), null, OrderImportDialog.ACTION_MODE_INVENTORY).open();
 			}
 		};
 

@@ -4253,6 +4253,7 @@ public class Messages extends NLS {
 	public static String StockView_OutlayArticle;
 	public static String StockView_PerformFullInventoryOnCommSystem;
 	public static String StockView_reload;
+	public static String StockView_InventoryMode;
 	public static String Stock_Actual_Count;
 	public static String Stock_Actual_Pkg_Count;
 	public static String SubmitOrderEntryHandler_0;

@@ -517,6 +517,7 @@ public class Messages {
 	public static String Core_DoSearch = ch.elexis.core.l10n.Messages.Core_DoSearch;
 	public static String SearchView_textToSearch = ch.elexis.core.l10n.Messages.SearchView_textToSearch;
 	public static String StockView_reload = ch.elexis.core.l10n.Messages.StockView_reload;
+	public static String StockView_InventoryMode = ch.elexis.core.l10n.Messages.StockView_InventoryMode;
 	public static String StockView_OutlayArticle = ch.elexis.core.l10n.Messages.StockView_OutlayArticle;
 	public static String StockView_PerformFullInventoryOnCommSystem = ch.elexis.core.l10n.Messages.StockView_PerformFullInventoryOnCommSystem;
 	public static String TextView_15 = ch.elexis.core.l10n.Messages.TextView_15;
