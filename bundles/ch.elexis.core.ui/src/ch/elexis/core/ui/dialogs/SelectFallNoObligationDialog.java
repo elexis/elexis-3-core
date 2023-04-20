@@ -40,7 +40,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Fall;
 
 public class SelectFallNoObligationDialog extends TitleAreaDialog {

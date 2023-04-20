@@ -44,7 +44,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
