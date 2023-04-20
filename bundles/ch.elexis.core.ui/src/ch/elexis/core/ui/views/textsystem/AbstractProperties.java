@@ -10,7 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.views.textsystem;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;

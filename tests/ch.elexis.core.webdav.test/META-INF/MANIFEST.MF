@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test
+Bundle-SymbolicName: ch.elexis.core.webdav.test
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: ch.elexis.core.webdav;bundle-version="1.0.0"
+Require-Bundle: org.junit
+Automatic-Module-Name: ch.elexis.core.webdav.test
+Bundle-RequiredExecutionEnvironment: JavaSE-11

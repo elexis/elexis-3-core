@@ -65,7 +65,7 @@ import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
 import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.base.InputDialog;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;

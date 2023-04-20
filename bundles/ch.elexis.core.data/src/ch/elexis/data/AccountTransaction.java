@@ -11,12 +11,15 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -311,4 +314,15 @@ public class AccountTransaction extends PersistentObject {
 	protected AccountTransaction() {
 	}
 
+	/**
+	 * Convenience conversion method, loads object via model service
+	 *
+	 * @return
+	 * @since 3.11
+	 * @throws IllegalStateException if entity could not be loaded
+	 */
+	public IAccountTransaction toIAccountTransaction() {
+		return CoreModelServiceHolder.get().load(getId(), IAccountTransaction.class)
+				.orElseThrow(() -> new IllegalStateException("Could not convert transaction [" + getId() + "]"));
+	}
 }

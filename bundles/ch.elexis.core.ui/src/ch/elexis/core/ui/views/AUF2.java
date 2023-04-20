@@ -54,9 +54,9 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.commands.AufNewHandler;
 import ch.elexis.core.ui.commands.AufPrintHandler;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 

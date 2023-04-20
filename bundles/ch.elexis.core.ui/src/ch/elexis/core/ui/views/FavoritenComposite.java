@@ -52,9 +52,9 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
 

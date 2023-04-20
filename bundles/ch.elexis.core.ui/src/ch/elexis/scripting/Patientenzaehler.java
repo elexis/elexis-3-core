@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import com.tiff.common.ui.datepicker.DatePicker;
+
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -28,8 +30,6 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePicker;
 
 public class Patientenzaehler extends TitleAreaDialog {
 	DatePicker dpVon, dpBis;

@@ -10,10 +10,11 @@
  ******************************************************************************/
 package ch.elexis.scripting;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBillable;

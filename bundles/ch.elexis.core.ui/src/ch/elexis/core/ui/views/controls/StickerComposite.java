@@ -36,7 +36,7 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class StickerComposite extends Composite {
 

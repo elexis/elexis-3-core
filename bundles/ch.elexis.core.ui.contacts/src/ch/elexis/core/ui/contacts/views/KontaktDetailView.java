@@ -24,8 +24,8 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.actions.GlobalActions;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IRefreshable;
 

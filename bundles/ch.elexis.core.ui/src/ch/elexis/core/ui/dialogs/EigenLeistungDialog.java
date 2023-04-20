@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Eigenleistung;
 import ch.rgw.tools.TimeTool;
 

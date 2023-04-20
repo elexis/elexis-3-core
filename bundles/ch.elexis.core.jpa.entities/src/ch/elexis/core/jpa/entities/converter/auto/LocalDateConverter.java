@@ -21,6 +21,8 @@ public class LocalDateConverter implements AttributeConverter<LocalDate, String>
 	public String convertToDatabaseColumn(LocalDate date) {
 		if (date == null) {
 			return null;
+		} else if (LocalDate.MIN.equals(date)) {
+			return "";
 		}
 
 		return date.format(yyyyMMdd);

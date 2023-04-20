@@ -35,9 +35,9 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 

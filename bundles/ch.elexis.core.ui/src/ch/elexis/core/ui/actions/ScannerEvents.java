@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.actions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;

@@ -9,8 +9,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 
-import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.icons.Images;
 
 /**
  * Move an entry within a structured viewer

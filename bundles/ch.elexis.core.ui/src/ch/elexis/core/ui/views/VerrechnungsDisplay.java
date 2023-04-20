@@ -112,7 +112,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.util.CoreCommandUiUtil;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
@@ -825,7 +825,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 							});
 						}
 					}
-					CoreUiUtil.addCommandContributions(contextMenuManager, selection.toArray(),
+					CoreCommandUiUtil.addCommandContributions(contextMenuManager, selection.toArray(),
 							"popup:ch.elexis.VerrechnungsDisplay"); //$NON-NLS-1$
 				}
 			}

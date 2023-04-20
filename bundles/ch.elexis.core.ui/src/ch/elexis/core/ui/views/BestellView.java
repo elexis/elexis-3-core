@@ -75,9 +75,11 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -89,12 +91,12 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.SelectBestellungDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TableViewerSorter;
 import ch.elexis.core.ui.util.TableViewerSorter.IColumnContentProvider;
@@ -395,7 +397,11 @@ public class BestellView extends ViewPart {
 
 	private void makeActions() {
 		listenToBarcodeInputAction = new Action(Messages.BestellView_ListenToBarcode, IAction.AS_CHECK_BOX) {
-			// we are only interested in the state
+			@Override
+			public void run() {
+				String valueToSet = listenToBarcodeInputAction.isChecked() ? BestellView.class.getName() : null;
+				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet);
+			}
 		};
 		removeAction = new Action(Messages.BestellView_RemoveArticle) {
 			@Override
@@ -684,9 +690,12 @@ public class BestellView extends ViewPart {
 
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
-	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event) {
-		if (listenToBarcodeInputAction.isChecked() && event instanceof IArticle)
+	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event,
+			IContextService contextService) {
+		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
+				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
 			addItemsToOrder(Collections.singletonList((IArticle) event));
+		}
 	}
 
 	public void addItemsToOrder(List<IArticle> articlesToOrder) {
@@ -702,7 +711,9 @@ public class BestellView extends ViewPart {
 
 		for (IArticle article : articlesToOrder) {
 			// SINGLE SHOT ORDER
-			IOrderEntry orderEntry = actOrder.addEntry(article, null, null, 1);
+			String mandatorId = ContextServiceHolder.get().getActiveMandator().map(m -> m.getId()).orElse(null);
+			IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
+			IOrderEntry orderEntry = actOrder.addEntry(article, stock, null, 1);
 			CoreModelServiceHolder.get().save(orderEntry);
 		}
 		if (tv != null && !tv.getControl().isDisposed()) {

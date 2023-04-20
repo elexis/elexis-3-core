@@ -24,11 +24,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TypedListener;
 
+import com.tiff.common.ui.datepicker.DatePickerCombo;
+
 import ch.elexis.core.ui.UiDesk;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
-
-import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 /**
  * A Composite with a spinner indicating a number of days and a DatePicker

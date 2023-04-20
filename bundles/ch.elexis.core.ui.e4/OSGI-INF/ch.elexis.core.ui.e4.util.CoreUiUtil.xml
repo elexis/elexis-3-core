@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.ui.e4.util.CoreUiUtil">
-   <reference bind="setModelService" interface="ch.elexis.core.services.IContextService" name="ModelService"/>
+   <property name="event.topics" value="org/eclipse/e4/ui/LifeCycle/appStartupComplete"/>
+   <service>
+      <provide interface="org.osgi.service.event.EventHandler"/>
+   </service>
    <implementation class="ch.elexis.core.ui.e4.util.CoreUiUtil"/>
 </scr:component>

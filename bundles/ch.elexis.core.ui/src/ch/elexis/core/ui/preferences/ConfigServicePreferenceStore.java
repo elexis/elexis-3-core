@@ -14,7 +14,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 /**
  * Adapter for {@link IConfigService} to {@link IPreferenceStore}. Replacement

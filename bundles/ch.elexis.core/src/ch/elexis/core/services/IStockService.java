@@ -211,4 +211,12 @@ public interface IStockService {
 	public List<IStockEntry> getAllStockEntries();
 
 	public IStock getDefaultStock();
+
+	/**
+	 * 
+	 * @return the highest ranking stock of a Mandator (if multiple assigned to
+	 *         mandator), or if none found or invalid mandator, the default Stock
+	 * @since 3.10
+	 */
+	public IStock getMandatorDefaultStock(String mandatorId);
 }

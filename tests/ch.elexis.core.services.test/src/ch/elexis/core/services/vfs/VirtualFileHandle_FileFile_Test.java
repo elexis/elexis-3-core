@@ -81,12 +81,13 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 	}
 
 	@Test(expected = IOException.class)
-	public void testListHandles() throws IOException {
+	public void listFails() throws IOException {
 		testHandle.listHandles();
 	}
 
 	@Test(expected = IOException.class)
-	public void testListHandlesIVirtualFilesystemhandleFilter() throws IOException {
+	public void listWithFilterFails() throws IOException {
+		// TODO add actual filter
 		testHandle.listHandles(null);
 	}
 
@@ -161,13 +162,14 @@ public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTe
 		testHandle.subFile("subfile");
 	}
 
+	@Test
 	public void testMkdir() throws IOException {
 		// TODO behavior?
 		testHandle.mkdir();
 	}
 
 	@Test
-	public void testOpenInputStream() throws IOException {
+	public void openInputStream() throws IOException {
 		try (InputStream is = testHandle.openInputStream()) {
 			String string = IOUtils.toString(is, Charset.defaultCharset());
 			System.out.println(string);

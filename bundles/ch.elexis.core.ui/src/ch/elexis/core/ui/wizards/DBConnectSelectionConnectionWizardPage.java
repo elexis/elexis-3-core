@@ -10,14 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.wizards;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;

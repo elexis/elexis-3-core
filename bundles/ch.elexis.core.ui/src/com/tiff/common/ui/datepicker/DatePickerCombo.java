@@ -14,11 +14,11 @@
 
 package com.tiff.common.ui.datepicker;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.accessibility.ACC;

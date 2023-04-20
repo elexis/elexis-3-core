@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.exchange;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINTSIZE;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_BIRTHDATE;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_FIRSTNAME;
@@ -24,6 +23,8 @@ import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_STREET;
 import static ch.elexis.core.ui.dialogs.KontaktSelektor.HINT_ZIP;
 
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.interfaces.IPatient;

@@ -12,7 +12,6 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.Date;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;

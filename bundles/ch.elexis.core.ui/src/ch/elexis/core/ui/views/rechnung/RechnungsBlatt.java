@@ -53,6 +53,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -76,7 +78,9 @@ import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.documents.DocumentStore;
@@ -101,7 +105,7 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.controls.IIdentifiableModifiableListComposite;
 import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
-import ch.elexis.core.ui.util.CoreUiUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -493,6 +497,72 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		ecAusgaben.setClient(lbOutputs);
 		SWTHelper.setGridDataHeight(lbOutputs, 4, true);
 		tk.adapt(lbOutputs, true, true);
+		lbOutputs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				String[] selectedOutputTraces = lbOutputs.getSelection();
+				if (selectedOutputTraces != null) {
+					for (String trace : selectedOutputTraces) {
+						getOutputterForTrace(trace).ifPresent(o -> {
+							getOutputDateTime(trace).ifPresent(ot -> {
+								o.openOutput(actRn.toIInvoice(), ot.toLocalDateTime(), getOutputInvoiceState(trace));
+							});
+						});
+					}
+				}
+			}
+
+			private java.util.Optional<IRnOutputter> getOutputterForTrace(String trace) {
+				List<IRnOutputter> outputters = Extensions.getClasses(ExtensionPointConstantsData.RECHNUNGS_MANAGER,
+						"outputter"); //$NON-NLS-1$
+				String description = getOutputterDescription(trace);
+				if (StringUtils.isNotBlank(description)) {
+					for (IRnOutputter iRnOutputter : outputters) {
+						if (iRnOutputter.getDescription().equalsIgnoreCase(description)) {
+							return java.util.Optional.of(iRnOutputter);
+						}
+					}
+				}
+				return java.util.Optional.empty();
+			}
+
+			private String getOutputterDescription(String trace) {
+				if (trace != null) {
+					String[] parts = trace.split(": ");
+					if (parts != null && parts.length >= 2) {
+						return parts[1].trim();
+					}
+				}
+				return null;
+			}
+
+			private InvoiceState getOutputInvoiceState(String trace) {
+				if (trace != null) {
+					String[] parts = trace.split(": ");
+					if (parts != null && parts.length >= 3) {
+						for (InvoiceState state : InvoiceState.values()) {
+							if (state.getLocaleText().equals(parts[2])) {
+								return state;
+							}
+						}
+					}
+				}
+				return null;
+			}
+
+			private java.util.Optional<TimeTool> getOutputDateTime(String trace) {
+				if (trace != null) {
+					String[] parts = trace.split(": ");
+					if (parts != null && parts.length >= 1) {
+						TimeTool ret = new TimeTool();
+						if (ret.set(parts[0].trim())) {
+							return java.util.Optional.of(ret);
+						}
+					}
+				}
+				return java.util.Optional.empty();
+			}
+		});
 
 		ecKons = WidgetFactory.createExpandableComposite(tk, form, Messages.Core_Consultations); // $NON-NLS-1$
 		ecKons.addExpansionListener(ecExpansionListener);

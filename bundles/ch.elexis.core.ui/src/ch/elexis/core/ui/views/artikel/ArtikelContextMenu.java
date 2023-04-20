@@ -11,10 +11,10 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.artikel;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;

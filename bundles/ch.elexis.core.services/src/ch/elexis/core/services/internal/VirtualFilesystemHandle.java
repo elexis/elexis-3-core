@@ -1,6 +1,5 @@
 package ch.elexis.core.services.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -23,12 +22,15 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
+import ch.elexis.core.webdav.WebdavFile;
+import ch.elexis.core.webdav.WebdavFileNameFilter;
 import jcifs.SmbTreeHandle;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -55,12 +57,15 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public InputStream openInputStream() throws IOException {
-		File file = URIUtil.toFile(uri);
-		if (file != null) {
-			return new FileInputStream(file);
+		if (!isDirectoryUrl()) {
+			File file = URIUtil.toFile(uri);
+			if (file != null) {
+				return new FileInputStream(file);
+			}
+			URL url = URIUtil.toURL(uri);
+			return url.openStream();
 		}
-		URL url = URIUtil.toURL(uri);
-		return url.openStream();
+		throw new IOException("Inputstream on directory not supported");
 	}
 
 	@Override
@@ -69,6 +74,13 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 			IOUtils.copy(in, byteArrayOutputStream);
 			return byteArrayOutputStream.toByteArray();
+		}
+	}
+
+	@Override
+	public void writeAllBytes(byte[] content) throws IOException {
+		try (OutputStream outputStream = openOutputStream()) {
+			IOUtils.write(content, outputStream);
 		}
 	}
 
@@ -83,13 +95,15 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			try (SmbFile smbFile = (SmbFile) connection) {
 				return smbFile.getContentLengthLong();
 			}
+		} else if (connection instanceof WebdavFile) {
+			return ((WebdavFile) connection).getContentLengthLong();
 		}
 		throw new IOException("Can not determine content length on [" + connection.getClass() + "]");
 	}
 
 	@Override
 	public OutputStream openOutputStream() throws IOException {
-		if (!isDirectory()) {
+		if (!isDirectoryUrl()) {
 			File file = URIUtil.toFile(uri);
 			if (file != null) {
 				return new FileOutputStream(file);
@@ -101,7 +115,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 		}
 
-		throw new IOException("Does not support outputstream on directory");
+		throw new IOException("Outputstream on directory not supported");
 	}
 
 	@Override
@@ -139,6 +153,14 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 					LoggerFactory.getLogger(getClass()).warn("getParent()", mfe);
 				}
 			}
+		} else if (connection instanceof WebdavFile) {
+			try {
+				String parent = ((WebdavFile) connection).getParent();
+				URI webdavUri = convertToWebdavHandlingUrl(new URL(parent));
+				return new VirtualFilesystemHandle(webdavUri);
+			} catch (URISyntaxException e) {
+				LoggerFactory.getLogger(getClass()).warn("getParent()", e);
+			}
 		}
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
@@ -172,7 +194,6 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				SmbFile[] listFiles = smbFile.listFiles(new IVFSFileFilterAdapter(ff));
 				IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
 				for (int i = 0; i < listFiles.length; i++) {
-
 					try (SmbFile _file = listFiles[i]) {
 						String fileURL = convertToURLEscapingIllegalCharacters(_file.getURL());
 						URI _fileUri = new URI(fileURL);
@@ -184,9 +205,20 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				}
 				return retVal;
 			}
+		} else if (connection instanceof WebdavFile) {
+			WebdavFile[] listFiles = ((WebdavFile) connection).listFiles(new IVFSFileFilterAdapter(ff));
+			IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
+			for (int i = 0; i < listFiles.length; i++) {
+				try {
+					URI webdavUri = convertToWebdavHandlingUrl(listFiles[i].getURL());
+					retVal[i] = new VirtualFilesystemHandle(webdavUri);
+				} catch (URISyntaxException e) {
+					LoggerFactory.getLogger(getClass()).warn("listHandles() [{}]", listFiles[i], e);
+				}
+			}
+			return retVal;
 		}
 
-		// TODO http?
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
 
@@ -212,6 +244,9 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				smbFile.delete();
 				return;
 			}
+		} else if (connection instanceof WebdavFile) {
+			((WebdavFile) connection).delete();
+			return;
 		}
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
@@ -227,6 +262,15 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 
 	@Override
+	public boolean isDirectoryUrl() throws IOException {
+		try {
+			return getURI().toURL().toString().endsWith("/");
+		} catch (MalformedURLException e) {
+			throw new IOException(e);
+		}
+	}
+
+	@Override
 	public boolean isDirectory() throws IOException {
 		if (toFile().isPresent()) {
 			File file = toFile().get();
@@ -239,6 +283,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			} catch (SmbException e) {
 				throw new IOException(e);
 			}
+		} else if (connection instanceof WebdavFile) {
+			return ((WebdavFile) connection).isDirectory();
 		}
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
@@ -258,6 +304,19 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 		} catch (IOException e) {
 			LoggerFactory.getLogger(getClass()).warn("toSmbFile()", e);
+		}
+
+		return Optional.empty();
+	}
+
+	private Optional<WebdavFile> toWebdavFile() {
+		try {
+			URLConnection connection = uri.toURL().openConnection();
+			if (connection instanceof WebdavFile) {
+				return Optional.of((WebdavFile) connection);
+			}
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).warn("toWebdavFile()", e);
 		}
 
 		return Optional.empty();
@@ -284,6 +343,8 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			try (SmbFile smbFile = (SmbFile) connection) {
 				return smbFile.exists();
 			}
+		} else if (connection instanceof WebdavFile) {
+			return ((WebdavFile) connection).exists();
 		}
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
@@ -312,6 +373,14 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 		}
 
+		Optional<WebdavFile> webdavFile = toWebdavFile();
+		if (webdavFile.isPresent()) {
+			try {
+				return webdavFile.get().canRead();
+			} catch (IOException e) {
+			}
+		}
+
 		return false;
 	}
 
@@ -327,6 +396,14 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			try {
 				return smbFile.get().canWrite();
 			} catch (SmbException e) {
+			}
+		}
+
+		Optional<WebdavFile> webdavFile = toWebdavFile();
+		if (webdavFile.isPresent()) {
+			try {
+				return webdavFile.get().canWrite();
+			} catch (IOException e) {
 			}
 		}
 
@@ -369,7 +446,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 					if (smbFileTh.isSameTree(smbFileThTarget)) {
 
 						// both resources on same share
-						smbFile.get().renameTo(smbFileTarget.get());
+						smbFile.get().renameTo(smbFileTarget.get(), true);
 					} else {
 						smbFile.get().copyTo(smbFileTarget.get());
 						smbFile.get().delete();
@@ -377,6 +454,15 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				}
 			}
 			return target;
+		}
+		
+		Optional<WebdavFile> webdavFile = toWebdavFile();
+		if(webdavFile.isPresent()) {
+			Optional<WebdavFile> webdavTarget = ((VirtualFilesystemHandle) target).toWebdavFile();
+			if(webdavTarget.isPresent()) {
+				webdavFile.get().move(webdavTarget.get().getURL());
+				return target;
+			}
 		}
 
 		throw new IOException("Invalid type");
@@ -409,7 +495,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 	@Override
 	public IVirtualFilesystemHandle subFile(String subFile) throws IOException {
-		if (!isDirectory()) {
+		if (!isDirectoryUrl()) {
 			throw new IOException("[" + uri + "] is not a directory");
 		}
 		if (subFile.startsWith("/")) {
@@ -444,6 +530,9 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 				}
 				return this;
 			}
+		} else if (connection instanceof WebdavFile) {
+			((WebdavFile) connection).mkdir();
+			return this;
 		}
 		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
 	}
@@ -453,7 +542,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		return uri;
 	}
 
-	private class IVFSFileFilterAdapter implements FileFilter, SmbFileFilter {
+	private class IVFSFileFilterAdapter implements FileFilter, SmbFileFilter, WebdavFileNameFilter {
 
 		private final IVirtualFilesystemhandleFilter ff;
 
@@ -495,6 +584,31 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 		}
 
+		@Override
+		public boolean accept(String webdavFileName) {
+			if (ff == null) {
+				return true;
+			}
+			
+			return ff.accept(new TransientVirtualFilesystemHandle(webdavFileName));
+		}
+		
+	}
+
+	/**
+	 * Webdav URLStreamHandlerService are registered for protocol "davs" (and "dav"
+	 * in testing scenario), in order not to override the original "http" and
+	 * "https" protocl handling. To keep using these handlers, we need to rewrite
+	 * the "internally" used http protocol to our davs/dav scheme.
+	 * 
+	 * @param url
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	private URI convertToWebdavHandlingUrl(URL url) throws URISyntaxException {
+		String targetProtocol = "https".equals(url.getProtocol()) ? "davs" : "dav";
+		return new URI(targetProtocol, url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(),
+				url.getRef());
 	}
 
 	/**

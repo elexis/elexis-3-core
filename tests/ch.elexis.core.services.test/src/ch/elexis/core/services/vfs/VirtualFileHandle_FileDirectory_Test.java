@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -189,8 +188,8 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		testHandle.mkdir();
 	}
 
-	@Test(expected = FileNotFoundException.class)
-	public void testOpenInputStream() throws IOException {
+	@Test(expected = IOException.class)
+	public void openInputStreamFails() throws IOException {
 		try (InputStream is = testHandle.openInputStream()) {
 			String string = IOUtils.toString(is, Charset.defaultCharset());
 			System.out.println(string);

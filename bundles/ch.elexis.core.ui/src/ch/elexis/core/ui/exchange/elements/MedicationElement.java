@@ -14,7 +14,6 @@ package ch.elexis.core.ui.exchange.elements;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.exchange.elements.XidElement.Identity;
 import ch.elexis.data.Artikel;

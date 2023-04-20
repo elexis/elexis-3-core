@@ -106,9 +106,9 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
-import ch.elexis.core.ui.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
 
