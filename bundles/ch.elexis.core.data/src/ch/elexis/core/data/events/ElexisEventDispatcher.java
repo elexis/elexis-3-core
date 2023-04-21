@@ -254,6 +254,13 @@ public final class ElexisEventDispatcher implements Runnable {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_DELETE) {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_AQUIRED) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_PRERELEASE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
+								identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_RELEASED) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_SELECTED) {
 						ContextServiceHolder.get().setTyped(identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
@@ -272,6 +279,12 @@ public final class ElexisEventDispatcher implements Runnable {
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, object);
 				} else if (eventType == ElexisEvent.EVENT_DELETE) {
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_AQUIRED) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_PRERELEASE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_RELEASED) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, object);
 				} else if (eventType == ElexisEvent.EVENT_SELECTED) {
 					ContextServiceHolder.get().setTyped(object);
 				} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
