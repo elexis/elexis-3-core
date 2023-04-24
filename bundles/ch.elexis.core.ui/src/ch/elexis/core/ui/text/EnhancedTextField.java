@@ -117,11 +117,11 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 
 	@Inject
 	void activeUser(@Optional IUser user) {
-		if (text != null && !text.isDisposed()) {
-			Display.getDefault().asyncExec(() -> {
+		Display.getDefault().syncExec(() -> {
+			if (text != null && !text.isDisposed()) {
 				text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-			});
-		}
+			}
+		});
 	}
 
 	public void setExternalMakros(List<IKonsMakro> makros) {

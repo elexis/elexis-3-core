@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -86,9 +87,11 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	@Optional
 	@Inject
 	public void activeMandator(IMandator mandator) {
-		if (invoiceListBottomComposite != null) {
-			invoiceListBottomComposite.updateMahnAutomatic();
-		}
+		Display.getDefault().syncExec(() -> {
+			if (invoiceListBottomComposite != null && !invoiceListBottomComposite.isDisposed()) {
+				invoiceListBottomComposite.updateMahnAutomatic();
+			}
+		});
 	}
 
 	private Action reloadViewAction = new Action(Messages.Core_Reload) {
