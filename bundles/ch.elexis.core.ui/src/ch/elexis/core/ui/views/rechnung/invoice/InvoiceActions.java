@@ -18,7 +18,9 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.Handler;
@@ -36,6 +38,7 @@ import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Fall;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
@@ -46,8 +49,8 @@ import ch.rgw.tools.TimeTool;
 public class InvoiceActions {
 
 	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction, stornoAction,
-			addAccountExcessAction, printListeAction, mahnWizardAction, exportListAction, changeStatusAction,
-			deleteAction, reactivateAction;
+			stornoRecreateAction, addAccountExcessAction, printListeAction, mahnWizardAction, exportListAction,
+			changeStatusAction, deleteAction, reactivateAction;
 
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;
@@ -194,6 +197,40 @@ public class InvoiceActions {
 				ElexisEventDispatcher.update(actRn);
 			}
 
+		};
+
+		stornoRecreateAction = new MultiLockRequestingAction<List<Rechnung>>(Messages.RnActions_stornoRecreateAction) {
+			{
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+				setToolTipText(Messages.RnActions_stornoRecreateActionTooltip);
+			}
+
+			private int dialogResult = -1;
+			private boolean dialogReopen = false;
+			private List<IRnOutputter> dialogExporters;
+
+			@Override
+			public List<? extends PersistentObject> getTargetedObjects() {
+				// reset dialog result for new selection
+				dialogResult = -1;
+				dialogReopen = false;
+				return getInvoiceSelections(viewer);
+			}
+
+			@Override
+			public void doRun(PersistentObject po) {
+				Rechnung actRn = (Rechnung) po;
+				List<Konsultation> actRnEncounters = actRn.getKonsultationen();
+				// use existing storno action
+				stornoAction.run();
+				// test if successful and encounters open for new invoice
+				if (actRn.getInvoiceState() == InvoiceState.CANCELLED) {
+					if (actRnEncounters.stream().allMatch(e -> e.getRechnung() == null)) {
+						InvoiceServiceHolder.get()
+								.invoice(NoPoUtil.loadAsIdentifiable(actRnEncounters, IEncounter.class));
+					}
+				}
+			}
 		};
 
 		addAccountExcessAction = new Action(Messages.RnActions_addAccountGood) {

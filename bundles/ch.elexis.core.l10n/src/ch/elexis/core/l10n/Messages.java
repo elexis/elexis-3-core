@@ -3994,6 +3994,8 @@ public class Messages extends NLS {
 	public static String RnActions_stornoAction;
 	public static String RnActions_stornoActionNotPossibleText;
 	public static String RnActions_stornoActionTooltip;
+	public static String RnActions_stornoRecreateAction;
+	public static String RnActions_stornoRecreateActionTooltip;
 	public static String RnActions_transferMoneyCaption;
 	public static String RnContentProvider_collectInvoices;
 	public static String RnContentProvider_errorRetriveingBillds;

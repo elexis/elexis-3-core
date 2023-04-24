@@ -364,6 +364,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		menuManager.add(new Separator());
 		menuManager.add(invoiceActions.changeStatusAction);
 		menuManager.add(invoiceActions.stornoAction);
+		menuManager.add(invoiceActions.stornoRecreateAction);
 		menuManager.add(new Separator());
 		menuManager.add(invoiceActions.deleteAction);
 		menuManager.add(invoiceActions.reactivateAction);
