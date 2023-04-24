@@ -238,6 +238,17 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
+            locationURI="toolbar:ch.elexis.PatDetail_v2">
+         <command
+               commandId="at.medevit.elexis.contacts.core.command.SendSmsCommand"
+               icon="icon://IMG_MOBILEPHONE"
+               label="SMS an Patienten"
+               style="push"
+               tooltip="SMS an Patienten">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
             locationURI="toolbar:ch.elexis.PatListView">
          <command
                commandId="at.medevit.elexis.contacts.core.command.StickerFilter"
@@ -272,6 +283,11 @@
             defaultHandler="ch.elexis.core.ui.contacts.command.SendMailCommand"
             id="at.medevit.elexis.contacts.core.command.SendMail"
             name="send mail">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.contacts.command.SendSmsCommand"
+            id="at.medevit.elexis.contacts.core.command.SendSmsCommand"
+            name="send sms">
       </command>
       <command
             defaultHandler="ch.elexis.core.ui.contacts.command.StickerFilterCommand"
