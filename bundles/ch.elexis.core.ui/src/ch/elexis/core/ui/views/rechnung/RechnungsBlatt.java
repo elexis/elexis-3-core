@@ -808,6 +808,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	public void display() {
 		rnform.reload(actRn);
 
+		String[] outputsSelection = lbOutputs.getSelection();
+		String[] journalSelection = lbJournal.getSelection();
+
 		lbJournal.removeAll();
 		lbOutputs.removeAll();
 
@@ -824,6 +827,15 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						RnStatus.getStatusText(Integer.parseInt(stm[1])));
 				lbJournal.add(sb.toString());
 			}
+			if (journalSelection != null && journalSelection.length > 0) {
+				for (int i = 0; i < lbJournal.getItemCount(); i++) {
+					for (String selection : journalSelection) {
+						if (lbJournal.getItem(i).equals(selection)) {
+							lbJournal.select(i);
+						}
+					}
+				}
+			}
 			if (actRn.getStatus() == InvoiceState.DEFECTIVE.numericValue()) {
 				List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
 				StringBuilder rjj = new StringBuilder();
@@ -837,6 +849,15 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
 			for (String o : outputs) {
 				lbOutputs.add(o);
+			}
+			if (outputsSelection != null && outputsSelection.length > 0) {
+				for (int i = 0; i < lbOutputs.getItemCount(); i++) {
+					for (String selection : outputsSelection) {
+						if (lbOutputs.getItem(i).equals(selection)) {
+							lbOutputs.select(i);
+						}
+					}
+				}
 			}
 			tBemerkungen.setText(actRn.getBemerkung());
 			tInternalRemarks.setText(actRn.getInternalRemarks());
