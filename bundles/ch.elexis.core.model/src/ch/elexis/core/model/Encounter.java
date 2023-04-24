@@ -145,6 +145,7 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 		if (!getEntity().getDiagnoses().contains(diag)) {
 			getEntityMarkDirty().getDiagnoses().add(diag);
 		}
+		addUpdated(ModelPackage.Literals.IENCOUNTER__DIAGNOSES);
 		CodeElementServiceHolder.updateStatistics(diagnosis,
 				ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		CodeElementServiceHolder.updateStatistics(diagnosis, getPatient());
@@ -159,6 +160,8 @@ public class Encounter extends AbstractIdDeleteModelAdapter<Behandlung> implemen
 		@SuppressWarnings("unchecked")
 		Diagnosis diag = ((AbstractIdModelAdapter<Diagnosis>) diagnosis).getEntity();
 		getEntityMarkDirty().getDiagnoses().remove(diag);
+
+		addUpdated(ModelPackage.Literals.IENCOUNTER__DIAGNOSES);
 	}
 
 	@Override

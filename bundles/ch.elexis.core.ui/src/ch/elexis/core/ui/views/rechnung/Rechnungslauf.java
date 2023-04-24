@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;

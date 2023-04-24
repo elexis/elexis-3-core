@@ -112,6 +112,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixCancelledInvoices">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.RemoveInvalidEncounters">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>

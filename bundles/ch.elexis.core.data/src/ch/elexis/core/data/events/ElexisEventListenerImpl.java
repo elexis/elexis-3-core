@@ -13,6 +13,7 @@
 package ch.elexis.core.data.events;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher.IPerformanceStatisticHandler;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.data.PersistentObject;
 
 /**
@@ -21,7 +22,8 @@ import ch.elexis.data.PersistentObject;
  * is forwarded in an async UI thread)
  *
  * @author gerry
- *
+ * @deprecated since 3.11, use {@link IContextService} to set active context or
+ *             post/send events
  */
 public class ElexisEventListenerImpl implements ElexisEventListener {
 	private final ElexisEvent template;

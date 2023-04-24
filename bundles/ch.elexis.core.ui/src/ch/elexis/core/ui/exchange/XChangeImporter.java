@@ -22,7 +22,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPath;
 
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.core.ui.util.Log;

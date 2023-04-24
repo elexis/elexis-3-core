@@ -199,10 +199,11 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void reloadPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) IPatient patient) {
-		if (patient != null && patient.equals(actPat) && created) {
+	@Optional
+	public void reloadPatient(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IPatient.class.equals(clazz) && created) {
 			actPat = null; // make sure patient will be updated
-			setPatient(patient);
+			setPatient(actPat);
 		}
 	}
 
@@ -217,7 +218,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser mandator) {
+	void activeUser(@Optional IUser user) {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
 				adaptMenus();
@@ -226,8 +227,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	@Inject
-	void reloadCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_RELOAD) ICoverage coverage) {
-		if (created) {
+	@Optional
+	public void reloadCoverage(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (ICoverage.class.equals(clazz) && created) {
 			updateFallCombo();
 		}
 	}
@@ -274,6 +276,15 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		if (created) {
 			if (encounter != null && encounter.equals(actEncounter)) {
 				setKons(encounter);
+			}
+		}
+	}
+
+	@Inject
+	void deleteEncounter(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) @Optional IEncounter encounter) {
+		if (created) {
+			if (encounter != null && encounter.equals(actEncounter)) {
+				setKons(null);
 			}
 		}
 	}
@@ -785,7 +796,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	public void adaptMenus() {
-		billedDisplay.adaptMenus();
+		if (CoreUiUtil.isActiveControl(billedDisplay)) {
+			billedDisplay.adaptMenus();
+		}
 	}
 
 	@Optional

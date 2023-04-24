@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.e4.util;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -334,4 +337,53 @@ public class CoreUiUtil implements EventHandler {
 		setCommandSelection(commandId, selection.toArray());
 	}
 
+	private static Control getAsControl(Object object) {
+		if (object != null) {
+			if (object instanceof Control) {
+				return (Control) object;
+			}
+			if (object instanceof Viewer) {
+				return ((Viewer) object).getControl();
+			}
+			try {
+				if (object.getClass().getMethod("getViewerWidget", new Class[0]) != null) {
+					Method method = object.getClass().getMethod("getViewerWidget", (Class[]) null);
+
+					Object viewerWidget = method.invoke(object, (Object[]) null);
+					if (viewerWidget instanceof StructuredViewer) {
+						return ((StructuredViewer) viewerWidget).getControl();
+					}
+					if (viewerWidget instanceof Control) {
+						return (Control) viewerWidget;
+					}
+				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(CoreUiUtil.class).warn("Error getting viewer widget of [" + object + "]", e);
+			}
+			throw new IllegalArgumentException("Can not get Control from [" + object + "]");
+		}
+		return null;
+	}
+
+	public static void runAsyncIfActive(Runnable runnable, Object object) {
+		Control control = getAsControl(object);
+		if (control != null) {
+			Display.getDefault().asyncExec(() -> {
+				if (isActiveControl(control)) {
+					runnable.run();
+				}
+			});
+		}
+	}
+
+	public static void runIfActive(Runnable runnable, Object object) {
+		Control control = getAsControl(object);
+		if (control != null) {
+			Display.getDefault().syncExec(() -> {
+				if (isActiveControl(control)) {
+					runnable.run();
+				}
+			});
+		}
+	}
 }

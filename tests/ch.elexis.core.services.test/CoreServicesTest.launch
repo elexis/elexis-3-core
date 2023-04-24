@@ -13,7 +13,7 @@
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
     <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles"/>
-    <booleanAttribute key="includeOptional" value="true"/>
+    <booleanAttribute key="includeOptional" value="false"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
     <setAttribute key="name.schedenig.eclipse.grepconsole.DisabledIds"/>
     <setAttribute key="name.schedenig.eclipse.grepconsole.EnabledIds"/>

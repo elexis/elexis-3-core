@@ -55,6 +55,14 @@ public class KonsListe extends ViewPart implements IRefreshable {
 
 	@Optional
 	@Inject
+	void reloadEncounter(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IEncounter.class.equals(clazz)) {
+			restart(false);
+		}
+	}
+
+	@Optional
+	@Inject
 	void compatitbility(@UIEventTopic(ElexisEventTopics.PERSISTENCE_EVENT_COMPATIBILITY + "*") Object object) {
 		if (object instanceof IEncounter || (object instanceof Class && object.equals(IEncounter.class))) {
 			// refresh from database if modified by po
@@ -69,11 +77,13 @@ public class KonsListe extends ViewPart implements IRefreshable {
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		if ((actPatient == null || liste.lKons.isEmpty())
-				|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
-			actPatient = patient;
-			restart(true);
-		}
+		CoreUiUtil.runIfActive(() -> {
+			if ((actPatient == null || liste.lKons.isEmpty())
+					|| (patient != null && !actPatient.getId().equals(patient.getId()))) {
+				actPatient = patient;
+				restart(true);
+			}
+		}, liste);
 	}
 
 	@Inject
@@ -96,6 +106,8 @@ public class KonsListe extends ViewPart implements IRefreshable {
 		if (iEncounter != null && !iEncounter.equals(actEncounter)) {
 			restart(false);
 			actEncounter = iEncounter;
+		} else if (iEncounter != null && iEncounter.isDeleted()) {
+			restart(false);
 		}
 	}
 

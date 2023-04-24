@@ -1,6 +1,5 @@
 package ch.elexis.core.common;
 
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
 
 public class ElexisEventTopics {
@@ -41,6 +40,7 @@ public class ElexisEventTopics {
 	public static final String PROPKEY_USER = "user";
 	public static final String PROPKEY_OBJ = "object";
 	public static final String PROPKEY_PROPERTY = "property";
+	public static final String PROPKEY_UPDATED = "updated";
 
 	/**
 	 * A persistent object was added, thrown by PersistentObject implementations
@@ -82,19 +82,14 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_TITLE = "title";
 	public static final String NOTIFICATION_PROPKEY_MESSAGE = "message";
 
+	public static final String NOTIFICATION_STATUS = BASE_NOTIFICATION + "status";
+	public static final String NOTIFICATION_PROPKEY_STATUS = "status";
+
 	/**
 	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a model class.
 	 * 
 	 */
 	public static final String EVENT_INVALIDATE_CACHE = BASE_MODEL + "invalidatecache";
-	
-	/**
-	 * User was changed (e.g. via login or re-login), delivers {@link IUser} or
-	 * <code>null</code> on logout. (Re-Login events: <code>null</code> and the new
-	 * user). Please consider direct e4 injection see
-	 * https://redmine.medelexis.ch/issues/19669
-	 */
-	public static final String EVENT_USER_CHANGED = BASE + "user/changed";
 
 	/**
 	 * Topics concerning locking object events

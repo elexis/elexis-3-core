@@ -19,7 +19,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -45,6 +48,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
@@ -56,10 +60,8 @@ import org.jdom2.output.XMLOutputter;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.model.SSDRange;
@@ -67,6 +69,7 @@ import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.UserTextPref;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
@@ -106,11 +109,20 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private static Pattern underline = Pattern.compile("_\\S+_"); //$NON-NLS-1$
 	private IAction copyAction, cutAction, pasteAction;
 	private IMenuListener globalMenuListener;
-	private final ElexisEventListener eeli_user = new UserChangeListener();
 	private List<IKonsMakro> externalMakros;
 	private int lastCurserPosition = 0;
 	private RangeTracker rangeTracker;
 	private boolean unlocked = false;
+
+
+	@Inject
+	void activeUser(@Optional IUser user) {
+		if (text != null && !text.isDisposed()) {
+			Display.getDefault().asyncExec(() -> {
+				text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+			});
+		}
+	}
 
 	public void setExternalMakros(List<IKonsMakro> makros) {
 		externalMakros = makros;
@@ -191,7 +203,6 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		};
 		// TODO
 		// ApplicationActionBarAdvisor.editMenu.addMenuListener(globalMenuListener);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_user);
 	}
 
 	public void disconnectGlobalActions(IViewSite site) {
@@ -201,8 +212,6 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);
 		// TODO
 		// ApplicationActionBarAdvisor.editMenu.removeMenuListener(globalMenuListener);
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_user);
-
 	}
 
 	@Override
@@ -365,6 +374,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		rangeTracker = new RangeTracker();
 		text.addExtendedModifyListener(rangeTracker);
 		new GenericObjectDropTarget(text, dropper);
+
+		CoreUiUtil.injectServicesWithContext(this);
 
 		dirty = false;
 	}
@@ -841,27 +852,6 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				text.copy();
 			}
 		};
-
-	}
-
-	class UserChangeListener implements ElexisEventListener {
-		ElexisEvent filter = new ElexisEvent(null, null, ElexisEvent.EVENT_USER_CHANGED);
-
-		@Override
-		public void catchElexisEvent(ElexisEvent ev) {
-			UiDesk.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-
-				}
-			});
-		}
-
-		@Override
-		public ElexisEvent getElexisEventFilter() {
-			return filter;
-		}
 
 	}
 

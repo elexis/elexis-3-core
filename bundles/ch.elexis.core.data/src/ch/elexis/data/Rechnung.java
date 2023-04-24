@@ -32,7 +32,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.IInvoice;

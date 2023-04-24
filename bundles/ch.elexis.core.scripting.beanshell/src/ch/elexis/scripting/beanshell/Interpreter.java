@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import bsh.EvalError;
 import bsh.ParseException;
 import bsh.TargetError;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.data.Script;
 import ch.elexis.scripting.beanshell.internal.MultiClassLoader;

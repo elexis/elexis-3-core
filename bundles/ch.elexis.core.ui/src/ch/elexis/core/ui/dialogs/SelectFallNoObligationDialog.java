@@ -13,6 +13,10 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -31,13 +35,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Fall;
 
 public class SelectFallNoObligationDialog extends TitleAreaDialog {
@@ -53,6 +56,7 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.oblFall = Fall.load(iCoverage.getId());
 		this.noOblCode = iBillable;
+		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	@Override
@@ -107,8 +111,6 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 		if (lastSelectedFall != null)
 			noOblFallCombo.setSelection(new StructuredSelection(lastSelectedFall));
 
-		ElexisEventDispatcher.getInstance().addListeners(new UpdateFallComboListener(noOblFallCombo, Fall.class, 0xff));
-
 		fd = new FormData();
 		fd.top = new FormAttachment(toolbar, 5);
 		fd.left = new FormAttachment(0, 5);
@@ -126,6 +128,7 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 	protected List<Fall> getNoObligationFaelle() {
 		ArrayList<Fall> ret = new ArrayList<Fall>();
 		Fall[] faelle = oblFall.getPatient().getFaelle();
+		System.out.println("ff -> " + faelle.length);
 		for (Fall f : faelle) {
 			String gesetz = f.getConfiguredBillingSystemLaw().name();
 			if (f.isOpen() && !gesetz.equalsIgnoreCase("KVG")) //$NON-NLS-1$
@@ -155,21 +158,21 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 		return NoPoUtil.loadAsIdentifiable(fall, ICoverage.class).orElse(null);
 	}
 
-	private class UpdateFallComboListener extends ElexisUiEventListenerImpl {
+	@Optional
+	@Inject
+	private void createCoverage(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			noOblFallCombo.setInput(getNoObligationFaelle());
+			noOblFallCombo.refresh();
+		}, noOblFallCombo);
+	}
 
-		ComboViewer viewer;
-
-		UpdateFallComboListener(ComboViewer viewer, final Class<?> clazz, int mode) {
-			super(clazz, mode);
-			this.viewer = viewer;
-		}
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-				viewer.setInput(getNoObligationFaelle());
-				viewer.refresh();
-			}
-		}
+	@Optional
+	@Inject
+	private void updateCoverage(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) ICoverage iCoverage) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			noOblFallCombo.setInput(getNoObligationFaelle());
+			noOblFallCombo.refresh();
+		}, noOblFallCombo);
 	}
 }

@@ -41,18 +41,14 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -295,9 +291,6 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 		private CodeSelectorFactory master;
 		private IDetailDisplay detail;
 
-		private ElexisEventListenerImpl eeli_div;
-		private ElexisEventListenerImpl eeli_mod;
-
 		public MasterDetailsPage(Composite parent, CodeSelectorFactory codeSelectorFactory,
 				IDetailDisplay displayDetail) {
 			super(parent, SWT.NONE);
@@ -305,33 +298,16 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 			this.detail = displayDetail;
 			this.master = codeSelectorFactory;
 			cv = new CommonViewer();
-			eeli_div = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_SELECTED) {
-				@Override
-				public void runInUi(ElexisEvent ev) {
-					detail.display(ev.getObject());
-				}
-			};
-			eeli_mod = new ElexisUiEventListenerImpl(detail.getElementClass(), ElexisEvent.EVENT_UPDATE) {
-				@Override
-				public void runInUi(ElexisEvent ev) {
-					cv.notify(CommonViewer.Message.updateSingle, ev.getObject());
-				}
-			};
 			setLayout(new FillLayout());
 			sash = new SashForm(this, SWT.NONE);
 			cv.setViewName(master.getCodeSystemName());
 			cv.create(master.createViewerConfigurer(cv), sash, SWT.NONE, getViewSite());
 			detail.createDisplay(sash, getViewSite());
 			cv.getConfigurer().getContentProvider().startListening();
-			ElexisEventDispatcher.getInstance().addListeners(eeli_div, eeli_mod);
 		}
 
 		public CodeSelectorFactory getCodeSelectorFactory() {
 			return master;
-		}
-
-		public void dispose() {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_div, eeli_mod);
 		}
 	}
 

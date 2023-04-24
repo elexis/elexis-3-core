@@ -64,14 +64,14 @@ import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.data.interfaces.IXid;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.SqlRunner;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.util.ElexisIdGenerator;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.Xid.XIDException;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.Settings;
@@ -1109,7 +1109,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				log.warn("Fehler bei Felddefinition " + field);
 				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, CoreHub.PLUGIN_ID,
 						ElexisStatus.CODE_NOFEEDBACK, "Fehler bei Felddefinition", nmex);
-				ElexisEventDispatcher.fireElexisStatusEvent(status);
+				ElexisStatus.fire(status);
 				return mapped;
 			} catch (Exception ex) {
 				// ignore the exceptions calling functions look for
@@ -1955,7 +1955,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (!mapped.startsWith("JOINT:")) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
 					"Feld " + field + " ist keine n:m Verknüpfung", null, ElexisStatus.LOG_ERRORS);
-			ElexisEventDispatcher.fireElexisStatusEvent(status);
+			ElexisStatus.fire(status);
 			return false;
 		}
 		String[] m = mapped.split(":");// m[1] FremdID, m[2] eigene ID, m[3]
@@ -2836,7 +2836,7 @@ public abstract class PersistentObject implements IPersistentObject {
 				// (this is executed in a Runnable where Exception handling is
 				// not blocking UI
 				// thread)
-				ElexisEventDispatcher.fireElexisStatusEvent(status);
+				ElexisStatus.fire(status);
 			} else {
 				status.setLogLevel(ElexisStatus.LOG_FATALS);
 				throw new PersistenceException(status);

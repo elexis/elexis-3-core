@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -33,9 +37,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ILocalCoding;
@@ -51,14 +54,18 @@ import ch.elexis.core.findings.ui.views.nattable.FindingsNatTableTooltip;
 import ch.elexis.core.findings.ui.views.nattable.LabelDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper.IDoubleClickListener;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.Patient;
 
-public class FindingsViewDynamic extends ViewPart implements IActivationListener {
+public class FindingsViewDynamic extends ViewPart implements IRefreshable {
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	private CodesSelectionComposite codeSelectionComposite;
 
@@ -67,29 +74,26 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	private IDataProvider headerDataProvider;
 	private IDataProvider rowDataProvider;
 
-	private final ElexisUiEventListenerImpl eeli_find = new ElexisUiEventListenerImpl(IFinding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Optional
+	@Inject
+	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IFinding finding) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-	};
+		}, natTable);
+	}
 
-	private final ElexisUiEventListenerImpl eeli_code = new ElexisUiEventListenerImpl(ICoding.class,
-			ElexisEvent.EVENT_CREATE | ElexisEvent.EVENT_RELOAD | ElexisEvent.EVENT_DELETE) {
+	@Optional
+	@Inject
+	void crudCoding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") ICoding coding) {
+		codeRefresh();
+	}
 
-		@Override
-		public void runInUi(ElexisEvent ev) {
-			codeRefresh();
-		}
-	};
-
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev) {
+	@Inject
+	void activePatient(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
-		}
-	};
+		}, natTable);
+	}
 
 	private NatTableWrapper wrapper;
 
@@ -189,8 +193,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 
 		atachTooltip();
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat, eeli_find, eeli_code);
-		GlobalEventDispatcher.addActivationListener(this, this);
+		getSite().getPage().addPartListener(udpateOnVisible);
 
 		refresh();
 	}
@@ -254,8 +257,10 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 		return ret;
 	}
 
+	@Override
 	public void refresh() {
-		dataProvider.reload(ElexisEventDispatcher.getSelectedPatient());
+		dataProvider.reload(
+				(Patient) NoPoUtil.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null)));
 		natTable.refresh();
 	}
 
@@ -266,26 +271,12 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 
 	@Override
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat, eeli_find, eeli_code);
-		GlobalEventDispatcher.removeActivationListener(this, this);
+		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
 
 	@Override
-	public void activation(boolean mode) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void visible(boolean mode) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		natTable.setFocus();
 	}
 }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
@@ -38,8 +39,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewSite;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
@@ -395,16 +398,22 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				sel[0] = ((Tree<?>) sel[0]).contents;
 			}
 			if (sel[0] instanceof PersistentObject) {
-				ElexisEventDispatcher.fireSelectionEvent((PersistentObject) sel[0]);
+				Optional<Class<?>> modelClass = ElexisEventDispatcher
+						.getCoreModelInterfaceForElexisClass(sel[0].getClass());
+				if (modelClass.isPresent()) {
+					NoPoUtil.loadAsIdentifiable((PersistentObject) sel[0], modelClass.get())
+							.ifPresent(indentifiable -> {
+								ContextServiceHolder.get().getRootContext().setTyped(indentifiable);
+							});
+				} else {
+					LoggerFactory.getLogger(getClass()).warn("PersistentObject selection [" + sel[0] + "] in context");
+					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
+				}
 			} else {
 				if (StringUtils.isNotBlank(namedSelection)) {
 					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
 				} else {
-					// fallback to ElexisEventDispatcher
 					if (sel[0] instanceof Identifiable) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-								sel[0]);
-					} else {
 						ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
 					}
 				}

@@ -26,6 +26,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -81,22 +82,25 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.BillCallback;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -104,7 +108,6 @@ import ch.elexis.core.ui.dialogs.FallSelectionDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentInvoiceLockHandler;
@@ -117,7 +120,6 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.rechnung.InvoiceCorrectionWizard.Page2;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Rechnung;
@@ -155,59 +157,76 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, RnDetailView.ID);
 
-	private final ElexisEventListenerImpl eeli_rn = new ElexisUiEventListenerImpl(Rechnung.class,
-			ElexisEvent.EVENT_DELETE | ElexisEvent.EVENT_UPDATE | ElexisEvent.EVENT_SELECTED | ElexisEvent.EVENT_RELOAD
-					| ElexisEvent.EVENT_LOCK_AQUIRED | ElexisEvent.EVENT_LOCK_RELEASED) {
-
-		public void runInUi(ElexisEvent ev) {
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_UPDATE:
-				reloadSameInvoice((Rechnung) ev.getObject());
-				break;
-			case ElexisEvent.EVENT_DELETE:
-				reload(null);
-				break;
-			case ElexisEvent.EVENT_RELOAD:
-			case ElexisEvent.EVENT_SELECTED:
-				if (actualInvoice != null) {
-					releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
-					if (LocalLockServiceHolder.get().isLocked(actualInvoice.getFall())) {
-						LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
-					}
-				}
-				reload((Rechnung) ev.getObject());
-				break;
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if (actualInvoice != null && actualInvoice.equals((Rechnung) ev.getObject())) {
-					if (ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED) {
-						if (LocalLockServiceHolder.get().acquireLock(actualInvoice.getFall()).isOk()) {
-							setUnlocked(true);
-						} else {
-							MessageDialog.openWarning(UiDesk.getDisplay().getActiveShell(), "Lock nicht erhalten",
-									"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
-						}
-					} else {
-						setUnlocked(false);
-					}
-				}
-				break;
-			}
+	@Inject
+	@Optional
+	public void lockReleased(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IInvoice invoice) {
+		if (actualInvoice != null && actualInvoice.getId().equals(invoice.getId())) {
+			setUnlocked(false);
 		}
-	};
+	}
 
-	private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-			ElexisEvent.EVENT_USER_CHANGED) {
-
-		public void runInUi(ElexisEvent ev) {
-			if (actualInvoice != null) {
-				ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+	@Inject
+	@Optional
+	public void lockAquired(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IInvoice invoice) {
+		if (actualInvoice != null && actualInvoice.getId().equals(invoice.getId())) {
+			if (LocalLockServiceHolder.get().acquireLock(actualInvoice.getFall()).isOk()) {
+				setUnlocked(true);
 			} else {
-				reload(null);
+				MessageDialog.openWarning(UiDesk.getDisplay().getActiveShell(), "Lock nicht erhalten",
+						"Lock nicht erhalten. Diese Operation ist derzeit nicht möglich.");
 			}
 		}
-	};
+	}
+
+	@Inject
+	@Optional
+	public void updateInvoice(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IInvoice invoice) {
+		reloadSameInvoice((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+	}
+
+	@Inject
+	@Optional
+	public void deletedInvoice(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IInvoice invoice) {
+		reload(null);
+	}
+
+	@Inject
+	@Optional
+	public void reloadInvoice(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IInvoice.class.equals(clazz)) {
+			reload(actualInvoice);
+		}
+	}
+
+	@Optional
+	@Inject
+	void activeInvoice(IInvoice invoice) {
+		Display.getDefault().asyncExec(() -> {
+			if (actualInvoice != null) {
+				releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
+				if (LocalLockServiceHolder.get().isLocked(actualInvoice.getFall())) {
+					LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
+				}
+			}
+			reload((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+		});
+	}
+
+	@Inject
+	void activeUser(@Optional IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			adaptForUser(user);
+		});
+	}
+
+	private void adaptForUser(IUser user) {
+		if (actualInvoice != null) {
+			ElexisEventDispatcher.getInstance()
+					.fire(new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+		} else {
+			reload(null);
+		}
+	}
 
 	private void reloadSameInvoice(Rechnung invoiceToReload) {
 		if (actualInvoice != null && invoiceToReload != null
@@ -252,7 +271,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		parent.setLayout(new GridLayout(1, false));
 		invoiceComposite = new InvoiceComposite(parent);
 		invoiceComposite.createComponents(invoiceCorrectionDTO);
-		ElexisEventDispatcher.getInstance().addListeners(eeli_rn, eeli_user);
 		Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
 		if (selected != null) {
 			reload(selected);
@@ -265,7 +283,6 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			releaseAndRefreshLock(actualInvoice, ToggleCurrentInvoiceLockHandler.COMMAND_ID);
 			LocalLockServiceHolder.get().releaseLock(actualInvoice.getFall());
 		}
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_rn, eeli_user);
 		super.dispose();
 	}
 

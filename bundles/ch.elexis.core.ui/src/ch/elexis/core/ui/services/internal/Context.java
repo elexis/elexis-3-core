@@ -10,22 +10,29 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.IContextService;
 
 public class Context implements IContext {
 
 	private ConcurrentHashMap<String, Object> context;
 
+	private IContextService service;
+
 	private Context parent;
 
 	private IEclipseContext eclipseContext;
 
-	public Context() {
-		this(null, "root"); //$NON-NLS-1$
+	private TypedModifier typedModifier;
+
+	public Context(IContextService service) {
+		this(null, "root", service); //$NON-NLS-1$
 	}
 
-	public Context(Context parent, String name) {
+	public Context(Context parent, String name, IContextService service) {
 		context = new ConcurrentHashMap<>();
 		this.parent = parent;
+		this.service = service;
+		this.typedModifier = new TypedModifier(this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -40,6 +47,10 @@ public class Context implements IContext {
 
 	@Override
 	public void setTyped(Object object) {
+		setTyped(object, false);
+	}
+
+	protected void setTyped(Object object, boolean ignoreModifier) {
 		if (object != null) {
 			if (object instanceof IUser) {
 				// also set active user contact
@@ -62,6 +73,9 @@ public class Context implements IContext {
 				} else {
 					eclipseContext.set(object.getClass().getName(), object);
 				}
+			}
+			if (typedModifier != null && !ignoreModifier) {
+				typedModifier.modifyFor(object);
 			}
 		} else {
 			throw new IllegalArgumentException("object must not be null, use #removeTyped"); //$NON-NLS-1$
@@ -125,6 +139,7 @@ public class Context implements IContext {
 
 	public void setEclipseContext(IEclipseContext applicationContext) {
 		this.eclipseContext = applicationContext;
+		setTyped(applicationContext);
 		// update with not present context
 		context.forEach((k, v) -> {
 			if (k instanceof String && v != null) {
@@ -136,5 +151,9 @@ public class Context implements IContext {
 	@Override
 	public String getStationIdentifier() {
 		return getNamed(STATION_IDENTIFIER).get().toString();
+	}
+
+	public IContextService getService() {
+		return service;
 	}
 }

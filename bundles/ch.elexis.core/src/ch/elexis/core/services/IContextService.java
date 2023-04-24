@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Map;
 import java.util.Optional;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -140,6 +141,24 @@ public interface IContextService {
 	}
 
 	/**
+	 * Set an {@link Object} typed to the root context.
+	 * 
+	 * @param object
+	 */
+	default public void setTyped(Object object) {
+		getRootContext().setTyped(object);
+	}
+
+	/**
+	 * Remove the object set for the type clazz from the root context.
+	 * 
+	 * @param object
+	 */
+	default public void removeTyped(Class<?> clazz) {
+		getRootContext().removeTyped(clazz);
+	}
+
+	/**
 	 * Get an {@link Object} identified by the name from the root context.
 	 *
 	 * @param name
@@ -181,7 +200,18 @@ public interface IContextService {
 	 * @param eventTopic
 	 * @param object
 	 */
-	public void postEvent(String eventTopic, Object object);
+	default public void postEvent(String eventTopic, Object object) {
+		postEvent(eventTopic, object, null);
+	}
+
+	/**
+	 * Post an Event using a topic (see {@link ElexisEventTopics}), an optional
+	 * object and optional additional properties for the event.
+	 *
+	 * @param eventTopic
+	 * @param object
+	 */
+	public void postEvent(String eventTopic, Object object, Map<String, Object> additionalProperties);
 
 	/**
 	 * Send an Event using a topic (see {@link ElexisEventTopics}), and an optional
@@ -190,5 +220,16 @@ public interface IContextService {
 	 * @param eventTopic
 	 * @param object
 	 */
-	public void sendEvent(String eventTopic, Object object);
+	default public void sendEvent(String eventTopic, Object object) {
+		sendEvent(eventTopic, object, null);
+	}
+
+	/**
+	 * Send an Event using a topic (see {@link ElexisEventTopics}), an optional
+	 * object and optional additional properties for the event.
+	 *
+	 * @param eventTopic
+	 * @param object
+	 */
+	public void sendEvent(String eventTopic, Object object, Map<String, Object> additionalProperties);
 }

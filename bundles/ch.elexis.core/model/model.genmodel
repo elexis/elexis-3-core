@@ -30,6 +30,11 @@
         <genParameters ecoreParameter="model.ecore#//Identifiable/addRefresh/changed"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//Identifiable/clearRefresh"/>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/addUpdated">
+        <genParameters ecoreParameter="model.ecore#//Identifiable/addUpdated/feature"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/getUpdated"/>
+      <genOperations ecoreOperation="model.ecore#//Identifiable/clearUpdated"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//Deleteable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//Deleteable/deleted"/>

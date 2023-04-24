@@ -22,7 +22,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.views.TemplatePrintView;
 import ch.elexis.data.Patient;

@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -48,15 +49,15 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListener;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -68,7 +69,6 @@ import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
@@ -110,27 +110,31 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	private IObservableValue patientObservable = new WritableValue(null, Patient.class);
 	private boolean bLocked = true;
 
-	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-		public void runInUi(ElexisEvent ev) {
-			Patient pat = (Patient) ev.getObject();
-
-			switch (ev.getType()) {
-			case ElexisEvent.EVENT_SELECTED:
-				IPersistentObject deselected = (IPersistentObject) patientObservable.getValue();
-				setPatient(pat);
-				releaseAndRefreshLock(deselected, ToggleCurrentPatientLockHandler.COMMAND_ID);
-				break;
-			case ElexisEvent.EVENT_LOCK_AQUIRED:
-			case ElexisEvent.EVENT_LOCK_RELEASED:
-				if (pat.equals(patientObservable.getValue())) {
-					setUnlocked(ev.getType() == ElexisEvent.EVENT_LOCK_AQUIRED);
-				}
-				break;
-			default:
-				break;
-			}
+	@Inject
+	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		if (pat != null && pat.equals(patientObservable.getValue())) {
+			setUnlocked(true);
 		}
-	};
+	}
+
+	@Inject
+	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IPatient patient) {
+		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
+		if (pat != null && pat.equals(patientObservable.getValue())) {
+			setUnlocked(false);
+		}
+	}
+
+	@Optional
+	@Inject
+	void activePatient(IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			IPersistentObject deselected = (IPersistentObject) patientObservable.getValue();
+			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			releaseAndRefreshLock(deselected, ToggleCurrentPatientLockHandler.COMMAND_ID);
+		}, scrldfrm);
+	}
 
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
@@ -147,7 +151,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	public PatientDetailView() {
 		toolkit.setBorderStyle(SWT.NULL); // Deactivate borders for the widgets
 		makeActions();
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
 	}
 
 	@Override
@@ -457,7 +460,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	}
 
 	public void dispose() {
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 		toolkit.dispose();
 		super.dispose();
 	}

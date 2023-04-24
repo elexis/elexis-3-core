@@ -55,10 +55,6 @@ public class Desk implements IApplication {
 	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		// register ElexisEvent and MessageEvent listeners
-		log.debug("Registering " + CoreEventListenerRegistrar.class.getName()); //$NON-NLS-1$
-		new CoreEventListenerRegistrar();
-
 		// Check if we "are complete" - throws Error if not
 		ICoreOperationAdvisor cod = CoreOperationAdvisorHolder.get();
 

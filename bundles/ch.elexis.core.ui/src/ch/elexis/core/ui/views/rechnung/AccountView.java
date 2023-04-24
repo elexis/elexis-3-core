@@ -48,9 +48,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IAccountTransaction;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -58,7 +59,6 @@ import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
@@ -113,25 +113,24 @@ public class AccountView extends ViewPart implements IActivationListener {
 			160, // REMARKS
 			80 // ACCOUNT
 	};
-	private ElexisEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 
-		public void runInUi(ElexisEvent ev) {
-			if (ev.getType() == ElexisEvent.EVENT_SELECTED) {
-				Patient selectedPatient = (Patient) ev.getObject();
-				setPatient(selectedPatient);
-			} else if (ev.getType() == ElexisEvent.EVENT_DESELECTED) {
+	@Inject
+	void activeUser(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
+			if (patient != null) {
+				setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			} else {
 				setPatient(null);
 			}
+		}, accountViewer);
+	}
 
+	@Inject
+	void activeTransaction(@Optional IAccountTransaction transaction) {
+		if (removePaymentAction != null) {
+			removePaymentAction.setEnabled(transaction != null);
 		}
-	};
-
-	private ElexisEventListenerImpl eeli_at = new ElexisUiEventListenerImpl(AccountTransaction.class) {
-
-		public void runInUi(ElexisEvent ev) {
-			removePaymentAction.setEnabled(ev.getType() == ElexisEvent.EVENT_SELECTED);
-		}
-	};
+	}
 
 	public void createPartControl(Composite parent) {
 		initializeJobs();
@@ -384,11 +383,9 @@ public class AccountView extends ViewPart implements IActivationListener {
 
 	public void visible(boolean mode) {
 		if (mode == true) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_at, eeli_pat);
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			setPatient(patient);
 		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_at, eeli_pat);
 			setPatient(null);
 		}
 	};

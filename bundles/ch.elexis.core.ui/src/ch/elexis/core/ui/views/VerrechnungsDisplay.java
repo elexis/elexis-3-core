@@ -83,7 +83,6 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
@@ -102,12 +101,14 @@ import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.dialogs.StatusDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -286,8 +287,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
-					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-							selection.getFirstElement());
+					ContextServiceHolder.get().getRootContext().setTyped(selection.getFirstElement());
 				}
 			}
 		});
@@ -1088,6 +1088,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public void adaptMenus() {
-		table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
+		if (CoreUiUtil.isActiveControl(table)) {
+			table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
+		}
 	}
 }

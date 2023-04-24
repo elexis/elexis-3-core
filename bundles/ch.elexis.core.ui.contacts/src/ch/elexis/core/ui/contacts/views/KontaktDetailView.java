@@ -25,11 +25,15 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.ViewMenus;
+import ch.elexis.core.ui.views.IRefreshable;
 
-public class KontaktDetailView extends ViewPart {
+public class KontaktDetailView extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.KontaktDetailView"; //$NON-NLS-1$
 	KontaktBlatt kb;
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	public KontaktDetailView() {
 
@@ -41,6 +45,14 @@ public class KontaktDetailView extends ViewPart {
 		kb = new KontaktBlatt(parent, SWT.NONE, getViewSite());
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(GlobalActions.printKontaktEtikette);
+
+		getSite().getPage().addPartListener(udpateOnVisible);
+	}
+
+	@Override
+	public void dispose() {
+		getSite().getPage().removePartListener(udpateOnVisible);
+		super.dispose();
 	}
 
 	@Override
@@ -52,5 +64,10 @@ public class KontaktDetailView extends ViewPart {
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	@Override
+	public void refresh() {
+		kb.refresh();
 	}
 }

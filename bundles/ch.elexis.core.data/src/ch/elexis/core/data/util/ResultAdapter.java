@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
-import ch.elexis.core.data.interfaces.events.MessageEvent;
+import ch.elexis.core.events.MessageEvent;
 import ch.rgw.tools.Result;
 
 /**

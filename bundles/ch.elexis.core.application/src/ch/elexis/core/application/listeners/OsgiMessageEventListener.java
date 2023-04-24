@@ -2,6 +2,7 @@ package ch.elexis.core.application.listeners;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
@@ -9,6 +10,7 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE_NOTIFICATION + "*")
@@ -19,6 +21,7 @@ public class OsgiMessageEventListener implements EventHandler {
 		final String topic = event.getTopic().substring(ElexisEventTopics.BASE_NOTIFICATION.length());
 		final String title = (String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_TITLE);
 		final String message = (String) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_MESSAGE);
+		final ElexisStatus status = (ElexisStatus) event.getProperty(ElexisEventTopics.NOTIFICATION_PROPKEY_STATUS);
 
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
@@ -32,6 +35,13 @@ public class OsgiMessageEventListener implements EventHandler {
 					break;
 				case "info": //$NON-NLS-1$
 					MessageDialog.openInformation(UiDesk.getTopShell(), title, message);
+					break;
+				case "status": //$NON-NLS-1$
+					LoggerFactory.getLogger(getClass())
+							.info("StatusEvent [PLUGIN] " + status.getPlugin() + " [MESSAGE] " + status.getMessage() //$NON-NLS-1$ //$NON-NLS-2$
+									+ " [EXCEPTION] " //$NON-NLS-1$
+									+ status.getException());
+					StatusManager.getManager().handle(status);
 					break;
 				default:
 					LoggerFactory.getLogger(getClass())

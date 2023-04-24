@@ -40,16 +40,16 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
-import ch.elexis.core.data.events.PatientEventListener;
 import ch.elexis.core.data.interfaces.ShutdownJob;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
@@ -135,11 +135,6 @@ public class CoreHub implements BundleActivator {
 	 */
 	@Deprecated(forRemoval = true)
 	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
-
-	/**
-	 * The listener for patient events
-	 */
-	private final PatientEventListener eeli_pat = new PatientEventListener();
 
 	/**
 	 * Returns the actual contact of the logged in User. Use it only for PO
@@ -266,8 +261,6 @@ public class CoreHub implements BundleActivator {
 
 		heart = Heartbeat.getInstance();
 
-		ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
-
 		// add core ClassLoader to default Script Interpreter
 		Interpreter.classLoaders.add(CoreHub.class.getClassLoader());
 
@@ -292,7 +285,6 @@ public class CoreHub implements BundleActivator {
 		CoreHub.logoffAnwender();
 
 		PersistentObject.disconnect();
-		ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
 		ElexisEventDispatcher.getInstance().dump();
 
 		globalCfg = null;
@@ -362,6 +354,12 @@ public class CoreHub implements BundleActivator {
 
 		ElexisEventDispatcher.getInstance()
 				.fire(new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
+		if (newMandant != null) {
+			ContextServiceHolder.get()
+					.setActiveMandator(NoPoUtil.loadAsIdentifiable(newMandant, IMandator.class).get());
+		} else {
+			ContextServiceHolder.get().setActiveMandator(null);
+		}
 	}
 
 	/**
@@ -442,9 +440,8 @@ public class CoreHub implements BundleActivator {
 
 		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
+		ContextServiceHolder.get().setActiveMandator(null);
 		ContextServiceHolder.get().setActiveUser(null);
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, Anwender.class, ElexisEvent.EVENT_USER_CHANGED));
-		ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, IUser.class, ElexisEvent.EVENT_DESELECTED));
 	}
 
 	public static Object getStationIdentifier() {

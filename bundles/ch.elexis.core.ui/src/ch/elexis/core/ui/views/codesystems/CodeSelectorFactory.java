@@ -14,12 +14,14 @@ package ch.elexis.core.ui.views.codesystems;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -52,18 +54,16 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.events.ElexisEventListenerImpl;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -72,7 +72,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
@@ -160,7 +159,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
-				Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
+				java.util.Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
 				if (systemDescription.isPresent()) {
 					if (codeSystemName.equals(systemDescription.get().getCodeSystemName())) {
 						return systemDescription.get().getSelectionDialog(parent, data);
@@ -210,7 +209,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 
 		if (list != null) {
 			for (IConfigurationElement ic : list) {
-				Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
+				java.util.Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
 				if (systemDescription.isPresent()) {
 					CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
 					tabItem.setText(systemDescription.get().getCodeSystemName());
@@ -254,7 +253,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				if (ic == null) {
 					continue;
 				}
-				Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
+				java.util.Optional<CodeSystemDescription> systemDescription = CodeSystemDescription.of(ic);
 				if (systemDescription.isPresent()) {
 					CTabItem tabItem = new CTabItem(ctab, SWT.NONE);
 					tabItem.setText(systemDescription.get().getCodeSystemName());
@@ -305,25 +304,24 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		int[] sashWeights = null;
 		ResizeListener resizeListener;
 
-		private final ElexisEventListenerImpl eeli_user = new ElexisUiEventListenerImpl(Anwender.class,
-				ElexisEvent.EVENT_USER_CHANGED) {
+		@Inject
+		void activeUser(@Optional IUser user) {
+			Display.getDefault().asyncExec(() -> {
+				adaptForUser(user);
+			});
+		}
 
-			public void runInUi(ElexisEvent ev) {
-				if (patientStatistics != null && (!patientStatistics.isDisposed())) {
-					patientStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-				if (userStatistics != null && (!userStatistics.isDisposed())) {
-					userStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-				if (cv != null && cv.getViewerWidget() != null && (!cv.getViewerWidget().getControl().isDisposed())) {
-					cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
-				}
-				userStatistics.setContact(ContextServiceHolder.get().getActiveUserContact().orElse(null));
+		private void adaptForUser(IUser user) {
+			if (patientStatistics != null && (!patientStatistics.isDisposed())) {
+				patientStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 			}
-		};
-
-		protected cPage(CTabFolder ctab) {
-			super(ctab, SWT.NONE);
+			if (userStatistics != null && (!userStatistics.isDisposed())) {
+				userStatistics.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+			}
+			if (cv != null && cv.getViewerWidget() != null && (!cv.getViewerWidget().getControl().isDisposed())) {
+				cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
+			}
+			userStatistics.setContact(user.getAssignedContact());
 		}
 
 		cPage(final CTabItem ctab, final CodeSystemDescription description) {
@@ -404,7 +402,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				sash.setWeights(new int[] { 20, 20, 60 });
 			}
 
-			ElexisEventDispatcher.getInstance().addListeners(eeli_user);
+			CoreUiUtil.injectServicesWithContext(this);
 			refresh();
 		}
 
@@ -416,7 +414,6 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		@Override
 		public void dispose() {
 			vc.getContentProvider().stopListening();
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_user);
 			super.dispose();
 		}
 

@@ -43,12 +43,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
@@ -62,20 +60,23 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  *
  */
-public class MediVerlaufView extends ViewPart implements IActivationListener {
+public class MediVerlaufView extends ViewPart implements IRefreshable {
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+
 	TableViewer tv;
 	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
 	private static final String[] columns = { Messages.Core_Since, Messages.Core_Date_Until,
 			Messages.MediVerlaufView_medicament, Messages.Core_Dosage };
 	private static final int[] colwidth = { 90, 90, 300, 200 };
 
-	private ElexisUiEventListenerImpl eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
-
-		@Override
-		public void runInUi(ElexisEvent ev) {
+	@Inject
+	void activePatient(@Optional IPatient patient) {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			reload();
-		}
-	};
+		}, tv);
+	}
+
 	private static int sortCol = 0;
 	private static boolean revert = false;
 	public static final String TOOPEN = " ... "; //$NON-NLS-1$
@@ -116,14 +117,14 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		tv.setUseHashlookup(true);
 		tv.setContentProvider(new MediVerlaufContentProvider());
 		tv.setLabelProvider(new MediVerlaufLabelProvider());
-		GlobalEventDispatcher.addActivationListener(this, getViewSite().getPart());
+		getSite().getPage().addPartListener(udpateOnVisible);
 		tv.setSorter(sorter);
 		tv.setInput(getViewSite());
 	}
 
 	@Override
 	public void dispose() {
-		GlobalEventDispatcher.removeActivationListener(this, getViewSite().getPart());
+		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 
 	@Override
@@ -232,13 +233,6 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		}
 	}
 
-	public void selectionEvent(final PersistentObject obj) {
-		if (obj instanceof Patient) {
-			reload();
-		}
-
-	}
-
 	private static class MediAbgabe implements Comparable<MediAbgabe> {
 		String von, bis;
 		String medi;
@@ -304,23 +298,6 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 		}
 	}
 
-	@Override
-	public void activation(final boolean mode) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void visible(final boolean mode) {
-		if (mode) {
-			ElexisEventDispatcher.getInstance().addListeners(eeli_pat);
-			reload();
-		} else {
-			ElexisEventDispatcher.getInstance().removeListeners(eeli_pat);
-		}
-
-	}
-
 	private static class MediSorter extends ViewerSorter {
 
 		@Override
@@ -328,6 +305,11 @@ public class MediVerlaufView extends ViewPart implements IActivationListener {
 			return ((MediAbgabe) e1).compareTo((MediAbgabe) e2);
 		}
 
+	}
+
+	@Override
+	public void refresh() {
+		reload();
 	}
 
 	@Optional

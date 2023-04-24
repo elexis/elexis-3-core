@@ -1,6 +1,8 @@
 package ch.elexis.core.data.util;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.Optional;
 import java.util.StringJoiner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
@@ -27,6 +31,36 @@ import ch.elexis.data.PersistentObjectFactory;
 public class NoPoUtil {
 
 	private static PersistentObjectFactory poFactory = new PersistentObjectFactory();
+
+	/**
+	 * Load {@link PersistentObject} implementation for the provided
+	 * {@link Identifiable}. If loading via {@link PersistentObjectFactory} and the
+	 * {@link IStoreToStringService} does not load an instanceof clazz, the load
+	 * method of the clazz.
+	 * 
+	 * @param identifiable
+	 * @param clazz
+	 * @return
+	 */
+	public static PersistentObject loadAsPersistentObject(Identifiable identifiable, Class<?> clazz) {
+		PersistentObject loaded = loadAsPersistentObject(identifiable);
+		if (loaded != null && !clazz.isAssignableFrom(loaded.getClass())) {
+			return load(loaded, clazz);
+		}
+		return loaded;
+	}
+
+	private static PersistentObject load(PersistentObject loaded, Class<?> clazz) {
+		try {
+			Method load = clazz.getMethod("load", new Class[] { String.class }); //$NON-NLS-1$
+			return (PersistentObject) (load.invoke(null, new Object[] { loaded.getId() }));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			LoggerFactory.getLogger(ElexisEventDispatcher.class)
+					.warn("Could not load [" + loaded + "] as [" + clazz + "]", e);
+		}
+		return null;
+	}
 
 	/**
 	 * Load {@link PersistentObject} implementation for the provided

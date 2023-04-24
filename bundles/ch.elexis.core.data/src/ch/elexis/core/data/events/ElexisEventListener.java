@@ -12,6 +12,12 @@
 
 package ch.elexis.core.data.events;
 
+import ch.elexis.core.services.IContextService;
+
+/**
+ * @deprecated since 3.11, use {@link IContextService} to set active context or
+ *             post/send events *
+ */
 public interface ElexisEventListener {
 	/**
 	 * An Event was fired

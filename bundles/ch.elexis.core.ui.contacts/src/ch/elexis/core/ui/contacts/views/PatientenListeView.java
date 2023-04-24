@@ -15,12 +15,12 @@ package ch.elexis.core.ui.contacts.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -100,7 +100,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private RestrictedAction newPatAction;
 	// private IAction filterAction;
 	private IAction copySelectedPatInfosToClipboardAction, copySelectedAddressesToClipboardAction;
-	private boolean initiated = false;
 	private String[] currentUserFields;
 	// PatListFilterBox plfb;
 	PatListeContentProvider plcp;
@@ -109,11 +108,14 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private boolean created = false;
 
+	private IUser actUser;
+
 	@Inject
-	void changedMandator(@Optional @UIEventTopic(ElexisEventTopics.EVENT_USER_CHANGED) IUser user) {
-		if (created && user != null) {
+	void activeUser(@Optional IUser user) {
+		actUser = user;
+		if (created) {
 			Display.getDefault().asyncExec(() -> {
-				userChanged();
+				userChanged(user);
 			});
 		}
 	}
@@ -252,8 +254,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void collectUserFields() {
 		ArrayList<String> fields = new ArrayList<String>();
-		initiated = !(StringUtils.EMPTY
-				.equals(ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, StringUtils.EMPTY)));
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$ //$NON-NLS-1$
 		}
@@ -538,16 +538,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
 				if (element instanceof IPatient) {
-					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-							(IPatient) element);
+					ContextServiceHolder.get().getRootContext().setTyped((IPatient) element);
 				}
 			}
 		}
 	}
 
-	public void userChanged() {
-		if (!initiated)
+	public void userChanged(IUser user) {
+		if (!Objects.equals(actUser, user)) {
 			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
+		}
 		if (!cv.getViewerWidget().getControl().isDisposed()) {
 			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 			cv.notify(CommonViewer.Message.update);

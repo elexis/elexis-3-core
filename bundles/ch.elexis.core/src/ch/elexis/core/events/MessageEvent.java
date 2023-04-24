@@ -43,6 +43,10 @@ public class MessageEvent {
 		fire(LEVEL.INFO, title, message, null, true);
 	}
 
+	public static void fireWarninig(String title, String message) {
+		fire(LEVEL.WARNING, title, message, null, true);
+	}
+
 	private static void fire(LEVEL level, String title, String message, Exception ex, boolean log) {
 
 		Logger logger = null;

@@ -15,28 +15,28 @@ package ch.elexis.core.data.events;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.interfaces.events.MessageEvent;
 import ch.elexis.core.data.server.ServerEventMapper;
 import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.status.ElexisStatus;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
@@ -65,6 +65,9 @@ import ch.elexis.data.PersistentObject;
  * @since 3.4 switched listeners to {@link ListenerList}
  * @since 3.7 move from Eclipse job to ScheduledExecutorService
  * @since 3.8 must explicitly {@link #start()} queue execution
+ * @deprecated since 3.11, use {@link IContextService} to set active context or
+ *             post/send events
+ * 
  */
 public final class ElexisEventDispatcher implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
@@ -82,6 +85,20 @@ public final class ElexisEventDispatcher implements Runnable {
 	private volatile IPerformanceStatisticHandler performanceStatisticHandler;
 
 	private ScheduledExecutorService service;
+
+	private static ClassToModelInterfaceService classToModelInterfaceService;
+
+	private static ClassToModelInterfaceService getClassToModelInterfaceService() {
+		if (classToModelInterfaceService == null) {
+			classToModelInterfaceService = OsgiServiceUtil.getService(ClassToModelInterfaceService.class)
+					.orElseThrow(() -> new IllegalStateException("No ClassToModelInterfaceService"));
+		}
+		return classToModelInterfaceService;
+	}
+
+	public static Optional<Class<?>> getCoreModelInterfaceForElexisClass(Class<? extends Object> clazz) {
+		return getClassToModelInterfaceService().getCoreModelInterfaceForElexisClass(clazz);
+	}
 
 	public static synchronized ElexisEventDispatcher getInstance() {
 		if (theInstance == null) {
@@ -116,6 +133,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 *
 	 * @param el one ore more ElexisEventListeners that have to return valid values
 	 *           on el.getElexisEventFilter()
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void addListeners(final ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
@@ -128,6 +147,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * Otherwise nothing will happen
 	 *
 	 * @param el The Listener to remove
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void removeListeners(ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
@@ -136,22 +157,13 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	/**
-	 *
-	 * @param me
-	 * @since 3.0.0
-	 */
-	public void fireMessageEvent(MessageEvent me) {
-		ElexisEvent ev = new ElexisEvent(me, MessageEvent.class, ElexisEvent.EVENT_NOTIFICATION,
-				ElexisEvent.PRIORITY_SYNC);
-		fire(ev);
-	}
-
-	/**
 	 * Set a list of {@link ElexisEvent} types that will be skipped when fired. Is
 	 * used for example on import when many new objects are created, and we are not
 	 * interest in calling the event listeners. Set to null to reset.
 	 *
 	 * @param blockEventTypes
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public synchronized void setBlockEventTypes(List<Integer> blockEventTypes) {
 		this.blockEventTypes = blockEventTypes;
@@ -168,6 +180,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * pushed into the queue, only the last entered will be dispatched.
 	 *
 	 * @param ee the event to fire.
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
@@ -187,6 +201,9 @@ public final class ElexisEventDispatcher implements Runnable {
 				doDispatch(ee);
 				return;
 			}
+
+			transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject(),
+					ee.getObjectClass());
 
 			int eventType = ee.getType();
 			if (eventType == ElexisEvent.EVENT_SELECTED || eventType == ElexisEvent.EVENT_DESELECTED) {
@@ -220,6 +237,81 @@ public final class ElexisEventDispatcher implements Runnable {
 		}
 	}
 
+	private void transalteAndPostOsgiEvent(int eventType, Object object, Class<?> clazz) {
+		if (object instanceof Class && clazz == null) {
+			clazz = (Class<?>) object;
+			object = null;
+		}
+		if (object != null) {
+			Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+					.getCoreModelInterfaceForElexisClass(object.getClass());
+			if (modelInterface.isPresent() && object instanceof PersistentObject) {
+				Optional<?> identifiable = NoPoUtil.loadAsIdentifiable((PersistentObject) object, modelInterface.get());
+				if (identifiable.isPresent()) {
+					if (eventType == ElexisEvent.EVENT_CREATE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_CREATE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_UPDATE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_DELETE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_AQUIRED) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_PRERELEASE) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
+								identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_LOCK_RELEASED) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_SELECTED) {
+						ContextServiceHolder.get().setTyped(identifiable.get());
+					} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+						ContextServiceHolder.get().removeTyped(modelInterface.get());
+					} else {
+						log.warn("Event typ [" + eventType + "] not mapped for [" + object + "]", new Throwable());
+					}
+				} else {
+					log.warn("Could not load [" + object + "] as [" + modelInterface.get() + "]");
+				}
+			} else {
+				log.warn("Unknown model class for [" + object + "] using PersistentObject");
+				if (eventType == ElexisEvent.EVENT_CREATE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_CREATE, object);
+				} else if (eventType == ElexisEvent.EVENT_UPDATE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, object);
+				} else if (eventType == ElexisEvent.EVENT_DELETE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_DELETE, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_AQUIRED) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_PRERELEASE) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, object);
+				} else if (eventType == ElexisEvent.EVENT_LOCK_RELEASED) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, object);
+				} else if (eventType == ElexisEvent.EVENT_SELECTED) {
+					ContextServiceHolder.get().setTyped(object);
+				} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+					ContextServiceHolder.get().removeTyped(object.getClass());
+				}
+			}
+		} else if (clazz != null) {
+			if (eventType == ElexisEvent.EVENT_RELOAD) {
+				Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+						.getCoreModelInterfaceForElexisClass(clazz);
+				if (modelInterface.isPresent()) {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, modelInterface.get());
+				} else {
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, clazz);
+				}
+			} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
+				Optional<Class<?>> modelInterface = getClassToModelInterfaceService()
+						.getCoreModelInterfaceForElexisClass(clazz);
+				if (modelInterface.isPresent()) {
+					ContextServiceHolder.get().removeTyped(modelInterface.get());
+				}
+			} else {
+				log.warn("Event typ [" + eventType + "] not mapped for [" + clazz + "]", new Throwable());
+			}
+		}
+	}
+
 	private void removeExisting(ElexisEvent elexisEvent) {
 		Iterator<ElexisEvent> queueIter = eventQueue.iterator();
 		while (queueIter.hasNext()) {
@@ -235,49 +327,42 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	/**
-	 * Synchronously fire an {@link ElexisStatus} event.
-	 *
-	 * @param es an {@link ElexisStatus} describing the problem
-	 * @since 3.0.0
-	 */
-	public static void fireElexisStatusEvent(ElexisStatus es) {
-		ElexisEvent statusEvent = new ElexisEvent(es, ElexisStatus.class, ElexisEvent.EVENT_ELEXIS_STATUS,
-				ElexisEvent.PRIORITY_SYNC);
-		getInstance().doDispatch(statusEvent);
-	}
-
-	/**
-	 * find the last selected object of a given type
+	 * Find the last selected object of a given type, selection will be fetched from
+	 * {@link IContextService}.
 	 *
 	 * @param template tha class defining the object to find
 	 * @return the last object of the given type or null if no such object is
 	 *         selected
 	 */
 	public static IPersistentObject getSelected(final Class<?> template) {
-		return getInstance().elexisUIContext.getSelected(template);
-	}
-
-	/**
-	 * inform the system that an object has been selected, fallback to context
-	 * service if {@link Identifiable} could not be resolved to
-	 * {@link PersistentObject}.
-	 * 
-	 * @param identifiable
-	 */
-	public static void fireSelectionEvent(Identifiable identifiable) {
-		PersistentObject po = NoPoUtil.loadAsPersistentObject(identifiable, false);
-		if (po != null) {
-			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
+		Optional<Class<?>> ciOpt = getClassToModelInterfaceService().getCoreModelInterfaceForElexisClass(template);
+		if (ciOpt.isPresent()) {
+			Optional<?> selected = Optional.empty();
+			if (Anwender.class == template) {
+				selected = ContextServiceHolder.get().getActiveUserContact();
+			} else {
+				selected = ContextServiceHolder.get().getTyped(ciOpt.get());
+			}
+			if (selected.isPresent() && selected.get() instanceof Identifiable) {
+				return NoPoUtil.loadAsPersistentObject((Identifiable) selected.get(), template);
+			}
 		} else {
-			log.info("Could not get PersistentObject for [" + identifiable + "]");
-			ContextServiceHolder.get().getRootContext().setTyped(identifiable);
+			LoggerFactory.getLogger(ElexisEventDispatcher.class)
+					.warn("Unknown code model interface for [" + template + "]");
+			Optional<?> selected = ContextServiceHolder.get().getTyped(template);
+			if (selected.isPresent() && selected.get() instanceof IPersistentObject) {
+				return (IPersistentObject) selected.get();
+			}
 		}
+		return null;
 	}
 
 	/**
 	 * inform the system that an object has been selected
 	 *
 	 * @param po the object that is selected now
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void fireSelectionEvent(PersistentObject po) {
 		if (po != null) {
@@ -289,6 +374,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * inform the system, that several objects have been selected
 	 *
 	 * @param objects
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void fireSelectionEvents(PersistentObject... objects) {
 		if (objects != null) {
@@ -304,6 +391,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * inform the system, that no object of the specified type is selected anymore
 	 *
 	 * @param clazz the class of which selection was removed
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void clearSelection(Class<?> clazz) {
 		if (clazz != null) {
@@ -316,6 +405,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * from storage
 	 *
 	 * @param clazz the clazz whose objects are invalidated
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void reload(Class<?> clazz) {
 		if (clazz != null) {
@@ -328,6 +419,8 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * properties
 	 *
 	 * @param po the object that was modified
+	 * @deprecated use {@link IContextService} to set active context or post/send
+	 *             events
 	 */
 	public static void update(PersistentObject po) {
 		if (po != null) {
@@ -475,18 +568,5 @@ public final class ElexisEventDispatcher implements Runnable {
 		void startCatchEvent(ElexisEvent ee, ElexisEventListener listener);
 
 		void endCatchEvent(ElexisEvent ee, ElexisEventListener listener);
-	}
-
-	public void registerFallbackConsumer(IContextService contextService) {
-		contextService.getRootContext().setNamed(ch.elexis.core.services.holder.ContextServiceHolder.SELECTIONFALLBACK,
-				new Consumer<Identifiable>() { // $NON-NLS-1$
-
-					@Override
-					public void accept(Identifiable identifiable) {
-						if (identifiable != null) {
-							fireSelectionEvent(identifiable);
-						}
-					}
-				});
 	}
 }

@@ -5867,6 +5867,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(identifiableEClass, null, "clearRefresh", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(identifiableEClass, null, "addUpdated", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEStructuralFeature(), "feature", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(identifiableEClass, null, "getUpdated", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(ecorePackage.getEStructuralFeature());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		addEOperation(identifiableEClass, null, "clearUpdated", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(deleteableEClass, Deleteable.class, "Deleteable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDeleteable_Deleted(), ecorePackage.getEBoolean(), "deleted", null, 0, 1, Deleteable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

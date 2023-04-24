@@ -8,10 +8,21 @@
  * Contributors:
  *     G. Weirich - initial API and implementation
  ******************************************************************************/
-package ch.elexis.core.data.status;
+package ch.elexis.core.status;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * This class represents a Status of the Elexis Application. It can be logged or
@@ -72,5 +83,19 @@ public class ElexisStatus extends Status {
 	@Override
 	public void setMessage(String message) {
 		super.setMessage(message);
+	}
+
+	public static void fire(ElexisStatus status) {
+		Map<String, Object> properties = new HashMap<>();
+		properties.put(ElexisEventTopics.NOTIFICATION_PROPKEY_STATUS, status);
+
+		Event event = new Event(ElexisEventTopics.NOTIFICATION_STATUS, properties);
+		Optional<EventAdmin> eventAdmin = OsgiServiceUtil.getService(EventAdmin.class);
+		if (eventAdmin.isPresent()) {
+			eventAdmin.get().sendEvent(event);
+		} else {
+			LoggerFactory.getLogger(MessageEvent.class).error("EventAdmin not available. Status not delivered: [{}]",
+					status);
+		}
 	}
 }

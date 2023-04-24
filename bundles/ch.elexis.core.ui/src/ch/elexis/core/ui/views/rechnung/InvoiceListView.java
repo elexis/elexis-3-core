@@ -51,9 +51,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -64,35 +66,29 @@ import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider.InvoiceEntry;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListHeaderComposite;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
-import ch.elexis.data.Fall;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.Money;
 
 public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
 
-	private Settings rnStellerSettings;
 	private TableViewer tableViewerInvoiceList;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
 
-	/**
-	 * @param rnStellerSettings
-	 * @wbp.parser.constructor
-	 * @wbp.eval.method.parameter rnStellerSettings new ch.rgw.io.InMemorySettings()
-	 */
-	InvoiceListView(Settings rnStellerSettings) {
-		this.rnStellerSettings = rnStellerSettings;
+	public InvoiceListView() {
+
 	}
 
-	public InvoiceListView() {
-		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		rnStellerSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
+	@Optional
+	@Inject
+	public void activeMandator(IMandator mandator) {
+		if (invoiceListBottomComposite != null) {
+			invoiceListBottomComposite.updateMahnAutomatic();
+		}
 	}
 
 	private Action reloadViewAction = new Action(Messages.Core_Reload) {
@@ -142,12 +138,12 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
 				InvoiceEntry firstElement = (InvoiceEntry) ss.getFirstElement();
-				Rechnung load = Rechnung.load(firstElement.getInvoiceId());
-				ElexisEventDispatcher.fireSelectionEvent(load);
-				Fall f = load.getFall();
-				if (f != null) {
-					ElexisEventDispatcher.fireSelectionEvent(f.getPatient());
-					ElexisEventDispatcher.fireSelectionEvent(f);
+				IInvoice invoice = CoreModelServiceHolder.get().load(firstElement.getInvoiceId(), IInvoice.class)
+						.orElse(null);
+				ContextServiceHolder.get().setTyped(invoice);
+				if (invoice.getCoverage() != null) {
+					ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
+					ContextServiceHolder.get().setTyped(invoice.getCoverage());
 				}
 			}
 		});
@@ -337,7 +333,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		});
 		tblclmnTotalAmount.addSelectionListener(sortAdapter);
 
-		invoiceListBottomComposite = new InvoiceListBottomComposite(parent, SWT.NONE, rnStellerSettings);
+		invoiceListBottomComposite = new InvoiceListBottomComposite(parent, SWT.NONE);
 
 		invoiceListContentProvider = new InvoiceListContentProvider(tableViewerInvoiceList, invoiceListHeaderComposite,
 				invoiceListBottomComposite);

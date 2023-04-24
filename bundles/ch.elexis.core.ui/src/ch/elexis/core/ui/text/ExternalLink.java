@@ -19,7 +19,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.program.Program;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ch.elexis.core.data.status.ElexisStatus;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.IKonsExtension;

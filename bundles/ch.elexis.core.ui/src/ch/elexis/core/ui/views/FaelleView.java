@@ -41,7 +41,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
@@ -82,9 +81,9 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		Display.getDefault().asyncExec(() -> {
+		CoreUiUtil.runAsyncIfActive(() -> {
 			handleEventPatient(patient);
-		});
+		}, tv);
 	}
 
 	@Optional
@@ -100,7 +99,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 	}
 
 	private void handleEventPatient(IPatient patient) {
-		if (patient != null && CoreUiUtil.isActiveControl(tv.getControl())) {
+		if (patient != null) {
 			if (actPatient != patient) {
 				actPatient = patient;
 				tv.refresh(true);
@@ -157,19 +156,16 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 	@Inject
 	void activeCoverage(@Optional ICoverage iCoverage) {
-		Display.getDefault().syncExec(() -> {
-			if (tv != null && CoreUiUtil.isActiveControl(tv.getControl())) {
-				tv.refresh(true);
-				actCoverage = iCoverage;
-				if (actCoverage != null) {
-					tv.setSelection(new StructuredSelection(actCoverage));
-				}
-				if (konsFilterAction.isChecked()) {
-					filter.setFall(iCoverage);
-				}
+		CoreUiUtil.runAsyncIfActive(() -> {
+			tv.refresh(true);
+			actCoverage = iCoverage;
+			if (actCoverage != null) {
+				tv.setSelection(new StructuredSelection(actCoverage));
 			}
-		});
-
+			if (konsFilterAction.isChecked()) {
+				filter.setFall(iCoverage);
+			}
+		}, tv);
 	}
 
 	private void refreshTableViewer() {
@@ -199,8 +195,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 					if (!selection.isEmpty()) {
 						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
 						if (selectedCoverage != null && !selectedCoverage.equals(actCoverage)) {
-							ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
-									selectedCoverage);
+							ContextServiceHolder.get().getRootContext().setTyped(selectedCoverage);
 						}
 					}
 				}
