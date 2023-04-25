@@ -265,7 +265,7 @@ public final class ElexisEventDispatcher implements Runnable {
 						ContextServiceHolder.get().setTyped(identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_DESELECTED) {
 						ContextServiceHolder.get().removeTyped(modelInterface.get());
-					} else {
+					} else if (eventType != ElexisEvent.EVENT_MANDATOR_CHANGED) {
 						log.warn("Event typ [" + eventType + "] not mapped for [" + object + "]", new Throwable());
 					}
 				} else {
@@ -306,7 +306,7 @@ public final class ElexisEventDispatcher implements Runnable {
 				if (modelInterface.isPresent()) {
 					ContextServiceHolder.get().removeTyped(modelInterface.get());
 				}
-			} else {
+			} else if (eventType != ElexisEvent.EVENT_MANDATOR_CHANGED) {
 				log.warn("Event typ [" + eventType + "] not mapped for [" + clazz + "]", new Throwable());
 			}
 		}
