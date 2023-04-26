@@ -1826,6 +1826,7 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_ProposeForBillingIn;
 	public static String FallDetailBlatt2_ProposeForBillingNeg;
 	public static String FallDetailBlatt2_ReasonForInsurance;
+	public static String FallDetailBlatt2_GestationWeek13;
 	public static String FallDetailBlatt2_SelectCostBearerBody;
 	public static String FallDetailBlatt2_SelectCostBearerCaption;
 	public static String FallDetailBlatt2_SelectGuarantorBody;
