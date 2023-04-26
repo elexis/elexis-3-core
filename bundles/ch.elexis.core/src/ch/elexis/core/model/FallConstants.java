@@ -11,6 +11,7 @@ public class FallConstants {
 	public static final String FLD_EXT_COPY_FOR_PATIENT = "CopyForPatient"; //$NON-NLS-1$
 	public static final String FLD_EXT_KOSTENTRAEGER = "Kostenträger"; //$NON-NLS-1$
 	public static final String FLD_EXT_RECHNUNGSEMPFAENGER = "Rechnungsempfänger"; //$NON-NLS-1$
+	public static final String FLD_EXT_GESTATIONWEEK13 = "gestation_week13"; //$NON-NLS-1$
 
 	public static final String TYPE_DISEASE = Messages.Fall_Disease; // $NON-NLS-1$
 	public static final String TYPE_ACCIDENT = Messages.Fall_Accident; // $NON-NLS-1$

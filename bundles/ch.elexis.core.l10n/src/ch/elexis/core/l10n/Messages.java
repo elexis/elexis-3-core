@@ -1053,6 +1053,7 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_ChangeBillingSystemNotAllowedCaption;
 	public static String FallDetailBlatt2_ChangeBillingSystemNotAllowedBody;
 	public static String FallDetailBlatt2_EndDate;
+	public static String FallDetailBlatt2_GestationWeek13;
 	public static String FallDetailBlatt2_Guarantor;
 	public static String FallDetailBlatt2_GuarantorNoSpecialChars;
 	public static String FallDetailBlatt2_InsNumber;

@@ -124,13 +124,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	public static final String[] dgsys = null;
 	Combo cAbrechnung;
 	ComboViewer cReason;
-	CDateTime dpVon, dpBis;
+	CDateTime dpVon, dpBis, dpGestationWeek13;
 	Text tBezeichnung, tGarant, tCostBearer;
 	Hyperlink autoFill, hlGarant, hlCostBearer;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
 	Button btnNoElectronicDelivery;
+	Label dpGestationWeek13Label;
 
 	Set<String> ignoreFocusreacts = new HashSet<String>();
 	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
@@ -377,6 +378,36 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			}
 		});
 		dpBis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+		dpGestationWeek13Label = tk.createLabel(top, Messages.FallDetailBlatt2_GestationWeek13);
+		dpGestationWeek13 = new CDateTime(top, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
+		if (getSelectedFall() == null) {
+			dpGestationWeek13.setSelection(null);
+		} else {
+			String gestationWeekValue = getSelectedFall().getInfoString(FallConstants.FLD_EXT_GESTATIONWEEK13);
+			if (StringUtils.isNotBlank(gestationWeekValue)) {
+				dpGestationWeek13.setSelection(new TimeTool(gestationWeekValue).getTime());
+			} else {
+				dpGestationWeek13.setSelection(null);
+			}
+		}
+		dpGestationWeek13.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (dpGestationWeek13.getSelection() != null) {
+					TimeTool selectedDate = new TimeTool(dpGestationWeek13.getSelection());
+					getSelectedFall().setInfoString(FallConstants.FLD_EXT_GESTATIONWEEK13,
+							selectedDate.toString(TimeTool.DATE_GER));
+				} else {
+					getSelectedFall().setInfoString(FallConstants.FLD_EXT_GESTATIONWEEK13, StringUtils.EMPTY);
+				}
+				fireSelectedFallUpdateEvent();
+			}
+		});
+		dpGestationWeek13.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		ignoreFocusReact(FallConstants.FLD_EXT_GESTATIONWEEK13);
+
 		ddc = new DayDateCombo(top, Messages.FallDetailBlatt2_ProposeForBillingIn,
 				Messages.FallDetailBlatt2_DaysOrAfter, Messages.FallDetailBlatt2_ProposeForBillingNeg,
 				Messages.FallDetailBlatt2_DaysOrAfterNeg);
@@ -684,6 +715,13 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		} else {
 			dpBis.setSelection(null);
 		}
+		String gestationWeekValue = f.getInfoString(FallConstants.FLD_EXT_GESTATIONWEEK13);
+		if (StringUtils.isNotBlank(gestationWeekValue)) {
+			dpGestationWeek13.setSelection(new TimeTool(gestationWeekValue).getTime());
+		} else {
+			dpGestationWeek13.setSelection(null);
+		}
+		updateGestationWeek13();
 
 		// *** set copy for patient
 		btnCopyForPatient.setSelection(f.getCopyForPatient());
@@ -962,6 +1000,24 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		} else {
 			btnNoElectronicDelivery.setVisible(false);
 			((GridData) btnNoElectronicDelivery.getLayoutData()).exclude = true;
+		}
+		form.reflow(true);
+		form.redraw();
+	}
+
+	private void updateGestationWeek13() {
+		IFall f = getSelectedFall();
+		if (f instanceof Fall && (BillingLaw.KVG.equals(((Fall) f).getConfiguredBillingSystemLaw()))
+				&& FallConstants.TYPE_MATERNITY.equals(f.getGrund())) {
+			dpGestationWeek13Label.setVisible(true);
+			((GridData) dpGestationWeek13Label.getLayoutData()).exclude = false;
+			dpGestationWeek13.setVisible(true);
+			((GridData) dpGestationWeek13.getLayoutData()).exclude = false;
+		} else {
+			dpGestationWeek13Label.setVisible(false);
+			((GridData) dpGestationWeek13Label.getLayoutData()).exclude = true;
+			dpGestationWeek13.setVisible(false);
+			((GridData) dpGestationWeek13.getLayoutData()).exclude = true;
 		}
 		form.reflow(true);
 		form.redraw();
