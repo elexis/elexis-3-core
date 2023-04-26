@@ -102,6 +102,8 @@ public class Hub extends AbstractUIPlugin {
 	@Inject
 	private ICommandService commandService;
 
+	private Anwender lastLoggedInContact;
+
 	@Inject
 	public void activePatient(@Optional IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
@@ -152,20 +154,25 @@ public class Hub extends AbstractUIPlugin {
 		// reminder
 		if (CoreHub.getLoggedInContact() != null) {
 			Anwender loggedInContact = CoreHub.getLoggedInContact();
-			CompletableFuture.runAsync(() -> {
-				final List<Reminder> reminderList = Reminder.findToShowOnStartup(loggedInContact);
+			if (lastLoggedInContact == null || !lastLoggedInContact.equals(loggedInContact)) {
+				CompletableFuture.runAsync(() -> {
+					final List<Reminder> reminderList = Reminder.findToShowOnStartup(loggedInContact);
 
-				if (reminderList.size() > 0) {
-					// must be called inside display thread
-					Display.getDefault().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							new ReminderListSelectionDialog(reminderList,
-									Messages.ReminderView_importantRemindersOnLogin).open();
-						}
-					});
-				}
-			});
+					if (reminderList.size() > 0) {
+						// must be called inside display thread
+						UiDesk.runIfWorkbenchRunning(() -> {
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									new ReminderListSelectionDialog(reminderList,
+											Messages.ReminderView_importantRemindersOnLogin).open();
+								}
+							});
+						});
+					}
+				});
+				lastLoggedInContact = loggedInContact;
+			}
 		}
 		// favorites
 		VerrechenbarFavorites.reset();

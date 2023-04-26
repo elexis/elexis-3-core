@@ -190,7 +190,9 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
+			if (txtSearch != null && !txtSearch.isDisposed()) {
+				adaptForUser(user);
+			}
 		});
 	}
 

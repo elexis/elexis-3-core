@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
@@ -205,25 +208,24 @@ public class InvoiceActions {
 				setToolTipText(Messages.RnActions_stornoRecreateActionTooltip);
 			}
 
-			private int dialogResult = -1;
-			private boolean dialogReopen = false;
-			private List<IRnOutputter> dialogExporters;
+			private Map<Rechnung, List<Konsultation>> invoiceEncounterMap;
 
 			@Override
 			public List<? extends PersistentObject> getTargetedObjects() {
-				// reset dialog result for new selection
-				dialogResult = -1;
-				dialogReopen = false;
-				return getInvoiceSelections(viewer);
+				List<Rechnung> ret = getInvoiceSelections(viewer);
+				// collect encounters to recreate after storno
+				invoiceEncounterMap = ret.stream()
+						.collect(Collectors.toMap(Function.identity(), Rechnung::getKonsultationen));
+				// use existing storno action before sequential recreate
+				stornoAction.run();
+				return ret;
 			}
 
 			@Override
 			public void doRun(PersistentObject po) {
 				Rechnung actRn = (Rechnung) po;
-				List<Konsultation> actRnEncounters = actRn.getKonsultationen();
-				// use existing storno action
-				stornoAction.run();
-				// test if successful and encounters open for new invoice
+				List<Konsultation> actRnEncounters = invoiceEncounterMap.get(actRn);
+				// test if cancelled and encounters open for new invoice
 				if (actRn.getInvoiceState() == InvoiceState.CANCELLED) {
 					if (actRnEncounters.stream().allMatch(e -> e.getRechnung() == null)) {
 						InvoiceServiceHolder.get()
