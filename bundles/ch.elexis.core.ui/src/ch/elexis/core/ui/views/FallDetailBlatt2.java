@@ -338,6 +338,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				String selected = (String) event.getStructuredSelection().getFirstElement();
 				if (actFall != null) {
 					actFall.setGrund(selected);
+					updateGestationWeek13();
 					fireSelectedFallUpdateEvent();
 				}
 			}
