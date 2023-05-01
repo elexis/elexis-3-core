@@ -83,7 +83,7 @@ public class ISickCertificateConditionAttributeMapper
 			target.setStart(TimeUtil.toLocalDate(source.getOnsetDateTimeType().getValue()));
 		}
 		if(source.hasAbatementDateTimeType()) {
-			target.setStart(TimeUtil.toLocalDate(source.getAbatementDateTimeType().getValue()));
+			target.setEnd(TimeUtil.toLocalDate(source.getAbatementDateTimeType().getValue()));
 		}
 		
 		if(source.hasCode()) {

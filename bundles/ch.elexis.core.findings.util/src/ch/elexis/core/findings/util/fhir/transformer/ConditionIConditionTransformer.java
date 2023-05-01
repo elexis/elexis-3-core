@@ -3,6 +3,7 @@ package ch.elexis.core.findings.util.fhir.transformer;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Condition;
 import org.osgi.service.component.annotations.Component;
@@ -12,7 +13,10 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.accessor.ConditionAccessor;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
@@ -25,6 +29,8 @@ public class ConditionIConditionTransformer implements IFhirTransformer<Conditio
 
 	@Reference
 	private IFindingsService findingsService;
+
+	private ConditionAccessor accessor = new ConditionAccessor();
 
 	private FindingsContentHelper contentHelper = new FindingsContentHelper();
 
@@ -40,7 +46,8 @@ public class ConditionIConditionTransformer implements IFhirTransformer<Conditio
 	@Override
 	public Optional<ICondition> getLocalObject(Condition fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<ICondition> existing = findingsService.findById(fhirObject.getId(), ICondition.class);
+			Optional<ICondition> existing = findingsService
+					.findById(FhirUtil.getLocalId(fhirObject.getId()).orElse(StringUtils.EMPTY), ICondition.class);
 			if (existing.isPresent()) {
 				return Optional.of(existing.get());
 			}
@@ -50,7 +57,18 @@ public class ConditionIConditionTransformer implements IFhirTransformer<Conditio
 
 	@Override
 	public Optional<ICondition> updateLocalObject(Condition fhirObject, ICondition localObject) {
-		return Optional.empty();
+		Optional<String> fhirText = ModelUtil.getNarrativeAsString(fhirObject.getText());
+		if (fhirText.isPresent()) {
+			localObject.setText(fhirText.get());
+		} else {
+			localObject.setText(StringUtils.EMPTY);
+		}
+		localObject.setStatus(accessor.getStatus(fhirObject));
+		localObject.setStart(accessor.getStart(fhirObject).orElse(StringUtils.EMPTY));
+		localObject.setEnd(accessor.getEnd(fhirObject).orElse(StringUtils.EMPTY));
+
+		findingsService.saveFinding(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override
