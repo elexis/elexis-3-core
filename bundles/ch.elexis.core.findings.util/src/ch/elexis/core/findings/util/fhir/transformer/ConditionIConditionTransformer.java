@@ -38,7 +38,9 @@ public class ConditionIConditionTransformer implements IFhirTransformer<Conditio
 	public Optional<Condition> getFhirObject(ICondition localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
 		if (resource.isPresent()) {
-			return Optional.of((Condition) resource.get());
+			Condition fhirObject = (Condition) resource.get();
+			FhirUtil.setVersionedIdPartLastUpdatedMeta(Condition.class, fhirObject, localObject);
+			return Optional.of(fhirObject);
 		}
 		return Optional.empty();
 	}
