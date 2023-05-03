@@ -787,10 +787,12 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 	@Override
 	public boolean setFocus() {
-		if (medicationTableComposite != null && medicationTableComposite.isVisible()) {
+		if (medicationTableComposite != null && !medicationTableComposite.isDisposed()
+				&& medicationTableComposite.isVisible()) {
 			medicationTableComposite.setPendingInput();
 		}
-		if (medicationHistoryTableComposite != null && medicationHistoryTableComposite.isVisible()) {
+		if (medicationHistoryTableComposite != null && !medicationHistoryTableComposite.isDisposed()
+				&& medicationHistoryTableComposite.isVisible()) {
 			medicationHistoryTableComposite.setPendingInput();
 		}
 
