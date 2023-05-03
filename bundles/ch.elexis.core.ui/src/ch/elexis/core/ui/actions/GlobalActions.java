@@ -945,11 +945,14 @@ public class GlobalActions {
 	}
 
 	public static void updateModelOfParts(MPerspective activePerspective, EModelService modelService) {
-		// toolbars want to be visible
-		List<MPart> mParts = modelService.findElements(getActivePerspective(modelService), null, MPart.class);
-		for (MPart mPart : mParts) {
-			if (mPart.getToolbar() != null) {
-				mPart.getToolbar().setVisible(true);
+		// perspective with actionsets want visible part toolbars
+		if (activePerspective.getTags().stream().filter(t -> t.toLowerCase().contains("actionset"))
+				.findFirst().isPresent()) {
+			List<MPart> mParts = modelService.findElements(getActivePerspective(modelService), null, MPart.class);
+			for (MPart mPart : mParts) {
+				if (mPart.getToolbar() != null) {
+					mPart.getToolbar().setVisible(true);
+				}
 			}
 		}
 	}
