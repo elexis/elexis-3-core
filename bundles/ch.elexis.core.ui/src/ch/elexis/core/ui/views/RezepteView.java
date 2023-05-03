@@ -616,7 +616,9 @@ public class RezepteView extends ViewPart implements IRefreshable {
 
 				@Override
 				public void run() {
-					viewer.setInput(loaded);
+					if (viewer != null && !viewer.getControl().isDisposed()) {
+						viewer.setInput(loaded);
+					}
 				}
 			});
 			return Status.OK_STATUS;
