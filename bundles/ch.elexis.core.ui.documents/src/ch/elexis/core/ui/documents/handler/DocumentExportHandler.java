@@ -9,11 +9,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -37,17 +39,36 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-		StructuredSelection selection = (StructuredSelection) HandlerUtil.getCurrentStructuredSelection(event);
-		
-		if (selection instanceof StructuredSelection && !((StructuredSelection) selection).isEmpty()) {
-			Object selectionType = selection.getFirstElement();
-			if (selectionType instanceof IDocument) {
-				List<?> iDocuments = ((StructuredSelection) selection).toList();
-				for (Object documentToExport : iDocuments) {
-					openExportDialog(shell, (IDocument) documentToExport);
+
+		IStructuredSelection selection = HandlerUtil.getCurrentStructuredSelection(event);
+		List<?> selections = selection.toList();
+		Set<Object> types = new HashSet<>();
+
+		for (Object first : selections) {
+			if (!types.contains(first.getClass())) {
+				if (first instanceof IDocument) {
+					if (types.stream().noneMatch(t -> t instanceof IDocument)) {
+						types.add(first);
+					}
+				} else {
+					types.add(first.getClass());
 				}
-			} else if (selectionType instanceof FilterCategory) {
-				openExportFilterCategoryDialog(shell, (FilterCategory) selectionType, selection);
+			}
+		}
+
+		if (types.size() > 1) {
+			MessageDialog.openInformation(shell, "Export Information",
+					"Es können nicht Ordner und Dokumente gleichzeitig exportiert werden.");
+		} else {
+			Object selectionType = selection.getFirstElement();
+			if (selectionType != null) {
+				if (selectionType instanceof IDocument) {
+					for (Object documentToExport : selections) {
+						openExportDialog(shell, (IDocument) documentToExport);
+					}
+				} else if (selectionType instanceof FilterCategory) {
+					openExportFilterCategoryDialog(shell, (FilterCategory) selectionType, selection);
+				}
 			}
 		}
 		return null;
@@ -73,7 +94,7 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 	}
 
 	private void openExportFilterCategoryDialog(Shell shell, FilterCategory filterCategory,
-			StructuredSelection selection) {
+			IStructuredSelection selection) {
 		FileDialog fileDialog = new FileDialog(shell, SWT.SAVE | SWT.MULTI);
 		fileDialog.setFileName(filterCategory.getName());
 		String filterCategoryName = fileDialog.open();
@@ -106,13 +127,7 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 						try (InputStream inputStream = documentList.get(a).getContent();
 								FileOutputStream outputStream = new FileOutputStream(newFile)) {
 							if (inputStream != null) {
-								byte[] buffer = new byte[1024];
-								int bytesRead;
-								while ((bytesRead = inputStream.read(buffer)) != -1) {
-									outputStream.write(buffer, 0, bytesRead);
-								}
-								inputStream.close();
-								outputStream.close();
+								IOUtils.copy(inputStream, outputStream);
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
