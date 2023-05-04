@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.perspective.service.IPerspectiveImportService;
 import ch.elexis.core.ui.perspective.service.IStateCallback;
 import ch.elexis.core.ui.perspective.service.IStateCallback.State;
@@ -137,6 +138,10 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	@Override
 	public void openPerspective(IPerspectiveDescriptor iPerspectiveDescriptor) {
 		try {
+			EPartService partService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getService(EPartService.class);
+			GlobalActions.addModelOfParts(partService);
+
 			IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			PlatformUI.getWorkbench().showPerspective(iPerspectiveDescriptor.getId(), win);
 
@@ -388,6 +393,9 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	}
 
 	private static <T> T getService(final Class<T> clazz) {
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(clazz);
+		}
 		return PlatformUI.getWorkbench().getService(clazz);
 	}
 

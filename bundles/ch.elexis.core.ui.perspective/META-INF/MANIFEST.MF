@@ -7,6 +7,7 @@ Bundle-Version: 3.9.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: ch.elexis.core.data.activator,
  ch.elexis.core.ui,
+ ch.elexis.core.ui.actions,
  ch.elexis.core.ui.compatibility,
  org.apache.commons.io;version="2.4.0",
  org.apache.commons.io.filefilter;version="2.4.0",

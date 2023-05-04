@@ -35,6 +35,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -321,6 +323,10 @@ public class GlobalActions {
 					perspektive = UiResourceConstants.PatientPerspektive_ID;
 				}
 				try {
+					EPartService partService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(EPartService.class);
+					GlobalActions.addModelOfParts(partService);
+
 					IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					PlatformUI.getWorkbench().showPerspective(perspektive, win);
 					// Hub.heart.resume(true);
@@ -957,11 +963,21 @@ public class GlobalActions {
 		}
 	}
 
+	public static void addModelOfParts(EPartService partService) {
+		for (MPart mPart : partService.getParts()) {
+			if (!mPart.isToBeRendered() && mPart.getTags().contains("GlobalActions:deleted")) {
+				partService.showPart(mPart, PartState.CREATE);
+				mPart.getTags().remove("GlobalActions:deleted");
+			}
+		}
+	}
+
 	public static void removeModelOfParts(MPerspective mPerspective, EModelService modelService) {
 		List<MPart> mParts = modelService.findElements(mPerspective, null, MPart.class);
 		for (MPart mPart : mParts) {
 			if (mPart.getWidget() instanceof Composite) {
 				try {
+					mPart.getTags().add("GlobalActions:deleted");
 					modelService.deleteModelElement(mPart);
 				} catch (Exception e) {
 					// ignore keep on resetting
