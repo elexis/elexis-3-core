@@ -673,11 +673,11 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		 */
 		briefLadenAction.setImageDescriptor(Images.IMG_DOCUMENT_TEXT.getImageDescriptor());
 		briefLadenAction.setToolTipText(Messages.BriefAuswahlOpenLetterForEdit); // $NON-NLS-1$
-		briefNeuAction.setImageDescriptor(Images.IMG_DOCUMENT_ADD.getImageDescriptor());
+		briefNeuAction.setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 		briefNeuAction.setToolTipText(Messages.BriefAuswahlCreateNewDocument); // $NON-NLS-1$
 		editNameAction.setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
 		editNameAction.setToolTipText(Messages.BriefAuswahlRenameDocument); // $NON-NLS-1$
-		deleteAction.setImageDescriptor(Images.IMG_DOCUMENT_REMOVE.getImageDescriptor());
+		deleteAction.setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 		deleteAction.setToolTipText(Messages.Core_Delete_Document); // $NON-NLS-1$
 	}
 
