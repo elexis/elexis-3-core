@@ -255,7 +255,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
+			if (rnform != null && !rnform.isDisposed()) {
+				adaptForUser(user);
+			}
 		});
 	}
 

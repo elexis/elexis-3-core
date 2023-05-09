@@ -29,9 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -279,18 +284,12 @@ public class GlobalActions {
 			@Override
 			public void run() {
 				EModelService modelService = PlatformUI.getWorkbench().getService(EModelService.class);
-				EPartService partService = PlatformUI.getWorkbench().getService(EPartService.class);
 
-				if (partService != null) {
-					// refresh whole part model to get correct toolbar
-					for (MPart part : partService.getParts()) {
-						if (part.getWidget() instanceof Composite) {
-							modelService.deleteModelElement(part);
-						}
-					}
-				}
+				removeModelOfParts(getActivePerspective(modelService), modelService);
 
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
+
+				updateModelOfParts(getActivePerspective(modelService), modelService);
 
 				// update fixedLayout
 				boolean value = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
@@ -298,11 +297,12 @@ public class GlobalActions {
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
 			}
 
+
+
 			@Override
 			public ImageDescriptor getImageDescriptor() {
 				return Images.IMG_REFRESH.getImageDescriptor();
 			}
-
 		};
 
 		homeAction = new Action(Messages.GlobalActions_Home) {
@@ -322,6 +322,10 @@ public class GlobalActions {
 					perspektive = UiResourceConstants.PatientPerspektive_ID;
 				}
 				try {
+					EPartService partService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(EPartService.class);
+					GlobalActions.addModelOfParts(partService);
+
 					IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					PlatformUI.getWorkbench().showPerspective(perspektive, win);
 					// Hub.heart.resume(true);
@@ -939,5 +943,62 @@ public class GlobalActions {
 			IHandler handler = new ActionHandler(action);
 			handlerService.activateHandler(commandId, handler);
 		}
+	}
+
+	public static void updateModelOfParts(MPerspective activePerspective, EModelService modelService) {
+		// perspective with actionsets want visible part toolbars
+		if (activePerspective.getTags().stream().filter(t -> t.toLowerCase().contains("actionset"))
+				.findFirst().isPresent()) {
+			List<MPart> mParts = modelService.findElements(getActivePerspective(modelService), null, MPart.class);
+			for (MPart mPart : mParts) {
+				if (mPart.getToolbar() != null) {
+					mPart.getToolbar().setVisible(true);
+				}
+			}
+		}
+	}
+
+	public static void addModelOfParts(EPartService partService) {
+		for (MPart mPart : partService.getParts()) {
+			if (!mPart.isToBeRendered() && mPart.getTags().contains("GlobalActions:deleted")) {
+				partService.showPart(mPart, PartState.CREATE);
+				mPart.getTags().remove("GlobalActions:deleted");
+			}
+		}
+	}
+
+	public static void removeModelOfParts(MPerspective mPerspective, EModelService modelService) {
+		List<MPart> mParts = modelService.findElements(mPerspective, null, MPart.class);
+		for (MPart mPart : mParts) {
+			if (mPart.getWidget() instanceof Composite) {
+				try {
+					mPart.getTags().add("GlobalActions:deleted");
+					modelService.deleteModelElement(mPart);
+				} catch (Exception e) {
+					// ignore keep on resetting
+				}
+			}
+		}
+	}
+
+	public static MPerspective getActivePerspective(EModelService modelService) {
+		MTrimmedWindow mWindow = getActiveWindow(modelService);
+		if (mWindow != null) {
+			return modelService.getActivePerspective(mWindow);
+		}
+		return null;
+	}
+
+	private static MTrimmedWindow getActiveWindow(EModelService modelService) {
+		MApplication mApplication = PlatformUI.getWorkbench().getService(MApplication.class);
+
+		MTrimmedWindow mWindow = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
+		if (mWindow == null) {
+			List<MWindow> windows = mApplication.getChildren();
+			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
+				mWindow = (MTrimmedWindow) windows.get(0);
+			}
+		}
+		return mWindow;
 	}
 }

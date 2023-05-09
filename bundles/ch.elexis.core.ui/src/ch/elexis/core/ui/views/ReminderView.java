@@ -373,7 +373,9 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	@Override
 	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyOwnDueReminderToggleAction.isChecked());
+		if (showOnlyOwnDueReminderToggleAction != null) {
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyOwnDueReminderToggleAction.isChecked());
+		}
 	}
 
 	private Images determineActionTypeImage(Type actionType) {

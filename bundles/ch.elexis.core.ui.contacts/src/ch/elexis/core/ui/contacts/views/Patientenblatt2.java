@@ -201,7 +201,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
+			if (cUserfields != null && !cUserfields.isDisposed()) {
+				adaptForUser(user);
+			}
 		});
 	}
 

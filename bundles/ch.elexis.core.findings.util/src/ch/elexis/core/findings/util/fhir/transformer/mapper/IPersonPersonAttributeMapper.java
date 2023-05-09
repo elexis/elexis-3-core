@@ -2,7 +2,10 @@ package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
 import java.util.Set;
 
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Person;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -26,7 +29,7 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 
 	@Override
 	public void elexisToFhir(IPerson source, Person target, SummaryEnum summaryEnum, Set<Include> includes) {
-		target.setId(new IdDt("Person", source.getId()));
+		target.setId(new IdDt(Person.class.getSimpleName(), source.getId()));
 
 		mapMetaData(source, target);
 		if (SummaryEnum.DATA != summaryEnum) {
@@ -43,6 +46,14 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 		target.setTelecom(personHelper.getContactPoints(source));
 
 		target.setPhoto(personHelper.mapContactImage(source));
+
+		if (source.isPatient()) {
+			target.addLink().setTarget(new Reference(new IdDt(Patient.class.getSimpleName(), source.getId())));
+		}
+
+		if (source.isMandator()) {
+			target.addLink().setTarget(new Reference(new IdDt(Practitioner.class.getSimpleName(), source.getId())));
+		}
 	}
 
 	@Override
@@ -52,6 +63,7 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
+
 	}
 
 }

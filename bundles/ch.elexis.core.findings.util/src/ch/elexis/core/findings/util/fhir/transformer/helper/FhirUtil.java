@@ -95,6 +95,9 @@ public class FhirUtil {
 				id = id.substring(0, id.length() - 1);
 			}
 			if (id.contains("/")) {
+				if (id.contains("/_history")) {
+					id = id.substring(0, id.indexOf("/_history"));
+				}
 				return Optional.of(id.substring(id.lastIndexOf('/') + 1));
 			}
 			return Optional.of(id);

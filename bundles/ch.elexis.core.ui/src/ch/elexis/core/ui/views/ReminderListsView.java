@@ -348,7 +348,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
+			if (viewersScrolledComposite != null && !viewersScrolledComposite.isDisposed()) {
+				adaptForUser(user);
+			}
 		});
 	}
 

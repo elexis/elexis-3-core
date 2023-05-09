@@ -360,7 +360,7 @@ public class CoreUiUtil implements EventHandler {
 			} catch (Exception e) {
 				LoggerFactory.getLogger(CoreUiUtil.class).warn("Error getting viewer widget of [" + object + "]", e);
 			}
-			throw new IllegalArgumentException("Can not get Control from [" + object + "]");
+			LoggerFactory.getLogger(CoreUiUtil.class).warn("Can not get Control from [" + object + "]");
 		}
 		return null;
 	}

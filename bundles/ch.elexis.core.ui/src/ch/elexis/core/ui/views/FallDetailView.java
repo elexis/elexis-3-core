@@ -50,7 +50,9 @@ public class FallDetailView extends ViewPart implements IRefreshable {
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
-			adaptForUser(user);
+			if (fdb != null && !fdb.isDisposed()) {
+				adaptForUser(user);
+			}
 		});
 	}
 
@@ -77,16 +79,18 @@ public class FallDetailView extends ViewPart implements IRefreshable {
 		}, fdb);
 	}
 
+	@Optional
 	@Inject
-	void lockedCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) ICoverage coverage) {
+	void lockedCoverage(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) ICoverage coverage) {
 		Fall fall = (Fall) NoPoUtil.loadAsPersistentObject(coverage, Fall.class);
 		if (fdb != null && fall.equals(fdb.getFall())) {
 			fdb.setUnlocked(true);
 		}
 	}
 
+	@Optional
 	@Inject
-	void unlockedCoverage(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) ICoverage coverage) {
+	void unlockedCoverage(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) ICoverage coverage) {
 		Fall fall = (Fall) NoPoUtil.loadAsPersistentObject(coverage, Fall.class);
 		if (fdb != null && fall.equals(fdb.getFall())) {
 			fdb.setUnlocked(false);
