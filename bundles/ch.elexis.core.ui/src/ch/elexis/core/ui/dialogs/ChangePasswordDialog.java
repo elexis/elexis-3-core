@@ -20,13 +20,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.data.User;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.rgw.tools.PasswordValidator;
 import ch.rgw.tools.PasswordValidator.PasswordValidationResult;
 
 public class ChangePasswordDialog extends TitleAreaDialog {
 
-	private User user;
+	private IUser user;
 	private Text txtPassword1;
 	private Text txtPassword2;
 
@@ -42,7 +43,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 	 *
 	 * @param parentShell
 	 */
-	public ChangePasswordDialog(Shell parentShell, User user) {
+	public ChangePasswordDialog(Shell parentShell, IUser user) {
 		super(parentShell);
 		this.user = user;
 		disallowedPasswords.add("Vkwi42Ja");
@@ -166,7 +167,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		user.setPassword(txtPassword1.getText());
+		UserServiceHolder.get().setPasswordForUser(user, txtPassword1.getText());
 		super.okPressed();
 	}
 

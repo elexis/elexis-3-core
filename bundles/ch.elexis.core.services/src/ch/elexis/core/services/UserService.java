@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,11 +16,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.PasswordEncryptionService;
 
 @Component
@@ -83,6 +86,28 @@ public class UserService implements IUserService {
 			return modelService.load(defaultMandatorId, IMandator.class);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public void setDefaultExecutiveDoctorWorkingFor(IContact userContact, IMandator mandator) {
+		userContact.setExtInfo("StdMandant", mandator.getId());
+		CoreModelServiceHolder.get().save(userContact);
+	}
+
+	@Override
+	public void addOrRemoveExecutiveDoctorWorkingFor(IContact user, IMandator mandator, boolean add) {
+		HashSet<IMandator> mandators = new HashSet<>(getExecutiveDoctorsWorkingFor(user));
+		if (add) {
+			mandators.add(mandator);
+		} else {
+			mandators.remove(mandator);
+		}
+		List<String> edList = mandators.stream().map(p -> p.getLabel()).collect(Collectors.toList());
+		user.setExtInfo("Mandant",
+				edList.isEmpty() ? StringUtils.EMPTY
+						: (String) edList.stream().map(o -> o.toString())
+								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
+		CoreModelServiceHolder.get().save(user);
 	}
 
 	@Override
