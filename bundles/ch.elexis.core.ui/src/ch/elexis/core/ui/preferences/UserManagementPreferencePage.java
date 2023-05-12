@@ -2,6 +2,7 @@ package ch.elexis.core.ui.preferences;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -682,7 +683,16 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				}
 
 				Mandant m = (Mandant) element;
-				return (m.equals(stdWorkingFor) ? "* " : "") + m.getName() + " " + m.getVorname();
+				StringBuilder sb = new StringBuilder();
+				if (m.equals(stdWorkingFor)) {
+					sb.append("* "); //$NON-NLS-1$
+				}
+				sb.append(m.getName() + StringUtils.SPACE + m.getVorname());
+				String name3 = m.get(Mandant.FLD_NAME3);
+				if (StringUtils.isNoneBlank(name3)) {
+					sb.append(" (").append(name3).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				return sb.toString();
 			}
 		});
 		updateRoles();
