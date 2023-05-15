@@ -25,6 +25,7 @@ public class FhirUtil {
 		domainResource.setId(new IdDt(resourceClass.getSimpleName(), localObject.getId(),
 				Long.toString(localObject.getLastupdate())));
 		domainResource.getMeta().setLastUpdated(getLastUpdateAsDate(localObject.getLastupdate()).orElse(null));
+		domainResource.getMeta().setVersionId(Long.toString(localObject.getLastupdate()));
 	}
 
 	public static Optional<Date> getLastUpdateAsDate(Long lastUpdate) {
