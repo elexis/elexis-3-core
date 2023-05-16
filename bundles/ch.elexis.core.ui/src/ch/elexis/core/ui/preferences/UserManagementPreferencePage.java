@@ -781,12 +781,14 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			IUser user = (IUser) cell.getElement();
 			cell.setText(user.getLabel());
 			IContact ac = user.getAssignedContact();
-			Optional<IMandator> mandator = CoreModelServiceHolder.get().load(ac.getId(), IMandator.class);
-			if (ac != null && mandator.isPresent()) {
-				Color mc = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));
-				cell.setImage(MandantSelectionContributionItem.getBoxSWTColorImage(mc));
-			} else {
-				cell.setImage(Images.IMG_EMPTY_TRANSPARENT.getImage());
+			if (ac != null) {
+				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(ac.getId(), IMandator.class);
+				if (mandator.isPresent()) {
+					Color mc = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));
+					cell.setImage(MandantSelectionContributionItem.getBoxSWTColorImage(mc));
+				} else {
+					cell.setImage(Images.IMG_EMPTY_TRANSPARENT.getImage());
+				}
 			}
 			if (user.isAdministrator()) {
 				cell.setForeground(UiDesk.getColor(UiDesk.COL_RED));
