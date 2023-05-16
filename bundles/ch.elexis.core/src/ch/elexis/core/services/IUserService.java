@@ -34,7 +34,18 @@ public interface IUserService {
 	 * @param user contact as retrieved by {@link IUser#getAssignedContact()}
 	 * @return
 	 */
-	Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user);
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user);
+
+	/**
+	 * Add or remove the {@link IMandator} to the list of mandators the user
+	 * {@link IContact} is working for. Depending on the add parameter add or remove
+	 * is performed.
+	 * 
+	 * @param user
+	 * @param mandator
+	 * @param add
+	 */
+	public void addOrRemoveExecutiveDoctorWorkingFor(IContact user, IMandator mandator, boolean add);
 
 	/**
 	 * Retrieve the default executive doctor this user is working for.
@@ -42,7 +53,15 @@ public interface IUserService {
 	 * @param user contact as retrieved by {@link IUser#getAssignedContact()}
 	 * @return
 	 */
-	Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
+
+	/**
+	 * Set the default executive doctor this user is working for.
+	 * 
+	 * @param userContact
+	 * @param mandator
+	 */
+	public void setDefaultExecutiveDoctorWorkingFor(IContact userContact, IMandator mandator);
 
 	/**
 	 * Retrieve the active users associated with a given contact.
@@ -51,6 +70,6 @@ public interface IUserService {
 	 * @return active users associated with the contact (excludes users marked as
 	 *         deleted and not active)
 	 */
-	List<IUser> getUsersByAssociatedContact(IContact contact);
+	public List<IUser> getUsersByAssociatedContact(IContact contact);
 
 }
