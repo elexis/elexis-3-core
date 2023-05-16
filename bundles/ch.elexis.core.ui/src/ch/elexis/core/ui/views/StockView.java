@@ -90,6 +90,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
@@ -174,6 +175,23 @@ public class StockView extends ViewPart implements IRefreshable {
 			@Override
 			public void run() {
 				StockEntryLoader.setFilterOrderOnly(isChecked());
+				refresh();
+			}
+		});
+		tbm.add(new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_CART.getImageDescriptor();
+			}
+
+			@Override
+			public String getToolTipText() {
+				return "Nur zu einbuchen anzeigen";
+			}
+
+			@Override
+			public void run() {
+				StockEntryLoader.setFilterBookInOnly(isChecked());
 				refresh();
 			}
 		});
@@ -665,6 +683,7 @@ public class StockView extends ViewPart implements IRefreshable {
 		private Viewer viewer;
 
 		private static boolean filterOrderOnly = false;
+		private static boolean filterBookInOnly = false;
 		private String filter;
 
 		private List<ch.elexis.core.model.IStockEntry> loaded;
@@ -679,6 +698,10 @@ public class StockView extends ViewPart implements IRefreshable {
 			filterOrderOnly = checked;
 		}
 
+		public static void setFilterBookInOnly(boolean checked) {
+			filterBookInOnly = checked;
+		}
+
 		public StockEntryLoader(Viewer viewer) {
 			super("Stock loading ...");
 			this.viewer = viewer;
@@ -690,6 +713,9 @@ public class StockView extends ViewPart implements IRefreshable {
 			loaded = StockServiceHolder.get().getAllStockEntries();
 			if (filterOrderOnly) {
 				loaded = loaded.parallelStream().filter(se -> selectOrderOnly(se)).collect(Collectors.toList());
+			}
+			if (filterBookInOnly) {
+				loaded = loaded.parallelStream().filter(se -> selectToOrderOnly(se)).collect(Collectors.toList());
 			}
 			if (filter != null) {
 				loaded = loaded.parallelStream().filter(se -> selectFilter(se, filter)).collect(Collectors.toList());
@@ -726,6 +752,14 @@ public class StockView extends ViewPart implements IRefreshable {
 				default:
 					return false;
 				}
+			}
+			return false;
+		}
+
+		private boolean selectToOrderOnly(IStockEntry se) {
+			IOrderEntry availability = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(se);
+			if (availability != null) {
+				return true;
 			}
 			return false;
 		}
