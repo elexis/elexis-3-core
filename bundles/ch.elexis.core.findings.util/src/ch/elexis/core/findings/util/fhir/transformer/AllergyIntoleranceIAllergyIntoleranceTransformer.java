@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
+import org.hl7.fhir.r4.model.Condition;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -14,6 +15,7 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
@@ -40,7 +42,9 @@ public class AllergyIntoleranceIAllergyIntoleranceTransformer
 			Set<Include> includes) {
 		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
 		if (resource.isPresent()) {
-			return Optional.of((AllergyIntolerance) resource.get());
+			AllergyIntolerance fhirObject = (AllergyIntolerance) resource.get();
+			FhirUtil.setVersionedIdPartLastUpdatedMeta(Condition.class, fhirObject, localObject);
+			return Optional.of(fhirObject);
 		}
 		return Optional.empty();
 	}

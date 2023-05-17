@@ -32,6 +32,7 @@ public class ConditionISickCertificateTransformer implements IFhirTransformer<Co
 			Set<Include> includes) {
 		Condition condition = new Condition();
 		attributeMapper.elexisToFhir(localObject, condition, summaryEnum, includes);
+		FhirUtil.setVersionedIdPartLastUpdatedMeta(Condition.class, condition, localObject);
 		return Optional.of(condition);
 	}
 
