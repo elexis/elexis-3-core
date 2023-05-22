@@ -185,7 +185,7 @@ public class StockView extends ViewPart implements IRefreshable {
 
 			@Override
 			public String getToolTipText() {
-				return "Nur zu einbuchen anzeigen";
+				return "Nur einzubuchende anzeigen";
 			}
 
 			@Override
