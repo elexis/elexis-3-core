@@ -6,7 +6,7 @@
       <view
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.documents.views.DocumentsView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/dokument.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16//document_new.png"
             id="ch.elexis.core.ui.documents.views.DocumentsView"
             inject="true"
             name="%view.name">

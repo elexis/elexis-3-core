@@ -13,7 +13,7 @@
       <view
             category="ch.elexis.konsultationKategorie"
             class="ch.elexis.core.ui.views.FallListeView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_stack.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/document_new.png"
             id="ch.elexis.FallListeView"
             inject="true"
             name="%elexis.caseKonsView">
@@ -108,7 +108,7 @@
             allowMultiple="true"
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.TextView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/dokument.gif"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/document_new.png"
             id="ch.elexis.TextView"
             inject="true"
             name="%elexis.textView">
@@ -470,7 +470,7 @@
       </perspective>
       <perspective
             class="ch.elexis.core.application.perspectives.BriefePerspektive"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/documents_text.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/document_new.png"
             id="ch.elexis.BriefePerspektive"
             name="%elexis.letterPerspective">
       </perspective>
