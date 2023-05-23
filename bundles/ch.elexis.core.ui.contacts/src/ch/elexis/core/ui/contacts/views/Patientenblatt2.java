@@ -211,9 +211,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		recreateUserpanel();
 	}
 
-	private ArrayList<String> lbExpandable = new ArrayList<>(
-			Arrays.asList(Messages.Core_Diagnosis, Messages.Patientenblatt2_persAnamnesisLbl, Messages.Allergies,
-					Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
+	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
+			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList("Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
 			"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
@@ -249,7 +249,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		ArrayList<InputData> fields = new ArrayList<InputData>(20);
 		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
+		fields.add(
+				new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
 		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
 			@Override
@@ -324,19 +325,20 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}));
 		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE,
+				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
-			public void displayContent(Object po, InputData ltf) {
-				ltf.setText(actPatient.getKontostand().getAmountAsString());
-			}
+					public void displayContent(Object po, InputData ltf) {
+						ltf.setText(actPatient.getKontostand().getAmountAsString());
+					}
 
-			public void reloadContent(Object po, InputData ltf) {
-				if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
-					ltf.setText(actPatient.getKontostand().getAmountAsString());
-				}
-			}
+					public void reloadContent(Object po, InputData ltf) {
+						if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
+							ltf.setText(actPatient.getKontostand().getAmountAsString());
+						}
+					}
 
-		}));
+				}));
 		fields.add(new InputData(Messages.Core_RegularPhysiscion, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
@@ -371,7 +373,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 								Messages.Patientenblatt2_selectRegularPhysicianTitle,
 								Messages.Patientenblatt2_selectRegularPhysicianMessage, false, true);
-
 						ks.enableEmptyFieldButton();
 						if (ks.open() == Dialog.OK) {
 							Object contactSel = ks.getSelection();
@@ -738,7 +739,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			text.setData("index", Integer.valueOf(i));
 			text.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					saveExpandable((Integer) text.getData("index"));
+					saveExpandable((Integer)text.getData("index"));
 				}
 			});
 			txExpandable.add(text);
@@ -821,7 +822,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	protected void saveExpandable(Integer i) {
-		if (i != null) {
+		if(i != null) {
 			String field = dfExpandable.get(i);
 			String oldvalue = StringTool.unNull(actPatient.get(field));
 			String newvalue = txExpandable.get(i).getText();
@@ -829,10 +830,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				txExpandable.get(i).setText(oldvalue);
 			} else {
 				actPatient.set(field, newvalue);
-			}
+			}			
 		}
 	}
 
+	
 	/*
 	 * private Menu createZusatzAdressMenu() { Menu ret = new
 	 * Menu(inpZusatzAdresse); delZA = new MenuItem(ret, SWT.NONE);
