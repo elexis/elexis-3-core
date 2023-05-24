@@ -1,0 +1,10 @@
+{
+  "roles-represented" : [ "medical-assistant" ], // bound to extend assistant
+  "object" : {
+    "ch.elexis.core.model.IEncounter" : "crv:aobo",
+    "ch.elexis.core.model.IBillable" : "cruvd",
+    "ch.elexis.core.model.IBilled" : "cruvd:aobo",
+    "ch.elexis.core.model.IPrescription": "rv:aobo",
+    "ch.elexis.core.model.IInvoice": "rv:aobo"
+  }
+}

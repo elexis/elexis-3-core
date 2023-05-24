@@ -1,2 +1,1 @@
 INSERT INTO USER_ROLE_JOINT (ID, USER_ID) VALUES ( 'user', 'user');
-INSERT INTO USER_ROLE_JOINT (ID, USER_ID) VALUES ( 'doctor', 'user');

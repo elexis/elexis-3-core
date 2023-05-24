@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
+import ch.elexis.core.ui.exchange.elements.ServiceBlockElement;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
@@ -61,6 +62,11 @@ public class BlockImporter extends ImporterPage {
 	@Override
 	public String getTitle() {
 		return Messages.BlockImporter_Blocks; // $NON-NLS-1$
+	}
+	
+	@Override
+	public String getObjectClass() {
+		return ServiceBlockElement.class.getName();
 	}
 
 }

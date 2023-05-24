@@ -592,7 +592,7 @@
        </property>
        <property
              name="aboutText"
-             value="Elexis 3.9 - www.elexis.info&#x0A;         Copyright 2005-2021 G. Weirich und Elexis-Team">
+             value="Elexis 3.11 - www.elexis.info&#x0A;         Copyright 2005-2023 G. Weirich und Elexis-Team">
        </property>
        <property
              name="aboutImage"
@@ -605,10 +605,6 @@
        <property
         name="rendererFactoryUri"
         value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
-      </property>
-      <property
-               name="applicationCSS"
-               value="platform:/plugin/ch.elexis.core.product/rsc/elexis.css">
       </property>
     </product>
  </extension>

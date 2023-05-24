@@ -99,7 +99,6 @@ public class PersistentObjectDataSourceActivator {
 			try {
 				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
 				Mandant.initializeAdministratorUser();
-				CoreHub.pin.initializeGrants();
 				CoreHub.pin.initializeGlobalPreferences(configService);
 				Mandant bypassMandator = PersistentObjectUtil
 						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch() || CoreUtil.isTestMode());

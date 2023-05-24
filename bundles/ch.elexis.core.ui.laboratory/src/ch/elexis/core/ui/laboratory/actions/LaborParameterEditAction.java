@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.admin.Messages;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
 import ch.elexis.data.LabItem;
@@ -17,7 +19,7 @@ public class LaborParameterEditAction extends RestrictedAction {
 	private StructuredViewer viewer;
 
 	public LaborParameterEditAction(List<LabResult> currentSelection, StructuredViewer viewer) {
-		super(AccessControlDefaults.LABPARAM_EDIT, Messages.AccessControlDefaults_EditLaboratoryParameter);
+		super(EvACE.of(ILabItem.class, Right.UPDATE), Messages.AccessControlDefaults_EditLaboratoryParameter);
 		this.currentSelection = currentSelection;
 		this.viewer = viewer;
 	}

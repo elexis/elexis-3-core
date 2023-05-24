@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -53,6 +52,8 @@ import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.model.ac.EvACEs;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -129,7 +130,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 					LabResult lr = (LabResult) event.getElement();
 					boolean state = event.getChecked();
 					if (state) {
-						if (CoreHub.acl.request(AccessControlDefaults.LAB_SEEN)) {
+						if (AccessControlServiceHolder.get().evaluate(EvACEs.LAB_SEEN)) {
 							lr.removeFromUnseen();
 						} else {
 							tv.setChecked(lr, false);
@@ -280,7 +281,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	}
 
 	private void makeActions() {
-		markAllAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN, Messages.LabNotSeenView_markAll) { // $NON-NLS-1$
+		markAllAction = new RestrictedAction(EvACEs.LAB_SEEN, Messages.LabNotSeenView_markAll) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.LabNotSeenView_markAllToolTip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_TICK.getImageDescriptor());
@@ -301,8 +302,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			}
 
 		};
-		markPersonAction = new RestrictedAction(AccessControlDefaults.LAB_SEEN,
-				Messages.LabNotSeenView_markAllofPatient) { // $NON-NLS-1$
+		markPersonAction = new RestrictedAction(EvACEs.LAB_SEEN, Messages.LabNotSeenView_markAllofPatient) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.LabNotSeenView_markAllOfPatientToolTip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_PERSON_OK.getImageDescriptor());

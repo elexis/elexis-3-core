@@ -10,10 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.proposalProvider;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;

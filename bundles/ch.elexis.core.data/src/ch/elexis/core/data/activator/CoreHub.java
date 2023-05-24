@@ -31,8 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
-import ch.elexis.admin.AbstractAccessControl;
-import ch.elexis.admin.RoleBasedAccessControl;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
@@ -50,7 +48,6 @@ import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
-import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.data.Anwender;
@@ -127,14 +124,6 @@ public class CoreHub implements BundleActivator {
 
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
-
-	/**
-	 * Die zentrale Zugriffskontrolle
-	 *
-	 * @deprecated use {@link IAccessControlService}
-	 */
-	@Deprecated(forRemoval = true)
-	public static final AbstractAccessControl acl = new RoleBasedAccessControl();
 
 	/**
 	 * Returns the actual contact of the logged in User. Use it only for PO

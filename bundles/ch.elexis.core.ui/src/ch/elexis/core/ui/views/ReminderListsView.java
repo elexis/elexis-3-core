@@ -68,7 +68,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -90,6 +91,7 @@ import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.ISubQuery;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -118,7 +120,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			false);
 	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
+			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
@@ -228,7 +230,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	};
 
-	private Action showOthersRemindersAction = new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
+	private Action showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW, "*"),
 			Messages.Core_All, Action.AS_CHECK_BOX) {
 		{
 			setToolTipText(Messages.ReminderView_foreignTooltip);
@@ -271,7 +273,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	};
 
-	private RestrictedAction selectPatientAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+	private RestrictedAction selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW, "*"),
 			Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
 		{
 			setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
@@ -606,7 +608,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 					.supplyAsync(new CurrentPatientSupplier(actPatient)
 							.showAll(showAllReminders
-									&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
+									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
 							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 							.showSelfCreated(showSelfCreatedReminders));
 			currentLoader.thenRunAsync(() -> {
@@ -643,7 +645,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 				.supplyAsync(new GeneralPatientSupplier(actPatient)
 						.showAll(
-								showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
+								showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
 						.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 						.showSelfCreated(showSelfCreatedReminders));
 		currentLoader.thenRunAsync(() -> {
@@ -677,7 +679,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private void refreshGeneralInput() {
 		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralSupplier()
-				.showAll(showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
+				.showAll(showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
 				.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 				.showSelfCreated(showSelfCreatedReminders));
 		currentLoader.thenRunAsync(() -> {

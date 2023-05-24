@@ -71,7 +71,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
@@ -79,8 +78,10 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.MultiplikatorList;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -1026,7 +1027,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			fdOpt.setToolTipText(Messages.Leistungscodes_fields_tooltip);
 
 			// *** label/editor field for unused fields
-			if (CoreHub.acl.request(AccessControlDefaults.CASE_DEFINE_SPECIALS) == true) {
+			if (AccessControlServiceHolder.get().evaluate(EvACEs.CASE_DEFINE_SPECIALS)) {
 				data = null;
 				if ((result != null) && (result.length > 5) && (result[5] != null))
 					data = result[5].split(DEFINITIONSDELIMITER);

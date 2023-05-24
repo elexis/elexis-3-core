@@ -74,10 +74,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IRnOutputter;
@@ -97,6 +97,7 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
@@ -180,7 +181,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				if (openAmount.isZero()) {
 					return;
 				}
-				if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_BILLMODIFY)) {
+				if (!AccessControlServiceHolder.get().evaluate(EvACE.of(IInvoice.class, Right.UPDATE))) {
 					MessageDialog.openError(Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Insufficient rights", "You are not authorized to perform this action");
 					return;
@@ -201,27 +202,26 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 	private static final InputData[] rndata = {
 			new InputData(Messages.RechnungsBlatt_billNumber, Rechnung.BILL_NUMBER, Typ.STRING, null),
-			new InputData(Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null), new InputData(
-					Messages.Core_Invoicestate, Rechnung.BILL_STATE, new LabeledInputField.IContentProvider() {
+			new InputData(Messages.RechnungsBlatt_billDate, Rechnung.BILL_DATE, Typ.STRING, null),
+			new InputData(Messages.Core_Invoicestate, Rechnung.BILL_STATE, new LabeledInputField.IContentProvider() {
 
-						@Override
-						public void displayContent(Object po, InputData ltf) {
-							Rechnung r = (Rechnung) po;
-							ltf.setText(RnStatus.getStatusText(r.getStatus()));
+				@Override
+				public void displayContent(Object po, InputData ltf) {
+					Rechnung r = (Rechnung) po;
+					ltf.setText(RnStatus.getStatusText(r.getStatus()));
 
-						}
+				}
 
-						@Override
-						public void reloadContent(Object po, InputData ltf) {
-							if (new RnDialogs.StatusAendernDialog(
-									Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), (Rechnung) po)
-											.open() == Dialog.OK) {
-								ElexisEventDispatcher.update((PersistentObject) po);
-							}
-						}
+				@Override
+				public void reloadContent(Object po, InputData ltf) {
+					if (new RnDialogs.StatusAendernDialog(
+							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), (Rechnung) po)
+							.open() == Dialog.OK) {
+						ElexisEventDispatcher.update((PersistentObject) po);
+					}
+				}
 
-					}),
-			new InputData(Messages.RechnungsBlatt_treatmentsFrom, Rechnung.BILL_DATE_FROM, Typ.STRING, null),
+			}), new InputData(Messages.RechnungsBlatt_treatmentsFrom, Rechnung.BILL_DATE_FROM, Typ.STRING, null),
 			new InputData(Messages.RechnungsBlatt_treatmentsUntil, Rechnung.BILL_DATE_UNTIL, Typ.STRING, null),
 			new InputData(Messages.RechnungsBlatt_amountTotal, Rechnung.BILL_AMOUNT_CENTS, Typ.CURRENCY, null),
 			new InputData(Messages.Invoice_Amount_Unpaid, Rechnung.BILL_AMOUNT_CENTS, openAmountContentProvider) };

@@ -29,10 +29,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
@@ -115,8 +116,10 @@ public class StickerComposite extends Composite {
 
 						@Override
 						public void menuShown(MenuEvent e) {
-							miRemove.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
-							miAdd.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+							miRemove.setEnabled(
+									AccessControlServiceHolder.get().evaluate(EvACE.of(ISticker.class, Right.DELETE)));
+							miAdd.setEnabled(
+									AccessControlServiceHolder.get().evaluate(EvACE.of(ISticker.class, Right.CREATE)));
 						}
 					});
 
@@ -148,7 +151,7 @@ public class StickerComposite extends Composite {
 			}
 
 		});
-		miAdd.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_ETIKETTE));
+		miAdd.setEnabled(AccessControlServiceHolder.get().evaluate(EvACE.of(ISticker.class, Right.CREATE)));
 		return miAdd;
 	}
 }

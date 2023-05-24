@@ -12,12 +12,12 @@
 
 package ch.elexis.core.ui.contacts.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
@@ -48,8 +48,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IRelatedContact;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
@@ -59,7 +62,6 @@ import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.BezugsKontaktRelation;
 
 public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchPreferencePage {
@@ -69,13 +71,13 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 
 	private Set<String> updateExistingEntriesIds = new HashSet<>();
 	private List<BezugsKontaktRelation> initalValues = new ArrayList<>();
-
 	private final boolean allowEditing;
 
 	public BezugsKontaktSettings() {
 		noDefaultAndApplyButton();
 		setTitle(Messages.Core_Reference_Definition);
-		this.allowEditing = CoreHub.acl.request(AccessControlDefaults.ADMIN);
+		allowEditing = AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IRelatedContact.class, Right.UPDATE).and(Right.EXECUTE));
 	}
 
 	@Override

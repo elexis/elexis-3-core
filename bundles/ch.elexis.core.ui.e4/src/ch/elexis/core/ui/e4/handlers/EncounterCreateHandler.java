@@ -6,7 +6,8 @@ import java.util.List;
 
 import org.eclipse.e4.core.di.annotations.Execute;
 
-import ch.elexis.core.ac.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -29,7 +30,7 @@ import ch.elexis.core.ui.e4.dialog.UserDialog;
 public class EncounterCreateHandler extends RestrictedHandler {
 
 	public EncounterCreateHandler() {
-		super(AccessControlDefaults.KONS_CREATE);
+		super(EvACE.of(IEncounter.class, Right.CREATE));
 	}
 
 	@Execute

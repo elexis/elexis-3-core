@@ -13,10 +13,10 @@
 
 package ch.elexis.core.ui.laboratory.preferences;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
@@ -55,9 +55,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
@@ -304,7 +306,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			}
 		});
 
-		if (CoreHub.acl.request(AccessControlDefaults.LABITEM_MERGE) == true) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(ILabItem.class, Right.UPDATE))) {
 			((GridLayout) parent.getLayout()).numColumns++;
 			Button bImportMapping = new Button(parent, SWT.PUSH);
 			bImportMapping.setText(Messages.LaborPrefs_mergeLabItems);
@@ -410,7 +412,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 			}
 		});
-		if (CoreHub.acl.request(AccessControlDefaults.DELETE_LABITEMS) == false) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(ILabItem.class, Right.DELETE)) == false) {
 			bDelAllItems.setEnabled(false);
 		}
 	}

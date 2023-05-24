@@ -1,0 +1,24 @@
+{
+  "roles-represented" : [ "user" ],
+  "system-configuration" : {
+    "global" : "r",
+    "user" : "rvu:self",
+    "local" : [ "rv:verbindung/*", "rvu/*" ],
+    "mandator" : "r:aobo",
+    "contact" : ""
+  },
+  "system-command" : {
+    "ch.elexis.core.ui.login" : "x"
+  },
+  "object" : {
+    "ch.elexis.core.model.IConfig" : "r",
+    "ch.elexis.core.model.IUserconfig" : "rvu",
+    "ch.elexis.core.model.IOrganization" : "rv",
+    "ch.elexis.core.model.ILaboratory" : "rv",
+    "ch.elexis.core.model.IPerson" : "rv",
+    "ch.elexis.core.model.IMandator" : "rv",
+    "ch.elexis.core.model.IArticle" : "rv",
+    "ch.elexis.core.model.ILabItem" : "rv",
+    "ch.elexis.core.model.IBlob" : "crud"
+  }
+}

@@ -61,7 +61,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -79,6 +80,7 @@ import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -126,7 +128,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 			false);
 	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
+			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
@@ -257,7 +259,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		menu.createToolbar(reloadAction, newReminderAction, toggleAutoSelectPatientAction);
 		menu.createMenu(createActionList());
 
-		if (CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*"))) {
 			showOthersRemindersAction.setEnabled(true);
 			showOthersRemindersAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false));
 		} else {
@@ -516,7 +518,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
 		};
-		showOthersRemindersAction = new RestrictedAction(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS,
+		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW, "*"),
 				Messages.Core_All, Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.ReminderView_foreignTooltip);
@@ -531,7 +533,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 			}
 		};
 
-		selectPatientAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+		selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW, "*"),
 				Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
 			{
 				setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
@@ -816,7 +818,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 			SortedSet<Reminder> reminders = new TreeSet<Reminder>();
 
-			if (showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS)) {
+			if (showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*"))) {
 				qbe.clear();
 				if (filterDueDateDays != -1) {
 					applyDueDateFilter(qbe);

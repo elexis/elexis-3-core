@@ -67,7 +67,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -78,6 +77,8 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IService;
+import ch.elexis.core.model.ac.EvACEs;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -271,7 +272,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 		vc = new ViewerConfigurer(new DefaultContentProvider(cv, Patient.class) {
 			@Override
 			public Object[] getElements(final Object inputElement) {
-				if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
+				if (!AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_STATS)) {
 					return new Konsultation[0];
 				}
 				if (kons == null) {
@@ -551,7 +552,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 			qbe.clear();
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, datVon.toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, datBis.toString(TimeTool.DATE_COMPACT));
-			if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+			if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 				if (CoreHub.actMandant == null) {
 					monitor.done();
 					return Status.OK_STATUS;
@@ -700,7 +701,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 	public void jobFinished(final BackgroundJob j) {
 		if (j.isValid()) {
 			kons = (Konsultation[]) j.getData();
-			if (!CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_STATS)) {
+			if (!AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_STATS)) {
 				tPat.setText("Sie haben keine Rechte für diese View");
 			} else {
 				tPat.setText(Integer.toString(numPat));

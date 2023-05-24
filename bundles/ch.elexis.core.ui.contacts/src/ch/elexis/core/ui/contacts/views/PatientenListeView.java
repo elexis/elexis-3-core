@@ -49,7 +49,8 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -349,7 +350,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 	private void makeActions() {
 
-		newPatAction = new RestrictedAction(AccessControlDefaults.PATIENT_INSERT,
+		newPatAction = new RestrictedAction(EvACE.of(IPatient.class, Right.CREATE),
 				Messages.PatientenListeView_NewPatientAction) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.CanExecute;
 
-import ch.elexis.core.ac.ACE;
+import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.services.IAccessControlService;
 
 public class RestrictedHandler {
@@ -12,15 +12,15 @@ public class RestrictedHandler {
 	@Inject
 	private IAccessControlService accessControlService;
 
-	private final ACE acessControlEntity;
+	private final EvaluatableACE acessControlEntity;
 
-	public RestrictedHandler(ACE acessControlEntity) {
+	public RestrictedHandler(EvaluatableACE acessControlEntity) {
 		this.acessControlEntity = acessControlEntity;
 	}
 
 	@CanExecute
 	public boolean canExecute() {
-		return accessControlService.request(acessControlEntity);
+		return accessControlService.evaluate(acessControlEntity);
 	}
 
 }

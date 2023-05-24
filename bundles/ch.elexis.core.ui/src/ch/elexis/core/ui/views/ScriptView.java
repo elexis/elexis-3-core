@@ -49,7 +49,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.exceptions.ElexisException;
@@ -176,7 +177,7 @@ public class ScriptView extends ViewPart {
 			}
 		};
 
-		importScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT, "Import Script") {
+		importScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE), "Import Script") {
 			{
 				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
 				setToolTipText("Import script from a text file");
@@ -199,7 +200,7 @@ public class ScriptView extends ViewPart {
 			}
 
 		};
-		newScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT, Messages.ScriptView_newScriptAction) { // $NON-NLS-1$
+		newScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE), Messages.ScriptView_newScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ScriptView_newScriptTooltip); // $NON-NLS-1$
@@ -222,7 +223,7 @@ public class ScriptView extends ViewPart {
 			}
 
 		};
-		editScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
+		editScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE),
 				Messages.Core_Edit_Script) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
@@ -242,7 +243,7 @@ public class ScriptView extends ViewPart {
 
 			}
 		};
-		removeScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EDIT,
+		removeScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE),
 				Messages.ScriptView_deleteScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -259,7 +260,7 @@ public class ScriptView extends ViewPart {
 				}
 			}
 		};
-		execScriptAction = new RestrictedAction(AccessControlDefaults.SCRIPT_EXECUTE,
+		execScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.EXECUTE),
 				Messages.Core_Execute_Script) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_GOFURTHER.getImageDescriptor());

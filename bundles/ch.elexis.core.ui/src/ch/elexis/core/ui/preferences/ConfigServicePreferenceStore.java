@@ -25,7 +25,9 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
  */
 public class ConfigServicePreferenceStore extends EventManager implements IPreferenceStore {
 
+	
 	public enum Scope {
+		// FIXME replace with ConfigurationScope, s.t. its usable from non ui
 		GLOBAL, USER, MANDATOR, LOCAL, CONTACT
 	}
 

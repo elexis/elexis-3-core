@@ -15,11 +15,12 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.internal.RoleBasedAccessControlServiceTest;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
+@SuiteClasses({ RoleBasedAccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
 		IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
 		IStoreToStringServiceTest.class, IStickerServiceTest.class, BriefDocumentStoreTest.class,
 		IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
 
@@ -59,5 +60,10 @@ public class GenericImporter extends ImporterPage {
 	@Override
 	public String getTitle() {
 		return TITLE;
+	}
+	
+	@Override
+	public String getObjectClass() {
+		return IContact.class.getName();
 	}
 }

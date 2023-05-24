@@ -26,6 +26,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
+import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.ui.util.ImporterPage;
@@ -93,6 +94,11 @@ public class Importer extends ImporterPage {
 	@Override
 	public String getTitle() {
 		return Messages.Eigendiagnosen_CodeSystemName;
+	}
+
+	@Override
+	public String getObjectClass() {
+		return IDiagnosis.class.getName();
 	}
 
 	private Result<String> importExcel(final String file, final IProgressMonitor mon) {

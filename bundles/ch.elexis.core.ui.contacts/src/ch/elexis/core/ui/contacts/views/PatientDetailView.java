@@ -48,7 +48,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -107,7 +108,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			showAdditionalAddressAction;
 	private ListDisplay<BezugsKontakt> inpZusatzAdresse;
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
-	private IObservableValue patientObservable = new WritableValue(null, Patient.class);
+	private IObservableValue<Patient> patientObservable = new WritableValue<Patient>(null, Patient.class);
 	private boolean bLocked = true;
 
 	@Inject
@@ -551,7 +552,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			}
 		};
 
-		showZAAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+		showZAAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
@@ -563,7 +564,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			}
 		};
 
-		showBKAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
+		showBKAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
 				Messages.Patientenblatt2_showBezugKontaktRelation) {
 			@Override
 			public void doRun() {

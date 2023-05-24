@@ -89,6 +89,21 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
 			and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 		}
+		// FIXME ACE has Constraint#AOBO or SELF on this class?
+		//IAccessControlService iac = null;
+		//ACEAccessBitMapConstraint constraint = iac.getConstraint(EvACE.of(clazz, Right.READ));
+		//if(constraint != null) {
+			// determine owner 
+			
+			// transitive aobo
+			// + ACE_OBJECT oder einfaches Security Label - Freigabe für ALLE
+			
+		//	if(ACEAccessBitMapConstraint.AOBO == constraint) {
+				// determine ACEOwner
+		//		 Field field;
+		//	}
+		//}
+		
 
 		MappingEntry mappingForInterface = adapterFactory.getMappingForInterface(clazz);
 		mappingForInterface.applyQueryPrecondition(this);
@@ -310,6 +325,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> execute() {
+
 		List<T> ret = (List<T>) getTypedQuery().getResultStream().parallel()
 				.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 				.filter(Objects::nonNull).collect(Collectors.toList());

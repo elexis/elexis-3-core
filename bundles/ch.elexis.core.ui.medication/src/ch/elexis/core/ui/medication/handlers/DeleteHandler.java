@@ -12,8 +12,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.ac.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -22,7 +24,6 @@ import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerItem;
 import ch.elexis.core.ui.medication.views.MedicationView;
-import ch.elexis.core.l10n.Messages;
 
 public class DeleteHandler extends AbstractHandler {
 
@@ -48,7 +49,7 @@ public class DeleteHandler extends AbstractHandler {
 				while (selectionList.hasNext()) {
 
 					boolean hasRight = AccessControlServiceHolder.get()
-							.request(AccessControlDefaults.DELETE_MEDICATION);
+							.evaluate(EvACE.of(IPrescription.class, Right.DELETE));
 					if (hasRight) {
 
 						MedicationTableViewerItem item = selectionList.next();

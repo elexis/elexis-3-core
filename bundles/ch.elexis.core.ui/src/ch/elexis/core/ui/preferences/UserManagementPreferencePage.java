@@ -60,8 +60,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -73,6 +73,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
@@ -94,7 +95,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Person;
 import ch.elexis.data.User;
-
 
 public class UserManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
@@ -134,7 +134,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	 */
 	@Override
 	public Control createContents(Composite parent) {
-		if (!CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+		if (!AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IUser.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
 			return new PrefAccessDenied(parent);
 		}
 
@@ -143,7 +144,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 		MenuManager popManager = new MenuManager();
 
-		addUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE, Messages.Core_Add_ellipsis) {
+		addUserAction = new RestrictedAction(EvACE.of(IUser.class, Right.CREATE), Messages.Core_Add_ellipsis) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			}
@@ -182,7 +183,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		};
 		popManager.add(addUserAction);
 
-		deleteUserAction = new LockedRestrictedAction<IUser>(AccessControlDefaults.USER_DELETE,
+		deleteUserAction = new LockedRestrictedAction<IUser>(EvACE.of(IUser.class, Right.DELETE),
 				Messages.Core_Delete) {
 
 			@Override
@@ -213,7 +214,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		popManager.add(deleteUserAction);
 
 		if (!(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get().getConnectionStatus())) {
-			lockUserAction = new RestrictedAction(AccessControlDefaults.USER_CREATE, Messages.Leistungscodes_editItem) {
+			lockUserAction = new RestrictedAction(EvACE.of(IUser.class, Right.UPDATE),
+					Messages.Leistungscodes_editItem) {
 
 				@Override
 				public void doRun() {

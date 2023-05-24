@@ -3,7 +3,6 @@ package ch.elexis.core.ui.eigenartikel;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 

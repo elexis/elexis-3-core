@@ -34,9 +34,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -60,7 +62,8 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+		if (AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IUser.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
 			FormToolkit tk = UiDesk.getToolkit();
 			Form form = tk.createForm(parent);
 			final Composite body = form.getBody();

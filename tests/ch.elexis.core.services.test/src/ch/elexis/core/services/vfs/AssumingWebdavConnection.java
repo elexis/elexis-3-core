@@ -17,7 +17,7 @@ public class AssumingWebdavConnection implements TestRule {
 
 	public AssumingWebdavConnection(String connection) {
 		try {
-			String replaced = connection.replaceFirst("dav", "http");
+			String replaced = connection.replaceFirst("davs", "https");
 			connectionUrl = new URL(replaced);
 		} catch (MalformedURLException e) {
 		}

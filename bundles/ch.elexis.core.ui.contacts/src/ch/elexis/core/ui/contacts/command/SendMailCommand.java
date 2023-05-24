@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.contacts.command;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;

@@ -10,7 +10,7 @@ import ch.elexis.core.model.builder.AllBuilderTests;
 import ch.elexis.core.services.AllServiceTests;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TimeUtilTest.class, AllJavaTests.class, AllBuilderTests.class, AllServiceTests.class })
+@SuiteClasses({ TimeUtilTest.class, AllJavaTests.class, AllBuilderTests.class, AllServiceTests.class  })
 public class AllTests {
 
 }

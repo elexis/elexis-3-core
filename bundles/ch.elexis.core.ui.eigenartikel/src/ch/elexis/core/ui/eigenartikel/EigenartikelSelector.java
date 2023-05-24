@@ -30,6 +30,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -43,7 +45,6 @@ import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
-import ch.elexis.core.ui.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -160,7 +161,8 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 		}
 	}
 
-	private RestrictedAction rearrangePackagesAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY) {
+	private RestrictedAction rearrangePackagesAction = new RestrictedAction(
+			new ObjectEvaluatableACE(IArticle.class, Right.UPDATE)) {
 
 		boolean initialized = false;
 

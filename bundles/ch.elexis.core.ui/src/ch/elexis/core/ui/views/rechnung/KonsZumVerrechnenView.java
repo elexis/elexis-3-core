@@ -73,10 +73,11 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ac.EvACEs;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -346,7 +347,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 									monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
 									String sql = "SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
 									"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
-									if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+									if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 										sql += "AND BEHANDLUNGEN.MANDANTID=" //$NON-NLS-1$
 												+ CoreHub.actMandant.getWrappedId();
 									}
@@ -380,7 +381,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 						sql = "SELECT distinct FAELLE.ID FROM FAELLE join BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID " //$NON-NLS-1$
 								+ "WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID=" //$NON-NLS-1$
 								+ cont.getWrappedId(); // $NON-NLS-1$
-						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+						if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 							sql += " AND BEHANDLUNGEN.MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
 						}
 						rs = stm.query(sql);
@@ -394,7 +395,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 					} else if (cont instanceof Fall) {
 						sql = "SELECT ID FROM BEHANDLUNGEN WHERE RECHNUNGSID is null AND deleted='0' AND billable='1' AND FALLID=" //$NON-NLS-1$
 								+ cont.getWrappedId();
-						if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+						if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 							sql += " AND MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
 						}
 						rs = stm.query(sql);
@@ -683,7 +684,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			}
 
 		};
-		detailAction = new RestrictedAction(AccessControlDefaults.LSTG_VERRECHNEN,
+		detailAction = new RestrictedAction(EvACEs.LSTG_VERRECHNEN,
 				Messages.KonsZumVerrechnenView_billingDetails) { // $NON-NLS-1$
 			@SuppressWarnings("unchecked")
 			@Override

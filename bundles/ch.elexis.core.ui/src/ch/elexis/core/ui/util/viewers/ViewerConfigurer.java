@@ -374,10 +374,6 @@ public class ViewerConfigurer {
 										((DefaultControlFieldProvider) vcf.getConfigurer().getControlFieldProvider())
 												.getDBFields(),
 										vcf.getConfigurer().getControlFieldProvider().getValues());
-						if (vcf.getConfigurer().getContentProvider() instanceof LazyContentProvider) {
-							LazyContentProvider lc = (LazyContentProvider) vcf.getConfigurer().getContentProvider();
-							lc.dataloader.invalidate();
-						}
 					}
 					vcf.getViewerWidget().getControl().redraw();
 					vcf.getViewerWidget().getControl().update();

@@ -10,12 +10,12 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.controls;
 
-import org.apache.commons.lang3.StringUtils;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.map.ObservableMap;

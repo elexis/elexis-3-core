@@ -13,8 +13,9 @@ package ch.elexis.core.data.propertyTester;
 
 import org.eclipse.core.expressions.PropertyTester;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 
 public class ACETester extends PropertyTester {
 
@@ -24,7 +25,7 @@ public class ACETester extends PropertyTester {
 			if (args.length > 0) {
 				if (ContextServiceHolder.get().getActiveUser().isPresent()) {
 					String right = (String) args[0];
-					return CoreHub.acl.request(right);
+					return AccessControlServiceHolder.get().evaluate(EvACE.of(right));
 				}
 			}
 		}

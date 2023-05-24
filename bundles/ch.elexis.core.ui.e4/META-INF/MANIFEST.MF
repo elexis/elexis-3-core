@@ -42,6 +42,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.lock.types,
  ch.elexis.core.services,
  ch.elexis.core.services.holder,
+ com.opcoach.e4.preferences,
  javax.inject;version="1.0.0",
  org.apache.commons.lang3;version="3.12.0",
  org.apache.http.client.utils;version="4.5.13",

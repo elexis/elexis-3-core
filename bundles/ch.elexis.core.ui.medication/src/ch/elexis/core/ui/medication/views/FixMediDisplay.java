@@ -37,7 +37,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.services.IEvaluationService;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IArticle;
@@ -294,7 +295,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 
 	private void makeActions() {
 
-		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
+		changeMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.UPDATE),
 				Messages.Core_DoChange_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
@@ -312,8 +313,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			}
 		};
 
-		stopMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
-				Messages.Core_DoStop) { // $NON-NLS-1$
+		stopMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.UPDATE), Messages.Core_DoStop) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_StopThisMedicament); // $NON-NLS-1$
@@ -400,8 +400,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			}
 		};
 
-		removeMedicationAction = new RestrictedAction(AccessControlDefaults.DELETE_MEDICATION,
-				Messages.Core_Delete) { // $NON-NLS-1$
+		removeMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.DELETE), Messages.Core_Delete) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_DeleteUnrecoverable); // $NON-NLS-1$

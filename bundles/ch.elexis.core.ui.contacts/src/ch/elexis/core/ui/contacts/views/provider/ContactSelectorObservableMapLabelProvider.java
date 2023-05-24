@@ -10,10 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.views.provider;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;

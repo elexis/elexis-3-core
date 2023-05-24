@@ -1,12 +1,13 @@
 package ch.elexis.core.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Bestellung;

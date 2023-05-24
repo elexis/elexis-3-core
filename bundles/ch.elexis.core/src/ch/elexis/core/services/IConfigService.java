@@ -274,6 +274,8 @@ public interface IConfigService {
 	 */
 	public int getLocal(String key, int defaultValue);
 
+	public Map<String, String> getLocalAsMap();
+
 	/**
 	 * Get a stored value for the current active {@link IMandator} configuration.
 	 * The current mandator is resolved via the {@link IContextService}
@@ -448,6 +450,12 @@ public interface IConfigService {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getAsMap();
+
+	/**
 	 * Retrieve a value as a list for a contact specific configuration entry.
 	 * Retains the order it was persisted.
 	 *
@@ -461,7 +469,7 @@ public interface IConfigService {
 	/**
 	 * Get the whole config for a given contact as hierarchy of {@link Map}s.
 	 *
-	 * @param contact
+	 * @param contact not <code>null</code>
 	 * @return
 	 */
 	public Map<Object, Object> getAsMap(IContact contact);

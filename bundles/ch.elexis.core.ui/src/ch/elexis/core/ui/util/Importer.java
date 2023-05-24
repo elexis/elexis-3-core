@@ -24,7 +24,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 
 /**
  * This Dialog will open on the Global Action importAction (normally linked to
@@ -59,10 +62,13 @@ public class Importer extends TitleAreaDialog {
 		List<ImporterPage> importers = Extensions.getClasses(ext, "Class"); //$NON-NLS-1$
 		for (ImporterPage p : importers) {
 			if (p != null) {
-				CTabItem item = new CTabItem(ctab, SWT.NONE);
-				item.setText(p.getTitle());
-				item.setControl(p.createPage(ctab));
-				item.setData(p);
+				if (AccessControlServiceHolder.get()
+						.evaluate(new ObjectEvaluatableACE(p.getObjectClass(), Right.IMPORT))) {
+					CTabItem item = new CTabItem(ctab, SWT.NONE);
+					item.setText(p.getTitle());
+					item.setControl(p.createPage(ctab));
+					item.setData(p);
+				}
 			}
 		}
 		ctab.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));

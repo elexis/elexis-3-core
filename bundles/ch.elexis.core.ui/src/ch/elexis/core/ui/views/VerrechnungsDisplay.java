@@ -76,7 +76,6 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -94,6 +93,7 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IService;
+import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
@@ -492,8 +492,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			interactionLink.updateAtcs(gtins);
 			billedLabel.setText(String.format("%s %s / %s %s", //$NON-NLS-1$
-					Messages.Core_Amount, sum.getAmountAsString(), Messages.Core_Time,
-					sumMinutes));
+					Messages.Core_Amount, sum.getAmountAsString(), Messages.Core_Time, sumMinutes));
 		} else {
 			billedLabel.setText(StringUtils.EMPTY);
 		}
@@ -537,7 +536,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				o = presc.getArtikel();
 			}
 			if (o instanceof IVerrechenbar) {
-				if (AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN) == false) {
+				if (AccessControlServiceHolder.get().evaluate(EvACEs.LSTG_VERRECHNEN) == false) {
 					SWTHelper.alert(Messages.Core_Missing_rights, // $NON-NLS-1$
 							Messages.VerrechnungsDisplay_missingRightsBody); // $NON-NLS-1$
 				} else {
@@ -665,8 +664,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						}
 						if (!notOkResults.toString().isEmpty()) {
 							Display.getDefault().asyncExec(() -> {
-								MessageDialog.openWarning(getShell(), Messages.Core_Warning,
-										notOkResults.toString());
+								MessageDialog.openWarning(getShell(), Messages.Core_Warning, notOkResults.toString());
 							});
 						}
 						// refresh with sorted billed list
@@ -1089,7 +1087,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 
 	public void adaptMenus() {
 		if (CoreUiUtil.isActiveControl(table)) {
-			table.getMenu().setEnabled(AccessControlServiceHolder.get().request(AccessControlDefaults.LSTG_VERRECHNEN));
+			table.getMenu().setEnabled(AccessControlServiceHolder.get().evaluate(EvACEs.LSTG_VERRECHNEN));
 		}
 	}
 }

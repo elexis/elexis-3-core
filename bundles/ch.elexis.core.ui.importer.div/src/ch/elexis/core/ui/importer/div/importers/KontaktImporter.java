@@ -11,14 +11,15 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
@@ -56,6 +57,11 @@ public class KontaktImporter extends ImporterPage {
 		return Messages.Core_Contacts;
 	}
 
+	@Override
+	public String getObjectClass() {
+		return IContact.class.getName();
+	}
+	
 	static Kontakt queryKontakt(final String name, final String vorname, final String strasse, final String plz,
 			final String ort, final boolean createIfMissing) {
 		Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);

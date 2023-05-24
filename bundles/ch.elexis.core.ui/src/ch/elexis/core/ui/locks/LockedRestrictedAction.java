@@ -1,15 +1,15 @@
 package ch.elexis.core.ui.locks;
 
-import ch.elexis.admin.ACE;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.actions.RestrictedAction;
 
 abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 
 	private T object;
 
-	public LockedRestrictedAction(ACE requiredACE, String text) {
+	public LockedRestrictedAction(EvaluatableACE requiredACE, String text) {
 		super(requiredACE, text);
 		setEnabled(false);
 	}
@@ -18,7 +18,7 @@ abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 	public void reflectRight() {
 		setEnabled(false);
 
-		boolean rights = CoreHub.acl.request(necessaryRight);
+		boolean rights = AccessControlServiceHolder.get().evaluate(evaluatableAce);
 		if (!rights) {
 			return;
 		}
@@ -33,7 +33,8 @@ abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 	}
 
 	public void doRun() {
-		if (LocalLockServiceHolder.get().isLocked(object) && CoreHub.acl.request(necessaryRight)) {
+		if (LocalLockServiceHolder.get().isLocked(object)
+				&& AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
 			if (object != null) {
 				doRun((T) object);
 			}

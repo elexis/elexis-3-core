@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
-import ch.elexis.admin.ACE;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.IConfigService;
@@ -109,15 +108,6 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeGlobalPreferences(IConfigService configService) {
 		configService.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
-	}
-
-	/**
-	 * Diese Funktion wird ebenfalls nur beim ersten Mal nach dem Erstellen der
-	 * Datenbank aufgerufen und erledigt die Vorkonfiguration der Zugriffsrechte
-	 * Hier alle Zugriffsrechte voreinstellen
-	 */
-	public void initializeGrants() {
-		ACE.initializeACEDefaults(false);
 	}
 
 	public static String getDefaultDBPath() {

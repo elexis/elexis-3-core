@@ -27,12 +27,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
@@ -84,7 +86,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		lbl.setText("Konsultation erstellen");
 
 		ToolBarManager tbManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP);
-		tbManager.add(new RestrictedAction(AccessControlDefaults.KONS_CREATE, Messages.Core_New_Consultation) {
+		tbManager.add(new RestrictedAction(EvACE.of(IEncounter.class, Right.CREATE), Messages.Core_New_Consultation) {
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.Core_Create_new_consultation); // $NON-NLS-1$

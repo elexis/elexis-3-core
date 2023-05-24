@@ -10,13 +10,13 @@
  ******************************************************************************/
 package ch.elexis.core.ui.contacts.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -31,13 +31,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LocalizeUtil;
 import ch.elexis.core.types.RelationshipType;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.BezugsKontaktRelation;
 import ch.rgw.tools.StringTool;

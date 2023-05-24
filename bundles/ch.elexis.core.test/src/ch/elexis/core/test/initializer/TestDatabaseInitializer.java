@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
-import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IContactBuilder;
@@ -368,10 +366,10 @@ public class TestDatabaseInitializer {
 			modelService.save(mandant);
 
 			user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
-			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
-			if (doctorRole.isPresent()) {
-				user.addRole(doctorRole.get());
-			}
+//			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
+//			if (doctorRole.isPresent()) {
+//				user.addRole(doctorRole.get());
+//			}
 			modelService.save(user);
 
 			mandant.addXid(XidConstants.DOMAIN_EAN, "2000000000002", true);

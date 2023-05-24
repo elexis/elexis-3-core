@@ -15,7 +15,8 @@ Import-Package: javax.xml.bind;version="2.3.0",
  org.osgi.service.url;version="1.0.0",
  org.slf4j
 Require-Bundle: org.apache.httpcomponents.httpclient;bundle-version="4.5.13",
- org.apache.httpcomponents.httpcore;bundle-version="4.4.15"
+ org.apache.httpcomponents.httpcore;bundle-version="4.4.15",
+ ch.elexis.core;bundle-version="3.11.0"
 Service-Component: OSGI-INF/ch.elexis.core.webdav.internal.UnsafeWebdavURLStreamHandlerService.xml,
  OSGI-INF/ch.elexis.core.webdav.internal.WebdavURLStreamHandlerService.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-11

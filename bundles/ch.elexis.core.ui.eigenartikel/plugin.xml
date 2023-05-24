@@ -12,11 +12,4 @@
             system="Eigenartikel">
       </Artikel>
    </extension>
-   <extension
-         point="ch.elexis.core.data.ACLContribution">
-      <ACLContribution
-            ACLContributor="ch.elexis.core.ui.eigenartikel.acl.ACLContributor"
-            name="ch.elexis.core.ui.eigenartikel.acl.ACLContributor">
-      </ACLContribution>
-   </extension>
 </plugin>

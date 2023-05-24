@@ -62,17 +62,19 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import com.tiff.common.ui.datepicker.DatePickerCombo;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.OrganizationConstants;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -256,7 +258,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				} else {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
-							if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY)) {
+							if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE))) {
 								if (SWTHelper.askYesNo(Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, // $NON-NLS-1$
 										Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { // $NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
@@ -891,7 +893,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		// *** only for admins!
 		if (otherFieldsList_2.length() > 0) {
-			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
+			if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE).and(Right.EXECUTE))) {
 				setExtendedFields(f, otherFieldsList_2, Messages.FallDetailBlatt2_unusedFieldsWithDefinition, true,
 						true, false); // $NON-NLS-1$
 			}
@@ -979,7 +981,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				tmpDel = DEFINITIONSDELIMITER;
 			}
 			// *** only for admins!
-			if (CoreHub.acl.request(AccessControlDefaults.CASE_MODIFY_SPECIALS) == true) {
+			if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE))) {
 				setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
 						true, false); // $NON-NLS-1$
 			}

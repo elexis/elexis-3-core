@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IViewSite;
 
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -27,7 +29,6 @@ import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
-import ch.elexis.core.ui.eigenartikel.acl.ACLContributor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
@@ -45,9 +46,10 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private Composite compProduct;
 	private Composite compArticle;
 
-	private RestrictedAction createAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY,
+	private RestrictedAction createAction = new RestrictedAction(new ObjectEvaluatableACE(IArticle.class, Right.CREATE),
 			ch.elexis.core.ui.views.artikel.Messages.Core_New_ellipsis) {
 		{
+
 			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 			setToolTipText(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_createProductToolTipText);
 		}
@@ -63,7 +65,8 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 		}
 	};
 
-	private RestrictedAction toggleLockAction = new RestrictedAction(ACLContributor.EIGENARTIKEL_MODIFY, "lock", //$NON-NLS-1$
+	private RestrictedAction toggleLockAction = new RestrictedAction(
+			new ObjectEvaluatableACE(IArticle.class, Right.UPDATE), "lock", //$NON-NLS-1$
 			SWT.TOGGLE) {
 		{
 			setImageDescriptor(Images.IMG_LOCK_CLOSED.getImageDescriptor());
@@ -101,7 +104,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	};
 
 	private RestrictedAction deleteAction = new LockRequestingRestrictedAction<IArticle>(
-			ACLContributor.EIGENARTIKEL_MODIFY,
+			new ObjectEvaluatableACE(IArticle.class, Right.UPDATE),
 			ch.elexis.core.ui.views.artikel.Messages.Core_Delete) {
 		{
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
@@ -117,8 +120,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 
 		@Override
 		public void doRun(IArticle act) {
-			if (MessageDialog.openConfirm(site.getShell(),
-					ch.elexis.core.ui.views.artikel.Messages.Core_Confirm_delete,
+			if (MessageDialog.openConfirm(site.getShell(), ch.elexis.core.ui.views.artikel.Messages.Core_Confirm_delete,
 					MessageFormat.format(ch.elexis.core.ui.views.artikel.Messages.Core_Want_to_delete_0,
 							act.getName()))) {
 				CoreModelServiceHolder.get().delete(act);

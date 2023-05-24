@@ -39,16 +39,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IXid;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
@@ -71,8 +72,7 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
-public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
-{
+public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable {
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
@@ -85,9 +85,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private static final String BEZEICHNUNG = Messages.Core_Description; // $NON-NLS-1$
 	static final String[] types = { "istOrganisation", "istLabor", "istPerson", "istPatient", IS_USER, "istMandant" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
 	}; // $NON-NLS-6$
-	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory,
-			Messages.Core_Person, Messages.Core_Patient, Messages.Core_User,
-			Messages.Core_Mandator };
+	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory, Messages.Core_Person,
+			Messages.Core_Patient, Messages.Core_User, Messages.Core_Mandator };
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;
@@ -378,13 +377,14 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = kontakt;
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
+			boolean updateRight = AccessControlServiceHolder.get()
+					.evaluate(EvACE.of(IContact.class, Right.UPDATE, actKontakt.getId()));
+
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);
 			for (int i = 0; i < types.length; i++) {
 				bTypes[i].setSelection((ret[i] == null) ? false : StringConstants.ONE.equals(ret[i]));
-				if (CoreHub.acl.request(AccessControlDefaults.KONTAKT_MODIFY) == false) {
-					bTypes[i].setEnabled(false);
-				}
+				bTypes[i].setEnabled(updateRight);
 			}
 			if (bTypes[3].getSelection() == true) {
 				// isPatient

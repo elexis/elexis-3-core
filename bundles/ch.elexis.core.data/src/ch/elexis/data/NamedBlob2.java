@@ -11,11 +11,13 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Hashtable;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import org.apache.commons.lang3.StringUtils;
+
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.model.IBlobSecondary;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.TimeTool;
 
@@ -179,7 +181,8 @@ public class NamedBlob2 extends PersistentObject {
 	 * @param older
 	 */
 	public static void cleanup(final String prefix, final TimeTool older) {
-		if (CoreHub.acl.request(AccessControlDefaults.AC_PURGE)) {
+		if (AccessControlServiceHolder.get()
+				.evaluate(new ObjectEvaluatableACE(IBlobSecondary.class, ch.elexis.core.ac.Right.REMOVE))) {
 			Query<NamedBlob2> qbe = new Query<NamedBlob2>(NamedBlob2.class);
 			qbe.add(FLD_DATUM, "<", older.toString(TimeTool.DATE_COMPACT));
 			for (NamedBlob2 nb : qbe.execute()) {

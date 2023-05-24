@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.wizards.DBImportWizard;
@@ -92,6 +93,13 @@ public abstract class ImporterPage implements IExecutableExtension {
 
 	/** Eine längere Beschreibung für den Message-Bereich des Dialogs */
 	abstract public String getDescription();
+
+	/**
+	 * 
+	 * @return The class name of the imported object. Used to evaluate
+	 *         {@link Right#IMPORT}
+	 */
+	public abstract String getObjectClass();
 
 	/**
 	 * Allfällige von User eingegebene Daten einsammeln. Die Default-Implementation

@@ -34,12 +34,14 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -129,7 +131,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			}
 		});
 		// Not everybody may create users and mandators
-		if (!CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+		if (!AccessControlServiceHolder.get().evaluate(EvACE.of(IUser.class, Right.UPDATE))) {
 			bMandant.setEnabled(false);
 			bAnwender.setEnabled(false);
 		}

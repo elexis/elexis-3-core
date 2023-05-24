@@ -39,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.IQuery;
@@ -50,7 +51,6 @@ import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.preferences.inputs.ComboFieldEditor;
 import ch.elexis.core.ui.preferences.inputs.MultilineFieldEditor;
 import ch.elexis.core.ui.util.SWTHelper;

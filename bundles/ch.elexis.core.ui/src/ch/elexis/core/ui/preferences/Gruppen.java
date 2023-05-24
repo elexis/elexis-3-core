@@ -34,7 +34,7 @@ public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPref
 
 	@Override
 	protected void createFieldEditors() {
-//		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+//		if (AccessControlServiceHolder.get().request(AccessControlDefaults.ACL_USERS)) {
 //			addField(new StringListFieldEditor(Preferences.ACC_GROUPS,
 //				StringConstants.ROLES_NAMING, Messages.Gruppen_BitteGebenSieNameEin,
 //				Messages.Core_Groups, getFieldEditorParent()));

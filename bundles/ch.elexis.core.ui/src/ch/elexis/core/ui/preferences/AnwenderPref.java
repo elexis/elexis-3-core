@@ -28,9 +28,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -55,7 +57,8 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 
 	@Override
 	protected Control createContents(Composite parent) {
-		if (CoreHub.acl.request(AccessControlDefaults.ACL_USERS)) {
+		if (AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IUser.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
 			FormToolkit tk = new FormToolkit(UiDesk.getDisplay());
 			Form form = tk.createForm(parent);
 			Composite body = form.getBody();

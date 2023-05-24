@@ -36,14 +36,14 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ac.EvACEs;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Query;
@@ -63,7 +63,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		if (CoreHub.acl.request(AccessControlDefaults.LAB_SEEN)) {
+		if (AccessControlServiceHolder.get().evaluate(EvACEs.LAB_SEEN)) {
 			return super.createContents(parent);
 		} else {
 			return new PrefAccessDenied(parent);

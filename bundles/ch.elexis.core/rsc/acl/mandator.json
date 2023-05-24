@@ -1,0 +1,6 @@
+{
+  "roles-represented" : [ "mandator" ],
+  "system-command" : {
+    "ch.medelexis.application.imp.abo.change" : "x"
+  }
+}

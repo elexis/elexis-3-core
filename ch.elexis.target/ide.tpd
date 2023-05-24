@@ -1,5 +1,9 @@
 target "Elexis IDE 2022-09-java17" with source allEnvironments
 
+location "https://www.opcoach.com/repository/2022-09" {
+	com.opcoach.e4.preferences.feature.feature.group
+}
+
 location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	
 	// justj.17

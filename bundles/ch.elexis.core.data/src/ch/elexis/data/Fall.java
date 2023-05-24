@@ -22,7 +22,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
@@ -35,7 +36,9 @@ import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.interfaces.ITransferable;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.ExHandler;
@@ -662,8 +665,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @return true if this Fall could be (and has been) deleted.
 	 */
 	public boolean delete(final boolean force) {
-		if (!hasDependent()
-				|| ((force == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
+		if (!hasDependent() || ((force == true) && (AccessControlServiceHolder.get()
+				.evaluate(new ObjectEvaluatableACE(ICoverage.class, Right.REMOVE, getId()))))) {
 			for (Konsultation b : getBehandlungen(false)) {
 				b.delete(true);
 			}

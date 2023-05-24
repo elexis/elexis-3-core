@@ -29,6 +29,8 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.DBLog;
@@ -62,8 +64,23 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache) {
 		if (StringUtils.isNotEmpty(id)) {
+
+//			EvaluatableACE evACE = EvACE.of(clazz, Right.READ, id);
+//			Boolean ace = evACE.fastEval();
+//			if (ace != null && !ace) {
+//				// 
+//				
+//				
+//				// or return aobo list? and verify against ACEOwner?
+//				return Optional.empty();
+//			}
+
+			// we must not return null, this would mean the object does not exist
+			// something else?
+
 			EntityManager em = getEntityManager(true);
 			Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
+
 			HashMap<String, Object> queryHints = new HashMap<>();
 			if (refreshCache) {
 				queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
@@ -78,6 +95,9 @@ public abstract class AbstractModelService implements IModelService {
 				}
 				Optional<Identifiable> modelObject = adapterFactory.getModelAdapter(dbObject, clazz, true);
 				if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
+//					if (ace == null) {
+//						// aobo or self 
+//					}
 					return (Optional<T>) modelObject;
 				}
 			}
@@ -183,6 +203,7 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public void save(Identifiable identifiable) {
 		if (identifiable == null) {
+			// TODO IllegalArgumentException?
 			return;
 		}
 		if (identifiable.getChanged() != null) {
@@ -341,6 +362,10 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void remove(Identifiable identifiable) {
+		if (!EvACE.of(identifiable.getClass(), Right.REMOVE).eval()) {
+			// TODO
+		}
+
 		Optional<EntityWithId> dbObject = getDbObject(identifiable);
 		if (dbObject.isPresent()) {
 			EntityManager em = getEntityManager(false);
@@ -433,6 +458,9 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void delete(Deleteable deletable) {
+		if (!EvACE.of(deletable.getClass(), Right.DELETE).eval()) {
+			// TODO
+		}
 		deletable.setDeleted(true);
 		save((Identifiable) deletable);
 		createDBLog((Identifiable) deletable);

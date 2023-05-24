@@ -10,11 +10,11 @@ import org.eclipse.swt.graphics.Font;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ILabItem;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.dialogs.DisplayLabDokumenteDialog;
 import ch.elexis.core.ui.dialogs.DisplayTextDialog;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 

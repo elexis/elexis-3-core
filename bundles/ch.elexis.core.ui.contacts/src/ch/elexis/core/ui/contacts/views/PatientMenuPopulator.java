@@ -31,12 +31,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import ch.elexis.admin.AccessControlDefaults;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
+import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -58,17 +61,17 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 		LinkedList<IAction> ret = new LinkedList<IAction>();
 		ret.add(stickerAction);
 		ret.add(delPatAction);
-		if (CoreHub.acl.request(AccessControlDefaults.KONTAKT_EXPORT)) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IContact.class, Right.EXPORT))) {
 			ret.add(exportKGAction);
 		}
 		delPatAction.reflectRight();
-		exportKGAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.KONTAKT_EXPORT));
+		exportKGAction.setEnabled(AccessControlServiceHolder.get().evaluate(EvACE.of(IContact.class, Right.EXPORT)));
 		return ret.toArray(new IAction[0]);
 	}
 
 	PatientMenuPopulator(PatientenListeView plv, final StructuredViewer structuredViewer) {
 		mine = plv;
-		stickerAction = new RestrictedAction(AccessControlDefaults.KONTAKT_ETIKETTE,
+		stickerAction = new RestrictedAction(EvACE.of(ISticker.class, Right.CREATE),
 				Messages.Core_Sticker_ellipsis) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.PatientMenuPopulator_StickerToolTip); // $NON-NLS-1$
@@ -82,7 +85,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 			}
 
 		};
-		delPatAction = new LockRequestingRestrictedAction<IPatient>(AccessControlDefaults.KONTAKT_DELETE,
+		delPatAction = new LockRequestingRestrictedAction<IPatient>(EvACE.of(IContact.class, Right.DELETE),
 				Messages.PatientMenuPopulator_DeletePatientAction) {
 
 			@Override

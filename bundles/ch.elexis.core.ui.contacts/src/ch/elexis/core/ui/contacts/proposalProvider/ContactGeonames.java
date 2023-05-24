@@ -1,8 +1,9 @@
 package ch.elexis.core.ui.contacts.proposalProvider;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.types.Country;
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;

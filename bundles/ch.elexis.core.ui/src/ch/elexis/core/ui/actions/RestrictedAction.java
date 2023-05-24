@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007-2015, G. Weirich and others
+ * Copyright (c) 2007-2023, G. Weirich and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,8 @@ import org.eclipse.jface.action.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.ACE;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvaluatableACE;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 
 /**
  * Special class for actions requiring special access rights.
@@ -37,25 +37,25 @@ import ch.elexis.core.data.activator.CoreHub;
  *
  */
 abstract public class RestrictedAction extends Action {
-	protected ACE necessaryRight;
+	protected EvaluatableACE evaluatableAce;
 
 	protected static Logger log = LoggerFactory.getLogger(RestrictedAction.class);
 
-	public RestrictedAction(ACE necessaryRight) {
+	public RestrictedAction(EvaluatableACE evaluatableAce) {
 		super();
-		this.necessaryRight = necessaryRight;
+		this.evaluatableAce = evaluatableAce;
 		reflectRight();
 	}
 
-	public RestrictedAction(ACE necessaryRight, String text, int style) {
-		super(text, style);
-		this.necessaryRight = necessaryRight;
-		reflectRight();
-	}
-
-	public RestrictedAction(ACE necessaryRight, String text) {
+	public RestrictedAction(EvaluatableACE evaluatableAce, String text) {
 		super(text);
-		this.necessaryRight = necessaryRight;
+		this.evaluatableAce = evaluatableAce;
+		reflectRight();
+	}
+
+	public RestrictedAction(EvaluatableACE evaluatableAce, String text, int style) {
+		super(text, style);
+		this.evaluatableAce = evaluatableAce;
 		reflectRight();
 	}
 
@@ -64,14 +64,14 @@ abstract public class RestrictedAction extends Action {
 	 * Unchecks the action if the required right is not available.
 	 */
 	public void reflectRight() {
-		setEnabled(CoreHub.acl.request(necessaryRight));
+		setEnabled(AccessControlServiceHolder.get().evaluate(evaluatableAce));
 	}
 
 	/**
 	 * Checks the required access rights and then calls doRun().
 	 */
 	final public void run() {
-		if (CoreHub.acl.request(necessaryRight)) {
+		if (AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
 			doRun();
 		}
 	}

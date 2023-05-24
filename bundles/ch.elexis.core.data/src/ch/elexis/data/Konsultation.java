@@ -29,7 +29,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
@@ -53,11 +55,13 @@ import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
@@ -364,7 +368,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	private boolean isEintragEditable() {
 		boolean editable = false;
-		boolean hasRight = CoreHub.acl.request(AccessControlDefaults.ADMIN_KONS_EDIT_IF_BILLED);
+		boolean hasRight = AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IEncounter.class, Right.UPDATE).and(Right.EXECUTE));
 		if (hasRight) {
 			// user has right to change Konsultation. in this case, the user
 			// may change the text even if the Konsultation has already been
@@ -529,7 +534,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	private boolean isEditable(boolean checkMandant, boolean checkBill, boolean showError) {
 		Mandant m = getMandant();
-		checkMandant = !CoreHub.acl.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		checkMandant = !AccessControlServiceHolder.get().evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandantOK = true;
 		boolean mandatorIsActive = false;
 		boolean billOK = true;
@@ -1059,8 +1064,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (forced || isEditable(true)) {
 			List<Verrechnet> vv = getLeistungen();
 			// VersionedResource vr=getEintrag();
-			if ((vv.size() == 0)
-					|| (forced == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true)) {
+			if ((vv.size() == 0) || (forced == true) && (AccessControlServiceHolder.get()
+					.evaluate(new ObjectEvaluatableACE(IEncounter.class, Right.REMOVE, getId())))) {
 				delete_dependent();
 				return super.delete();
 			}
@@ -1152,7 +1157,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		if (actFall == null) {
 			if (actPatient == null) {
-				MessageEvent.fireError(Messages.GlobalActions_CantCreateKons, Messages.Core_Please_Select_first_a_Patient);
+				MessageEvent.fireError(Messages.GlobalActions_CantCreateKons,
+						Messages.Core_Please_Select_first_a_Patient);
 				return;
 			}
 			if (actFall == null) {
@@ -1188,7 +1194,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 		}
 		if (!actFall.isOpen()) {
-			MessageEvent.fireError(Messages.GlobalActions_casclosed, Messages.Core_Cannot_add_consultation_to_closed_case);
+			MessageEvent.fireError(Messages.GlobalActions_casclosed,
+					Messages.Core_Cannot_add_consultation_to_closed_case);
 			return;
 		}
 		Konsultation actLetzte = actFall.getLetzteBehandlung();

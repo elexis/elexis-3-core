@@ -27,9 +27,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
@@ -37,6 +37,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
@@ -144,7 +145,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 			return pats;
 		}
 
-		if (!CoreHub.acl.request(AccessControlDefaults.PATIENT_DISPLAY)) {
+		if (!AccessControlServiceHolder.get().evaluate(EvACE.of(IPatient.class, Right.VIEW))) {
 			return new Object[0];
 		}
 

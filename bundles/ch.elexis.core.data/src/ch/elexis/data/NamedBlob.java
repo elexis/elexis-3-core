@@ -18,8 +18,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.IBlob;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.rgw.compress.CompEx;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
@@ -207,7 +209,8 @@ public class NamedBlob extends PersistentObject {
 	 * @param older
 	 */
 	public static void cleanup(final String prefix, final TimeTool older) {
-		if (CoreHub.acl.request(AccessControlDefaults.AC_PURGE)) {
+		if (AccessControlServiceHolder.get()
+				.evaluate(new ObjectEvaluatableACE(IBlob.class, ch.elexis.core.ac.Right.REMOVE))) {
 			Query<NamedBlob> qbe = new Query<NamedBlob>(NamedBlob.class);
 			qbe.add("Datum", "<", older.toString(TimeTool.DATE_COMPACT));
 			for (NamedBlob nb : qbe.execute()) {

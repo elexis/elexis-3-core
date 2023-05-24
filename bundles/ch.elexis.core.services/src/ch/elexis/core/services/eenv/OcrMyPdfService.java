@@ -30,6 +30,7 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 	public void activate() {
 		try {
 			String ocrMyPdfUrl = elexisEnvironmentService.getOcrMyPdfBaseUrl();
+			// TODO timeout 
 			remoteOcrMyPdfService = ConsumerFactory.createConsumer(ocrMyPdfUrl, new OcrMyPdfClientConfig(),
 					IRemoteOcrMyPdfService.class);
 		} catch (Exception e) {

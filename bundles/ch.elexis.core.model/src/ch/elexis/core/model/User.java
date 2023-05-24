@@ -2,6 +2,8 @@ package ch.elexis.core.model;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -147,5 +149,13 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public boolean isInternal() {
 		return true;
+	}
+	
+	public Set<String> getContactIdsOfExecutiveDoctorsWorkingFor() {
+		String mandators = (String) getAssignedContact().getExtInfo("Mandant");
+		if (mandators == null) {
+			return Collections.emptySet();
+		}
+		return new HashSet<String>(Arrays.asList(mandators.split(",")));
 	}
 }

@@ -1,20 +1,20 @@
 package ch.elexis.core.ui.laboratory.controls.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;

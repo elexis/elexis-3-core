@@ -3,11 +3,11 @@ package ch.elexis.core.ui.locks;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.elexis.admin.ACE;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.data.PersistentObject;
 
@@ -15,16 +15,16 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 
 	private List<T> objects;
 
-	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text) {
-		super(necessaryRight, text);
+	public AllOrNoneLockRequestingRestrictedAction(EvaluatableACE evaluatableAce, String text) {
+		super(evaluatableAce, text);
 	}
 
-	public AllOrNoneLockRequestingRestrictedAction(ACE necessaryRight, String text, int val) {
-		super(necessaryRight, text, val);
+	public AllOrNoneLockRequestingRestrictedAction(EvaluatableACE evaluatableAce, String text, int val) {
+		super(evaluatableAce, text, val);
 	}
 
 	public void doRun() {
-		if (!CoreHub.acl.request(necessaryRight)) {
+		if (!AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
 			return;
 		}
 

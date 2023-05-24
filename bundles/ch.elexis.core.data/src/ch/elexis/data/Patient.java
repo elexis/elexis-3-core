@@ -30,17 +30,20 @@ import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.JdbcLink;
@@ -475,7 +478,8 @@ public class Patient extends Person {
 		Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
 
 		// normally do not display other mandator's balance
-		if (CoreHub.acl.request(AccessControlDefaults.ACCOUNTING_GLOBAL) == false) {
+
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IInvoice.class, Right.READ, "*")) == false) {
 			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
 			if (mandator != null) {
 				rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, mandator.getId());
@@ -603,8 +607,8 @@ public class Patient extends Person {
 	 */
 	public boolean delete(final boolean force) {
 		Fall[] fl = getFaelle();
-		if ((fl.length == 0)
-				|| ((force == true) && (CoreHub.acl.request(AccessControlDefaults.DELETE_FORCED) == true))) {
+		if ((fl.length == 0) || ((force == true) && (AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(ICoverage.class, Right.DELETE).and(Right.EXECUTE)) == true))) {
 			for (Fall f : fl) {
 				f.delete(true);
 			}

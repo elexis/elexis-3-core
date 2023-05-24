@@ -61,11 +61,11 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -77,6 +77,8 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.ac.EvACEs;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
@@ -346,7 +348,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		boolean hlMandantEnabled = actEncounter != null && BillingServiceHolder.get().isEditable(actEncounter).isOK()
-				&& CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN) && unlocked;
+				&& AccessControlServiceHolder.get().evaluate(EvACEs.KONS_REASSIGN) && unlocked;
 		hlMandant.setEnabled(hlMandantEnabled);
 		boolean cbFallEnabled = actEncounter != null && BillingServiceHolder.get().isEditable(actEncounter).isOK()
 				&& unlocked;
@@ -612,7 +614,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			hlMandant.setText(sb.toString());
 
 			boolean hlMandantEnabled = BillingServiceHolder.get().isEditable(encounter).isOK()
-					&& CoreHub.acl.request(AccessControlDefaults.KONS_REASSIGN);
+					&& AccessControlServiceHolder.get().evaluate(EvACEs.KONS_REASSIGN);
 			hlMandant.setEnabled(hlMandantEnabled);
 			diagnosesDisplay.setEncounter(encounter);
 			billedDisplay.setEncounter(encounter);
@@ -704,7 +706,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			}
 		};
 
-		purgeAction = new LockedRestrictedAction<IEncounter>(AccessControlDefaults.AC_PURGE,
+		purgeAction = new LockedRestrictedAction<IEncounter>(EvACE.of(IEncounter.class, Right.REMOVE),
 				Messages.KonsDetailView_PurgeOldEntries) {
 
 			@Override

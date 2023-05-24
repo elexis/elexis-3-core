@@ -29,10 +29,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.interfaces.IContact;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.actions.FlatDataLoader;
@@ -161,7 +163,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	}
 
 	private void makeActions() {
-		delKontakt = new LockedRestrictedAction<Kontakt>(AccessControlDefaults.KONTAKT_DELETE,
+		delKontakt = new LockedRestrictedAction<Kontakt>(EvACE.of(IContact.class, Right.DELETE),
 				Messages.Core_Delete) {
 			@Override
 			public void doRun(Kontakt k) {

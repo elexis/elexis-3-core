@@ -16,7 +16,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IViewSite;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -322,7 +323,7 @@ public class InvoiceActions {
 		};
 
 		changeStatusAction = new AllOrNoneLockRequestingRestrictedAction<Rechnung>(
-				AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY, Messages.RnActions_changeStateAction) {
+				EvACE.of(IInvoice.class, Right.UPDATE), Messages.RnActions_changeStateAction) {
 			{
 				setToolTipText(Messages.RnActions_changeStateTooltip);
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());

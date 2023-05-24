@@ -39,12 +39,15 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -479,8 +482,10 @@ public class TextView extends ViewPart implements IActivationListener {
 			}
 			// txt.getPlugin().clear();
 		} else {
-			loadSysTemplateAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.DOCUMENT_SYSTEMPLATE));
-			saveTemplateAction.setEnabled(CoreHub.acl.request(AccessControlDefaults.DOCUMENT_TEMPLATE));
+			loadSysTemplateAction.setEnabled(AccessControlServiceHolder.get()
+					.evaluate(EvACE.of(IDocumentLetter.class, Right.CREATE).and(Right.UPDATE).and(Right.EXECUTE)));
+			saveTemplateAction.setEnabled(AccessControlServiceHolder.get()
+					.evaluate(EvACE.of(IDocumentLetter.class, Right.CREATE).and(Right.UPDATE)));
 		}
 	}
 

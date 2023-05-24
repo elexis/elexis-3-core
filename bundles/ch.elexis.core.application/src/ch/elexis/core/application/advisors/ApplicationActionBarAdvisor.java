@@ -48,19 +48,15 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
-import ch.elexis.core.ac.AccessControlDefaults;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.services.IAccessControlService;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -100,21 +96,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		window = win;
 		Hub.mainActions = new GlobalActions(window);
 		register(GlobalActions.exitAction);
-		// register(GlobalActions.updateAction);
-		/*
-		 * register(GlobalActions.newWindowAction); register(GlobalActions.copyAction);
-		 * register(GlobalActions.cutAction); register(GlobalActions.pasteAction);
-		 * register(GlobalActions.loginAction); register(GlobalActions.importAction);
-		 * register(GlobalActions.aboutAction); register(GlobalActions.helpAction);
-		 * register(GlobalActions.prefsAction);
-		 * register(GlobalActions.connectWizardAction);
-		 */
-		// register(GlobalActions.savePerspectiveAction);
-		// register(GlobalActions.savePerspectiveAsAction);
-		// register(GlobalActions.resetPerspectiveAction);
-		// register(savePerspectiveAsDefaultAction);
-		// register(MainMenuActions.showViewAction);
-		// register(MainMenuActions.showPerspectiveAction);
 
 		// create open perspective actions according to the list of Sidebar
 		if (CoreHub.localCfg.get(Preferences.SHOWTOOLBARITEMS, Boolean.toString(true))
@@ -151,27 +132,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 						RestrictedAction ra = (RestrictedAction) aci.getAction();
 						ra.reflectRight();
 						continue;
-					}
-					String id = action.getActionDefinitionId();
-					if (id == null) {
-						continue;
-					}
-					IAccessControlService acl = AccessControlServiceHolder.get();
-					switch (id) {
-					case IWorkbenchCommandConstants.FILE_EXIT:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_EXIT));
-						break;
-					case IWorkbenchCommandConstants.WINDOW_NEW_WINDOW:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_NEWWINDOW));
-						break;
-					case IWorkbenchCommandConstants.HELP_ABOUT:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_ABOUT));
-						break;
-					case IWorkbenchCommandConstants.WINDOW_PREFERENCES:
-						action.setEnabled(acl.request(AccessControlDefaults.AC_PREFS));
-						break;
-					default:
-						break;
 					}
 				}
 			}
@@ -225,8 +185,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				IContributionItem[] items = manager.getItems();
 				for (IContributionItem iContributionItem : items) {
 					if ("viewsShortlist".equals(iContributionItem.getId())) { //$NON-NLS-1$
-						iContributionItem.setVisible(
-								AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
+//						iContributionItem.setVisible(
+//								AccessControlServiceHolder.get().request(AccessControlDefaults.AC_SHOWVIEW));
+						iContributionItem.setVisible(true);
 					}
 				}
 			}

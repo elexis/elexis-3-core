@@ -59,7 +59,8 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -479,7 +480,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
-		changeMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY,
+		changeMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.UPDATE),
 				Messages.Core_DoChange_ellipsis) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());

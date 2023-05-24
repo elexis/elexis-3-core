@@ -11,10 +11,6 @@
 
 package ch.elexis.core.ui.actions;
 
-import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
-import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
-import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
-import static ch.elexis.admin.AccessControlDefaults.AC_LOGIN;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
@@ -73,7 +69,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.ConfigurationScope;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
+import ch.elexis.core.ac.SystemCommandConstants;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -245,7 +244,7 @@ public class GlobalActions {
 			}
 		};
 
-		helpAction = new RestrictedAction(AC_HELP, Messages.GlobalActions_ac_handbook) {
+		helpAction = new Action(Messages.GlobalActions_ac_handbook) {
 			{
 				setImageDescriptor(Images.IMG_BOOK.getImageDescriptor());
 				setToolTipText(Messages.GlobalActions_ac_openhandbook);
@@ -253,7 +252,7 @@ public class GlobalActions {
 			}
 
 			@Override
-			public void doRun() {
+			public void run() {
 				Desktop desktop = Desktop.getDesktop();
 				String url = ConfigServiceHolder.getGlobal(UiPreferenceConstants.CFG_HANDBOOK,
 						UiPreferenceConstants.DEFAULT_HANDBOOK);
@@ -291,8 +290,6 @@ public class GlobalActions {
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
 			}
-
-
 
 			@Override
 			public ImageDescriptor getImageDescriptor() {
@@ -342,7 +339,7 @@ public class GlobalActions {
 			}
 
 		};
-		loginAction = new RestrictedAction(AC_LOGIN, Messages.GlobalActions_Login) {
+		loginAction = new RestrictedAction(EvACE.of(SystemCommandConstants.LOGIN_UI), Messages.GlobalActions_Login) {
 			{
 				setId("login"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "login"); //$NON-NLS-1$
@@ -373,14 +370,14 @@ public class GlobalActions {
 				}
 			}
 		};
-		importAction = new RestrictedAction(AC_IMORT, Messages.GlobalActions_Import) {
+		importAction = new Action(Messages.GlobalActions_Import) {
 			{
 				setId("import"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "import"); //$NON-NLS-1$
 			}
 
 			@Override
-			public void doRun() {
+			public void run() {
 				// cnv.open();
 				Importer imp = new Importer(mainWindow.getShell(), ExtensionPointConstantsUi.FREMDDATENIMPORT);
 				imp.create();
@@ -391,7 +388,8 @@ public class GlobalActions {
 			}
 		};
 
-		connectWizardAction = new RestrictedAction(AC_CONNECT, Messages.GlobalActions_Connection) {
+		connectWizardAction = new RestrictedAction(EvACE.of(ConfigurationScope.LOCAL, Right.UPDATE, "verbindung/"),
+				Messages.GlobalActions_Connection) {
 			{
 				setId("connectWizard"); //$NON-NLS-1$
 				setActionDefinitionId(Hub.COMMAND_PREFIX + "connectWizard"); //$NON-NLS-1$
@@ -624,7 +622,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		delFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.DELETE_CASE,
+		delFallAction = new LockedRestrictedAction<Fall>(EvACE.of(ICoverage.class, Right.DELETE),
 				Messages.GlobalActions_DeleteCase) {
 			@Override
 			public void doRun(Fall element) {
@@ -640,7 +638,7 @@ public class GlobalActions {
 				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 			}
 		};
-		delKonsAction = new LockedRestrictedAction<Konsultation>(AccessControlDefaults.KONS_DELETE,
+		delKonsAction = new LockedRestrictedAction<Konsultation>(EvACE.of(IEncounter.class, Right.DELETE),
 				Messages.GlobalActions_DeleteKons) {
 
 			@Override
@@ -691,7 +689,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		reopenFallAction = new LockedRestrictedAction<Fall>(AccessControlDefaults.CASE_REOPEN,
+		reopenFallAction = new LockedRestrictedAction<Fall>(EvACE.of(ICoverage.class, Right.DELETE).and(Right.EXECUTE),
 				Messages.GlobalActions_ReopenCase) {
 			@Override
 			public void doRun(Fall element) {
@@ -917,8 +915,8 @@ public class GlobalActions {
 
 	public static void updateModelOfParts(MPerspective activePerspective, EModelService modelService) {
 		// perspective with actionsets want visible part toolbars
-		if (activePerspective.getTags().stream().filter(t -> t.toLowerCase().contains("actionset"))
-				.findFirst().isPresent()) {
+		if (activePerspective.getTags().stream().filter(t -> t.toLowerCase().contains("actionset")).findFirst()
+				.isPresent()) {
 			List<MPart> mParts = modelService.findElements(getActivePerspective(modelService), null, MPart.class);
 			for (MPart mPart : mParts) {
 				if (mPart.getToolbar() != null) {

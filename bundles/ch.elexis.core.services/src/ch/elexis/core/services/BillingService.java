@@ -19,7 +19,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.ac.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
@@ -103,7 +103,7 @@ public class BillingService implements IBillingService {
 		}
 
 		IMandator encounterMandator = encounter.getMandator();
-		boolean checkMandant = !accessControlService.request(AccessControlDefaults.LSTG_CHARGE_FOR_ALL);
+		boolean checkMandant = !accessControlService.evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
 		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);

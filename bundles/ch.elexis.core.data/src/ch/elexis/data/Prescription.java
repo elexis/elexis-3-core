@@ -19,7 +19,8 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
@@ -27,10 +28,12 @@ import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.nopo.adapter.ArtikelAdapter;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -463,7 +466,7 @@ public class Prescription extends PersistentObject {
 	 */
 	@Override
 	public boolean delete() {
-		if (CoreHub.acl.request(AccessControlDefaults.MEDICATION_MODIFY)) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IPrescription.class, Right.UPDATE))) {
 			stop(null);
 			return true;
 		}
@@ -476,7 +479,7 @@ public class Prescription extends PersistentObject {
 	 * @return
 	 */
 	public boolean remove() {
-		if (CoreHub.acl.request(AccessControlDefaults.DELETE_MEDICATION)) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IPrescription.class, Right.DELETE))) {
 			return super.delete();
 		}
 		return false;
@@ -489,6 +492,7 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1.0
 	 */
 	public void stop(TimeTool until) {
+		// FIXME ACE
 		if (until == null)
 			until = new TimeTool();
 		set(FLD_DATE_UNTIL, until.toString(TimeTool.TIMESTAMP));

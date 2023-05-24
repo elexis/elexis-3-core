@@ -21,9 +21,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.admin.AccessControlDefaults;
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.constants.UiResourceConstants;
@@ -240,7 +242,7 @@ public class RnActions {
 		};
 
 		changeStatusAction = new AllOrNoneLockRequestingRestrictedAction<Rechnung>(
-				AccessControlDefaults.ADMIN_CHANGE_BILLSTATUS_MANUALLY, Messages.RnActions_changeStateAction) { // $NON-NLS-1$
+				EvACE.of(IInvoice.class, Right.UPDATE), Messages.RnActions_changeStateAction) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.RnActions_changeStateTooltip); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());

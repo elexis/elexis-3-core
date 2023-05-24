@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.equinox.internal.app.CommandLineArgs;
+import org.eclipse.core.runtime.Platform;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -40,7 +40,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -89,7 +88,7 @@ public class ConfigService implements IConfigService {
 	}
 
 	private String getLocalConfigFileName() {
-		String[] args = CommandLineArgs.getApplicationArgs();
+		String[] args = Platform.getApplicationArgs();
 		String config = "default"; //$NON-NLS-1$
 		for (String s : args) {
 			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
@@ -253,6 +252,12 @@ public class ConfigService implements IConfigService {
 			return Arrays.asList(split).stream().collect(Collectors.toList());
 		}
 		return defaultValue;
+	}
+	
+	@Override
+	public Map<String, String> getAsMap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -419,6 +424,9 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public Map<Object, Object> getAsMap(IContact contact) {
+		if (contact == null) {
+			throw new IllegalArgumentException();
+		}
 		IQuery<IUserConfig> query = CoreModelServiceHolder.get().getQuery(IUserConfig.class);
 		query.and("ownerid", COMPARATOR.EQUALS, contact.getId());
 		List<IUserConfig> entries = query.execute();
@@ -426,10 +434,10 @@ public class ConfigService implements IConfigService {
 		return ret;
 	}
 
-	private Map<Object, Object> buildMap(List<IUserConfig> entries) {
+	private Map<Object, Object> buildMap(List<? extends IConfig> entries) {
 		Hashtable<Object, Object> ret = new Hashtable<Object, Object>();
-		for (IUserConfig iUserConfig : entries) {
-			buildMap(iUserConfig.getKey(), iUserConfig.getValue(), ret);
+		for (IConfig entry : entries) {
+			buildMap(entry.getKey(), entry.getValue(), ret);
 		}
 		return ret;
 	}
@@ -574,6 +582,12 @@ public class ConfigService implements IConfigService {
 		return localConfig.get(key, defaultValue);
 	}
 
+	@Override
+	public Map<String, String> getLocalAsMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public boolean getActiveMandator(String key, boolean defaultValue) {
 		String defaultValueString = Boolean.toString(defaultValue);
