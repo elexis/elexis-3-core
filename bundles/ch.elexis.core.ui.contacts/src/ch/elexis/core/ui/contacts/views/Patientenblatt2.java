@@ -372,7 +372,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 						KontaktSelektor ks = new KontaktSelektor(getShell(), Kontakt.class,
 								Messages.Patientenblatt2_selectRegularPhysicianTitle,
-								Messages.Patientenblatt2_selectRegularPhysicianMessage, null);
+								Messages.Patientenblatt2_selectRegularPhysicianMessage, false, true);
 						ks.enableEmptyFieldButton();
 						if (ks.open() == Dialog.OK) {
 							Object contactSel = ks.getSelection();
