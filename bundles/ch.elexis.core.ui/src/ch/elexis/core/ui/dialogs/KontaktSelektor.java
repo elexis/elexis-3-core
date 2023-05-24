@@ -19,12 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,14 +47,14 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader.QueryFilter;
 import ch.elexis.core.ui.dialogs.provider.KontaktSelektorLabelProvider;
+import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
@@ -210,32 +210,11 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 
 			mandantenViewer = new ListViewer(mandantenComposite, SWT.SINGLE | SWT.V_SCROLL);
 			mandantenViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-			mandantenViewer.setContentProvider(new IStructuredContentProvider() {
-				public Object[] getElements(Object inputElement) {
-					List<IContact> kontakte = getMandantenKontakte();
-					return kontakte.toArray();
-				}
-
-				public void dispose() {
-
-				}
-
-				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-				}
-			});
-
-			mandantenViewer.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element) {
-					IContact mandant = (IContact) element;
-					return mandant.getDescription1() + " " + mandant.getDescription2() + " "
-							+ mandant.getDescription3();
-				}
-			});
-
-			mandantenViewer.setInput(this);
+			mandantenViewer.setContentProvider(ArrayContentProvider.getInstance());
+			mandantenViewer.setLabelProvider(new IdentifiableLabelProvider());
+			IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
+			List<IMandator> list = query.execute();
+			mandantenViewer.setInput(list);
 			ScrollBar scrollBar = mandantenViewer.getList().getVerticalBar();
 			scrollBar.setVisible(true);
 			scrollBar.setEnabled(true);
@@ -254,19 +233,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 					}
 				}
 			});
-			mandantenViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-
-				}
-			});
 			mandantenViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
-					Object selection = getMandatKontaktSelection();
-					if (selection instanceof IContact) {
-						IContact mandant = (IContact) selection;
-						Kontakt kontakt = Kontakt.load(mandant.getId());
-					}
-
 					okPressed();
 				}
 			});
@@ -429,25 +397,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		cv.addDoubleClickListener(this);
 		// cv.getViewerWidget().addFilter(filter);
 		kl.addQueryFilter(fp);
-
-		if (bezugsKontaktViewer != null) {
-			cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					if (isSelecting) {
-						return;
-					}
-
-					if (bezugsKontaktViewer != null) {
-						IStructuredSelection sel = (IStructuredSelection) bezugsKontaktViewer.getSelection();
-						if (sel.size() > 0) {
-							isSelecting = true;
-							bezugsKontaktViewer.setSelection(new StructuredSelection(), false);
-							isSelecting = false;
-						}
-					}
-				}
-			});
-		}
+		addSelectionChangedListener(bezugsKontaktViewer);
+		addSelectionChangedListener(mandantenViewer);
 		return ret;
 	}
 
@@ -460,6 +411,26 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			bAll.setSelection(true);
 		}
 
+	}
+
+	private void addSelectionChangedListener(ListViewer viewer) {
+		if (viewer != null) {
+			cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					if (isSelecting) {
+						return;
+					}
+					if (viewer != null) {
+						IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+						if (sel.size() > 0) {
+							isSelecting = true;
+							viewer.setSelection(new StructuredSelection(), false);
+							isSelecting = false;
+						}
+					}
+				}
+			});
+		}
 	}
 
 	public Object getSelection() {
@@ -531,7 +502,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 
 		return mandatKontakt;
 	}
-	
+
 	/*
 	 * (Kein Javadoc)
 	 *
@@ -589,6 +560,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 					fp.setType(0);
 				}
 				cv.notify(CommonViewer.Message.update);
+
 			}
 		}
 	}
@@ -679,12 +651,6 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			}
 		}
 
-	}
-
-	private List<IContact> getMandantenKontakte() {
-		IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
-		query.and(ModelPackage.Literals.ICONTACT__MANDATOR, COMPARATOR.EQUALS, true);
-		return query.execute();
 	}
 
 	public void enableEmptyFieldButton(String emptyFieldLabel) {
