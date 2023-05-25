@@ -47,12 +47,12 @@ public class DummyPatientResolver extends HL7PatientResolver {
 	}
 
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate) {
+	public IPatient resolvePatient(String patid, String firstname, String lastname, String birthDate) {
 		return patient;
 	}
 
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate, String sender) {
-		return resolvePatient(firstname, lastname, birthDate);
+	public IPatient resolvePatient(String patid, String firstname, String lastname, String birthDate, String sender) {
+		return resolvePatient(patid, firstname, lastname, birthDate);
 	}
 }

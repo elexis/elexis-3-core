@@ -1,8 +1,8 @@
 package ch.elexis.hl7;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public abstract class HL7Reader {
 
 	private String[] abnormalFlagStartCharacters = { "-", "+", "<", ">", "L", "H", "A" };
 
-	protected void resolvePatient(String firstName, String lastName, String birthDate) {
+	protected void resolvePatient(String patid, String firstName, String lastName, String birthDate) {
 		String sender = null;
 		try {
 			sender = getSender();
@@ -64,9 +64,9 @@ public abstract class HL7Reader {
 		}
 		if (pat == null) {
 			if (sender != null && !sender.isEmpty()) {
-				pat = patientResolver.resolvePatient(firstName, lastName, birthDate, sender);
+				pat = patientResolver.resolvePatient(firstName, lastName, birthDate, sender, patid);
 			} else {
-				pat = patientResolver.resolvePatient(firstName, lastName, birthDate);
+				pat = patientResolver.resolvePatient(firstName, lastName, birthDate, patid);
 			}
 		}
 		if (pat == null) {
@@ -84,7 +84,7 @@ public abstract class HL7Reader {
 			pat = null;
 			logger.warn(sb.toString());
 
-			resolvePatient(firstName, lastName, birthDate);
+			resolvePatient(firstName, lastName, birthDate, sex);
 		}
 	}
 

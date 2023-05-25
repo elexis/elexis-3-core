@@ -1,11 +1,11 @@
 package ch.elexis.hl7.v2x;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +65,7 @@ public class HL7ReaderV251 extends HL7Reader {
 	@Override
 	public String getSender() throws ElexisException {
 		String sender;
+
 		try {
 			MSH msh = (MSH) message.get("MSH");
 			sender = msh.getMsh4_SendingFacility().getNamespaceID().getValue();
@@ -273,7 +274,6 @@ public class HL7ReaderV251 extends HL7Reader {
 				// We did not find the patient using the PatID, so we try the
 				// name and birthdate
 				list = patientResolver.findPatientByNameAndBirthdate(lastName, firstName, birthDate);
-
 				if ((list != null) && (list.size() == 1)) {
 					pat = list.get(0);
 				} else {
@@ -308,7 +308,7 @@ public class HL7ReaderV251 extends HL7Reader {
 
 						pat.setPhone1(phone);
 					} else {
-						resolvePatient(firstName, lastName, birthDate);
+						resolvePatient(patid, firstName, lastName, birthDate);
 					}
 				}
 			} else {

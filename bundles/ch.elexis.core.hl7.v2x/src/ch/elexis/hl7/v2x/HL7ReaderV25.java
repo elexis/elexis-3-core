@@ -236,7 +236,7 @@ public class HL7ReaderV25 extends HL7Reader {
 
 						pat.setPhone1(phone);
 					} else {
-						resolvePatient(firstName, lastName, birthDate);
+						resolvePatient(patid, firstName, lastName, birthDate);
 					}
 				}
 			} else {
