@@ -16,7 +16,7 @@ public abstract class HL7PatientResolver {
 	 * @param birthDate
 	 * @return
 	 */
-	public abstract IPatient resolvePatient(String patid, String firstname, String lastname, String birthDate);
+	public abstract IPatient resolvePatient(String firstname, String lastname, String birthDate, String patid);
 
 	/**
 	 * Search for an existing {@link IPatient} with the provided properties.
@@ -30,7 +30,7 @@ public abstract class HL7PatientResolver {
 	 * @param sender
 	 * @return
 	 */
-	public abstract IPatient resolvePatient(String patid, String firstname, String lastname, String birthDate,
+	public abstract IPatient resolvePatient(String firstname, String lastname, String birthDate, String patid,
 			String sender);
 
 	/**

@@ -238,7 +238,7 @@ public class HL7ReaderV23 extends HL7Reader {
 				// is the correct name
 				pat = list.get(0);
 				if (lastName.length() != 0 && firstName.length() != 0) {
-					checkConflict(firstName, lastName, birthDate, sex);
+					checkConflict(firstName, lastName, birthDate, sex, patid);
 				}
 			}
 		}

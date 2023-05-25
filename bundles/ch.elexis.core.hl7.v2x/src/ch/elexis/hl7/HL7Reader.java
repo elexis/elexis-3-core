@@ -74,7 +74,7 @@ public abstract class HL7Reader {
 		}
 	}
 
-	protected void checkConflict(String firstName, String lastName, String birthDate, String sex) {
+	protected void checkConflict(String firstName, String lastName, String birthDate, String sex, String patid) {
 		if (!patientResolver.matchPatient(pat, firstName, lastName, birthDate)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(Messages.HL7_NameConflictWithID).append("[" + pat.getPatientNr() + "]").append(":\n")
@@ -84,7 +84,7 @@ public abstract class HL7Reader {
 			pat = null;
 			logger.warn(sb.toString());
 
-			resolvePatient(firstName, lastName, birthDate, sex);
+			resolvePatient(firstName, lastName, birthDate, patid);
 		}
 	}
 
