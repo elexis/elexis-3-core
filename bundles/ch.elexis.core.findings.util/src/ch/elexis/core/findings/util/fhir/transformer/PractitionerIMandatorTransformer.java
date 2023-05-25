@@ -23,7 +23,7 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
 
-@Component
+@Component(property = IFhirTransformer.TRANSFORMERID + "=Practitioner.IMandator")
 public class PractitionerIMandatorTransformer implements IFhirTransformer<Practitioner, IMandator> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
