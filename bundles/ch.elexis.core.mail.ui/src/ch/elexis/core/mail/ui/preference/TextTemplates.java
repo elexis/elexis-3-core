@@ -76,7 +76,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
 
-	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE";
+	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -160,17 +160,24 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 				ITextTemplate template = (ITextTemplate) selectedTextTemplate.getFirstElement();
 
 				IBlobSecondary textTemplate = CoreModelServiceHolder.get()
-						.load("TEXTTEMPLATE_" + template.getId(), IBlobSecondary.class).orElse(null);
+						.load(NAMED_BLOB_PREFIX + template.getId(), IBlobSecondary.class).orElse(null);
 
 				if (textTemplate != null) {
 					byte[] attachmentData = textTemplate.getContent();
-					List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
 					try {
-						Path temp = Files.createTempFile(fileList.get(index).getName(), ".pdf");
+						List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
 
-						Files.write(temp, fileList.get(index).getData());
-						Program.launch(temp.toString());
-					} catch (IOException e) {
+						try {
+							Path temp = Files.createTempFile(fileList.get(index).getName(), ".pdf");
+
+							Files.write(temp, fileList.get(index).getData());
+							Program.launch(temp.toString());
+						} catch (IOException e) {
+							MessageDialog.openError(getShell(), "Dokument Fehler",
+									"Das Dokument konnte nicht geladen werden.");
+							e.printStackTrace();
+						}
+					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 				}
@@ -264,12 +271,16 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		if (selection != null && template instanceof ITextTemplate) {
 
 			IBlobSecondary textTemplate = CoreModelServiceHolder.get()
-					.load("TEXTTEMPLATE_" + template.getId(), IBlobSecondary.class).orElse(null);
+					.load(NAMED_BLOB_PREFIX + template.getId(), IBlobSecondary.class).orElse(null);
 
 			if (textTemplate != null) {
 				byte[] attachmentData = textTemplate.getContent();
-				List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
-				tableViewer.setInput(fileList);
+				try {
+					List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
+					tableViewer.setInput(fileList);
+				} catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			} else {
 				tableViewer.setInput(null);
 			}
@@ -358,12 +369,12 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 				if (document != null) {
 					try {
-						String id = NAMED_BLOB_PREFIX + "_" + template.getId();
+						String id = NAMED_BLOB_PREFIX + template.getId();
 						IBlobSecondary textTemplate = CoreModelServiceHolder.get().load(id, IBlobSecondary.class)
 								.orElse(null);
 						if (textTemplate == null) {
 							textTemplate = CoreModelServiceHolder.get().create(IBlobSecondary.class);
-							textTemplate.setId(NAMED_BLOB_PREFIX + "_" + template.getId());
+							textTemplate.setId(id);
 						}
 
 						byte[] bytes = Files.readAllBytes(Paths.get(document));
@@ -372,11 +383,16 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						if (textTemplate.getContent() != null) {
 							byte[] DBArrayList = textTemplate.getContent();
-							List<SerializableFile> deserializedContent = SerializableFileUtil
-									.deserializeData(DBArrayList);
-							for (SerializableFile serializableFile : deserializedContent) {
-								fileList.add(new SerializableFile(serializableFile.getName(),
-										serializableFile.getMimeType(), serializableFile.getData()));
+							try {
+								List<SerializableFile> deserializedContent = SerializableFileUtil
+										.deserializeData(DBArrayList);
+
+								for (SerializableFile serializableFile : deserializedContent) {
+									fileList.add(new SerializableFile(serializableFile.getName(),
+											serializableFile.getMimeType(), serializableFile.getData()));
+								}
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
 							}
 						}
 
@@ -412,18 +428,23 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 			ITextTemplate template = (ITextTemplate) selection.getFirstElement();
 			int index = tableViewer.getTable().getSelectionIndex();
 
-			String id = NAMED_BLOB_PREFIX + "_" + template.getId();
+			String id = NAMED_BLOB_PREFIX + template.getId();
 			IBlobSecondary textTemplate = CoreModelServiceHolder.get().load(id, IBlobSecondary.class).orElse(null);
 
 			if (textTemplate != null) {
 				byte[] attachmentData = textTemplate.getContent();
-				ArrayList<SerializableFile> fileList = (ArrayList<SerializableFile>) SerializableFileUtil
-						.deserializeData(attachmentData);
-				if (index >= 0 && index < fileList.size()) {
-					fileList.remove(index);
-					byte[] serializedData = SerializableFileUtil.serializeData(fileList);
-					textTemplate.setContent(serializedData);
-					CoreModelServiceHolder.get().save(textTemplate);
+				try {
+					ArrayList<SerializableFile> fileList = (ArrayList<SerializableFile>) SerializableFileUtil
+							.deserializeData(attachmentData);
+
+					if (index >= 0 && index < fileList.size()) {
+						fileList.remove(index);
+						byte[] serializedData = SerializableFileUtil.serializeData(fileList);
+						textTemplate.setContent(serializedData);
+						CoreModelServiceHolder.get().save(textTemplate);
+					}
+				} catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
 
