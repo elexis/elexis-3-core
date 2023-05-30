@@ -17,7 +17,7 @@ class HL7ImporterPatientResolver extends AbstractHL7PatientResolver {
 	}
 
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate, String sender) {
+	public IPatient resolvePatient(String firstname, String lastname, String birthDate, String sender, String patid) {
 		// TODO
 		return null;
 	}

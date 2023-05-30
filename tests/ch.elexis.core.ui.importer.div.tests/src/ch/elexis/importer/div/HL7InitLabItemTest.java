@@ -101,7 +101,7 @@ public class HL7InitLabItemTest {
 		}
 
 		@Override
-		public IPatient resolvePatient(String firstname, String lastname, String birthDate) {
+		public IPatient resolvePatient(String firstname, String lastname, String birthDate, String patid) {
 			if (last == null || last == male) {
 				last = female;
 				return female;
@@ -118,7 +118,7 @@ public class HL7InitLabItemTest {
 
 		@Override
 		public List<? extends IPatient> getPatientById(String patid) {
-			return Collections.singletonList(resolvePatient("", "", ""));
+			return Collections.singletonList(resolvePatient("", "", "", ""));
 		}
 	}
 }

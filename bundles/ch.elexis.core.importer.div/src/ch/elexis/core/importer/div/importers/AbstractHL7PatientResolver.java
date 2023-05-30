@@ -1,7 +1,7 @@
 package ch.elexis.core.importer.div.importers;
 
 import java.util.List;
-import org.eclipse.emf.ecore.EAttribute;
+
 import org.slf4j.Logger;
 
 import ch.elexis.core.model.IPatient;
@@ -24,8 +24,8 @@ public abstract class AbstractHL7PatientResolver extends HL7PatientResolver {
 	Logger logger;
 
 	@Override
-	public IPatient resolvePatient(String firstname, String lastname, String birthDate) {
-		return resolvePatient(firstname, lastname, birthDate, null);
+	public IPatient resolvePatient(String patid, String firstname, String lastname, String birthDate) {
+		return resolvePatient(firstname, lastname, birthDate, patid);
 	}
 
 	@Override
