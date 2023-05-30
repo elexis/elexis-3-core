@@ -236,7 +236,7 @@ public class HL7ReaderV25 extends HL7Reader {
 
 						pat.setPhone1(phone);
 					} else {
-						resolvePatient(patid, firstName, lastName, birthDate);
+						resolvePatient(firstName, lastName, birthDate);
 					}
 				}
 			} else {
@@ -244,7 +244,7 @@ public class HL7ReaderV25 extends HL7Reader {
 				// is the correct name
 				pat = list.get(0);
 				if (lastName.length() != 0 && firstName.length() != 0) {
-					checkConflict(firstName, lastName, birthDate, sex, patid);
+					checkConflict(firstName, lastName, birthDate, sex);
 				}
 			}
 		}
