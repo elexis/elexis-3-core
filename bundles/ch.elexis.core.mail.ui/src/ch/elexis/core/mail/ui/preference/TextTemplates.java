@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.mail.MailTextTemplate;
@@ -77,6 +78,8 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private TableViewer tableViewer;
 
 	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
+
+	private static Logger logger = LoggerFactory.getLogger(TextTemplates.class);
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -167,18 +170,15 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 					try {
 						List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
 
-						try {
-							Path temp = Files.createTempFile(fileList.get(index).getName(), ".pdf");
+						Path temp = Files.createTempFile(fileList.get(index).getName(),
+								fileList.get(index).getMimeType());
 
-							Files.write(temp, fileList.get(index).getData());
-							Program.launch(temp.toString());
-						} catch (IOException e) {
-							e.printStackTrace();
-							MessageDialog.openError(getShell(), "Error", "Das Dokument konnte nicht geladen werden");
-						}
+						Files.write(temp, fileList.get(index).getData());
+						Program.launch(temp.toString());
 					} catch (IOException | ClassNotFoundException e) {
-						e.printStackTrace();
-						MessageDialog.openError(getShell(), "Error", "Fehler bei der Deserialisierung. Siehe log file");
+						MessageDialog.openError(getShell(), "Fehler",
+								"Das Dokument kann nicht geladen werden.");
+						logger.info("Error loading document", e);
 					}
 				}
 			}
@@ -243,7 +243,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 						} catch (IOException e1) {
 							MessageDialog.openError(getShell(), "Fehler",
 									"Die Datei konnte nicht als Praxis Logo importiert werden.");
-							LoggerFactory.getLogger(getClass()).error("Error importing praxislogo", e);
+							logger.info("Error importing praxislogo", e);
 						}
 					}
 				}
@@ -279,8 +279,8 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 					List<SerializableFile> fileList = SerializableFileUtil.deserializeData(attachmentData);
 					tableViewer.setInput(fileList);
 				} catch (IOException | ClassNotFoundException e) {
-					e.printStackTrace();
-					MessageDialog.openError(getShell(), "Error", "Daten können nicht geladen werden. Siehe log file");
+					MessageDialog.openError(getShell(), "Fehler", "Die Daten können nicht geladen werden.");
+					logger.info("Error loading texttemplate content", e);
 				}
 			} else {
 				tableViewer.setInput(null);
@@ -380,11 +380,11 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						byte[] bytes = Files.readAllBytes(Paths.get(document));
 						ArrayList<SerializableFile> fileList = new ArrayList<SerializableFile>();
-						fileList.add(new SerializableFile(fileDialog.getFileName(), "application/pdf", bytes));
+						String mimeType = fileDialog.getFileName().substring(fileDialog.getFileName().lastIndexOf("."));
+						fileList.add(new SerializableFile(fileDialog.getFileName(), mimeType, bytes));
 
 						if (textTemplate.getContent() != null) {
 							byte[] DBArrayList = textTemplate.getContent();
-							try {
 								List<SerializableFile> deserializedContent = SerializableFileUtil
 										.deserializeData(DBArrayList);
 
@@ -392,21 +392,16 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 									fileList.add(new SerializableFile(serializableFile.getName(),
 											serializableFile.getMimeType(), serializableFile.getData()));
 								}
-							} catch (ClassNotFoundException e) {
-								e.printStackTrace();
-								MessageDialog.openError(getShell(), "Error",
-										"Dokument kann nicht hinzugefügt werden. Sieh log file");
-							}
 						}
 
 						byte[] data = SerializableFileUtil.serializeData(fileList);
 						textTemplate.setContent(data);
 
 						CoreModelServiceHolder.get().save(textTemplate);
-					} catch (IOException e) {
-						e.printStackTrace();
-						MessageDialog.openError(getShell(), "Error",
-								"Dokument kann nicht hinzugefügt werden. Siehe log file");
+					} catch (IOException | ClassNotFoundException e) {
+						MessageDialog.openError(getShell(), "Fehler",
+								"Das Dokument kann nicht hinzugefügt werden.");
+						logger.info("Error saving document", e);
 					}
 				}
 			}
@@ -449,8 +444,8 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 						CoreModelServiceHolder.get().save(textTemplate);
 					}
 				} catch (IOException | ClassNotFoundException e) {
-					e.printStackTrace();
-					MessageDialog.openError(getShell(), "Error", "Dokument kann nicht entfernt werden. Sieh log file");
+					MessageDialog.openError(getShell(), "Fehler", "Das Dokument kann nicht entfernt werden.");
+					logger.info("Error deleting document", e);
 				}
 			}
 
