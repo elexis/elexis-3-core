@@ -219,7 +219,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				@Override
 				public void doRun() {
 					StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
-					User u = (User) ss.getFirstElement();
+					IUser u = (IUser) ss.getFirstElement();
 					LockResponse acquireLock = LocalLockServiceHolder.get().acquireLock(u);
 					if (acquireLock.isOk()) {
 						setUnlocked(true);
