@@ -275,7 +275,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			btnLock.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					IPersistentObject user = (IPersistentObject) wvUser.getValue();
+					IUser user = wvUser.getValue();
 					if (LocalLockServiceHolder.get().isLocked(user)) {
 						LocalLockServiceHolder.get().releaseLock(user);
 					} else {
