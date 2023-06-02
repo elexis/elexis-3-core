@@ -62,7 +62,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import ch.elexis.admin.AccessControlDefaults;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -183,27 +182,27 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		};
 		popManager.add(addUserAction);
 
-		deleteUserAction = new LockedRestrictedAction<User>(AccessControlDefaults.USER_DELETE,
+		deleteUserAction = new LockedRestrictedAction<IUser>(AccessControlDefaults.USER_DELETE,
 				Messages.LabGroupPrefs_delete) {
 
 			@Override
-			public User getTargetedObject() {
+			public IUser getTargetedObject() {
 				if (tableViewerUsers == null) {
 					return null;
 				}
 				StructuredSelection ss = (StructuredSelection) tableViewerUsers.getSelection();
-				return (ss != null) ? (User) ss.getFirstElement() : null;
+				return (ss != null) ? (IUser) ss.getFirstElement() : null;
 			}
 
 			@Override
-			public void doRun(User user) {
+			public void doRun(IUser user) {
 				IUser currentUser = ContextServiceHolder.get().getActiveUser().orElse(null);
 				if (currentUser != null) {
 					if (currentUser.getId().equals(user.getId())) {
 						MessageDialog.openWarning(getShell(), "Warnung",
 								"Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
 					} else {
-						user.delete();
+						CoreModelServiceHolder.get().delete(user);
 						updateUserList();
 						wvUser.setValue(null);
 						wvUserContact.setValue(null);
@@ -270,7 +269,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 		if (!(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get().getConnectionStatus())) {
 			Button btnLock = new Button(compositeButtons, SWT.FLAT | SWT.TOGGLE);
-			btnLock.setSelection(LocalLockServiceHolder.get().isLocked((IPersistentObject) wvUser.getValue()));
+			btnLock.setSelection(LocalLockServiceHolder.get().isLocked(wvUser.getValue()));
 			btnLock.setImage(Images.IMG_LOCK_OPEN.getImage());
 			btnLock.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -281,7 +280,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					} else {
 						lockUserAction.doRun();
 					}
-					boolean locked = LocalLockServiceHolder.get().isLocked((IPersistentObject) wvUser.getValue());
+					boolean locked = LocalLockServiceHolder.get().isLocked(wvUser.getValue());
 					btnLock.setSelection(locked);
 					setUnlocked(locked);
 				}
