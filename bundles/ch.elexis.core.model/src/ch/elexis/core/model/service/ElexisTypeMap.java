@@ -14,6 +14,7 @@ import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.FreeTextDiagnosis;
+import ch.elexis.core.jpa.entities.Heap;
 import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.LabResult;
@@ -87,6 +88,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_AUF = "ch.elexis.data.AUF";
 	public static final String TYPE_STICKER = "ch.elexis.data.Sticker";
 	public static final String TYPE_REZEPT = "ch.elexis.data.Rezept";
+	public static final String TYPE_NAMEDBLOB = "ch.elexis.data.NamedBlob";
 
 	static {
 		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
@@ -141,6 +143,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Sticker.class, TYPE_STICKER);
 		stsToClassMap.put(TYPE_REZEPT, Rezept.class);
 		classToStsMap.put(Rezept.class, TYPE_REZEPT);
+		stsToClassMap.put(TYPE_NAMEDBLOB, Heap.class);
+		classToStsMap.put(Heap.class, TYPE_NAMEDBLOB);
 
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);
