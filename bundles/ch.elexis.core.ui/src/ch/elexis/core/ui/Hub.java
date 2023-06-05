@@ -107,7 +107,9 @@ public class Hub extends AbstractUIPlugin {
 	@Inject
 	public void activePatient(@Optional IPatient patient) {
 		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-		Hub.setWindowText(pat);
+		Display.getDefault().syncExec(() -> {
+			Hub.setWindowText(pat);
+		});
 
 		commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
 
