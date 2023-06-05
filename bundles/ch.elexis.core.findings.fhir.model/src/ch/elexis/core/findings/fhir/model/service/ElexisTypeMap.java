@@ -2,6 +2,7 @@ package ch.elexis.core.findings.fhir.model.service;
 
 import java.util.HashMap;
 
+import ch.elexis.core.jpa.entities.AllergyIntolerance;
 import ch.elexis.core.jpa.entities.Condition;
 import ch.elexis.core.jpa.entities.DocumentReference;
 import ch.elexis.core.jpa.entities.Encounter;
@@ -36,6 +37,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Observation.class, "ch.elexis.core.findings.fhir.po.model.Observation");
 		stsToClassMap.put("ch.elexis.core.findings.fhir.po.model.DocumentReference", DocumentReference.class);
 		classToStsMap.put(DocumentReference.class, "ch.elexis.core.findings.fhir.po.model.DocumentReference");
+		stsToClassMap.put("ch.elexis.core.findings.fhir.po.model.AllergyIntolerance", AllergyIntolerance.class);
+		classToStsMap.put(AllergyIntolerance.class, "ch.elexis.core.findings.fhir.po.model.AllergyIntolerance");
 	}
 
 	/**

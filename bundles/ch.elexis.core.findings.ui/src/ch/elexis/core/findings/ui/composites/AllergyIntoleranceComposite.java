@@ -36,11 +36,18 @@ public class AllergyIntoleranceComposite extends Composite {
 		initDataBindings();
 	}
 
-	public void setInput(Optional<IAllergyIntolerance> input) {
+	public void setAllergyIntolerance(Optional<IAllergyIntolerance> input) {
 		if (textOberservation != null) {
 			item.setValue(new AllergyIntoleranceBeanAdapter(input.isPresent() ? input.get()
 					: FindingsServiceComponent.getService().create(IAllergyIntolerance.class)).autoSave(true));
 		}
+	}
+
+	public Optional<IAllergyIntolerance> getAllergyIntolerance() {
+		if (item.getValue() != null) {
+			return Optional.ofNullable((IAllergyIntolerance) item.getValue().getFinding());
+		}
+		return Optional.empty();
 	}
 
 	protected void initDataBindings() {

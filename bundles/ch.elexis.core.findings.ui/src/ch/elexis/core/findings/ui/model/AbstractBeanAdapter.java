@@ -47,6 +47,10 @@ public abstract class AbstractBeanAdapter<T extends IFinding> {
 		return finding.getLabel();
 	}
 
+	public IFinding getFinding() {
+		return finding;
+	}
+
 	protected void autoSave() {
 		if (autoSave) {
 			save();

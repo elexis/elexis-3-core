@@ -1,16 +1,15 @@
 package ch.elexis.core.findings.ui.viewcontributions;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.migration.IMigratorService;
-import ch.elexis.core.findings.ui.composites.AllergyIntoleranceComposite;
+import ch.elexis.core.findings.ui.composites.AllergyIntoleranceListComposite;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
@@ -18,7 +17,7 @@ import ch.elexis.data.Patient;
 
 public class AllergyIntoleranceViewContribution implements IViewContribution {
 
-	AllergyIntoleranceComposite allergyIntoleranceComposite;
+	private AllergyIntoleranceListComposite allergyIntoleranceComposite;
 
 	@Override
 	public void setUnlocked(boolean unlocked) {
@@ -38,7 +37,7 @@ public class AllergyIntoleranceViewContribution implements IViewContribution {
 
 	@Override
 	public Composite initComposite(Composite parent) {
-		allergyIntoleranceComposite = new AllergyIntoleranceComposite(parent, SWT.NONE);
+		allergyIntoleranceComposite = new AllergyIntoleranceListComposite(parent, SWT.NONE);
 		return allergyIntoleranceComposite;
 	}
 
@@ -52,16 +51,11 @@ public class AllergyIntoleranceViewContribution implements IViewContribution {
 						IAllergyIntolerance.class);
 			}
 
-			if (iFindings != null && iFindings.size() >= 1) {
-				if (iFindings.size() > 1) {
-					MessageDialog.openWarning(allergyIntoleranceComposite.getShell(), "Allergien",
-							"Mehr als eine Allergien Einträge gefunden.\n Nur die letzte Allergie wird angezeigt.");
-				}
-				allergyIntoleranceComposite.setInput(Optional.of(((List<IAllergyIntolerance>) iFindings).get(0)));
+			if (iFindings != null && !iFindings.isEmpty()) {
+				allergyIntoleranceComposite.setInput((List<IAllergyIntolerance>) iFindings);
 			} else {
-				allergyIntoleranceComposite.setInput(Optional.empty());
+				allergyIntoleranceComposite.setInput(Collections.emptyList());
 			}
 		}
-
 	}
 }

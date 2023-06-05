@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.fhir.model;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -31,6 +32,24 @@ public class AllergyIntolerance extends AbstractFindingModelAdapter<ch.elexis.co
 			saveResource(resource.get());
 		}
 		getEntity().setPatientId(patientId);
+	}
+
+	@Override
+	public AllergyIntoleranceCategory getCategory() {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getCategory((DomainResource) resource.get());
+		}
+		return AllergyIntoleranceCategory.UNKNOWN;
+	}
+
+	@Override
+	public Optional<LocalDate> getDateRecorded() {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getDateRecorded((DomainResource) resource.get());
+		}
+		return Optional.empty();
 	}
 
 	@Override

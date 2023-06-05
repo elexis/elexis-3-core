@@ -10,6 +10,47 @@
  ******************************************************************************/
 package ch.elexis.core.findings;
 
-public interface IAllergyIntolerance extends IFinding {
+import java.time.LocalDate;
+import java.util.MissingResourceException;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
+public interface IAllergyIntolerance extends IFinding {
+	public enum AllergyIntoleranceCategory {
+		UNKNOWN("unknown"), FOOD("food"), MEDICATION("medication"), ENVIRONMENT("environment"), BIOLOGIC("biologic");
+
+		private String code;
+
+		private AllergyIntoleranceCategory(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getLocalized() {
+			try {
+				String localized = ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)
+						.getString(this.getClass().getSimpleName() + "_" + this.name());
+				return localized;
+			} catch (MissingResourceException e) {
+				return this.toString();
+			}
+		}
+	}
+
+	/**
+	 * Get the allergy intolerance category.
+	 *
+	 * @return
+	 */
+	public AllergyIntoleranceCategory getCategory();
+
+	/**
+	 * Get the date the {@link IAllergyIntolerance} was documented.
+	 *
+	 * @return
+	 */
+	public Optional<LocalDate> getDateRecorded();
 }
