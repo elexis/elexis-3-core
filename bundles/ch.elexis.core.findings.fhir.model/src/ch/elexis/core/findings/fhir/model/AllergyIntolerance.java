@@ -1,12 +1,15 @@
 package ch.elexis.core.findings.fhir.model;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.DomainResource;
 
 import ch.elexis.core.findings.IAllergyIntolerance;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.util.fhir.accessor.AllergyIntoleranceAccessor;
 import ch.elexis.core.model.IXid;
 
@@ -50,6 +53,24 @@ public class AllergyIntolerance extends AbstractFindingModelAdapter<ch.elexis.co
 			return accessor.getDateRecorded((DomainResource) resource.get());
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public List<ICoding> getCoding() {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			return accessor.getCoding((DomainResource) resource.get());
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public void setCoding(List<ICoding> coding) {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setCoding((DomainResource) resource.get(), coding);
+			saveResource(resource.get());
+		}
 	}
 
 	@Override

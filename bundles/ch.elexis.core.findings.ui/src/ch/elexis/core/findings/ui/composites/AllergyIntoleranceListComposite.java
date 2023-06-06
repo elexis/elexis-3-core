@@ -39,6 +39,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IAllergyIntolerance.AllergyIntoleranceCategory;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ui.dialogs.AllergyIntoleranceEditDialog;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.ui.icons.Images;
@@ -97,6 +98,16 @@ public class AllergyIntoleranceListComposite extends Composite {
 							}
 							contentText.append(t);
 						});
+
+						Optional<ICoding> substanceCode = allergy.getCoding().stream()
+								.filter(c -> c.getSystem() != null && c.getSystem().toLowerCase().contains("substance"))
+								.findFirst();
+						if (substanceCode.isPresent()) {
+							if (contentText.length() > 0) {
+								contentText.append(StringUtils.LF);
+							}
+							contentText.append(substanceCode.get().getDisplay());
+						}
 
 						text.append(contentText.toString());
 

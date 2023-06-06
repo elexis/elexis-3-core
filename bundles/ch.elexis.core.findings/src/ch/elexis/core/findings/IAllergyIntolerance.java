@@ -11,6 +11,7 @@
 package ch.elexis.core.findings;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -53,4 +54,18 @@ public interface IAllergyIntolerance extends IFinding {
 	 * @return
 	 */
 	public Optional<LocalDate> getDateRecorded();
+
+	/**
+	 * Get the coding of the {@link IAllergyIntolerance}.
+	 *
+	 * @return
+	 */
+	public List<ICoding> getCoding();
+
+	/**
+	 * Set the coding of the {@link IAllergyIntolerance}.
+	 *
+	 * @return
+	 */
+	public void setCoding(List<ICoding> coding);
 }

@@ -1,18 +1,22 @@
 package ch.elexis.core.findings.util.fhir.accessor;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.r4.model.AllergyIntolerance;
+import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.IAllergyIntolerance.AllergyIntoleranceCategory;
+import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
+import ch.elexis.core.findings.util.ModelUtil;
 
 public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 
@@ -51,5 +55,24 @@ public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 			}
 		}
 		return AllergyIntoleranceCategory.UNKNOWN;
+	}
+
+	public List<ICoding> getCoding(DomainResource resource) {
+		org.hl7.fhir.r4.model.AllergyIntolerance fhirCondition = (org.hl7.fhir.r4.model.AllergyIntolerance) resource;
+		CodeableConcept codeableConcept = fhirCondition.getCode();
+		if (codeableConcept != null) {
+			return ModelUtil.getCodingsFromConcept(codeableConcept);
+		}
+		return Collections.emptyList();
+	}
+
+	public void setCoding(DomainResource resource, List<ICoding> coding) {
+		org.hl7.fhir.r4.model.AllergyIntolerance fhirCondition = (org.hl7.fhir.r4.model.AllergyIntolerance) resource;
+		CodeableConcept codeableConcept = fhirCondition.getCode();
+		if (codeableConcept == null) {
+			codeableConcept = new CodeableConcept();
+		}
+		ModelUtil.setCodingsToConcept(codeableConcept, coding);
+		fhirCondition.setCode(codeableConcept);
 	}
 }
