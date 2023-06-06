@@ -198,8 +198,7 @@ public class ModelUtil {
 	public static Optional<String> getNarrativeAsString(Narrative narrative) {
 		String text = narrative.getDivAsString();
 		if (text != null) {
-			String divDecodedText = text.replaceAll("<div>|<div xmlns=\"http://www.w3.org/1999/xhtml\">|</div>|</ div>",
-					StringUtils.EMPTY);
+			String divDecodedText = text.replaceAll("[<](/)?div[^>]*[>]", StringUtils.EMPTY);
 			divDecodedText = divDecodedText.replaceAll("<br/>|<br />", StringUtils.LF).replaceAll("&amp;", "&")
 					.replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("'&sect;'", "§");
 			return Optional.of(divDecodedText);
