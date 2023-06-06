@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
-import org.hl7.fhir.r4.model.Condition;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,7 +42,7 @@ public class AllergyIntoleranceIAllergyIntoleranceTransformer
 		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
 		if (resource.isPresent()) {
 			AllergyIntolerance fhirObject = (AllergyIntolerance) resource.get();
-			FhirUtil.setVersionedIdPartLastUpdatedMeta(Condition.class, fhirObject, localObject);
+			FhirUtil.setVersionedIdPartLastUpdatedMeta(AllergyIntolerance.class, fhirObject, localObject);
 			return Optional.of(fhirObject);
 		}
 		return Optional.empty();
