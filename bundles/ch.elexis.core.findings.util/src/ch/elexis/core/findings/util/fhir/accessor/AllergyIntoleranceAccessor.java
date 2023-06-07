@@ -21,8 +21,8 @@ import ch.elexis.core.findings.util.ModelUtil;
 public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 
 	private EnumMapping categoryMapping = new EnumMapping(
-			org.hl7.fhir.r4.model.codesystems.AllergyIntoleranceCategory.class,
-			org.hl7.fhir.r4.model.codesystems.AllergyIntoleranceCategory.NULL,
+			org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory.class,
+			org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory.NULL,
 			ch.elexis.core.findings.IAllergyIntolerance.AllergyIntoleranceCategory.class,
 			ConditionCategory.UNKNOWN);
 
@@ -55,6 +55,18 @@ public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 			}
 		}
 		return AllergyIntoleranceCategory.UNKNOWN;
+	}
+
+	public void setCategory(DomainResource resource, AllergyIntoleranceCategory category) {
+		org.hl7.fhir.r4.model.AllergyIntolerance fhirCondition = (org.hl7.fhir.r4.model.AllergyIntolerance) resource;
+		org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory fhirCategoryCode = (org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory) categoryMapping
+				.getFhirEnumValueByEnum(category);
+		if (fhirCategoryCode != null) {
+			if (fhirCondition.hasCategory()) {
+				fhirCondition.setCategory(null);
+			}
+			fhirCondition.addCategory(fhirCategoryCode);
+		}
 	}
 
 	public List<ICoding> getCoding(DomainResource resource) {

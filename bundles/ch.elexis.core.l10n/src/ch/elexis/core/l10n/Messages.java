@@ -4937,6 +4937,22 @@ public class Messages extends NLS {
 	public static String ZuweiserUebersicht_Name;
 	public static String iMedAction_nameAction;
 	public static String xChangeContributor_thisIsAnOmnivoreDoc;
+	public static String ConditionStatus_UNKNOWN;
+	public static String ConditionStatus_RECURRENCE;
+	public static String ConditionStatus_ACTIVE;
+	public static String ConditionStatus_RELAPSE;
+	public static String ConditionStatus_INACTIVE;
+	public static String ConditionStatus_REMISSION;
+	public static String ConditionStatus_RESOLVED;
+	public static String AllergyIntoleranceCategory_UNKNOWN;
+	public static String AllergyIntoleranceCategory_FOOD;
+	public static String AllergyIntoleranceCategory_MEDICATION;
+	public static String AllergyIntoleranceCategory_ENVIRONMENT;
+	public static String AllergyIntoleranceCategory_BIOLOGIC;
+	public static String ConditionCategory_UNKNOWN;
+	public static String ConditionCategory_PROBLEMLISTITEM;
+	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
+
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

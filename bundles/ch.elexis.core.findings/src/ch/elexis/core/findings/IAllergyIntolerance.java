@@ -49,6 +49,13 @@ public interface IAllergyIntolerance extends IFinding {
 	public AllergyIntoleranceCategory getCategory();
 
 	/**
+	 * Set the allergy intolerance category.
+	 *
+	 * @param category
+	 */
+	public void setCategory(AllergyIntoleranceCategory category);
+
+	/**
 	 * Get the date the {@link IAllergyIntolerance} was documented.
 	 *
 	 * @return

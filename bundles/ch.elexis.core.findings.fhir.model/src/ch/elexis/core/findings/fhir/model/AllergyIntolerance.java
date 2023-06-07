@@ -47,6 +47,15 @@ public class AllergyIntolerance extends AbstractFindingModelAdapter<ch.elexis.co
 	}
 
 	@Override
+	public void setCategory(AllergyIntoleranceCategory category) {
+		Optional<IBaseResource> resource = loadResource();
+		if (resource.isPresent()) {
+			accessor.setCategory((DomainResource) resource.get(), category);
+			saveResource(resource.get());
+		}
+	}
+
+	@Override
 	public Optional<LocalDate> getDateRecorded() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
