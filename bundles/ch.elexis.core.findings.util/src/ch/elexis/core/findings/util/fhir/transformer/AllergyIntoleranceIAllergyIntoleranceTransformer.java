@@ -3,6 +3,7 @@ package ch.elexis.core.findings.util.fhir.transformer;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
 import org.osgi.service.component.annotations.Activate;
@@ -13,7 +14,9 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.accessor.AllergyIntoleranceAccessor;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
@@ -28,6 +31,8 @@ public class AllergyIntoleranceIAllergyIntoleranceTransformer
 
 	@Reference
 	private IFindingsService findingsService;
+
+	private AllergyIntoleranceAccessor accessor = new AllergyIntoleranceAccessor();
 
 	private FindingsContentHelper contentHelper;
 
@@ -51,8 +56,8 @@ public class AllergyIntoleranceIAllergyIntoleranceTransformer
 	@Override
 	public Optional<IAllergyIntolerance> getLocalObject(AllergyIntolerance fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<IAllergyIntolerance> existing = findingsService.findById(fhirObject.getId(),
-					IAllergyIntolerance.class);
+			Optional<IAllergyIntolerance> existing = findingsService.findById(
+					FhirUtil.getLocalId(fhirObject.getId()).orElse(StringUtils.EMPTY), IAllergyIntolerance.class);
 			if (existing.isPresent()) {
 				return Optional.of(existing.get());
 			}
@@ -63,7 +68,16 @@ public class AllergyIntoleranceIAllergyIntoleranceTransformer
 	@Override
 	public Optional<IAllergyIntolerance> updateLocalObject(AllergyIntolerance fhirObject,
 			IAllergyIntolerance localObject) {
-		return Optional.empty();
+		Optional<String> fhirText = ModelUtil.getNarrativeAsString(fhirObject.getText());
+		if (fhirText.isPresent()) {
+			localObject.setText(fhirText.get());
+		} else {
+			localObject.setText(StringUtils.EMPTY);
+		}
+		localObject.setCategory(accessor.getCategory(fhirObject));
+
+		findingsService.saveFinding(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override
