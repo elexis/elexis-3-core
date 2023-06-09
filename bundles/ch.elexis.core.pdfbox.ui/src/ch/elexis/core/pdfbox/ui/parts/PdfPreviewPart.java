@@ -31,6 +31,8 @@ public class PdfPreviewPart {
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
 
+	private IDocument currentDocument;
+
 	@PostConstruct
 	public void postConstruct(Composite parent) throws IOException {
 		scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -50,6 +52,11 @@ public class PdfPreviewPart {
 	@Inject
 	@Optional
 	void activePatient(IPatient patient) throws IOException {
+		// do not unload if document has no connection to a patient
+		if (currentDocument != null && currentDocument.getPatient() == null) {
+			return;
+		}
+
 		if (pdfPreviewPartLoadHandler != null) {
 			pdfPreviewPartLoadHandler.unloadDocument();
 			updatePreview((InputStream) null);
@@ -59,6 +66,7 @@ public class PdfPreviewPart {
 	@Inject
 	@Optional
 	void updatePreview(@UIEventTopic(ElexisUiEventTopics.EVENT_PREVIEW_MIMETYPE_PDF) IDocument pdfIDocument) {
+		currentDocument = pdfIDocument;
 		updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
 	}
 
