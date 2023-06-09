@@ -11,11 +11,11 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Reference;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.IAllergyIntolerance.AllergyIntoleranceCategory;
 import ch.elexis.core.findings.ICoding;
-import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.util.ModelUtil;
 
 public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
@@ -24,7 +24,7 @@ public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 			org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory.class,
 			org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory.NULL,
 			ch.elexis.core.findings.IAllergyIntolerance.AllergyIntoleranceCategory.class,
-			ConditionCategory.UNKNOWN);
+			AllergyIntoleranceCategory.UNKNOWN);
 
 	public void setPatientId(DomainResource resource, String patientId) {
 		AllergyIntolerance fhAllergyIntolerance = (AllergyIntolerance) resource;
@@ -47,9 +47,13 @@ public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 					.getCategory();
 			if (!categories.isEmpty()) {
 				for (Enumeration<org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory> categoryEnum : categories) {
-					Enum<?> localValue = categoryMapping.getLocalEnumValueByEnum(categoryEnum.getValue());
-					if (localValue != null) {
-						return (AllergyIntoleranceCategory) localValue;
+					try {
+						Enum<?> localValue = categoryMapping.getLocalEnumValueByEnum(categoryEnum.getValue());
+						if (localValue != null) {
+							return (AllergyIntoleranceCategory) localValue;
+						}
+					} catch (IllegalArgumentException e) {
+						LoggerFactory.getLogger(AllergyIntoleranceAccessor.class).warn(e.getMessage());
 					}
 				}
 			}
