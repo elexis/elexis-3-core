@@ -1107,9 +1107,6 @@ public abstract class PersistentObject implements IPersistentObject {
 				}
 			} catch (NoSuchMethodException nmex) {
 				log.warn("Fehler bei Felddefinition " + field);
-				ElexisStatus status = new ElexisStatus(ElexisStatus.WARNING, CoreHub.PLUGIN_ID,
-						ElexisStatus.CODE_NOFEEDBACK, "Fehler bei Felddefinition", nmex);
-				ElexisEventDispatcher.fireElexisStatusEvent(status);
 				return mapped;
 			} catch (Exception ex) {
 				// ignore the exceptions calling functions look for
