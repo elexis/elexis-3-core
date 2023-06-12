@@ -63,6 +63,12 @@ public class AllergyIntoleranceAccessor extends AbstractFindingsAccessor {
 
 	public void setCategory(DomainResource resource, AllergyIntoleranceCategory category) {
 		org.hl7.fhir.r4.model.AllergyIntolerance fhirCondition = (org.hl7.fhir.r4.model.AllergyIntolerance) resource;
+		if (category == AllergyIntoleranceCategory.UNKNOWN) {
+			if (fhirCondition.hasCategory()) {
+				fhirCondition.setCategory(null);
+			}
+			return;
+		}
 		org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory fhirCategoryCode = (org.hl7.fhir.r4.model.AllergyIntolerance.AllergyIntoleranceCategory) categoryMapping
 				.getFhirEnumValueByEnum(category);
 		if (fhirCategoryCode != null) {
