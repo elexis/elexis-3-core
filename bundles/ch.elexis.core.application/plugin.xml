@@ -108,7 +108,7 @@
             allowMultiple="true"
             category="ch.elexis.textKategorie"
             class="ch.elexis.core.ui.views.TextView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/document_new.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/briefe_perspective.png"
             id="ch.elexis.TextView"
             inject="true"
             name="%elexis.textView">
@@ -470,7 +470,7 @@
       </perspective>
       <perspective
             class="ch.elexis.core.application.perspectives.BriefePerspektive"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/document_new.png"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/mail.png"
             id="ch.elexis.BriefePerspektive"
             name="%elexis.letterPerspective">
       </perspective>
