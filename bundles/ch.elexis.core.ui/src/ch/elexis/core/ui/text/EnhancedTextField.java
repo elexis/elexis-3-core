@@ -224,12 +224,16 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	}
 
 	public EnhancedTextField(final Composite parent) {
+		this(parent, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+	}
+
+	public EnhancedTextField(final Composite parent, int style) {
 		super(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		setLayout(layout);
-		text = new StyledText(this, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+		text = new StyledText(this, style);
 		text.setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 		text.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		text.addVerifyListener(new ETFVerifyListener());
