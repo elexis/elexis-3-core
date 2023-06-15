@@ -2,12 +2,10 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -40,7 +38,6 @@ public class Heap extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@Column(length = 8)
 	protected LocalDate datum;
 
-	@Basic(fetch = FetchType.LAZY)
 	@Lob()
 	protected byte[] inhalt;
 
