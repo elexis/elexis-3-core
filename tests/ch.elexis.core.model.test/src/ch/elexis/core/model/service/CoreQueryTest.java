@@ -4,7 +4,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
@@ -457,11 +456,13 @@ public class CoreQueryTest {
 		byte[] content = iBlob.getContent();
 		assertArrayEquals(b, content);
 
-		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor()) {
-			iBlob = cursor.next();
-			content = iBlob.getContent();
-			assertNull(content);
-		}
+		// blob content is not lazy any more see ticket
+		// https://redmine.medelexis.ch/issues/25356
+//		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class).executeAsCursor()) {
+//			iBlob = cursor.next();
+//			content = iBlob.getContent();
+//			assertNull(content);
+//		}
 
 		try (IQueryCursor<IBlob> cursor = modelService.getQuery(IBlob.class)
 				.executeAsCursor(Collections.singletonMap(QueryHints.MAINTAIN_CACHE, HintValues.TRUE))) {
