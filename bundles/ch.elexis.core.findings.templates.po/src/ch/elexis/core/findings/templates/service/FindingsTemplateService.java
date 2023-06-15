@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.templates.service;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
@@ -56,6 +56,7 @@ import ch.elexis.core.findings.templates.model.InputDataText;
 import ch.elexis.core.findings.templates.model.ModelFactory;
 import ch.elexis.core.findings.templates.model.Type;
 import ch.elexis.core.model.IBlob;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -213,9 +214,9 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 	}
 
 	@Override
-	public IFinding createFinding(Patient patient, FindingsTemplate findingsTemplate) throws ElexisException {
+	public IFinding createFinding(IPatient patient, FindingsTemplate findingsTemplate) throws ElexisException {
 		IFinding iFinding = null;
-		if (patient != null && patient.exists()) {
+		if (patient != null) {
 			validateCycleDetection(findingsTemplate, 0, 100);
 
 			Type type = findingsTemplate.getType();
@@ -310,7 +311,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		return Optional.empty();
 	}
 
-	private void setFindingsAttributes(IFinding iFinding, Patient patient, FindingsTemplate findingsTemplate) {
+	private void setFindingsAttributes(IFinding iFinding, IPatient patient, FindingsTemplate findingsTemplate) {
 		if (iFinding != null) {
 			iFinding.setPatientId(patient.getId());
 			String text = findingsTemplate.getTitle();
@@ -355,7 +356,7 @@ public class FindingsTemplateService implements IFindingsTemplateService {
 		}
 	}
 
-	private IFinding createObservation(Patient patient, FindingsTemplate findingsTemplate) throws ElexisException {
+	private IFinding createObservation(IPatient patient, FindingsTemplate findingsTemplate) throws ElexisException {
 		IObservation iObservation = create(IObservation.class);
 		iObservation.setEffectiveTime(LocalDateTime.now());
 		switch (findingsTemplate.getType()) {

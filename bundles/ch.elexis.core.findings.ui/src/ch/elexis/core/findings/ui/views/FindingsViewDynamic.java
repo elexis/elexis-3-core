@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ILocalCoding;
@@ -61,7 +60,6 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
-import ch.elexis.data.Patient;
 
 public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
@@ -80,6 +78,26 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 		CoreUiUtil.runAsyncIfActive(() -> {
 			refresh();
 		}, natTable);
+	}
+
+	@Optional
+	@Inject
+	void reloadFindings(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Object clazz) {
+		if (IFinding.class.equals(clazz)) {
+			CoreUiUtil.runAsyncIfActive(() -> {
+				refresh();
+			}, natTable);
+		}
+	}
+
+	@Optional
+	@Inject
+	void reloadCodings(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Object clazz) {
+		if (ICoding.class.equals(clazz)) {
+			CoreUiUtil.runAsyncIfActive(() -> {
+				codeRefresh();
+			}, natTable);
+		}
 	}
 
 	@Optional
@@ -259,8 +277,7 @@ public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 
 	@Override
 	public void refresh() {
-		dataProvider.reload(
-				(Patient) NoPoUtil.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null)));
+		dataProvider.reload(ContextServiceHolder.get().getActivePatient().orElse(null));
 		natTable.refresh();
 	}
 

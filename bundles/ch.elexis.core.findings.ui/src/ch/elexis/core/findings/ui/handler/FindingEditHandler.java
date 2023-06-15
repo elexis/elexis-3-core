@@ -12,11 +12,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.ui.dialogs.FindingsEditDialog;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 
@@ -62,8 +62,7 @@ public class FindingEditHandler extends AbstractHandler implements IHandler {
 							// }
 							// }
 							FindingsServiceComponent.getService().saveFinding(iFinding);
-							ElexisEventDispatcher.getInstance()
-									.fire(new ElexisEvent(iFinding, IFinding.class, ElexisEvent.EVENT_RELOAD));
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IFinding.class);
 							ret = Boolean.TRUE;
 						}
 					}
