@@ -8,11 +8,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ui.dialogs.VisibleCodingsSelectionDialog;
 import ch.elexis.core.findings.ui.util.FindingsUiUtil;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class SelectVisibleCodesHandler extends AbstractHandler implements IHandler {
 
@@ -25,8 +25,7 @@ public class SelectVisibleCodesHandler extends AbstractHandler implements IHandl
 		dialog.setSelected(FindingsUiUtil.loadVisibleCodings());
 		if (dialog.open() == Window.OK) {
 			FindingsUiUtil.saveVisibleCodings(dialog.getSelected());
-			ElexisEventDispatcher.getInstance()
-					.fire(new ElexisEvent(null, ICoding.class, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ICoding.class);
 		}
 		return null;
 	}

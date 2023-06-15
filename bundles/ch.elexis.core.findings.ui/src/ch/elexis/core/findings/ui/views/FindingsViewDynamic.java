@@ -52,6 +52,7 @@ import ch.elexis.core.findings.ui.views.nattable.LabelDataProvider;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper;
 import ch.elexis.core.findings.ui.views.nattable.NatTableWrapper.IDoubleClickListener;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.events.ElexisUiEventListenerImpl;
@@ -255,7 +256,7 @@ public class FindingsViewDynamic extends ViewPart implements IActivationListener
 	}
 
 	public void refresh() {
-		dataProvider.reload(ElexisEventDispatcher.getSelectedPatient());
+		dataProvider.reload(ContextServiceHolder.get().getActivePatient().orElse(null));
 		natTable.refresh();
 	}
 
