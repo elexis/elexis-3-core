@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -101,7 +102,15 @@ public class ModelUtil {
 					rawContent = convertedContent.get();
 				}
 			}
-			resource = getAsResource(rawContent);
+			try {
+				resource = getAsResource(rawContent);
+			} catch (DataFormatException e) {
+				// try to escape html entities and update raw content
+				rawContent = StringEscapeUtils.unescapeHtml4(rawContent);
+				resource = getAsResource(rawContent);
+				finding.setRawContent(rawContent);
+				findingsModelService.save(finding);
+			}
 		}
 		return Optional.ofNullable(resource);
 	}
