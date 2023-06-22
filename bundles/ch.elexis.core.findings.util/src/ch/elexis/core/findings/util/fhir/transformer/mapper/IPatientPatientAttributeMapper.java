@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +26,10 @@ import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IPersonHelper;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.MaritalStatus;
-import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -84,9 +81,11 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapAddress(source.getAddress(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
+		personHelper.mapContactImage(coreModelService, source.getPhoto().isEmpty() ? null : source.getPhoto().get(0),
+				target);
 		mapComments(source, target);
 		mapMaritalStatus(source, target);
-		mapContactImage(source, target);
+
 	}
 
 	private void mapRelatedContacts(IPatient source, Patient target) {
@@ -120,21 +119,6 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		}
 
 		target.setContact(contacts);
-	}
-
-	private void mapContactImage(Patient source, IPatient target) {
-		if (!source.getPhoto().isEmpty()) {
-			Attachment fhirImage = source.getPhoto().get(0);
-			IImage image = coreModelService.create(IImage.class);
-			image.setDate(LocalDate.now());
-			String contentType = fhirImage.getContentTypeElement().asStringValue();
-			MimeType mimeType = MimeType.getByContentType(contentType);
-			image.setMimeType(mimeType);
-			image.setImage(fhirImage.getData());
-			target.setImage(image);
-		} else {
-			target.setImage(null);
-		}
 	}
 
 	private void mapMaritalStatus(IPatient source, Patient target) {

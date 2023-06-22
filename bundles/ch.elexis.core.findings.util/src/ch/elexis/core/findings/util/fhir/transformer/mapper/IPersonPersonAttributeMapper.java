@@ -63,7 +63,7 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
-
+		personHelper.mapContactImage(modelService, source.getPhoto(), target);
 	}
 
 }
