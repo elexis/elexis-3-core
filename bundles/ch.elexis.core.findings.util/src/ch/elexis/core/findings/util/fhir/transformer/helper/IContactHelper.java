@@ -1,5 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,10 @@ import org.hl7.fhir.r4.model.StringType;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.MimeType;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
 import ch.elexis.core.types.Country;
 
@@ -175,6 +178,21 @@ public class IContactHelper extends AbstractHelper {
 			contactImage = _image;
 		}
 		return contactImage;
+	}
+	
+	public void mapContactImage(IModelService coreModelService, Attachment photo, IPerson target) {
+		if (!photo.isEmpty()) {
+			Attachment fhirImage = photo;
+			IImage image = coreModelService.create(IImage.class);
+			image.setDate(LocalDate.now());
+			String contentType = fhirImage.getContentTypeElement().asStringValue();
+			MimeType mimeType = MimeType.getByContentType(contentType);
+			image.setMimeType(mimeType);
+			image.setImage(fhirImage.getData());
+			target.setImage(image);
+		} else {
+			target.setImage(null);
+		}
 	}
 	
 }
