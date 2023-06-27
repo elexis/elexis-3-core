@@ -21,12 +21,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.mail.MailAccount;
+import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class Preference extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -34,7 +37,7 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 
 	private MailAccountComposite accountComposite;
 	private ComboViewer accountsViewer;
-	private Button testButton;
+	private Button testButton, defaultBtn;
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -57,16 +60,25 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 				if (index == 0) {
 					accountComposite.setAccount(new MailAccount());
 					testButton.setEnabled(true);
+					defaultBtn.setEnabled(false);
 				} else {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					String accountId = (String) selection.getFirstElement();
 					if (accountId != null) {
+						String defaultAccount = ConfigServiceHolder.get()
+								.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
+						if (defaultAccount != null && accountId.equals(defaultAccount)) {
+							defaultBtn.setSelection(true);
+						} else {
+							defaultBtn.setSelection(false);
+						}
 						if (MailClientComponent.isVirtLocal(accountId)) {
 							Optional<MailAccount> selectedAccount = MailClientComponent.getMailClient()
 									.getAccount(accountId);
 							if (selectedAccount.isPresent()) {
 								accountComposite.setAccount(selectedAccount.get());
 								testButton.setEnabled(true);
+								defaultBtn.setEnabled(true);
 							}
 						} else {
 							Optional<MailAccount> selectedAccount = MailClientComponent.getMailClient()
@@ -74,6 +86,7 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 							if (selectedAccount.isPresent()) {
 								accountComposite.setAccount(selectedAccount.get());
 								testButton.setEnabled(true);
+								defaultBtn.setEnabled(true);
 							}
 						}
 					}
@@ -85,6 +98,22 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 
 		accountComposite = new MailAccountComposite(parentComposite, SWT.NONE);
 		accountComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+		defaultBtn = new Button(parentComposite, SWT.CHECK);
+		defaultBtn.setText("Als Standard E-Mail Konto verwenden");
+		defaultBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection selectedAccount = accountsViewer.getStructuredSelection();
+				if (selectedAccount != null) {
+					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT,
+							(String) selectedAccount.getFirstElement());
+				}
+			}
+		});
+		defaultBtn.setEnabled(false);
+
+		new Label(parentComposite, SWT.NONE);
 
 		testButton = new Button(parentComposite, SWT.PUSH);
 		testButton.setText("Test");
