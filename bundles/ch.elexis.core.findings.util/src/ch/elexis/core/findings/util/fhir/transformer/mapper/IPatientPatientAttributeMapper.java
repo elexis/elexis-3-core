@@ -81,8 +81,8 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapAddress(source.getAddress(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
-		personHelper.mapContactImage(coreModelService, source.getPhoto().isEmpty() ? null : source.getPhoto().get(0),
-				target);
+		personHelper.mapContactImage(coreModelService,
+				(source.getPhoto() != null && !source.getPhoto().isEmpty()) ? source.getPhoto().get(0) : null, target);
 		mapComments(source, target);
 		mapMaritalStatus(source, target);
 
