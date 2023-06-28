@@ -61,17 +61,14 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 					accountComposite.setAccount(new MailAccount());
 					testButton.setEnabled(true);
 					defaultBtn.setEnabled(false);
+					defaultBtn.setSelection(false);
 				} else {
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					String accountId = (String) selection.getFirstElement();
 					if (accountId != null) {
 						String defaultAccount = ConfigServiceHolder.get()
 								.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
-						if (defaultAccount != null && accountId.equals(defaultAccount)) {
-							defaultBtn.setSelection(true);
-						} else {
-							defaultBtn.setSelection(false);
-						}
+						defaultBtn.setSelection(defaultAccount != null && accountId.equals(defaultAccount));
 						if (MailClientComponent.isVirtLocal(accountId)) {
 							Optional<MailAccount> selectedAccount = MailClientComponent.getMailClient()
 									.getAccount(accountId);
@@ -101,14 +98,11 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 
 		defaultBtn = new Button(parentComposite, SWT.CHECK);
 		defaultBtn.setText("Als Standard E-Mail Konto verwenden");
-		defaultBtn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection selectedAccount = accountsViewer.getStructuredSelection();
-				if (selectedAccount != null) {
-					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT,
-							(String) selectedAccount.getFirstElement());
-				}
+		defaultBtn.addListener(SWT.Selection, e -> {
+			IStructuredSelection selectedAccount = accountsViewer.getStructuredSelection();
+			if (selectedAccount != null) {
+				ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT,
+						(String) selectedAccount.getFirstElement());
 			}
 		});
 		defaultBtn.setEnabled(false);

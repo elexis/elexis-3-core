@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.mail.IMailClient;
@@ -17,10 +18,9 @@ import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.status.ObjectStatus;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
+@Component
 public class MailTransporter implements IMessageTransporter {
 
 	@Reference
@@ -29,6 +29,7 @@ public class MailTransporter implements IMessageTransporter {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
+	@Reference
 	private IMailClient mailClient;
 
 	@Override
@@ -43,8 +44,6 @@ public class MailTransporter implements IMessageTransporter {
 
 	@Override
 	public IStatus send(TransientMessage transientMessage) {
-		mailClient = OsgiServiceUtil.getService(IMailClient.class).get();
-
 		String jobID = UUID.randomUUID().toString();
 		String receiver = transientMessage.getReceiver();
 		String text = transientMessage.getMessageText();
@@ -66,7 +65,7 @@ public class MailTransporter implements IMessageTransporter {
 
 		Optional<MailAccount> account = mailClient.getAccount(messageCodes.get("account.hint"));
 		if (account.get() == null) {
-			String defaultAccount = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
+			String defaultAccount = configService.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
 			account = mailClient.getAccount(defaultAccount);
 		}
 
