@@ -63,7 +63,7 @@ public class MailTransporter implements IMessageTransporter {
 		}
 		String onlyText = text.substring(text.indexOf("\n") + 1);
 
-		Optional<MailAccount> account = mailClient.getAccount(messageCodes.get("account.hint"));
+		Optional<MailAccount> account = mailClient.getAccount(messageCodes.get("account.id"));
 		if (account.get() == null) {
 			String defaultAccount = configService.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
 			account = mailClient.getAccount(defaultAccount);
