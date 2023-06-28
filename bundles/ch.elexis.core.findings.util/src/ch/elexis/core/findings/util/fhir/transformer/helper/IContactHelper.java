@@ -230,9 +230,9 @@ public class IContactHelper extends AbstractHelper {
 		}
 		return contactImage;
 	}
-	
+
 	public void mapContactImage(IModelService coreModelService, Attachment photo, IPerson target) {
-		if (!photo.isEmpty()) {
+		if (photo != null && !photo.isEmpty()) {
 			Attachment fhirImage = photo;
 			IImage image = coreModelService.create(IImage.class);
 			image.setDate(LocalDate.now());
@@ -245,5 +245,5 @@ public class IContactHelper extends AbstractHelper {
 			target.setImage(null);
 		}
 	}
-	
+
 }
