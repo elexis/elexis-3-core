@@ -16,6 +16,7 @@ import org.hl7.fhir.r4.model.Dosage;
 import org.hl7.fhir.r4.model.Dosage.DosageDoseAndRateComponent;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.MedicationRequest;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestDispenseRequestComponent;
 import org.hl7.fhir.r4.model.MedicationRequest.MedicationRequestIntent;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
@@ -39,8 +41,10 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
+import ch.elexis.core.model.builder.IRecipeBuilder;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IContextService;
@@ -74,6 +78,12 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		FhirUtil.setVersionedIdPartLastUpdatedMeta(MedicationRequest.class, fhirObject, localObject);
 
 		MedicationRequestStatus statusEnum = MedicationRequestStatus.ACTIVE;
+		MedicationRequestIntent intentEnum = MedicationRequestIntent.ORDER;
+		if (localObject.getEntryType() == EntryType.RECIPE) {
+			fhirObject.setGroupIdentifier(getRecipeGroupIdentifier(localObject));
+		} else {
+			intentEnum = MedicationRequestIntent.PLAN;
+		}
 
 		fhirObject.addIdentifier(getElexisObjectIdentifier(localObject));
 
@@ -108,7 +118,6 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		medication.setText(textBuilder.toString());
 		fhirObject.setMedication(medication);
 
-		MedicationRequestDispenseRequestComponent dispenseRequest = new MedicationRequestDispenseRequestComponent();
 		Period dispensePeriod = new Period();
 		LocalDateTime dateFrom = localObject.getDateFrom();
 		if (dateFrom != null) {
@@ -127,6 +136,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 				statusEnum = MedicationRequestStatus.STOPPED;
 			}
 		}
+
+		MedicationRequestDispenseRequestComponent dispenseRequest = new MedicationRequestDispenseRequestComponent();
 		dispenseRequest.setValidityPeriod(dispensePeriod);
 		fhirObject.setDispenseRequest(dispenseRequest);
 
@@ -165,7 +176,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		}
 
 		fhirObject.setStatus(statusEnum);
-		fhirObject.setIntent(MedicationRequestIntent.ORDER);
+		fhirObject.setIntent(intentEnum);
 		fhirObject.setPriority(MedicationRequestPriority.ROUTINE);
 
 		Narrative narrative = new Narrative();
@@ -179,6 +190,16 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 		elexisEntryType.setValue(new Enumeration<>(entryTypeFactory, entryType));
 		fhirObject.addExtension(elexisEntryType);
 		return Optional.of(fhirObject);
+	}
+
+	private Identifier getRecipeGroupIdentifier(IPrescription localObject) {
+		if (localObject.getRecipe() != null) {
+			Identifier ret = new Identifier();
+			ret.setSystem(IdentifierSystem.ELEXIS_RECIPE.getSystem());
+			ret.setValue(localObject.getRecipe().getId());
+			return ret;
+		}
+		return null;
 	}
 
 	@Override
@@ -266,8 +287,14 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 			LoggerFactory.getLogger(getClass()).error("MedicationRequest with no gtin");
 		}
 		// lookup patient
-		Optional<IPatient> patient = modelService.load(FhirUtil.getId(fhirObject.getSubject()).get(), IPatient.class);
-		if (item.isPresent() && patient.isPresent()) {
+		Optional<IPatient> patient = modelService.load(FhirUtil.getId(fhirObject.getSubject()).orElse(null),
+				IPatient.class);
+		Optional<IMandator> mandator = modelService.load(FhirUtil.getId(fhirObject.getRecorder()).orElse(null),
+				IMandator.class);
+		if (!mandator.isPresent()) {
+			mandator = modelService.load(FhirUtil.getId(fhirObject.getRequester()).orElse(null), IMandator.class);
+		}
+		if (item.isPresent() && patient.isPresent() && mandator.isPresent()) {
 			IPrescription localObject = new IPrescriptionBuilder(modelService, contextService, item.get(),
 					patient.get(), getMedicationRequestDosage(fhirObject)).build();
 
@@ -283,12 +310,51 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 
 			Optional<EntryType> prescriptionType = getMedicationRequestPrescriptionType(fhirObject);
 			prescriptionType.ifPresent(entryType -> localObject.setEntryType(entryType));
+
+			if (fhirObject.getIntent() == MedicationRequestIntent.ORDER) {
+				localObject.setEntryType(EntryType.RECIPE);
+				if (!fhirObject.hasGroupIdentifier() && mandator.isPresent()) {
+					IRecipe recipe = new IRecipeBuilder(modelService, patient.get(), mandator.get()).buildAndSave();
+					localObject.setRecipe(recipe);
+					LoggerFactory.getLogger(getClass())
+							.info("MedicationRequest created recipe [" + recipe.getId() + "] for request");
+				} else if (fhirObject.hasGroupIdentifier()) {
+					Identifier groupIdentifier = fhirObject.getGroupIdentifier();
+					if (groupIdentifier != null
+							&& IdentifierSystem.ELEXIS_RECIPE.getSystem().equals(groupIdentifier.getSystem())) {
+						modelService.load(groupIdentifier.getValue(), IRecipe.class).ifPresent(recipe -> {
+							localObject.setRecipe(recipe);
+							LoggerFactory.getLogger(getClass())
+									.info("MedicationRequest added request to recipe [" + recipe.getId() + "]");
+						});
+					}
+				}
+			}
+
 			modelService.save(localObject);
 
 			return Optional.of(localObject);
 		} else {
-			LoggerFactory.getLogger(getClass()).error(
-					"MedicationRequest with unknown patient [" + FhirUtil.getId(fhirObject.getSubject()).get() + "]");
+			if (!item.isPresent()) {
+				StringJoiner medicationCodes = new StringJoiner(",");
+				Type medication = fhirObject.getMedication();
+				if (medication instanceof CodeableConcept) {
+					List<Coding> codings = ((CodeableConcept) medication).getCoding();
+					for (Coding coding : codings) {
+						medicationCodes.add(coding.getSystem() + "|" + coding.getCode());
+					}
+				}
+				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown medication ["
+						+ medicationCodes.toString() + "]");
+			}
+			if (!patient.isPresent()) {
+				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown patient ["
+						+ FhirUtil.getId(fhirObject.getSubject()).orElse(null) + "]");
+			}
+			if (!mandator.isPresent()) {
+				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown mandator ["
+						+ FhirUtil.getId(fhirObject.getRecorder()).orElse(null) + "]");
+			}
 		}
 		return Optional.empty();
 	}
