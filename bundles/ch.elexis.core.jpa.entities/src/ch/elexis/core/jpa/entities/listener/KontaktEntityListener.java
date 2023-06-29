@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.TypedQuery;
 
 import ch.elexis.core.jpa.entities.Config;
@@ -15,6 +16,13 @@ public class KontaktEntityListener {
 
 	@PrePersist
 	public void prePersist(Kontakt contact) {
+		if (contact.isPatient() && contact.getCode() == null) {
+			contact.setCode(Integer.toString(findAndIncrementPatientNr()));
+		}
+	}
+
+	@PreUpdate
+	public void preUpdate(Kontakt contact) {
 		if (contact.isPatient() && contact.getCode() == null) {
 			contact.setCode(Integer.toString(findAndIncrementPatientNr()));
 		}
