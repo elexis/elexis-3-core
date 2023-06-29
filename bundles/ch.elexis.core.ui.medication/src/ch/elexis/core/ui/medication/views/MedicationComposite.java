@@ -3,8 +3,10 @@ package ch.elexis.core.ui.medication.views;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -77,6 +79,8 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
@@ -130,6 +134,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private ControlDecoration ctrlDecor;
 	private IPatient patient;
 	private GenericObjectDropTarget dropTarget;
+	private Text txtLastModified;
 	private Text txtIntakeOrder;
 	private Text txtDisposalComment;
 	private Text txtStopComment;
@@ -148,7 +153,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	public MedicationComposite(Composite parent, int style, IWorkbenchPartSite partSite) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-
+		
 		searchFilterComposite();
 		medicationTableComposite(partSite);
 		stateComposite();
@@ -157,7 +162,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 
-		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell())); //$NON-NLS-1$
+		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell()));
 	}
 
 	private void searchFilterComposite() {
@@ -230,7 +235,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 	private void stateComposite() {
 		Composite compositeState = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeState = new GridLayout(6, false);
+		GridLayout gl_compositeState = new GridLayout(8, false);
 		gl_compositeState.marginWidth = 0;
 		gl_compositeState.marginHeight = 0;
 		gl_compositeState.horizontalSpacing = 0;
@@ -242,8 +247,37 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 				(MedicationTableViewerContentProvider) medicationTableComposite.getTableViewer().getContentProvider());
 		contentProviderComp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		Button bestaetigenButton = new Button(compositeState, SWT.FLAT | SWT.TOGGLE);
+		bestaetigenButton.setImage(Images.IMG_TICK.getImage());
+		bestaetigenButton.setToolTipText(Messages.MedicationComposite_btnConfirm_toolTipText);
+		bestaetigenButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+
+		txtLastModified = new Text(compositeState, SWT.READ_ONLY | SWT.WRAP | SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gridData.heightHint = 15;
+		gridData.horizontalIndent = 5;
+		txtLastModified.setLayoutData(gridData);
+
+		bestaetigenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (patient != null && !patient.getId().isEmpty()) {
+					String info = CoreHub.getLoggedInContact().getLabel() + " " + setCurrentDateTime();
+					saveLastModifiedInfo(patient.getId(), info);
+					txtLastModified.setText(setCurrentDate());
+					txtLastModified.setToolTipText(info);
+				} else {
+					txtLastModified.setText("Kein Patient ausgewählt");
+				}
+
+			}
+		});
+
 		Label lblLastDisposal = new Label(compositeState, SWT.NONE);
 		lblLastDisposal.setText(Messages.MedicationComposite_lastReceived);
+		GridData gd_lblLastDisposal = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastDisposal.horizontalIndent = 5;
+		lblLastDisposal.setLayoutData(gd_lblLastDisposal);
 
 		lblLastDisposalLink = new Label(compositeState, SWT.NONE);
 		lblLastDisposalLink.addMouseListener(new MouseAdapter() {
@@ -784,6 +818,16 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			lblDailyTherapyCost.setText(StringUtils.EMPTY);
 			interactionLink.updateAtcs(Collections.emptyList());
 		}
+		if (patient != null && !patient.getId().isEmpty()) {
+			String patientId = patient.getId();
+			String lastModifiedInfo = getLastModifiedInfo(patientId);
+			String[] parts = lastModifiedInfo.split(" ");
+			String datum = parts[1];
+			txtLastModified.setText(datum);
+			txtLastModified.setToolTipText(lastModifiedInfo);
+
+		} else {
+		}
 	}
 
 	@Override
@@ -1068,5 +1112,42 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			}
 			return true;
 		}
+	}
+
+	public String setCurrentDateTime() {
+		LocalDate localDate = LocalDate.now();
+		LocalTime localTime = LocalTime.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+				.withZone(ZoneId.systemDefault());
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
+				.withZone(ZoneId.systemDefault());
+		String currentDate = dateFormatter.format(localDate);
+		String currentTime = timeFormatter.format(localTime);
+
+		String currentDateTime = currentDate + " " + currentTime;
+		return currentDateTime;
+	}
+
+	public String setCurrentDate() {
+		LocalDate localDate = LocalDate.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+				.withZone(ZoneId.systemDefault());
+		String currentDate = dateFormatter.format(localDate);
+
+		return currentDate;
+	}
+
+	private void saveLastModifiedInfo(String patientId, String info) {
+		ConfigServicePreferenceStore preferenceStore = new ConfigServicePreferenceStore(Scope.USER);
+		String key = "lastModifiedInfo_" + patientId;
+
+		preferenceStore.setValue(key, info);
+	}
+
+	private String getLastModifiedInfo(String patientId) {
+		ConfigServicePreferenceStore preferenceStore = new ConfigServicePreferenceStore(Scope.USER);
+		String key = "lastModifiedInfo_" + patientId;
+
+		return preferenceStore.getString(key);
 	}
 }

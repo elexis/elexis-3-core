@@ -63,6 +63,7 @@ public class Messages {
 
 	public static String Core_UP = ch.elexis.core.l10n.Messages.Core_UP;
 	public static String Core_Down = ch.elexis.core.l10n.Messages.Core_Down;
+	public static String MedicationComposite_btnConfirm_toolTipText = ch.elexis.core.l10n.Messages.MedicationComposite_btnConfirm_toolTipText;
 	public static String MedicationComposite_btnCheckButton_text = ch.elexis.core.l10n.Messages.MedicationComposite_btnCheckButton_text;
 	public static String MedicationComposite_btnShowHistory_toolTipText = ch.elexis.core.l10n.Messages.MedicationComposite_btnShowHistory_toolTipText;
 	public static String MedicationComposite_btnIsFixmedication_toolTipText = ch.elexis.core.l10n.Messages.MedicationComposite_btnIsFixmedication_toolTipText;
