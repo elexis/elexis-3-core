@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Enumerations.DocumentReferenceStatus;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -39,6 +41,7 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.CodingWrapper;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -184,6 +187,12 @@ public class ModelUtil {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public static @Nullable String getIdentifierBySystem(List<Identifier> identifiers, String system) {
+		Optional<Identifier> systemIdentifier = identifiers.stream()
+				.filter(id -> Objects.equals(system, id.getSystem())).findFirst();
+		return systemIdentifier.isPresent() ? systemIdentifier.get().getValue() : null;
 	}
 
 	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding, String codingSystem) {

@@ -1,7 +1,10 @@
 package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Person;
 import org.hl7.fhir.r4.model.Practitioner;
@@ -58,12 +61,28 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 
 	@Override
 	public void fhirToElexis(Person source, IPerson target) {
+		checkPromoteToPatient(source, target);
 		personHelper.mapHumanName(source.getName(), target);
 		personHelper.mapAddress(source.getAddress(), target);
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
 		personHelper.mapContactImage(modelService, source.getPhoto(), target);
+	}
+
+	private void checkPromoteToPatient(Person source, IPerson target) {
+		if (!target.isPatient() && !source.getLink().isEmpty()) {
+			Optional<Reference> patientReference = source.getLink().stream().filter(e -> Objects.nonNull(e.getTarget())).map(e -> e.getTarget())
+					.filter(e -> StringUtils.startsWith(e.getReference(), Patient.class.getSimpleName())).findFirst();
+			if(patientReference.isPresent()) {
+				String value = patientReference.get().getReference();
+				if(StringUtils.equals(value, Patient.class.getSimpleName()+"/"+target.getId())) {
+					target.setCode(null);
+					target.setPatient(true); // patient-number is transparently created on save
+				}
+			}
+			
+		}
 	}
 
 }
