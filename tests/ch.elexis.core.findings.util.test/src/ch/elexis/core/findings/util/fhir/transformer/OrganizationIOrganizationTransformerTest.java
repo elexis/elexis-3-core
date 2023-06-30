@@ -46,7 +46,7 @@ public class OrganizationIOrganizationTransformerTest {
 
 		assertEquals("1560", org.getXid(XidConstants.DOMAIN_BSVNUM).getDomainId());
 		assertEquals("7601003000436", org.getXid(XidConstants.DOMAIN_RECIPIENT_EAN).getDomainId());
-
+		assertEquals("Christiane Auer, Specialist in everything, +41332443", org.getDescription3());
 	}
 
 	public IBaseResource toBaseResource(String actual) {
