@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Address;
+import org.hl7.fhir.r4.model.Address.AddressType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.ContactPoint;
@@ -48,6 +49,7 @@ public class IContactHelper extends AbstractHelper {
 		// main address data
 		Address address = new Address();
 		address.setUse(AddressUse.HOME);
+		address.setType(AddressType.PHYSICAL);
 		address.setCity(contact.getCity());
 		address.setPostalCode(contact.getZip());
 		address.setCountry((contact.getCountry() != null) ? contact.getCountry().name() : null);
@@ -55,6 +57,13 @@ public class IContactHelper extends AbstractHelper {
 		lines.add(new StringType(contact.getStreet()));
 		address.setLine(lines);
 		ret.add(address);
+
+		// postal address
+		Address postalAddress = new Address();
+		postalAddress.setUse(AddressUse.HOME);
+		postalAddress.setType(AddressType.POSTAL);
+		postalAddress.setText(contact.getPostalAddress());
+		ret.add(postalAddress);
 
 		return ret;
 	}
@@ -120,21 +129,30 @@ public class IContactHelper extends AbstractHelper {
 		target.setZip(null);
 		target.setStreet(null);
 		target.setCountry(null);
+		target.setPostalAddress(null);
 
 		for (Address address : sourceAdresses) {
-			if (sourceAdresses.size() == 1 || AddressUse.HOME.equals(address.getUse())) {
-				target.setCity(address.getCity());
-				target.setZip(address.getPostalCode());
-				if (!address.getLine().isEmpty()) {
-					target.setStreet(address.getLine().get(0).asStringValue());
+			if (AddressUse.HOME.equals(address.getUse())) {
+				if (AddressType.PHYSICAL.equals(address.getType())) {
+					target.setCity(address.getCity());
+					target.setZip(address.getPostalCode());
+					if (!address.getLine().isEmpty()) {
+						target.setStreet(address.getLine().get(0).asStringValue());
+					}
+					Country country = null;
+					try {
+						country = Country.valueOf(address.getCountry());
+					} catch (IllegalArgumentException | NullPointerException e) {
+						// ignore
+					}
+					target.setCountry(country);
 				}
-				Country country = null;
-				try {
-					country = Country.valueOf(address.getCountry());
-				} catch (IllegalArgumentException | NullPointerException e) {
-					// ignore
+				if (AddressType.POSTAL.equals(address.getType())) {
+					String postalAddressText = address.getText();
+					if (!StringUtils.equals(target.getPostalAddress(), postalAddressText)) {
+						target.setPostalAddress(postalAddressText);
+					}
 				}
-				target.setCountry(country);
 			}
 		}
 
