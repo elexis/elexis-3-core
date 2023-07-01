@@ -122,6 +122,7 @@ public class IOrganizationOrganizationAttributeMapper
 		if (StringUtils.isNotBlank(contactPersonName)) {
 			OrganizationContactComponent occ = new OrganizationContactComponent();
 			occ.setName(new HumanName().setText(contactPersonName));
+			contact.add(occ);
 		}
 	}
 
