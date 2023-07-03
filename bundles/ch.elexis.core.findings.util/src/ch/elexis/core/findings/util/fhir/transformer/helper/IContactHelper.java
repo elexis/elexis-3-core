@@ -132,6 +132,13 @@ public class IContactHelper extends AbstractHelper {
 		target.setPostalAddress(null);
 
 		for (Address address : sourceAdresses) {
+			if (address.getUse() == null) {
+				address.setUse(AddressUse.HOME);
+			}
+			if (address.getType() == null) {
+				address.setType(AddressType.PHYSICAL);
+			}
+
 			if (AddressUse.HOME.equals(address.getUse())) {
 				if (AddressType.PHYSICAL.equals(address.getType())) {
 					target.setCity(address.getCity());
