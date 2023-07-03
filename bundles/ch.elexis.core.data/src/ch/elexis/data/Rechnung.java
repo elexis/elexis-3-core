@@ -32,9 +32,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
@@ -1045,4 +1045,12 @@ public class Rechnung extends PersistentObject {
 		return CoreModelServiceHolder.get().load(getId(), IInvoice.class)
 				.orElseThrow(() -> new IllegalStateException("Could not convert invoice [" + getId() + "]"));
 	}
+
+	public void setStatus(InvoiceState state) {
+
+		int status = state.getState();
+
+		setStatus(status);
+	}
+
 }
