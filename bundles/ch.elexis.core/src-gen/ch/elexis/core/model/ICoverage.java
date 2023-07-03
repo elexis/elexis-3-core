@@ -182,6 +182,9 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The "Rechnungsempfänger", "Garant". If Tiers Payant (TP) identical to the costBearer. TP is only valid, if both costBearer and gurarantor are Organizations. If Tiers Garant (TG) differs from the costBearer. Bedeutung Begriff TP: Ein Dritter (Tiers, die Versicherung) bezahlt direkt für die Kosten (payer: bezahlen).\n(Validiert JK 3.7.23)
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Guarantor</em>' reference.
 	 * @see #setGuarantor(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getICoverage_Guarantor()
@@ -208,6 +211,9 @@ public interface ICoverage extends Deleteable, Identifiable, WithExtInfo {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The "Kostenträger", "Payor". If Tiers Garant (TG) costBearer and guarantor differ.\n(Validiert JK 3.7.23)
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cost Bearer</em>' reference.
 	 * @see #setCostBearer(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getICoverage_CostBearer()

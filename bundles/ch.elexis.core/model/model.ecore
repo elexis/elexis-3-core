@@ -596,6 +596,9 @@
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="attributeName" value="kostentrkontakt"/>
       </eAnnotations>
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The &quot;Kostenträger&quot;, &quot;Payor&quot;. If Tiers Garant (TG) costBearer and guarantor differ.\n(Validiert JK 3.7.23)"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="insuranceNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
@@ -612,7 +615,11 @@
         eType="#//IEncounter" changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billingSystem" lowerBound="1"
         eType="#//IBillingSystem"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guarantor" eType="#//IContact"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guarantor" eType="#//IContact">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The &quot;Rechnungsempfänger&quot;, &quot;Garant&quot;. If Tiers Payant (TP) identical to the costBearer. TP is only valid, if both costBearer and gurarantor are Organizations. If Tiers Garant (TG) differs from the costBearer. Bedeutung Begriff TP: Ein Dritter (Tiers, die Versicherung) bezahlt direkt für die Kosten (payer: bezahlen).\n(Validiert JK 3.7.23)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystemFactor" abstract="true"
       interface="true" eSuperTypes="#//Identifiable">
