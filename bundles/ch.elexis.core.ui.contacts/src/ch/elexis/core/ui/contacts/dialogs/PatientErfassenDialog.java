@@ -11,12 +11,17 @@
 
 package ch.elexis.core.ui.contacts.dialogs;
 
+import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
+
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -28,10 +33,12 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;
+import ch.elexis.core.ui.util.FormatValidator;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
@@ -45,9 +52,10 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class PatientErfassenDialog extends TitleAreaDialog {
 	HashMap<String, String> fld;
-	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tTel;
+	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tTel, tMail, tAHV;
 	Combo cbSex;
 	Patient result;
+	Object po;
 
 	public Patient getResult() {
 		return result;
@@ -114,7 +122,69 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(getField(Patient.FLD_PHONE1));
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
+		new Label(ret, SWT.NONE).setText(Messages.Core_E_Mail); // $NON-NLS-1$
+		tMail = new Text(ret, SWT.BORDER);
+		tMail.setText(getField(Patient.FLD_E_MAIL));
+		tMail.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
+		final Color defaultMailColor = tMail.getForeground();
+		final Color red = UiDesk.getColor(UiDesk.COL_RED);
+
+		tMail.addModifyListener(e -> {
+			var text = tMail.getText();
+
+			if (!text.isEmpty() && !FormatValidator.isValidMailAddress(text)) {
+				tMail.setForeground(red);
+				setEnableOKButton(false);
+				return;
+			} 
+
+			tMail.setForeground(defaultMailColor);
+			setEnableOKButton(true);
+		});
+
+		new Label(ret, SWT.NONE).setText(Messages.Patientenblatt2_ahvNumber); // $NON-NLS-1$
+		tAHV = new Text(ret, SWT.BORDER);
+		tAHV.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		final Color defaultAHVColor = tAHV.getForeground();
+		tAHV.setTextLimit(16);
+		tAHV.setMessage("756.XXXX.XXXX.XX");
+
+		tAHV.addVerifyListener(event -> {
+			var text = tAHV.getText();
+
+			if (StringUtils.isNumeric(event.text.replaceAll("\\.", ""))) {
+				if (text.length() == 2 || text.length() == 7 || text.length() == 12) {
+					event.text = event.text + ".";
+					return;
+				}
+
+				text += event.text;
+				var isValid = FormatValidator.isValidAHVNum(text);
+				event.doit = text.length() <= 16 ? true : isValid;
+			} else if (event.keyCode != 8) {
+				event.doit = false;
+			}
+		});
+
+		tAHV.addModifyListener(e -> {
+			var text = tAHV.getText();
+
+			if (!text.isEmpty() && !FormatValidator.isValidAHVNum(text)) {
+				tAHV.setForeground(red);
+				setEnableOKButton(false);
+				return;
+			}
+			tAHV.setForeground(defaultAHVColor);
+			setEnableOKButton(true);
+		});
 		return ret;
+	}
+
+
+	private void setEnableOKButton(boolean enabled) {
+		getButton(IDialogConstants.OK_ID).setEnabled(enabled);
 	}
 
 	@Override
@@ -128,7 +198,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		final String[] ret = new String[8];
+		final String[] ret = new String[9];
 		ret[0] = tName.getText();
 		ret[1] = tVorname.getText();
 		int idx = cbSex.getSelectionIndex();
@@ -151,6 +221,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			ret[5] = tPlz.getText();
 			ret[6] = tOrt.getText();
 			ret[7] = tTel.getText();
+			ret[8] = tMail.getText();
 			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
 			qbe.add("Bezeichnung1", Query.EQUALS, ret[0], true); //$NON-NLS-1$
 			qbe.add("Bezeichnung2", Query.EQUALS, ret[1], true); //$NON-NLS-1$
@@ -170,6 +241,14 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			result = new Patient(ret[0], ret[1], check, ret[2]);
+
+			String formattedAHV = tAHV.getText();
+
+			if (!formattedAHV.isEmpty()) {
+				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
+				result.addXid(DOMAIN_AHV, formattedAHV, true);
+			}
+
 			AcquireLockUi.aquireAndRun(result, new ILockHandler() {
 
 				@Override
@@ -180,8 +259,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				@Override
 				public void lockAcquired() {
 					result.set(
-							new String[] { Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 },
-							new String[] { ret[4], ret[5], ret[6], ret[7] });
+							new String[] { Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1,
+									Kontakt.FLD_E_MAIL },
+							new String[] { ret[4], ret[5], ret[6], ret[7], ret[8] });
 
 					ElexisEventDispatcher.fireSelectionEvent(result);
 				}
