@@ -79,8 +79,6 @@ import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
-import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
-import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
@@ -153,7 +151,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	public MedicationComposite(Composite parent, int style, IWorkbenchPartSite partSite) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
+
 		searchFilterComposite();
 		medicationTableComposite(partSite);
 		stateComposite();
@@ -250,7 +248,10 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		Button bestaetigenButton = new Button(compositeState, SWT.FLAT | SWT.TOGGLE);
 		bestaetigenButton.setImage(Images.IMG_TICK.getImage());
 		bestaetigenButton.setToolTipText(Messages.MedicationComposite_btnConfirm_toolTipText);
-		bestaetigenButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gridData2 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gridData2.widthHint = 20;
+		gridData2.heightHint = 20;
+		bestaetigenButton.setLayoutData(gridData2);
 
 		txtLastModified = new Text(compositeState, SWT.READ_ONLY | SWT.WRAP | SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -263,13 +264,13 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			public void widgetSelected(SelectionEvent e) {
 				if (patient != null && !patient.getId().isEmpty()) {
 					String info = CoreHub.getLoggedInContact().getLabel() + " " + setCurrentDateTime();
-					saveLastModifiedInfo(patient.getId(), info);
+					patient.setExtInfo("lastModifiedInfo", info);
+					CoreModelServiceHolder.get().save(patient);
 					txtLastModified.setText(setCurrentDate());
 					txtLastModified.setToolTipText(info);
 				} else {
 					txtLastModified.setText("Kein Patient ausgewählt");
 				}
-
 			}
 		});
 
@@ -819,14 +820,20 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			interactionLink.updateAtcs(Collections.emptyList());
 		}
 		if (patient != null && !patient.getId().isEmpty()) {
-			String patientId = patient.getId();
-			String lastModifiedInfo = getLastModifiedInfo(patientId);
-			String[] parts = lastModifiedInfo.split(" ");
-			String datum = parts[1];
-			txtLastModified.setText(datum);
-			txtLastModified.setToolTipText(lastModifiedInfo);
-
+			Object extInfoObj = patient.getExtInfo("lastModifiedInfo");
+			String lastModifiedInfo = extInfoObj != null ? extInfoObj.toString() : "";
+			if (lastModifiedInfo != null && !lastModifiedInfo.isEmpty()) {
+				String[] parts = lastModifiedInfo.split(" ");
+				String datum = parts[1];
+				txtLastModified.setText(datum);
+				txtLastModified.setToolTipText(lastModifiedInfo);
+			} else {
+				txtLastModified.setText(StringUtils.EMPTY);
+				txtLastModified.setToolTipText(StringUtils.EMPTY);
+			}
 		} else {
+			txtLastModified.setText(StringUtils.EMPTY);
+			txtLastModified.setToolTipText(StringUtils.EMPTY);
 		}
 	}
 
@@ -1137,17 +1144,4 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		return currentDate;
 	}
 
-	private void saveLastModifiedInfo(String patientId, String info) {
-		ConfigServicePreferenceStore preferenceStore = new ConfigServicePreferenceStore(Scope.USER);
-		String key = "lastModifiedInfo_" + patientId;
-
-		preferenceStore.setValue(key, info);
-	}
-
-	private String getLastModifiedInfo(String patientId) {
-		ConfigServicePreferenceStore preferenceStore = new ConfigServicePreferenceStore(Scope.USER);
-		String key = "lastModifiedInfo_" + patientId;
-
-		return preferenceStore.getString(key);
-	}
 }
