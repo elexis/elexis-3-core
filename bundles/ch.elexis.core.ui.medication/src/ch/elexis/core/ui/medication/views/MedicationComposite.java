@@ -3,7 +3,6 @@ package ch.elexis.core.ui.medication.views;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -11,6 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
@@ -125,6 +126,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private Button btnToggleDetailComposite;
 	private Label lblLastDisposalLink;
 	private Label lblDailyTherapyCost;
+	private Label lblLastModified;
 
 	private Color tagBtnColor = UiDesk.getColor(UiDesk.COL_GREEN);
 	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256"); //$NON-NLS-1$
@@ -132,7 +134,6 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private ControlDecoration ctrlDecor;
 	private IPatient patient;
 	private GenericObjectDropTarget dropTarget;
-	private Text txtLastModified;
 	private Text txtIntakeOrder;
 	private Text txtDisposalComment;
 	private Text txtStopComment;
@@ -160,7 +161,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 
-		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell()));
+		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell()));//$NON-NLS-1$
 	}
 
 	private void searchFilterComposite() {
@@ -253,11 +254,11 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		gridData2.heightHint = 20;
 		bestaetigenButton.setLayoutData(gridData2);
 
-		txtLastModified = new Text(compositeState, SWT.READ_ONLY | SWT.WRAP | SWT.NONE);
+		lblLastModified = new Label(compositeState, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.heightHint = 15;
 		gridData.horizontalIndent = 5;
-		txtLastModified.setLayoutData(gridData);
+		lblLastModified.setLayoutData(gridData);
 
 		bestaetigenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -266,10 +267,10 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 					String info = CoreHub.getLoggedInContact().getLabel() + " " + setCurrentDateTime();
 					patient.setExtInfo("lastModifiedInfo", info);
 					CoreModelServiceHolder.get().save(patient);
-					txtLastModified.setText(setCurrentDate());
-					txtLastModified.setToolTipText(info);
+					lblLastModified.setText(setCurrentDate());
+					lblLastModified.setToolTipText(info);
 				} else {
-					txtLastModified.setText("Kein Patient ausgewählt");
+					lblLastModified.setText("Kein Patient ausgewählt");
 				}
 			}
 		});
@@ -821,19 +822,22 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		}
 		if (patient != null && !patient.getId().isEmpty()) {
 			Object extInfoObj = patient.getExtInfo("lastModifiedInfo");
-			String lastModifiedInfo = extInfoObj != null ? extInfoObj.toString() : "";
+			String lastModifiedInfo = extInfoObj != null ? extInfoObj.toString() : StringUtils.EMPTY;
 			if (lastModifiedInfo != null && !lastModifiedInfo.isEmpty()) {
-				String[] parts = lastModifiedInfo.split(" ");
-				String datum = parts[1];
-				txtLastModified.setText(datum);
-				txtLastModified.setToolTipText(lastModifiedInfo);
+				Pattern pattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
+				Matcher matcher = pattern.matcher(lastModifiedInfo);
+				if (matcher.find()) {
+					String datum = matcher.group();
+					lblLastModified.setText(datum);
+					lblLastModified.setToolTipText(lastModifiedInfo);
+				}
 			} else {
-				txtLastModified.setText(StringUtils.EMPTY);
-				txtLastModified.setToolTipText(StringUtils.EMPTY);
+				lblLastModified.setText(StringUtils.EMPTY);
+				lblLastModified.setToolTipText(StringUtils.EMPTY);
 			}
 		} else {
-			txtLastModified.setText(StringUtils.EMPTY);
-			txtLastModified.setToolTipText(StringUtils.EMPTY);
+			lblLastModified.setText(StringUtils.EMPTY);
+			lblLastModified.setToolTipText(StringUtils.EMPTY);
 		}
 	}
 
@@ -1122,16 +1126,8 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	}
 
 	public String setCurrentDateTime() {
-		LocalDate localDate = LocalDate.now();
-		LocalTime localTime = LocalTime.now();
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-				.withZone(ZoneId.systemDefault());
-		DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
-				.withZone(ZoneId.systemDefault());
-		String currentDate = dateFormatter.format(localDate);
-		String currentTime = timeFormatter.format(localTime);
-
-		String currentDateTime = currentDate + " " + currentTime;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		String currentDateTime = formatter.format(LocalDateTime.now());
 		return currentDateTime;
 	}
 
