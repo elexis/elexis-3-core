@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -1133,8 +1132,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 	public String setCurrentDate() {
 		LocalDate localDate = LocalDate.now();
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-				.withZone(ZoneId.systemDefault());
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 		String currentDate = dateFormatter.format(localDate);
 
 		return currentDate;
