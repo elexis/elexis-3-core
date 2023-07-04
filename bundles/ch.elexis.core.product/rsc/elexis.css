@@ -120,7 +120,6 @@ Hyperlink {
 Button {
   /* actual values */
   background-color: #ffffff;
-  background-image: none;
   color: #000000;
   font-family: "Segoe UI";
   font-size: 9;
@@ -177,7 +176,6 @@ ScrolledComposite {
 Composite Button{
   /* actual values */
   background-color: #ffffff;	/* declared in CSS: rgb(255, 255, 255) */
-  background-image: none;	/* declared in CSS: none */
   color: #000000;	/* declared in CSS: rgb(0, 0, 0) */
   font-family: "Segoe UI";	/* declared in CSS: Segoe UI */
   font-size: 9;	/* declared in CSS: 9 */
