@@ -41,4 +41,41 @@
             <column name="CODE"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="VALIDFROM" type="CHAR(8)" />
+			<column name="VALIDUNTIL" type="CHAR(8)" />
+			<column name="TP" type="CHAR(8)" />
+			<column name="CODE" type="VARCHAR(16)" />
+			<column name="CODETEXT" type="VARCHAR(255)" />
+			<column name="DESCRIPTION" type="CLOB" />
+		</createTable>
+		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL">
+       		<column name="ID" value="VERSION"/>
+       		<column name="CODE" value="0.0.0"/>
+    	</insert>		
+	</changeSet>
+    <changeSet author="thomas" id="manual_index_CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL_IDX1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL"
+					indexName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL_IDX1" tableName="CH_ELEXIS_ARZTTARIFE_CH_OCCUPATIONAL">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
