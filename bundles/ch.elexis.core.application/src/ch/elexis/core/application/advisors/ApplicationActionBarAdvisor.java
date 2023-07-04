@@ -12,7 +12,6 @@
 
 package ch.elexis.core.application.advisors;
 
-import org.apache.commons.lang3.StringUtils;
 import static ch.elexis.core.ui.actions.GlobalActions.fixLayoutAction;
 import static ch.elexis.core.ui.actions.GlobalActions.perspectiveMenu;
 import static ch.elexis.core.ui.actions.GlobalActions.resetPerspectiveAction;
@@ -22,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -109,7 +109,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		 * register(GlobalActions.prefsAction);
 		 * register(GlobalActions.connectWizardAction);
 		 */
-		// register(GlobalActions.changeMandantAction);
 		// register(GlobalActions.savePerspectiveAction);
 		// register(GlobalActions.savePerspectiveAsAction);
 		// register(GlobalActions.resetPerspectiveAction);
@@ -195,7 +194,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menuBar.add(helpMenu);
 
 		fileMenu.add(GlobalActions.loginAction);
-		fileMenu.add(GlobalActions.changeMandantAction);
 		fileMenu.add(GlobalActions.connectWizardAction);
 		fileMenu.add(GlobalActions.prefsAction);
 		fileMenu.add(new Separator());

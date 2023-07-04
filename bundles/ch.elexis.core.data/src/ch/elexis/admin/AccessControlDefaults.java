@@ -161,8 +161,6 @@ public class AccessControlDefaults {
 			Messages.AccessControlDefaults_databaseConnection);
 	public static final ACE AC_PURGE = new ACE(ACTIONS, "Datenbankbereinigung", //$NON-NLS-1$
 			Messages.AccessControlDefaults_databaseUtilities);
-	public static final ACE AC_CHANGEMANDANT = new ACE(ACTIONS, "Mandantwechsel", //$NON-NLS-1$
-			Messages.AccessControlDefaults_changeMandator);
 	public static final ACE AC_NEWWINDOW = new ACE(ACTIONS, "NeuesFenster", Messages.AccessControlDefaults_newWindow); //$NON-NLS-1$
 	public static final ACE AC_SHOWPERSPECTIVE = new ACE(ACTIONS, "Perspektivenauswahl", //$NON-NLS-1$
 			Messages.AccessControlDefaults_selectPerspective);
