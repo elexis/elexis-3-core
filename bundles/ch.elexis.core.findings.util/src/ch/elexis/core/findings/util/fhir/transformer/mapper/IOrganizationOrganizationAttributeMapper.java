@@ -20,7 +20,6 @@ import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IXidService;
-import ch.elexis.core.types.Country;
 
 public class IOrganizationOrganizationAttributeMapper
 		implements IdentifiableDomainResourceAttributeMapper<IOrganization, Organization> {
@@ -64,8 +63,10 @@ public class IOrganizationOrganizationAttributeMapper
 
 	@Override
 	public void fhirToElexis(Organization source, IOrganization target) {
+		target.setDescription1(source.getName());
+		
 		contactHelper.mapIdentifiers(source.getIdentifier(), target);
-		mapNameContactData(source, target);
+		contactHelper.mapAddress(source.getAddress(), target);
 		contactHelper.mapTelecom(source.getTelecom(), target);
 		mapContactPerson(source.getContact(), target);
 
@@ -74,35 +75,6 @@ public class IOrganizationOrganizationAttributeMapper
 				.map(e -> e.getCodingFirstRep()).orElse(null);
 		target.setLaboratory(StringUtils.equals(hftcs != null ? hftcs.getCode() : null,
 				FhirChConstants.SCTID_LABORATORY_ENVIRONMENT));
-	}
-
-	private void mapNameContactData(Organization source, IOrganization target) {
-		target.setDescription1(source.getName());
-
-		Address addressFirstRep = source.getAddressFirstRep();
-		if (addressFirstRep != null) {
-			if (addressFirstRep.hasLine()) {
-				StringBuilder sb = new StringBuilder();
-				addressFirstRep.getLine().forEach(e -> sb.append(e));
-				target.setStreet(sb.toString());
-			} else {
-				target.setStreet(null);
-			}
-			target.setCity(addressFirstRep.getCity());
-			target.setZip(addressFirstRep.getPostalCode());
-			try {
-				Country country = Country.valueOf(addressFirstRep.getCountry());
-				target.setCountry(country);
-			} catch (IllegalArgumentException | NullPointerException e) {
-				// ignore
-			}
-		} else {
-			target.setStreet(null);
-			target.setCity(null);
-			target.setCountry(null);
-			target.setZip(null);
-		}
-
 	}
 
 	private void mapContactPerson(String contactPersonName, List<OrganizationContactComponent> contact) {
