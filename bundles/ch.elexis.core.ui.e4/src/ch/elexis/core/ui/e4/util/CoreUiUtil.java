@@ -318,10 +318,7 @@ public class CoreUiUtil implements EventHandler {
 	 * @param selection
 	 */
 	public static void setCommandSelection(String commandId, Object[] selection) {
-		if (serviceContext == null) {
-			CoreUiUtil.serviceContext = getServiceContext();
-		}
-		serviceContext.set(commandId.concat(".selection"), //$NON-NLS-1$
+		applicationContext.set(commandId.concat(".selection"), //$NON-NLS-1$
 				new StructuredSelection(selection));
 	}
 

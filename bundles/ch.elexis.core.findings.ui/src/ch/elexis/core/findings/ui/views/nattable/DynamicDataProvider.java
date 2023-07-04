@@ -13,7 +13,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.data.Patient;
+import ch.elexis.core.model.IPatient;
 
 public class DynamicDataProvider implements IDataProvider {
 
@@ -79,7 +79,7 @@ public class DynamicDataProvider implements IDataProvider {
 		}
 	}
 
-	public void reload(Patient selectedPatient) {
+	public void reload(IPatient selectedPatient) {
 		if (selectedPatient == null) {
 			currentFindings.clear();
 		} else {
@@ -88,9 +88,9 @@ public class DynamicDataProvider implements IDataProvider {
 		updateShownFindings();
 	}
 
-	public List<IFinding> getFindings(Patient patient) {
+	public List<IFinding> getFindings(IPatient patient) {
 		List<IFinding> ret = new ArrayList<>();
-		if (patient != null && patient.exists()) {
+		if (patient != null) {
 			String patientId = patient.getId();
 			ret.addAll(getObservations(patientId));
 			/*

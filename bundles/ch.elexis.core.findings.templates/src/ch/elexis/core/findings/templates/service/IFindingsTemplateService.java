@@ -10,6 +10,7 @@ import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;
 import ch.elexis.core.findings.templates.model.FindingsTemplates;
 import ch.elexis.core.findings.templates.model.Type;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.data.Patient;
 
 public interface IFindingsTemplateService {
@@ -23,7 +24,7 @@ public interface IFindingsTemplateService {
 	 * @return
 	 * @throws ElexisException
 	 */
-	public IFinding createFinding(Patient load, FindingsTemplate template) throws ElexisException;
+	public IFinding createFinding(IPatient load, FindingsTemplate template) throws ElexisException;
 
 	/**
 	 * Get a findings templates model.

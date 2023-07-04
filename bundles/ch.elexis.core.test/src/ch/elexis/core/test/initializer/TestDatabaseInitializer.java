@@ -407,6 +407,9 @@ public class TestDatabaseInitializer {
 		if (!isPatientInitialized) {
 			initializePatient();
 		}
+		if (!isMandantInitialized) {
+			initializeMandant();
+		}
 
 		if (!isArticleInitialized) {
 			article = modelService.create(IArticle.class);
@@ -422,7 +425,9 @@ public class TestDatabaseInitializer {
 		}
 
 		if (!isPrescriptionInitialized) {
-			prescription = new IPrescriptionBuilder(modelService, null, article, patient, "1-1-1-1").buildAndSave();
+			prescription = new IPrescriptionBuilder(modelService, null, article, patient, "1-1-1-1").build();
+			prescription.setPrescriptor(mandant);
+			modelService.save(prescription);
 
 			isPrescriptionInitialized = true;
 		}

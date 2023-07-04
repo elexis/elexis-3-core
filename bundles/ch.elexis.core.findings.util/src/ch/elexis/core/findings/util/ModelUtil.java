@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Enumerations.DocumentReferenceStatus;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -39,6 +42,7 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.ObservationComponent;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.model.CodingWrapper;
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -101,7 +105,15 @@ public class ModelUtil {
 					rawContent = convertedContent.get();
 				}
 			}
-			resource = getAsResource(rawContent);
+			try {
+				resource = getAsResource(rawContent);
+			} catch (DataFormatException e) {
+				// try to escape html entities and update raw content
+				rawContent = StringEscapeUtils.unescapeHtml4(rawContent);
+				resource = getAsResource(rawContent);
+				finding.setRawContent(rawContent);
+				findingsModelService.save(finding);
+			}
 		}
 		return Optional.ofNullable(resource);
 	}
@@ -184,6 +196,12 @@ public class ModelUtil {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public static @Nullable String getIdentifierBySystem(List<Identifier> identifiers, String system) {
+		Optional<Identifier> systemIdentifier = identifiers.stream()
+				.filter(id -> Objects.equals(system, id.getSystem())).findFirst();
+		return systemIdentifier.isPresent() ? systemIdentifier.get().getValue() : null;
 	}
 
 	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding, String codingSystem) {
