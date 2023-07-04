@@ -1,10 +1,12 @@
 package ch.elexis.core.findings.util.fhir.transformer.mapper;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Person;
 import org.hl7.fhir.r4.model.Practitioner;
@@ -42,6 +44,10 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 			return;
 		}
 
+		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
+		identifiers.add(getElexisObjectIdentifier(source));
+		target.setIdentifier(identifiers);
+		
 		target.setName(personHelper.getHumanNames(source));
 		target.setGender(personHelper.getGender(source.getGender()));
 		target.setBirthDate(personHelper.getBirthDate(source));
@@ -62,6 +68,7 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 	@Override
 	public void fhirToElexis(Person source, IPerson target) {
 		checkPromoteToPatient(source, target);
+		personHelper.mapIdentifiers(source.getIdentifier(), target);
 		personHelper.mapHumanName(source.getName(), target);
 		personHelper.mapAddress(source.getAddress(), target);
 		personHelper.mapGender(source.getGender(), target);

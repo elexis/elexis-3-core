@@ -21,8 +21,6 @@ import org.hl7.fhir.r4.model.StringType;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IPersonHelper;
 import ch.elexis.core.model.IContact;
@@ -58,7 +56,11 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 			return;
 		}
 
-		mapIdentifiersAndPatientNumber(source, target);
+		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
+		identifiers.add(getElexisObjectIdentifier(source));
+		identifiers.add(getPatientNumberIdentifier(source));
+		target.setIdentifier(identifiers);
+
 		target.setName(personHelper.getHumanNames(source));
 		target.setGender(personHelper.getGender(source.getGender()));
 		target.setBirthDate(personHelper.getBirthDate(source));
@@ -75,7 +77,7 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 
 	@Override
 	public void fhirToElexis(Patient source, IPatient target) {
-		mapIdentifiers(source, target);
+		personHelper.mapIdentifiers(source.getIdentifier(), target);
 		personHelper.mapHumanName(source.getName(), target);
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
@@ -150,37 +152,12 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		target.addExtension(elexisPatientNote);
 	}
 
-	private void mapIdentifiersAndPatientNumber(IPatient source, Patient target) {
-		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
-		identifiers.add(getElexisObjectIdentifier(source));
-
+	private Identifier getPatientNumberIdentifier(IPatient source) {
 		String patNr = source.getPatientNr();
 		Identifier identifier = new Identifier();
 		identifier.setSystem(IdentifierSystem.ELEXIS_PATNR.getSystem());
 		identifier.setValue(patNr);
-		identifiers.add(identifier);
-		target.setIdentifier(identifiers);
-	}
-
-	/**
-	 * Selective support for mapping incoming identifiers. Currently only accepts
-	 * AHV Number
-	 *
-	 * @param source
-	 * @param target
-	 */
-	private void mapIdentifiers(Patient source, IPatient target) {
-		// id must not be mapped (not updateable)
-		// patientNumber must not be mapped (not updateable)
-		List<Identifier> identifiers = source.getIdentifier();
-		for (Identifier identifier : identifiers) {
-			if (XidConstants.CH_AHV.equals(identifier.getSystem())) {
-				target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
-			}
-			if (FhirChConstants.OID_AHV13_SYSTEM.equals(identifier.getSystem())) {
-				target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
-			}
-		}
+		return identifier;
 	}
 
 }
