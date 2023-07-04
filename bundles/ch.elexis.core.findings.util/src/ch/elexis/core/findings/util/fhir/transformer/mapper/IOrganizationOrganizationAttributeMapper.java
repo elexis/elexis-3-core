@@ -15,7 +15,6 @@ import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IContactHelper;
@@ -65,7 +64,7 @@ public class IOrganizationOrganizationAttributeMapper
 
 	@Override
 	public void fhirToElexis(Organization source, IOrganization target) {
-		mapIdentifiers(source, target);
+		contactHelper.mapIdentifiers(source.getIdentifier(), target);
 		mapNameContactData(source, target);
 		contactHelper.mapTelecom(source.getTelecom(), target);
 		mapContactPerson(source.getContact(), target);
@@ -102,18 +101,6 @@ public class IOrganizationOrganizationAttributeMapper
 			target.setCity(null);
 			target.setCountry(null);
 			target.setZip(null);
-		}
-
-	}
-
-	private void mapIdentifiers(Organization source, IOrganization target) {
-		for (Identifier identifier : source.getIdentifier()) {
-			if (FhirChConstants.OID_GLN_SYSTEM.equals(identifier.getSystem())) {
-				target.addXid(XidConstants.DOMAIN_RECIPIENT_EAN, identifier.getValue(), true);
-			}
-			if (FhirChConstants.BSV_NUMMER_SYSTEM.equals(identifier.getSystem())) {
-				target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
-			}
 		}
 
 	}

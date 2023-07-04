@@ -15,6 +15,8 @@ import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
+import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
@@ -122,6 +124,28 @@ public class IContactHelper extends AbstractHelper {
 			ret.add(identifier);
 		}
 		return ret;
+	}
+
+	public void mapIdentifiers(List<Identifier> identifiers, IContact target) {
+		for (Identifier identifier : identifiers) {
+			switch (identifier.getSystem()) {
+			case XidConstants.CH_AHV:
+			case FhirChConstants.OID_AHV13_SYSTEM:
+				target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
+				break;
+			case XidConstants.EAN:
+				target.addXid(XidConstants.EAN, identifier.getValue(), true);
+				break;
+			case FhirChConstants.OID_GLN_SYSTEM:
+				target.addXid(XidConstants.DOMAIN_RECIPIENT_EAN, identifier.getValue(), true);
+				break;
+			case FhirChConstants.BSV_NUMMER_SYSTEM:
+				target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	public void mapAddress(List<Address> sourceAdresses, IContact target) {
