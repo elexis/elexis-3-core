@@ -11,7 +11,6 @@
 
 package ch.elexis.core.ui.actions;
 
-import static ch.elexis.admin.AccessControlDefaults.AC_CHANGEMANDANT;
 import static ch.elexis.admin.AccessControlDefaults.AC_CONNECT;
 import static ch.elexis.admin.AccessControlDefaults.AC_HELP;
 import static ch.elexis.admin.AccessControlDefaults.AC_IMORT;
@@ -48,7 +47,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
@@ -110,14 +108,11 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
 import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.TemplatePrintView;
-import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
@@ -135,7 +130,7 @@ public class GlobalActions {
 
 	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
 	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
-	public static IAction connectWizardAction, changeMandantAction, savePerspectiveAction, savePerspectiveAsAction;
+	public static IAction connectWizardAction, savePerspectiveAction, savePerspectiveAsAction;
 	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
 	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette, showBlatt;
 	public static IAction printRoeBlatt;
@@ -410,31 +405,6 @@ public class GlobalActions {
 
 		};
 
-		changeMandantAction = new RestrictedAction(AC_CHANGEMANDANT, Messages.GlobalActions_Mandator) {
-			{
-				setId("changeMandant"); //$NON-NLS-1$
-				// setActionDefinitionId(Hub.COMMAND_PREFIX+"changeMandant"); //$NON-NLS-1$
-			}
-
-			@Override
-			public void doRun() {
-				List<Mandant> lMandant;
-				Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
-				lMandant = qbe.execute();
-
-				GenericSearchSelectionDialog cmd = new GenericSearchSelectionDialog(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), lMandant,
-						Messages.GlobalActions_ChangeMandator, Messages.GlobalActions_ChangeMandator,
-						Messages.GlobalActions_ChangeMandatorMessage, null, SWT.SINGLE);
-
-				if (cmd.open() == Dialog.OK) {
-					Mandant n = (Mandant) cmd.getSelection().getFirstElement();
-					if (n != null) {
-						Hub.setMandant(n);
-					}
-				}
-			}
-		};
 		printKontaktEtikette = new Action(Messages.Print_AddressLabel) {
 			{
 				setToolTipText(Messages.GlobalActions_PrintContactLabelToolTip);
