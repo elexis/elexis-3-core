@@ -5,7 +5,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	// BUNDLE_NAME is needed for core.data
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
-
+	public static String MedicationComposite_btnConfirm_toolTipText;
+	public static String MedicationComposite_btnCheckButton_Confirm_text;
 	public static String Core_Barcode_global_settings;
 	public static String Core_BarcodePat;
 	public static String Core_BarcodeElexis;

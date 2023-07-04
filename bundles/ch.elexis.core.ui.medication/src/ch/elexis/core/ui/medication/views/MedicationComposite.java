@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
@@ -123,6 +125,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private Button btnToggleDetailComposite;
 	private Label lblLastDisposalLink;
 	private Label lblDailyTherapyCost;
+	private Label lblLastModified;
 
 	private Color tagBtnColor = UiDesk.getColor(UiDesk.COL_GREEN);
 	private Color stopBGColor = UiDesk.getColorFromRGB("FF7256"); //$NON-NLS-1$
@@ -157,7 +160,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		showSearchFilterComposite(false);
 		showMedicationDetailComposite(null);
 
-		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell())); //$NON-NLS-1$
+		dropTarget = new GenericObjectDropTarget("Medication", this, new DropMedicationReceiver(getShell()));//$NON-NLS-1$
 	}
 
 	private void searchFilterComposite() {
@@ -230,7 +233,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 
 	private void stateComposite() {
 		Composite compositeState = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeState = new GridLayout(6, false);
+		GridLayout gl_compositeState = new GridLayout(8, false);
 		gl_compositeState.marginWidth = 0;
 		gl_compositeState.marginHeight = 0;
 		gl_compositeState.horizontalSpacing = 0;
@@ -242,8 +245,40 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 				(MedicationTableViewerContentProvider) medicationTableComposite.getTableViewer().getContentProvider());
 		contentProviderComp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		Button bestaetigenButton = new Button(compositeState, SWT.FLAT | SWT.TOGGLE);
+		bestaetigenButton.setImage(Images.IMG_TICK.getImage());
+		bestaetigenButton.setToolTipText(Messages.MedicationComposite_btnConfirm_toolTipText);
+		GridData gridData2 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gridData2.widthHint = 20;
+		gridData2.heightHint = 20;
+		bestaetigenButton.setLayoutData(gridData2);
+
+		lblLastModified = new Label(compositeState, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gridData.heightHint = 15;
+		gridData.horizontalIndent = 5;
+		lblLastModified.setLayoutData(gridData);
+
+		bestaetigenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (patient != null && !patient.getId().isEmpty()) {
+					String info = CoreHub.getLoggedInContact().getLabel() + " " + setCurrentDateTime();
+					patient.setExtInfo("lastModifiedInfo", info);
+					CoreModelServiceHolder.get().save(patient);
+					lblLastModified.setText(setCurrentDate());
+					lblLastModified.setToolTipText(info);
+				} else {
+					lblLastModified.setText("Kein Patient ausgewählt");
+				}
+			}
+		});
+
 		Label lblLastDisposal = new Label(compositeState, SWT.NONE);
 		lblLastDisposal.setText(Messages.MedicationComposite_lastReceived);
+		GridData gd_lblLastDisposal = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastDisposal.horizontalIndent = 5;
+		lblLastDisposal.setLayoutData(gd_lblLastDisposal);
 
 		lblLastDisposalLink = new Label(compositeState, SWT.NONE);
 		lblLastDisposalLink.addMouseListener(new MouseAdapter() {
@@ -784,6 +819,25 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			lblDailyTherapyCost.setText(StringUtils.EMPTY);
 			interactionLink.updateAtcs(Collections.emptyList());
 		}
+		if (patient != null && !patient.getId().isEmpty()) {
+			Object extInfoObj = patient.getExtInfo("lastModifiedInfo");
+			String lastModifiedInfo = extInfoObj != null ? extInfoObj.toString() : StringUtils.EMPTY;
+			if (lastModifiedInfo != null && !lastModifiedInfo.isEmpty()) {
+				Pattern pattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
+				Matcher matcher = pattern.matcher(lastModifiedInfo);
+				if (matcher.find()) {
+					String datum = matcher.group();
+					lblLastModified.setText(datum);
+					lblLastModified.setToolTipText(lastModifiedInfo);
+				}
+			} else {
+				lblLastModified.setText(StringUtils.EMPTY);
+				lblLastModified.setToolTipText(StringUtils.EMPTY);
+			}
+		} else {
+			lblLastModified.setText(StringUtils.EMPTY);
+			lblLastModified.setToolTipText(StringUtils.EMPTY);
+		}
 	}
 
 	@Override
@@ -1069,4 +1123,19 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			return true;
 		}
 	}
+
+	public String setCurrentDateTime() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		String currentDateTime = formatter.format(LocalDateTime.now());
+		return currentDateTime;
+	}
+
+	public String setCurrentDate() {
+		LocalDate localDate = LocalDate.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		String currentDate = dateFormatter.format(localDate);
+
+		return currentDate;
+	}
+
 }
