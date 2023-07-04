@@ -167,8 +167,10 @@ public class IContactHelper extends AbstractHelper {
 				if (AddressType.PHYSICAL.equals(address.getType())) {
 					target.setCity(address.getCity());
 					target.setZip(address.getPostalCode());
-					if (!address.getLine().isEmpty()) {
-						target.setStreet(address.getLine().get(0).asStringValue());
+					if(address.hasLine()) {
+						StringBuilder sb = new StringBuilder();
+						address.getLine().forEach(e -> sb.append(e));
+						target.setStreet(sb.toString());
 					}
 					Country country = null;
 					try {
