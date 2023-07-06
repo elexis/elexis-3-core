@@ -1045,12 +1045,4 @@ public class Rechnung extends PersistentObject {
 		return CoreModelServiceHolder.get().load(getId(), IInvoice.class)
 				.orElseThrow(() -> new IllegalStateException("Could not convert invoice [" + getId() + "]"));
 	}
-
-	public void setStatus(InvoiceState state) {
-
-		int status = state.getState();
-
-		setStatus(status);
-	}
-
 }
