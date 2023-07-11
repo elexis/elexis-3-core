@@ -83,7 +83,7 @@ public class DocumentsViewerComparator extends ViewerComparator {
 				break;
 			case 3:
 				if (bFlat || cat1.equals(cat2)) {
-					rc = dh1.getTitle().compareToIgnoreCase(dh2.getTitle());
+					rc = dh1.getLastchanged().compareTo(dh2.getLastchanged());
 				} else {
 					compareCategories = true;
 				}
@@ -96,6 +96,13 @@ public class DocumentsViewerComparator extends ViewerComparator {
 				}
 				break;
 			case 5:
+				if (bFlat || cat1.equals(cat2)) {
+					rc = dh1.getTitle().compareToIgnoreCase(dh2.getTitle());
+				} else {
+					compareCategories = true;
+				}
+				break;
+			case 6:
 				if (bFlat || cat1.equals(cat2)) {
 					rc = Objects.toString(dh1.getKeywords(), "")
 							.compareToIgnoreCase(Objects.toString(dh2.getKeywords(), ""));

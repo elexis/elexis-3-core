@@ -1914,6 +1914,7 @@ public class Messages extends NLS {
 	public static String DocumentView_saveErrorText;
 	public static String DocumentView_searchLabel;
 	public static String DocumentView_stateColumn;
+	public static String DocumentView_dateColumn;
 	public static String DocumentView_titleColumn;
 	public static String DocumentsView_Title;
 	public static String DocumentsView_extensionColumn;

@@ -7,6 +7,7 @@ public class Messages {
 	public static String DocumentView_lastChangedColumn = ch.elexis.core.l10n.Messages.DocumentView_lastChangedColumn;
 	public static String DocumentView_dateCreatedColumn = ch.elexis.core.l10n.Messages.DocumentView_dateCreatedColumn;
 	public static String DocumentView_stateColumn = ch.elexis.core.l10n.Messages.DocumentView_stateColumn;
+	public static String DocumentView_dateColumn = ch.elexis.core.l10n.Messages.DocumentView_dateColumn;
 	public static String DocumentView_titleColumn = ch.elexis.core.l10n.Messages.DocumentView_titleColumn;
 	public static String DocumentView_keywordsColumn = ch.elexis.core.l10n.Messages.DocumentView_keywordsColumn;
 	public static String DocumentView_searchLabel = ch.elexis.core.l10n.Messages.DocumentView_searchLabel;
