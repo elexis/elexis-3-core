@@ -38,6 +38,16 @@ public class ContactSelectorViewerComparator extends ViewerComparator {
 		IContact c1 = (IContact) e1;
 		IContact c2 = (IContact) e2;
 
+		if (c1 == null || c2 == null) {
+			if (c1 == null && c2 != null) {
+				return 1;
+			} else if (c1 != null && c2 == null) {
+				return -1;
+			} else if (c1 == null && c2 == null) {
+				return 0;
+			}
+		}
+
 		switch (selectedSorter) {
 		case SORT_BY_FIRSTNAME:
 			if (c1.getDescription1() == null || c2.getDescription1() == null)

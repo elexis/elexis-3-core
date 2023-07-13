@@ -113,7 +113,7 @@ public class ContactSelectorView extends ViewPart implements ITabbedPropertyShee
 		txtFilter = new Text(compositeSearch, SWT.BORDER | SWT.SEARCH | SWT.CANCEL);
 		txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		tableViewerContacts = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewerContacts = new TableViewer(composite, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewerContacts.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
