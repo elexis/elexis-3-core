@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -102,6 +103,10 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			InfoDialogRunnable runnable = new InfoDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
+			// dispose possibly created display if workbench is not running
+			if (!PlatformUI.isWorkbenchRunning()) {
+				Display.getDefault().dispose();
+			}
 			return;
 		}
 		log.error("Could not show info [" + title + "] [" + message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -112,6 +117,10 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (isDisplayAvailable() && !CoreUtil.isTestMode()) {
 			QuestionDialogRunnable runnable = new QuestionDialogRunnable(title, message);
 			Display.getDefault().syncExec(runnable);
+			// dispose possibly created display if workbench is not running
+			if (!PlatformUI.isWorkbenchRunning()) {
+				Display.getDefault().dispose();
+			}
 			return runnable.getResult();
 		}
 		log.error("Could not ask question [" + title + "] [" + message + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
