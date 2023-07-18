@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
 
@@ -30,7 +31,7 @@ public interface IModelService {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> T create(Class<T> clazz);
+	public <T> T create(Class<T> clazz) throws AccessControlException;
 
 	/**
 	 * Load a model object of type clazz by the id. Deleted entries are not loaded.
@@ -49,7 +50,7 @@ public interface IModelService {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> List<T> findAll(Class<T> clazz);
+	public <T> List<T> findAll(Class<T> clazz)  throws AccessControlException;
 
 	/**
 	 * Load all model objects of type clazz by a set of ids. Deleted entries are not
@@ -58,7 +59,7 @@ public interface IModelService {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> List<T> findAllById(Collection<String> ids, Class<T> clazz);
+	public <T> List<T> findAllById(Collection<String> ids, Class<T> clazz)  throws AccessControlException;
 
 	/**
 	 * Adapt a jpa loaded entity to clazz. This can be used to "convert" already
@@ -96,7 +97,7 @@ public interface IModelService {
 	 * @param includeDeleted
 	 * @return
 	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) {
+	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) throws AccessControlException {
 		return load(id, clazz, includeDeleted, true);
 	}
 
@@ -113,7 +114,7 @@ public interface IModelService {
 	 * @param refreshCache
 	 * @return
 	 */
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache);
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)  throws AccessControlException;
 
 	/**
 	 * Save the model object.
@@ -121,7 +122,7 @@ public interface IModelService {
 	 * @param object
 	 * @throws IllegalStateException
 	 */
-	public void save(Identifiable identifiable);
+	public void save(Identifiable identifiable) throws AccessControlException;
 
 	/**
 	 * Update {@link Identifiable#getLastupdate()} to current
@@ -136,14 +137,14 @@ public interface IModelService {
 	 * @param objects
 	 * @throws IllegalStateException
 	 */
-	public void save(List<? extends Identifiable> identifiables);
+	public void save(List<? extends Identifiable> identifiables) throws AccessControlException;
 
 	/**
 	 * Remove the {@link Identifiable} from the database.
 	 *
 	 * @param identifiable
 	 */
-	public void remove(Identifiable identifiable);
+	public void remove(Identifiable identifiable) throws AccessControlException;
 
 	/**
 	 * Remove a list of {@link Identifiable} from the database in a single
@@ -151,7 +152,7 @@ public interface IModelService {
 	 *
 	 * @param identifiables
 	 */
-	public void remove(List<? extends Identifiable> identifiables);
+	public void remove(List<? extends Identifiable> identifiables) throws AccessControlException;
 
 	/**
 	 * Get a Query for objects of type clazz. If the clazz implements
@@ -259,13 +260,13 @@ public interface IModelService {
 	 *
 	 * @param deletable
 	 */
-	public void delete(Deleteable deletable);
+	public void delete(Deleteable deletable) throws AccessControlException;
 
 	/**
 	 * @see #delete(Deleteable)
 	 * @param deletables
 	 */
-	public void delete(List<? extends Deleteable> deletables);
+	public void delete(List<? extends Deleteable> deletables) throws AccessControlException;
 
 	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including

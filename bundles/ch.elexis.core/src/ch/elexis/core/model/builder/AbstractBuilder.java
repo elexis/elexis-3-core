@@ -29,5 +29,4 @@ public abstract class AbstractBuilder<T extends Identifiable> {
 		modelService.save(object);
 		return object;
 	}
-
 }

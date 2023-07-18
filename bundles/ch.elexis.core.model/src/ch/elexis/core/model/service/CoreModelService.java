@@ -14,6 +14,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
@@ -21,6 +22,7 @@ import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractModelService;
+import ch.elexis.core.jpa.model.adapter.EmptyQuery;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
@@ -143,7 +145,10 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 
 	@Override
 	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted) {
-		return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
+		if(evaluateRightNoException(clazz, Right.READ)) {
+			return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
+		}
+		return new EmptyQuery<T>();
 	}
 
 	@Override

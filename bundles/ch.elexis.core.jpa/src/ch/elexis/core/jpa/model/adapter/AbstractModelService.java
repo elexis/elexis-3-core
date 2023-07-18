@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
@@ -33,6 +34,7 @@ import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
@@ -41,15 +43,20 @@ import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 
 public abstract class AbstractModelService implements IModelService {
 
+	private IAccessControlService accessControlService;
+	
 	protected AbstractModelAdapterFactory adapterFactory;
 
 	protected abstract EntityManager getEntityManager(boolean managed);
@@ -63,42 +70,44 @@ public abstract class AbstractModelService implements IModelService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache) {
-		if (StringUtils.isNotEmpty(id)) {
+		if(evaluateRightNoException(clazz, Right.READ)) {
+			if (StringUtils.isNotEmpty(id)) {
 
-//			EvaluatableACE evACE = EvACE.of(clazz, Right.READ, id);
-//			Boolean ace = evACE.fastEval();
-//			if (ace != null && !ace) {
-//				// 
-//				
-//				
-//				// or return aobo list? and verify against ACEOwner?
-//				return Optional.empty();
-//			}
+//				EvaluatableACE evACE = EvACE.of(clazz, Right.READ, id);
+//				Boolean ace = evACE.fastEval();
+//				if (ace != null && !ace) {
+//					// 
+//					
+//					
+//					// or return aobo list? and verify against ACEOwner?
+//					return Optional.empty();
+//				}
 
-			// we must not return null, this would mean the object does not exist
-			// something else?
+				// we must not return null, this would mean the object does not exist
+				// something else?
 
-			EntityManager em = getEntityManager(true);
-			Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
+				EntityManager em = getEntityManager(true);
+				Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
 
-			HashMap<String, Object> queryHints = new HashMap<>();
-			if (refreshCache) {
-				queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
-			}
-			EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
-			if (dbObject != null) {
-				// check for deleted
-				if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
-					if (((EntityWithDeleted) dbObject).isDeleted()) {
-						return Optional.empty();
-					}
+				HashMap<String, Object> queryHints = new HashMap<>();
+				if (refreshCache) {
+					queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
 				}
-				Optional<Identifiable> modelObject = adapterFactory.getModelAdapter(dbObject, clazz, true);
-				if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
-//					if (ace == null) {
-//						// aobo or self 
-//					}
-					return (Optional<T>) modelObject;
+				EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
+				if (dbObject != null) {
+					// check for deleted
+					if (!includeDeleted && (dbObject instanceof EntityWithDeleted)) {
+						if (((EntityWithDeleted) dbObject).isDeleted()) {
+							return Optional.empty();
+						}
+					}
+					Optional<Identifiable> modelObject = adapterFactory.getModelAdapter(dbObject, clazz, true);
+					if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
+//						if (ace == null) {
+//							// aobo or self 
+//						}
+						return (Optional<T>) modelObject;
+					}
 				}
 			}
 		}
@@ -202,144 +211,150 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void save(Identifiable identifiable) {
-		if (identifiable == null) {
-			// TODO IllegalArgumentException?
-			return;
-		}
-		if (identifiable.getChanged() != null) {
-			save(Collections.singletonList(identifiable));
-			return;
-		}
-		Optional<EntityWithId> dbObject = getDbObject(identifiable);
-		if (dbObject.isPresent()) {
-			boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
-			EntityManager em = getEntityManager(false);
-			try {
-				em.getTransaction().begin();
-				EntityWithId merged = em.merge(dbObject.get());
-				em.getTransaction().commit();
-				// update model adapters and post events
-				if (identifiable instanceof AbstractIdModelAdapter) {
-					// clear dirty state before setting merged entity
-					setDbObject(identifiable, merged, true);
-				}
-				if (identifiable.getRefresh() != null) {
-					for (Identifiable toRefresh : identifiable.getRefresh()) {
-						refresh(toRefresh, true);
-					}
-					identifiable.clearRefresh();
-				}
-				if (identifiable.getUpdated() != null) {
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable,
-							Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, identifiable.getUpdated()));
-					identifiable.clearUpdated();
-				}
-				if (newlyCreatedObject) {
-					ElexisEvent createEvent = getCreateEvent(identifiable);
-					if (createEvent != null) {
-						if (ContextServiceHolder.isPresent()) {
-							String userId = ContextServiceHolder.get().getActiveUser().map(Identifiable::getId)
-									.orElse(null);
-							if (userId != null) {
-								createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
-							}
-						}
-						postElexisEvent(createEvent);
-					}
-					postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
-				}
+		if(evaluateRight(identifiable.getClass(), Right.UPDATE)) {
+			if (identifiable == null) {
+				// TODO IllegalArgumentException?
 				return;
-			} finally {
-				closeEntityManager(em);
 			}
+			if (identifiable.getChanged() != null) {
+				save(Collections.singletonList(identifiable));
+				return;
+			}
+			Optional<EntityWithId> dbObject = getDbObject(identifiable);
+			if (dbObject.isPresent()) {
+				boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
+				EntityManager em = getEntityManager(false);
+				try {
+					em.getTransaction().begin();
+					EntityWithId merged = em.merge(dbObject.get());
+					em.getTransaction().commit();
+					// update model adapters and post events
+					if (identifiable instanceof AbstractIdModelAdapter) {
+						// clear dirty state before setting merged entity
+						setDbObject(identifiable, merged, true);
+					}
+					if (identifiable.getRefresh() != null) {
+						for (Identifiable toRefresh : identifiable.getRefresh()) {
+							refresh(toRefresh, true);
+						}
+						identifiable.clearRefresh();
+					}
+					if (identifiable.getUpdated() != null) {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable,
+								Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, identifiable.getUpdated()));
+						identifiable.clearUpdated();
+					}
+					if (newlyCreatedObject) {
+						ElexisEvent createEvent = getCreateEvent(identifiable);
+						if (createEvent != null) {
+							if (ContextServiceHolder.isPresent()) {
+								String userId = ContextServiceHolder.get().getActiveUser().map(Identifiable::getId)
+										.orElse(null);
+								if (userId != null) {
+									createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
+								}
+							}
+							postElexisEvent(createEvent);
+						}
+						postEvent(ElexisEventTopics.EVENT_CREATE, identifiable);
+					}
+					return;
+				} finally {
+					closeEntityManager(em);
+				}
+			}
+			String message = "Could not save [" + identifiable + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+			LoggerFactory.getLogger(getClass()).error(message);
+			throw new IllegalStateException(message);			
 		}
-		String message = "Could not save [" + identifiable + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-		LoggerFactory.getLogger(getClass()).error(message);
-		throw new IllegalStateException(message);
 	}
 
 	@Override
 	public void save(List<? extends Identifiable> identifiables) {
-		if (identifiables == null || identifiables.isEmpty()) {
-			return;
-		}
-		identifiables = addChanged(identifiables);
-		Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
-		for (Identifiable identifiable : identifiables) {
-			dbObjects.put(identifiable, getDbObject(identifiable).orElse(null));
-		}
-		if (!dbObjects.isEmpty()) {
-			EntityManager em = getEntityManager(false);
-			try {
-				// collect information for update of model adapters and events
-				List<ElexisEvent> createdEvents = new ArrayList<>();
-				List<Identifiable> createdIdentifiables = new ArrayList<>();
-				Map<Identifiable, EntityWithId> mergedEntities = new HashMap<>();
-				em.getTransaction().begin();
-				for (Identifiable identifiable : identifiables) {
-					EntityWithId dbObject = dbObjects.get(identifiable);
-					if (dbObject != null) {
-						boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
-
-						EntityWithId merged = em.merge(dbObject);
-						mergedEntities.put(identifiable, merged);
-						if (newlyCreatedObject) {
-							ElexisEvent createEvent = getCreateEvent(identifiable);
-							if (createEvent != null) {
-								if (ContextServiceHolder.isPresent()) {
-									String userId = ContextServiceHolder.get().getActiveUser().map(Identifiable::getId)
-											.orElse(null);
-									if (userId != null) {
-										createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
-									}
-								}
-								createdEvents.add(createEvent);
-							}
-							createdIdentifiables.add(identifiable);
-						}
-					}
-				}
-				em.getTransaction().commit();
-				// update model adapters and post events
-				identifiables.stream().forEach(i -> {
-					if (i instanceof AbstractIdModelAdapter) {
-						setDbObject(i, mergedEntities.get(i), true);
-						if (i.getRefresh() != null) {
-							for (Identifiable toRefresh : i.getRefresh()) {
-								refresh(toRefresh, true);
-							}
-							i.clearRefresh();
-						}
-						if (i.getUpdated() != null) {
-							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, i,
-									Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, i.getUpdated()));
-							i.clearUpdated();
-						}
-					}
-				});
-				createdEvents.stream().forEach(e -> postElexisEvent(e));
-				createdIdentifiables.stream().forEach(i -> postEvent(ElexisEventTopics.EVENT_CREATE, i));
+		if(evaluateRight(identifiables, Right.UPDATE)) {
+			if (identifiables == null || identifiables.isEmpty()) {
 				return;
-			} finally {
-				closeEntityManager(em);
 			}
+			identifiables = addChanged(identifiables);
+			Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
+			for (Identifiable identifiable : identifiables) {
+				dbObjects.put(identifiable, getDbObject(identifiable).orElse(null));
+			}
+			if (!dbObjects.isEmpty()) {
+				EntityManager em = getEntityManager(false);
+				try {
+					// collect information for update of model adapters and events
+					List<ElexisEvent> createdEvents = new ArrayList<>();
+					List<Identifiable> createdIdentifiables = new ArrayList<>();
+					Map<Identifiable, EntityWithId> mergedEntities = new HashMap<>();
+					em.getTransaction().begin();
+					for (Identifiable identifiable : identifiables) {
+						EntityWithId dbObject = dbObjects.get(identifiable);
+						if (dbObject != null) {
+							boolean newlyCreatedObject = (dbObject.getLastupdate() == null);
+
+							EntityWithId merged = em.merge(dbObject);
+							mergedEntities.put(identifiable, merged);
+							if (newlyCreatedObject) {
+								ElexisEvent createEvent = getCreateEvent(identifiable);
+								if (createEvent != null) {
+									if (ContextServiceHolder.isPresent()) {
+										String userId = ContextServiceHolder.get().getActiveUser().map(Identifiable::getId)
+												.orElse(null);
+										if (userId != null) {
+											createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
+										}
+									}
+									createdEvents.add(createEvent);
+								}
+								createdIdentifiables.add(identifiable);
+							}
+						}
+					}
+					em.getTransaction().commit();
+					// update model adapters and post events
+					identifiables.stream().forEach(i -> {
+						if (i instanceof AbstractIdModelAdapter) {
+							setDbObject(i, mergedEntities.get(i), true);
+							if (i.getRefresh() != null) {
+								for (Identifiable toRefresh : i.getRefresh()) {
+									refresh(toRefresh, true);
+								}
+								i.clearRefresh();
+							}
+							if (i.getUpdated() != null) {
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, i,
+										Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, i.getUpdated()));
+								i.clearUpdated();
+							}
+						}
+					});
+					createdEvents.stream().forEach(e -> postElexisEvent(e));
+					createdIdentifiables.stream().forEach(i -> postEvent(ElexisEventTopics.EVENT_CREATE, i));
+					return;
+				} finally {
+					closeEntityManager(em);
+				}
+			}
+			String message = "Could not save list [" + identifiables + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+			LoggerFactory.getLogger(getClass()).error(message);
+			throw new IllegalStateException(message);			
 		}
-		String message = "Could not save list [" + identifiables + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-		LoggerFactory.getLogger(getClass()).error(message);
-		throw new IllegalStateException(message);
 	}
 
 	public void touch(Identifiable identifiable) {
-		Optional<EntityWithId> dbObject = getDbObject(identifiable);
-		if (dbObject.isPresent()) {
-			EntityManager em = getEntityManager(false);
-			try {
-				em.getTransaction().begin();
-				dbObject.get().setLastupdate(System.currentTimeMillis());
-				em.merge(dbObject.get());
-				em.getTransaction().commit();
-			} finally {
-				closeEntityManager(em);
+		if (evaluateRight(identifiable.getClass(), Right.UPDATE)) {
+			Optional<EntityWithId> dbObject = getDbObject(identifiable);
+			if (dbObject.isPresent()) {
+				EntityManager em = getEntityManager(false);
+				try {
+					em.getTransaction().begin();
+					dbObject.get().setLastupdate(System.currentTimeMillis());
+					em.merge(dbObject.get());
+					em.getTransaction().commit();
+				} finally {
+					closeEntityManager(em);
+				}
 			}
 		}
 	}
@@ -362,23 +377,21 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void remove(Identifiable identifiable) {
-		if (!EvACE.of(identifiable.getClass(), Right.REMOVE).eval()) {
-			// TODO
-		}
-
-		Optional<EntityWithId> dbObject = getDbObject(identifiable);
-		if (dbObject.isPresent()) {
-			EntityManager em = getEntityManager(false);
-			try {
-				em.getTransaction().begin();
-				EntityWithId object = em.merge(dbObject.get());
-				em.remove(object);
-				em.getTransaction().commit();
-				postEvent(ElexisEventTopics.EVENT_DELETE, identifiable);
-				return;
-			} finally {
-				closeEntityManager(em);
-			}
+		if(evaluateRight(identifiable.getClass(), Right.REMOVE)) {
+			Optional<EntityWithId> dbObject = getDbObject(identifiable);
+			if (dbObject.isPresent()) {
+				EntityManager em = getEntityManager(false);
+				try {
+					em.getTransaction().begin();
+					EntityWithId object = em.merge(dbObject.get());
+					em.remove(object);
+					em.getTransaction().commit();
+					postEvent(ElexisEventTopics.EVENT_DELETE, identifiable);
+					return;
+				} finally {
+					closeEntityManager(em);
+				}
+			}			
 		}
 		String message = "Could not remove [" + identifiable + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		LoggerFactory.getLogger(getClass()).error(message);
@@ -458,28 +471,30 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void delete(Deleteable deletable) {
-		if (!EvACE.of(deletable.getClass(), Right.DELETE).eval()) {
-			// TODO
+		if(evaluateRight(deletable.getClass(), Right.DELETE)) {
+			deletable.setDeleted(true);
+			save((Identifiable) deletable);
+			createDBLog((Identifiable) deletable);
+			postEvent(ElexisEventTopics.EVENT_DELETE, deletable);			
 		}
-		deletable.setDeleted(true);
-		save((Identifiable) deletable);
-		createDBLog((Identifiable) deletable);
-		postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
 	}
 
 	@Override
 	public void delete(List<? extends Deleteable> deletables) {
 		if (deletables != null) {
-			List<Identifiable> identifiables = new ArrayList<>();
-			deletables.forEach(item -> {
-				item.setDeleted(true);
-				identifiables.add((Identifiable) item);
-			});
-			save(identifiables);
-			identifiables.forEach(item -> {
-				createDBLog(item);
-				postEvent(ElexisEventTopics.EVENT_DELETE, item);
-			});
+			if (evaluateRight(deletables.stream().map(d -> (Identifiable) d).collect(Collectors.toList()),
+					Right.DELETE)) {
+				List<Identifiable> identifiables = new ArrayList<>();
+				deletables.forEach(item -> {
+					item.setDeleted(true);
+					identifiables.add((Identifiable) item);
+				});
+				save(identifiables);
+				identifiables.forEach(item -> {
+					createDBLog(item);
+					postEvent(ElexisEventTopics.EVENT_DELETE, item);
+				});
+			}
 		}
 	}
 
@@ -539,9 +554,47 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public <T> T create(Class<T> clazz) {
-		return adapterFactory.createAdapter(clazz);
+		if(evaluateRight(clazz, Right.CREATE)) {
+			return adapterFactory.createAdapter(clazz);
+		}
+		return null;
 	}
 
+	private IAccessControlService getAccessControlService() {
+		if(accessControlService == null) {
+			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+		}
+		return accessControlService;
+	}
+	
+	protected boolean evaluateRightNoException(Class<?> clazz, Right right) {
+		boolean ret = CoreUtil.isTestMode();
+		if(getAccessControlService() != null) {
+			ret = accessControlService.evaluate(EvACE.of(clazz, right));
+		}
+		return ret;
+	}
+	
+	protected boolean evaluateRight(Class<?> clazz, Right right) throws AccessControlException {
+		boolean ret = evaluateRightNoException(clazz, right);
+		if(!ret) {
+			throw new AccessControlException(clazz, right);
+		}
+		return ret;
+	}
+
+	protected boolean evaluateRight(List<? extends Identifiable> identifiables, Right right)
+			throws AccessControlException {
+		boolean ret = CoreUtil.isTestMode();
+		if (identifiables != null) {
+			ret = identifiables.stream().map(i -> evaluateRight(i.getClass(), right)).allMatch(b -> b == Boolean.TRUE);
+			if (!ret) {
+				throw new AccessControlException(identifiables.get(0).getClass(), right);
+			}
+		}
+		return ret;
+	}
+	
 	@Override
 	public Stream<?> executeNativeQuery(String sql) {
 		Query query = getEntityManager(true).createNativeQuery(sql);

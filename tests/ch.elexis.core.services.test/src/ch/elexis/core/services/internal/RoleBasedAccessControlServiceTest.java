@@ -1,14 +1,12 @@
 package ch.elexis.core.services.internal;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,32 +14,39 @@ import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandConstants;
+import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ac.EvACEs;
-import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.services.AllServiceTests;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class RoleBasedAccessControlServiceTest {
 
 	private IModelService modelService = AllServiceTests.getModelService();
 	private static IAccessControlService accessControlService;
+	private static IContextService contextService;
 
 	@BeforeClass
 	public static void beforeClass() {
 		accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).get();
+		contextService = OsgiServiceUtil.getService(IContextService.class).get();
+		contextService.getRootContext().setNamed("testAccessControl", Boolean.TRUE);
 	}
 
+	@AfterClass
+	public static void afterClass() {
+		contextService.getRootContext().setNamed("testAccessControl", null);
+	}
+	
 	@Test
 	public void userHasSystemCommandRightToLogin() {
 		assertTrue(accessControlService.evaluate(EvACE.of(SystemCommandConstants.LOGIN_UI)));
@@ -64,22 +69,20 @@ public class RoleBasedAccessControlServiceTest {
 		assertTrue(execute.isEmpty());
 	}
 
-	@Test
+	@Test(expected = AccessControlException.class)
 	public void userHasNoRightToCreatePatient() {
 		assertFalse(accessControlService.evaluate(EvACE.of(IPatient.class, Right.CREATE)));
-		assertFalse(accessControlService.evaluate(EvACE.of(IPatient.class, Right.DELETE)));
 
-		IPatient buildAndSave = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "shouldNot", "exist",
-				LocalDate.now(), Gender.MALE).buildAndSave();
-		assertNull(buildAndSave); // or throw exception?
-
-		CoreModelServiceHolder.get().create(IPatient.class); // Exception?
+		CoreModelServiceHolder.get().create(IPatient.class);
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void userHasNoRightToRemovePatient() {
-		Optional<Identifiable> load = CoreModelServiceHolder.get().load(AllServiceTests.getPatient().getId(),
-				Identifiable.class);
+	@Test(expected = AccessControlException.class)
+	public void userHasNoRightToRemoveOrganization() {
+		assertTrue(accessControlService.evaluate(EvACE.of(IOrganization.class, Right.READ)));
+		assertFalse(accessControlService.evaluate(EvACE.of(IOrganization.class, Right.REMOVE)));
+		
+		Optional<IOrganization> load = CoreModelServiceHolder.get().load(AllServiceTests.getLaboratory().getId(),
+				IOrganization.class);
 		CoreModelServiceHolder.get().remove(load.get()); // or other exception
 	}
 
@@ -94,9 +97,10 @@ public class RoleBasedAccessControlServiceTest {
 		assertTrue(laboratory.isPresent());
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = AccessControlException.class)
 	public void userHasNoRightToDeleteLaboratory() {
-		assertTrue(accessControlService.evaluate(EvACE.of(ILaboratory.class, Right.DELETE)));
+		assertTrue(accessControlService.evaluate(EvACE.of(ILaboratory.class, Right.READ)));
+		assertFalse(accessControlService.evaluate(EvACE.of(ILaboratory.class, Right.DELETE)));
 
 		Optional<ILaboratory> load = CoreModelServiceHolder.get().load(AllServiceTests.getLaboratory().getId(),
 				ILaboratory.class);
@@ -107,12 +111,13 @@ public class RoleBasedAccessControlServiceTest {
 	public void userHasRightToLoadPerson() {
 		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
 		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.VIEW)));
-		// must be Person = 1 AND Patient = 0
-		// we do not have right to load patients
-		fail();
+
+		Optional<IPerson> load = CoreModelServiceHolder.get().load(AllServiceTests.getPatient().getId(),
+				IPerson.class);
+		assertTrue(load.isPresent());
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = AccessControlException.class)
 	public void userHasNoRightToUpdateArticle() {
 		assertTrue(accessControlService.evaluate(EvACE.of(IArticle.class, Right.READ)));
 		assertTrue(accessControlService.evaluate(EvACE.of(IArticle.class, Right.VIEW)));
@@ -124,6 +129,17 @@ public class RoleBasedAccessControlServiceTest {
 		CoreModelServiceHolder.get().save(iArticle); // better exception than IllegalState??
 
 		CoreModelServiceHolder.get().touch(iArticle); // should fail too - better exception than IllegalState??
+	}
+	
+	@Test(expected = AccessControlException.class)
+	public void userHasNoRightToTouchArticle() {
+		assertTrue(accessControlService.evaluate(EvACE.of(IArticle.class, Right.READ)));
+		assertTrue(accessControlService.evaluate(EvACE.of(IArticle.class, Right.VIEW)));
+		assertFalse(accessControlService.evaluate(EvACE.of(IArticle.class, Right.UPDATE)));
+
+		IArticle iArticle = CoreModelServiceHolder.get().load(AllServiceTests.getEigenartikel().getId(), IArticle.class)
+				.get();
+		CoreModelServiceHolder.get().touch(iArticle);
 	}
 	
 	@Test

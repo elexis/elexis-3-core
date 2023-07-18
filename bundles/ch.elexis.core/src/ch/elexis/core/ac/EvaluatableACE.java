@@ -51,5 +51,4 @@ public abstract class EvaluatableACE {
 		requestedRightMap[requestedRight.ordinal()] = 1;
 		return this;
 	}
-
 }

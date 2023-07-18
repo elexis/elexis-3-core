@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,6 +27,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.utils.CoreUtil;
 
 @Component
 public class RoleBasedAccessControlService implements IAccessControlService {
@@ -33,11 +35,11 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private Logger logger;
 
 	@Reference
-	IContextService contextService;
+	private IContextService contextService;
 
 	private Map<String, AccessControlList> roleAclMap;
 	private Map<IUser, AccessControlList> userAclMap;
-
+	
 	public RoleBasedAccessControlService() {
 		logger = LoggerFactory.getLogger(getClass());
 		roleAclMap = Collections.synchronizedMap(new HashMap<>());
@@ -46,13 +48,21 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public boolean evaluate(EvaluatableACE evaluatableAce) {
-		IUser user = contextService.getActiveUser().orElse(null);
-		if (!userAclMap.containsKey(user)) {
-			// calculate user ACL by combining the users roles
-			userAclMap.put(user, determineUserAccessControlList(user.getRoles()));
-			logger.debug("ACE User=[{}] Roles=[{}]", user.getId(), userAclMap.get(user).getRolesRepresented());
+		if(CoreUtil.isTestMode() && contextService.getNamed("testAccessControl").isEmpty()) {
+			return true;
 		}
-		return evaluateACE(userAclMap.get(user), evaluatableAce);
+		Optional<IUser> user = contextService.getActiveUser();
+		if(user.isPresent()) {
+			if (!userAclMap.containsKey(user.get())) {
+				// calculate user ACL by combining the users roles
+				userAclMap.put(user.get(), determineUserAccessControlList(user.get().getRoles()));
+				logger.debug("ACE User=[{}] Roles=[{}]", user.get().getId(), userAclMap.get(user.get()).getRolesRepresented());
+			}
+			return evaluateACE(userAclMap.get(user.get()), evaluatableAce);			
+		} else {
+			logger.warn("No active user to evalute");
+		}
+		return false;
 	}
 
 	private AccessControlList determineUserAccessControlList(List<IRole> roles) {
