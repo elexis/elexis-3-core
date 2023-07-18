@@ -118,12 +118,12 @@ public class UiDesk {
 	}
 
 	public static Display getDisplay() {
-		if (theDisplay == null) {
+		if (theDisplay == null || theDisplay.isDisposed()) {
 			if (PlatformUI.isWorkbenchRunning()) {
 				theDisplay = PlatformUI.getWorkbench().getDisplay();
 			}
 		}
-		if (theDisplay == null) {
+		if (theDisplay == null || theDisplay.isDisposed()) {
 			theDisplay = PlatformUI.createDisplay();
 		}
 		return theDisplay;
