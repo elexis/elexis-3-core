@@ -37,9 +37,11 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
@@ -107,43 +109,46 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 
-		// load by local database
-		String username = usr.getText();
-		IUser _user = null;
-		Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
-		if (dbUser.isPresent()) {
-			_user = dbUser.get().login(username, pwd.getTextChars());
-		}
-		if (_user != null && _user.isActive()) {
-			Anwender anwender = Anwender.load(_user.getAssignedContact().getId());
-			if (anwender != null) {
-				if (anwender.isValid()) {
-					if (anwender.istAnwender()) {
-						user = _user;
+		IAccessControlService accessControlService = OsgiServiceUtil.getServiceWait(IAccessControlService.class, 5000)
+				.orElseThrow();
+		accessControlService.doPrivileged(() -> {
+			// load by local database
+			String username = usr.getText();
+			IUser _user = null;
+			Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+			if (dbUser.isPresent()) {
+				_user = dbUser.get().login(username, pwd.getTextChars());
+			}
+			if (_user != null && _user.isActive()) {
+				Anwender anwender = Anwender.load(_user.getAssignedContact().getId());
+				if (anwender != null) {
+					if (anwender.isValid()) {
+						if (anwender.istAnwender()) {
+							user = _user;
 
-						if (elexisEnvironmentService != null) {
-							elexisEnvironmentService.loadAccessToken(username, pwd.getTextChars());
+							if (elexisEnvironmentService != null) {
+								elexisEnvironmentService.loadAccessToken(username, pwd.getTextChars());
+							}
+
+							super.okPressed();
+							return;
+						} else {
+							LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
+									new LoginException("anwender is not a istAnwender")); //$NON-NLS-1$
 						}
-
-						super.okPressed();
-						return;
 					} else {
 						LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
-								new LoginException("anwender is not a istAnwender")); //$NON-NLS-1$
+								new LoginException("anwender is invalid or deleted")); //$NON-NLS-1$
 					}
+
 				} else {
 					LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
-							new LoginException("anwender is invalid or deleted")); //$NON-NLS-1$
+							new LoginException("anwender is null")); //$NON-NLS-1$
 				}
-
-			} else {
-				LoggerFactory.getLogger(getClass()).error("username: {}", username, //$NON-NLS-1$
-						new LoginException("anwender is null")); //$NON-NLS-1$
 			}
-		}
 
-		setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
-
+			setMessage(Messages.LoginDialog_4, IMessageProvider.ERROR);
+		});
 	}
 
 	@Override

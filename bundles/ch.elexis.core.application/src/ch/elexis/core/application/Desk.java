@@ -32,6 +32,7 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.status.ObjectStatus;
@@ -145,16 +146,20 @@ public class Desk implements IApplication {
 	}
 
 	protected void initIdentifiers() {
-		IConfigService configService = OsgiServiceUtil.getServiceWait(IConfigService.class, 5000).orElseThrow();
-		if (configService.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
-			LocalLock localLock = new LocalLock("initInstallationTimestamp"); //$NON-NLS-1$
-			if (localLock.tryLock()) {
-				configService.set(Preferences.INSTALLATION_TIMESTAMP, Long.toString(System.currentTimeMillis()));
+		IAccessControlService accessControlService = OsgiServiceUtil.getServiceWait(IAccessControlService.class, 5000).orElseThrow();
+		accessControlService.doPrivileged(() -> {
+			IConfigService configService = OsgiServiceUtil.getServiceWait(IConfigService.class, 5000).orElseThrow();
+			if (configService.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
+				LocalLock localLock = new LocalLock("initInstallationTimestamp"); //$NON-NLS-1$
+				if (localLock.tryLock()) {
+					configService.set(Preferences.INSTALLATION_TIMESTAMP, Long.toString(System.currentTimeMillis()));
+				}
+				localLock.unlock();
 			}
-			localLock.unlock();
-		}
-		configService.setLocal(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
-		OsgiServiceUtil.ungetService(configService);
+			configService.setLocal(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
+			OsgiServiceUtil.ungetService(configService);
+		});
+		OsgiServiceUtil.ungetService(accessControlService);
 	}
 
 	@Override

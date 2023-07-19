@@ -25,6 +25,7 @@ import ch.elexis.core.services.AllServiceTests;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -144,7 +145,29 @@ public class RoleBasedAccessControlServiceTest {
 	
 	@Test
 	public void namedQueryExecution() {
-		// ? CoreModelServiceHolder.get().getNamedQuery
+		assertFalse(accessControlService.evaluate(EvACE.of(IPatient.class, Right.READ)));
+		
+		INamedQuery<IPatient> namedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+		List<IPatient> found = namedQuery.executeWithParameters(namedQuery.getParameterMap("code", AllServiceTests.getPatient().getPatientNr()));
+		assertTrue(found.isEmpty());
+	}
+
+	@Test
+	public void executePrivileged() {
+		assertFalse(accessControlService.evaluate(EvACE.of(IPatient.class, Right.READ)));
+
+		accessControlService.doPrivileged(() -> {
+			INamedQuery<IPatient> privilegedNamedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class,
+					"code");
+			List<IPatient> privilegedfound = privilegedNamedQuery.executeWithParameters(
+					privilegedNamedQuery.getParameterMap("code", AllServiceTests.getPatient().getPatientNr()));
+			assertFalse(privilegedfound.isEmpty());
+		});
+		// test if not privileged afterwards
+		INamedQuery<IPatient> namedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+		List<IPatient> found = namedQuery
+				.executeWithParameters(namedQuery.getParameterMap("code", AllServiceTests.getPatient().getPatientNr()));
+		assertTrue(found.isEmpty());
 	}
 
 	@Test

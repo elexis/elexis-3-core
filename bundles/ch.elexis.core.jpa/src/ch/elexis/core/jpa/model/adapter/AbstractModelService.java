@@ -70,7 +70,7 @@ public abstract class AbstractModelService implements IModelService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache) {
-		if(evaluateRightNoException(clazz, Right.READ)) {
+		if (evaluateRightNoException(clazz, Right.READ, true)) {
 			if (StringUtils.isNotEmpty(id)) {
 
 //				EvaluatableACE evACE = EvACE.of(clazz, Right.READ, id);
@@ -567,16 +567,20 @@ public abstract class AbstractModelService implements IModelService {
 		return accessControlService;
 	}
 	
-	protected boolean evaluateRightNoException(Class<?> clazz, Right right) {
+	protected boolean evaluateRightNoException(Class<?> clazz, Right right, boolean logDeny) {
 		boolean ret = CoreUtil.isTestMode();
 		if(getAccessControlService() != null) {
 			ret = accessControlService.evaluate(EvACE.of(clazz, right));
+			if (!ret) {
+				LoggerFactory.getLogger(getClass())
+						.info("User has no right [" + right + "] for class [" + clazz.getSimpleName() + "]");
+			}
 		}
 		return ret;
 	}
 	
 	protected boolean evaluateRight(Class<?> clazz, Right right) throws AccessControlException {
-		boolean ret = evaluateRightNoException(clazz, right);
+		boolean ret = evaluateRightNoException(clazz, right, false);
 		if(!ret) {
 			throw new AccessControlException(clazz, right);
 		}
@@ -645,15 +649,21 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String... properties) {
-		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
-				getNamedQueryName(definitionClazz, properties));
+		if (evaluateRightNoException(definitionClazz, Right.READ, true)) {
+			return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
+					getNamedQueryName(definitionClazz, properties));
+		}
+		return new EmptyNamedQuery<>();
 	}
 
 	@Override
 	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String queryName) {
-		return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
-				queryName);
+		if (evaluateRightNoException(definitionClazz, Right.READ, true)) {
+			return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
+					queryName);
+		}
+		return new EmptyNamedQuery<>();
 	}
 
 	@Override

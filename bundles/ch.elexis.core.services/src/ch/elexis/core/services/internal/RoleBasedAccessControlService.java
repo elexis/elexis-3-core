@@ -40,15 +40,19 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private Map<String, AccessControlList> roleAclMap;
 	private Map<IUser, AccessControlList> userAclMap;
 	
+	private ThreadLocal<Boolean> privileged;
+
 	public RoleBasedAccessControlService() {
 		logger = LoggerFactory.getLogger(getClass());
 		roleAclMap = Collections.synchronizedMap(new HashMap<>());
 		userAclMap = Collections.synchronizedMap(new HashMap<>());
+
+		privileged = ThreadLocal.withInitial(() -> Boolean.FALSE);
 	}
 
 	@Override
 	public boolean evaluate(EvaluatableACE evaluatableAce) {
-		if(CoreUtil.isTestMode() && contextService.getNamed("testAccessControl").isEmpty()) {
+		if (isPrivileged()) {
 			return true;
 		}
 		Optional<IUser> user = contextService.getActiveUser();
@@ -63,6 +67,11 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			logger.warn("No active user to evalute");
 		}
 		return false;
+	}
+
+	private boolean isPrivileged() {
+		// privileged set, or in test mode
+		return privileged.get() || (CoreUtil.isTestMode() && contextService.getNamed("testAccessControl").isEmpty());
 	}
 
 	private AccessControlList determineUserAccessControlList(List<IRole> roles) {
@@ -156,6 +165,17 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			return aceAccessBitMap.grants(Right.EXECUTE);
 		}
 		return false;
+	}
+
+	@Override
+	public void doPrivileged(Runnable runnable) {
+		try {
+			privileged.set(Boolean.TRUE);
+			logger.info("Executing priviledged [" + runnable + "]");
+			runnable.run();
+		} finally {
+			privileged.set(Boolean.FALSE);
+		}
 	}
 
 }
