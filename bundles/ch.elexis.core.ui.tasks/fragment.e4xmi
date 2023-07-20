@@ -4,6 +4,7 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yKaBgA9_EeqCRvaXdJ-ZfQ" featurename="descriptors" parentElementId="xpath:/">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_9ho_gA9_EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.parts.TaskLogPart" label="Task Log" iconURI="platform:/plugin/ch.elexis.core.ui.tasks/rsc/icons/screwdriver.png" category="General" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogPart">
       <tags>View</tags>
+      <tags>accesscontrol:ch.elexis.core.tasks.model.ITask</tags>
       <handlers xmi:id="_I-_qcA--EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handler.identifiable.remove" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.RemoveTaskHandler" command="_CbdE8A--EeqCRvaXdJ-ZfQ"/>
       <menus xsi:type="menu:PopupMenu" xmi:id="_5Yz_wA-9EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.popupmenu.tableresults">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_MuBg8A--EeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.handledmenuitem.lschen" label="L&#xf6;schen" iconURI="icon://IMG_BOMB" command="_CbdE8A--EeqCRvaXdJ-ZfQ"/>
@@ -15,9 +16,12 @@
         <children xsi:type="menu:DirectToolItem" xmi:id="_JMn4EFFGEe2vw9zG0Wbi_g" elementId="ch.elexis.core.ui.tasks.directtoolitem.taskfiltern" label="Task filtern" iconURI="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/filter_ps.png" tooltip="Ansicht nach Task filtern" type="Check" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogFilterDialog"/>
       </toolbar>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_LHyLYBBMEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.partdescriptor.taskdetail" label="Task Detail" allowMultiple="true" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogDetailPart"/>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_LHyLYBBMEeqCRvaXdJ-ZfQ" elementId="ch.elexis.core.ui.tasks.partdescriptor.taskdetail" label="Task Detail" allowMultiple="true" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskLogDetailPart">
+      <tags>accesscontrol:ch.elexis.core.tasks.model.ITask</tags>
+    </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_RsuUUIDNEeu356yw_Cgikg" elementId="ch.elexis.core.ui.tasks.parts.TaskConfigurationPart" label="Task Configuration" iconURI="icon://IMG_GEAR" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.TaskConfigurationPart">
       <tags>View</tags>
+      <tags>accesscontrol:ch.elexis.core.tasks.model.ITaskDescriptor</tags>
       <handlers xmi:id="_Ycc6QIY0EeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.tasks.handler.2" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.ManuallyTriggerTaskDescriptorHandler" command="_bF_IUIY0EeutVMzWpU7zdQ"/>
       <handlers xmi:id="_QvPtYIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handler.0" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.CreateTaskDescriptorHandler" command="_9LfTgIJOEeu-w48IYw7DTw"/>
       <handlers xmi:id="_nq0RQIJXEeu-w48IYw7DTw" elementId="ch.elexis.core.ui.tasks.handler.1" contributionURI="bundleclass://ch.elexis.core.ui.tasks/ch.elexis.core.ui.tasks.parts.handlers.DeleteTaskDescriptorHandler" command="_hNDjoIJXEeu-w48IYw7DTw"/>
