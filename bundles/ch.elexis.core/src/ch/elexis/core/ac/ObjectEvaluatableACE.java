@@ -1,5 +1,8 @@
 package ch.elexis.core.ac;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.elexis.core.services.IAccessControlService;
 
 public class ObjectEvaluatableACE extends EvaluatableACE {
@@ -27,7 +30,35 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 	}
 
 	public ObjectEvaluatableACE(Class<?> clazz, Right requestedRight) {
-		this(clazz.getName(), requestedRight, null);
+		this(getElexisInterfaceName(clazz), requestedRight, null);
+	}
+
+	private static String getElexisInterfaceName(Class<?> clazz) {
+		if (!clazz.isInterface()) {
+			List<String> canidates = new ArrayList<>();
+			for (Class<?> interfaze : clazz.getInterfaces()) {
+				canidates.add(interfaze.getName());
+			}
+			if (!canidates.isEmpty()) {
+				canidates.sort((l, r) -> {
+					String lSimplename = l.substring(l.lastIndexOf('.'));
+					boolean lFirstLetters = Character.isUpperCase(lSimplename.charAt(0))
+							&& Character.isUpperCase(lSimplename.charAt(1));
+					String rSimplename = r.substring(r.lastIndexOf('.'));
+					boolean rFirstLetters = Character.isUpperCase(lSimplename.charAt(0))
+							&& Character.isUpperCase(lSimplename.charAt(1));
+					if (lFirstLetters && !rFirstLetters) {
+						return 1;
+					} else if (rFirstLetters && !lFirstLetters) {
+						return -1;
+					} else {
+						return lSimplename.compareTo(rSimplename);
+					}
+				});
+				return canidates.get(0);
+			}
+		}
+		return clazz.getName();
 	}
 
 	/**
