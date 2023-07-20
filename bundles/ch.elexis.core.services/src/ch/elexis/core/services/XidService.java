@@ -50,9 +50,14 @@ public class XidService implements IXidService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
+	@Reference
+	private IAccessControlService accessControlService;
+
 	@Activate
 	private void activate() {
-		loadDomains();
+		accessControlService.doPrivileged(() -> {
+			loadDomains();
+		});
 	}
 
 	@Override

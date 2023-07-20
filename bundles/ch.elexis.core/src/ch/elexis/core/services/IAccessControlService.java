@@ -16,8 +16,8 @@ public interface IAccessControlService {
 	public boolean evaluate(EvaluatableACE evaluatableAce) throws AccessControlException;
 
 	/**
-	 * Execute the runnable in privileged mode. The runnable is executed privileged
-	 * in the calling thread.
+	 * Execute the runnable privileged (all rights, no user needed) in the calling
+	 * thread.
 	 * 
 	 * @param runnable
 	 */
