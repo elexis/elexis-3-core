@@ -12,7 +12,7 @@
   },
   "object" : {
     "ch.elexis.core.model.IConfig" : "r",
-    "ch.elexis.core.model.IUserconfig" : "rvu",
+    "ch.elexis.core.model.IUserConfig" : "rwvu",
     "ch.elexis.core.model.IOrganization" : "rv",
     "ch.elexis.core.model.ILaboratory" : "rv",
     "ch.elexis.core.model.IPerson" : "rv",
