@@ -79,10 +79,12 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			return null;
 		}
 
-		AccessControlList accessControlList = getOrLoadRoleAccessControlList(roles.get(0));
-		if (roles.size() > 1) {
-			for (int i = 1; i < roles.size(); i++) {
-				AccessControlList _accessControlList = roleAclMap.get(roles.get(i).getId().toLowerCase());
+		AccessControlList accessControlList = null;
+		for (IRole role : roles) {
+			if (accessControlList == null) {
+				accessControlList = getOrLoadRoleAccessControlList(role);
+			} else if (accessControlList != null) {
+				AccessControlList _accessControlList = roleAclMap.get(role.getId().toLowerCase());
 				accessControlList = AccessControlListUtil.merge(_accessControlList, _accessControlList);
 			}
 		}
@@ -94,12 +96,16 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (!roleAclMap.containsKey(_role)) {
 			InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
 					.getResourceAsStream("/rsc/acl/" + _role + ".json");
-			try {
-				AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-						.readValue(roleAccessDefaultUserFile, AccessControlList.class);
-				roleAclMap.put(_role, acl);
-			} catch (Exception e) {
-				logger.error("Error loading role acl [{}]", _role, e);
+			if (roleAccessDefaultUserFile != null) {
+				try {
+					AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
+							.readValue(roleAccessDefaultUserFile, AccessControlList.class);
+					roleAclMap.put(_role, acl);
+				} catch (Exception e) {
+					logger.error("Error loading role acl [{}]", _role, e);
+				}
+			} else {
+				logger.warn("No role acl [{}] file", _role);
 			}
 		}
 		return roleAclMap.get(_role);
