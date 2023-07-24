@@ -608,4 +608,19 @@
       </property>
     </product>
  </extension>
+ <extension
+       point="ch.elexis.core.ui.AccessControl">
+    <view
+          id="ch.elexis.PatListView"
+          object="ch.elexis.core.model.IPatient">
+    </view>
+    <view
+          id="ch.elexis.Konsdetail"
+          object="ch.elexis.core.model.IEncounter">
+    </view>
+    <view
+          id="ch.elexis.RechnungsDetailView"
+          object="ch.elexis.core.model.IInvoice">
+    </view>
+ </extension>
 </plugin>

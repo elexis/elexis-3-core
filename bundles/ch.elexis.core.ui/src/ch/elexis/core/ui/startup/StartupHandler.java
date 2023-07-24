@@ -9,7 +9,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
@@ -25,6 +27,7 @@ import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ui.processor.AccessControlProcessor;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 
 /**
@@ -46,6 +49,11 @@ public class StartupHandler implements EventHandler {
 			MApplication application = (MApplication) property;
 			StartupHandler.applicationContext = application.getContext();
 		}
+
+		// run access control after startup to remove added e3 views
+		AccessControlProcessor accessControl = ContextInjectionFactory.make(AccessControlProcessor.class,
+				applicationContext);
+		ContextInjectionFactory.invoke(accessControl, Execute.class, applicationContext);
 
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override

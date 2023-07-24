@@ -39,4 +39,5 @@ public class ExtensionPointConstantsUi {
 	public static final String GENERICCODE = "ch.elexis.core.ui.Genericcode"; //$NON-NLS-1$
 	public static final String RECHNUNGSDETAIL = "ch.elexis.core.ui.Rechnungsdetail"; //$NON-NLS-1$
 	public static final String TEXT_TEMPLATE_REQUIREMENT = "ch.elexis.core.ui.TextTemplateRequirement"; //$NON-NLS-1$
+	public static final String ACCESSCONTROL = "ch.elexis.core.ui.AccessControl"; //$NON-NLS-1$
 }

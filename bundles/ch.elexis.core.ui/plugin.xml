@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
- <extension-point id="Sidebar" name="%elexis.sidebar" schema="schema/Sidebar.exsd"/>
+   <extension-point id="AccessControl" name="Access Control" schema="schema/AccessControl.exsd"/>
+   <extension-point id="Sidebar" name="%elexis.sidebar" schema="schema/Sidebar.exsd"/>
    <extension-point id="LaborDatenImport" name="%elexis.importLab" schema="schema/LaborDatenImport.exsd"/>
    <extension-point id="FremdDatenImport" name="%elexis.importExt" schema="schema/FremdDatenImport.exsd"/>
    <extension-point id="Text" name="%elexis.text" schema="schema/Text.exsd"/>
