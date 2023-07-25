@@ -54,10 +54,6 @@
          id="org.eclipse.ecf.filetransfer.httpclient5.feature"
          version="0.0.0"/>
 
-   <includes
-         id="com.opcoach.e4.preferences.feature"
-         version="0.0.0"/>
-
    <plugin
          id="ch.elexis.core.application"
          download-size="0"
