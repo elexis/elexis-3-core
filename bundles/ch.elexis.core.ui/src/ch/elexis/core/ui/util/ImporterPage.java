@@ -99,7 +99,9 @@ public abstract class ImporterPage implements IExecutableExtension {
 	 * @return The class name of the imported object. Used to evaluate
 	 *         {@link Right#IMPORT}
 	 */
-	public abstract String getObjectClass();
+	public String getObjectClass() {
+		return StringUtils.EMPTY;
+	};
 
 	/**
 	 * Allfällige von User eingegebene Daten einsammeln. Die Default-Implementation
