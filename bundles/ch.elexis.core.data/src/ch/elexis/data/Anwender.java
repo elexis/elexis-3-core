@@ -30,6 +30,7 @@ import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -76,8 +77,9 @@ public class Anwender extends Person {
 		super.setConstraint();
 
 		User user = new User(this, username, password);
-		if (isExecutiveDoctor)
+		if (isExecutiveDoctor) {
 			user.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+		}
 	}
 
 	public Anwender(final String Name, final String Vorname, final String Geburtsdatum, final String s) {
@@ -217,13 +219,15 @@ public class Anwender extends Person {
 		admin.create(null);
 		admin.set(new String[] { Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER }, ADMINISTRATOR, ADMINISTRATOR,
 				StringConstants.ONE);
-		Optional<IUser> user = CoreModelServiceHolder.get().load(ADMINISTRATOR, IUser.class);
-		if (user.isPresent()) {
-			user.get()
-					.setAssignedContact(CoreModelServiceHolder.get().load(admin.getId(), IContact.class).orElse(null));
-		} else {
-			throw new IllegalStateException("Incorrect DB state - No admin user found!");
-		}
+		AccessControlServiceHolder.get().doPrivileged(() -> {
+			Optional<IUser> user = CoreModelServiceHolder.get().load(ADMINISTRATOR, IUser.class);
+			if (user.isPresent()) {
+				user.get().setAssignedContact(
+						CoreModelServiceHolder.get().load(admin.getId(), IContact.class).orElse(null));
+			} else {
+				throw new IllegalStateException("Incorrect DB state - No admin user found!");
+			}
+		});
 	}
 
 	/**

@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.exceptions.AccessControlException;
+import ch.elexis.core.model.IUser;
 
 public interface IAccessControlService {
 
@@ -22,5 +23,12 @@ public interface IAccessControlService {
 	 * @param runnable
 	 */
 	public void doPrivileged(Runnable runnable);
+
+	/**
+	 * Refresh the ACL information for the user.
+	 * 
+	 * @param user
+	 */
+	void refresh(IUser user);
 
 }

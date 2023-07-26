@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 /**
@@ -26,6 +27,8 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 @Component(property = "id=login.envvars")
 public class EnvVarsLoginContributor implements ILoginContributor {
 
+	private Optional<IUser> dbUser;
+
 	@Override
 	public int getPriority() {
 		return 1000;
@@ -38,7 +41,9 @@ public class EnvVarsLoginContributor implements ILoginContributor {
 
 		if (StringUtils.isNotEmpty(username)) {
 			LoggerFactory.getLogger(getClass()).warn("Bypassing LoginDialog with username " + username);
-			Optional<IUser> dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+			AccessControlServiceHolder.get().doPrivileged(() -> {
+				dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+			});
 			if (dbUser.isPresent()) {
 				IUser user = dbUser.get().login(username, password.toCharArray());
 				if (user != null && user.isActive()) {

@@ -20,6 +20,7 @@ import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.ISettingChangedListener;
 import ch.rgw.tools.ExHandler;
@@ -95,11 +96,14 @@ public class PersistentObjectDataSourceActivator {
 		DBConnection defaultConnection = PersistentObject.getDefaultConnection();
 
 		if (CoreHub.globalCfg == null || CoreHub.globalCfg.get("created", null) == null) {
+
 			log.info("PO data initialization");
 			try {
 				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
 				Mandant.initializeAdministratorUser();
-				CoreHub.pin.initializeGlobalPreferences(configService);
+				AccessControlServiceHolder.get().doPrivileged(() -> {
+					CoreHub.pin.initializeGlobalPreferences(configService);
+				});
 				Mandant bypassMandator = PersistentObjectUtil
 						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch() || CoreUtil.isTestMode());
 

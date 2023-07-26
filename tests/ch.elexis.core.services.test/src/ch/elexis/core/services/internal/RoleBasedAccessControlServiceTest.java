@@ -16,10 +16,14 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandConstants;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IRole;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.services.AllServiceTests;
 import ch.elexis.core.services.IAccessControlService;
@@ -168,6 +172,24 @@ public class RoleBasedAccessControlServiceTest {
 		List<IPatient> found = namedQuery
 				.executeWithParameters(namedQuery.getParameterMap("code", AllServiceTests.getPatient().getPatientNr()));
 		assertTrue(found.isEmpty());
+	}
+
+	@Test
+	public void medicalPractitionerRole() {
+		assertTrue(accessControlService.evaluate(EvACE.of(IRole.class, Right.READ)));
+		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
+		assertFalse(accessControlService.evaluate(EvACE.of(IEncounter.class, Right.READ)));
+
+		IRole role = CoreModelServiceHolder.get().load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR, IRole.class)
+				.get();
+		IUser user = contextService.getActiveUser().get();
+		user.addRole(role);
+		accessControlService.refresh(user);
+
+		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
+		assertTrue(accessControlService.evaluate(EvACE.of(IEncounter.class, Right.READ)));
+
+		user.removeRole(role);
 	}
 
 	@Test

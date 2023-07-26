@@ -7,4 +7,7 @@ public class RoleConstants {
 	public static final String SYSTEMROLE_LITERAL_ASSISTANT = "assistant";
 	public static final String SYSTEMROLE_LITERAL_USER_EXTERNAL = "user_external";
 	public static final String SYSTEMROLE_LITERAL_PATIENT = "patient";
+
+	public static final String ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER = "medical-practitioner";
+	public static final String ACCESSCONTROLE_ROLE_MEDICAL_ASSITANT = "medical-assistant";
 }

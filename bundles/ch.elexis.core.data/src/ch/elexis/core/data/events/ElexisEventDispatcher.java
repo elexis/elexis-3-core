@@ -35,6 +35,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
@@ -202,8 +203,10 @@ public final class ElexisEventDispatcher implements Runnable {
 				return;
 			}
 
-			transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject(),
-					ee.getObjectClass());
+			AccessControlServiceHolder.get().doPrivileged(() -> {
+				transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject(),
+						ee.getObjectClass());
+			});
 
 			int eventType = ee.getType();
 			if (eventType == ElexisEvent.EVENT_SELECTED || eventType == ElexisEvent.EVENT_DESELECTED) {
