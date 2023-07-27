@@ -44,6 +44,8 @@ public class AccessControlListUtil {
 				firstObject[Right.EXECUTE.ordinal()] |= secondObject[Right.EXECUTE.ordinal()];
 				firstObject[Right.VIEW.ordinal()] |= secondObject[Right.VIEW.ordinal()];
 				firstObject[Right.EXPORT.ordinal()] |= secondObject[Right.EXPORT.ordinal()];
+				firstObject[Right.IMPORT.ordinal()] |= secondObject[Right.IMPORT.ordinal()];
+				firstObject[Right.REMOVE.ordinal()] |= secondObject[Right.REMOVE.ordinal()];
 			} else {
 				firstObjectAcl.put(k, v);
 			}

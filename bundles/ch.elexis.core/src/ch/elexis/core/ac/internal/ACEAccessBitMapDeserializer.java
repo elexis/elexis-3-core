@@ -59,6 +59,8 @@ public class ACEAccessBitMapDeserializer extends JsonDeserializer<ACEAccessBitMa
 			accessRightMap[Right.EXECUTE.ordinal()] ^= multiplyFindConstraint(Right.EXECUTE, constraint, denominator);
 			accessRightMap[Right.VIEW.ordinal()] ^= multiplyFindConstraint(Right.VIEW, constraint, denominator);
 			accessRightMap[Right.EXPORT.ordinal()] ^= multiplyFindConstraint(Right.EXPORT, constraint, denominator);
+			accessRightMap[Right.IMPORT.ordinal()] ^= multiplyFindConstraint(Right.IMPORT, constraint, denominator);
+			accessRightMap[Right.REMOVE.ordinal()] ^= multiplyFindConstraint(Right.REMOVE, constraint, denominator);
 		});
 		return accessRightMap;
 	}
