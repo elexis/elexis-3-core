@@ -35,13 +35,6 @@
       </propertyTester>
    </extension>
   <extension
-        point="ch.elexis.core.data.ACLContribution">
-     <ACLContribution
-           ACLContributor="ch.elexis.admin.ACLContributor"
-           name="Elexis.ACLContribution">
-     </ACLContribution>
-  </extension>
-  <extension
         point="ch.elexis.core.data.DataAccess">
      <DataAccess
            class="ch.elexis.core.data.util.AllDataAccessor"
