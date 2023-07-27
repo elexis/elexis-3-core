@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -573,9 +572,6 @@ public abstract class AbstractModelService implements IModelService {
 		if(getAccessControlService() != null) {
 			ret = accessControlService.evaluate(EvACE.of(clazz, right));
 			if (!ret) {
-				System.out.println(ContextServiceHolder.get().getActiveUser().get().getId() + "] -> "
-						+ Arrays.toString(ContextServiceHolder.get().getActiveUser().get().getRoles().toArray()));
-				
 				LoggerFactory.getLogger(getClass())
 						.info("User has no right [" + right + "] for class [" + clazz.getSimpleName() + "]");
 			}
