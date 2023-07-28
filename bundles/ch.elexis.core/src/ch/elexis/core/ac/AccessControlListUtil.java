@@ -46,6 +46,8 @@ public class AccessControlListUtil {
 				firstObject[Right.EXPORT.ordinal()] |= secondObject[Right.EXPORT.ordinal()];
 				firstObject[Right.IMPORT.ordinal()] |= secondObject[Right.IMPORT.ordinal()];
 				firstObject[Right.REMOVE.ordinal()] |= secondObject[Right.REMOVE.ordinal()];
+				// update with merged copy of the bitmap
+				firstObjectAcl.put(k, new ACEAccessBitMap(firstObject));
 			} else {
 				firstObjectAcl.put(k, v);
 			}
