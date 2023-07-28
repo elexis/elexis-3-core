@@ -1065,7 +1065,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			List<Verrechnet> vv = getLeistungen();
 			// VersionedResource vr=getEintrag();
 			if ((vv.size() == 0) || (forced == true) && (AccessControlServiceHolder.get()
-					.evaluate(new ObjectEvaluatableACE(IEncounter.class, Right.REMOVE, getId())))) {
+					.evaluate(new ObjectEvaluatableACE(IEncounter.class, Right.REMOVE,
+							StoreToStringServiceHolder.getStoreToString(this))))) {
 				delete_dependent();
 				return super.delete();
 			}

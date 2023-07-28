@@ -120,7 +120,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			false);
 	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")));
+			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
@@ -230,7 +230,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	};
 
-	private Action showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW, "*"),
+	private Action showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW),
 			Messages.Core_All, Action.AS_CHECK_BOX) {
 		{
 			setToolTipText(Messages.ReminderView_foreignTooltip);
@@ -273,7 +273,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	};
 
-	private RestrictedAction selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW, "*"),
+	private RestrictedAction selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
 			Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
 		{
 			setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
@@ -608,7 +608,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 					.supplyAsync(new CurrentPatientSupplier(actPatient)
 							.showAll(showAllReminders
-									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
+									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
 							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 							.showSelfCreated(showSelfCreatedReminders));
 			currentLoader.thenRunAsync(() -> {
@@ -645,7 +645,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 				.supplyAsync(new GeneralPatientSupplier(actPatient)
 						.showAll(
-								showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
+								showAllReminders && AccessControlServiceHolder.get()
+										.evaluate(EvACE.of(IReminder.class, Right.VIEW)))
 						.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 						.showSelfCreated(showSelfCreatedReminders));
 		currentLoader.thenRunAsync(() -> {
@@ -679,7 +680,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private void refreshGeneralInput() {
 		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralSupplier()
-				.showAll(showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")))
+				.showAll(showAllReminders
+						&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
 				.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
 				.showSelfCreated(showSelfCreatedReminders));
 		currentLoader.thenRunAsync(() -> {

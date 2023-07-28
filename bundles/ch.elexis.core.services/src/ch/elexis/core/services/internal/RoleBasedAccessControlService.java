@@ -26,13 +26,17 @@ import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.utils.CoreUtil;
 
 @Component
@@ -42,6 +46,12 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Reference
 	private IContextService contextService;
+
+	@Reference
+	private IUserService userService;
+
+	@Reference
+	private IStoreToStringService storeToStringService;
 
 	private Map<String, AccessControlList> roleAclMap;
 	private Map<IUser, AccessControlList> userAclMap;
@@ -78,7 +88,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	@Override
 	public void refresh(IUser user) {
 		// calculate user ACL by combining the users roles
-		userAclMap.put(user, determineUserAccessControlList(getUserRoles(user)));
+		AccessControlList userAccessControlList = determineUserAccessControlList(getUserRoles(user));
+		userAclMap.put(user, userAccessControlList);
 		logger.debug("ACE User=[{}] Roles=[{}]", user.getId(), userAclMap.get(user).getRolesRepresented());
 	}
 
@@ -169,10 +180,12 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 					if (aceBitMap[i] == (byte) 4) {
 						aceBitMap[i] = (byte) 1;
 					} else if (aceBitMap[i] == (byte) 2) {
-						if (StringUtils.isNotEmpty(_ace.getObjectId()) && isAoboObject(_ace.getObject())) {
-							List<String> aoboIds = getAoboMandatorIds(user);
-							// TODO test if object has an aobo mandator d
-							aceBitMap[i] = (byte) 0;
+						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
+							if (evaluateAobo(user, _ace)) {
+								aceBitMap[i] = (byte) 1;
+							} else {
+								aceBitMap[i] = (byte) 0;
+							}
 						} else {
 							aceBitMap[i] = (byte) 1;
 						}
@@ -200,12 +213,27 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return false;
 	}
 
+	private boolean evaluateAobo(IUser user, ObjectEvaluatableACE _ace) {
+		List<String> aoboIds = getAoboMandatorIds(user);
+		Optional<Identifiable> object = storeToStringService.loadFromString(_ace.getStoreToString());
+		if(object.isPresent()) {
+			if (object.get() instanceof IEncounter) {
+				return aoboIds.contains(((IEncounter) object.get()).getMandator().getId());
+			}
+		} else {
+			logger.warn("Could not load aobo object [{}]", _ace.getStoreToString());
+		}
+		return false;
+	}
+
 	private List<String> getAoboMandatorIds(IUser user) {
 		List<String> ret = new ArrayList<>();
 		if(user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
 			ret.add(user.getAssignedContact().getId());
+
+			userService.getExecutiveDoctorsWorkingFor(user.getAssignedContact()).stream()
+					.forEach(m -> ret.add(m.getId()));
 		}
-		
 		return ret;
 	}
 

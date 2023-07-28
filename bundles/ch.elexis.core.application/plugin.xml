@@ -622,5 +622,9 @@
           id="ch.elexis.RechnungsDetailView"
           object="ch.elexis.core.model.IInvoice">
     </view>
+    <view
+          id="ch.elexis.HistoryView"
+          object="ch.elexis.core.model.IEncounter">
+    </view>
  </extension>
 </plugin>

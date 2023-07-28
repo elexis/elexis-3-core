@@ -31,6 +31,7 @@ import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.dbupdate.FallUpdatesFor36;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IRnOutputter;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
@@ -666,7 +667,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 */
 	public boolean delete(final boolean force) {
 		if (!hasDependent() || ((force == true) && (AccessControlServiceHolder.get()
-				.evaluate(new ObjectEvaluatableACE(ICoverage.class, Right.REMOVE, getId()))))) {
+				.evaluate(new ObjectEvaluatableACE(ICoverage.class, Right.REMOVE,
+						StoreToStringServiceHolder.getStoreToString(this)))))) {
 			for (Konsultation b : getBehandlungen(false)) {
 				b.delete(true);
 			}

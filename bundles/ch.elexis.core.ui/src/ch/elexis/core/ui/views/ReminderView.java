@@ -128,7 +128,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 			false);
 	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*")));
+			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
@@ -259,7 +259,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		menu.createToolbar(reloadAction, newReminderAction, toggleAutoSelectPatientAction);
 		menu.createMenu(createActionList());
 
-		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*"))) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW))) {
 			showOthersRemindersAction.setEnabled(true);
 			showOthersRemindersAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false));
 		} else {
@@ -518,7 +518,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
 		};
-		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW, "*"),
+		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW),
 				Messages.Core_All, Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.ReminderView_foreignTooltip);
@@ -533,7 +533,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 			}
 		};
 
-		selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW, "*"),
+		selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
 				Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
 			{
 				setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
@@ -818,7 +818,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 			SortedSet<Reminder> reminders = new TreeSet<Reminder>();
 
-			if (showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW, "*"))) {
+			if (showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW))) {
 				qbe.clear();
 				if (filterDueDateDays != -1) {
 					applyDueDateFilter(qbe);

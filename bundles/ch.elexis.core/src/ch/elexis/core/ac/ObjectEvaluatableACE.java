@@ -8,20 +8,20 @@ import ch.elexis.core.services.IAccessControlService;
 public class ObjectEvaluatableACE extends EvaluatableACE {
 
 	private final String object;
-	private final String objectId;
+	private final String storeToString;
 
 	/**
 	 * 
 	 * @param object
 	 * @param requestedRight
-	 * @param objectId       the specific object the right is queried for. If no
-	 *                       objectId is given, the request counts for global
+	 * @param storeToString  the specific object the right is queried for. If no
+	 *                       storeToString is given, the request counts for global
 	 *                       access, i.e. "*"
 	 */
-	public ObjectEvaluatableACE(String object, Right requestedRight, String objectId) {
+	public ObjectEvaluatableACE(String object, Right requestedRight, String storeToString) {
 		super();
 		this.object = object;
-		this.objectId = objectId;
+		this.storeToString = storeToString;
 		requestedRightMap[requestedRight.ordinal()] = 1;
 	}
 
@@ -64,16 +64,12 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 	/**
 	 * @see #ObjectEvaluatableACE(String, Right, String)
 	 */
-	public ObjectEvaluatableACE(Class<?> clazz, Right requestedRight, String objectId) {
-		this(clazz.getName(), requestedRight, objectId);
+	public ObjectEvaluatableACE(Class<?> clazz, Right requestedRight, String storeToString) {
+		this(clazz.getName(), requestedRight, storeToString);
 	}
 
 	public String getObject() {
 		return object;
-	}
-
-	public String getObjectId() {
-		return objectId;
 	}
 
 	public boolean evaluate(IAccessControlService iac) {
@@ -82,6 +78,10 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 
 	public byte[] getRequestedRightMap() {
 		return requestedRightMap;
+	}
+
+	public String getStoreToString() {
+		return storeToString;
 	}
 
 }

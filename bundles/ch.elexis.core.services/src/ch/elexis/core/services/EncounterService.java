@@ -60,12 +60,17 @@ public class EncounterService implements IEncounterService {
 	@Reference
 	private IConfigService configService;
 
+	@Reference
+	private IStoreToStringService storeToStringService;
+
 	@Override
 	public boolean isEditable(IEncounter encounter) {
 		boolean editable = false;
 		if (encounter != null) {
 			boolean hasRight = accessControlService
-					.evaluate(EvACE.of(IEncounter.class, Right.UPDATE, encounter.getId()).and(Right.EXECUTE));
+					.evaluate(EvACE
+							.of(IEncounter.class, Right.UPDATE, storeToStringService.storeToString(encounter).get())
+							.and(Right.EXECUTE));
 			if (hasRight) {
 				// user has right to change encounter. in this case, the user
 				// may change the text even if the encounter has already been

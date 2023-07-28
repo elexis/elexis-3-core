@@ -4,5 +4,7 @@
       <provide interface="ch.elexis.core.services.IAccessControlService"/>
    </service>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="storeToStringService" interface="ch.elexis.core.services.IStoreToStringService" name="storeToStringService"/>
+   <reference cardinality="1..1" field="userService" interface="ch.elexis.core.services.IUserService" name="userService"/>
    <implementation class="ch.elexis.core.services.internal.RoleBasedAccessControlService"/>
 </scr:component>

@@ -479,7 +479,7 @@ public class Patient extends Person {
 
 		// normally do not display other mandator's balance
 
-		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IInvoice.class, Right.READ, "*")) == false) {
+		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IInvoice.class, Right.READ)) == false) {
 			Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
 			if (mandator != null) {
 				rQuery.add(Rechnung.MANDATOR_ID, Query.EQUALS, mandator.getId());

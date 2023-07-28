@@ -31,14 +31,18 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.BackgroundJob;
 import ch.elexis.core.ui.actions.BackgroundJob.BackgroundJobListener;
@@ -168,7 +172,11 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 		if (fall != null) {
 			// @TODO sort reverse
 			for (IEncounter k : fall.getEncounters()) {
-				lKons.add(k);
+				if (AccessControlServiceHolder.get()
+						.evaluate(EvACE.of(IEncounter.class, Right.READ, StoreToStringServiceHolder.getStoreToString(k))
+								.and(Right.VIEW))) {
+					lKons.add(k);
+				}
 			}
 		}
 	}

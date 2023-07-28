@@ -1,6 +1,7 @@
 package ch.elexis.core.ac;
 
 import java.beans.Transient;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,8 +21,13 @@ public class ACEAccessBitMap {
 		this.hasConstraint = evaluateHasConstraint();
 	}
 
+	/**
+	 * Get a copy of the access right map.
+	 * 
+	 * @return
+	 */
 	public byte[] getAccessRightMap() {
-		return accessRightMap;
+		return Arrays.copyOf(accessRightMap, accessRightMap.length);
 	}
 
 	public boolean isHasConstraint() {

@@ -51,6 +51,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
@@ -378,7 +379,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
 			boolean updateRight = AccessControlServiceHolder.get()
-					.evaluate(EvACE.of(IContact.class, Right.UPDATE, actKontakt.getId()));
+					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
+							StoreToStringServiceHolder.getStoreToString(actKontakt)));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);

@@ -15,8 +15,8 @@ public class EvACE {
 	/**
 	 * @see ObjectEvaluatableACE#ObjectEvaluatableACE(Class, Right, String)
 	 */
-	public static EvaluatableACE of(Class<?> clazz, Right right, String id) {
-		return new ObjectEvaluatableACE(clazz, right, id);
+	public static EvaluatableACE of(Class<?> clazz, Right right, String storeToString) {
+		return new ObjectEvaluatableACE(clazz, right, storeToString);
 	}
 
 	/**
