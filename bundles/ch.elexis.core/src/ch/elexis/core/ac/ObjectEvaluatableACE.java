@@ -23,6 +23,8 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 		this.object = object;
 		this.storeToString = storeToString;
 		requestedRightMap[requestedRight.ordinal()] = 1;
+
+		requested |= 1 << requestedRight.ordinal();
 	}
 
 	public ObjectEvaluatableACE(String object, Right requestedRight) {
@@ -78,6 +80,10 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 
 	public byte[] getRequestedRightMap() {
 		return requestedRightMap;
+	}
+
+	public short getRequested() {
+		return requested;
 	}
 
 	public String getStoreToString() {

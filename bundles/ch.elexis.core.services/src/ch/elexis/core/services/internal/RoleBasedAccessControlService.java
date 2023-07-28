@@ -172,22 +172,25 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				// e.g. { 0, 1, 0, 0, 0, 0, 0 } requested
 
 				byte[] evaluated = new byte[Right.values().length];
-
+				short flattenedbitmap = 0;
 				// if the requested rights can be satisfied with a bitwise AND,
 				// we have a GO!
 
 				for (int i = 0; i < evaluated.length; i++) {
 					if (aceBitMap[i] == (byte) 4) {
 						aceBitMap[i] = (byte) 1;
+						flattenedbitmap |= 1 << i;
 					} else if (aceBitMap[i] == (byte) 2) {
 						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
 							if (evaluateAobo(user, _ace)) {
 								aceBitMap[i] = (byte) 1;
+								flattenedbitmap |= 1 << i;
 							} else {
 								aceBitMap[i] = (byte) 0;
 							}
 						} else {
 							aceBitMap[i] = (byte) 1;
+							flattenedbitmap |= 1 << i;
 						}
 					}
 					evaluated[i] = (byte) (aceBitMap[i] & requested[i]);
@@ -197,7 +200,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				System.out.println("flattenedAceBitMap " + Arrays.toString(aceBitMap) + " &  req "
 						+ Arrays.toString(requested) + "  = eval " + Arrays.toString(evaluated));
 
-				boolean result = Arrays.equals(requested, evaluated);
+				boolean result = (flattenedbitmap & _ace.getRequested()) == _ace.getRequested();
 				if (result) {
 					// TODO add to cache - ?? add also negative result to cache??
 				}

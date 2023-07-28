@@ -11,6 +11,8 @@ public abstract class EvaluatableACE {
 
 	protected byte[] requestedRightMap;
 
+	protected short requested;
+
 	public EvaluatableACE() {
 		requestedRightMap = new byte[Right.values().length];
 	}
@@ -49,6 +51,7 @@ public abstract class EvaluatableACE {
 	 */
 	public EvaluatableACE and(Right requestedRight) {
 		requestedRightMap[requestedRight.ordinal()] = 1;
+		requested |= 1 << requestedRight.ordinal();
 		return this;
 	}
 }
