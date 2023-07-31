@@ -2,6 +2,7 @@ package ch.elexis.core.ui.preferences;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -73,6 +74,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
@@ -750,8 +752,11 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
 
 			if (anw != null) {
-				checkboxTableViewerAssociation
-						.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(anw).toArray());
+				@SuppressWarnings("unchecked")
+				Optional<Set<IMandator>> activeUserWorkingFor = (Optional<Set<IMandator>>) ContextServiceHolder.get()
+						.getNamed(IUserService.ACTIVE_USER_WORKING_FOR);
+				activeUserWorkingFor.ifPresent(
+						mandatorsSet -> checkboxTableViewerAssociation.setCheckedElements(mandatorsSet.toArray()));
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					Color color = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));

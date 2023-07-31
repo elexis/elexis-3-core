@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
@@ -46,9 +48,6 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Reference
 	private IContextService contextService;
-
-	@Reference
-	private IUserService userService;
 
 	@Reference
 	private IStoreToStringService storeToStringService;
@@ -233,9 +232,9 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		List<String> ret = new ArrayList<>();
 		if(user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
 			ret.add(user.getAssignedContact().getId());
-
-			userService.getExecutiveDoctorsWorkingFor(user.getAssignedContact()).stream()
-					.forEach(m -> ret.add(m.getId()));
+			@SuppressWarnings("unchecked")
+			Optional<Set<IMandator>> activeUserWorkingFor = (Optional<Set<IMandator>>) contextService.getNamed(IUserService.ACTIVE_USER_WORKING_FOR);
+			activeUserWorkingFor.ifPresent(mandatorsSet -> mandatorsSet.forEach(m -> ret.add(m.getId())));
 		}
 		return ret;
 	}

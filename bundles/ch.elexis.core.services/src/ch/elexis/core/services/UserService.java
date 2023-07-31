@@ -8,10 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.StringUtils;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,26 @@ public class UserService implements IUserService {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
+
+	@Reference
+	private IContextService contextService;
+
+	@Activate
+	public void activate() {
+		contextService.getRootContext().setNamed(IUserService.ACTIVE_USER_WORKING_FOR, new Supplier<Set<IMandator>>() {
+
+			private Set<IMandator> executiveDoctorsWorkingFor;
+
+			@Override
+			public Set<IMandator> get() {
+				if (executiveDoctorsWorkingFor == null && contextService.getActiveUserContact().isPresent()) {
+					executiveDoctorsWorkingFor = getExecutiveDoctorsWorkingFor(
+							contextService.getActiveUserContact().get());
+				}
+				return executiveDoctorsWorkingFor;
+			}
+		});
+	}
 
 	@Override
 	public boolean verifyPassword(IUser user, char[] attemptedPassword) {
