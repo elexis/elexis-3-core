@@ -106,7 +106,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return ret;
 	}
 
-	private boolean isPrivileged() {
+	@Override
+	public boolean isPrivileged() {
 		// privileged set, or in test mode
 		return privileged.get() || (CoreUtil.isTestMode() && contextService.getNamed("testAccessControl").isEmpty());
 	}
@@ -261,6 +262,33 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		} finally {
 			privileged.set(Boolean.FALSE);
 		}
+	}
+
+	@Override
+	public boolean isAobo(ObjectEvaluatableACE evaluatableAce) {
+		if (isPrivileged()) {
+			return false;
+		}
+		Optional<IUser> user = contextService.getActiveUser();
+		if (user.isPresent()) {
+			if (!userAclMap.containsKey(user.get())) {
+				refresh(user.get());
+			}
+			AccessControlList acl = userAclMap.get(user.get());
+			ACEAccessBitMap useracebm = acl.getObject().get(evaluatableAce.getObject());
+			if (useracebm != null) {
+				byte[] aceBitMap = useracebm.getAccessRightMap();
+				byte[] requested = evaluatableAce.getRequestedRightMap();
+				for (int i = 0; i < requested.length; i++) {
+					if (requested[i] == 1 && aceBitMap[i] != 2) {
+						return false;
+					}
+				}
+			}
+		} else {
+			logger.warn("No active user to test aobo");
+		}
+		return true;
 	}
 
 	private class AccessControlRole implements IRole {

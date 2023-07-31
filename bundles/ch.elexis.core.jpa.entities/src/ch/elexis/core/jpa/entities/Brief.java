@@ -20,11 +20,14 @@ import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
 
+import ch.elexis.core.ac.AoboEntity;
+import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
+@AoboEntity
 @Table(name = "BRIEFE")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
@@ -55,6 +58,7 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(length = 8)
 	protected LocalDate gedruckt;
 
+	@AoboEntityColumn
 	@OneToOne
 	@JoinColumn(name = "absenderID")
 	protected Kontakt sender;

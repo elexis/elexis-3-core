@@ -24,6 +24,8 @@ import javax.persistence.Table;
 import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.annotations.Mutable;
 
+import ch.elexis.core.ac.AoboEntity;
+import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.VersionedResourceConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -31,6 +33,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.VersionedResource;
 
 @Entity
+@AoboEntity
 @Table(name = "behandlungen")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
@@ -58,6 +61,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@JoinColumn(name = "FallID")
 	private Fall fall;
 
+	@AoboEntityColumn
 	@OneToOne
 	@JoinColumn(name = "mandantId")
 	private Kontakt mandant;

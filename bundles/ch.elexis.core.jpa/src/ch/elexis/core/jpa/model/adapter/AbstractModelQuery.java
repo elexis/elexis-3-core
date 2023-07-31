@@ -1,10 +1,13 @@
 package ch.elexis.core.jpa.model.adapter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -29,17 +32,27 @@ import org.eclipse.persistence.sessions.DatabaseRecord;
 import org.eclipse.persistence.sessions.Session;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.AoboEntity;
+import ch.elexis.core.ac.AoboEntityColumn;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateGroupStack;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateHandler;
 import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
+import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.ISubQuery;
+import ch.elexis.core.services.IUserService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * Abstract super class for JPA based {@link IQuery} implementations.
@@ -72,6 +85,9 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	private PredicateGroupStack predicateGroups;
 	private PredicateHandler predicateHandler;
 
+	private IAccessControlService accessControlService;
+	private IUserService userService;
+
 	public AbstractModelQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
 			boolean includeDeleted) {
 		this.clazz = clazz;
@@ -89,24 +105,74 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (EntityWithDeleted.class.isAssignableFrom(entityClazz) && !includeDeleted) {
 			and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.NOT_EQUALS, true);
 		}
-		// FIXME ACE has Constraint#AOBO or SELF on this class?
-		//IAccessControlService iac = null;
-		//ACEAccessBitMapConstraint constraint = iac.getConstraint(EvACE.of(clazz, Right.READ));
-		//if(constraint != null) {
-			// determine owner 
-			
-			// transitive aobo
-			// + ACE_OBJECT oder einfaches Security Label - Freigabe für ALLE
-			
-		//	if(ACEAccessBitMapConstraint.AOBO == constraint) {
-				// determine ACEOwner
-		//		 Field field;
-		//	}
-		//}
-		
+		addAobo();
 
 		MappingEntry mappingForInterface = adapterFactory.getMappingForInterface(clazz);
 		mappingForInterface.applyQueryPrecondition(this);
+	}
+
+	private void addAobo() {
+		if (isAoboClass(entityClazz)) {
+			Field aoboColumn = getAoboColumn(entityClazz);
+			getAoboColumnValues(aoboColumn).ifPresent(values -> {
+				startGroup();
+				or(aoboColumn.getName(), COMPARATOR.EQUALS, null);
+				or(aoboColumn.getName(), COMPARATOR.IN, values);
+				andJoinGroups();
+			});
+		}
+	}
+
+	private Optional<List<?>> getAoboColumnValues(Field aoboColumn) {
+		List<IMandator> aoboMandators = getAoboMandators();
+		if (!aoboMandators.isEmpty()) {
+			return Optional.of(aoboMandators.stream().map(m -> m.getId()).collect(Collectors.toList()));
+		}
+		return Optional.empty();
+	}
+
+	private List<IMandator> getAoboMandators() {
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
+		if(user != null) {
+			List<IMandator> ret = new ArrayList<>();
+			if (user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
+				ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+					ret.add(m);
+					ret.addAll(getExecutiveDoctorsWorkingFor(m));
+				});
+			}
+			return ret;			
+		}
+		return Collections.emptyList();
+	}
+
+	private Set<IMandator> getExecutiveDoctorsWorkingFor(IMandator m) {
+		if (userService == null) {
+			userService = OsgiServiceUtil.getService(IUserService.class).orElse(null);
+		}
+		return userService != null ? userService.getExecutiveDoctorsWorkingFor(m) : Collections.emptySet();
+	}
+
+	private Field getAoboColumn(Class<? extends EntityWithId> entityClazz) {
+		for (Field field : entityClazz.getDeclaredFields()) {
+			if (field.isAnnotationPresent(AoboEntityColumn.class)) {
+				return field;
+			}
+		}
+		throw new IllegalStateException(
+				"AOBO entity class [" + entityClazz.getName() + "] has no AOBO column annotation");
+	}
+
+	private boolean isAoboClass(Class<? extends EntityWithId> entityClazz) {
+		return entityClazz.isAnnotationPresent(AoboEntity.class) && isAoboAccessControl(entityClazz);
+	}
+
+	private boolean isAoboAccessControl(Class<? extends EntityWithId> entityClazz) {
+		if (accessControlService == null) {
+			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+		}
+		return accessControlService != null ? accessControlService.isAobo(new ObjectEvaluatableACE(clazz, Right.READ))
+				: false;
 	}
 
 	/**
@@ -325,7 +391,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> execute() {
-
 		List<T> ret = (List<T>) getTypedQuery().getResultStream().parallel()
 				.map(e -> adapterFactory.getModelAdapter((EntityWithId) e, clazz, true).orElse(null))
 				.filter(Objects::nonNull).collect(Collectors.toList());

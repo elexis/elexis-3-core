@@ -1,6 +1,7 @@
 {
   "roles-represented" : [ "medical-assistant" ], // bound to extend assistant
   "object" : {
+    "ch.elexis.core.model.IStockEntry" : "cruvd",
     "ch.elexis.core.model.ISticker" : "cruvd",
     "ch.elexis.core.model.IContact" : "cruvd",
     "ch.elexis.core.model.ILaboratory" : "cruvd",
@@ -14,6 +15,11 @@
     "ch.elexis.core.model.IBillable" : "cruvd",
     "ch.elexis.core.model.IBilled" : "cruvd:aobo",
     "ch.elexis.core.model.IPrescription": "rv:aobo",
-    "ch.elexis.core.model.IInvoice": "rv:aobo"
+    "ch.elexis.core.model.IDocumentLetter" : "cruvd:aobo",
+    "ch.elexis.core.model.IInvoice": "rv:aobo",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedKumulation": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedExtension": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedLeistung": "rv"
   }
 }

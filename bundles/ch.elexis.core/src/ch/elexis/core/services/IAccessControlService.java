@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import ch.elexis.core.ac.EvaluatableACE;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.IUser;
 
@@ -25,10 +26,25 @@ public interface IAccessControlService {
 	public void doPrivileged(Runnable runnable);
 
 	/**
+	 * Test if the current thread is running in privileged mode.
+	 * 
+	 * @return
+	 */
+	boolean isPrivileged();
+
+	/**
 	 * Refresh the ACL information for the user.
 	 * 
 	 * @param user
 	 */
 	void refresh(IUser user);
 
+	/**
+	 * Test if the current user provided by the {@link IContextService} has aobo for
+	 * the provided {@link ObjectEvaluatableACE}.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public boolean isAobo(ObjectEvaluatableACE evaluatableAce);
 }
