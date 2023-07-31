@@ -8,13 +8,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.StringUtils;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IContact;
@@ -30,6 +37,14 @@ public class UserService implements IUserService {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
+
+	private LoadingCache<IContact, Set<IMandator>> executiveDoctorsWorkingForCache;
+	
+	@Activate()
+	public void activate() {
+		executiveDoctorsWorkingForCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS)
+				.build(new UserExecutiveDoctorsLoader());
+	}
 
 	@Override
 	public boolean verifyPassword(IUser user, char[] attemptedPassword) {
@@ -66,17 +81,12 @@ public class UserService implements IUserService {
 
 	@Override
 	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user) {
-		String mandators = (String) user.getExtInfo("Mandant");
-		if (mandators == null) {
-			return Collections.emptySet();
+		try {
+			return executiveDoctorsWorkingForCache.get(user);
+		} catch (ExecutionException e) {
+			LoggerFactory.getLogger(getClass()).error("Error getting executive doctors", e);
 		}
-
-		List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
-				.filter(IMandator::isActive).collect(Collectors.toList());
-
-		List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
-		return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
-				.collect(Collectors.toSet());
+		return Collections.emptySet();
 	}
 
 	@Override
@@ -125,4 +135,21 @@ public class UserService implements IUserService {
 		return qre.execute();
 	}
 
+	private class UserExecutiveDoctorsLoader extends CacheLoader<IContact, Set<IMandator>> {
+
+		@Override
+		public Set<IMandator> load(IContact user) throws Exception {
+			String mandators = (String) user.getExtInfo("Mandant");
+			if (mandators == null) {
+				return Collections.emptySet();
+			}
+
+			List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
+					.filter(IMandator::isActive).collect(Collectors.toList());
+
+			List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
+			return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
+					.collect(Collectors.toSet());
+		}
+	}
 }
