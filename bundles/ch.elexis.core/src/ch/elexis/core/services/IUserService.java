@@ -10,8 +10,6 @@ import ch.elexis.core.model.IUser;
 
 public interface IUserService {
 
-	public static String ACTIVE_USER_WORKING_FOR = "ActiveExecutiveDoctorsWorkingFor";
-
 	/**
 	 * Verify the provided password for the given user
 	 *
