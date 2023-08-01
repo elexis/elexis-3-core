@@ -7,8 +7,11 @@ import java.util.Vector;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.types.Country;
+import ch.elexis.core.types.Gender;
 import ch.rgw.tools.StringTool;
 
 public class PostalAddress {
@@ -81,7 +84,20 @@ public class PostalAddress {
 		}
 		StringBuilder ret = new StringBuilder(100);
 		if (withName == true) {
-			ret.append(contact.getLabel()).append(sep);
+			if (contact.isPerson()) {
+				IPerson person = contact.asIPerson();
+				String salutation = getPersonSalutation(person, multiline);
+				ret.append(salutation);
+			} else {
+
+				ret.append(contact.getDescription1());
+				if (StringUtils.isNotEmpty(contact.getDescription2())) {
+					ret.append(StringTool.space + contact.getDescription2());
+				}
+				if (multiline) {
+					ret.append(StringTool.lf);
+				}
+			}
 		}
 		if (StringUtils.isNotEmpty(contact.getStreet())) {
 			ret.append(contact.getStreet()).append(sep);
@@ -94,6 +110,30 @@ public class PostalAddress {
 		}
 		if (multiline) {
 			// append trailing newline
+			ret.append(StringTool.lf);
+		}
+		return ret.toString();
+	}
+
+	private String getPersonSalutation(IPerson person, boolean multiline) {
+		StringBuilder ret = new StringBuilder();
+		String salutation;
+		if (Gender.MALE == person.getGender()) {
+			salutation = Messages.Contact_SalutationM;
+		} else {
+			salutation = Messages.Contact_SalutationF;
+		}
+		ret.append(salutation);
+		if (multiline) {
+			ret.append(StringTool.lf);
+		} else {
+			ret.append(StringTool.space);
+		}
+		if (StringUtils.isNotEmpty(person.getTitel())) {
+			ret.append(person.getTitel() + StringTool.space);
+		}
+		ret.append(person.getFirstName() + " " + person.getLastName());
+		if (multiline) {
 			ret.append(StringTool.lf);
 		}
 		return ret.toString();
