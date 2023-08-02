@@ -67,7 +67,7 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 	 * @see #ObjectEvaluatableACE(String, Right, String)
 	 */
 	public ObjectEvaluatableACE(Class<?> clazz, Right requestedRight, String storeToString) {
-		this(clazz.getName(), requestedRight, storeToString);
+		this(getElexisInterfaceName(clazz), requestedRight, storeToString);
 	}
 
 	public String getObject() {

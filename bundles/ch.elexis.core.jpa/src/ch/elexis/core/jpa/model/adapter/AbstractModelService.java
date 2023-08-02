@@ -31,6 +31,7 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -70,22 +71,8 @@ public abstract class AbstractModelService implements IModelService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache) {
-		if (evaluateRightNoException(clazz, Right.READ, true)) {
+		if (evaluateRightNoException(clazz, Right.READ)) {
 			if (StringUtils.isNotEmpty(id)) {
-
-//				EvaluatableACE evACE = EvACE.of(clazz, Right.READ, id);
-//				Boolean ace = evACE.fastEval();
-//				if (ace != null && !ace) {
-//					// 
-//					
-//					
-//					// or return aobo list? and verify against ACEOwner?
-//					return Optional.empty();
-//				}
-
-				// we must not return null, this would mean the object does not exist
-				// something else?
-
 				EntityManager em = getEntityManager(true);
 				Class<? extends EntityWithId> dbObjectClass = adapterFactory.getEntityClass(clazz);
 
@@ -103,10 +90,9 @@ public abstract class AbstractModelService implements IModelService {
 					}
 					Optional<Identifiable> modelObject = adapterFactory.getModelAdapter(dbObject, clazz, true);
 					if (modelObject.isPresent() && clazz.isAssignableFrom(modelObject.get().getClass())) {
-//						if (ace == null) {
-//							// aobo or self 
-//						}
-						return (Optional<T>) modelObject;
+						if (evaluateRightNoException(Collections.singletonList(modelObject.get()), Right.READ)) {
+							return (Optional<T>) modelObject;
+						}
 					}
 				}
 			}
@@ -211,11 +197,7 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void save(Identifiable identifiable) {
-		if(evaluateRight(identifiable.getClass(), Right.UPDATE)) {
-			if (identifiable == null) {
-				// TODO IllegalArgumentException?
-				return;
-			}
+		if (identifiable != null && evaluateRight(identifiable.getClass(), Right.UPDATE)) {
 			if (identifiable.getChanged() != null) {
 				save(Collections.singletonList(identifiable));
 				return;
@@ -567,10 +549,10 @@ public abstract class AbstractModelService implements IModelService {
 		return accessControlService;
 	}
 	
-	protected boolean evaluateRightNoException(Class<?> clazz, Right right, boolean logDeny) {
+	protected boolean evaluateRightNoException(Class<?> clazz, Right right) {
 		boolean ret = CoreUtil.isTestMode();
 		if(getAccessControlService() != null) {
-			ret = accessControlService.evaluate(EvACE.of(clazz, right));
+			ret = getAccessControlService().evaluate(EvACE.of(clazz, right));
 			if (!ret) {
 				LoggerFactory.getLogger(getClass())
 						.info("User has no right [" + right + "] for class [" + clazz.getSimpleName() + "]");
@@ -580,21 +562,42 @@ public abstract class AbstractModelService implements IModelService {
 	}
 	
 	protected boolean evaluateRight(Class<?> clazz, Right right) throws AccessControlException {
-		boolean ret = evaluateRightNoException(clazz, right, false);
+		boolean ret = evaluateRightNoException(clazz, right);
 		if(!ret) {
 			throw new AccessControlException(clazz, right);
 		}
 		return ret;
 	}
 
+	protected boolean evaluateRightNoException(List<? extends Identifiable> identifiables, Right right) {
+		boolean ret = true;
+		if (identifiables != null && !identifiables.isEmpty()) {
+			// test class of first object
+			if (!evaluateRightNoException(identifiables.get(0).getClass(), right)) {
+				return false;
+			}
+			// test all objects if aobo
+			if(getAccessControlService() != null) {
+				for (Identifiable identifiable : identifiables) {
+					String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable).orElse(null);
+					if (storeToString != null) {
+						ObjectEvaluatableACE objAce = (ObjectEvaluatableACE) EvACE.of(identifiable.getClass(), right,
+								storeToString);
+						if (!getAccessControlService().evaluate(objAce)) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
 	protected boolean evaluateRight(List<? extends Identifiable> identifiables, Right right)
 			throws AccessControlException {
-		boolean ret = CoreUtil.isTestMode();
-		if (identifiables != null) {
-			ret = identifiables.stream().map(i -> evaluateRight(i.getClass(), right)).allMatch(b -> b == Boolean.TRUE);
-			if (!ret) {
-				throw new AccessControlException(identifiables.get(0).getClass(), right);
-			}
+		boolean ret = evaluateRightNoException(identifiables, right);
+		if (!ret && identifiables != null && !identifiables.isEmpty()) {
+			throw new AccessControlException(identifiables.get(0).getClass(), right);
 		}
 		return ret;
 	}
@@ -649,7 +652,7 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <R, T> INamedQuery<R> getNamedQuery(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String... properties) {
-		if (evaluateRightNoException(definitionClazz, Right.READ, true)) {
+		if (evaluateRightNoException(definitionClazz, Right.READ)) {
 			return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
 					getNamedQueryName(definitionClazz, properties));
 		}
@@ -659,7 +662,7 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String queryName) {
-		if (evaluateRightNoException(definitionClazz, Right.READ, true)) {
+		if (evaluateRightNoException(definitionClazz, Right.READ)) {
 			return new NamedQuery<>(returnValueclazz, definitionClazz, refreshCache, adapterFactory, getEntityManager(true),
 					queryName);
 		}

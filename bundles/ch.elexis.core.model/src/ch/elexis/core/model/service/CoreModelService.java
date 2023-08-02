@@ -145,7 +145,7 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 
 	@Override
 	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted) {
-		if (evaluateRightNoException(clazz, Right.READ, true)) {
+		if (evaluateRightNoException(clazz, Right.READ)) {
 			return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
 		}
 		return new EmptyQuery<T>();

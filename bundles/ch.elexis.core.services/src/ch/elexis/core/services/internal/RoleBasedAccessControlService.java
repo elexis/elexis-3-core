@@ -26,7 +26,9 @@ import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
@@ -162,6 +164,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (ace instanceof ObjectEvaluatableACE) {
 			ObjectEvaluatableACE _ace = (ObjectEvaluatableACE) ace;
 			ACEAccessBitMap useracebm = acl.getObject().get(_ace.getObject());
+			System.out.println();
 			if (useracebm != null) {
 				byte[] aceBitMap = useracebm.getAccessRightMap();
 				// e.g. { 2, 4, 2, 2, 0, 4, 0, 0 } aceBitMap
@@ -221,9 +224,23 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		List<String> aoboIds = getAoboMandatorIds(user);
 		Optional<Identifiable> object = storeToStringService.loadFromString(_ace.getStoreToString());
 		if(object.isPresent()) {
+			String id = null;
 			if (object.get() instanceof IEncounter) {
-				return aoboIds.contains(((IEncounter) object.get()).getMandator().getId());
+				if(((IEncounter) object.get()).getMandator() != null) {
+					id = ((IEncounter) object.get()).getMandator().getId();					
+				}
+			} else if (object.get() instanceof IInvoice) {
+				if (((IInvoice) object.get()).getMandator() != null) {
+					id = ((IInvoice) object.get()).getMandator().getId();					
+				}
+			} else if (object.get() instanceof IDocumentLetter) {
+				if (((IDocumentLetter) object.get()).getAuthor() != null) {
+					id = ((IDocumentLetter) object.get()).getAuthor().getId();
+				}
+			} else {
+				logger.warn("Unknown aobo object [{}]", _ace.getStoreToString());
 			}
+			return id != null ? aoboIds.contains(id) : true;
 		} else {
 			logger.warn("Could not load aobo object [{}]", _ace.getStoreToString());
 		}
@@ -239,6 +256,15 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 					.forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
+	}
+
+	@Override
+	public List<String> getAoboMandatorIds() {
+		Optional<IUser> user = contextService.getActiveUser();
+		if (user.isPresent()) {
+			return getAoboMandatorIds(user.get());
+		}
+		return Collections.emptyList();
 	}
 
 	private boolean isAoboObject(String object) {

@@ -81,6 +81,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IRnOutputter;
+import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.documents.DocumentStore;
@@ -99,6 +100,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -238,14 +240,14 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Optional
 	@Inject
 	void updateInvoice(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IInvoice invoice) {
-		doSelect((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+		doSelect(invoice);
 	}
 
 	@Inject
 	void activeInvoice(@Optional IInvoice invoice) {
 		Display.getDefault().asyncExec(() -> {
 			if (invoice != null) {
-				doSelect((Rechnung) NoPoUtil.loadAsPersistentObject(invoice));
+				doSelect(invoice);
 			} else {
 				doSelect(null);
 			}
@@ -786,22 +788,25 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Override
 	public void visible(boolean mode) {
 		if (mode) {
-			Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
+			IInvoice selected = ContextServiceHolder.get().getTyped(IInvoice.class).orElse(null);
 			if (selected != null) {
 				doSelect(selected);
 			}
 		}
 	}
 
-	private void doSelect(Rechnung rn) {
-		actRn = rn;
-		UiDesk.getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				display();
-			}
-		});
+	private void doSelect(IInvoice invoice) {
+		if (invoice == null || AccessControlServiceHolder.get()
+				.evaluate(EvACE.of(IInvoice.class, Right.VIEW, StoreToStringServiceHolder.getStoreToString(invoice)))) {
 
+			actRn = (Rechnung) NoPoUtil.loadAsPersistentObject(invoice);
+			UiDesk.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					display();
+				}
+			});
+		}
 	}
 
 	public void display() {
