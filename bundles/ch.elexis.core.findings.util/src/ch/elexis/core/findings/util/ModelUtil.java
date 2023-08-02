@@ -197,11 +197,23 @@ public class ModelUtil {
 		}
 		return Optional.empty();
 	}
-	
+
 	public static @Nullable String getIdentifierBySystem(List<Identifier> identifiers, String system) {
-		Optional<Identifier> systemIdentifier = identifiers.stream()
-				.filter(id -> Objects.equals(system, id.getSystem())).findFirst();
-		return systemIdentifier.isPresent() ? systemIdentifier.get().getValue() : null;
+		int identifierIndexBySystem = getIdentifierIndexBySystem(identifiers, system);
+		if (identifierIndexBySystem >= 0) {
+			return identifiers.get(identifierIndexBySystem).getValue();
+		}
+		return null;
+	}
+
+	public static int getIdentifierIndexBySystem(List<Identifier> identifiers, String system) {
+		for (int i = 0; i < identifiers.size(); i++) {
+			Identifier _identifier = identifiers.get(i);
+			if (Objects.equals(system, _identifier.getSystem())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public static Optional<ICoding> getCodeBySystem(List<ICoding> coding, String codingSystem) {
