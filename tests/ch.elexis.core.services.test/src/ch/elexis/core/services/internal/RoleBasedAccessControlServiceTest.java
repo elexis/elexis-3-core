@@ -180,8 +180,8 @@ public class RoleBasedAccessControlServiceTest {
 		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
 		assertFalse(accessControlService.evaluate(EvACE.of(IEncounter.class, Right.READ)));
 
-		IRole role = CoreModelServiceHolder.get().load(RoleConstants.ACCESSCONTROLE_ROLE_USER, IRole.class)
-				.get();
+		IRole role = CoreModelServiceHolder.get()
+				.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER, IRole.class).get();
 		IUser user = contextService.getActiveUser().get();
 		user.addRole(role);
 		accessControlService.refresh(user);
