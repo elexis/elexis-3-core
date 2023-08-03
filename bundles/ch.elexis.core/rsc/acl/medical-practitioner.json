@@ -1,10 +1,27 @@
 {
   "roles-represented" : [ "medical-practitioner" ],
   "object" : {
-    "ch.elexis.core.model.IUser" : "cruvdz",
     "ch.elexis.core.model.IConfig" : "cruvdz",
+    "ch.elexis.core.model.IUser" : "cruvdz",
+    "ch.elexis.core.model.IStockEntry" : "cruvd",
+    "ch.elexis.core.model.ISticker" : "cruvd",
+    "ch.elexis.core.model.IContact" : "cruvd",
+    "ch.elexis.core.model.ILaboratory" : "cruvd",
+    "ch.elexis.core.model.IPerson" : "cruvd",
+    "ch.elexis.core.model.IPatient" : "cruvd",
+    "ch.elexis.core.model.ILabItem" : "cruvd",
+    "ch.elexis.core.model.ILabResult" : "cruvd",
+    "ch.elexis.core.model.ILabMapping" : "cruvd",
+    "ch.elexis.core.model.ILabOrder" : "cruvd",
     "ch.elexis.core.model.IEncounter" : "cruvd:aobo",
-    "ch.elexis.core.model.IBillable" : "cruvd:aobo",
-    "ch.elexis.core.model.IPrescription": "cruvd:aobo"
+    "ch.elexis.core.model.IBillable" : "cruvd",
+    "ch.elexis.core.model.IBilled" : "cruvd:aobo",
+    "ch.elexis.core.model.IPrescription": "cruvd:aobo",
+    "ch.elexis.core.model.IDocumentLetter" : "cruvd:aobo",
+    "ch.elexis.core.model.IInvoice": "rv:aobo",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedKumulation": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedExtension": "rv",
+    "ch.elexis.base.ch.arzttarife.tarmed.ITarmedLeistung": "rv"
   }
 }
