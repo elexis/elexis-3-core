@@ -58,6 +58,9 @@ public class ConfigService implements IConfigService {
 	@Reference
 	private IContextService contextService;
 
+	@Reference
+	private IAccessControlService accessControlService;
+
 	public static final String LIST_SEPARATOR = ",";
 
 	private Settings localConfig;
@@ -68,15 +71,18 @@ public class ConfigService implements IConfigService {
 
 	@Activate
 	public void activate() {
-		validateConfiguredDatabaseLocale();
+		accessControlService.doPrivileged(() -> {
 
-		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
-		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
-		localConfig = cfg;
+			validateConfiguredDatabaseLocale();
 
-		managedLocks = new HashMap<>();
+			SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
+			cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
+			localConfig = cfg;
 
-		traceExecutor = Executors.newSingleThreadExecutor();
+			managedLocks = new HashMap<>();
+
+			traceExecutor = Executors.newSingleThreadExecutor();
+		});
 	}
 
 	@Deactivate

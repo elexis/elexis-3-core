@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.ElexisEnvironmentPropertyConstants;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 
@@ -26,6 +27,9 @@ public class ElexisEnvironmentServiceActivator {
 	private ServiceRegistration<IElexisEnvironmentService> serviceRegistration;
 
 	@Reference
+	private IAccessControlService accessControlService;
+
+	@Reference
 	private IConfigService configService;
 
 	@Reference
@@ -33,36 +37,37 @@ public class ElexisEnvironmentServiceActivator {
 
 	@Activate
 	public void activate() {
-		// 1. try via system property
-		String elexisEnvironmentHost = System.getProperty(ElexisSystemPropertyConstants.EE_HOSTNAME);
-		// 2. if empty fetch via environment variable
-		if (StringUtils.isBlank(elexisEnvironmentHost)) {
-			elexisEnvironmentHost = System.getenv(ElexisEnvironmentPropertyConstants.EE_HOSTNAME);
-		}
-		// 3. if empty fetch via config service
-		if (StringUtils.isBlank(elexisEnvironmentHost)) {
-			elexisEnvironmentHost = configService.get(IElexisEnvironmentService.CFG_EE_HOSTNAME, null);
-		}
-
-		Logger log = LoggerFactory.getLogger(getClass());
-
-		if (StringUtils.isNotBlank(elexisEnvironmentHost)) {
-			try {
-				// activate the service
-				ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(elexisEnvironmentHost,
-						contextService, configService);
-				serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
-						.getBundleContext()
-						.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
-
-			} catch (Exception e) {
-				log.warn("EE initialization failed:", e);
+		accessControlService.doPrivileged(() -> {
+			// 1. try via system property
+			String elexisEnvironmentHost = System.getProperty(ElexisSystemPropertyConstants.EE_HOSTNAME);
+			// 2. if empty fetch via environment variable
+			if (StringUtils.isBlank(elexisEnvironmentHost)) {
+				elexisEnvironmentHost = System.getenv(ElexisEnvironmentPropertyConstants.EE_HOSTNAME);
+			}
+			// 3. if empty fetch via config service
+			if (StringUtils.isBlank(elexisEnvironmentHost)) {
+				elexisEnvironmentHost = configService.get(IElexisEnvironmentService.CFG_EE_HOSTNAME, null);
 			}
 
-		} else {
-			log.debug("No elexis-environment configured");
-		}
+			Logger log = LoggerFactory.getLogger(getClass());
 
+			if (StringUtils.isNotBlank(elexisEnvironmentHost)) {
+				try {
+					// activate the service
+					ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(
+							elexisEnvironmentHost, contextService, configService);
+					serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
+							.getBundleContext()
+							.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);
+
+				} catch (Exception e) {
+					log.warn("EE initialization failed:", e);
+				}
+
+			} else {
+				log.debug("No elexis-environment configured");
+			}
+		});
 	}
 
 	@Deactivate

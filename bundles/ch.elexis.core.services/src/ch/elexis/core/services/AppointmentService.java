@@ -30,11 +30,11 @@ import com.google.common.cache.LoadingCache;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
@@ -71,6 +71,9 @@ public class AppointmentService implements IAppointmentService {
 	private List<String> states = null;
 
 	@Reference
+	private IAccessControlService accessControlService;
+
+	@Reference
 	private IConfigService configService;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
@@ -90,8 +93,10 @@ public class AppointmentService implements IAppointmentService {
 	@Activate
 	public void activate() {
 		// @TODO server support ?
-		states = getStates();
-		cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(new AreaLoader());
+		accessControlService.doPrivileged(() -> {
+			states = getStates();
+			cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(new AreaLoader());
+		});
 	}
 
 	private class AreaLoader extends CacheLoader<String, Map<String, Area>> {
