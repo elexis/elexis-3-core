@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="thomas" id="manual_update_ROLE_medical-practitioner">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='executive_doctor'
+			</sqlCheck>
+		</preConditions>
+		<update tableName="ROLE">
+			<column name="ID" value="medical-practitioner" />
+			<where>id='executive_doctor'</where>
+		</update>
+		<update tableName="USER_ROLE_JOINT">
+			<column name="ID" value="medical-practitioner" />
+			<where>id='executive_doctor'</where>
+		</update>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_update_ROLE_mandator">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='doctor'
+			</sqlCheck>
+		</preConditions>
+		<update tableName="ROLE">
+			<column name="ID" value="mandator" />
+			<where>id='doctor'</where>
+		</update>
+		<update tableName="USER_ROLE_JOINT">
+			<column name="ID" value="mandator" />
+			<where>id='doctor'</where>
+		</update>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_update_ROLE_medical-assistant">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='assistant'
+			</sqlCheck>
+		</preConditions>
+		<update tableName="ROLE">
+			<column name="ID" value="medical-assistant" />
+			<where>id='assistant'</where>
+		</update>
+		<update tableName="USER_ROLE_JOINT">
+			<column name="ID" value="medical-assistant" />
+			<where>id='assistant'</where>
+		</update>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_insert_ROLE_ict-administrator">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='ict-administrator'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="ict-administrator" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_insert_ROLE_bot">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='bot'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="bot" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_insert_ROLE_mpk">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='mpk'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="mpk" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_insert_ROLE_mpa">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='mpa'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="mpa" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_delete_old_ROLE_and_USER_ROLE_JOINT">
+		<delete tableName="ROLE">
+			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner')</where>
+		</delete>
+		
+		<delete tableName="USER_ROLE_JOINT">
+			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner')</where>
+		</delete>
+	</changeSet>
+</databaseChangeLog>

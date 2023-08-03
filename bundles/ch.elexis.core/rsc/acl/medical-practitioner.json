@@ -1,6 +1,7 @@
 {
-  "roles-represented" : [ "medical-practitioner" ], // bound to extend assistant
+  "roles-represented" : [ "medical-practitioner" ],
   "object" : {
+    "ch.elexis.core.model.IUser" : "cruvdz",
     "ch.elexis.core.model.IConfig" : "cruvdz",
     "ch.elexis.core.model.IEncounter" : "cruvd:aobo",
     "ch.elexis.core.model.IBillable" : "cruvd:aobo",

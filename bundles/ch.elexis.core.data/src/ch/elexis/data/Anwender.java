@@ -69,7 +69,7 @@ public class Anwender extends Person {
 	 * @param username
 	 * @param password
 	 * @param isExecutiveDoctor additionally assign the
-	 *                          {@link Role#SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR}
+	 *                          {@link RoleConstants#ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER}
 	 * @since 3.1
 	 */
 	public Anwender(String username, String password, boolean isExecutiveDoctor) {
@@ -78,7 +78,7 @@ public class Anwender extends Person {
 
 		User user = new User(this, username, password);
 		if (isExecutiveDoctor) {
-			user.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
+			user.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER), true);
 		}
 	}
 

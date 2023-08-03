@@ -18,7 +18,7 @@ public class IUserBuilder extends AbstractBuilder<IUser> {
 		object.setSalt("invalid");
 		object.setHashedPassword("invalid");
 
-		modelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).ifPresent(object::addRole);
+		modelService.load(RoleConstants.ACCESSCONTROLE_ROLE_USER, IRole.class).ifPresent(object::addRole);
 	}
 
 }

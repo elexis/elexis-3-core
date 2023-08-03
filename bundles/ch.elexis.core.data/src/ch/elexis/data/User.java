@@ -62,7 +62,8 @@ public class User extends PersistentObject {
 	}
 
 	/**
-	 * Every new {@link User} is assigned the {@link Role#SYSTEMROLE_LITERAL_USER}
+	 * Every new {@link User} is assigned the
+	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_USER}
 	 *
 	 * @param anw
 	 * @param username
@@ -76,7 +77,7 @@ public class User extends PersistentObject {
 		}
 		setPassword(password);
 
-		setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_USER), true);
+		setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_USER), true);
 	}
 
 	protected User(final String id) {
@@ -97,8 +98,10 @@ public class User extends PersistentObject {
 	/**
 	 * Transfer existing users into the new separated table.<br>
 	 * Every {@link Anwender} is automatically assigned to the role
-	 * {@link Role#SYSTEMROLE_LITERAL_USER}. Every {@link Mandant} is additionally
-	 * assigned to the role {@link Role#SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR}.
+	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_USER}. Every {@link Mandant} is
+	 * additionally assigned to the role
+	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER} and
+	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_MANDATOR}.
 	 *
 	 * @see https://redmine.medelexis.ch/issues/771
 	 *
@@ -140,8 +143,8 @@ public class User extends PersistentObject {
 
 			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
 			if (isMandator) {
-				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR), true);
-				u.setAssignedRole(Role.load(RoleConstants.SYSTEMROLE_LITERAL_DOCTOR), true);
+				u.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER), true);
+				u.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MANDATOR), true);
 			}
 
 			log.info("Migrated anwender [{}] to new user structure with id [{}]", anwender.getLabel(), u.getId());

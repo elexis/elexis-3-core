@@ -46,13 +46,13 @@ public class IUserServiceTest extends AbstractServiceTest {
 		assertNotNull(user.getSalt());
 		Collection<IRole> roles = user.getRoles();
 		assertNotNull(roles);
-		assertEquals(RoleConstants.SYSTEMROLE_LITERAL_USER, roles.iterator().next().getId());
+		assertEquals(RoleConstants.ACCESSCONTROLE_ROLE_USER, roles.iterator().next().getId());
 
 		assertFalse(service.verifyPassword(user, "invalid".toCharArray()));
 		service.setPasswordForUser(user, "password");
 		assertTrue(service.verifyPassword(user, "password".toCharArray()));
 
-		Optional<IRole> userRole = coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class);
+		Optional<IRole> userRole = coreModelService.load(RoleConstants.ACCESSCONTROLE_ROLE_USER, IRole.class);
 		assertTrue(user.getRoles().contains(userRole.get()));
 	}
 

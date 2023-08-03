@@ -1,0 +1,9 @@
+{
+  "roles-represented" : [ "assistant" ],
+  "object" : {
+    "ch.elexis.core.model.IAppointment" : "crudv",
+    "ch.elexis.core.model.IArticle" : "crudv",
+    "ch.elexis.core.model.IInvoice" : "crdv:aobo",
+    "ch.elexis.core.model.ISticker" : "cruvd"
+  }
+}

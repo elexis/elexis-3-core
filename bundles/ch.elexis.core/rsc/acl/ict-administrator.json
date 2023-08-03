@@ -9,7 +9,6 @@
     "ch.elexis.core.ui.login" : "x"
   },
   "object" : {
-  	// permissive, if not defined, all rights; what about 'z'?
     "ch.elexis.core.model.IConfig": "crudv",
     "ch.elexis.core.model.IUserconfig": "crudv",
     "ch.elexis.core.model.IContact" : "crudvz",

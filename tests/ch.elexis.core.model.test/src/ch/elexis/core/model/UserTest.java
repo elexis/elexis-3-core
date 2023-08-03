@@ -24,7 +24,7 @@ public class UserTest extends AbstractTest {
 
 		userRole = coreModelService.create(IRole.class);
 		userRole.setSystemRole(true);
-		userRole.setId(RoleConstants.SYSTEMROLE_LITERAL_USER);
+		userRole.setId(RoleConstants.ACCESSCONTROLE_ROLE_USER);
 		coreModelService.save(userRole);
 
 		testRole = coreModelService.create(IRole.class);
@@ -48,7 +48,7 @@ public class UserTest extends AbstractTest {
 		assertEquals("test", user.getUsername());
 		assertEquals(person.getId(), user.getAssignedContact().getId());
 		assertTrue(user.getRoles()
-				.contains(coreModelService.load(RoleConstants.SYSTEMROLE_LITERAL_USER, IRole.class).get()));
+				.contains(coreModelService.load(RoleConstants.ACCESSCONTROLE_ROLE_USER, IRole.class).get()));
 		assertTrue(user.isActive());
 
 		coreModelService.remove(user);
@@ -76,5 +76,4 @@ public class UserTest extends AbstractTest {
 		assertFalse(user.getRoles().contains(testRole));
 		assertTrue(user.getRoles().contains(userRole));
 	}
-
 }

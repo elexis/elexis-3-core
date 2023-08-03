@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -29,12 +28,9 @@ import ch.elexis.core.ac.SystemCommandEvaluatableACE;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
-import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IStoreToStringService;
@@ -90,22 +86,9 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	@Override
 	public void refresh(IUser user) {
 		// calculate user ACL by combining the users roles
-		AccessControlList userAccessControlList = determineUserAccessControlList(getUserRoles(user));
+		AccessControlList userAccessControlList = determineUserAccessControlList(user.getRoles());
 		userAclMap.put(user, userAccessControlList);
 		logger.debug("ACE User=[{}] Roles=[{}]", user.getId(), userAclMap.get(user).getRolesRepresented());
-	}
-
-	private List<IRole> getUserRoles(IUser user) {
-		List<IRole> roles = user.getRoles();
-		List<IRole> ret = roles.stream().map(r -> (IRole) new AccessControlRole(r)).collect(Collectors.toList());
-		Optional<IRole> practitioner = ret.stream()
-				.filter(r -> r.getId().equals(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER)).findFirst();
-		Optional<IRole> assistant = ret.stream()
-				.filter(r -> r.getId().equals(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_ASSITANT)).findFirst();
-		if (practitioner.isPresent() && !assistant.isPresent()) {
-			ret.add(new AccessControlRole(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_ASSITANT));
-		}
-		return ret;
 	}
 
 	@Override
@@ -315,81 +298,5 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			logger.warn("No active user to test aobo");
 		}
 		return true;
-	}
-
-	private class AccessControlRole implements IRole {
-
-		private IRole role;
-
-		private String roleId;
-
-		public AccessControlRole(IRole role) {
-			this.role = role;
-		}
-
-		public AccessControlRole(String roleId) {
-			this.roleId = roleId;
-		}
-
-		@Override
-		public String getId() {
-			if (role != null) {
-				switch (role.getId()) {
-				case RoleConstants.SYSTEMROLE_LITERAL_EXECUTIVE_DOCTOR:
-					return RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER;
-				case RoleConstants.SYSTEMROLE_LITERAL_ASSISTANT:
-					return RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_ASSITANT;
-				}
-				return role.getId();
-			}
-			return roleId;
-		}
-
-		@Override
-		public String getLabel() {
-			return getId();
-		}
-
-		@Override
-		public boolean addXid(String domain, String id, boolean updateIfExists) {
-			return false;
-		}
-
-		@Override
-		public IXid getXid(String domain) {
-			return null;
-		}
-
-		@Override
-		public Long getLastupdate() {
-			if (role != null) {
-				return role.getLastupdate();
-			}
-			return 0L;
-		}
-
-		@Override
-		public void setId(String id) {
-		}
-
-		@Override
-		public boolean isSystemRole() {
-			if (role != null) {
-				return role.isSystemRole();
-			}
-			return true;
-		}
-
-		@Override
-		public void setSystemRole(boolean value) {
-		}
-
-		@Override
-		public List<IRight> getAssignedRights() {
-			if (role != null) {
-				return role.getAssignedRights();
-			}
-			return Collections.emptyList();
-		}
 	}
 }
