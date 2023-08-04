@@ -15,8 +15,10 @@ import org.eclipse.persistence.queries.ScrollableCursor;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQueryCursor;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class NamedQuery<R, T> implements INamedQuery<R> {
 
@@ -27,6 +29,8 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
 	private EntityManager entityManager;
+
+	private IAccessControlService accessControlService;
 
 	public NamedQuery(Class<R> returnValueClazz, Class<T> interfaceClazz, boolean refreshCache,
 			AbstractModelAdapterFactory adapterFactory, EntityManager entityManager, String queryName) {
@@ -59,6 +63,9 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<R> executeWithParameters(Map<String, Object> parameters) {
+		if (isAoboQuery()) {
+			addAoboParameter(parameters);
+		}
 		parameters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
@@ -74,8 +81,23 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		}
 	}
 
+	private void addAoboParameter(Map<String, Object> parameters) {
+		if (accessControlService == null) {
+			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+		}
+		parameters.put("aoboids", accessControlService.getAoboMandatorIds());
+	}
+
+	private boolean isAoboQuery() {
+		return query.getParameters().stream().filter(p -> p.getName().equals("aoboids")).findFirst()
+				.isPresent();
+	}
+
 	@Override
 	public IQueryCursor<R> executeAsCursorWithParameters(Map<String, Object> parameters) {
+		if (isAoboQuery()) {
+			addAoboParameter(parameters);
+		}
 		parameters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
@@ -93,7 +115,9 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 
 	@Override
 	public Optional<R> executeWithParametersSingleResult(Map<String, Object> parameters) {
-
+		if (isAoboQuery()) {
+			addAoboParameter(parameters);
+		}
 		parameters.forEach((k, v) -> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
