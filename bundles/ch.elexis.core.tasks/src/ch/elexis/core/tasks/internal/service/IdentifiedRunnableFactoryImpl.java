@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.tasks.internal.runnables.DeleteFileIdentifiedRunnable;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
 import ch.elexis.core.tasks.internal.runnables.RemoveTaskLogEntriesRunnable;
@@ -39,9 +39,12 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 		taskModelService = modelService;
 	}
 
+	@Reference
+	private IAccessControlService accessControlService;
+
 	@Activate
 	public void activate() {
-		AccessControlServiceHolder.get().doPrivileged(() -> {
+		accessControlService.doPrivileged(() -> {
 			try {
 				TriggerTaskForEveryFileInDirectoryTemplateTaskDescriptor.assertTemplate(taskService);
 			} catch (TaskException e) {

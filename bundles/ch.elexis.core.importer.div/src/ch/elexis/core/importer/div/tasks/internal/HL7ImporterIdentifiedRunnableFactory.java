@@ -16,9 +16,9 @@ import ch.elexis.core.importer.div.tasks.BillLabResultOnCreationTemplateTaskDesc
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.tasks.model.ITaskService;
 
 @Component(immediate = true)
@@ -40,9 +40,12 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 	@Reference
 	private IVirtualFilesystemService vfsService;
 
+	@Reference
+	private IAccessControlService accessControlService;
+
 	@Activate
 	private void activate() {
-		AccessControlServiceHolder.get().doPrivileged(() -> {
+		accessControlService.doPrivileged(() -> {
 			try {
 				HL7ImporterTemplateTaskDescriptor.assertTemplate(taskService);
 				BillLabResultOnCreationTemplateTaskDescriptor.assertTemplate(taskService);
