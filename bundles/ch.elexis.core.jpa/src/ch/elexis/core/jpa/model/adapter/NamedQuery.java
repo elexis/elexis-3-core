@@ -85,7 +85,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		if (accessControlService == null) {
 			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
 		}
-		parameters.put("aoboids", accessControlService.getAoboMandatorIds());
+		parameters.put("aoboids", accessControlService.getAoboMandatorIdsForSqlIn());
 	}
 
 	private boolean isAoboQuery() {

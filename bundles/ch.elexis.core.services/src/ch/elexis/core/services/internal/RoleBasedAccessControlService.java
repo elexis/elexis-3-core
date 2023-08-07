@@ -251,6 +251,14 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return Collections.emptyList();
 	}
 
+	@Override
+	public List<String> getAoboMandatorIdsForSqlIn() {
+		List<String> ret = new ArrayList<>();
+		ret.add("-1");
+		ret.addAll(getAoboMandatorIds());
+		return ret;
+	}
+
 	private boolean isAoboObject(String object) {
 		return Arrays.asList(aoboObjects).stream().filter(aobo -> object.endsWith(aobo)).findFirst().isPresent();
 	}

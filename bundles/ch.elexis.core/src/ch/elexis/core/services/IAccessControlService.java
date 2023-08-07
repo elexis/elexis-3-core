@@ -59,4 +59,13 @@ public interface IAccessControlService {
 	 * @return
 	 */
 	public List<String> getAoboMandatorIds();
+
+	/**
+	 * Get a list of all ids of the {@link IMandator}s the current user provided by
+	 * the {@link IContextService} acts on behalf of (aobo). List is never empty and
+	 * starts with "-1" element for SQL WHERE IN.
+	 * 
+	 * @return
+	 */
+	public List<String> getAoboMandatorIdsForSqlIn();
 }

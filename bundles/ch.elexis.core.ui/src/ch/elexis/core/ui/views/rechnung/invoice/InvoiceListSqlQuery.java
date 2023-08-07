@@ -70,7 +70,7 @@ public class InvoiceListSqlQuery {
 
 	private static String addAobo() {
 		if (AccessControlServiceHolder.get().isAobo(EvACE.of(IInvoice.class, Right.READ))) {
-			return " AND (r.MandantID IN (" + AccessControlServiceHolder.get().getAoboMandatorIds().stream() //$NON-NLS-1$
+			return " AND (r.MandantID IN (" + AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn().stream() //$NON-NLS-1$
 					.map(s -> "\'" + s + "\'").collect(Collectors.joining(",")) + ") OR r.MandantID is null)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		return StringUtils.EMPTY;

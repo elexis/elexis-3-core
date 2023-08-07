@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -41,9 +40,6 @@ import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateGroupStack;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateHandler;
 import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
-import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
-import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IAccessControlService;
@@ -114,43 +110,12 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	private void addAobo() {
 		if (isAoboClass(entityClazz)) {
 			Field aoboColumn = getAoboColumn(entityClazz);
-			getAoboColumnValues(aoboColumn).ifPresent(values -> {
-				startGroup();
-				or(aoboColumn.getName(), COMPARATOR.EQUALS, null);
-				or(aoboColumn.getName(), COMPARATOR.IN, values);
-				andJoinGroups();
-			});
-		}
-	}
 
-	private Optional<List<?>> getAoboColumnValues(Field aoboColumn) {
-		List<IMandator> aoboMandators = getAoboMandators();
-		if (!aoboMandators.isEmpty()) {
-			return Optional.of(aoboMandators.stream().map(m -> m.getId()).collect(Collectors.toList()));
+			startGroup();
+			or(aoboColumn.getName(), COMPARATOR.EQUALS, null);
+			or(aoboColumn.getName(), COMPARATOR.IN, getAoboMandatorIds());
+			andJoinGroups();
 		}
-		return Optional.empty();
-	}
-
-	private List<IMandator> getAoboMandators() {
-		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		if(user != null) {
-			List<IMandator> ret = new ArrayList<>();
-			if (user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
-				ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-					ret.add(m);
-					ret.addAll(getExecutiveDoctorsWorkingFor(m));
-				});
-			}
-			return ret;			
-		}
-		return Collections.emptyList();
-	}
-
-	private Set<IMandator> getExecutiveDoctorsWorkingFor(IMandator m) {
-		if (userService == null) {
-			userService = OsgiServiceUtil.getService(IUserService.class).orElse(null);
-		}
-		return userService != null ? userService.getExecutiveDoctorsWorkingFor(m) : Collections.emptySet();
 	}
 
 	private Field getAoboColumn(Class<? extends EntityWithId> entityClazz) {
@@ -165,6 +130,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 
 	private boolean isAoboClass(Class<? extends EntityWithId> entityClazz) {
 		return entityClazz.isAnnotationPresent(AoboEntity.class) && isAoboAccessControl(entityClazz);
+	}
+
+	private List<String> getAoboMandatorIds() {
+		if (accessControlService == null) {
+			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+		}
+		return accessControlService != null ? accessControlService.getAoboMandatorIds()
+				: Collections.singletonList("-1");
 	}
 
 	private boolean isAoboAccessControl(Class<? extends EntityWithId> entityClazz) {
