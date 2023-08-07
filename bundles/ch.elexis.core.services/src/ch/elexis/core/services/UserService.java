@@ -122,6 +122,7 @@ public class UserService implements IUserService {
 						: (String) edList.stream().map(o -> o.toString())
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		CoreModelServiceHolder.get().save(user);
+		executiveDoctorsWorkingForCache.invalidateAll();
 	}
 
 	@Override
