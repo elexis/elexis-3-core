@@ -88,7 +88,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		// calculate user ACL by combining the users roles
 		AccessControlList userAccessControlList = determineUserAccessControlList(user.getRoles());
 		userAclMap.put(user, userAccessControlList);
-		logger.debug("ACE User=[{}] Roles=[{}]", user.getId(), userAclMap.get(user).getRolesRepresented());
+		logger.debug("ACE User=[{}] Roles=[{}]", user.getId(),
+				userAclMap.get(user) != null ? userAclMap.get(user).getRolesRepresented() : "");
 	}
 
 	@Override
