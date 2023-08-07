@@ -20,6 +20,7 @@ import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
@@ -65,8 +66,10 @@ public class AccessControlProcessor {
 				List<EvaluatableACE> aces = getAccessControlEntries(acStrings);
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
-						placeholder.setVisible(false);
-						placeholder.setToBeRendered(false);
+						Display.getDefault().syncExec(() -> {
+							placeholder.setVisible(false);
+							placeholder.setToBeRendered(false);
+						});
 					}
 				}
 			}
@@ -81,8 +84,10 @@ public class AccessControlProcessor {
 				List<EvaluatableACE> aces = getAccessControlEntries(acStrings);
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
-						mPart.setVisible(false);
-						mPart.setToBeRendered(false);
+						Display.getDefault().syncExec(() -> {
+							mPart.setVisible(false);
+							mPart.setToBeRendered(false);
+						});
 					}
 				}
 			}
