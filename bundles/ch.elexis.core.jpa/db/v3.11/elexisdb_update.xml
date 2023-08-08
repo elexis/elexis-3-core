@@ -137,4 +137,19 @@
 			<column name="USER_ID" value="Administrator" />
 		</insert>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_insert_USER_ROLE_JOINT_Administrator_user">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM USER_ROLE_JOINT
+				WHERE USER_ID='Administrator' AND ID='user'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="USER_ROLE_JOINT">
+			<column name="ID" value="user" />
+			<column name="DELETED" value="0" />
+			<column name="USER_ID" value="Administrator" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
