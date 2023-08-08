@@ -88,7 +88,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		// calculate user ACL by combining the users roles
 		AccessControlList userAccessControlList = determineUserAccessControlList(user.getRoles());
 		userAclMap.put(user, userAccessControlList);
-		logger.debug("ACE User=[{}] Roles=[{}]", user.getId(),
+		logger.info("ACE User=[{}] Roles=[{}]", user.getId(),
 				userAclMap.get(user) != null ? userAclMap.get(user).getRolesRepresented() : "");
 	}
 
@@ -143,26 +143,18 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	}
 
 	private boolean evaluateACE(IUser user, AccessControlList acl, EvaluatableACE ace) {
-		// TODO cache result
-
 		if (ace instanceof ObjectEvaluatableACE) {
 			ObjectEvaluatableACE _ace = (ObjectEvaluatableACE) ace;
 			ACEAccessBitMap useracebm = acl.getObject().get(_ace.getObject());
-			System.out.println();
 			if (useracebm != null) {
 				byte[] aceBitMap = useracebm.getAccessRightMap();
 				// e.g. { 2, 4, 2, 2, 0, 4, 0, 0 } aceBitMap
 				// cud:aobo,rv:*
-
-				System.out.println("aceBitMap " + Arrays.toString(aceBitMap));
-
 				byte[] requested = _ace.getRequestedRightMap();
 				// e.g. { 0, 1, 0, 0, 0, 0, 0 } requested
 
 				byte[] evaluated = new byte[Right.values().length];
 				short flattenedbitmap = 0;
-				// if the requested rights can be satisfied with a bitwise AND,
-				// we have a GO!
 
 				for (int i = 0; i < evaluated.length; i++) {
 					if (aceBitMap[i] == (byte) 4) {
@@ -185,22 +177,13 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				}
 				// e.g. { 0, 1, 0, 0, 0, 0, 0} firstRun
 
-				System.out.println("flattenedAceBitMap " + Arrays.toString(aceBitMap) + " &  req "
-						+ Arrays.toString(requested) + "  = eval " + Arrays.toString(evaluated));
-
 				boolean result = (flattenedbitmap & _ace.getRequested()) == _ace.getRequested();
-				if (result) {
-					// TODO add to cache - ?? add also negative result to cache??
-				}
 				return result;
 			}
 		} else if (ace instanceof SystemCommandEvaluatableACE) {
 			SystemCommandEvaluatableACE _ace = (SystemCommandEvaluatableACE) ace;
 			return evaluateSystemCommandACE(acl, _ace);
 		}
-
-		// LOG
-
 		return false;
 	}
 
@@ -233,8 +216,10 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private List<String> getAoboMandatorIds(IUser user) {
 		List<String> ret = new ArrayList<>();
-		if(user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
-			ret.add(user.getAssignedContact().getId());
+		if (user.getAssignedContact() != null) {
+			if (user.getAssignedContact().isMandator()) {
+				ret.add(user.getAssignedContact().getId());
+			}
 
 			userService.getExecutiveDoctorsWorkingFor(user.getAssignedContact()).stream()
 					.forEach(m -> ret.add(m.getId()));

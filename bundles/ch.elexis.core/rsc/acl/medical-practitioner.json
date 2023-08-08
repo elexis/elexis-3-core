@@ -14,6 +14,8 @@
     "ch.elexis.core.model.ILabMapping" : "cruvd",
     "ch.elexis.core.model.ILabOrder" : "cruvd",
     "ch.elexis.core.model.IEncounter" : "cruvd:aobo",
+    "ch.elexis.core.model.IDiagnosisReference" : "cruvd",
+    "ch.elexis.core.model.ICoverage" : "cruvd",
     "ch.elexis.core.model.IBillable" : "cruvd",
     "ch.elexis.core.model.IBilled" : "cruvd:aobo",
     "ch.elexis.core.model.IPrescription": "cruvd:aobo",

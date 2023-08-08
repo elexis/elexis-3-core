@@ -1,5 +1,5 @@
 {
-  "roles-represented" : [ "assistant" ],
+  "roles-represented" : [ "mpk" ],
   "object" : {
     "ch.elexis.core.model.IAppointment" : "crudv",
     "ch.elexis.core.model.IArticle" : "crudv",
