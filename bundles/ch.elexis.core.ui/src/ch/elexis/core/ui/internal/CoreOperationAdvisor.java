@@ -30,11 +30,11 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
@@ -176,6 +176,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
+			ContextServiceHolder.get().sendEvent("info/elexis/ui/login", user);
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();

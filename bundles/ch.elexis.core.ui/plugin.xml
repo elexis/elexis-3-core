@@ -1024,11 +1024,6 @@
              beforefragment="false"
              class="ch.elexis.core.ui.services.internal.ContextService">
        </processor>
-       <processor
-             apply="always"
-             beforefragment="false"
-             class="ch.elexis.core.ui.processor.AccessControlProcessor">
-       </processor>
 	   </extension>
       <extension
             point="org.eclipse.ui.views">

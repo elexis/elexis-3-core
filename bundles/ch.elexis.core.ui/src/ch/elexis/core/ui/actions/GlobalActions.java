@@ -361,7 +361,9 @@ public class GlobalActions {
 					System.clearProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME);
 					boolean performLogin = CoreOperationAdvisorHolder.get().performLogin(win.getShell());
 					// reset after login
-					System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, loginUserName);
+					if (loginUserName != null) {
+						System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, loginUserName);
+					}
 					if (!performLogin) {
 						exitAction.run();
 					}

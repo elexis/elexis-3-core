@@ -41,6 +41,14 @@ public class StartupHandler implements EventHandler {
 
 	private static IEclipseContext applicationContext;
 
+	public static void runAccessControlProcessor() {
+		if (applicationContext != null) {
+			AccessControlProcessor accessControl = ContextInjectionFactory.make(AccessControlProcessor.class,
+					applicationContext);
+			ContextInjectionFactory.invoke(accessControl, Execute.class, applicationContext);
+		}
+	}
+
 	@Override
 	public void handleEvent(Event event) {
 		LoggerFactory.getLogger(getClass()).info("APPLICATION STARTUP COMPLETE"); //$NON-NLS-1$
@@ -51,9 +59,7 @@ public class StartupHandler implements EventHandler {
 		}
 
 		// run access control after startup to remove added e3 views
-		AccessControlProcessor accessControl = ContextInjectionFactory.make(AccessControlProcessor.class,
-				applicationContext);
-		ContextInjectionFactory.invoke(accessControl, Execute.class, applicationContext);
+		runAccessControlProcessor();
 
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override

@@ -2,8 +2,10 @@ package ch.elexis.core.ui.processor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -13,7 +15,10 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
@@ -21,10 +26,13 @@ import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchPage;
 
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 
@@ -35,14 +43,65 @@ public class AccessControlProcessor {
 	@Inject
 	private IAccessControlService accessControlService;
 
+	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
+
+	@SuppressWarnings("restriction")
 	@Execute
-	public void execute(MApplication mApplication, EModelService eModelService) {
+	public void execute(IEclipseContext context, MApplication mApplication, EModelService eModelService) {
 		updateDescriptors(mApplication, eModelService);
-		updatePlaceholders(mApplication, eModelService);
-		updateParts(mApplication, eModelService);
+		Display.getDefault().syncExec(() -> {
+			updatePlaceholders(mApplication, eModelService);
+			updateParts(mApplication, eModelService);
+		});
+		Display.getDefault().asyncExec(() -> {
+			// reset perspective use platform ui see platform ResetPerspectiveHandler
+			WorkbenchPage page = (WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (page != null) {
+				page.resetPerspective();
+			}
+		});
 	}
 
-	private void updateDescriptors(MApplication mApplication, EModelService eModelService) {
+	@Optional
+	@Inject
+	public void login(@UIEventTopic("info/elexis/ui/login") IUser user, MApplication mApplication,
+			EModelService eModelService) {
+		if (!removedDescriptors.isEmpty()) {
+			resetModel(mApplication, eModelService);
+		}
+		execute(mApplication.getContext(), mApplication, eModelService);
+	}
+
+	private void resetModel(MApplication mApplication, EModelService eModelService) {
+		Display.getDefault().syncExec(() -> {
+			if (removedDescriptors != null && !removedDescriptors.isEmpty()) {
+				mApplication.getDescriptors().addAll(removedDescriptors);
+				removedDescriptors = new HashSet<>();
+			}
+
+			List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class,
+					null);
+			for (MPlaceholder placeholder : foundPlaceholders) {
+				List<String> acStrings = getAccessControlStrings(placeholder);
+				if (acStrings != null && !acStrings.isEmpty()) {
+					placeholder.setVisible(true);
+					placeholder.setToBeRendered(true);
+				}
+			}
+
+			List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
+			for (MPart mPart : foundParts) {
+				List<String> acStrings = getAccessControlStrings(mPart);
+				if (acStrings != null && !acStrings.isEmpty()) {
+					mPart.setVisible(false);
+					mPart.setToBeRendered(false);
+				}
+			}
+		});
+	}
+
+	private List<MPartDescriptor> updateDescriptors(MApplication mApplication, EModelService eModelService) {
+		List<MPartDescriptor> ret = new ArrayList<MPartDescriptor>();
 		for (MPartDescriptor foundPartDescriptor : new ArrayList<>(mApplication.getDescriptors())) {
 			List<String> acStrings = getAccessControlStrings(foundPartDescriptor);
 			if (acStrings != null && !acStrings.isEmpty()) {
@@ -52,10 +111,12 @@ public class AccessControlProcessor {
 						while (mApplication.getDescriptors().remove(foundPartDescriptor)) {
 							// System.out.println("Remove [" + foundPartDescriptor + "]");
 						}
+						removedDescriptors.add(foundPartDescriptor);
 					}
 				}
 			}
 		}
+		return ret;
 	}
 
 	private void updatePlaceholders(MApplication mApplication, EModelService eModelService) {
@@ -66,10 +127,8 @@ public class AccessControlProcessor {
 				List<EvaluatableACE> aces = getAccessControlEntries(acStrings);
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
-						Display.getDefault().syncExec(() -> {
-							placeholder.setVisible(false);
-							placeholder.setToBeRendered(false);
-						});
+						placeholder.setVisible(false);
+						placeholder.setToBeRendered(false);
 					}
 				}
 			}
@@ -84,10 +143,8 @@ public class AccessControlProcessor {
 				List<EvaluatableACE> aces = getAccessControlEntries(acStrings);
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
-						Display.getDefault().syncExec(() -> {
-							mPart.setVisible(false);
-							mPart.setToBeRendered(false);
-						});
+						mPart.setVisible(false);
+						mPart.setToBeRendered(false);
 					}
 				}
 			}
