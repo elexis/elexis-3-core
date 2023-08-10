@@ -148,7 +148,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		
 		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
 			SWTHelper.showError("Ungültige Datumsangabe",
-					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt.");	
+					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
 		}
 		else {
 			if (!StringTool.isNothing(zus)) {
