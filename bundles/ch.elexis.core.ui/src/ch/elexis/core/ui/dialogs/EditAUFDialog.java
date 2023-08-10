@@ -139,6 +139,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 			auf.setDate(LocalDate.now());
 			auf.setPatient(fall.getPatient());
 		}
+		
 		auf.setCoverage(fall);
 		auf.setStart(asLocalDate(dpVon.getDate()));
 		auf.setEnd(asLocalDate(dpBis.getDate()));
@@ -147,7 +148,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		
 		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
 			SWTHelper.showError("Ungültige Datumsangabe",
-					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt.");	
 		}
 		else {
 			if (!StringTool.isNothing(zus)) {
@@ -157,7 +158,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 			super.okPressed();
 		}
 	}
-	
+
 	private static boolean validDateSpan(Date startDate, Date endDate) {
 		return startDate.before(endDate) || startDate.equals(endDate);
 	}
