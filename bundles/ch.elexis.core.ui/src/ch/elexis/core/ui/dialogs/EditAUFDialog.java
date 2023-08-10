@@ -105,10 +105,6 @@ public class EditAUFDialog extends TitleAreaDialog {
 			dpVon.setDate(tt.getTime());
 			dpBis.setDate(tt.getTime());
 		}
-		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
-			SWTHelper.showError("Ungültige Datumsangabe",
-					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
-		}
 		return ret;
 	}
 
@@ -149,14 +145,17 @@ public class EditAUFDialog extends TitleAreaDialog {
 		auf.setPercent(Integer.parseInt(tProzent.getText()));
 		auf.setReason(tGrund.getText());
 		
-//hier
-		//else {
+		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
+			SWTHelper.showError("Ungültige Datumsangabe",
+					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+		}
+		else {
 			if (!StringTool.isNothing(zus)) {
 				auf.setNote(zus);
 			}
 			CoreModelServiceHolder.get().save(auf);
 			super.okPressed();
-		//}
+		}
 	}
 	
 	private static boolean validDateSpan(Date startDate, Date endDate) {
