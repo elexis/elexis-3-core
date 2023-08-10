@@ -16,9 +16,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.test.AbstractTest;
+import ch.elexis.core.types.Gender;
 
 public class PersonTest extends AbstractTest {
 
@@ -62,4 +65,15 @@ public class PersonTest extends AbstractTest {
 		assertEquals(1, execute.size());
 	}
 
+	@Test
+	public void personGetPostalAddressNonPersisted() {
+		IPatient patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), "Firstname", "Lastname",
+				LocalDate.of(2000, 1, 1), Gender.MALE).build();
+		patient.setCity("City");
+		patient.setZip("123");
+
+		patient.setStreet("Street");
+		String address = patient.getPostalAddress();
+		assertNotNull(address);
+	}
 }

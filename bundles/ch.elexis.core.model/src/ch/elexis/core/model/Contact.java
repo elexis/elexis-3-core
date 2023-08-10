@@ -347,16 +347,28 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public IPerson asIPerson() {
-		return CoreModelServiceHolder.get().load(getId(), IPerson.class).orElse(null);
+		IPerson ret = CoreModelServiceHolder.get().load(getId(), IPerson.class).orElse(null);
+		if (ret == null && this instanceof IPerson) {
+			ret = (IPerson) this;
+		}
+		return ret;
 	}
 
 	@Override
 	public IPatient asIPatient() {
-		return CoreModelServiceHolder.get().load(getId(), IPatient.class).orElse(null);
+		IPatient ret = CoreModelServiceHolder.get().load(getId(), IPatient.class).orElse(null);
+		if (ret == null && this instanceof IPatient) {
+			ret = (IPatient) this;
+		}
+		return ret;
 	}
 
 	@Override
 	public IOrganization asIOrganization() {
-		return CoreModelServiceHolder.get().load(getId(), IOrganization.class).orElse(null);
+		IOrganization ret = CoreModelServiceHolder.get().load(getId(), IOrganization.class).orElse(null);
+		if (ret == null && this instanceof IOrganization) {
+			ret = (IOrganization) this;
+		}
+		return ret;
 	}
 }
