@@ -418,6 +418,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 
 	<reporting>
 		<plugins>
+			<!--The Checkstyle Plugin generates a report regarding the code style used by the developers-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
