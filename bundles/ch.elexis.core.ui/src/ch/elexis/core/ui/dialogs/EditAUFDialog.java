@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import com.tiff.common.ui.datepicker.DatePicker;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -104,6 +105,10 @@ public class EditAUFDialog extends TitleAreaDialog {
 			dpVon.setDate(tt.getTime());
 			dpBis.setDate(tt.getTime());
 		}
+		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
+			SWTHelper.showError("Ungültige Datumsangabe",
+					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+		}
 		return ret;
 	}
 
@@ -143,11 +148,19 @@ public class EditAUFDialog extends TitleAreaDialog {
 		auf.setEnd(asLocalDate(dpBis.getDate()));
 		auf.setPercent(Integer.parseInt(tProzent.getText()));
 		auf.setReason(tGrund.getText());
-		if (!StringTool.isNothing(zus)) {
-			auf.setNote(zus);
-		}
-		CoreModelServiceHolder.get().save(auf);
-		super.okPressed();
+		
+//hier
+		//else {
+			if (!StringTool.isNothing(zus)) {
+				auf.setNote(zus);
+			}
+			CoreModelServiceHolder.get().save(auf);
+			super.okPressed();
+		//}
+	}
+	
+	private static boolean validDateSpan(Date startDate, Date endDate) {
+		return startDate.before(endDate) || startDate.equals(endDate);
 	}
 
 	public ISickCertificate getAuf() {
