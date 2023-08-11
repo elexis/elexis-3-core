@@ -19,6 +19,8 @@ import java.util.Date;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -79,6 +81,15 @@ public class EditAUFDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
+		dpBis.addSelectionListener(new SelectionAdapter() {
+		      public void widgetSelected(SelectionEvent event) {
+		  		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
+					SWTHelper.showError("Ungültige Datumsangabe",
+						"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+				}
+		      }
+		});
+		
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Core_Reason); // $NON-NLS-1$
 		tProzent = new Text(ret, SWT.BORDER);
@@ -96,6 +107,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		if (auf != null) {
 			dpVon.setDate(asDate(auf.getStart()));
 			dpBis.setDate(asDate(auf.getEnd()));
+			
 			tGrund.setText(auf.getReason());
 			tProzent.setText(Integer.toString(auf.getPercent()));
 			tZusatz.setText(auf.getNote());
@@ -146,18 +158,12 @@ public class EditAUFDialog extends TitleAreaDialog {
 		auf.setPercent(Integer.parseInt(tProzent.getText()));
 		auf.setReason(tGrund.getText());
 		
-		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
-			SWTHelper.showError("Ungültige Datumsangabe",
-					"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+		if (!StringTool.isNothing(zus)) {
+			auf.setNote(zus);
 		}
-		else {
-			if (!StringTool.isNothing(zus)) {
-				auf.setNote(zus);
-			}
-			CoreModelServiceHolder.get().save(auf);
-			super.okPressed();
+		CoreModelServiceHolder.get().save(auf);
+		super.okPressed();
 		}
-	}
 
 	private static boolean validDateSpan(Date startDate, Date endDate) {
 		return startDate.before(endDate) || startDate.equals(endDate);
