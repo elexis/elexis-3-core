@@ -84,8 +84,8 @@ public class EditAUFDialog extends TitleAreaDialog {
 		dpBis.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent event) {
 		  		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
-					SWTHelper.showError("Ungültige Datumsangabe",
-						"Stellen Sie sicher, dass das Enddatum nicht vor dem Startdatum liegt");	
+					SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
+						Messages.EditAUFDialog_checkIfDatesValid);	
 				}
 		      }
 		});
