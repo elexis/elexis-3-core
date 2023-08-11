@@ -6,11 +6,14 @@
     "local" : [ "rvu/*" ]
   },
   "system-command" : {
-    "ch.elexis.core.ui.login" : "x"
+    "ch.elexis.core.ui.login" : "x",
+    "PERSPECTIVE_ADMIN" : "x",
+    "ACL_CHANGE_IMPABO" : "x",
+    "ACL_AUTO_INSTALL_FEATURES" : "x"
   },
   "object" : {
-    "ch.elexis.core.model.IConfig": "crudv",
-    "ch.elexis.core.model.IUserconfig": "crudv",
+    "ch.elexis.core.model.IConfig": "crudvz",
+    "ch.elexis.core.model.IUserConfig": "crudvz",
     "ch.elexis.core.model.IContact" : "crudvz",
     "ch.elexis.core.model.IUser": "crudv",
     "ch.elexis.core.model.IRole": "crudv"

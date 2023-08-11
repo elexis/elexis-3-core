@@ -88,6 +88,7 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml
  OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml,
  OSGI-INF/ch.elexis.core.ui.jfr.JfrE4EventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.locks.LockStatusDialogHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.processor.AccessControlUiEventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,

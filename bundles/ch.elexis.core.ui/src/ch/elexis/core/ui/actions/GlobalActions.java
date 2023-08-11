@@ -277,6 +277,10 @@ public class GlobalActions {
 
 			@Override
 			public void run() {
+				// run access control reset
+				ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/reset",
+						ContextServiceHolder.get().getActiveUser().orElse(null));
+
 				EModelService modelService = PlatformUI.getWorkbench().getService(EModelService.class);
 
 				removeModelOfParts(getActivePerspective(modelService), modelService);
@@ -289,6 +293,10 @@ public class GlobalActions {
 				boolean value = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
+
+				// run access control after perspective reset
+				ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/update",
+						ContextServiceHolder.get().getActiveUser().orElse(null));
 			}
 
 			@Override

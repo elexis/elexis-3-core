@@ -15,92 +15,115 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
-import ch.elexis.core.model.IUser;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
-public class AccessControlProcessor {
+@Component(property = { EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/update",
+		EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/reset",
+		EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE })
+public class AccessControlUiEventHandler implements EventHandler {
+
+	@Reference
+	private IAccessControlService accessControlService;
+
+	private boolean startUpComplete = false;
+
+	private MApplication mApplication;
+
+	@Inject
+	private EModelService eModelService;
 
 	private Map<String, List<String>> viewAccessControlMap;
 
-	@Inject
-	private IAccessControlService accessControlService;
-
 	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
 
-	@SuppressWarnings("restriction")
-	@Execute
-	public void execute(IEclipseContext context, MApplication mApplication, EModelService eModelService) {
-		updateDescriptors(mApplication, eModelService);
-		Display.getDefault().syncExec(() -> {
-			updatePlaceholders(mApplication, eModelService);
-			updateParts(mApplication, eModelService);
-		});
-		Display.getDefault().asyncExec(() -> {
-			// reset perspective use platform ui see platform ResetPerspectiveHandler
-			WorkbenchPage page = (WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page != null) {
-				page.resetPerspective();
-			}
-		});
+
+	private void updateModel() {
+		LoggerFactory.getLogger(getClass()).info("UPDATE MODEL " + mApplication + " / " + eModelService);
+
+		updateDescriptors();
+		updatePlaceholders();
+		updateParts();
 	}
 
-	@Optional
-	@Inject
-	public void login(@UIEventTopic("info/elexis/ui/login") IUser user, MApplication mApplication,
-			EModelService eModelService) {
-		if (!removedDescriptors.isEmpty()) {
-			resetModel(mApplication, eModelService);
+	@Override
+	public void handleEvent(Event event) {
+		if (UIEvents.UILifeCycle.APP_STARTUP_COMPLETE.equals(event.getTopic())) {
+			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
+			if (property instanceof MApplication) {
+				mApplication = (MApplication) property;
+			}
+			CoreUiUtil.injectServices(this);
+			startUpComplete = true;
 		}
-		execute(mApplication.getContext(), mApplication, eModelService);
+		if (startUpComplete) {
+			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
+				Display.getDefault().syncExec(() -> {
+					LoggerFactory.getLogger(getClass()).info("RESET for event [" + event + "]");
+					if (mApplication != null && eModelService != null) {
+						resetModel();
+					}
+				});
+			}
+			if (event.getTopic().endsWith("ui/accesscontrol/update")) {
+				Display.getDefault().syncExec(() -> {
+					LoggerFactory.getLogger(getClass()).info("UPDATE for event [" + event + "]");
+					if (mApplication != null && eModelService != null) {
+						updateModel();
+					}
+				});
+			}
+		}
 	}
 
-	private void resetModel(MApplication mApplication, EModelService eModelService) {
-		Display.getDefault().syncExec(() -> {
-			if (removedDescriptors != null && !removedDescriptors.isEmpty()) {
-				mApplication.getDescriptors().addAll(removedDescriptors);
-				removedDescriptors = new HashSet<>();
-			}
+	private void resetModel() {
+		LoggerFactory.getLogger(getClass()).info("RESET MODEL " + mApplication + " / " + eModelService);
 
-			List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class,
-					null);
-			for (MPlaceholder placeholder : foundPlaceholders) {
-				List<String> acStrings = getAccessControlStrings(placeholder);
-				if (acStrings != null && !acStrings.isEmpty()) {
-					placeholder.setVisible(true);
-					placeholder.setToBeRendered(true);
-				}
-			}
+		if (removedDescriptors != null && !removedDescriptors.isEmpty()) {
+			mApplication.getDescriptors().addAll(removedDescriptors);
+			removedDescriptors = new HashSet<>();
+		}
 
-			List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
-			for (MPart mPart : foundParts) {
-				List<String> acStrings = getAccessControlStrings(mPart);
-				if (acStrings != null && !acStrings.isEmpty()) {
-					mPart.setVisible(false);
-					mPart.setToBeRendered(false);
-				}
+		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
+		for (MPlaceholder placeholder : foundPlaceholders) {
+			List<String> acStrings = getAccessControlStrings(placeholder);
+			if (acStrings != null && !acStrings.isEmpty()) {
+				placeholder.setVisible(true);
+				placeholder.setToBeRendered(true);
 			}
-		});
+		}
+
+		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
+		for (MPart mPart : foundParts) {
+			List<String> acStrings = getAccessControlStrings(mPart);
+			if (acStrings != null && !acStrings.isEmpty()) {
+				mPart.setVisible(false);
+				mPart.setToBeRendered(false);
+			}
+		}
 	}
 
-	private List<MPartDescriptor> updateDescriptors(MApplication mApplication, EModelService eModelService) {
+	private List<MPartDescriptor> updateDescriptors() {
 		List<MPartDescriptor> ret = new ArrayList<MPartDescriptor>();
 		for (MPartDescriptor foundPartDescriptor : new ArrayList<>(mApplication.getDescriptors())) {
 			List<String> acStrings = getAccessControlStrings(foundPartDescriptor);
@@ -119,7 +142,7 @@ public class AccessControlProcessor {
 		return ret;
 	}
 
-	private void updatePlaceholders(MApplication mApplication, EModelService eModelService) {
+	private void updatePlaceholders() {
 		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
 		for (MPlaceholder placeholder : foundPlaceholders) {
 			List<String> acStrings = getAccessControlStrings(placeholder);
@@ -135,7 +158,7 @@ public class AccessControlProcessor {
 		}
 	}
 
-	private void updateParts(MApplication mApplication, EModelService eModelService) {
+	private void updateParts() {
 		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
 		for (MPart mPart : foundParts) {
 			List<String> acStrings = getAccessControlStrings(mPart);

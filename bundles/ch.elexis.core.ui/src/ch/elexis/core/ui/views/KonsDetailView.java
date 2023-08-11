@@ -256,17 +256,19 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	void selectedEncounter(@Optional IEncounter encounter) {
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
-				if (encounter != null) {
-					// ElexisEvent.EVENT_SELECTED
-					IEncounter deselectedKons = actEncounter;
-					setKons(encounter);
-					releaseAndRefreshLock(deselectedKons);
-					setKons(encounter);
-				} else {
-					// ElexisEvent.EVENT_DESELECTED
-					IEncounter deselectedKons = actEncounter;
-					setKons(null);
-					releaseAndRefreshLock(deselectedKons);
+				if (form != null && !form.isDisposed()) {
+					if (encounter != null) {
+						// ElexisEvent.EVENT_SELECTED
+						IEncounter deselectedKons = actEncounter;
+						setKons(encounter);
+						releaseAndRefreshLock(deselectedKons);
+						setKons(encounter);
+					} else {
+						// ElexisEvent.EVENT_DESELECTED
+						IEncounter deselectedKons = actEncounter;
+						setKons(null);
+						releaseAndRefreshLock(deselectedKons);
+					}
 				}
 			});
 		}

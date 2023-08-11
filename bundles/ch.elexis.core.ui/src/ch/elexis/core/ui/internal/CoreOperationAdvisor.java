@@ -176,12 +176,14 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-			ContextServiceHolder.get().sendEvent("info/elexis/ui/login", user);
+
 
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.getLoggedInContact().setInitialMandator();
 			CoreHub.heart.resume(true);
-
+			// run access control
+			ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/reset", user);
+			ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/update", user);
 			return true;
 		}
 

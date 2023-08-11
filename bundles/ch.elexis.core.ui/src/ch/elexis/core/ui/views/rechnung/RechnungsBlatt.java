@@ -810,83 +810,85 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	}
 
 	public void display() {
-		rnform.reload(actRn);
+		if (rnform != null && !rnform.isDisposed()) {
+			rnform.reload(actRn);
 
-		String[] outputsSelection = lbOutputs.getSelection();
-		String[] journalSelection = lbJournal.getSelection();
+			String[] outputsSelection = lbOutputs.getSelection();
+			String[] journalSelection = lbJournal.getSelection();
 
-		lbJournal.removeAll();
-		lbOutputs.removeAll();
+			lbJournal.removeAll();
+			lbOutputs.removeAll();
 
-		if (actRn != null) {
-			Kontakt adressat = actRn.getFall().getInvoiceRecipient();
-			rnAdressat.setText(
-					Messages.RechnungsBlatt_adressee + ((adressat != null) ? adressat.getLabel() : StringUtils.EMPTY));
-			form.setText(actRn.getLabel());
-			List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
-			for (String s : trace) {
-				String[] stm = s.split("\\s*:\\s"); //$NON-NLS-1$
-				StringBuilder sb = new StringBuilder();
-				sb.append(stm[0]).append(" : ").append( //$NON-NLS-1$
-						RnStatus.getStatusText(Integer.parseInt(stm[1])));
-				lbJournal.add(sb.toString());
-			}
-			if (journalSelection != null && journalSelection.length > 0) {
-				for (int i = 0; i < lbJournal.getItemCount(); i++) {
-					for (String selection : journalSelection) {
-						if (lbJournal.getItem(i).equals(selection)) {
-							lbJournal.select(i);
+			if (actRn != null) {
+				Kontakt adressat = actRn.getFall().getInvoiceRecipient();
+				rnAdressat.setText(Messages.RechnungsBlatt_adressee
+						+ ((adressat != null) ? adressat.getLabel() : StringUtils.EMPTY));
+				form.setText(actRn.getLabel());
+				List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
+				for (String s : trace) {
+					String[] stm = s.split("\\s*:\\s"); //$NON-NLS-1$
+					StringBuilder sb = new StringBuilder();
+					sb.append(stm[0]).append(" : ").append( //$NON-NLS-1$
+							RnStatus.getStatusText(Integer.parseInt(stm[1])));
+					lbJournal.add(sb.toString());
+				}
+				if (journalSelection != null && journalSelection.length > 0) {
+					for (int i = 0; i < lbJournal.getItemCount(); i++) {
+						for (String selection : journalSelection) {
+							if (lbJournal.getItem(i).equals(selection)) {
+								lbJournal.select(i);
+							}
 						}
 					}
 				}
-			}
-			if (actRn.getStatus() == InvoiceState.DEFECTIVE.numericValue()) {
-				List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
-				StringBuilder rjj = new StringBuilder();
-				for (String r : rejects) {
-					rjj.append(r).append("\n------\n"); //$NON-NLS-1$
+				if (actRn.getStatus() == InvoiceState.DEFECTIVE.numericValue()) {
+					List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
+					StringBuilder rjj = new StringBuilder();
+					for (String r : rejects) {
+						rjj.append(r).append("\n------\n"); //$NON-NLS-1$
+					}
+					tRejects.setText(rjj.toString());
+				} else {
+					tRejects.setText(StringUtils.EMPTY);
 				}
-				tRejects.setText(rjj.toString());
+				List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
+				for (String o : outputs) {
+					lbOutputs.add(o);
+				}
+				if (outputsSelection != null && outputsSelection.length > 0) {
+					for (int i = 0; i < lbOutputs.getItemCount(); i++) {
+						for (String selection : outputsSelection) {
+							if (lbOutputs.getItem(i).equals(selection)) {
+								lbOutputs.select(i);
+							}
+						}
+					}
+				}
+				tBemerkungen.setText(actRn.getBemerkung());
+				tInternalRemarks.setText(actRn.getInternalRemarks());
 			} else {
-				tRejects.setText(StringUtils.EMPTY);
+				rnAdressat.setText(StringConstants.EMPTY);
+				tRejects.setText(StringConstants.EMPTY);
+				form.setText(null);
 			}
-			List<String> outputs = actRn.getTrace(Rechnung.OUTPUT);
-			for (String o : outputs) {
-				lbOutputs.add(o);
-			}
-			if (outputsSelection != null && outputsSelection.length > 0) {
-				for (int i = 0; i < lbOutputs.getItemCount(); i++) {
-					for (String selection : outputsSelection) {
-						if (lbOutputs.getItem(i).equals(selection)) {
-							lbOutputs.select(i);
-						}
-					}
-				}
-			}
-			tBemerkungen.setText(actRn.getBemerkung());
-			tInternalRemarks.setText(actRn.getInternalRemarks());
-		} else {
-			rnAdressat.setText(StringConstants.EMPTY);
-			tRejects.setText(StringConstants.EMPTY);
-			form.setText(null);
+
+			attachments.getStructuredViewer().setInput(actRn);
+			buchungen.setInput(actRn);
+			konsultationenViewer.refresh();
+			stornoViewer.refresh();
+
+			detailComposites.forEach(dc -> dc.setDetailObject(actRn, null));
+
+			setExpandedState(ecBuchungen, KEY_RECHNUNGSBLATT + ecBuchungen.getText());
+			setExpandedState(ecBemerkungen, KEY_RECHNUNGSBLATT + ecBemerkungen.getText());
+			setExpandedState(ecStatus, KEY_RECHNUNGSBLATT + ecStatus.getText());
+			setExpandedState(ecFehler, KEY_RECHNUNGSBLATT + ecFehler.getText());
+			setExpandedState(ecAusgaben, KEY_RECHNUNGSBLATT + ecAusgaben.getText());
+			setExpandedState(ecKons, KEY_RECHNUNGSBLATT + ecKons.getText());
+			setExpandedState(ecStorno, KEY_RECHNUNGSBLATT + ecStorno.getText());
+
+			form.reflow(true);
 		}
-
-		attachments.getStructuredViewer().setInput(actRn);
-		buchungen.setInput(actRn);
-		konsultationenViewer.refresh();
-		stornoViewer.refresh();
-
-		detailComposites.forEach(dc -> dc.setDetailObject(actRn, null));
-
-		setExpandedState(ecBuchungen, KEY_RECHNUNGSBLATT + ecBuchungen.getText());
-		setExpandedState(ecBemerkungen, KEY_RECHNUNGSBLATT + ecBemerkungen.getText());
-		setExpandedState(ecStatus, KEY_RECHNUNGSBLATT + ecStatus.getText());
-		setExpandedState(ecFehler, KEY_RECHNUNGSBLATT + ecFehler.getText());
-		setExpandedState(ecAusgaben, KEY_RECHNUNGSBLATT + ecAusgaben.getText());
-		setExpandedState(ecKons, KEY_RECHNUNGSBLATT + ecKons.getText());
-		setExpandedState(ecStorno, KEY_RECHNUNGSBLATT + ecStorno.getText());
-
-		form.reflow(true);
 	}
 
 }
