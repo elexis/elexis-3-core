@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
 	<artifactId>elexis-3-core</artifactId>
@@ -234,9 +236,12 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<encoding>UTF-8</encoding>
 					<consoleOutput>false</consoleOutput>
 					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<headerLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
+					<configLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
+					<suppressionsLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<version>2.17</version>
 			</plugin>
@@ -276,6 +281,11 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>fr.jcgay.maven.plugins</groupId>
+					<artifactId>buildplan-maven-plugin</artifactId>
+					<version>1.5</version>
+				</plugin>
+				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
@@ -313,7 +323,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					</configuration>
 				</plugin>
 				<plugin>
-					<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
+					<!-- Use compiler plugin with tycho as the adapter to the
+					JDT compiler. -->
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.10.1</version>
 					<configuration>
@@ -321,7 +332,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					</configuration>
 				</plugin>
 				<plugin>
-					<!-- we want to ensure that the bin directory created by the Eclipse 
+					<!-- we want to ensure that the bin directory created by the
+					Eclipse 
 						gets cleaned, too. Without it Maven would put two versions of each class 
 						file into the jars -->
 					<artifactId>maven-clean-plugin</artifactId>
@@ -347,7 +359,8 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 						<compilerArguments>
 							<inlineJSR />
 							<enableJavadoc />
-							<!-- Removed due to bug #2105 <encoding>ISO-8859-1</encoding> -->
+							<!-- Removed due to bug #2105
+							<encoding>ISO-8859-1</encoding> -->
 						</compilerArguments>
 					</configuration>
 				</plugin>
@@ -361,11 +374,11 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
 							<version>2.7.5</version>
 						</dependency>-->
-					<dependency>
-   						 <groupId>org.eclipse.tycho</groupId>
-    						 <artifactId>tycho-buildtimestamp-jgit</artifactId>
-    						 <version>3.0.5</version>
-					</dependency>
+						<dependency>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>tycho-buildtimestamp-jgit</artifactId>
+							<version>3.0.5</version>
+						</dependency>
 					</dependencies>
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
@@ -429,9 +442,12 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<encoding>UTF-8</encoding>
 					<consoleOutput>false</consoleOutput>
 					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
+					<headerLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
+					<configLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
+					<suppressionsLocation>
+						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
 				</configuration>
 				<reportSets>
 					<reportSet>
