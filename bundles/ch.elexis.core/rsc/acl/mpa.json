@@ -24,9 +24,18 @@
 
     "ch.elexis.core.model.IBillable" : "cruvd",
     "ch.elexis.core.model.IBilled" : "cruvd:aobo",
+    "ch.elexis.core.model.IBillingSystemFactor" : "cruvd",
 
     "ch.elexis.core.model.IPrescription" : "cruvd",
     "ch.elexis.core.model.ICondition" : "cruvd",
+    "ch.elexis.core.model.ISickCertificate" : "cruvd",
+    "ch.elexis.core.model.IRecipe" : "cruvd",
+
+    "ch.elexis.core.model.ICodeElementBlock" : "cruvd",
+
+    "ch.elexis.omnivore.model.IDocumentHandle" : "cruvd",
+
+    "at.medevit.ch.artikelstamm.IArtikelstammItem" : "cruvd",
 
     "ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",
     "ch.elexis.base.ch.arzttarife.tarmed.ITarmedKumulation": "rv",

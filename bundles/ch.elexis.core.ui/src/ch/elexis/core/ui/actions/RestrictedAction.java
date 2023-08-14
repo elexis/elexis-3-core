@@ -64,15 +64,19 @@ abstract public class RestrictedAction extends Action {
 	 * Unchecks the action if the required right is not available.
 	 */
 	public void reflectRight() {
-		setEnabled(AccessControlServiceHolder.get().evaluate(evaluatableAce));
+		if (evaluatableAce != null) {
+			setEnabled(AccessControlServiceHolder.get().evaluate(evaluatableAce));
+		}
 	}
 
 	/**
 	 * Checks the required access rights and then calls doRun().
 	 */
 	final public void run() {
-		if (AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
-			doRun();
+		if (evaluatableAce != null) {
+			if (AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
+				doRun();
+			}
 		}
 	}
 

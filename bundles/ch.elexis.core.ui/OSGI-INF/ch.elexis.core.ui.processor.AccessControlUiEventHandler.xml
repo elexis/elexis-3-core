@@ -3,6 +3,7 @@
    <property name="event.topics">info/elexis/ui/accesscontrol/update
 info/elexis/ui/accesscontrol/reset
 org/eclipse/e4/ui/LifeCycle/appStartupComplete
+org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/*
    </property>
    <service>
       <provide interface="org.osgi.service.event.EventHandler"/>

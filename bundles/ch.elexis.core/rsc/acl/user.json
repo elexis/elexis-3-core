@@ -13,7 +13,7 @@
   "object" : {
     "ch.elexis.core.model.IConfig" : "r",
     "ch.elexis.core.model.IRole" : "r",
-    "ch.elexis.core.model.IUser" : "r",
+    "ch.elexis.core.model.IUser" : "crudv",
     "ch.elexis.core.model.IUserConfig" : "crwvu",
     "ch.elexis.core.model.IOrganization" : "rv",
     "ch.elexis.core.model.ILaboratory" : "rv",

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
@@ -40,7 +41,8 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 @Component(property = { EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/update",
 		EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/reset",
-		EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE })
+		EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE,
+		EventConstants.EVENT_TOPIC + "=" + UIEvents.ElementContainer.TOPIC_SELECTEDELEMENT })
 public class AccessControlUiEventHandler implements EventHandler {
 
 	@Reference
@@ -75,6 +77,18 @@ public class AccessControlUiEventHandler implements EventHandler {
 			}
 			CoreUiUtil.injectServices(this);
 			startUpComplete = true;
+		}
+		if (event.getTopic().startsWith(UIEvents.UIModelTopicBase) && UIEvents.isSET(event)) {
+			// selected perspective change
+			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
+			if (property instanceof Map) {
+				Object newValue = ((Map) property).get("NewValue");
+				if (newValue instanceof MPerspective) {
+//					Display.getDefault().asyncExec(() -> {
+//						GlobalActions.resetPerspectiveAction.run();
+//					});
+				}
+			}
 		}
 		if (startUpComplete) {
 			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
@@ -117,8 +131,8 @@ public class AccessControlUiEventHandler implements EventHandler {
 		for (MPart mPart : foundParts) {
 			List<String> acStrings = getAccessControlStrings(mPart);
 			if (acStrings != null && !acStrings.isEmpty()) {
-				mPart.setVisible(false);
-				mPart.setToBeRendered(false);
+				mPart.setVisible(true);
+				mPart.setToBeRendered(true);
 			}
 		}
 	}
