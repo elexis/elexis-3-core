@@ -11,7 +11,7 @@
 
 	<properties>
 		<elexis.target>2022-09-java17</elexis.target>
-		<formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
+		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
 		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
@@ -32,7 +32,7 @@
 		<name>elexis.info</name>
 		<url>http://www.elexis.info</url>
 	</organization>
-
+	<!--???-->
 	<scm>
 		<connection>scm:git:https://github.com/elexis/elexis-3-core.git</connection>
 		<developerConnection>scm:git:https://github.com/elexis/elexis-3-core.git</developerConnection>
@@ -59,6 +59,7 @@
 		<module>tests</module>
 		<module>ch.elexis.core.p2site</module>
 	</modules>
+	
 	<profiles>
 		<profile>
 			<id>windows-x86_64</id>
@@ -99,6 +100,7 @@
 	</profiles>
 	<build>
 		<plugins>
+			<!-- Formatter, wird in Format:Goal aufgerufen -->
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
@@ -116,6 +118,8 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<!--Configures the target-platform to use in order to resolve dependencies.
+⚠️ This mojo is actually not executable, and is only meant to host configuration-->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -146,6 +150,8 @@
 					</dependency-resolution>
 				</configuration>
 			</plugin>
+			<!--GMavenPlus Plugin is a rewrite of GMaven, a Maven plugin that allows you to integrate Groovy into your Maven projects.
+Basic usage can be found on the usage page, with additional usages on the examples-->
 			<plugin>
 				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
 				<groupId>org.codehaus.gmavenplus</groupId>
