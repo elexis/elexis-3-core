@@ -31,19 +31,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.locks.AcquireLockUi;
-import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.FormatValidator;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
-import ch.elexis.data.Person.PersonDataException;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -54,11 +54,11 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 	HashMap<String, String> fld;
 	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tTel, tMail, tAHV;
 	Combo cbSex;
-	Patient result;
+	private IPatient patient;
 	Object po;
 
-	public Patient getResult() {
-		return result;
+	public IPatient getResult() {
+		return patient;
 	}
 
 	public PatientErfassenDialog(final Shell parent, final HashMap<String, String> fields) {
@@ -138,7 +138,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				tMail.setForeground(red);
 				setEnableOKButton(false);
 				return;
-			} 
+			}
 
 			tMail.setForeground(defaultMailColor);
 			setEnableOKButton(true);
@@ -182,7 +182,6 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		return ret;
 	}
 
-
 	private void setEnableOKButton(boolean enabled) {
 		getButton(IDialogConstants.OK_ID).setEnabled(enabled);
 	}
@@ -198,35 +197,30 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		final String[] ret = new String[9];
-		ret[0] = tName.getText();
-		ret[1] = tVorname.getText();
+		Gender gender = null;
 		int idx = cbSex.getSelectionIndex();
 		if (idx == 1 || cbSex.getText().contentEquals(Messages.Patient_female_short)) {
-			ret[2] = Patient.FEMALE; // German w for weiblich = female
+			gender = Gender.FEMALE; // German w for weiblich = female
 		} else if (idx == 0 || cbSex.getText().contentEquals(Messages.Patient_male_short)) {
-			ret[2] = Patient.MALE;
+			gender = Gender.MALE;
 		} else if (idx == -1) {
 			SWTHelper.showError(Messages.PatientErfassenDialog_Error_Sex,
 					Messages.PatientErfassenDialog_Sex_must_be_specified);
 			return;
 		}
-		ret[3] = tGebDat.getText();
 		try {
 			TimeTool check = null;
-			if (!StringTool.isNothing(ret[3])) {
-				check = new TimeTool(ret[3], true);
+			if (!StringTool.isNothing(tGebDat.getText())) {
+				check = new TimeTool(tGebDat.getText(), true);
+			} else {
+				check = new TimeTool();
 			}
-			ret[4] = tStrasse.getText();
-			ret[5] = tPlz.getText();
-			ret[6] = tOrt.getText();
-			ret[7] = tTel.getText();
-			ret[8] = tMail.getText();
 			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
-			qbe.add("Bezeichnung1", Query.EQUALS, ret[0], true); //$NON-NLS-1$
-			qbe.add("Bezeichnung2", Query.EQUALS, ret[1], true); //$NON-NLS-1$
-			if (check != null)
+			qbe.add("Bezeichnung1", Query.EQUALS, tName.getText(), true); //$NON-NLS-1$
+			qbe.add("Bezeichnung2", Query.EQUALS, tVorname.getText(), true); //$NON-NLS-1$
+			if (check != null) {
 				qbe.add(Person.BIRTHDATE, Query.EQUALS, check.toDBString(false), true);
+			}
 			List<Kontakt> list = qbe.execute();
 			if ((list != null) && (!list.isEmpty())) {
 				Kontakt k = list.get(0);
@@ -240,40 +234,27 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 					}
 				}
 			}
-			result = new Patient(ret[0], ret[1], check, ret[2]);
+
+			patient = new IContactBuilder.PatientBuilder(CoreModelServiceHolder.get(), tVorname.getText(),
+					tName.getText(), check.toLocalDate(), gender).build();
+			patient.setStreet(tStrasse.getText());
+			patient.setZip(tPlz.getText());
+			patient.setCity(tOrt.getText());
+			patient.setPhone1(tTel.getText());
+			patient.setEmail(tMail.getText());
+			CoreModelServiceHolder.get().save(patient);
 
 			String formattedAHV = tAHV.getText();
-
 			if (!formattedAHV.isEmpty()) {
 				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
-				result.addXid(DOMAIN_AHV, formattedAHV, true);
+				patient.addXid(DOMAIN_AHV, formattedAHV, true);
 			}
 
-			AcquireLockUi.aquireAndRun(result, new ILockHandler() {
-
-				@Override
-				public void lockFailed() {
-					result.delete();
-				}
-
-				@Override
-				public void lockAcquired() {
-					result.set(
-							new String[] { Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1,
-									Kontakt.FLD_E_MAIL },
-							new String[] { ret[4], ret[5], ret[6], ret[7], ret[8] });
-
-					ElexisEventDispatcher.fireSelectionEvent(result);
-				}
-			});
 			super.okPressed();
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);
 			SWTHelper.showError("Falsches Datumsformat", "Das Geburtsdatum kann nicht interpretiert werden");
 			return;
-		} catch (PersonDataException pe) {
-			ExHandler.handle(pe);
-			SWTHelper.showError("Unplausible Angaben", "Bitte überprüfen Sie die Eingabe nochmals: " + pe.getMessage());
 		}
 	}
 
