@@ -15,12 +15,14 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
-import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.swt.widgets.Display;
@@ -41,8 +43,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 @Component(property = { EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/update",
 		EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/reset",
-		EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE,
-		EventConstants.EVENT_TOPIC + "=" + UIEvents.ElementContainer.TOPIC_SELECTEDELEMENT })
+		EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE })
 public class AccessControlUiEventHandler implements EventHandler {
 
 	@Reference
@@ -55,6 +56,9 @@ public class AccessControlUiEventHandler implements EventHandler {
 	@Inject
 	private EModelService eModelService;
 
+	@Inject
+	private IEventBroker eventBroker;
+
 	private Map<String, List<String>> viewAccessControlMap;
 
 	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
@@ -64,8 +68,9 @@ public class AccessControlUiEventHandler implements EventHandler {
 		LoggerFactory.getLogger(getClass()).info("UPDATE MODEL " + mApplication + " / " + eModelService);
 
 		updateDescriptors();
-		updatePlaceholders();
 		updateParts();
+		updatePlaceholders();
+		updatePartStacks();
 	}
 
 	@Override
@@ -77,18 +82,6 @@ public class AccessControlUiEventHandler implements EventHandler {
 			}
 			CoreUiUtil.injectServices(this);
 			startUpComplete = true;
-		}
-		if (event.getTopic().startsWith(UIEvents.UIModelTopicBase) && UIEvents.isSET(event)) {
-			// selected perspective change
-			Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
-			if (property instanceof Map) {
-				Object newValue = ((Map) property).get("NewValue");
-				if (newValue instanceof MPerspective) {
-//					Display.getDefault().asyncExec(() -> {
-//						GlobalActions.resetPerspectiveAction.run();
-//					});
-				}
-			}
 		}
 		if (startUpComplete) {
 			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
@@ -118,23 +111,23 @@ public class AccessControlUiEventHandler implements EventHandler {
 			removedDescriptors = new HashSet<>();
 		}
 
-		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
-		for (MPlaceholder placeholder : foundPlaceholders) {
-			List<String> acStrings = getAccessControlStrings(placeholder);
-			if (acStrings != null && !acStrings.isEmpty()) {
-				placeholder.setVisible(true);
-				placeholder.setToBeRendered(true);
-			}
-		}
+//		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
+//		for (MPlaceholder placeholder : foundPlaceholders) {
+//			List<String> acStrings = getAccessControlStrings(placeholder);
+//			if (acStrings != null && !acStrings.isEmpty()) {
+//				placeholder.setVisible(true);
+//				placeholder.setToBeRendered(true);
+//			}
+//		}
 
-		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
-		for (MPart mPart : foundParts) {
-			List<String> acStrings = getAccessControlStrings(mPart);
-			if (acStrings != null && !acStrings.isEmpty()) {
-				mPart.setVisible(true);
-				mPart.setToBeRendered(true);
-			}
-		}
+//		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
+//		for (MPart mPart : foundParts) {
+//			List<String> acStrings = getAccessControlStrings(mPart);
+//			if (acStrings != null && !acStrings.isEmpty()) {
+//				mPart.setVisible(true);
+//				mPart.setToBeRendered(true);
+//			}
+//		}
 	}
 
 	private List<MPartDescriptor> updateDescriptors() {
@@ -156,6 +149,23 @@ public class AccessControlUiEventHandler implements EventHandler {
 		return ret;
 	}
 
+	private void updatePartStacks() {
+		List<MPartStack> foundpartStacks = eModelService.findElements(mApplication, null, MPartStack.class, null);
+		for (MPartStack partStack : foundpartStacks) {
+			if (partStack.getChildren().size() == 1) {
+				sendStackSelectedElement(partStack.getSelectedElement(), partStack);
+			}
+		}
+	}
+
+	private void sendStackSelectedElement(MStackElement mStackElement, MPartStack partStack) {
+		Map<String, Object> argMap = new HashMap<>();
+		argMap.put("ChangedElement", partStack);
+		argMap.put("OldValue", null);
+		argMap.put("NewValue", partStack.getSelectedElement());
+		eventBroker.send("org/eclipse/e4/ui/model/ui/ElementContainer/selectedElement/SET", argMap);
+	}
+
 	private void updatePlaceholders() {
 		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
 		for (MPlaceholder placeholder : foundPlaceholders) {
@@ -165,7 +175,8 @@ public class AccessControlUiEventHandler implements EventHandler {
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
 						placeholder.setVisible(false);
-						placeholder.setToBeRendered(false);
+					} else {
+						placeholder.setVisible(true);
 					}
 				}
 			}
@@ -181,7 +192,8 @@ public class AccessControlUiEventHandler implements EventHandler {
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
 						mPart.setVisible(false);
-						mPart.setToBeRendered(false);
+					} else {
+						mPart.setVisible(true);
 					}
 				}
 			}
