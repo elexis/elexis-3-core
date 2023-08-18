@@ -593,8 +593,7 @@ public class DatePicker extends Composite {
 		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
-		removeListener(SWT.Selection, listener);
-		removeListener(SWT.DefaultSelection, listener);
+		removeListener(SWT.Verify, listener);
 	}
 
 	/**
