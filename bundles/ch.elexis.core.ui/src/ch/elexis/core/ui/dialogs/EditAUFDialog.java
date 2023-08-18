@@ -19,8 +19,8 @@ import java.util.Date;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -71,7 +71,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 			});
 		}
 	}
-
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -81,14 +81,30 @@ public class EditAUFDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
-		dpBis.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent event) {
-		  		if (!validDateSpan(dpVon.getDate(), dpBis.getDate())) {
+		
+		VerifyListener bisListener = new VerifyListener(){
+			@Override
+		      public void verifyText(VerifyEvent e) {
+				if (!validDateSpan(dpVon.getDate(), (Date) e.data)) {
+					e.doit = false;
 					SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
-						Messages.EditAUFDialog_checkIfDatesValid);	
+					Messages.EditAUFDialog_checkIfDatesValid);
 				}
-		      }
-		});
+			}
+		};
+		VerifyListener vonListener = new VerifyListener(){
+			@Override
+		      public void verifyText(VerifyEvent e) {
+				if (!validDateSpan((Date) e.data, dpBis.getDate())){
+					e.doit = false;
+					SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
+					Messages.EditAUFDialog_checkIfDatesValid);
+				}
+			}
+		};
+		
+		dpBis.setVerifyListener(bisListener);
+		dpVon.setVerifyListener(vonListener);
 		
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Core_Reason); // $NON-NLS-1$
