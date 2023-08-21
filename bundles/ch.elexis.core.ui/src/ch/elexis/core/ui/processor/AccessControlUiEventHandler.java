@@ -82,6 +82,9 @@ public class AccessControlUiEventHandler implements EventHandler {
 			}
 			CoreUiUtil.injectServices(this);
 			startUpComplete = true;
+			Display.getDefault().syncExec(() -> {
+				updateModel();
+			});
 		}
 		if (startUpComplete) {
 			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
@@ -110,24 +113,6 @@ public class AccessControlUiEventHandler implements EventHandler {
 			mApplication.getDescriptors().addAll(removedDescriptors);
 			removedDescriptors = new HashSet<>();
 		}
-
-//		List<MPlaceholder> foundPlaceholders = eModelService.findElements(mApplication, null, MPlaceholder.class, null);
-//		for (MPlaceholder placeholder : foundPlaceholders) {
-//			List<String> acStrings = getAccessControlStrings(placeholder);
-//			if (acStrings != null && !acStrings.isEmpty()) {
-//				placeholder.setVisible(true);
-//				placeholder.setToBeRendered(true);
-//			}
-//		}
-
-//		List<MPart> foundParts = eModelService.findElements(mApplication, null, MPart.class, null);
-//		for (MPart mPart : foundParts) {
-//			List<String> acStrings = getAccessControlStrings(mPart);
-//			if (acStrings != null && !acStrings.isEmpty()) {
-//				mPart.setVisible(true);
-//				mPart.setToBeRendered(true);
-//			}
-//		}
 	}
 
 	private List<MPartDescriptor> updateDescriptors() {
@@ -152,8 +137,15 @@ public class AccessControlUiEventHandler implements EventHandler {
 	private void updatePartStacks() {
 		List<MPartStack> foundpartStacks = eModelService.findElements(mApplication, null, MPartStack.class, null);
 		for (MPartStack partStack : foundpartStacks) {
-			if (partStack.getChildren().size() == 1) {
+			MStackElement selectedPart = partStack.getSelectedElement();
+			if (selectedPart != null && selectedPart.isVisible() && selectedPart.isToBeRendered()) {
 				sendStackSelectedElement(partStack.getSelectedElement(), partStack);
+			} else {
+				for (MStackElement part : partStack.getChildren()) {
+					if (part.isVisible() && part.isToBeRendered()) {
+						sendStackSelectedElement(part, partStack);
+					}
+				}
 			}
 		}
 	}
@@ -175,8 +167,12 @@ public class AccessControlUiEventHandler implements EventHandler {
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
 						placeholder.setVisible(false);
+						placeholder.getTags().add("AccessControlUiEventHandler:hidden");
 					} else {
-						placeholder.setVisible(true);
+						if (placeholder.getTags().contains("AccessControlUiEventHandler:hidden")) {
+							placeholder.setVisible(true);
+							placeholder.getTags().remove("AccessControlUiEventHandler:hidden");
+						}
 					}
 				}
 			}
@@ -192,8 +188,12 @@ public class AccessControlUiEventHandler implements EventHandler {
 				for (EvaluatableACE ace : aces) {
 					if (!accessControlService.evaluate(ace)) {
 						mPart.setVisible(false);
+						mPart.getTags().add("AccessControlUiEventHandler:hidden");
 					} else {
-						mPart.setVisible(true);
+						if (mPart.getTags().contains("AccessControlUiEventHandler:hidden")) {
+							mPart.setVisible(true);
+							mPart.getTags().remove("AccessControlUiEventHandler:hidden");
+						}
 					}
 				}
 			}
