@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 
@@ -147,7 +146,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			omnivoreStore.saveDocument(ret);
 			if (attachment != null) {
 				if (attachment.getData() != null) {
-					try (InputStream in = new ByteArrayInputStream(Base64.getDecoder().decode(attachment.getData()))) {
+					try (InputStream in = new ByteArrayInputStream(attachment.getData())) {
 						omnivoreStore.saveDocument(ret, in);
 					} catch (IOException | ElexisException e) {
 						LoggerFactory.getLogger(getClass())
