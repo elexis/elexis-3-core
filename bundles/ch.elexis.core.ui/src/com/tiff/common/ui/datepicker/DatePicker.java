@@ -256,7 +256,14 @@ public class DatePicker extends Composite {
 		private void onMouseDown(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
 		
-			boolean doIt = getVerifyListener() == null ? true : verifyEnteredDay(day, getVerifyListener());
+			Listener[] verifyListeners = getVerifyListeners();
+			boolean doIt = true;
+			
+			if (verifyListeners != null) {
+				for (int i = 0; i < verifyListeners.length && doIt; ++i ) {
+					doIt = verifyEnteredDay(day, verifyListeners[i]);
+				}
+			}
 			
 			if (day > 0 && doIt) {
 				cal.set(Calendar.DAY_OF_MONTH, day);
@@ -264,6 +271,7 @@ public class DatePicker extends Composite {
 				updateDate();
 			}
 		}
+		
 		
 		private boolean verifyEnteredDay(int day, Listener vfl) {
 			Event event = new Event();
@@ -484,13 +492,23 @@ public class DatePicker extends Composite {
 		addListener(SWT.DefaultSelection, typedListener);
 	}
 	
+	/**
+	 * Adds a VerifyListener to the DatePicker's DatePanel.
+	 *
+	 * @param listener the listener
+	 */
 	public void addVerifyListener(Listener listener) {
 		datePanel.addListener(SWT.Verify, listener);
 	}
 	
-	public Listener getVerifyListener() {
+	/**
+	 * Gets the VerifyListener of the DatePicker's DatePanel.
+	 *
+	 * @return the first VerifyListener or null (if none has been set) 
+	 */
+	public Listener[] getVerifyListeners() {
 		Listener[] verifyListeners = datePanel.getListeners(SWT.Verify);
-		return verifyListeners.length == 0 ? null : verifyListeners[0];
+		return verifyListeners.length == 0 ? null : verifyListeners;
 	}
 
 	

@@ -72,14 +72,6 @@ public class EditAUFDialog extends TitleAreaDialog {
 		}
 	}
 	
-	private void checkDateSpan(Date start, Date end, Event event) {
-		if (!validDateSpan(start, end)) {
-			event.doit = false;
-			SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
-			Messages.EditAUFDialog_checkIfDatesValid);
-		}
-	}
-	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -132,6 +124,14 @@ public class EditAUFDialog extends TitleAreaDialog {
 			dpBis.setDate(tt.getTime());
 		}
 		return ret;
+	}
+	
+	private void checkDateSpan(Date start, Date end, Event event) {
+		if (!validDateSpan(start, end)) {
+			event.doit = false;
+			SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
+			Messages.EditAUFDialog_checkIfDatesValid);
+		}
 	}
 
 	private Date asDate(LocalDate localDate) {
