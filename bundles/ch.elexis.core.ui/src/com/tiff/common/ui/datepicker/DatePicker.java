@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TypedListener;
 
 /**
@@ -64,7 +65,6 @@ import org.eclipse.swt.widgets.TypedListener;
  * @version $Revision: 1.2 $
  */
 public class DatePicker extends Composite {
-
 	// ~ Inner Classes ----------------------------------------------------------
 	private class DatePanel extends Canvas {
 		// ~ Instance fields ----------------------------------------------------
@@ -255,14 +255,35 @@ public class DatePicker extends Composite {
 
 		private void onMouseDown(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
-
-			if (day > 0) {
+		
+			Listener[] verifyListeners =  getListeners(SWT.Verify);
+			boolean doIt = true;
+		
+			for (Listener listener : verifyListeners ) {
+					doIt = verifyEnteredDay(day, listener);
+					if (!doIt) break;
+			}
+			
+			if (day > 0 && doIt) {
 				cal.set(Calendar.DAY_OF_MONTH, day);
 				onDateSelected(true);
 				updateDate();
 			}
 		}
+		
+		
+		private boolean verifyEnteredDay(int day, Listener vfl) {
+			Event event = new Event();
+			event.widget = this;
+			
+			Calendar calCopy = (Calendar) cal.clone();
+			calCopy.set(Calendar.DAY_OF_MONTH, day);
+			event.data = calCopy.getTime();
 
+			vfl.handleEvent(event);
+			return event.doit;
+		}
+		
 		private void onMouseMove(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
 			selection = day;
@@ -469,7 +490,7 @@ public class DatePicker extends Composite {
 		addListener(SWT.Selection, typedListener);
 		addListener(SWT.DefaultSelection, typedListener);
 	}
-
+	
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point pSize = datePanel.computeSize(wHint, hHint, changed);
 		Point labelSize = monthLabel.computeSize(wHint, hHint, changed);
@@ -538,6 +559,15 @@ public class DatePicker extends Composite {
 		}
 		removeListener(SWT.Selection, listener);
 		removeListener(SWT.DefaultSelection, listener);
+	}
+	
+	/**
+	 * Adds an internal VerifyListener to the DatePicker's DatePanel.
+	 *
+	 * @param listener the listener
+	 */
+	public void addVerifyListener(Listener listener) {
+		datePanel.addListener(SWT.Verify, listener);
 	}
 
 	/**
