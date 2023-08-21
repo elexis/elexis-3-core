@@ -31,8 +31,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -45,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TypedListener;
 
 /**
@@ -66,7 +65,6 @@ import org.eclipse.swt.widgets.TypedListener;
  * @version $Revision: 1.2 $
  */
 public class DatePicker extends Composite {
-	VerifyListener verifyListener;
 	// ~ Inner Classes ----------------------------------------------------------
 	private class DatePanel extends Canvas {
 		// ~ Instance fields ----------------------------------------------------
@@ -258,7 +256,7 @@ public class DatePicker extends Composite {
 		private void onMouseDown(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
 		
-			boolean doIt = verifyListener == null ? true : verifyDay(day);
+			boolean doIt = getVerifyListener() == null ? true : verifyEnteredDay(day, getVerifyListener());
 			
 			if (day > 0 && doIt) {
 				cal.set(Calendar.DAY_OF_MONTH, day);
@@ -267,19 +265,18 @@ public class DatePicker extends Composite {
 			}
 		}
 		
-		private boolean verifyDay(int day) {
+		private boolean verifyEnteredDay(int day, Listener vfl) {
 			Event event = new Event();
 			event.widget = this;
 			
 			Calendar calCopy = (Calendar) cal.clone();
 			calCopy.set(Calendar.DAY_OF_MONTH, day);
 			event.data = calCopy.getTime();
-				
-			VerifyEvent verifyEvent = new VerifyEvent(event);
-			verifyListener.verifyText(verifyEvent);
-			return verifyEvent.doit;
-		}
 
+			vfl.handleEvent(event);
+			return event.doit;
+		}
+		
 		private void onMouseMove(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
 			selection = day;
@@ -487,23 +484,16 @@ public class DatePicker extends Composite {
 		addListener(SWT.DefaultSelection, typedListener);
 	}
 	
-	/**
-	 * 
-	 * @param listener the listener
-	 * 
-	 * @exception SWTError (ERROR_NULL_ARGUMENT) when listener is null
-	 * 
-	 * @see VerifyListener
-	 * @see #removeVerifyListener
-	 */
-	public void setVerifyListener(VerifyListener listener) {
-		if (listener == null) {
-			SWT.error(SWT.ERROR_NULL_ARGUMENT);
-		}
-		
-		this.verifyListener = listener;
+	public void addVerifyListener(Listener listener) {
+		datePanel.addListener(SWT.Verify, listener);
+	}
+	
+	public Listener getVerifyListener() {
+		Listener[] verifyListeners = datePanel.getListeners(SWT.Verify);
+		return verifyListeners.length == 0 ? null : verifyListeners[0];
 	}
 
+	
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point pSize = datePanel.computeSize(wHint, hHint, changed);
 		Point labelSize = monthLabel.computeSize(wHint, hHint, changed);
@@ -572,28 +562,6 @@ public class DatePicker extends Composite {
 		}
 		removeListener(SWT.Selection, listener);
 		removeListener(SWT.DefaultSelection, listener);
-	}
-	
-	/**
-	 * Removes the listener.
-	 *
-	 * @param listener the listener
-	 *
-	 * @exception SWTError (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
-	 *                     thread
-	 * @exception SWTError (ERROR_WIDGET_DISPOSED) when the widget has been disposed
-	 * @exception SWTError (ERROR_NULL_ARGUMENT) when listener is null
-	 *
-	 * @see SelectionListener
-	 * @see #setVerifyListener
-	 */
-	public void removeVerifyListener(VerifyListener listener) {
-		checkWidget();
-
-		if (listener == null) {
-			SWT.error(SWT.ERROR_NULL_ARGUMENT);
-		}
-		removeListener(SWT.Verify, listener);
 	}
 
 	/**

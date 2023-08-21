@@ -19,14 +19,14 @@ import java.util.Date;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -72,6 +72,14 @@ public class EditAUFDialog extends TitleAreaDialog {
 		}
 	}
 	
+	private void checkDateSpan(Date start, Date end, Event event) {
+		if (!validDateSpan(start, end)) {
+			event.doit = false;
+			SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
+			Messages.EditAUFDialog_checkIfDatesValid);
+		}
+	}
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -81,30 +89,20 @@ public class EditAUFDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
+
+		dpBis.addVerifyListener(new Listener() {
+		    @Override
+		    public void handleEvent(Event event) {
+		    	checkDateSpan(dpVon.getDate(), (Date) event.data, event);
+		    }
+		});
 		
-		VerifyListener bisListener = new VerifyListener(){
-			@Override
-		      public void verifyText(VerifyEvent e) {
-				if (!validDateSpan(dpVon.getDate(), (Date) e.data)) {
-					e.doit = false;
-					SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
-					Messages.EditAUFDialog_checkIfDatesValid);
-				}
-			}
-		};
-		VerifyListener vonListener = new VerifyListener(){
-			@Override
-		      public void verifyText(VerifyEvent e) {
-				if (!validDateSpan((Date) e.data, dpBis.getDate())){
-					e.doit = false;
-					SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
-					Messages.EditAUFDialog_checkIfDatesValid);
-				}
-			}
-		};
-		
-		dpBis.setVerifyListener(bisListener);
-		dpVon.setVerifyListener(vonListener);
+		dpVon.addVerifyListener(new Listener() {
+			 @Override
+			    public void handleEvent(Event event) {
+			    	checkDateSpan((Date) event.data, dpBis.getDate(), event);
+			    }
+		});
 		
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Core_Reason); // $NON-NLS-1$
