@@ -256,13 +256,12 @@ public class DatePicker extends Composite {
 		private void onMouseDown(MouseEvent e) {
 			int day = getDayFromPoint(e.x, e.y);
 		
-			Listener[] verifyListeners = getVerifyListeners();
+			Listener[] verifyListeners =  getListeners(SWT.Verify);
 			boolean doIt = true;
-			
-			if (verifyListeners != null) {
-				for (int i = 0; i < verifyListeners.length && doIt; ++i ) {
-					doIt = verifyEnteredDay(day, verifyListeners[i]);
-				}
+		
+			for (Listener listener : verifyListeners ) {
+					doIt = verifyEnteredDay(day, listener);
+					if (!doIt) break;
 			}
 			
 			if (day > 0 && doIt) {
@@ -492,26 +491,6 @@ public class DatePicker extends Composite {
 		addListener(SWT.DefaultSelection, typedListener);
 	}
 	
-	/**
-	 * Adds a VerifyListener to the DatePicker's DatePanel.
-	 *
-	 * @param listener the listener
-	 */
-	public void addVerifyListener(Listener listener) {
-		datePanel.addListener(SWT.Verify, listener);
-	}
-	
-	/**
-	 * Gets the VerifyListener of the DatePicker's DatePanel.
-	 *
-	 * @return the first VerifyListener or null (if none has been set) 
-	 */
-	public Listener[] getVerifyListeners() {
-		Listener[] verifyListeners = datePanel.getListeners(SWT.Verify);
-		return verifyListeners.length == 0 ? null : verifyListeners;
-	}
-
-	
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point pSize = datePanel.computeSize(wHint, hHint, changed);
 		Point labelSize = monthLabel.computeSize(wHint, hHint, changed);
@@ -580,6 +559,15 @@ public class DatePicker extends Composite {
 		}
 		removeListener(SWT.Selection, listener);
 		removeListener(SWT.DefaultSelection, listener);
+	}
+	
+	/**
+	 * Adds an internal VerifyListener to the DatePicker's DatePanel.
+	 *
+	 * @param listener the listener
+	 */
+	public void addVerifyListener(Listener listener) {
+		datePanel.addListener(SWT.Verify, listener);
 	}
 
 	/**
