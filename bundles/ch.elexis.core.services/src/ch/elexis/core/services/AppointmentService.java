@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
@@ -35,6 +36,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
@@ -79,8 +81,9 @@ public class AppointmentService implements IAppointmentService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
+	@Reference
 	private IContextService contextService;
-
+	
 	private LoadingCache<String, Map<String, Area>> cache;
 
 	@Override
@@ -634,6 +637,18 @@ public class AppointmentService implements IAppointmentService {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public List<Area> getAoboAreas() {
+		Optional<IUser> user = contextService.getActiveUser();
+		if(user.isPresent()) {
+			List<String> aoboMandatorIds = accessControlService.getAoboMandatorIds();
+			return getAreas().stream()
+					.filter(a -> a.getType() == AreaType.GENERIC || aoboMandatorIds.contains(a.getContactId()))
+					.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 
 	@Override

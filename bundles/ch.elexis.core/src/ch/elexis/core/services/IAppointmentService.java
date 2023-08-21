@@ -214,4 +214,12 @@ public interface IAppointmentService {
 	 * @since 3.10
 	 */
 	String resolveAreaByAssignedContact(IContact contact);
+
+	/**
+	 * Get all areas that are {@link AreaType#GENERIC} or have a contactId that is
+	 * part of the {@link IAccessControlService#getAoboMandatorIds()} list.
+	 * 
+	 * @return
+	 */
+	List<Area> getAoboAreas();
 }
