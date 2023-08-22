@@ -23,12 +23,11 @@ public class TypedModifier {
 
 	public TypedModifier(Context context) {
 		this.context = context;
-		CoreUiUtil.injectServicesWithContext(this);
 	}
 
 	public void modifyFor(Object object) {
 		if (object instanceof IPatient) {
-			Optional<IEncounter> latestEncounter = encounterService.getLatestEncounter((IPatient) object);
+			Optional<IEncounter> latestEncounter = getEncounterService().getLatestEncounter((IPatient) object);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
 				context.setTyped(latestEncounter.get().getCoverage(), true);
@@ -38,7 +37,7 @@ public class TypedModifier {
 			}
 		}
 		if (object instanceof ICoverage) {
-			Optional<IEncounter> latestEncounter = coverageService.getLatestEncounter((ICoverage) object);
+			Optional<IEncounter> latestEncounter = getCoverageService().getLatestEncounter((ICoverage) object);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
 			} else {
@@ -48,5 +47,19 @@ public class TypedModifier {
 		if (object instanceof IEncounter) {
 			context.setTyped(((IEncounter) object).getCoverage(), true);
 		}
+	}
+
+	private IEncounterService getEncounterService() {
+		if (encounterService == null) {
+			CoreUiUtil.injectServicesWithContext(this);
+		}
+		return encounterService;
+	}
+
+	private ICoverageService getCoverageService() {
+		if (coverageService == null) {
+			CoreUiUtil.injectServicesWithContext(this);
+		}
+		return coverageService;
 	}
 }
