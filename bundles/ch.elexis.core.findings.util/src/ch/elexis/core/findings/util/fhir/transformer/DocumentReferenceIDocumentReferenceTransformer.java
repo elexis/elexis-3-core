@@ -12,6 +12,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Attachment;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.DocumentReference.DocumentReferenceContentComponent;
 import org.osgi.service.component.annotations.Activate;
@@ -64,6 +66,8 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			if (ret.getContent().isEmpty()) {
 				IDocument document = localObject.getDocument();
 				if (document != null) {
+					ret.addCategory(new CodeableConcept(
+							new Coding("http://elexis.info/document/storeid", document.getStoreId(), "")));
 					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 					Attachment attachment = new Attachment();
 					String title = document.getTitle();
@@ -142,6 +146,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 
 	private IDocument createDocument(IPatient patient, Attachment attachment, String category) {
 		IDocument ret = omnivoreStore.createDocument(patient.getId(), attachment.getTitle(), category);
+		if (StringUtils.isNotBlank(attachment.getContentType())) {
+			ret.setMimeType(attachment.getContentType());
+		}
 		try {
 			omnivoreStore.saveDocument(ret);
 			if (attachment != null) {
