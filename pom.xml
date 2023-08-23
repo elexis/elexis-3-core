@@ -261,11 +261,11 @@
 						</filesets>
 					</configuration>
 				</plugin>
-				<plugin>
+				<!--<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>target-versions-plugin</artifactId>
 					<version>${tycho.version}</version>
-				</plugin>
+				</plugin>-->
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
