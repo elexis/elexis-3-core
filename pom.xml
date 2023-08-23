@@ -15,8 +15,8 @@
 		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<!-- vvv required empty vvv -->
-		<os-jvm-flags />
+		<!-- vvv required empty vvv 
+		<os-jvm-flags />-->
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
 	</properties>
 
@@ -42,7 +42,7 @@
 	<licenses>
 		<license>
 			<name>Eclipse Public License</name>
-			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
 		</license>
 	</licenses>
 
@@ -118,8 +118,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!--Configures the target-platform to use in order to resolve dependencies.
-⚠️ This mojo is actually not executable, and is only meant to host configuration-->
+			<!--Configures the target-platform to use in order to resolve dependencies. This mojo is actually not executable, and is only meant to host configuration-->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -150,89 +149,7 @@
 					</dependency-resolution>
 				</configuration>
 			</plugin>
-			<!--GMavenPlus Plugin is a rewrite of GMaven, a Maven plugin that allows you to integrate Groovy into your Maven projects.
-Basic usage can be found on the usage page, with additional usages on the examples-->
-			<plugin>
-				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.13.1</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<allowSystemExits>true</allowSystemExits>
-							<scripts>
-								<script>
-									<![CDATA[
-  import java.text.SimpleDateFormat;
-  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
-  HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
 
-  // Returns the current branchName
-  public String createVersionProperties(String filename) {
-      branch =  System.getenv()['CI_COMMIT_REF_NAME']
-      if (branch != null ) {
-        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
-      } else {
-        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
-        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
-      }
-      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
-      elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
-      for ( i in tags ) {
-          if (i ==~/release\/(.*)/ ) {
-              elexis_version = (i=~ /release\//).replaceFirst("")
-              break
-          }
-      }
-      // Set property git_branch, but this property cannot be used in maven/pom.xml
-      // But it is used to invoke the modification only once per run
-      System.setProperty("git_branch",  branch)
-      System.setProperty("elexis_version",  elexis_version)
-      repo_version_file = new File(filename)
-      repo_version_file.write(HINT_GENERATED)
-      repo_version_file.append("elexis.version=${elexis_version}\n")
-      println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
-      return branch;
-  }
-  // Write a repo.properties file
-  public void createRepoProperties(String repo_properties_name, String branch) {
-    // Now we are have the info to crate teh repo.properties
-    repo_version_file = new File(repo_properties_name)
-    repo_version_file.write(HINT_GENERATED)
-    repo_version_file.append("repoVariant=${branch}\n")
-    repo_version_file.append("project.id=${project.id}\n")
-    repo_version_file.append("project.name=${project.name}\n")
-    repo_version_file.append("project.version=${project.version}\n")
-    repo_version_file.append("projectVersion=${elexis_version}\n")
-    println("Created ${repo_properties_name}")
-  }
-
-if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
-  branch = createVersionProperties('bundles/ch.elexis.core.data/rsc/version.properties')
-  createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
-}
-]]>
-								</script>
-							</scripts>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-all</artifactId>
-						<!-- any version of Groovy \>= 1.5.0 should work here -->
-						<version>2.4.21</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -328,15 +245,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-				<plugin>
-					<!-- Use compiler plugin with tycho as the adapter to the
-					JDT compiler. -->
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
-					<configuration>
-						<release>17</release>
-					</configuration>
-				</plugin>
+			
 				<plugin>
 					<!-- we want to ensure that the bin directory created by the
 					Eclipse 
@@ -375,11 +284,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho.version}</version>
 					<dependencies>
-						<!--<dependency>
-							<groupId>org.eclipse.tycho.extras</groupId>
-							<artifactId>tycho-buildtimestamp-jgit</artifactId>
-							<version>2.7.5</version>
-						</dependency>-->
+						
 						<dependency>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
