@@ -1,10 +1,11 @@
 <!-- 
-	Maven/Tycho configuration to start different/distinctive build cycles: 
+	Maven/Tycho configuration to pass through different/distinctive build cycles: 
 	
-	- test: mvn clean test 
-	- product-build: mvn clean verify 
-	- product-build-sign: mvn clean install 
-	- format-enforce: mvn checkstyle:checkstyle
+	- test: 			  mvn -V clean test 
+	- build: 			  mvn -V clean process-classes
+	- product-build: 	  mvn -V clean verify 
+	- product-build-sign: mvn -V clean install 
+	- format-enforce: 	  mvn -V formatter:format
 	 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
