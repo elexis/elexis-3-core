@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.preferences;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -310,6 +311,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		tableViewerUsers.setContentProvider(ArrayContentProvider.getInstance());
 		Table tableUsers = tableViewerUsers.getTable();
 		tableUsers.setLinesVisible(true);
+			
 		tableViewerUsers.addSelectionChangedListener(e -> {
 			releaseLockIfRequired();
 
@@ -535,6 +537,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					return;
 				}
 				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
+				updateUserList();
 			}
 		});
 
@@ -703,6 +706,15 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 	private void updateUserList() {
 		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
+		
+		List<IUser> inactiveUsers = new ArrayList<>();
+		for (IUser user : users) {
+		    if (!user.isActive()) {
+		        inactiveUsers.add(user);
+		    }
+		}
+		users.removeAll(inactiveUsers);
+		
 		users.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
 		tableViewerUsers.setInput(users);
 	}
@@ -737,7 +749,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					btnMandatorIsInactive.setSelection(!mandator.get().isActive());
-
+					updateUserList();
 					btnIsExecutiveDoctor.setSelection(true);
 				} else {
 					btnIsExecutiveDoctor.setSelection(false);
