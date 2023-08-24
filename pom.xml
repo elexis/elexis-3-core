@@ -1,3 +1,10 @@
+<!--
+Maven/Tycho configuration to start different/distinctive build cycles:
+	- test: mvn clean test
+	- product-build: mvn clean verify
+	- product-build-sign: mvn clean install
+	- format-enforce: mvn checkstyle:checkstyle
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,15 +15,12 @@
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
 
-
 	<properties>
 		<elexis.target>2022-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
 		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<!-- vvv required empty vvv 
-		<os-jvm-flags />-->
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
 	</properties>
 
@@ -27,7 +31,7 @@
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-
+	
 	<organization>
 		<name>elexis.info</name>
 		<url>http://www.elexis.info</url>
@@ -98,9 +102,9 @@
 			</properties>
 		</profile>
 	</profiles>
+	
 	<build>
 		<plugins>
-			<!-- Formatter, wird in Format:Goal aufgerufen -->
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
@@ -111,14 +115,14 @@
 					</goals>
 					<directories>
 						<directory>${project.build.sourceDirectory}</directory>
-						<directory>${project.basedir}/src</directory>
+						<directory>/src</directory>
 					</directories>
 					<configFile>${formatterConfigFile}</configFile>
 					<lineEnding>KEEP</lineEnding>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!--Configures the target-platform to use in order to resolve dependencies. This mojo is actually not executable, and is only meant to host configuration-->
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -168,6 +172,7 @@
 				</configuration>
 				<version>2.17</version>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
@@ -182,12 +187,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<extensions>true</extensions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-source-plugin</artifactId>
@@ -200,57 +207,46 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			 <plugin>
+        		<groupId>net.jsign</groupId>
+        		<artifactId>jsign-maven-plugin</artifactId>
+        		<version>3.0</version>
+        		<executions>
+            		<execution>
+                	<goals>
+                    	<goal>sign</goal>
+                	</goals>
+                	<phase>install</phase>
+                	<configuration>
+                    	<file>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</file>
+                    	<name>Elexis</name>
+                    	<url>https://github.com/elexis</url>
+                    	<keystore>/home/lzadmin/keystore.jks</keystore>
+                    	<alias>server</alias>
+                    	<storepass>12345678</storepass>
+                    	<tsaurl>http://timestamp.sectigo.com</tsaurl>
+                	</configuration>
+            </execution>
+        </executions>
+    </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				
 				<plugin>
 					<groupId>fr.jcgay.maven.plugins</groupId>
 					<artifactId>buildplan-maven-plugin</artifactId>
 					<version>1.5</version>
 				</plugin>
+				
 				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
-				<!--<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.gmavenplus
-										</groupId>
-										<artifactId>
-											gmavenplus-plugin
-										</artifactId>
-										<versionRange>
-											[1.5,)
-										</versionRange>
-										<goals>
-											<goal>execute</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>-->
-			
+				
 				<plugin>
-					<!-- we want to ensure that the bin directory created by the
-					Eclipse 
-						gets cleaned, too. Without it Maven would put two versions of each class 
-						file into the jars -->
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
@@ -261,11 +257,7 @@
 						</filesets>
 					</configuration>
 				</plugin>
-				<!--<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>target-versions-plugin</artifactId>
-					<version>${tycho.version}</version>
-				</plugin>-->
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
@@ -274,17 +266,15 @@
 						<compilerArguments>
 							<inlineJSR />
 							<enableJavadoc />
-							<!-- Removed due to bug #2105
-							<encoding>ISO-8859-1</encoding> -->
-						</compilerArguments>
+							</compilerArguments>
 					</configuration>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-packaging-plugin</artifactId>
 					<version>${tycho.version}</version>
 					<dependencies>
-						
 						<dependency>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
@@ -303,11 +293,13 @@
 						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 					</configuration>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-source-plugin</artifactId>
@@ -321,17 +313,13 @@
 					<artifactId>tycho-p2-director-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
-				<!--
-				<plugin>
-					<groupId>org.eclipse.tycho.extras</groupId>
-					<artifactId>tycho-custom-bundle-plugin</artifactId>
-					<version>${tycho.version}</version>
-				</plugin>-->
+				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-plugin</artifactId>
@@ -343,7 +331,6 @@
 
 	<reporting>
 		<plugins>
-			<!--The Checkstyle Plugin generates a report regarding the code style used by the developers-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
