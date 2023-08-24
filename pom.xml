@@ -1,9 +1,11 @@
-<!--
-Maven/Tycho configuration to start different/distinctive build cycles:
-	- test: mvn clean test
-	- product-build: mvn clean verify
-	- product-build-sign: mvn clean install
+<!-- 
+	Maven/Tycho configuration to start different/distinctive build cycles: 
+	
+	- test: mvn clean test 
+	- product-build: mvn clean verify 
+	- product-build-sign: mvn clean install 
 	- format-enforce: mvn checkstyle:checkstyle
+	 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,7 +16,17 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 	<version>3.12.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
-
+	<description>Elexis 3 Core Project</description>
+	<licenses>
+		<license>
+			<name>Eclipse Public License</name>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>elexis.info</name>
+		<url>http://www.elexis.info</url>
+	</organization>
 	<properties>
 		<elexis.target>2022-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
@@ -23,7 +35,6 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
 	</properties>
-
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
@@ -31,39 +42,12 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-	
-	<organization>
-		<name>elexis.info</name>
-		<url>http://www.elexis.info</url>
-	</organization>
-	<!--???-->
-	<scm>
-		<connection>scm:git:https://github.com/elexis/elexis-3-core.git</connection>
-		<developerConnection>scm:git:https://github.com/elexis/elexis-3-core.git</developerConnection>
-		<url>https://github.com/elexis/elexis-3-core</url>
-	</scm>
-
-	<licenses>
-		<license>
-			<name>Eclipse Public License</name>
-			<url>https://www.eclipse.org/legal/epl-v10.html</url>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<url>https://github.com/elexis/elexis-3-core/issues</url>
-		<system>Github</system>
-	</issueManagement>
-
-	<description>Elexis 3 Core Project</description>
-
 	<modules>
 		<module>bundles</module>
 		<module>features</module>
 		<module>tests</module>
 		<module>ch.elexis.core.p2site</module>
 	</modules>
-	
 	<profiles>
 		<profile>
 			<id>windows-x86_64</id>
@@ -102,7 +86,6 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 			</properties>
 		</profile>
 	</profiles>
-	
 	<build>
 		<plugins>
 			<plugin>
@@ -122,7 +105,7 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -153,26 +136,6 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 					</dependency-resolution>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<includeTestResources>false</includeTestResources>
-					<linkXRef>true</linkXRef>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>false</consoleOutput>
-					<failsOnError>false</failsOnError>
-					<headerLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<version>2.17</version>
-			</plugin>
-			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
@@ -187,14 +150,12 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 					</execution>
 				</executions>
 			</plugin>
-			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-source-plugin</artifactId>
@@ -207,45 +168,41 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 					</execution>
 				</executions>
 			</plugin>
-			
-			 <plugin>
-        		<groupId>net.jsign</groupId>
-        		<artifactId>jsign-maven-plugin</artifactId>
-        		<version>3.0</version>
-        		<executions>
-            		<execution>
-                	<goals>
-                    	<goal>sign</goal>
-                	</goals>
-                	<phase>install</phase>
-                	<configuration>
-                    	<file>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</file>
-                    	<name>Elexis</name>
-                    	<url>https://github.com/elexis</url>
-                    	<keystore>/home/lzadmin/keystore.jks</keystore>
-                    	<alias>server</alias>
-                    	<storepass>12345678</storepass>
-                    	<tsaurl>http://timestamp.sectigo.com</tsaurl>
-                	</configuration>
-            </execution>
-        </executions>
-    </plugin>
+			<plugin>
+				<groupId>net.jsign</groupId>
+				<artifactId>jsign-maven-plugin</artifactId>
+				<version>3.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<phase>install</phase>
+						<configuration>
+							<file>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</file>
+							<name>Elexis</name>
+							<url>https://github.com/elexis</url>
+							<keystore>/home/lzadmin/keystore.jks</keystore>
+							<alias>server</alias>
+							<storepass>12345678</storepass>
+							<tsaurl>http://timestamp.sectigo.com</tsaurl>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				
 				<plugin>
 					<groupId>fr.jcgay.maven.plugins</groupId>
 					<artifactId>buildplan-maven-plugin</artifactId>
 					<version>1.5</version>
 				</plugin>
-				
 				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
 				</plugin>
-				
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>2.5</version>
@@ -257,7 +214,6 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 						</filesets>
 					</configuration>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
@@ -266,10 +222,9 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 						<compilerArguments>
 							<inlineJSR />
 							<enableJavadoc />
-							</compilerArguments>
+						</compilerArguments>
 					</configuration>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-packaging-plugin</artifactId>
@@ -293,13 +248,11 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 						<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 					</configuration>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-source-plugin</artifactId>
@@ -313,13 +266,11 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 					<artifactId>tycho-p2-director-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
 					<version>${tycho.version}</version>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-plugin</artifactId>
@@ -328,47 +279,4 @@ Maven/Tycho configuration to start different/distinctive build cycles:
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
-				<configuration>
-					<includeTestResources>false</includeTestResources>
-					<linkXRef>true</linkXRef>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>false</consoleOutput>
-					<failsOnError>false</failsOnError>
-					<headerLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>
-						https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<inherited>false</inherited>
-						<reports>
-							<report>checkstyle-aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<!-- maven-jxr-plugin is needed for linkXRef -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-		</plugins>
-	</reporting>
-	<distributionManagement>
-		<site>
-			<id>www.elexis.info</id>
-			<url>http://www.elexis.info</url>
-		</site>
-	</distributionManagement>
 </project>
