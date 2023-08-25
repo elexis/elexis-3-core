@@ -19,6 +19,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPlaceholder;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
@@ -38,6 +39,7 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
@@ -82,13 +84,13 @@ public class AccessControlUiEventHandler implements EventHandler {
 			}
 			CoreUiUtil.injectServices(this);
 			startUpComplete = true;
-			Display.getDefault().syncExec(() -> {
+			Display.getDefault().asyncExec(() -> {
 				updateModel();
 			});
 		}
 		if (startUpComplete) {
 			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
-				Display.getDefault().syncExec(() -> {
+				Display.getDefault().asyncExec(() -> {
 					LoggerFactory.getLogger(getClass()).info("RESET for event [" + event + "]");
 					if (mApplication != null && eModelService != null) {
 						resetModel();
@@ -96,7 +98,7 @@ public class AccessControlUiEventHandler implements EventHandler {
 				});
 			}
 			if (event.getTopic().endsWith("ui/accesscontrol/update")) {
-				Display.getDefault().syncExec(() -> {
+				Display.getDefault().asyncExec(() -> {
 					LoggerFactory.getLogger(getClass()).info("UPDATE for event [" + event + "]");
 					if (mApplication != null && eModelService != null) {
 						updateModel();
@@ -135,7 +137,8 @@ public class AccessControlUiEventHandler implements EventHandler {
 	}
 
 	private void updatePartStacks() {
-		List<MPartStack> foundpartStacks = eModelService.findElements(mApplication, null, MPartStack.class, null);
+		MPerspective activePerspective = GlobalActions.getActivePerspective(eModelService);
+		List<MPartStack> foundpartStacks = eModelService.findElements(activePerspective, null, MPartStack.class, null);
 		for (MPartStack partStack : foundpartStacks) {
 			MStackElement selectedPart = partStack.getSelectedElement();
 			if (selectedPart != null && selectedPart.isVisible() && selectedPart.isToBeRendered()) {

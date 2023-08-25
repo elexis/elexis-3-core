@@ -296,7 +296,7 @@ public class GlobalActions {
 
 				// run access control after perspective reset
 				ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/update",
-						ContextServiceHolder.get().getActiveUser().orElse(null));
+						getActivePerspective(modelService));
 			}
 
 			@Override
