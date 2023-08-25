@@ -625,8 +625,12 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			if (BillingServiceHolder.get().isEditable(encounter).isOK()) {
 				text.setEnabled(true);
 				text.setToolTipText(StringUtils.EMPTY);
+				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+				hlDate.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
+				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+				hlDate.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {
 				text.setTextBackground(UiDesk.getColor(UiDesk.COL_WHITE));

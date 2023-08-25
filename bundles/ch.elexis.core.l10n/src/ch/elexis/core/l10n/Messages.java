@@ -1584,6 +1584,8 @@ public class Messages extends NLS {
 	public static String EditAUFDialog_editAufDetails;
 	public static String EditAUFDialog_enterNewAUF;
 	public static String EditAUFDialog_percent;
+	public static String EditAUFDialog_invalidDateSpan;
+	public static String EditAUFDialog_checkIfDatesValid;
 	public static String EditFindingDialog_captionBefundEditDlg;
 	public static String EditFindingDialog_enterTextForBefund;
 	public static String EditLabItemDialog_errorDecimalPlaceNotNumber;

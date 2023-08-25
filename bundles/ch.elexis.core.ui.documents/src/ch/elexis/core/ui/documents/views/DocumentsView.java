@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
@@ -107,9 +108,11 @@ import ch.elexis.core.types.DocumentStatus;
 import ch.elexis.core.ui.documents.handler.DocumentCrudHandler;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -118,10 +121,11 @@ import ch.rgw.tools.TimeTool;
  * with their associated application.
  */
 
-public class DocumentsView extends ViewPart {
+public class DocumentsView extends ViewPart implements IRefreshable {
 
 	public static final String ID = "ch.elexis.core.ui.documents.views.DocumentsView"; //$NON-NLS-1$
 	public static final String SETTING_FLAT_VIEW = "documentsView/flatView"; //$NON-NLS-1$
+	public static final String SETTING_COLUMN_WIDTH = "documentsView/columnwidths"; //$NON-NLS-1$
 
 	private static Logger logger = LoggerFactory.getLogger(DocumentsView.class);
 
@@ -130,9 +134,9 @@ public class DocumentsView extends ViewPart {
 	private IStructuredSelection currentDragSelection;
 
 	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.Core_Category,
-			Messages.Core_Title, Messages.DocumentView_dateCreatedColumn,
+			Messages.Core_Date, Messages.DocumentView_dateCreatedColumn, Messages.Core_Title, 
 			Messages.Core_Keywords };
-	private final String colWidth = "20,20,150,250,100,500"; //$NON-NLS-1$
+	private final String colWidth = "20,20,150,100,100,250,500"; //$NON-NLS-1$
 	private final String sortSettings = "0,1,-1,false"; //$NON-NLS-1$
 	private String searchTitle = StringUtils.EMPTY;
 
@@ -140,14 +144,39 @@ public class DocumentsView extends ViewPart {
 	private Action doubleClickAction;
 	private boolean bFlat = false;
 
+	private IPatient actPatient;
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
+		@Override
+		public void partDeactivated(IWorkbenchPartReference partRef) {
+			if (isMatchingPart(partRef)) {
+				saveColumnWidthSettings();
+			}
+		}
+
+		private void saveColumnWidthSettings() {
+			TreeColumn[] treeColumns = viewer.getTree().getColumns();
+			StringBuilder sb = new StringBuilder();
+			for (TreeColumn tc : treeColumns) {
+				sb.append(tc.getWidth());
+				sb.append(","); //$NON-NLS-1$
+			}
+			ConfigServiceHolder.setUser(SETTING_COLUMN_WIDTH, sb.toString());
+		}
+	};
+
+
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		if (viewer != null && !viewer.getControl().isDisposed()) {
-			Display.getDefault().asyncExec(() -> {
-				viewer.setInput(patient);
-				viewer.expandAll();
-			});
-		}
+		Display.getDefault().asyncExec(() -> {
+			if (CoreUiUtil.isActiveControl(viewer.getControl())) {
+				if (actPatient != patient) {
+					viewer.setInput(patient);
+					viewer.expandAll();
+					actPatient = patient;
+				}
+			}
+		});
 	}
 
 	@Optional
@@ -351,23 +380,19 @@ public class DocumentsView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					return doc.getTitle();
+					return new TimeTool(doc.getLastchanged()).toString(TimeTool.DATE_GER);
 				}
 				return StringUtils.EMPTY;
-			};
+			}
 
 			@Override
-			public Image getImage(Object element) {
+			public String getToolTipText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					java.util.Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
-							.getPersistenceObject(doc);
-					if (opt.isPresent() && LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
-						return Images.IMG_EDIT.getImage();
-					}
+					return new TimeTool(doc.getLastchanged()).toString(TimeTool.LARGE_GER);
 				}
-				return super.getImage(element);
-			};
+				return super.getToolTipText(element);
+			}
 		});
 		viewerColumns.get(4).setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -389,6 +414,29 @@ public class DocumentsView extends ViewPart {
 			}
 		});
 		viewerColumns.get(5).setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return doc.getTitle();
+				}
+				return StringUtils.EMPTY;
+			};
+
+			@Override
+			public Image getImage(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					java.util.Optional<Identifiable> opt = DocumentStoreServiceHolder.getService()
+							.getPersistenceObject(doc);
+					if (opt.isPresent() && LocalDocumentServiceHolder.getService().get().contains(opt.get())) {
+						return Images.IMG_EDIT.getImage();
+					}
+				}
+				return super.getImage(element);
+			};
+		});
+		viewerColumns.get(6).setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof IDocument) {
@@ -553,6 +601,7 @@ public class DocumentsView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 
 		viewer.setInput(ContextServiceHolder.get().getActivePatient().orElse(null));
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	private void createFlatMenu(Composite filterComposite) {
@@ -636,13 +685,6 @@ public class DocumentsView extends ViewPart {
 	private void applySortDirection() {
 		String[] usrSortSettings = sortSettings.split(","); //$NON-NLS-1$
 
-		/*
-		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_SORT_DIRECTION, false)) {
-		 * String sortSet =
-		 * ConfigServiceHolder.getUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS,
-		 * sortSettings); usrSortSettings = sortSet.split(","); }
-		 */
-
 		int propertyIdx = Integer.parseInt(usrSortSettings[0]);
 		int direction = Integer.parseInt(usrSortSettings[1]);
 		if (propertyIdx != 0) {
@@ -663,12 +705,11 @@ public class DocumentsView extends ViewPart {
 	private void applyUsersColumnWidthSetting() {
 		TreeColumn[] treeColumns = viewer.getTree().getColumns();
 		String[] userColWidth = colWidth.split(","); //$NON-NLS-1$
-		/*
-		 * if (ConfigServiceHolder.getUser(PreferencePage.SAVE_COLUM_WIDTH, false)) {
-		 * String ucw =
-		 * ConfigServiceHolder.getUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS,
-		 * colWidth); userColWidth = ucw.split(","); }
-		 */
+
+		if (ConfigServiceHolder.getUser(SETTING_COLUMN_WIDTH, null) != null) {
+			String ucw = ConfigServiceHolder.getUser(SETTING_COLUMN_WIDTH, colWidth);
+			userColWidth = ucw.split(",");
+		}
 
 		for (int i = 0; i < treeColumns.length; i++) {
 			treeColumns[i].setWidth(Integer.parseInt(userColWidth[i]));
@@ -677,7 +718,7 @@ public class DocumentsView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		// saveSortSettings();
+		getSite().getPage().removePartListener(udpateOnVisible);
 		super.dispose();
 	}
 
@@ -690,32 +731,9 @@ public class DocumentsView extends ViewPart {
 		}
 	}
 
-	public void activation(boolean mode) {
-		if (mode == false) {
-			TreeColumn[] treeColumns = viewer.getTree().getColumns();
-			StringBuilder sb = new StringBuilder();
-			for (TreeColumn tc : treeColumns) {
-				sb.append(tc.getWidth());
-				sb.append(","); //$NON-NLS-1$
-			}
-			// ConfigServiceHolder.setUser(PreferencePage.USR_COLUMN_WIDTH_SETTINGS,
-			// sb.toString());
-
-			// saveSortSettings();
-		}
-	}
-
-	/*
-	 * private void saveSortSettings(){ int propertyIdx =
-	 * ovComparator.getPropertyIndex(); int direction =
-	 * ovComparator.getDirectionDigit(); int catDirection =
-	 * ovComparator.getCategoryDirection();
-	 * ConfigServiceHolder.setUser(PreferencePage.USR_SORT_DIRECTION_SETTINGS,
-	 * propertyIdx + "," + direction + "," + catDirection + "," + bFlat); }
-	 */
-
+	@Override
 	public void refresh() {
-		viewer.refresh();
+		activePatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
 
 	private void makeActions() {

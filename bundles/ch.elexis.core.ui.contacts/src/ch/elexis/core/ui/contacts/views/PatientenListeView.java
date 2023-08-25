@@ -386,15 +386,15 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				PatientErfassenDialog ped = new PatientErfassenDialog(getViewSite().getShell(), ctlFields);
 				if (ped.open() == Dialog.OK) {
 					plcp.temporaryAddObject(ped.getResult());
-					Patient pat = ped.getResult();
+					IPatient pat = ped.getResult();
 					for (int j = 0; j < currentUserFields.length; j++) {
 						String current = currentUserFields[j];
 						if (current.startsWith(Patient.FLD_PATID)) {
-							dcfp.setValue(j, pat.getPatCode());
-						} else if (current.startsWith(Patient.FLD_NAME) && pat.getName() != null) {
-							dcfp.setValue(j, pat.getName());
-						} else if (current.startsWith(Patient.FLD_FIRSTNAME) && pat.getVorname() != null) {
-							dcfp.setValue(j, pat.getVorname());
+							dcfp.setValue(j, pat.getPatientNr());
+						} else if (current.startsWith(Patient.FLD_NAME) && pat.getLastName() != null) {
+							dcfp.setValue(j, pat.getLastName());
+						} else if (current.startsWith(Patient.FLD_FIRSTNAME) && pat.getFirstName() != null) {
+							dcfp.setValue(j, pat.getFirstName());
 						}
 					}
 					plcp.syncRefresh();

@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.e4.dialog;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -32,7 +33,8 @@ import ch.elexis.core.ui.icons.Images;
 
 public class IContactSelectorDialog extends TitleAreaDialog {
 
-	private IModelService coreModelService;
+	private final IModelService coreModelService;
+	private final Class<? extends IContact> queryClass;
 
 	private IContact selectedContact;
 
@@ -40,10 +42,25 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private TableViewer tableViewerContacts;
 
 	private String initialSearchText;
+	private List<? extends IContact> initialInput;
+	private String _message;
 
 	public IContactSelectorDialog(Shell parentShell, IModelService coreModelService) {
+		this(parentShell, coreModelService, IContact.class);
+	}
+
+	public IContactSelectorDialog(Shell parentShell, IModelService coreModelService,
+			Class<? extends IContact> queryClass) {
 		super(parentShell);
 		this.coreModelService = coreModelService;
+		this.queryClass = queryClass;
+	}
+
+	@Override
+	public void create() {
+		super.create();
+		setTitle(Messages.Core_Please_Select_Contact);
+		super.setMessage(_message);
 	}
 
 	/**
@@ -57,8 +74,6 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		setTitle(Messages.Core_Please_Select_Contact);
 
 		text = new Text(container, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -104,13 +119,17 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			refresh();
 		}
 
+		if (initialInput != null) {
+			tableViewerContacts.setInput(initialInput);
+		}
+
 		return area;
 	}
 
 	private void refresh() {
 		String _text = text.getText();
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
-			IQuery<IContact> query = coreModelService.getQuery(IContact.class);
+			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
 			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + _text + "%");
 			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + _text + "%");
 			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, "%" + _text + "%");
@@ -137,6 +156,11 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		return selectedContact;
 	}
 
+	@Override
+	public void setMessage(String message) {
+		this._message = message;
+	}
+
 	/**
 	 * Return the initial size of the dialog.
 	 */
@@ -153,6 +177,10 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				initialSearchText = searchText;
 			}
 		}
+	}
+
+	public void setInput(List<? extends IContact> initialInput) {
+		this.initialInput = initialInput;
 	}
 
 }

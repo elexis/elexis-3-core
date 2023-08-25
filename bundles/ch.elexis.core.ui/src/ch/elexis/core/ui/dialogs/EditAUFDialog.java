@@ -24,13 +24,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.tiff.common.ui.datepicker.DatePicker;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -68,7 +71,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 			});
 		}
 	}
-
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
@@ -78,6 +81,21 @@ public class EditAUFDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Date_Until); // $NON-NLS-1$
 		dpVon = new DatePicker(ret, SWT.NONE);
 		dpBis = new DatePicker(ret, SWT.NONE);
+
+		dpBis.addVerifyListener(new Listener() {
+		    @Override
+		    public void handleEvent(Event event) {
+		    	checkDateSpan(dpVon.getDate(), (Date) event.data, event);
+		    }
+		});
+		
+		dpVon.addVerifyListener(new Listener() {
+			 @Override
+			    public void handleEvent(Event event) {
+			    	checkDateSpan((Date) event.data, dpBis.getDate(), event);
+			    }
+		});
+		
 		new Label(ret, SWT.NONE).setText(Messages.EditAUFDialog_percent); // $NON-NLS-1$
 		new Label(ret, SWT.NONE).setText(Messages.Core_Reason); // $NON-NLS-1$
 		tProzent = new Text(ret, SWT.BORDER);
@@ -95,6 +113,7 @@ public class EditAUFDialog extends TitleAreaDialog {
 		if (auf != null) {
 			dpVon.setDate(asDate(auf.getStart()));
 			dpBis.setDate(asDate(auf.getEnd()));
+			
 			tGrund.setText(auf.getReason());
 			tProzent.setText(Integer.toString(auf.getPercent()));
 			tZusatz.setText(auf.getNote());
@@ -105,6 +124,14 @@ public class EditAUFDialog extends TitleAreaDialog {
 			dpBis.setDate(tt.getTime());
 		}
 		return ret;
+	}
+	
+	private void checkDateSpan(Date start, Date end, Event event) {
+		if (!validDateSpan(start, end)) {
+			event.doit = false;
+			SWTHelper.showError(Messages.EditAUFDialog_invalidDateSpan,
+			Messages.EditAUFDialog_checkIfDatesValid);
+		}
 	}
 
 	private Date asDate(LocalDate localDate) {
@@ -138,16 +165,22 @@ public class EditAUFDialog extends TitleAreaDialog {
 			auf.setDate(LocalDate.now());
 			auf.setPatient(fall.getPatient());
 		}
+		
 		auf.setCoverage(fall);
 		auf.setStart(asLocalDate(dpVon.getDate()));
 		auf.setEnd(asLocalDate(dpBis.getDate()));
 		auf.setPercent(Integer.parseInt(tProzent.getText()));
 		auf.setReason(tGrund.getText());
+		
 		if (!StringTool.isNothing(zus)) {
 			auf.setNote(zus);
 		}
 		CoreModelServiceHolder.get().save(auf);
 		super.okPressed();
+		}
+
+	private static boolean validDateSpan(Date startDate, Date endDate) {
+		return startDate.before(endDate) || startDate.equals(endDate);
 	}
 
 	public ISickCertificate getAuf() {

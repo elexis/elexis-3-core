@@ -231,10 +231,16 @@ public class Kontakt extends PersistentObject {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link IContact#getPostalAddress()}
+	 */
 	public String getPostAnschrift() {
 		return getPostAnschrift(false);
 	}
 
+	/**
+	 * @deprecated use {@link IContact#getPostalAddress()}
+	 */
 	public String getPostAnschrift(boolean multiline) {
 		String an = get(FLD_ANSCHRIFT);
 		if (StringTool.isNothing(an)) {
@@ -244,6 +250,9 @@ public class Kontakt extends PersistentObject {
 		return multiline == true ? an : an.replaceAll("\\n", StringTool.space); //$NON-NLS-1$
 	}
 
+	/**
+	 * @deprecated use {@link IContact#getPostalAddress()}
+	 */
 	public String createStdAnschrift() {
 		Anschrift an = getAnschrift();
 		String ret = getSalutation() + an.getEtikette(false, true);
@@ -255,6 +264,9 @@ public class Kontakt extends PersistentObject {
 		return ret;
 	}
 
+	/**
+	 * @deprecated use {@link IContact#getPostalAddress()}
+	 */
 	public String getSalutation() {
 		StringBuilder sb = new StringBuilder();
 		if (istPerson() == true) {

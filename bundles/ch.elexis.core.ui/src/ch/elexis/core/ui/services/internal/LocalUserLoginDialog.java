@@ -39,6 +39,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.ui.ILoginNews;
+import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -153,10 +154,12 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 
 	@Override
 	protected void cancelPressed() {
-		// GlobalActions.exitAction?
 		ContextServiceHolder.get().setActiveUser(null);
 		CoreHub.actMandant = null;
 		super.cancelPressed();
+		if (GlobalActions.exitAction != null) {
+			GlobalActions.exitAction.run();
+		}
 	}
 
 	@Override

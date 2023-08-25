@@ -2572,4 +2572,17 @@ WHERE kontakt.id IN (
 			<column name="REJECTCODE" />
 		</createIndex>
 	</changeSet>
+
+	<changeSet author="thomas"
+		id="manual_BEHANDLUNGEN_ADD_BILLABLE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="BEHANDLUNGEN"
+					columnName="BILLABLE" />
+			</not>
+		</preConditions>
+		<addColumn tableName="BEHANDLUNGEN">
+			<column name="BILLABLE" type="CHAR(1)" defaultValue="1" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
