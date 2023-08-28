@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.preferences;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -311,7 +310,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		tableViewerUsers.setContentProvider(ArrayContentProvider.getInstance());
 		Table tableUsers = tableViewerUsers.getTable();
 		tableUsers.setLinesVisible(true);
-			
 		tableViewerUsers.addSelectionChangedListener(e -> {
 			releaseLockIfRequired();
 
@@ -492,6 +490,28 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
+
+		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
+		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
+		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IUser user = wvUser.getValue();
+				if (user == null) {
+					return;
+				}
+				Optional<IMandator> mandator = Optional.empty();
+				if (user.getAssignedContact() != null) {
+					mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class);
+				}
+				if (!mandator.isPresent()) {
+					return;
+				}
+				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
+			}
+		});
+		
 		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (btnIsExecutiveDoctor.getSelection()) {
@@ -514,31 +534,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 							btnIsExecutiveDoctor.setSelection(false);
 						}
 					}
+					
 				}
-
 			};
-		});
-
-		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
-		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
-		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IUser user = wvUser.getValue();
-				if (user == null) {
-					return;
-				}
-				Optional<IMandator> mandator = Optional.empty();
-				if (user.getAssignedContact() != null) {
-					mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class);
-				}
-				if (!mandator.isPresent()) {
-					return;
-				}
-				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
-				updateUserList();
-			}
 		});
 
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
@@ -706,15 +704,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 	private void updateUserList() {
 		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
-		
-		List<IUser> inactiveUsers = new ArrayList<>();
-		for (IUser user : users) {
-		    if (!user.isActive()) {
-		        inactiveUsers.add(user);
-		    }
-		}
-		users.removeAll(inactiveUsers);
-		
 		users.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
 		tableViewerUsers.setInput(users);
 	}
@@ -749,10 +738,13 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					btnMandatorIsInactive.setSelection(!mandator.get().isActive());
-					updateUserList();
+
 					btnIsExecutiveDoctor.setSelection(true);
+					btnMandatorIsInactive.setEnabled(true);
 				} else {
 					btnIsExecutiveDoctor.setSelection(false);
+					
+					btnMandatorIsInactive.setEnabled(false);
 				}
 			}
 
