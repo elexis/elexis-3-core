@@ -44,7 +44,8 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private String initialSearchText;
 	private List<? extends IContact> initialInput;
 	private String _message;
-
+	private String _title;
+	
 	public IContactSelectorDialog(Shell parentShell, IModelService coreModelService) {
 		this(parentShell, coreModelService, IContact.class);
 	}
@@ -59,8 +60,13 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle(Messages.Core_Please_Select_Contact);
+		if(_title != null) {
+			super.setTitle(_title);
+		} else {
+			setTitle(Messages.Core_Please_Select_Contact);
+		}
 		super.setMessage(_message);
+		super.setTitle(_title);
 	}
 
 	/**
@@ -159,6 +165,11 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	@Override
 	public void setMessage(String message) {
 		this._message = message;
+	}
+	
+	@Override
+	public void setTitle(String title) {
+		this._title = title;
 	}
 
 	/**
