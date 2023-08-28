@@ -112,6 +112,8 @@ public class ElexisServerService implements IElexisServerService {
 	}
 
 	private void initializeProperties() {
+		// can be set by ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator
+		// or ch.medelexis.application.license.internal.LicenseManager or vmargs
 		restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
 		if (StringUtils.equals(restUrl, "disconnected")) {
 			// administratively disconnected - i.e. standalone
