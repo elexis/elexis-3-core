@@ -4,8 +4,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.IUserService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class TestContext implements IContext {
 
@@ -39,6 +42,15 @@ public class TestContext implements IContext {
 				// also set active user contact
 				IContact userContact = ((IUser) object).getAssignedContact();
 				setNamed(ACTIVE_USERCONTACT, userContact);
+				// try to set default mandator
+				Optional<IUserService> userService = OsgiServiceUtil.getService(IUserService.class);
+				if (userService.isPresent()) {
+					Optional<IMandator> defaultMandator = userService.get()
+							.getDefaultExecutiveDoctorWorkingFor((IUser) object);
+					if (defaultMandator.isPresent()) {
+						setTyped(defaultMandator.get());
+					}
+				}
 			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
 			if (object.equals(context.get(modelInterface.get().getName()))) {

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Ignore;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.rgw.tools.JdbcLink;
@@ -34,8 +35,7 @@ public class AbstractPersistentObjectTest {
 
 		User existingUser = User.load(testUserName);
 		if (!existingUser.exists()) {
-			new Anwender(testUserName, PASSWORD);
-			new Mandant("ut_mandator_", PASSWORD);
+			new Anwender(testUserName, PASSWORD, true).set(Anwender.FLD_IS_MANDATOR, StringConstants.ONE);
 		}
 
 		System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, testUserName);
