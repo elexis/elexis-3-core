@@ -796,6 +796,8 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		lastDisposal.setValue(null);
 
 		if (patient == null) {
+			medicationTableComposite.setInput(Collections.emptyList());
+			medicationHistoryTableComposite.setInput(Collections.emptyList());
 			return;
 		}
 
