@@ -15,6 +15,7 @@
     "ch.elexis.core.model.IUserConfig": "crudvz",
     "ch.elexis.core.model.IContact" : "crudvz",
     "ch.elexis.core.model.IUser": "crudv",
+    "ch.elexis.core.model.IUserGroup": "crudvz",
     "ch.elexis.core.model.IRole": "crudv",
     "ch.elexis.core.model.IMandator": "rv"
   }

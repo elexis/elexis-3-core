@@ -6,7 +6,9 @@ import java.util.Set;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserGroup;
 
 public interface IUserService {
 
@@ -31,21 +33,40 @@ public interface IUserService {
 	/**
 	 * Retrieve the set of mandators this user is working for.
 	 *
-	 * @param user contact as retrieved by {@link IUser#getAssignedContact()}
+	 * @param user
 	 * @return
 	 */
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IContact user);
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user);
+
+	/**
+	 * Retrieve the set of mandators this group is working for.
+	 *
+	 * @param group
+	 * @return
+	 */
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group);
 
 	/**
 	 * Add or remove the {@link IMandator} to the list of mandators the user
-	 * {@link IContact} is working for. Depending on the add parameter add or remove
-	 * is performed.
+	 * {@link IUser} is working for. Depending on the add parameter add or remove is
+	 * performed.
 	 * 
 	 * @param user
 	 * @param mandator
 	 * @param add
 	 */
-	public void addOrRemoveExecutiveDoctorWorkingFor(IContact user, IMandator mandator, boolean add);
+	public void addOrRemoveExecutiveDoctorWorkingFor(IUser user, IMandator mandator, boolean add);
+
+	/**
+	 * Add or remove the {@link IMandator} to the list of mandators the group
+	 * {@link IUserGroup} is working for. Depending on the add parameter add or
+	 * remove is performed.
+	 * 
+	 * @param user
+	 * @param mandator
+	 * @param add
+	 */
+	public void addOrRemoveExecutiveDoctorWorkingFor(IUserGroup userGroup, IMandator mandator, boolean add);
 
 	/**
 	 * Retrieve the default executive doctor this user is working for.
@@ -53,7 +74,7 @@ public interface IUserService {
 	 * @param user contact as retrieved by {@link IUser#getAssignedContact()}
 	 * @return
 	 */
-	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact user);
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user);
 
 	/**
 	 * Set the default executive doctor this user is working for.
@@ -61,7 +82,7 @@ public interface IUserService {
 	 * @param userContact
 	 * @param mandator
 	 */
-	public void setDefaultExecutiveDoctorWorkingFor(IContact userContact, IMandator mandator);
+	public void setDefaultExecutiveDoctorWorkingFor(IUser userContact, IMandator mandator);
 
 	/**
 	 * Retrieve the active users associated with a given contact.
@@ -71,5 +92,39 @@ public interface IUserService {
 	 *         deleted and not active)
 	 */
 	public List<IUser> getUsersByAssociatedContact(IContact contact);
+
+	/**
+	 * Verify whether the proposed username is not already in use
+	 *
+	 * @param username
+	 * @return <code>true</code> if the given username may be used
+	 */
+	public boolean verifyUsernameNotTaken(String username);
+
+	/**
+	 * Verify whether the proposed groupname is not already in use
+	 *
+	 * @param groupname
+	 * @return <code>true</code> if the given groupname may be used
+	 */
+	public boolean verifyGroupnameNotTaken(String groupname);
+
+	/**
+	 * Get the {@link IUserGroup}s the {@link IUser} is part of.
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public List<IUserGroup> getUserGroups(IUser user);
+
+	/**
+	 * Get the {@link IRole}s of the {@link IUser}. If the {@link IUser} is part of
+	 * one or many {@link IUserGroup}s, the {@link IRole}s of the
+	 * {@link IUserGroup}s are returned.
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public List<IRole> getUserRoles(IUser user);
 
 }

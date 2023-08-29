@@ -9,6 +9,7 @@
     "ch.elexis.core.model.ILaboratory" : "cruvd",
     "ch.elexis.core.model.IPerson" : "cruvd",
     "ch.elexis.core.model.IPatient" : "cruvd",
+    "ch.elexis.core.model.ISickCertificate" : "cruvd",    
     "ch.elexis.core.model.ILabItem" : "cruvd",
     "ch.elexis.core.model.ILabResult" : "cruvd",
     "ch.elexis.core.model.ILabMapping" : "cruvd",

@@ -110,6 +110,7 @@
 		<class>ch.elexis.core.jpa.entities.Termin</class>
 		<class>ch.elexis.core.jpa.entities.TagesNachricht</class>
 		<class>ch.elexis.core.jpa.entities.User</class>
+		<class>ch.elexis.core.jpa.entities.UserGroup</class>
 		<class>ch.elexis.core.jpa.entities.Userconfig</class>
 		<class>ch.elexis.core.jpa.entities.Verrechnet</class>
 		<class>ch.elexis.core.jpa.entities.VerrechnetCopy</class>

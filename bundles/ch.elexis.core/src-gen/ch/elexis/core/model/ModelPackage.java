@@ -2308,6 +2308,70 @@ public interface ModelPackage extends EPackage {
 	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IUserGroup
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserGroup()
+	 * @generated
+	 */
+	int IUSER_GROUP = 10;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP__DELETED = DELETEABLE__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP__LASTUPDATE = DELETEABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Users</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP__USERS = DELETEABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Roles</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP__ROLES = DELETEABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Groupname</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP__GROUPNAME = DELETEABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>IUser Group</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IUSER_GROUP_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 4;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2315,7 +2379,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabItem()
 	 * @generated
 	 */
-	int ILAB_ITEM = 10;
+	int ILAB_ITEM = 11;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -2487,7 +2551,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabResult()
 	 * @generated
 	 */
-	int ILAB_RESULT = 11;
+	int ILAB_RESULT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2650,7 +2714,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabOrder()
 	 * @generated
 	 */
-	int ILAB_ORDER = 12;
+	int ILAB_ORDER = 13;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -2777,7 +2841,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getILabMapping()
 	 * @generated
 	 */
-	int ILAB_MAPPING = 13;
+	int ILAB_MAPPING = 14;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -2850,7 +2914,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocument()
 	 * @generated
 	 */
-	int IDOCUMENT = 14;
+	int IDOCUMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -3004,7 +3068,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIHistory()
 	 * @generated
 	 */
-	int IHISTORY = 15;
+	int IHISTORY = 16;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -3050,7 +3114,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICategory()
 	 * @generated
 	 */
-	int ICATEGORY = 16;
+	int ICATEGORY = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3078,7 +3142,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentLetter()
 	 * @generated
 	 */
-	int IDOCUMENT_LETTER = 17;
+	int IDOCUMENT_LETTER = 18;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -3241,7 +3305,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDocumentTemplate()
 	 * @generated
 	 */
-	int IDOCUMENT_TEMPLATE = 18;
+	int IDOCUMENT_TEMPLATE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -3422,7 +3486,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISticker()
 	 * @generated
 	 */
-	int ISTICKER = 19;
+	int ISTICKER = 20;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -3531,7 +3595,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICodeElement()
 	 * @generated
 	 */
-	int ICODE_ELEMENT = 20;
+	int ICODE_ELEMENT = 21;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3568,7 +3632,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICodeElementBlock()
 	 * @generated
 	 */
-	int ICODE_ELEMENT_BLOCK = 21;
+	int ICODE_ELEMENT_BLOCK = 22;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -3659,7 +3723,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillable()
 	 * @generated
 	 */
-	int IBILLABLE = 22;
+	int IBILLABLE = 23;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillableVerifier <em>IBillable Verifier</em>}' class.
@@ -3669,7 +3733,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableVerifier()
 	 * @generated
 	 */
-	int IBILLABLE_VERIFIER = 23;
+	int IBILLABLE_VERIFIER = 24;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillableOptifier <em>IBillable Optifier</em>}' class.
@@ -3679,7 +3743,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillableOptifier()
 	 * @generated
 	 */
-	int IBILLABLE_OPTIFIER = 24;
+	int IBILLABLE_OPTIFIER = 25;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IService <em>IService</em>}' class.
@@ -3689,7 +3753,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIService()
 	 * @generated
 	 */
-	int ISERVICE = 25;
+	int ISERVICE = 26;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IArticle <em>IArticle</em>}' class.
@@ -3699,7 +3763,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticle()
 	 * @generated
 	 */
-	int IARTICLE = 27;
+	int IARTICLE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -3835,7 +3899,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomService()
 	 * @generated
 	 */
-	int ICUSTOM_SERVICE = 26;
+	int ICUSTOM_SERVICE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4079,7 +4143,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIArticleDefaultSignature()
 	 * @generated
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE = 28;
+	int IARTICLE_DEFAULT_SIGNATURE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4215,7 +4279,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosis()
 	 * @generated
 	 */
-	int IDIAGNOSIS = 29;
+	int IDIAGNOSIS = 30;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4270,7 +4334,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIFreeTextDiagnosis()
 	 * @generated
 	 */
-	int IFREE_TEXT_DIAGNOSIS = 30;
+	int IFREE_TEXT_DIAGNOSIS = 31;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4325,7 +4389,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisReference()
 	 * @generated
 	 */
-	int IDIAGNOSIS_REFERENCE = 31;
+	int IDIAGNOSIS_REFERENCE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4389,7 +4453,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDiagnosisTree()
 	 * @generated
 	 */
-	int IDIAGNOSIS_TREE = 32;
+	int IDIAGNOSIS_TREE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4462,7 +4526,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICustomDiagnosis()
 	 * @generated
 	 */
-	int ICUSTOM_DIAGNOSIS = 33;
+	int ICUSTOM_DIAGNOSIS = 34;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -4535,7 +4599,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getICoverage()
 	 * @generated
 	 */
-	int ICOVERAGE = 34;
+	int ICOVERAGE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -4671,7 +4735,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystemFactor()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM_FACTOR = 35;
+	int IBILLING_SYSTEM_FACTOR = 36;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -4735,7 +4799,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIConfig()
 	 * @generated
 	 */
-	int ICONFIG = 36;
+	int ICONFIG = 37;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -4781,7 +4845,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserConfig()
 	 * @generated
 	 */
-	int IUSER_CONFIG = 37;
+	int IUSER_CONFIG = 38;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -4836,7 +4900,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPeriod()
 	 * @generated
 	 */
-	int IPERIOD = 38;
+	int IPERIOD = 39;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -4891,7 +4955,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithExtInfo()
 	 * @generated
 	 */
-	int WITH_EXT_INFO = 39;
+	int WITH_EXT_INFO = 40;
 
 	/**
 	 * The number of structural features of the '<em>With Ext Info</em>' class.
@@ -4910,7 +4974,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRole()
 	 * @generated
 	 */
-	int IROLE = 40;
+	int IROLE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -4956,7 +5020,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlob()
 	 * @generated
 	 */
-	int IBLOB = 41;
+	int IBLOB = 42;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5011,7 +5075,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIEncounter()
 	 * @generated
 	 */
-	int IENCOUNTER = 42;
+	int IENCOUNTER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5138,7 +5202,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBilled()
 	 * @generated
 	 */
-	int IBILLED = 43;
+	int IBILLED = 44;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5301,7 +5365,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoiceBilled()
 	 * @generated
 	 */
-	int IINVOICE_BILLED = 44;
+	int IINVOICE_BILLED = 45;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5473,7 +5537,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoice()
 	 * @generated
 	 */
-	int IINVOICE = 45;
+	int IINVOICE = 46;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5672,7 +5736,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 46;
+	int ISTOCK = 47;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5754,7 +5818,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 47;
+	int ISTOCK_ENTRY = 48;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5854,7 +5918,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 48;
+	int IORDER_ENTRY = 49;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5945,7 +6009,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 49;
+	int IORDER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6009,7 +6073,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 50;
+	int IADDRESS = 51;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6118,7 +6182,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 51;
+	int IIMAGE = 52;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6137,7 +6201,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 52;
+	int WITH_ASSIGNABLE_ID = 53;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -6147,7 +6211,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 64;
+	int IAPPOINTMENT = 65;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6230,7 +6294,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 53;
+	int IPRESCRIPTION = 54;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6394,7 +6458,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
 	 * @generated
 	 */
-	int IRIGHT = 54;
+	int IRIGHT = 55;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6458,7 +6522,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM = 55;
+	int IBILLING_SYSTEM = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6495,7 +6559,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
 	 * @generated
 	 */
-	int IRECIPE = 56;
+	int IRECIPE = 57;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6577,7 +6641,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
 	 * @generated
 	 */
-	int IBLOB_SECONDARY = 57;
+	int IBLOB_SECONDARY = 58;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6632,7 +6696,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
 	 * @generated
 	 */
-	int IRELATED_CONTACT = 58;
+	int IRELATED_CONTACT = 59;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6714,7 +6778,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
 	 * @generated
 	 */
-	int IPAYMENT = 59;
+	int IPAYMENT = 60;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6787,7 +6851,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
 	 * @generated
 	 */
-	int IACCOUNT_TRANSACTION = 60;
+	int IACCOUNT_TRANSACTION = 61;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6887,7 +6951,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
 	 * @generated
 	 */
-	int IACCOUNT = 61;
+	int IACCOUNT = 62;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6924,7 +6988,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
 	 * @generated
 	 */
-	int IMESSAGE = 62;
+	int IMESSAGE = 63;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7033,7 +7097,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
 	 * @generated
 	 */
-	int ITEXT_TEMPLATE = 63;
+	int ITEXT_TEMPLATE = 64;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7304,7 +7368,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointmentSeries()
 	 * @generated
 	 */
-	int IAPPOINTMENT_SERIES = 65;
+	int IAPPOINTMENT_SERIES = 66;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7602,7 +7666,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISickCertificate()
 	 * @generated
 	 */
-	int ISICK_CERTIFICATE = 66;
+	int ISICK_CERTIFICATE = 67;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7720,7 +7784,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDayMessage()
 	 * @generated
 	 */
-	int IDAY_MESSAGE = 67;
+	int IDAY_MESSAGE = 68;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -7784,7 +7848,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminder()
 	 * @generated
 	 */
-	int IREMINDER = 68;
+	int IREMINDER = 69;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -7920,7 +7984,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminderResponsibleLink()
 	 * @generated
 	 */
-	int IREMINDER_RESPONSIBLE_LINK = 69;
+	int IREMINDER_RESPONSIBLE_LINK = 70;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -8737,6 +8801,49 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIUser_Administrator();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IUser Group</em>'.
+	 * @see ch.elexis.core.model.IUserGroup
+	 * @generated
+	 */
+	EClass getIUserGroup();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IUserGroup#getUsers <em>Users</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Users</em>'.
+	 * @see ch.elexis.core.model.IUserGroup#getUsers()
+	 * @see #getIUserGroup()
+	 * @generated
+	 */
+	EReference getIUserGroup_Users();
+
+	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IUserGroup#getRoles <em>Roles</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Roles</em>'.
+	 * @see ch.elexis.core.model.IUserGroup#getRoles()
+	 * @see #getIUserGroup()
+	 * @generated
+	 */
+	EReference getIUserGroup_Roles();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IUserGroup#getGroupname <em>Groupname</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Groupname</em>'.
+	 * @see ch.elexis.core.model.IUserGroup#getGroupname()
+	 * @see #getIUserGroup()
+	 * @generated
+	 */
+	EAttribute getIUserGroup_Groupname();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}'.
@@ -13423,6 +13530,40 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IUSER__ADMINISTRATOR = eINSTANCE.getIUser_Administrator();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IUserGroup
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIUserGroup()
+		 * @generated
+		 */
+		EClass IUSER_GROUP = eINSTANCE.getIUserGroup();
+
+		/**
+		 * The meta object literal for the '<em><b>Users</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IUSER_GROUP__USERS = eINSTANCE.getIUserGroup_Users();
+
+		/**
+		 * The meta object literal for the '<em><b>Roles</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IUSER_GROUP__ROLES = eINSTANCE.getIUserGroup_Roles();
+
+		/**
+		 * The meta object literal for the '<em><b>Groupname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IUSER_GROUP__GROUPNAME = eINSTANCE.getIUserGroup_Groupname();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabItem <em>ILab Item</em>}' class.

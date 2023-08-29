@@ -85,6 +85,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
@@ -169,6 +170,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iUserEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iUserGroupEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1362,6 +1370,46 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getIUser_Administrator() {
 		return (EAttribute)iUserEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIUserGroup() {
+		return iUserGroupEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIUserGroup_Users() {
+		return (EReference)iUserGroupEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIUserGroup_Roles() {
+		return (EReference)iUserGroupEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIUserGroup_Groupname() {
+		return (EAttribute)iUserGroupEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -5234,6 +5282,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iUserEClass, IUSER__ALLOW_EXTERNAL);
 		createEAttribute(iUserEClass, IUSER__ADMINISTRATOR);
 
+		iUserGroupEClass = createEClass(IUSER_GROUP);
+		createEReference(iUserGroupEClass, IUSER_GROUP__USERS);
+		createEReference(iUserGroupEClass, IUSER_GROUP__ROLES);
+		createEAttribute(iUserGroupEClass, IUSER_GROUP__GROUPNAME);
+
 		iLabItemEClass = createEClass(ILAB_ITEM);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__TYP);
 		createEAttribute(iLabItemEClass, ILAB_ITEM__REFERENCE_MALE);
@@ -5717,6 +5770,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iMandatorEClass.getESuperTypes().add(this.getIContact());
 		iUserEClass.getESuperTypes().add(this.getDeleteable());
 		iUserEClass.getESuperTypes().add(this.getIdentifiable());
+		iUserGroupEClass.getESuperTypes().add(this.getDeleteable());
+		iUserGroupEClass.getESuperTypes().add(this.getIdentifiable());
+		iUserGroupEClass.getESuperTypes().add(this.getWithExtInfo());
 		iLabItemEClass.getESuperTypes().add(this.getIdentifiable());
 		iLabItemEClass.getESuperTypes().add(this.getDeleteable());
 		iLabResultEClass.getESuperTypes().add(this.getDeleteable());
@@ -6003,6 +6059,23 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, theTypesPackage.getcharArray(), "password", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		addEOperation(iUserEClass, ecorePackage.getEBoolean(), "isInternal", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iUserGroupEClass, IUserGroup.class, "IUserGroup", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIUserGroup_Users(), this.getIUser(), null, "users", null, 0, -1, IUserGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIUserGroup_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUserGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUserGroup_Groupname(), ecorePackage.getEString(), "groupname", null, 0, 1, IUserGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(iUserGroupEClass, this.getIRole(), "addRole", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iUserGroupEClass, null, "removeRole", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iUserGroupEClass, this.getIUser(), "addUser", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIUser(), "user", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iUserGroupEClass, null, "removeUser", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIUser(), "user", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iLabItemEClass, ILabItem.class, "ILabItem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabItem_Typ(), theTypesPackage.getLabItemTyp(), "typ", null, 0, 1, ILabItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -34,6 +34,7 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.UserGroup;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.types.ArticleTyp;
 
@@ -145,6 +146,9 @@ public class ElexisTypeMap {
 		classToStsMap.put(Rezept.class, TYPE_REZEPT);
 		stsToClassMap.put(TYPE_NAMEDBLOB, Heap.class);
 		classToStsMap.put(Heap.class, TYPE_NAMEDBLOB);
+
+		stsToClassMap.put(UserGroup.class.getName(), ch.elexis.core.jpa.entities.UserGroup.class);
+		classToStsMap.put(ch.elexis.core.jpa.entities.UserGroup.class, UserGroup.class.getName());
 
 		// uni-directional mappable
 		stsToClassMap.put(TYPE_ARTIKEL, Artikel.class);

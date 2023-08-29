@@ -218,6 +218,26 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowExternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="administrator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IUserGroup" abstract="true" interface="true"
+      eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
+    <eOperations name="addRole" eType="#//IRole">
+      <eParameters name="role" lowerBound="1" eType="#//IRole"/>
+    </eOperations>
+    <eOperations name="removeRole">
+      <eParameters name="role" lowerBound="1" eType="#//IRole"/>
+    </eOperations>
+    <eOperations name="addUser" eType="#//IUser">
+      <eParameters name="user" lowerBound="1" eType="#//IUser"/>
+    </eOperations>
+    <eOperations name="removeUser">
+      <eParameters name="user" lowerBound="1" eType="#//IUser"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1"
+        eType="#//IUser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
+        eType="#//IRole"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="groupname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ILabItem" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
     <eOperations name="getVariableName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">

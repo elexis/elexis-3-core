@@ -152,4 +152,40 @@
 			<column name="USER_ID" value="Administrator" />
 		</insert>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_create_USERGROUP_table">
+        <createTable tableName="USERGROUP">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="USERGROUP_CONSTRAINT_ID"/>
+            </column>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column name="EXTINFO" type="${blob_type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_create_USERGROUP_ROLE_JOINT_table">
+        <createTable tableName="USERGROUP_ROLE_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="USERGROUP_ROLE_JOINT_CONSTRAINT_ID"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column name="DELETED" type="CHAR(1)"/>
+            <column name="USERGROUP_ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="USERGROUP_ROLE_JOINT_CONSTRAINT_ID"/>
+            </column>
+        </createTable>
+    </changeSet>
+        <changeSet author="thomas" id="manual_create_USERGROUP_USER_JOINT_table">
+        <createTable tableName="USERGROUP_USER_JOINT">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="USERGROUP_USER_JOINT_CONSTRAINT_ID"/>
+            </column>
+            <column defaultValueComputed="NULL" name="LASTUPDATE" type="BIGINT"/>
+            <column name="DELETED" type="CHAR(1)"/>
+            <column name="USERGROUP_ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="USERGROUP_USER_JOINT_CONSTRAINT_ID"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
 </databaseChangeLog>

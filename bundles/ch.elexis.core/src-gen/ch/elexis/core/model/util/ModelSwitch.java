@@ -163,6 +163,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IUSER_GROUP: {
+				IUserGroup iUserGroup = (IUserGroup)theEObject;
+				T1 result = caseIUserGroup(iUserGroup);
+				if (result == null) result = caseDeleteable(iUserGroup);
+				if (result == null) result = caseIdentifiable(iUserGroup);
+				if (result == null) result = caseWithExtInfo(iUserGroup);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.ILAB_ITEM: {
 				ILabItem iLabItem = (ILabItem)theEObject;
 				T1 result = caseILabItem(iLabItem);
@@ -810,6 +819,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIUser(IUser object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IUser Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IUser Group</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIUserGroup(IUserGroup object) {
 		return null;
 	}
 

@@ -87,6 +87,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Invoice;
@@ -140,6 +141,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 
 		addMapping(
 				new MappingEntry(IUser.class, ch.elexis.core.model.User.class, ch.elexis.core.jpa.entities.User.class));
+		addMapping(new MappingEntry(IUserGroup.class, ch.elexis.core.model.UserGroup.class,
+				ch.elexis.core.jpa.entities.UserGroup.class));
 
 		addMapping(new MappingEntry(ISticker.class, ch.elexis.core.model.Sticker.class,
 				ch.elexis.core.jpa.entities.Sticker.class));

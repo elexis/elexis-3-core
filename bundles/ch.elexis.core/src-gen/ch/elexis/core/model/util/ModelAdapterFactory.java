@@ -116,6 +116,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIUserAdapter();
 			}
 			@Override
+			public Adapter caseIUserGroup(IUserGroup object) {
+				return createIUserGroupAdapter();
+			}
+			@Override
 			public Adapter caseILabItem(ILabItem object) {
 				return createILabItemAdapter();
 			}
@@ -516,6 +520,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIUserAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IUserGroup
+	 * @generated
+	 */
+	public Adapter createIUserGroupAdapter() {
 		return null;
 	}
 

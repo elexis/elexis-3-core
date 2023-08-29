@@ -146,6 +146,23 @@
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IUser/isInternal"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IUserGroup">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUserGroup/users"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUserGroup/roles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUserGroup/groupname"/>
+      <genOperations ecoreOperation="model.ecore#//IUserGroup/addRole">
+        <genParameters ecoreParameter="model.ecore#//IUserGroup/addRole/role"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IUserGroup/removeRole">
+        <genParameters ecoreParameter="model.ecore#//IUserGroup/removeRole/role"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IUserGroup/addUser">
+        <genParameters ecoreParameter="model.ecore#//IUserGroup/addUser/user"/>
+      </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IUserGroup/removeUser">
+        <genParameters ecoreParameter="model.ecore#//IUserGroup/removeUser/user"/>
+      </genOperations>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/typ"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/referenceMale"/>
