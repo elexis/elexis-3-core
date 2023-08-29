@@ -116,7 +116,7 @@ public class CoreHub implements BundleActivator {
 	public static Settings localCfg;
 
 	/**
-	 * @deprecated please use {@link ElexisEventDispatcher#getSelectedMandator()} to
+	 * @deprecated please use {@link IContextService#getActiveMandator()} to
 	 *             retrieve current mandator
 	 */
 	@Deprecated(forRemoval = true)
@@ -338,6 +338,13 @@ public class CoreHub implements BundleActivator {
 		CoreHub.localCfg = cfg;
 	}
 
+	/**
+	 * 
+	 * @param newMandant
+	 * 
+	 * @deprecated set the active {@link IMandator} using the
+	 *             {@link IContextService} impl.
+	 */
 	public static void setMandant(Mandant newMandant) {
 		actMandant = newMandant;
 

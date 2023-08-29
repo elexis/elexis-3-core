@@ -43,6 +43,7 @@ import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -148,6 +149,11 @@ public class Hub extends AbstractUIPlugin {
 	}
 
 	@Inject
+	public void activeMandator(@Optional IMandator mandator) {
+		setWindowText(null);
+	}
+
+	@Inject
 	void activeUser(@Optional IUser user) {
 		updateUser(user);
 	}
@@ -225,7 +231,6 @@ public class Hub extends AbstractUIPlugin {
 
 	public static void setMandant(final Mandant m) {
 		CoreHub.setMandant(m);
-		setWindowText(null);
 	}
 
 	/*

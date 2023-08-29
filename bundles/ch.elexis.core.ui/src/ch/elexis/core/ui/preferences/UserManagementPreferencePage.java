@@ -1,7 +1,9 @@
 package ch.elexis.core.ui.preferences;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -71,6 +73,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
@@ -94,10 +97,11 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Person;
-import ch.elexis.data.User;
 
 public class UserManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
+
+	private List<IUserGroup> userGroups = Collections.emptyList();
 
 	private WritableValue<IUser> wvUser = new WritableValue<IUser>(null, IUser.class);
 	private WritableValue<IContact> wvUserContact = new WritableValue<IContact>(null, IContact.class);
@@ -162,7 +166,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						if (!allLettersOrDigits) {
 							return "Nur Buchstaben und Zahlen erlaubt";
 						}
-						boolean isFree = User.verifyUsernameNotTaken(newText);
+						boolean isFree = UserServiceHolder.get().verifyUsernameNotTaken(newText);
 						if (!isFree) {
 							return "Benuterzname vergeben (evtl. für gelöschten Benutzer)";
 						}
@@ -563,9 +567,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			if (m == null)
 				return;
 			IUser user = wvUser.getValue();
-			IContact anw = user.getAssignedContact();
-			if (anw != null) {
-				UserServiceHolder.get().addOrRemoveExecutiveDoctorWorkingFor(anw, m, e.getChecked());
+			if (user.getAssignedContact() != null) {
+				UserServiceHolder.get().addOrRemoveExecutiveDoctorWorkingFor(user, m, e.getChecked());
 			} else {
 				SWTHelper.showError("No contact assigned", "There is no contact assigned to user " + user.getLabel());
 			}
@@ -582,10 +585,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					if (selected instanceof IMandator) {
 						IUser user = wvUser.getValue();
 						if (user != null) {
-							IContact anw = user.getAssignedContact();
-							if (anw != null) {
+							if (user.getAssignedContact() != null) {
 								IMandator stdWorkingFor = UserServiceHolder.get()
-										.getDefaultExecutiveDoctorWorkingFor(anw).orElse(null);
+										.getDefaultExecutiveDoctorWorkingFor(user).orElse(null);
 								if (stdWorkingFor != null && stdWorkingFor.equals(selected)) {
 									manager.add(new Action() {
 										public String getText() {
@@ -593,7 +595,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 										};
 
 										public void run() {
-											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(anw, null);
+											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user, null);
 											checkboxTableViewerAssociation.refresh();
 										};
 									});
@@ -604,7 +606,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 										};
 
 										public void run() {
-											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(anw,
+											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user,
 													(IMandator) selected);
 											checkboxTableViewerAssociation.refresh();
 										};
@@ -660,9 +662,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				IMandator stdWorkingFor = null;
 				IUser user = wvUser.getValue();
 				if (user != null) {
-					IContact anw = user.getAssignedContact();
-					if (anw != null) {
-						stdWorkingFor = UserServiceHolder.get().getDefaultExecutiveDoctorWorkingFor(anw).orElse(null);
+					if (user.getAssignedContact() != null) {
+						stdWorkingFor = UserServiceHolder.get().getDefaultExecutiveDoctorWorkingFor(user).orElse(null);
 					}
 				}
 
@@ -721,6 +722,16 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			setErrorMessage(null);
 
+			userGroups = UserServiceHolder.get().getUserGroups(user);
+			if (userGroups.isEmpty()) {
+				setMessage(null, WARNING);
+			} else {
+				setMessage("Der Benutzer ist in Gruppe(n) "
+						+ userGroups.stream().map(ug -> ug.getGroupname()).collect(Collectors.joining(","))
+						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.",
+						WARNING);
+			}
+
 			IContact anw = user.getAssignedContact();
 			wvUserContact.setValue(anw);
 			String text = (anw != null) ? anw.getLabel() : "Nicht gesetzt";
@@ -730,7 +741,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			updateRoles();
 
-			Object[] assignedRoles = user.getRoles().toArray();
+			Object[] assignedRoles = UserServiceHolder.get().getUserRoles(user).toArray();
 			checkboxTableViewerRoles.setCheckedElements(assignedRoles);
 
 			updateAssociations();
@@ -751,7 +762,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			if (anw != null) {
 				checkboxTableViewerAssociation
-						.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(anw).toArray());
+						.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).toArray());
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					Color color = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));

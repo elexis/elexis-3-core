@@ -516,6 +516,12 @@
             id="ch.elexis.core.ui.billing.accounts"
             name="%elexis.billingcheck">
       </page>
+      <page
+            category="ch.elexis.preferences.security"
+            class="ch.elexis.core.ui.preferences.UserGroupsManagementPreferencePage"
+            id="ch.elexis.core.ui.UserGroupsManagementPreferencePage"
+            name="Gruppenverwaltung">
+      </page>
    </extension>
       <extension
             point="org.eclipse.ui.bindings">

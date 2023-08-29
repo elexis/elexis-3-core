@@ -28,8 +28,10 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
@@ -240,6 +242,9 @@ public class Anwender extends Person {
 	/**
 	 * Sets the initial {@link Mandant}. Should be used carefully. Only
 	 * {@link CoreHub} use it after login.
+	 * 
+	 * @deprecated initial {@link IMandator} is set by the {@link IContextService}
+	 *             impl.
 	 */
 	public void setInitialMandator() {
 		Mandant initialMandator = null;

@@ -42,10 +42,11 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IUserService;
+import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
 /**
@@ -53,8 +54,8 @@ import ch.elexis.data.Mandant;
  * application toolbar (coolbar). The list of colors represents the available
  * colors to distinguish the currently selected mandant.
  *
- * @since 3.1 do enable items according to
- *        {@link Anwender#getExecutiveDoctorsWorkingFor()}
+ * @since 3.11 do enable items according to
+ *        {@link IUserService#getExecutiveDoctorsWorkingFor()}
  */
 public class MandantSelectionContributionItem {
 
@@ -111,21 +112,11 @@ public class MandantSelectionContributionItem {
 				return;
 			}
 		}
-		adaptForAnwender(Anwender.load(user.getAssignedContact().getId()));
-	}
-
-	private void adaptForAnwender(Anwender anwender) {
-		if (anwender == null) {
-			anwender = CoreHub.getLoggedInContact();
-			if (anwender == null)
-				return;
-		}
-
-		List<String> exDocStr = anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
-				.collect(Collectors.toList());
+		List<String> workingForIds = UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).stream()
+				.map(a -> a.getId()).collect(Collectors.toList());
 		for (int i = 0; i < menuItems.length; i++) {
 			String id = (String) menuItems[i].getData();
-			menuItems[i].setEnabled(exDocStr.contains(id));
+			menuItems[i].setEnabled(workingForIds.contains(id));
 		}
 	}
 

@@ -7,8 +7,6 @@ import java.util.function.Supplier;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
-import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 
@@ -52,11 +50,6 @@ public class Context implements IContext {
 
 	protected void setTyped(Object object, boolean ignoreModifier) {
 		if (object != null) {
-			if (object instanceof IUser) {
-				// also set active user contact
-				IContact userContact = ((IUser) object).getAssignedContact();
-				setNamed(ACTIVE_USERCONTACT, userContact);
-			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
 			if (modelInterface.isPresent()) {
 				if (object.equals(context.get(modelInterface.get().getName()))) {
@@ -95,9 +88,16 @@ public class Context implements IContext {
 
 	@Override
 	public void removeTyped(Class<?> clazz) {
+		removeTyped(clazz, false);
+	}
+
+	protected void removeTyped(Class<?> clazz, boolean ignoreModifier) {
 		context.remove(clazz.getName());
 		if (eclipseContext != null) {
 			eclipseContext.remove(clazz.getName());
+		}
+		if (typedModifier != null && !ignoreModifier) {
+			typedModifier.modifyRemove(clazz);
 		}
 	}
 

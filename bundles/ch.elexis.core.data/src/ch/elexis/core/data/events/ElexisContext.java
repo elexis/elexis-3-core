@@ -47,6 +47,8 @@ import ch.elexis.data.PersistentObject;
  * to stick consistent with the selection.
  *
  * @since 3.0.0
+ * 
+ * @deprecated replaced with ch.elexis.core.ui.services.internal.TypedModifier
  */
 public class ElexisContext {
 	/**

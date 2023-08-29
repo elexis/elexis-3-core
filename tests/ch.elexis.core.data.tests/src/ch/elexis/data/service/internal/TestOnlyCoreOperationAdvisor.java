@@ -18,6 +18,7 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
+import ch.elexis.data.Mandant;
 
 @Component
 public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
@@ -82,8 +83,10 @@ public class TestOnlyCoreOperationAdvisor implements ICoreOperationAdvisor {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
 
+			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+				CoreHub.actMandant = Mandant.load(m.getId());
+			});
 			CoreOperationAdvisorHolder.get().adaptForUser();
-			CoreHub.getLoggedInContact().setInitialMandator();
 			CoreHub.heart.resume(true);
 
 			return true;
