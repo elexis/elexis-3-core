@@ -58,14 +58,14 @@ public class IUserServiceTest extends AbstractServiceTest {
 
 	@Test
 	public void getExecutiveDoctorsWorkingFor() {
-		Set<IMandator> executiveDoctorsWorkingFor = service.getExecutiveDoctorsWorkingFor(user.getAssignedContact());
+		Set<IMandator> executiveDoctorsWorkingFor = service.getExecutiveDoctorsWorkingFor(user);
 		assertEquals(testMandators.get(0), executiveDoctorsWorkingFor.iterator().next());
 	}
 
 	@Test
 	public void getDefaultExecutiveDoctorWorkingFor() {
 		Optional<IMandator> defaultExecutiveDoctorWorkingFor = service
-				.getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
+				.getDefaultExecutiveDoctorWorkingFor(user);
 		assertEquals(testMandators.get(0), defaultExecutiveDoctorWorkingFor.get());
 	}
 

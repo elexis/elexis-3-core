@@ -86,7 +86,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	@Override
 	public void refresh(IUser user) {
 		// calculate user ACL by combining the users roles
-		AccessControlList userAccessControlList = determineUserAccessControlList(user.getRoles());
+		AccessControlList userAccessControlList = determineUserAccessControlList(userService.getUserRoles(user));
 		userAclMap.put(user, userAccessControlList);
 		logger.info("ACE User=[{}] Roles=[{}]", user.getId(),
 				userAclMap.get(user) != null ? userAclMap.get(user).getRolesRepresented() : "");
@@ -220,8 +220,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			if (user.getAssignedContact().isMandator()) {
 				ret.add(user.getAssignedContact().getId());
 			}
-
-			userService.getExecutiveDoctorsWorkingFor(user.getAssignedContact()).stream()
+			userService.getExecutiveDoctorsWorkingFor(user).stream()
 					.forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
