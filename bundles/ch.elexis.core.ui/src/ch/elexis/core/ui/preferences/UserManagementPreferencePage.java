@@ -65,6 +65,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -94,7 +95,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Person;
 import ch.elexis.data.User;
-
 
 public class UserManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
@@ -445,7 +445,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
 		linkRechnungssteller.setToolTipText("Set the invoice contact for this mandator");
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IUser user = wvUser.getValue();
@@ -486,7 +485,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_compositeMandator.marginWidth = 0;
 		compositeMandator.setLayout(gl_compositeMandator);
 		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-
+		
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
@@ -494,6 +493,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
 		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
+		
 		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -506,15 +506,28 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class);
 				}
 				if (!mandator.isPresent()) {
+					btnMandatorIsInactive.setSelection(false);
 					return;
 				}
+
+				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
+					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
+					" wirklich deaktivieren?" + "\n\nACHTUNG: Mit dem Mandanten selbst werden auch seine User deaktiviert.")) {
+					btnMandatorIsInactive.setEnabled(true);
+				}
+				else {
+					btnMandatorIsInactive.setSelection(false);	
+				}
 				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
+				CoreModelServiceHolder.get().save(mandator.get());
 			}
 		});
 		
 		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (btnIsExecutiveDoctor.getSelection()) {
+					btnMandatorIsInactive.setEnabled(true);
 					IUser user = (IUser) wvUser.getValue();
 					if (user == null) {
 						return;
@@ -535,6 +548,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						}
 					}
 					
+				}
+				else {
+					btnMandatorIsInactive.setEnabled(false);
 				}
 			};
 		});
@@ -702,8 +718,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		// Initialize the preference page
 	}
 
+	private List<IUser> getUsers() {
+		return CoreModelServiceHolder.get().getQuery(IUser.class).execute();
+	}
+
 	private void updateUserList() {
-		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
+		List<IUser> users = getUsers();
 		users.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
 		tableViewerUsers.setInput(users);
 	}
@@ -738,12 +758,10 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					btnMandatorIsInactive.setSelection(!mandator.get().isActive());
-
 					btnIsExecutiveDoctor.setSelection(true);
 					btnMandatorIsInactive.setEnabled(true);
 				} else {
 					btnIsExecutiveDoctor.setSelection(false);
-					
 					btnMandatorIsInactive.setEnabled(false);
 				}
 			}
