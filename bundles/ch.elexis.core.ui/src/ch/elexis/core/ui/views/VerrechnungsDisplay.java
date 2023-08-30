@@ -109,6 +109,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.dialogs.StatusDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
@@ -289,6 +290,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
 					ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 							selection.getFirstElement());
+					CoreUiUtil.setCommandSelection("ch.elexis.VerrechnungsDisplay", selection.toList());
 				}
 			}
 		});
@@ -711,6 +713,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public void setEncounter(IEncounter encounter) {
+		CoreUiUtil.removeCommandSelection("ch.elexis.VerrechnungsDisplay");
 		actEncounter = encounter;
 		if (actEncounter != null) {
 			viewer.setInput(actEncounter.getBilled());
