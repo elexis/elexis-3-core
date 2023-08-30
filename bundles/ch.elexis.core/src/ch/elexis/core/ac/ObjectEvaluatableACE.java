@@ -2,6 +2,7 @@ package ch.elexis.core.ac;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import ch.elexis.core.services.IAccessControlService;
 
@@ -42,22 +43,13 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 				canidates.add(interfaze.getName());
 			}
 			if (!canidates.isEmpty()) {
-				canidates.sort((l, r) -> {
-					String lSimplename = l.substring(l.lastIndexOf('.'));
-					boolean lFirstLetters = Character.isUpperCase(lSimplename.charAt(0))
-							&& Character.isUpperCase(lSimplename.charAt(1));
-					String rSimplename = r.substring(r.lastIndexOf('.'));
-					boolean rFirstLetters = Character.isUpperCase(lSimplename.charAt(0))
-							&& Character.isUpperCase(lSimplename.charAt(1));
-					if (lFirstLetters && !rFirstLetters) {
-						return 1;
-					} else if (rFirstLetters && !lFirstLetters) {
-						return -1;
-					} else {
-						return lSimplename.compareTo(rSimplename);
-					}
-				});
-				return canidates.get(0);
+				Optional<String> canidate = canidates.stream().filter(s -> {
+					String lSimplename = s.substring(s.lastIndexOf('.') + 1);
+					return Character.isUpperCase(lSimplename.charAt(0)) && Character.isUpperCase(lSimplename.charAt(1));
+				}).findFirst();
+				if(canidate.isPresent()) {
+					return canidate.get();
+				}
 			}
 		}
 		return clazz.getName();

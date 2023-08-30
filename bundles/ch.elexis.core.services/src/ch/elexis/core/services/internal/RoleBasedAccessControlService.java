@@ -271,6 +271,9 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (isPrivileged()) {
 			return false;
 		}
+		if (!isAoboObject(evaluatableAce.getObject())) {
+			return false;
+		}
 		Optional<IUser> user = contextService.getActiveUser();
 		if (user.isPresent()) {
 			if (!userAclMap.containsKey(user.get())) {

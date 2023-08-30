@@ -37,15 +37,15 @@ public class AccessControlListUtil {
 					// already within?
 					byte[] firstObject = firstObjectAcl.get(k).getAccessRightMap();
 					byte[] secondObject = secondObjectAcl.get(k).getAccessRightMap();
-					firstObject[Right.CREATE.ordinal()] |= secondObject[Right.CREATE.ordinal()];
-					firstObject[Right.READ.ordinal()] |= secondObject[Right.READ.ordinal()];
-					firstObject[Right.UPDATE.ordinal()] |= secondObject[Right.UPDATE.ordinal()];
-					firstObject[Right.DELETE.ordinal()] |= secondObject[Right.DELETE.ordinal()];
-					firstObject[Right.EXECUTE.ordinal()] |= secondObject[Right.EXECUTE.ordinal()];
-					firstObject[Right.VIEW.ordinal()] |= secondObject[Right.VIEW.ordinal()];
-					firstObject[Right.EXPORT.ordinal()] |= secondObject[Right.EXPORT.ordinal()];
-					firstObject[Right.IMPORT.ordinal()] |= secondObject[Right.IMPORT.ordinal()];
-					firstObject[Right.REMOVE.ordinal()] |= secondObject[Right.REMOVE.ordinal()];
+					mergeRight(Right.CREATE, firstObject, secondObject);
+					mergeRight(Right.READ, firstObject, secondObject);
+					mergeRight(Right.UPDATE, firstObject, secondObject);
+					mergeRight(Right.DELETE, firstObject, secondObject);
+					mergeRight(Right.EXECUTE, firstObject, secondObject);
+					mergeRight(Right.VIEW, firstObject, secondObject);
+					mergeRight(Right.EXPORT, firstObject, secondObject);
+					mergeRight(Right.IMPORT, firstObject, secondObject);
+					mergeRight(Right.REMOVE, firstObject, secondObject);
 					// update with merged copy of the bitmap
 					firstObjectAcl.put(k, new ACEAccessBitMap(firstObject));
 				} else {
@@ -62,15 +62,15 @@ public class AccessControlListUtil {
 					// already within?
 					byte[] firstSystemCommand = firstSystemCommandAcl.get(k).getAccessRightMap();
 					byte[] secondSystemCommand = secondSystemCommandAcl.get(k).getAccessRightMap();
-					firstSystemCommand[Right.CREATE.ordinal()] |= secondSystemCommand[Right.CREATE.ordinal()];
-					firstSystemCommand[Right.READ.ordinal()] |= secondSystemCommand[Right.READ.ordinal()];
-					firstSystemCommand[Right.UPDATE.ordinal()] |= secondSystemCommand[Right.UPDATE.ordinal()];
-					firstSystemCommand[Right.DELETE.ordinal()] |= secondSystemCommand[Right.DELETE.ordinal()];
-					firstSystemCommand[Right.EXECUTE.ordinal()] |= secondSystemCommand[Right.EXECUTE.ordinal()];
-					firstSystemCommand[Right.VIEW.ordinal()] |= secondSystemCommand[Right.VIEW.ordinal()];
-					firstSystemCommand[Right.EXPORT.ordinal()] |= secondSystemCommand[Right.EXPORT.ordinal()];
-					firstSystemCommand[Right.IMPORT.ordinal()] |= secondSystemCommand[Right.IMPORT.ordinal()];
-					firstSystemCommand[Right.REMOVE.ordinal()] |= secondSystemCommand[Right.REMOVE.ordinal()];
+					mergeRight(Right.CREATE, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.READ, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.UPDATE, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.DELETE, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.EXECUTE, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.VIEW, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.EXPORT, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.IMPORT, firstSystemCommand, secondSystemCommand);
+					mergeRight(Right.REMOVE, firstSystemCommand, secondSystemCommand);
 					// update with merged copy of the bitmap
 					firstSystemCommandAcl.put(k, new ACEAccessBitMap(firstSystemCommand));
 				} else {
@@ -80,4 +80,13 @@ public class AccessControlListUtil {
 		}
 	}
 
+	private static void mergeRight(Right right, byte[] firstObject, byte[] secondObject) {
+		// never change if already full right
+		if (firstObject[right.ordinal()] != 4) {
+			// only merge if secondObject has better right
+			if (firstObject[right.ordinal()] < secondObject[right.ordinal()]) {
+				firstObject[right.ordinal()] = secondObject[right.ordinal()];
+			}
+		}
+	}
 }
