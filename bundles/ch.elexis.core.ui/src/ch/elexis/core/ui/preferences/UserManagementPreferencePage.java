@@ -487,17 +487,14 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		compositeMandator.setLayout(gl_compositeMandator);
 		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
-		
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
 
-		
 		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (btnIsExecutiveDoctor.getSelection()) {
-					btnMandatorIsInactive.setEnabled(true);
 					IUser user = (IUser) wvUser.getValue();
 					if (user == null) {
 						return;
@@ -513,16 +510,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						if (changeIt) {
 							ac.setMandator(true);
 							CoreModelServiceHolder.get().save(ac);
-						} else {
-							btnIsExecutiveDoctor.setSelection(false);
 						}
+						btnIsExecutiveDoctor.setSelection(changeIt);
 					}
-					
 				}
-				else {
-					btnMandatorIsInactive.setEnabled(false);
-				}
-			};
+				btnMandatorIsInactive.setEnabled(btnIsExecutiveDoctor.getSelection());
+			}
 		});
 		
 		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
@@ -547,7 +540,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
 					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
-					" wirklich deaktivieren?")) {
+					" wirklich deaktivieren?" + "\n\nACHTUNG: Mit dem Mandanten selbst werden auch seine User deaktiviert.")) {
 					btnMandatorIsInactive.setEnabled(true);
 				}
 				else {
