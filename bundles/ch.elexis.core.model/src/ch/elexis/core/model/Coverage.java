@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.jpa.entities.Fall;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -149,12 +151,21 @@ public class Coverage extends AbstractIdDeleteModelAdapter<Fall> implements Iden
 
 	@Override
 	public String getInsuranceNumber() {
-		return getEntity().getVersNummer();
+		String insuranceNumber = getEntity().getVersNummer();
+		if (StringUtils.isEmpty(insuranceNumber)) {
+			Object extInfoInsuranceNumber = getExtInfo(FallConstants.FLD_EXT_VERSICHERUNGSNUMMER);
+			if (extInfoInsuranceNumber instanceof String && StringUtils.isNotBlank((String) extInfoInsuranceNumber)) {
+				return (String) extInfoInsuranceNumber;
+			}
+		}
+		return insuranceNumber;
 	}
 
 	@Override
 	public void setInsuranceNumber(String value) {
 		getEntityMarkDirty().setVersNummer(value);
+		// compatibility
+		setExtInfo(FallConstants.FLD_EXT_VERSICHERUNGSNUMMER, value);
 	}
 
 	@Override

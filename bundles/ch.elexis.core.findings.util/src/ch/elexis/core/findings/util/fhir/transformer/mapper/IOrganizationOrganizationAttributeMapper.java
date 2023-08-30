@@ -37,7 +37,14 @@ public class IOrganizationOrganizationAttributeMapper
 			Set<Include> includes) {
 
 		target.setId(new IdDt(Organization.class.getSimpleName(), source.getId()));
-
+		mapMetaData(source, target);
+		if (SummaryEnum.DATA != summaryEnum) {
+			mapNarrative(source, target);
+		}
+		if (SummaryEnum.TEXT == summaryEnum || SummaryEnum.COUNT == summaryEnum) {
+			return;
+		}
+		
 		List<Identifier> identifiers = contactHelper.getIdentifiers(source, xidService);
 		identifiers.add(getElexisObjectIdentifier(source));
 		target.setIdentifier(identifiers);

@@ -288,6 +288,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
 					ContextServiceHolder.get().getRootContext().setTyped(selection.getFirstElement());
+					CoreUiUtil.setCommandSelection("ch.elexis.VerrechnungsDisplay", selection.toList());
 				}
 			}
 		});
@@ -708,6 +709,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public void setEncounter(IEncounter encounter) {
+		CoreUiUtil.removeCommandSelection("ch.elexis.VerrechnungsDisplay");
 		actEncounter = encounter;
 		if (actEncounter != null) {
 			viewer.setInput(actEncounter.getBilled());

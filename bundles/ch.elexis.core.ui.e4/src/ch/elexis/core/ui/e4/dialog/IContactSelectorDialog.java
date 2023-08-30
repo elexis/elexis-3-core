@@ -29,6 +29,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 
 public class IContactSelectorDialog extends TitleAreaDialog {
@@ -44,6 +45,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private String initialSearchText;
 	private List<? extends IContact> initialInput;
 	private String _message;
+	private String _title;
 
 	public IContactSelectorDialog(Shell parentShell, IModelService coreModelService) {
 		this(parentShell, coreModelService, IContact.class);
@@ -59,8 +61,13 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle(Messages.Core_Please_Select_Contact);
+		if (_title != null) {
+			super.setTitle(_title);
+		} else {
+			setTitle(Messages.Core_Please_Select_Contact);
+		}
 		super.setMessage(_message);
+		super.setTitle(_title);
 	}
 
 	/**
@@ -106,6 +113,9 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				IContact contact = ((IContact) element);
 				if (contact.isOrganization() || contact.isLaboratory()) {
 					return Images.IMG_ORGANISATION.getImage();
+				} else if (contact.isPatient()) {
+					return (Gender.MALE == contact.asIPatient().getGender()) ? Images.IMG_MANN.getImage()
+							: Images.IMG_FRAU.getImage();
 				}
 				return Images.IMG_PERSON.getImage();
 			}
@@ -129,10 +139,14 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private void refresh() {
 		String _text = text.getText();
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
+			String value = "%" + _text + "%";
+
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
-			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + _text + "%");
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + _text + "%");
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, "%" + _text + "%");
+			query.startGroup();
+			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
+			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
+			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
+			query.andJoinGroups();
 			query.limit(50);
 			tableViewerContacts.setInput(query.execute());
 		} else {
@@ -159,6 +173,11 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	@Override
 	public void setMessage(String message) {
 		this._message = message;
+	}
+
+	@Override
+	public void setTitle(String title) {
+		this._title = title;
 	}
 
 	/**
