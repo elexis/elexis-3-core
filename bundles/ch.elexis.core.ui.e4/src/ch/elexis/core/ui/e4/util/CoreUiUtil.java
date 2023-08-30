@@ -285,8 +285,8 @@ public class CoreUiUtil implements EventHandler {
 	 * @param commandId
 	 * @return
 	 */
-	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext, String commandId) {
-		return getCommandSelection(iEclipseContext, commandId, true);
+	public static StructuredSelection getCommandSelection(String commandId) {
+		return getCommandSelection(commandId, true);
 	}
 
 	/**
@@ -300,18 +300,17 @@ public class CoreUiUtil implements EventHandler {
 	 * @param remove
 	 * @return
 	 */
-	public static StructuredSelection getCommandSelection(IEclipseContext iEclipseContext, String commandId,
-			boolean remove) {
-		StructuredSelection selection = (StructuredSelection) iEclipseContext.get(commandId.concat(".selection")); //$NON-NLS-1$
+	public static StructuredSelection getCommandSelection(String commandId, boolean remove) {
+		StructuredSelection selection = (StructuredSelection) applicationContext.get(commandId.concat(".selection")); //$NON-NLS-1$
 		if (remove) {
-			iEclipseContext.remove(commandId.concat(".selection")); //$NON-NLS-1$
+			applicationContext.remove(commandId.concat(".selection")); //$NON-NLS-1$
 		}
 		return selection;
 	}
 
 	/**
-	 * Set the selection for the commandId in the current {@link IEclipseContext}.
-	 * Retrievable via
+	 * Set the selection for the commandId in the application
+	 * {@link IEclipseContext}. Retrievable via
 	 * {@link CoreUiUtil#getCommandSelection(IEclipseContext, String)}.
 	 *
 	 * @param commandId
@@ -320,6 +319,16 @@ public class CoreUiUtil implements EventHandler {
 	public static void setCommandSelection(String commandId, Object[] selection) {
 		applicationContext.set(commandId.concat(".selection"), //$NON-NLS-1$
 				new StructuredSelection(selection));
+	}
+
+	/**
+	 * Remove the selection for the commandId from the application
+	 * {@link IEclipseContext}.
+	 * 
+	 * @param commandId
+	 */
+	public static void removeCommandSelection(String commandId) {
+		applicationContext.remove(commandId.concat(".selection")); //$NON-NLS-1$
 	}
 
 	/**
