@@ -547,7 +547,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
 					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
-					" wirklich deaktivieren?" + "\n\nACHTUNG: Mit dem Mandanten selbst werden auch seine User deaktiviert.")) {
+					" wirklich deaktivieren?")) {
 					btnMandatorIsInactive.setEnabled(true);
 				}
 				else {
