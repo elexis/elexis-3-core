@@ -65,7 +65,6 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -95,6 +94,7 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Person;
 import ch.elexis.data.User;
+
 
 public class UserManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
@@ -445,6 +445,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
 		linkRechnungssteller.setToolTipText("Set the invoice contact for this mandator");
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
+			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IUser user = wvUser.getValue();
@@ -486,10 +487,44 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		compositeMandator.setLayout(gl_compositeMandator);
 		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		
+		
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
 
+		
+		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (btnIsExecutiveDoctor.getSelection()) {
+					btnMandatorIsInactive.setEnabled(true);
+					IUser user = (IUser) wvUser.getValue();
+					if (user == null) {
+						return;
+					}
+					IContact ac = user.getAssignedContact();
+					if (ac == null) {
+						return;
+					}
+					Optional<IMandator> mandator = CoreModelServiceHolder.get().load(ac.getId(), IMandator.class);
+					if (!mandator.isPresent()) {
+						boolean changeIt = MessageDialog.openQuestion(UiDesk.getTopShell(), "Kontakt ist kein Mandant",
+								"Der selektierte Kontakt ist kein Mandant. Wollen Sie diesen Kontakt in einen Mandanten ändern?");
+						if (changeIt) {
+							ac.setMandator(true);
+							CoreModelServiceHolder.get().save(ac);
+						} else {
+							btnIsExecutiveDoctor.setSelection(false);
+						}
+					}
+					
+				}
+				else {
+					btnMandatorIsInactive.setEnabled(false);
+				}
+			};
+		});
+		
 		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
 		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
@@ -523,37 +558,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			}
 		});
 		
-		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (btnIsExecutiveDoctor.getSelection()) {
-					btnMandatorIsInactive.setEnabled(true);
-					IUser user = (IUser) wvUser.getValue();
-					if (user == null) {
-						return;
-					}
-					IContact ac = user.getAssignedContact();
-					if (ac == null) {
-						return;
-					}
-					Optional<IMandator> mandator = CoreModelServiceHolder.get().load(ac.getId(), IMandator.class);
-					if (!mandator.isPresent()) {
-						boolean changeIt = MessageDialog.openQuestion(UiDesk.getTopShell(), "Kontakt ist kein Mandant",
-								"Der selektierte Kontakt ist kein Mandant. Wollen Sie diesen Kontakt in einen Mandanten ändern?");
-						if (changeIt) {
-							ac.setMandator(true);
-							CoreModelServiceHolder.get().save(ac);
-						} else {
-							btnIsExecutiveDoctor.setSelection(false);
-						}
-					}
-					
-				}
-				else {
-					btnMandatorIsInactive.setEnabled(false);
-				}
-			};
-		});
 
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
 		compositeAccounting.setLayout(new GridLayout(2, true));
@@ -718,12 +722,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		// Initialize the preference page
 	}
 
-	private List<IUser> getUsers() {
-		return CoreModelServiceHolder.get().getQuery(IUser.class).execute();
-	}
-
 	private void updateUserList() {
-		List<IUser> users = getUsers();
+		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
 		users.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
 		tableViewerUsers.setInput(users);
 	}
