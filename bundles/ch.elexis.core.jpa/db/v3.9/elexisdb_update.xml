@@ -24,4 +24,14 @@
 			<column name="TP" type="CHAR(8)" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="thomas"
+		id="manual_update_CH_ELEXIS_MESSAGES_messageCodes_columnname" dbms="postgresql">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="CH_ELEXIS_MESSAGES"
+				columnName="messageCodes" />
+		</preConditions>
+		<renameColumn tableName="CH_ELEXIS_MESSAGES"
+			oldColumnName="messageCodes" newColumnName="MESSAGECODES" />
+	</changeSet>
 </databaseChangeLog>
