@@ -148,7 +148,7 @@ public class UserService implements IUserService {
 				edList.isEmpty() ? StringUtils.EMPTY
 						: (String) edList.stream().map(o -> o.toString())
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
-		CoreModelServiceHolder.get().save(user);
+		CoreModelServiceHolder.get().save(user.getAssignedContact());
 		userExecutiveDoctorsWorkingForCache.invalidateAll();
 	}
 
@@ -197,7 +197,6 @@ public class UserService implements IUserService {
 				if (mandators == null) {
 					return Collections.emptySet();
 				}
-
 				List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
 						.filter(IMandator::isActive).collect(Collectors.toList());
 
