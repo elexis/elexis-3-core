@@ -555,7 +555,7 @@ public abstract class AbstractModelService implements IModelService {
 			ret = getAccessControlService().evaluate(EvACE.of(clazz, right));
 			if (!ret) {
 				LoggerFactory.getLogger(getClass())
-						.info("User has no right [" + right + "] for class [" + clazz.getSimpleName() + "]");
+						.info("User has no right [" + right + "] for class [" + clazz.getName() + "]");
 			}
 		}
 		return ret;

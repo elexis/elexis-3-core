@@ -65,7 +65,7 @@
                <visibleWhen
                      checkEnabled="false">
                   <test
-                        args="Aktionen/Viewauswahl"
+                        args="ACL_VIEW_SELECTION"
                         property="ch.elexis.commands.propertyTester.ACE">
                   </test>
                </visibleWhen>
@@ -938,7 +938,7 @@
                commandId="ch.elexis.core.command.copyFall">
             <enabledWhen>
                <test
-                     args="Fall/copy"
+                     args="ch.elexis.core.model.IEncounter:UPDATE"
                      property="ch.elexis.commands.propertyTester.ACE">
                </test>
             </enabledWhen>
@@ -992,7 +992,7 @@
             <enabledWhen>
                <and>
                   <test
-                        args="Rechnungen/erstellen"
+                        args="ch.elexis.core.model.IInvoice:CREATE"
                         property="ch.elexis.commands.propertyTester.ACE">
                   </test>
                   <test
