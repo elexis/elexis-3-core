@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -550,7 +551,18 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				return new Prescription[0];
 			}
 			List<IPrescription> list = recipe.getPrescriptions();
-			return list.toArray();
+	
+			return sortPrescriptions(list).toArray();
+		}
+		
+		private List<IPrescription> sortPrescriptions(List<IPrescription> prescriptions) {
+			Collections.sort(prescriptions, new Comparator<IPrescription>() {
+		      @Override
+		      public int compare(IPrescription pres1, IPrescription pres2) {
+		          return pres1.getLabel().compareTo(pres2.getLabel());
+		       }
+		    });
+			return prescriptions;
 		}
 
 		@Override
