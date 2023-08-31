@@ -540,7 +540,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
 					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
-					" wirklich deaktivieren?" + "\n\nACHTUNG: Mit dem Mandanten selbst werden auch seine User deaktiviert.")) {
+					" wirklich deaktivieren?")) {
 					btnMandatorIsInactive.setEnabled(true);
 				}
 				else {
@@ -751,12 +751,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					btnMandatorIsInactive.setSelection(!mandator.get().isActive());
-					btnIsExecutiveDoctor.setSelection(true);
-					btnMandatorIsInactive.setEnabled(true);
-				} else {
-					btnIsExecutiveDoctor.setSelection(false);
-					btnMandatorIsInactive.setEnabled(false);
 				}
+				btnIsExecutiveDoctor.setSelection(mandator.isPresent());
+				btnMandatorIsInactive.setEnabled(mandator.isPresent());
 			}
 
 			linkRechnungssteller.setText("- " + CHANGE_LINK); //$NON-NLS-1$
