@@ -8,20 +8,35 @@
     "contact" : ""
   },
   "system-command" : {
-    "ch.elexis.core.ui.login" : "x"
+    "ch.elexis.core.ui.login" : "x",
+    "ACL_AUTO_INSTALL_FEATURES" : "x"
   },
   "object" : {
-    "ch.elexis.core.model.IConfig" : "r",
-    "ch.elexis.core.model.IRole" : "r",
-    "ch.elexis.core.model.IUser" : "crudv",
-    "ch.elexis.core.model.IUserConfig" : "crwvu",
-    "ch.elexis.core.model.IOrganization" : "rv",
-    "ch.elexis.core.model.ILaboratory" : "rv",
-    "ch.elexis.core.model.IContact" : "rv",
-    "ch.elexis.core.model.IPerson" : "rv",
-    "ch.elexis.core.model.IMandator" : "rv",
-    "ch.elexis.core.model.IArticle" : "rv",
-    "ch.elexis.core.model.ILabItem" : "rv",
-    "ch.elexis.core.model.IBlob" : "crud"
-  }
+   "at.medevit.ch.artikelstamm.IArtikelstammItem" : "cruvd",
+   "ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung" : "crudv",
+   "ch.elexis.base.ch.arzttarife.tarmed.ITarmedExtension": "rv",
+   "ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",
+   "ch.elexis.base.ch.arzttarife.tarmed.ITarmedKumulation": "rv",
+   "ch.elexis.base.ch.arzttarife.tarmed.ITarmedLeistung": "rv",
+   "ch.elexis.core.model.IArticle" : "rv",
+   "ch.elexis.core.model.IBlob" : "crudv",
+   "ch.elexis.core.model.ICodeElementBlock" : "ruv",
+   "ch.elexis.core.model.IConfig" : "r",
+   "ch.elexis.core.model.IContact" : "rv",
+   "ch.elexis.core.model.ICustomService" : "rv",
+   "ch.elexis.core.model.IDiagnosisReference" : "cruvd",
+   "ch.elexis.core.model.IDiagnosisTree" : "cruvd",
+   "ch.elexis.core.model.ILabItem" : "crudv",
+   "ch.elexis.core.model.ILaboratory" : "rv",
+   "ch.elexis.core.model.IMandator" : "rv",
+   "ch.elexis.core.model.IOrganization" : "rv",
+   "ch.elexis.core.model.IPerson" : "rv",
+   "ch.elexis.core.model.IRole" : "r",
+   "ch.elexis.core.model.IStock" : "rv",
+   "ch.elexis.core.model.IStockEntry" : "cruvd",
+   "ch.elexis.core.model.IUser" : "crudv",
+   "ch.elexis.core.model.IUserConfig" : "cruv",
+   "ch.elexis.core.model.IXid" : "crudv",
+   "ch.elexis.privatrechnung.model.IPrivatLeistung" : "crudv"
+    }
 }
