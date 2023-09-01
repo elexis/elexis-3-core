@@ -11,8 +11,6 @@
  ******************************************************************************/
 package ch.elexis.core.data.propertyTester;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.slf4j.LoggerFactory;
@@ -27,7 +25,6 @@ public class ACETester extends PropertyTester {
 
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		System.out.println("PROP [" + property + "] [" + Arrays.toString(args) + "]");
 		if ("ACE".equals(property)) {
 			if (args.length > 0) {
 				if (ContextServiceHolder.get().getActiveUser().isPresent()) {
