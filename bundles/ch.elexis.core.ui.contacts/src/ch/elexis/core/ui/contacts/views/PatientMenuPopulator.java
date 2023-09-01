@@ -33,12 +33,12 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
-import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
