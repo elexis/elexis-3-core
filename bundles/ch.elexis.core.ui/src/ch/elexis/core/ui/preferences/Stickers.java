@@ -246,6 +246,8 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 
 		});
 		spWert = new Spinner(bottom, SWT.NONE);
+		spWert.setMaximum(999);
+		spWert.setMinimum(0);
 		spWert.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
