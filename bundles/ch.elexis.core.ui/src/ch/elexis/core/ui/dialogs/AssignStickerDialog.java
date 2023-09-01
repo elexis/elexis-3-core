@@ -72,6 +72,7 @@ public class AssignStickerDialog extends TitleAreaDialog {
 		viewer.getTable().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		viewer.getTable().setHeaderVisible(true);
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		alleEtiketten.removeIf(s -> (s.getImportance() > 999));
 		viewer.setInput(alleEtiketten);
 		createColumns();
 		comparator = new StickerViewerComparator();
