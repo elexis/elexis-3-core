@@ -1,15 +1,143 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>ch.elexis.base</groupId>
-    <artifactId>elexis-3.11</artifactId>
-    <version>3.11.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
-  </parent>
-  <groupId>ch.elexis.base</groupId>
-  <artifactId>ch.elexis.core.p2site</artifactId>
-  <version>3.11.0-SNAPSHOT</version>
-  <packaging>eclipse-repository</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ch.elexis.core</groupId>
+		<artifactId>elexis-3-core</artifactId>
+		<version>3.11.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>ch.elexis.core.p2site</artifactId>
+	<packaging>eclipse-repository</packaging>
+	<profiles>
+    <profile>
+      <id>MATERIALIZE_PRODUCTS</id>
+      <activation>
+        <property>
+           <name>env.MATERIALIZE_PRODUCTS</name>
+           <value>!false</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.soebes.maven.plugins</groupId>
+            <artifactId>echo-maven-plugin</artifactId>
+            <version>0.5.0</version>
+            <executions>
+              <execution>
+                <id>debug-MATERIALIZE_PRODUCTS</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>echo</goal>
+                </goals>
+                <configuration>
+                  <echos>
+                    <echo>debug materialize MATERIALIZE_PRODUCTS is set to ${env.MATERIALIZE_PRODUCTS}</echo>
+                  </echos>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho </groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<products>
+						<product>
+              <id>Elexis3</id> <!-- Name of final EXE/zip file -->
+							<attachId>ElexisApp</attachId>
+							<rootFolder />
+							<rootFolders>
+								<macosx>Elexis3.app</macosx>
+								<win32 />
+							</rootFolders>
+						</product>
+					</products>
+				</configuration>
+			</plugin>
+    </plugins>
+  </build>
+    </profile>
+  </profiles>
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho </groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+					<skipArchive>true</skipArchive>
+					<profileProperties>
+						<macosx-bundled>true</macosx-bundled>
+					</profileProperties>
+				</configuration>
+			</plugin>
+          <plugin>
+            <groupId>com.soebes.maven.plugins</groupId>
+            <artifactId>echo-maven-plugin</artifactId>
+            <version>0.5.0</version>
+            <executions>
+              <execution>
+                <id>show-MATERIALIZE_PRODUCTS</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>echo</goal>
+                </goals>
+                <configuration>
+                  <echos>
+                    <echo>tycho-p2-repository-plugin MATERIALIZE_PRODUCTS is set to ${env.MATERIALIZE_PRODUCTS}</echo>
+                  </echos>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.github.goldin</groupId>
+										<artifactId>
+											copy-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.2.5,)
+										</versionRange>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
