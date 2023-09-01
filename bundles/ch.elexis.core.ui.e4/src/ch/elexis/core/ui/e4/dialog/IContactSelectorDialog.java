@@ -24,10 +24,12 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
 
@@ -127,7 +129,6 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		});
 		TableColumn tblclmnNewColumn = tableViewerColumn.getColumn();
 		tcl_composite.setColumnData(tblclmnNewColumn, new ColumnWeightData(100));
-		tblclmnNewColumn.setText("New Column");
 
 		if (initialSearchText != null) {
 			text.setText(initialSearchText);
@@ -152,7 +153,9 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 			query.andJoinGroups();
-			query.limit(50);
+			if (queryClass.equals(IPatient.class)) {
+				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
+			}
 			tableViewerContacts.setInput(query.execute());
 		} else {
 			tableViewerContacts.setInput(Collections.emptyList());
