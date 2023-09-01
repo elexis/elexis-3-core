@@ -9,13 +9,4 @@
             apply="always">
       </fragment>
    </extension>
-   <extension
-         point="com.opcoach.e4.preferences.e4PreferencePages">
-      <page
-            class="ch.elexis.core.ui.e4.preference.FieldEditorPreferencePage"
-            id="ch.elexis.core.ui.e4.page2"
-            name="test">
-      </page>
-   </extension>
-
 </plugin>
