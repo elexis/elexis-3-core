@@ -227,7 +227,6 @@ public class MandantSelectionContributionItem {
 
 	public static Image getBoxSWTColorImage(Color color) {
 		String colorName = String.valueOf(color.hashCode());
-		
 		if (JFaceResources.getImageRegistry().get(colorName) == null) {
 			Display display = Display.getCurrent();
 			Image image = new Image(display, 16, 16);
@@ -238,7 +237,6 @@ public class MandantSelectionContributionItem {
 			gc.dispose();
 			JFaceResources.getImageRegistry().put(colorName, image);
 		}
-
 		return JFaceResources.getImageRegistry().get(colorName);
 	}
 }
