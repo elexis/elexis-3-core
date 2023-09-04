@@ -1,5 +1,7 @@
 package ch.elexis.core.exceptions;
 
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 
 public class AccessControlException extends RuntimeException {
@@ -16,6 +18,8 @@ public class AccessControlException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return "User has no right [" + right + "] for class [" + clazz.getName() + "]";
+		// use ObjectEvaluatableACE to get the inteface name that was evaluated
+		ObjectEvaluatableACE ace = EvACE.of(clazz, right);
+		return "User has no right [" + right + "] for class [" + ace.getObject() + "]";
 	}
 }
