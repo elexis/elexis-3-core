@@ -10,7 +10,6 @@
  *    MEDEVIT 	 - adaptations according to #2112
  *******************************************************************************/
 package ch.elexis.core.ui.coolbar;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +18,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -44,10 +42,11 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IUserService;
+import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
 /**
@@ -55,8 +54,8 @@ import ch.elexis.data.Mandant;
  * application toolbar (coolbar). The list of colors represents the available
  * colors to distinguish the currently selected mandant.
  *
- * @since 3.1 do enable items according to
- *        {@link Anwender#getExecutiveDoctorsWorkingFor()}
+ * @since 3.11 do enable items according to
+ *        {@link IUserService#getExecutiveDoctorsWorkingFor()}
  */
 public class MandantSelectionContributionItem {
 
@@ -65,7 +64,6 @@ public class MandantSelectionContributionItem {
 	private Mandant[] mandants;
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
-	private static ImageRegistry imageRegistry;
 
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
@@ -96,8 +94,6 @@ public class MandantSelectionContributionItem {
 			}, fParent);
 		}
 	}
-
-
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {
@@ -106,7 +102,6 @@ public class MandantSelectionContributionItem {
 			}
 		});
 	}
-
 	private void adaptForUser(IUser user) {
 		if (user == null) {
 			user = ContextServiceHolder.get().getActiveUser().orElse(null);
@@ -114,31 +109,19 @@ public class MandantSelectionContributionItem {
 				return;
 			}
 		}
-		adaptForAnwender(Anwender.load(user.getAssignedContact().getId()));
-	}
-
-	private void adaptForAnwender(Anwender anwender) {
-		if (anwender == null) {
-			anwender = CoreHub.getLoggedInContact();
-			if (anwender == null)
-				return;
-		}
-
-		List<String> exDocStr = anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
-				.collect(Collectors.toList());
+		List<String> workingForIds = UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).stream()
+				.map(a -> a.getId()).collect(Collectors.toList());
 		for (int i = 0; i < menuItems.length; i++) {
 			String id = (String) menuItems[i].getData();
-			menuItems[i].setEnabled(exDocStr.contains(id));
+			menuItems[i].setEnabled(workingForIds.contains(id));
 		}
 	}
 
 	public MandantSelectionContributionItem() {
 	}
-
 	@PostConstruct
 	protected Control createControl(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.NONE);
-
 		// dispose old items first
 		disposeItems();
 		if (item != null) {
@@ -147,10 +130,8 @@ public class MandantSelectionContributionItem {
 		if (menu != null) {
 			menu.dispose();
 		}
-
 		fParent = toolbar;
 		menu = new Menu(fParent);
-
 		List<Mandant> qre = Hub.getMandantenList();
 		qre.sort(new Comparator<Mandant>() {
 			@Override
@@ -161,12 +142,9 @@ public class MandantSelectionContributionItem {
 		mandants = qre.toArray(new Mandant[] {});
 		if (mandants.length < 2)
 			return null;
-
 		item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setToolTipText("Aktuell ausgewählter Mandant bzw. Mandantenauswahl");
-
 		menuItems = new MenuItem[mandants.length];
-
 		for (int i = 0; i < mandants.length; i++) {
 			final Mandant m = mandants[i];
 			menuItems[i] = new MenuItem(menu, SWT.RADIO);
@@ -183,22 +161,16 @@ public class MandantSelectionContributionItem {
 				menuItems[i].setSelection(CoreHub.actMandant.equals(m));
 			}
 		}
-
 		item.addListener(SWT.Selection, selectionListener);
-
 		if (CoreHub.actMandant != null && item != null) {
 			item.setText(CoreHub.actMandant.getMandantLabel());
 			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
 		}
-
 		adaptForUser(null);
-
 		toolbar.pack();
 		return toolbar;
 	}
-
 	private final Listener selectionListener = new Listener() {
-
 		@Override
 		public void handleEvent(Event event) {
 			if (event.detail == SWT.ARROW || event.type == SWT.Selection) {
@@ -210,7 +182,6 @@ public class MandantSelectionContributionItem {
 			}
 		}
 	};
-
 	private void disposeItems() {
 		if (menuItems != null && menuItems.length > 0) {
 			for (int i = 0; i < menuItems.length; i++) {
@@ -227,6 +198,7 @@ public class MandantSelectionContributionItem {
 
 	public static Image getBoxSWTColorImage(Color color) {
 		String colorName = String.valueOf(color.hashCode());
+		
 		if (JFaceResources.getImageRegistry().get(colorName) == null) {
 			Display display = Display.getCurrent();
 			Image image = new Image(display, 16, 16);
@@ -237,6 +209,7 @@ public class MandantSelectionContributionItem {
 			gc.dispose();
 			JFaceResources.getImageRegistry().put(colorName, image);
 		}
+		
 		return JFaceResources.getImageRegistry().get(colorName);
 	}
 }
