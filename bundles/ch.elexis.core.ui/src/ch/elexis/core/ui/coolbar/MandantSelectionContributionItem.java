@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,11 +43,10 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.services.IUserService;
-import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 
 /**
@@ -54,8 +54,8 @@ import ch.elexis.data.Mandant;
  * application toolbar (coolbar). The list of colors represents the available
  * colors to distinguish the currently selected mandant.
  *
- * @since 3.11 do enable items according to
- *        {@link IUserService#getExecutiveDoctorsWorkingFor()}
+ * @since 3.1 do enable items according to
+ *        {@link Anwender#getExecutiveDoctorsWorkingFor()}
  */
 public class MandantSelectionContributionItem {
 
@@ -112,11 +112,21 @@ public class MandantSelectionContributionItem {
 				return;
 			}
 		}
-		List<String> workingForIds = UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).stream()
-				.map(a -> a.getId()).collect(Collectors.toList());
+		adaptForAnwender(Anwender.load(user.getAssignedContact().getId()));
+	}
+
+	private void adaptForAnwender(Anwender anwender) {
+		if (anwender == null) {
+			anwender = CoreHub.getLoggedInContact();
+			if (anwender == null)
+				return;
+		}
+
+		List<String> exDocStr = anwender.getExecutiveDoctorsWorkingFor().stream().map(a -> a.getId())
+				.collect(Collectors.toList());
 		for (int i = 0; i < menuItems.length; i++) {
 			String id = (String) menuItems[i].getData();
-			menuItems[i].setEnabled(workingForIds.contains(id));
+			menuItems[i].setEnabled(exDocStr.contains(id));
 		}
 	}
 
@@ -213,14 +223,20 @@ public class MandantSelectionContributionItem {
 		}
 	}
 
-	public static Image getBoxSWTColorImage(Color color) {
-		Display display = Display.getCurrent();
-		Image image = new Image(display, 16, 16);
-		GC gc = new GC(image);
-		gc.setBackground(color);
-		gc.fillRoundRectangle(0, 0, 16, 16, 8, 8);
-		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
-		gc.dispose();
-		return image;
+	public static Image getBoxSWTColorImage(Color color) {		
+		String colorName = String.valueOf(color.hashCode());
+	
+		if (JFaceResources.getImageRegistry().get(colorName) == null) {
+			Display display = Display.getCurrent();
+			Image image = new Image(display, 16, 16);
+			GC gc = new GC(image);
+			gc.setBackground(color);
+			gc.fillRoundRectangle(0, 0, 16, 16, 8, 8);
+			gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+			gc.dispose();
+			JFaceResources.getImageRegistry().put(colorName, image);
+		}
+
+		return JFaceResources.getImageRegistry().get(colorName);
 	}
 }
