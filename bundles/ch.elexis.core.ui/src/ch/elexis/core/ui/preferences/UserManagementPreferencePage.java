@@ -445,7 +445,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
 		linkRechnungssteller.setToolTipText("Set the invoice contact for this mandator");
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
-
+			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IUser user = wvUser.getValue();
@@ -486,11 +486,13 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_compositeMandator.marginWidth = 0;
 		compositeMandator.setLayout(gl_compositeMandator);
 		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-
+		
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
+
 		btnIsExecutiveDoctor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (btnIsExecutiveDoctor.getSelection()) {
 					IUser user = (IUser) wvUser.getValue();
@@ -508,18 +510,18 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 						if (changeIt) {
 							ac.setMandator(true);
 							CoreModelServiceHolder.get().save(ac);
-						} else {
-							btnIsExecutiveDoctor.setSelection(false);
 						}
+						btnIsExecutiveDoctor.setSelection(changeIt);
 					}
 				}
-
-			};
+				btnMandatorIsInactive.setEnabled(btnIsExecutiveDoctor.getSelection());
+			}
 		});
-
+		
 		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
 		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
+		
 		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -532,11 +534,23 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class);
 				}
 				if (!mandator.isPresent()) {
+					btnMandatorIsInactive.setSelection(false);
 					return;
 				}
+
+				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
+					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
+					" wirklich deaktivieren?")) {
+					btnMandatorIsInactive.setEnabled(true);
+				}
+				else {
+					btnMandatorIsInactive.setSelection(false);	
+				}
 				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
+				CoreModelServiceHolder.get().save(mandator.get());
 			}
 		});
+		
 
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
 		compositeAccounting.setLayout(new GridLayout(2, true));
@@ -737,11 +751,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					btnMandatorIsInactive.setSelection(!mandator.get().isActive());
-
-					btnIsExecutiveDoctor.setSelection(true);
-				} else {
-					btnIsExecutiveDoctor.setSelection(false);
 				}
+				btnIsExecutiveDoctor.setSelection(mandator.isPresent());
+				btnMandatorIsInactive.setEnabled(mandator.isPresent());
 			}
 
 			linkRechnungssteller.setText("- " + CHANGE_LINK); //$NON-NLS-1$
