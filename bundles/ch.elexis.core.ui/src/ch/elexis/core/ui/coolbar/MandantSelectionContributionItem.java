@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,6 +65,7 @@ public class MandantSelectionContributionItem {
 	private Mandant[] mandants;
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
+	private static ImageRegistry imageRegistry;
 
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
@@ -223,9 +225,9 @@ public class MandantSelectionContributionItem {
 		}
 	}
 
-	public static Image getBoxSWTColorImage(Color color) {		
+	public static Image getBoxSWTColorImage(Color color) {
 		String colorName = String.valueOf(color.hashCode());
-	
+		
 		if (JFaceResources.getImageRegistry().get(colorName) == null) {
 			Display display = Display.getCurrent();
 			Image image = new Image(display, 16, 16);
