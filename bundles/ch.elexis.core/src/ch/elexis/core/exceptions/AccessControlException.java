@@ -16,6 +16,6 @@ public class AccessControlException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return "User has no right [" + right + "] for class [" + clazz.getSimpleName() + "]";
+		return "User has no right [" + right + "] for class [" + clazz.getName() + "]";
 	}
 }
