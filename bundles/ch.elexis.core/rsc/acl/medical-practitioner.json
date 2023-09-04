@@ -3,6 +3,7 @@
     "medical-practitioner"
   ],
   "object": {
+    "at.medevit.elexis.inbox.model.IInboxElement": "cruvd",
     "ch.elexis.base.ch.arzttarife.tarmed.ITarmedExtension": "rv",
     "ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",
     "ch.elexis.base.ch.arzttarife.tarmed.ITarmedKumulation": "rv",
