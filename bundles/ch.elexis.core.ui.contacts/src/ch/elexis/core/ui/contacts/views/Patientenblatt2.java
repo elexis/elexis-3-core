@@ -153,6 +153,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID);
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> buttonTabContributions = Extensions.getClasses(VIEWCONTRIBUTION,
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID+":buttonTab");
 
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev) {
@@ -543,6 +546,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		
+		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
+				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
+		for (IViewContribution ivc : _buttonTabContributions) {
+			Composite ret = ivc.initComposite(cPersonalien);
+			ret.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			tk.adapt(ret);
+		}
 
 		hHA = tk.createHyperlink(cPersonalien, Messages.Core_Postal_Address, SWT.NONE); // $NON-NLS-1$
 		hHA.addHyperlinkListener(hr);
@@ -880,6 +891,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp.getAutoForm().reload(actPatient);
 
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
+		buttonTabContributions.forEach(dc -> dc.setDetailObject(actPatient, null));
 
 		if (actPatient == null) {
 			form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
