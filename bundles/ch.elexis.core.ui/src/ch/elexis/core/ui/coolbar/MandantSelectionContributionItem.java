@@ -136,7 +136,7 @@ public class MandantSelectionContributionItem {
 		if (menu != null) {
 			menu.dispose();
 		}
-		
+
 		fParent = toolbar;
 		menu = new Menu(fParent);
 
