@@ -145,7 +145,7 @@ public class XidService implements IXidService {
 
 	@Override
 	public IXidDomain localRegisterXIDDomainIfNotExists(String domainName, String simpleName, int quality) {
-		return localRegisterXIDDomain(domainName, simpleName, quality, "");
+		return localRegisterXIDDomainIfNotExists(domainName, simpleName, quality, "");
 	}
 
 	private IXidDomain localRegisterXIDDomainIfNotExists(String domainName, String simpleName, int quality,
