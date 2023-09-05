@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.e4.core.di.annotations.Optional;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
@@ -28,6 +32,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 
 	private IContextService contextService;
 	private IModelService coreModelService;
+	private IAppointmentService appointmentService;
 
 	private Map<String, Area> appointmentUserAreas;
 	private IAppointment nextAppointment;
@@ -40,15 +45,25 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 			IAppointmentService appointmentService) {
 		this.contextService = contextService;
 		this.coreModelService = coreModelService;
+		this.appointmentService = appointmentService;
 
 		nextAppointmentLabel = NO_NEXT_APPOINTMENT_LABEL;
 		appointmentUserAreas = new HashMap<String, Area>();
-		appointmentService.getAreas().forEach(entry -> {
-			String contactId = entry.getContactId();
-			if (StringUtils.isNotBlank(contactId) && entry.getType() == AreaType.CONTACT) {
-				appointmentUserAreas.put(contactId, entry);
-			}
-		});
+	}
+
+	@Optional
+	@Inject
+	public void activeUser(IUser user) {
+		if (user != null) {
+			appointmentService.getAreas().forEach(entry -> {
+				String contactId = entry.getContactId();
+				if (StringUtils.isNotBlank(contactId) && entry.getType() == AreaType.CONTACT) {
+					appointmentUserAreas.put(contactId, entry);
+				}
+			});
+		} else {
+			appointmentUserAreas.clear();
+		}
 	}
 
 	@Override
