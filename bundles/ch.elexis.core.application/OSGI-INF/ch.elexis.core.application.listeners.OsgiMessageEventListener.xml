@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.application.listeners.OsgiMessageEventListener">
-   <property name="event.topics" value="info/elexis/notification/*"/>
+   <property name="event.topics">org/eclipse/e4/ui/LifeCycle/appStartupComplete
+info/elexis/notification/*
+   </property>
    <service>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
