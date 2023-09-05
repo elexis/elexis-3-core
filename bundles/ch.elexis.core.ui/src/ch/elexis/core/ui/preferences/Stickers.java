@@ -126,7 +126,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 			}
 		});
 		for (Sticker et : lEtiketten) {
-			if (et.isVisible())
+			if (et.isVisible() && et.getWert() < 1000)
 				combo.add(et.getLabel());
 		}
 		// new Label(ret,SWT.NONE).setText("Anzeige");
