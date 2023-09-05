@@ -123,11 +123,11 @@ public class MandantSelectionContributionItem {
 
 	public MandantSelectionContributionItem() {
 	}
-	
+
 	@PostConstruct
 	protected Control createControl(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.NONE);
-		
+
 		// dispose old items first
 		disposeItems();
 		if (item != null) {
