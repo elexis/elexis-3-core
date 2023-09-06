@@ -32,6 +32,7 @@ public interface IFinding extends Identifiable, Deleteable {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getId();
 
 	/**

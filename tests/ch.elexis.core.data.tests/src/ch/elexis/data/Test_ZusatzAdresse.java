@@ -47,13 +47,13 @@ public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
 		Assert.assertTrue(zusatzAdressen.size() == 1);
 		ZusatzAdresse savedZusatzAdresse = zusatzAdressen.get(0);
 		Assert.assertEquals(AddressType.PRISON.getLiteral(), savedZusatzAdresse.getDTO().getAddressType().getLiteral());
-		if (Locale.getDefault().toString().equals("de_CH")) {
+		if ("de_CH".equals(Locale.getDefault().toString())) {
 			// System.out.println("found de_CH: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(savedZusatzAdresse.getLabel().startsWith("Justizanstalt"));
 		} else {
 			System.out.println(Locale.getDefault().toString());
 		}
-		if (Locale.getDefault().toString().equals("en_US")) {
+		if ("en_US".equals(Locale.getDefault().toString())) {
 			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(savedZusatzAdresse.getLabel().startsWith("prison"));
 		}
