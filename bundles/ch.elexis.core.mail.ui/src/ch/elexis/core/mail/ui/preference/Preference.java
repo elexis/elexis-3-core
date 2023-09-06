@@ -37,7 +37,9 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 
 	private MailAccountComposite accountComposite;
 	private ComboViewer accountsViewer;
-	private Button testButton, defaultBtn;
+	private Button testButton;
+
+	private Button defaultBtn;
 
 	@Override
 	public void init(IWorkbench workbench) {

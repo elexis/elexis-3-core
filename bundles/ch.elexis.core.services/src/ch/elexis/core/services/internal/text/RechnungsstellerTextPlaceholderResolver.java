@@ -1,11 +1,11 @@
 package ch.elexis.core.services.internal.text;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;

@@ -38,7 +38,7 @@ public class CoverageService implements ICoverageService {
 				String localReq = StringUtils.EMPTY;
 				String[] r = req.split(":"); //$NON-NLS-1$
 				if (r != null && r.length > 1) {
-					if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
+					if (("X".equalsIgnoreCase(r[1])) && (r.length > 2)) { //$NON-NLS-1$
 						// *** support for additional field types (checkboxes with
 						// multiple items are
 						// special)
@@ -57,7 +57,7 @@ public class CoverageService implements ICoverageService {
 							return false;
 						}
 					}
-					if (r[1].equals("K")) { //$NON-NLS-1$
+					if ("K".equals(r[1])) { //$NON-NLS-1$
 						Optional<IContact> contact = CoreModelServiceHolder.get().load(localReq, IContact.class);
 						if (!contact.isPresent()) {
 							return false;
@@ -146,6 +146,7 @@ public class CoverageService implements ICoverageService {
 	 * should be generated.
 	 *
 	 */
+	@Override
 	public boolean getCopyForPatient(ICoverage coverage) {
 		return StringConstants.ONE.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
 	}
@@ -165,6 +166,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageLabel() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -180,6 +182,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageReason() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -197,6 +200,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageLaw() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {

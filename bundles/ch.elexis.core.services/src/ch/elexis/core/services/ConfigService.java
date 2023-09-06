@@ -192,7 +192,7 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean setFromList(String key, List<String> values) {
-		String flattenedValue = values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
+		String flattenedValue = values.stream().map(o -> o).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
 		return set(key, flattenedValue);
 	}
 
@@ -353,7 +353,7 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean setFromList(IContact contact, String key, List<String> values) {
-		String flattenedValue = values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
+		String flattenedValue = values.stream().map(o -> o).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
 		return set(contact, key, flattenedValue);
 	}
 
@@ -376,7 +376,7 @@ public class ConfigService implements IConfigService {
 	public boolean get(IContact contact, String key, boolean defaultValue) {
 		String value = get(contact, key, null);
 		if (value != null) {
-			return (value.equals("1") || value.equalsIgnoreCase(Boolean.TRUE.toString()));
+			return ("1".equals(value) || value.equalsIgnoreCase(Boolean.TRUE.toString()));
 		}
 		return defaultValue;
 	}
@@ -598,14 +598,14 @@ public class ConfigService implements IConfigService {
 	public boolean getActiveMandator(String key, boolean defaultValue) {
 		String defaultValueString = Boolean.toString(defaultValue);
 		String result = getActiveMandator(key, defaultValueString);
-		return (result.equals("1") || result.equalsIgnoreCase(Boolean.TRUE.toString()));
+		return ("1".equals(result) || result.equalsIgnoreCase(Boolean.TRUE.toString()));
 	}
 
 	@Override
 	public boolean getActiveUserContact(String key, boolean defaultValue) {
 		String defaultValueString = Boolean.toString(defaultValue);
 		String result = getActiveUserContact(key, defaultValueString);
-		return (result.equals("1") || result.equalsIgnoreCase(Boolean.TRUE.toString()));
+		return ("1".equals(result) || result.equalsIgnoreCase(Boolean.TRUE.toString()));
 	}
 
 	@Override

@@ -20,12 +20,14 @@ import ch.elexis.core.types.ArticleTyp;
 
 public class ArticleTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
 		createLocalArticle();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();

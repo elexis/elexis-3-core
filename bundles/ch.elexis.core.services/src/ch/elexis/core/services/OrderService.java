@@ -16,6 +16,7 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 @Component
 public class OrderService implements IOrderService {
 
+	@Override
 	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry stockEntry) {
 		IArticle article = stockEntry.getArticle();
 		if (article != null) {

@@ -75,7 +75,7 @@ public class ModelUtil {
 		Optional<IConfig> loaded = CoreModelServiceHolder.get().load(key, IConfig.class);
 		if (loaded.isPresent()) {
 			String value = loaded.get().getValue();
-			return value != null && (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
+			return value != null && ("true".equalsIgnoreCase(value) || "1".equalsIgnoreCase(value));
 		} else {
 			return defaultValue;
 		}
@@ -105,7 +105,7 @@ public class ModelUtil {
 					logger.warn("Multiple user config entries for [" + key + "] using first.");
 				}
 				String value = config.getValue();
-				return value != null && (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1"));
+				return value != null && ("true".equalsIgnoreCase(value) || "1".equalsIgnoreCase(value));
 			}
 		}
 		logger.warn("No user contact for query of key [" + key + "] returning default");

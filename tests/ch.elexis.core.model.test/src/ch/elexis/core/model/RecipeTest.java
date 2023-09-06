@@ -20,6 +20,7 @@ public class RecipeTest extends AbstractTest {
 
 	private IPrescription prescription;
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
@@ -31,6 +32,7 @@ public class RecipeTest extends AbstractTest {
 				.buildAndSave();
 	}
 
+	@Override
 	@After
 	public void after() {
 		coreModelService.remove(prescription);

@@ -151,6 +151,7 @@ public class AttachmentsComposite extends Composite {
 				remove.setImage(Images.IMG_DELETE.getImage());
 				remove.setData(string);
 				remove.addMouseListener(new MouseAdapter() {
+					@Override
 					public void mouseUp(MouseEvent e) {
 						List<String> removeParts = Arrays.asList(getDocuments().split(":::"));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))

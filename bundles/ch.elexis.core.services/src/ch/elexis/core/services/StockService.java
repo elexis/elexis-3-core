@@ -225,6 +225,7 @@ public class StockService implements IStockService {
 		return null;
 	}
 
+	@Override
 	public List<IStockEntry> getAllStockEntries() {
 		return CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
 	}
@@ -263,6 +264,7 @@ public class StockService implements IStockService {
 		return null;
 	}
 
+	@Override
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems) {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
 		if (!includeCommissioningSystems) {
@@ -302,6 +304,7 @@ public class StockService implements IStockService {
 		return getDefaultStock();
 	}
 
+	@Override
 	public Availability getArticleAvailabilityForStock(IStock stock, String article) {
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
 		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(), isTriggerStockAvailabilityOnBelow());

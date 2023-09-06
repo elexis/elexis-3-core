@@ -257,7 +257,7 @@ public class InvoiceService implements IInvoiceService {
 	public List<IEncounter> cancel(IInvoice invoice, boolean reopen) {
 		InvoiceState invoiceState = invoice.getState();
 		List<IEncounter> ret = Collections.emptyList();
-		if (!InvoiceState.CANCELLED.equals(invoiceState) && !InvoiceState.DEPRECIATED.equals(invoiceState)) {
+		if (InvoiceState.CANCELLED != invoiceState && InvoiceState.DEPRECIATED != invoiceState) {
 			Money amount = invoice.getTotalAmount();
 			Money demandAmount = invoice.getDemandAmount();
 			if (!demandAmount.isZero()) {
@@ -273,7 +273,7 @@ public class InvoiceService implements IInvoiceService {
 				invoice.setState(InvoiceState.DEPRECIATED);
 				CoreModelServiceHolder.get().save(invoice);
 			}
-		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
+		} else if (reopen && InvoiceState.CANCELLED == invoiceState) {
 			// if bill is canceled ensure that all kons are opened
 			ret = removeEncounters(invoice);
 		}
@@ -316,7 +316,7 @@ public class InvoiceService implements IInvoiceService {
 	public boolean hasStornoBeforeDate(IInvoice invoice, LocalDate date) {
 		List<IPayment> zahlungen = invoice.getPayments();
 		for (IPayment zahlung : zahlungen) {
-			if (zahlung.getRemark().equals("Storno")) {
+			if ("Storno".equals(zahlung.getRemark())) {
 				if (zahlung.getDate().isBefore(date) || zahlung.getDate().equals(date)) {
 					return true;
 				}
@@ -329,7 +329,7 @@ public class InvoiceService implements IInvoiceService {
 	public String getCombinedId(IInvoice invoice) {
 		IPatient patient = invoice.getCoverage().getPatient();
 		String pid;
-		if (ConfigServiceHolder.get().get("PatIDMode", "number").equals("number")) {
+		if ("number".equals(ConfigServiceHolder.get().get("PatIDMode", "number"))) {
 			pid = StringUtils.leftPad(patient.getCode(), 6, '0');
 		} else {
 			pid = new TimeTool(patient.getDateOfBirth()).toString(TimeTool.DATE_COMPACT);

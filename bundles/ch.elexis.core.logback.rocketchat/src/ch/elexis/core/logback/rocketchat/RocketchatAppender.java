@@ -24,7 +24,7 @@ public class RocketchatAppender extends AppenderBase<ILoggingEvent> {
 	protected void append(ILoggingEvent eventObject) {
 		try {
 			String integrationUrl = getContext().getProperty("integrationUrl");
-			if (integrationUrl == null || integrationUrl.length() == 0) {
+			if (integrationUrl == null || integrationUrl.isEmpty()) {
 				return;
 			}
 

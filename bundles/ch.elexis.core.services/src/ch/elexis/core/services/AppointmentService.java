@@ -425,6 +425,7 @@ public class AppointmentService implements IAppointmentService {
 		return ret;
 	}
 
+	@Override
 	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries) {
 		List<IAppointment> series = new ArrayList<>();
 		IAppointment root = appointmentSeries.getRootAppointment();
@@ -500,7 +501,7 @@ public class AppointmentService implements IAppointmentService {
 
 		int occurences = 0;
 		TimeTool endingDate = null;
-		if (appointmentSeries.getEndingType().equals(EndingType.AFTER_N_OCCURENCES)) {
+		if (appointmentSeries.getEndingType() == EndingType.AFTER_N_OCCURENCES) {
 			occurences = (Integer.parseInt(appointmentSeries.getEndingPatternString()) - 1);
 		} else {
 			endingDate = new TimeTool(appointmentSeries.getSeriesEndDate());
@@ -508,7 +509,7 @@ public class AppointmentService implements IAppointmentService {
 
 		switch (appointmentSeries.getSeriesType()) {
 		case DAILY:
-			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)) {
+			if (appointmentSeries.getEndingType() == EndingType.ON_SPECIFIC_DATE) {
 				occurences = dateIncrementer.daysTo(endingDate) + 1;
 			}
 			for (int i = 0; i < occurences; i++) {
@@ -527,7 +528,7 @@ public class AppointmentService implements IAppointmentService {
 				cal.set(Calendar.DAY_OF_WEEK, dayValue);
 				ret.add(writeSubsequentDateEntry(appointmentSeries, new TimeTool(cal.getTime())));
 			}
-			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE)) {
+			if (appointmentSeries.getEndingType() == EndingType.ON_SPECIFIC_DATE) {
 				long milisecondsDiff = 0;
 				if (endingDate != null) {
 					milisecondsDiff = endingDate.getTime().getTime() - dateIncrementer.getTime().getTime();
@@ -550,7 +551,7 @@ public class AppointmentService implements IAppointmentService {
 			}
 			break;
 		case MONTHLY:
-			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE) && endingDate != null) {
+			if (appointmentSeries.getEndingType() == EndingType.ON_SPECIFIC_DATE && endingDate != null) {
 				occurences = (endingDate.get(Calendar.YEAR) - dateIncrementer.get(Calendar.YEAR)) * 12
 						+ (endingDate.get(Calendar.MONTH) - dateIncrementer.get(Calendar.MONTH))
 						+ (endingDate.get(Calendar.DAY_OF_MONTH) >= dateIncrementer.get(Calendar.DAY_OF_MONTH) ? 0
@@ -562,7 +563,7 @@ public class AppointmentService implements IAppointmentService {
 			}
 			break;
 		case YEARLY:
-			if (appointmentSeries.getEndingType().equals(EndingType.ON_SPECIFIC_DATE) && endingDate != null) {
+			if (appointmentSeries.getEndingType() == EndingType.ON_SPECIFIC_DATE && endingDate != null) {
 				int monthOccurences = (endingDate.get(Calendar.YEAR) - dateIncrementer.get(Calendar.YEAR)) * 12
 						+ (endingDate.get(Calendar.MONTH) - dateIncrementer.get(Calendar.MONTH))
 						+ (endingDate.get(Calendar.DAY_OF_MONTH) >= dateIncrementer.get(Calendar.DAY_OF_MONTH) ? 0

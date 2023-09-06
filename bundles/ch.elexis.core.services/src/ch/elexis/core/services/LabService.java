@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public class LabService implements ILabService {
 			List<ILabResult> labresults = findAllLabResultsForLabOrderIdGroup(labOrder.get());
 			evaluationResult = evaluate(labOrder.get().getItem(), labResult.getPatient(), labresults);
 		}
-		if (evaluationResult == null || evaluationResult.equals("?formel?")) { //$NON-NLS-1$
+		if (evaluationResult == null || "?formel?".equals(evaluationResult)) { //$NON-NLS-1$
 			evaluationResult = evaluate(labResult.getItem(), labResult.getPatient(),
 					new TimeTool(labResult.getObservationTime()));
 		}
@@ -121,7 +121,7 @@ public class LabService implements ILabService {
 		for (ILabResult result : labresults) {
 			String var = result.getItem().getVariableName();
 			if (formula.indexOf(var) != -1) {
-				if (result.getResult() != null && !result.getResult().isEmpty() && !result.getResult().equals("?")) { //$NON-NLS-1$
+				if (result.getResult() != null && !result.getResult().isEmpty() && !"?".equals(result.getResult())) { //$NON-NLS-1$
 					formula = formula.replaceAll(var, result.getResult());
 					bMatched = true;
 				}

@@ -11,12 +11,14 @@ import ch.elexis.core.test.AbstractTest;
 
 public class MessageTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
 		super.createUserSetActiveInContext();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();
