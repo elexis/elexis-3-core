@@ -11,7 +11,6 @@
 
 package ch.elexis.core.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.NumberFormat;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

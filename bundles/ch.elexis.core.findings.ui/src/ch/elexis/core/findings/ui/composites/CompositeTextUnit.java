@@ -62,9 +62,9 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 
 			this.observationType = backboneComponent.getTypeFromExtension(ObservationType.class);
 
-			if (ObservationType.TEXT.equals(observationType)) {
+			if (ObservationType.TEXT == observationType) {
 				textValue = backboneComponent.getStringValue().orElse(StringUtils.EMPTY);
-			} else if (ObservationType.NUMERIC.equals(observationType)) {
+			} else if (ObservationType.NUMERIC == observationType) {
 				unit = backboneComponent.getNumericValueUnit().orElse(StringUtils.EMPTY);
 				numeric = backboneComponent.getNumericValue().isPresent()
 						? backboneComponent.getNumericValue().get().toPlainString()
@@ -76,9 +76,9 @@ public class CompositeTextUnit extends Composite implements ICompositeSaveable {
 
 			this.observationType = iObservation.getObservationType();
 
-			if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
+			if (ObservationType.TEXT == iObservation.getObservationType()) {
 				textValue = iObservation.getStringValue().orElse(StringUtils.EMPTY);
-			} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
+			} else if (ObservationType.NUMERIC == iObservation.getObservationType()) {
 				unit = iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY);
 				numeric = iObservation.getNumericValue().isPresent()
 						? iObservation.getNumericValue().get().toPlainString()

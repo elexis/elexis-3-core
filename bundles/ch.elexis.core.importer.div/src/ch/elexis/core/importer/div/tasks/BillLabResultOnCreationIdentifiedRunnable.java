@@ -276,8 +276,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				boolean addCons = true;
 				for (IBilled verrechnet : leistungen) {
 					IBillable verrechenbar = verrechnet.getBillable();
-					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("Tarmed")
-							&& verrechenbar.getCode().equals("00.0010")) {
+					if (verrechenbar != null && "Tarmed".equals(verrechenbar.getCodeSystemName())
+							&& "00.0010".equals(verrechenbar.getCode())) {
 						addCons = false;
 						break;
 					}

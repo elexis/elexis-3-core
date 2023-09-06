@@ -38,7 +38,7 @@ public class ICoverageHelper extends AbstractHelper {
 	public void setDependent(ICoverage coverage, String bin) {
 		String billingSystem = coverage.getBillingSystem().getName();
 		if (billingSystem != null && !billingSystem.isEmpty()) {
-			if (billingSystem.equals("UVG")) {
+			if ("UVG".equals(billingSystem)) {
 				coverage.setExtInfo(FallConstants.UVG_UNFALLNUMMER, bin);
 			} else {
 				coverage.setExtInfo(FallConstants.IV_FALLNUMMER, bin);

@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.fhir.accessor;
 
-import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Annotation;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeableConcept;
@@ -69,8 +69,8 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 			for (CodeableConcept categoryConcept : fhirObservation.getCategory()) {
 				List<Coding> coding = categoryConcept.getCoding();
 				for (Coding code : coding) {
-					if (code.getSystem().equals("http://hl7.org/fhir/observation-category")
-							|| code.getSystem().equals("http://terminology.hl7.org/CodeSystem/observation-category")) {
+					if ("http://hl7.org/fhir/observation-category".equals(code.getSystem())
+							|| "http://terminology.hl7.org/CodeSystem/observation-category".equals(code.getSystem())) {
 						ch.elexis.core.findings.IObservation.ObservationCategory mappedCategory = (ch.elexis.core.findings.IObservation.ObservationCategory) categoryMapping
 								.getLocalEnumValueByCode(code.getCode().toUpperCase());
 						if (mappedCategory != null) {
@@ -215,7 +215,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 
 				ObservationType observationType = tmpObservationComponent.getTypeFromExtension(ObservationType.class);
 
-				if (ObservationType.NUMERIC.equals(observationType)) {
+				if (ObservationType.NUMERIC == observationType) {
 					Quantity q = new Quantity();
 					if (o.hasValueQuantity()) {
 						q = (Quantity) o.getValue();
@@ -224,7 +224,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 					q.setUnit(component.getNumericValueUnit().orElse(StringUtils.EMPTY));
 					q.setValue(component.getNumericValue().orElse(null));
 					o.setValue(q);
-				} else if (ObservationType.TEXT.equals(observationType)) {
+				} else if (ObservationType.TEXT == observationType) {
 					StringType stringType = new StringType();
 					if (o.hasValueStringType()) {
 						stringType = (StringType) o.getValue();

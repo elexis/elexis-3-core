@@ -40,6 +40,7 @@ public class FindingsFormat20 extends FindingsFormat {
 		resourceFieldsMap.put("ProcedureRequest", procedureRequestFields);
 	}
 
+	@Override
 	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");
@@ -93,13 +94,13 @@ public class FindingsFormat20 extends FindingsFormat {
 				JsonObject category = new JsonObject();
 				JsonArray coding = new JsonArray();
 				for (Entry<String, JsonElement> entry : ((JsonObject) element).entrySet()) {
-					if (entry.getKey().equals("coding") && entry.getValue().isJsonArray()) {
+					if ("coding".equals(entry.getKey()) && entry.getValue().isJsonArray()) {
 						JsonArray existingCoding = (JsonArray) entry.getValue();
 						for (JsonElement jsonElement : existingCoding) {
 							if (jsonElement.isJsonObject()
-									&& ((JsonObject) jsonElement).get("system").getAsString()
-											.equals("http://hl7.org/fhir/condition-category")
-									&& ((JsonObject) jsonElement).get("code").getAsString().equals("diagnosis")) {
+									&& "http://hl7.org/fhir/condition-category"
+											.equals(((JsonObject) jsonElement).get("system").getAsString())
+									&& "diagnosis".equals(((JsonObject) jsonElement).get("code").getAsString())) {
 								JsonObject newCoding = new JsonObject();
 								newCoding.add("system", new JsonPrimitive("http://hl7.org/fhir/condition-category"));
 								newCoding.add("code", new JsonPrimitive("problem-list-item"));

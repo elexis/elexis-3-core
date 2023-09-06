@@ -1,6 +1,5 @@
 package ch.elexis.core.importer.div.importers.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -9,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -21,8 +21,8 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
 import ch.elexis.core.importer.div.importers.ImportHandler;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabItem;
@@ -76,6 +76,7 @@ public class LabImportUtil implements ILabImportUtil {
 	 * @param identifier
 	 * @return
 	 */
+	@Override
 	public ILaboratory getOrCreateLabor(String identifier) {
 		if (identifier == null || identifier.isEmpty()) {
 			throw new IllegalArgumentException("Labor identifier [" + identifier + "] invalid.");
@@ -102,6 +103,7 @@ public class LabImportUtil implements ILabImportUtil {
 		return ret;
 	}
 
+	@Override
 	public ILaboratory getLinkLabor(String identifier, IContactResolver<ILaboratory> contactResolver) {
 		if (identifier == null || identifier.isEmpty()) {
 			throw new IllegalArgumentException("Labor identifier [" + identifier + "] invalid.");
@@ -136,6 +138,7 @@ public class LabImportUtil implements ILabImportUtil {
 	 * @param labor
 	 * @return
 	 */
+	@Override
 	public ILabItem getLabItem(String identifier, ILaboratory labor) {
 		ILabMapping mapping = getLabMapping(labor, identifier).orElse(null);
 		if (mapping != null) {
@@ -214,6 +217,7 @@ public class LabImportUtil implements ILabImportUtil {
 	 * Import a list of TransientLabResults. Create LabOrder objects for new
 	 * results.
 	 */
+	@Override
 	public String importLabResults(List<TransientLabResult> results, ImportHandler importHandler) {
 		boolean overWriteAll = false;
 		IMandator mandator = findMandatorForLabResults(results);
@@ -356,7 +360,7 @@ public class LabImportUtil implements ILabImportUtil {
 		List<ILabResult> ret = Collections.emptyList();
 
 		// don't overwrite documents
-		if (!transientLabResult.getLabItem().getTyp().equals(LabItemTyp.DOCUMENT)) {
+		if (transientLabResult.getLabItem().getTyp() != LabItemTyp.DOCUMENT) {
 			if (transientLabResult.isObservationTime()) {
 				ret = getLabResults(transientLabResult.getPatient(), transientLabResult.getLabItem(), null, null,
 						transientLabResult.getObservationTime());
@@ -452,6 +456,7 @@ public class LabImportUtil implements ILabImportUtil {
 		return Optional.empty();
 	}
 
+	@Override
 	public Optional<ILabItem> getLabItem(String shortname, String name, ILaboratory labor) {
 		// lookup using mapping first
 		List<ILabMapping> mappings = getLabMappings(labor, shortname);

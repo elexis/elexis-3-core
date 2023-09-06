@@ -28,10 +28,12 @@ public abstract class AbstractData implements IValueType {
 		return name;
 	}
 
+	@Override
 	public Date getDate() {
 		return date;
 	}
 
+	@Override
 	public void setDate(Date date) {
 		this.date = date;
 	}

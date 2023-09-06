@@ -39,6 +39,7 @@ public class FindingsFormat40 extends FindingsFormat {
 		resourceFieldsMap.put("ServiceRequest", procedureRequestFields);
 	}
 
+	@Override
 	public int isFindingsFormat(String rawContent) {
 		JsonObject jsonObject = getJsonObject(rawContent);
 		JsonElement resourceType = jsonObject.get("resourceType");

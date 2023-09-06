@@ -176,7 +176,7 @@ public class HL7Parser {
 						}
 						String refMale = StringUtils.EMPTY;
 						String refFemale = StringUtils.EMPTY;
-						if (pat.getGender().equals(Gender.MALE)) {
+						if (pat.getGender() == Gender.MALE) {
 							refMale = hl7LabResult.getRange();
 						} else {
 							refFemale = hl7LabResult.getRange();

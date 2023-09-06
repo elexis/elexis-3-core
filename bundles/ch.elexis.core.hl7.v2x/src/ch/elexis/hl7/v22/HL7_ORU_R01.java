@@ -12,10 +12,11 @@
  *******************************************************************************/
 package ch.elexis.hl7.v22;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
@@ -326,7 +327,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 						if (ceIdentifier.getCe2_Text() != null) {
 							name = ceIdentifier.getCe2_Text().getValue();
 						}
-						if (name == null || name.trim().length() == 0) {
+						if (name == null || name.trim().isEmpty()) {
 							name = kuerzel;
 						}
 						TextData textData = new TextData(name, appendedTX, obrDateOfObservation, null, null);

@@ -79,7 +79,7 @@ public class Test_HL7_v25_Imports {
 		lrd = (LabResultData) observations.get(4);
 		assertEquals("VAGINA-ABSTRICH - Chlamydia trachomatis PCR", lrd.getName());
 		assertEquals("CHLATP", lrd.getCode());
-		assertTrue(lrd.getValue().equals("positiv"));
+		assertTrue("positiv".equals(lrd.getValue()));
 		assertNull(lrd.getFlag());
 		assertNull(lrd.getComment());
 		assertNull(lrd.getRange());
@@ -106,7 +106,7 @@ public class Test_HL7_v25_Imports {
 		LabResultData lrd = (LabResultData) observations.get(1);
 		assertEquals("STUHL - Helicobacter pylori  (Ag-Nachweis)", lrd.getName());
 		assertEquals("HELP", lrd.getCode());
-		assertTrue(lrd.getValue().equals("positiv"));
+		assertTrue("positiv".equals(lrd.getValue()));
 		assertNull(lrd.getFlag());
 		assertNull(lrd.getComment());
 		assertNull(lrd.getRange());
@@ -131,7 +131,7 @@ public class Test_HL7_v25_Imports {
 		LabResultData lrd = (LabResultData) observations.get(0);
 		assertEquals("HbA1c", lrd.getName());
 		assertEquals("HBA1", lrd.getCode());
-		assertTrue(lrd.getValue().equals("5.1"));
+		assertTrue("5.1".equals(lrd.getValue()));
 		assertNull(lrd.getFlag());
 		assertTrue(lrd.getComment().startsWith("Bemerkung zu HbA1c"));
 		assertEquals("< 5.7", lrd.getRange());
@@ -158,7 +158,7 @@ public class Test_HL7_v25_Imports {
 			LabResultData lrd = (LabResultData) iValueType;
 			if ("Ferritin".equals(lrd.getName())) {
 				assertEquals("FERR", lrd.getCode());
-				assertTrue(lrd.getValue().equals("66"));
+				assertTrue("66".equals(lrd.getValue()));
 				assertNull(lrd.getFlag());
 				assertNull(lrd.getComment());
 				assertEquals("ug/l", lrd.getUnit());

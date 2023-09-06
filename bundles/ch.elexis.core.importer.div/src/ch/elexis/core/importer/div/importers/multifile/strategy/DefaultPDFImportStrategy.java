@@ -278,6 +278,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	 * @param resolver
 	 * @return
 	 */
+	@Override
 	public IFileImportStrategy setLabContactResolver(ILabContactResolver resolver) {
 		// currently no use for a contact resolver here
 		return this;

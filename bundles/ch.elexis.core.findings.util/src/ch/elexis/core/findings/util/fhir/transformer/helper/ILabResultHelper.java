@@ -61,7 +61,7 @@ public class ILabResultHelper extends AbstractHelper {
 		String resultValue = localObject.getResult().trim().replaceAll("[()]", StringUtils.EMPTY);
 		String resultComment = localObject.getComment();
 		if (resultValue != null && localObject.getItem().getTyp() == LabItemTyp.TEXT
-				&& resultValue.equalsIgnoreCase("text") && resultComment != null && !resultComment.isEmpty()) {
+				&& "text".equalsIgnoreCase(resultValue) && resultComment != null && !resultComment.isEmpty()) {
 			return true;
 		}
 		return false;

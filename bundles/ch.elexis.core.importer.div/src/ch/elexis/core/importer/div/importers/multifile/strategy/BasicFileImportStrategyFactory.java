@@ -51,7 +51,7 @@ public abstract class BasicFileImportStrategyFactory implements IFileImportStrat
 		}
 
 		try {
-			return (hl7File.exists() && hl7File.getExtension().equalsIgnoreCase("hl7"));
+			return (hl7File.exists() && "hl7".equalsIgnoreCase(hl7File.getExtension()));
 		} catch (IOException e) {
 			return false;
 		}

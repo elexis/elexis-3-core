@@ -44,7 +44,7 @@ public class AllTests {
 		// check if for server test mode and init db if so
 		String testMode = System.getProperty("es.test");
 		if (testMode != null && !testMode.isEmpty()) {
-			if (testMode.equalsIgnoreCase("true")) {
+			if ("true".equalsIgnoreCase(testMode)) {
 				ServerDatabaseInitailizer initializer = new ServerDatabaseInitailizer();
 				initializer.initalize();
 			}

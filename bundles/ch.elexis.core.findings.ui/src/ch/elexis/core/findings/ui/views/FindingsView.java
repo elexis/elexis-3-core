@@ -96,6 +96,7 @@ public class FindingsView extends ViewPart implements IRefreshable {
 		tSearch.setMessage("Suche");
 		// Add search listener
 		ModifyListener searchListener = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				searchTitle = tSearch.getText();
 				refresh();

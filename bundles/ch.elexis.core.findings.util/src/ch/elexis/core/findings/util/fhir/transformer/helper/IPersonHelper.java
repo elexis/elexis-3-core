@@ -85,7 +85,7 @@ public class IPersonHelper extends IContactHelper {
 		target.setTitelSuffix(null);
 
 		for (HumanName humanName : names) {
-			if (names.size() == 1 || HumanName.NameUse.OFFICIAL.equals(humanName.getUse())) {
+			if (names.size() == 1 || HumanName.NameUse.OFFICIAL == humanName.getUse()) {
 				target.setFirstName(humanName.getGivenAsSingleString());
 				target.setLastName(humanName.getFamily());
 				target.setTitel(humanName.getPrefixAsSingleString());

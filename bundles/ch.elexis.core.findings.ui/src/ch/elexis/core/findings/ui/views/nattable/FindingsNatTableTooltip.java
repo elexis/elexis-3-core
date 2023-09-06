@@ -32,6 +32,7 @@ public class FindingsNatTableTooltip extends DefaultToolTip {
 	 * outside of the current cell (the combination of ToolTip.NO_RECREATE style and
 	 * override of this method).
 	 */
+	@Override
 	protected Object getToolTipArea(Event event) {
 		int col = natTable.getColumnPositionByX(event.x);
 		int row = natTable.getRowPositionByY(event.y);
@@ -39,6 +40,7 @@ public class FindingsNatTableTooltip extends DefaultToolTip {
 		return new Point(col, row);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected String getText(Event event) {
 		int col = natTable.getColumnPositionByX(event.x);
