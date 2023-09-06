@@ -38,6 +38,7 @@ public class DocxTextPluginTest {
 		assertTrue(plugin.loadFromStream(getClass().getResourceAsStream("/rsc/ueberweisungSie.docx"), true));
 
 		plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
+			@Override
 			public Object replace(final String in) {
 				return replaceFields(in.replaceAll(MATCH_SQUARE_BRACKET, ""));
 			}
@@ -120,6 +121,7 @@ public class DocxTextPluginTest {
 		// text.replace("\\[F98\\]", XMLPrinterUtil.getEANList(eanArray));
 		// find in table required
 		plugin.findOrReplace("\\[F98\\]", new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return "EAN List";
 			}
@@ -132,6 +134,7 @@ public class DocxTextPluginTest {
 
 		// find in textbox required, tab problem
 		plugin.findOrReplace("\\[F44.Datum\\]", new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return "Falldatum";
 			}
@@ -140,6 +143,7 @@ public class DocxTextPluginTest {
 		assertTrue(foundCount > 0);
 
 		plugin.findOrReplace("\\[Fall.BeginnDatum\\]", new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return "01.01.2011";
 			}
@@ -149,6 +153,7 @@ public class DocxTextPluginTest {
 
 		// replace in textbox with line break
 		plugin.findOrReplace("\\[Adressat.Anschrift]", new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return "test adressat\ntest adresse";
 			}
