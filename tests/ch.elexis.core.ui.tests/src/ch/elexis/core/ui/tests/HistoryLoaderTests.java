@@ -31,7 +31,13 @@ import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class HistoryLoaderTests implements BackgroundJobListener {
-	private static Patient patGriss, patSter, patKum, patPaal;
+	private static Patient patGriss;
+
+	private static Patient patSter;
+
+	private static Patient patKum;
+
+	private static Patient patPaal;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -213,7 +219,7 @@ public class HistoryLoaderTests implements BackgroundJobListener {
 					// ignore
 				}
 				String toString = tool.toString(TimeTool.DATE_GER);
-				if (!toString.equals("01.01.2020")) {
+				if (!"01.01.2020".equals(toString)) {
 					failed = true;
 					failedToString = toString;
 				}

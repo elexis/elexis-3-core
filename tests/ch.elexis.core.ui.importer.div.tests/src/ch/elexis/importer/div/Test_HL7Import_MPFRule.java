@@ -101,9 +101,9 @@ public class Test_HL7Import_MPFRule {
 				assertEquals((isMFPRuleActive) ? Description.PATHO_IMPORT : Description.PATHO_REF_ITEM,
 						pathologicDescription.getDescription());
 				Locale locale = Locale.getDefault();
-				if (locale.getLanguage().equals("de")) {
+				if ("de".equals(locale.getLanguage())) {
 					assertEquals((isMFPRuleActive) ? "Lt. MPF Regel" : "> 60", pathologicDescription.getReference());
-				} else if (locale.getLanguage().equals("en")) {
+				} else if ("en".equals(locale.getLanguage())) {
 					// This is the case when running under CI via gitlab/travis
 					assertEquals((isMFPRuleActive) ? "acc. MPF rule" : "> 60", pathologicDescription.getReference());
 				} else {

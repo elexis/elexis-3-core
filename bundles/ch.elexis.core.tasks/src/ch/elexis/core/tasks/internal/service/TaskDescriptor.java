@@ -58,7 +58,7 @@ public class TaskDescriptor extends AbstractIdDeleteModelAdapter<ch.elexis.core.
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setOwner(IUser value) {
-		if (value != null && value instanceof AbstractIdModelAdapter<?>) {
+		if (value instanceof AbstractIdModelAdapter<?>) {
 			getEntity().setOwner(((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.User>) value).getEntity());
 		} else {
 			getEntity().setOwner(null);
@@ -131,7 +131,7 @@ public class TaskDescriptor extends AbstractIdDeleteModelAdapter<ch.elexis.core.
 
 	@Override
 	public Cron getCronTriggerTypeConfiguration() {
-		if (TaskTriggerType.CRON.equals(getTriggerType())) {
+		if (TaskTriggerType.CRON == getTriggerType()) {
 			CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
 			String cronExpression = getTriggerParameters().get("cron");
 			if (cronExpression != null) {

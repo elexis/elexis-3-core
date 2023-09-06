@@ -324,6 +324,7 @@ public class TaskServiceImpl implements ITaskService {
 	 * @return
 	 * @throws TaskException
 	 */
+	@Override
 	public void refresh(ITaskDescriptor taskDescriptor) throws TaskException {
 		boolean toIncurOnThisStation = assertIncurOnThisStation(taskDescriptor);
 		Optional<ITaskDescriptor> incurredTask = getIncurredTasks().stream()
@@ -569,7 +570,7 @@ public class TaskServiceImpl implements ITaskService {
 
 	@Override
 	public IIdentifiedRunnable instantiateRunnableById(String runnableId) throws TaskException {
-		if (runnableId == null || runnableId.length() == 0) {
+		if (runnableId == null || runnableId.isEmpty()) {
 			throw new TaskException(TaskException.RWC_INVALID_ID);
 		}
 

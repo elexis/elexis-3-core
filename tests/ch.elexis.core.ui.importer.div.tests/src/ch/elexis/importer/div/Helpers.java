@@ -111,8 +111,8 @@ public class Helpers {
 			throws IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
-			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
-					|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
+			if ("01TEST5005.hl7".equalsIgnoreCase(f.getName())
+					|| "1_Kunde_20090612083757162_10009977_.HL7".equalsIgnoreCase(f.getName())) {
 				if (!alsoFailing) {
 					// System.out.println("Skipping " + name);
 					return;
