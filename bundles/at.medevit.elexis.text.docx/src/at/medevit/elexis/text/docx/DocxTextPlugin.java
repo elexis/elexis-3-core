@@ -1,6 +1,5 @@
 package at.medevit.elexis.text.docx;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.Docx4J;
 import org.docx4j.TraversalUtil;
 import org.docx4j.model.datastorage.migration.VariablePrepare;
@@ -405,6 +405,7 @@ public class DocxTextPlugin implements ITextPlugin {
 			openButton = new Button(composite, SWT.PUSH);
 			openButton.setText("Dokument öffnen");
 			openButton.addListener(SWT.Selection, new Listener() {
+				@Override
 				public void handleEvent(Event event) {
 					openCurrentDocument();
 				}
