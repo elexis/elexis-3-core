@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Services Test
 Bundle-SymbolicName: ch.elexis.core.services.test;singleton:=true
-Bundle-Version: 3.11.0.qualifier
+Bundle-Version: 3.12.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: ch.elexis.core.services;bundle-version="3.9.0"
 Automatic-Module-Name: ch.elexis.core.services.test
