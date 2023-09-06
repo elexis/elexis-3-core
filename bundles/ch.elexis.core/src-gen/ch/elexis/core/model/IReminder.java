@@ -10,14 +10,13 @@
  */
 package ch.elexis.core.model;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
-
-import java.time.LocalDate;
-
-import java.util.List;
 
 /**
  * <!-- begin-user-doc -->

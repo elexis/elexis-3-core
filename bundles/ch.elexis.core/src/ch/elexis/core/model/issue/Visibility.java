@@ -16,10 +16,12 @@ public enum Visibility implements INumericEnum, ILocalizedEnum {
 		this.numeric = numeric;
 	}
 
+	@Override
 	public int numericValue() {
 		return numeric;
 	}
 
+	@Override
 	public String getLocaleText() {
 		try {
 			return ResourceBundle.getBundle(ch.elexis.core.l10n.Messages.BUNDLE_NAME)

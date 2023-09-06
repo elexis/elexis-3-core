@@ -21,5 +21,6 @@ public interface IQueryCursor<T> extends Iterator<T>, Closeable {
 		return new EmptyCursor<>();
 	}
 
+	@Override
 	public void close();
 }

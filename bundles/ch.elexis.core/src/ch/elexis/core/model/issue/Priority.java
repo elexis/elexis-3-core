@@ -16,6 +16,7 @@ public enum Priority implements INumericEnum, ILocalizedEnum {
 		this.numeric = numeric;
 	}
 
+	@Override
 	public int numericValue() {
 		return numeric;
 	}

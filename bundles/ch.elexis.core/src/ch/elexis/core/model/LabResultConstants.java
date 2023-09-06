@@ -29,7 +29,11 @@ public class LabResultConstants {
 	 * @return
 	 */
 	public static boolean isPathologic(final ILabItem item, final String result, final String referenceValues) {
-		if (item.getTyp().equals(LabItemTyp.ABSOLUTE)) {
+		//$NON-NLS-1$
+		//$NON-NLS-1$
+		/* if(item.getTyp().equals(LabItem.typ.NUMERIC)) */
+		// only test first string as range is defined in one string
+		if (item.getTyp() == LabItemTyp.ABSOLUTE) {
 			if (result.toLowerCase().startsWith("pos")) { //$NON-NLS-1$
 				return true;
 			}

@@ -10,8 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDate;
+
+import ch.elexis.core.model.prescription.EntryType;
 
 
 /**

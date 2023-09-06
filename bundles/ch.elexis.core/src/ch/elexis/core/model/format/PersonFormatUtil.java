@@ -105,9 +105,9 @@ public class PersonFormatUtil {
 	}
 
 	public static String getSalutation(IPerson person) {
-		if (person.getGender().equals(Gender.MALE)) {
+		if (person.getGender() == Gender.MALE) {
 			return Messages.Contact_SalutationM;
-		} else if (person.getGender().equals(Gender.FEMALE)) {
+		} else if (person.getGender() == Gender.FEMALE) {
 			return Messages.Contact_SalutationF;
 		} else {
 			return StringUtils.EMPTY;

@@ -1,6 +1,7 @@
 package ch.elexis.core.model.format;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.IMandator;
 
 public class MandatorFormatUtil {

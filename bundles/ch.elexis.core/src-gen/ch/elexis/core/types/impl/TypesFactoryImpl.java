@@ -10,6 +10,21 @@
  */
 package ch.elexis.core.types.impl;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.InvoiceState.REJECTCODE;
 import ch.elexis.core.model.LabOrderState;
@@ -25,18 +40,6 @@ import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.model.prescription.EntryType;
-import java.time.LocalDateTime;
-
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.impl.EFactoryImpl;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import ch.elexis.core.types.AddressType;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
@@ -54,11 +57,7 @@ import ch.elexis.core.types.TypesFactory;
 import ch.elexis.core.types.TypesPackage;
 import ch.elexis.core.types.VatInfo;
 import ch.rgw.tools.Money;
-import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.time.LocalDate;
 
 /**
  * <!-- begin-user-doc -->

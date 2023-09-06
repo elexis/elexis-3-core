@@ -10,11 +10,11 @@
  */
 package ch.elexis.core.model;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
 import ch.elexis.core.types.DocumentStatus;
-import java.io.InputStream;
 
 /**
  * <!-- begin-user-doc -->

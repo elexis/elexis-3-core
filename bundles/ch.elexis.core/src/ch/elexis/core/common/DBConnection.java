@@ -73,7 +73,7 @@ public class DBConnection implements Serializable {
 
 		public static Optional<DBType> valueOfDriver(String driver) {
 			// compatibility for old mysql driver string
-			if (driver.equals("com.mysql.jdbc.Driver")) {
+			if ("com.mysql.jdbc.Driver".equals(driver)) {
 				return Optional.of(MySQL);
 			}
 			for (DBType dbType : values()) {
@@ -121,7 +121,7 @@ public class DBConnection implements Serializable {
 		if (rdbmsType == null) {
 			result = false;
 		}
-		if (!DBType.H2.equals(rdbmsType) && StringUtils.isBlank(hostName)) {
+		if (DBType.H2 != rdbmsType && StringUtils.isBlank(hostName)) {
 			result = false;
 		}
 		if (StringUtils.isBlank(databaseName)) {

@@ -12,10 +12,10 @@
 
 package ch.elexis.core.utils;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 

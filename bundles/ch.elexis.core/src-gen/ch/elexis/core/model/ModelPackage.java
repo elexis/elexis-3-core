@@ -10,12 +10,12 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.TypesPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
+import ch.elexis.core.types.TypesPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -168,8 +168,10 @@ public class SSDRange {
 	 *        satisfy dependency
 	 */
 	public class Rectangle {
-		int x, y;
-		int width, height;
+		int x;
+		int y;
+		int width;
+		int height;
 
 		/**
 		 * Construct a new instance of this class given the x, y, width and height

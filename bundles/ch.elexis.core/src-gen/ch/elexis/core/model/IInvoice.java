@@ -10,10 +10,11 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.model.InvoiceState.REJECTCODE;
-import ch.rgw.tools.Money;
 import java.time.LocalDate;
 import java.util.List;
+
+import ch.elexis.core.model.InvoiceState.REJECTCODE;
+import ch.rgw.tools.Money;
 
 
 /**
