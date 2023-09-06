@@ -106,7 +106,7 @@ public class DataSourceConnectionParser {
 				// impossible to add
 				// ;AUTO_SERVER=TRUE as a jdbc connection string, maven interprets it as an end
 				// of line
-				if (dbType.dbType.equalsIgnoreCase("h2") && !prop_dbConnSpec.contains("AUTO_SERVER=TRUE")) {
+				if ("h2".equalsIgnoreCase(dbType.dbType) && !prop_dbConnSpec.contains("AUTO_SERVER=TRUE")) {
 					prop_dbConnSpec = prop_dbConnSpec + ";AUTO_SERVER=TRUE";
 					logger.info("Added AUTO_SERVER [" + prop_dbConnSpec + "]");
 				}

@@ -13,15 +13,15 @@ import ch.elexis.core.model.Statistics;
 public class CompatibilityClassResolver {
 
 	public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
-		if (desc.getName().equals("ch.elexis.data.Kontakt$statL")) { //$NON-NLS-1$
+		if ("ch.elexis.data.Kontakt$statL".equals(desc.getName())) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
 					.loadClass("ch.elexis.core.jpa.model.util.compatibility.Kontakt$statL"); //$NON-NLS-1$
 		}
-		if (desc.getName().equals("ch.elexis.util.MFUList")) { //$NON-NLS-1$
+		if ("ch.elexis.util.MFUList".equals(desc.getName())) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
 					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList"); //$NON-NLS-1$
 		}
-		if (desc.getName().equals("ch.elexis.util.MFUList$Entry")) { //$NON-NLS-1$
+		if ("ch.elexis.util.MFUList$Entry".equals(desc.getName())) { //$NON-NLS-1$
 			return CompatibilityClassResolver.class.getClassLoader()
 					.loadClass("ch.elexis.core.jpa.model.util.compatibility.MFUList$Entry"); //$NON-NLS-1$
 		}

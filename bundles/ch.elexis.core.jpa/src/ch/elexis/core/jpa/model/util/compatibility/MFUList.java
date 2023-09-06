@@ -79,6 +79,7 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 			count = 0;
 		}
 
+		@Override
 		public int compareTo(Entry<X> obj) {
 			return obj.count - count;
 		}
@@ -95,6 +96,7 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		return new It();
 	}
@@ -106,14 +108,17 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 			li = list.iterator();
 		}
 
+		@Override
 		public boolean hasNext() {
 			return li.hasNext();
 		}
 
+		@Override
 		public T next() {
 			return li.next().o;
 		}
 
+		@Override
 		public void remove() {
 			li.remove();
 		}

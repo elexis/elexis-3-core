@@ -89,7 +89,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	}
 
 	private boolean isAoboQuery() {
-		return query.getParameters().stream().filter(p -> p.getName().equals("aoboids")).findFirst()
+		return query.getParameters().stream().filter(p -> "aoboids".equals(p.getName())).findFirst()
 				.isPresent();
 	}
 

@@ -1,16 +1,16 @@
 package ch.elexis.core.jpa.liquibase;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
+import ch.elexis.core.l10n.Messages;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSet.RunStatus;

@@ -90,6 +90,7 @@ public class TestDatabaseConnection extends DBConnection {
 			// location
 			if (!fileLocation.isPresent()) {
 				Runtime.getRuntime().addShutdownHook(new Thread() {
+					@Override
 					public void run() {
 						try {
 							Path dbdir = Paths.get(System.getenv("HOME"), "/elexisTest");
