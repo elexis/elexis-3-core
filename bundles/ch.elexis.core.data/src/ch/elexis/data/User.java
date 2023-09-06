@@ -72,7 +72,7 @@ public class User extends PersistentObject {
 	public User(Anwender anw, String username, String password) {
 		create(username);
 		setAssignedContact(anw);
-		if (password == null || password.length() == 0) {
+		if (password == null || password.isEmpty()) {
 			password = ElexisIdGenerator.generateId();
 		}
 		setPassword(password);
@@ -116,14 +116,14 @@ public class User extends PersistentObject {
 		List<Anwender> users = qbe.execute();
 		for (Anwender anwender : users) {
 			String username = anwender.get(Kontakt.FLD_NAME3);
-			if (username == null || username.length() == 0) {
+			if (username == null || username.isEmpty()) {
 				log.warn("Username for Anwender " + anwender.getLabel() + " not set. Skipping user creation.");
 				continue;
 			}
 
 			String password = (String) anwender.getExtInfoStoredObjectByKey("UsrPwd");
 			boolean setActive = true;
-			if (password == null || password.length() == 0) {
+			if (password == null || password.isEmpty()) {
 				password = "pass";
 				log.warn("Password for Anwender " + anwender.getLabel()
 						+ " is empty, setting 'pass' and deactivating user.");

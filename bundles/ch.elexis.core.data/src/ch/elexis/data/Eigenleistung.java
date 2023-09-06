@@ -33,6 +33,7 @@ public class Eigenleistung extends VerrechenbarAdapter {
 		Xid.localRegisterXIDDomainIfNotExists(XIDDOMAIN, CODESYSTEM_NAME, Xid.ASSIGNMENT_LOCAL | Xid.QUALITY_GUID);
 	}
 
+	@Override
 	public String getXidDomain() {
 		return XIDDOMAIN;
 	}
@@ -95,10 +96,12 @@ public class Eigenleistung extends VerrechenbarAdapter {
 		return true;
 	}
 
+	@Override
 	public int getTP(final TimeTool date, final IFall fall) {
 		return getPreis(date, fall).getCents();
 	}
 
+	@Override
 	public double getFactor(final TimeTool date, final IFall fall) {
 		if (MultiplikatorList.isEigenleistungUseMulti(fall.getAbrechnungsSystem())) {
 			return getVKMultiplikator(date, fall);

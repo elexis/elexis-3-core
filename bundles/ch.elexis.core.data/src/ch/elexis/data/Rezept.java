@@ -11,11 +11,11 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -197,7 +197,11 @@ public class Rezept extends PersistentObject {
 
 	private static class RpZeile {
 		public static final String fieldSeparator = "¦";
-		String num, name, pck, ds, bem;
+		String num;
+		String name;
+		String pck;
+		String ds;
+		String bem;
 
 		@Override
 		public String toString() {

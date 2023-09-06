@@ -12,6 +12,7 @@
 package ch.elexis.data;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ElexisSystemPropertyConstants;
 import ch.rgw.io.SqlSettings;

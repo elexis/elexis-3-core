@@ -136,6 +136,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 *
 	 * @return
 	 */
+	@Override
 	public TimeTool getBillingDate() {
 		String r = get(FLD_RN_PLANUNG);
 		if (StringTool.isNothing(r)) {
@@ -153,6 +154,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 *
 	 * @param dat Ein Zeitpunkt oder null
 	 */
+	@Override
 	public void setBillingDate(TimeTool dat) {
 		set(FLD_RN_PLANUNG, dat == null ? null : dat.toString(TimeTool.DATE_GER));
 	}
@@ -176,7 +178,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 				String localReq = StringUtils.EMPTY;
 				String[] r = req.split(":"); //$NON-NLS-1$
 				if (r != null && r.length > 1) {
-					if ((r[1].equalsIgnoreCase("X")) && (r.length > 2)) { //$NON-NLS-1$
+					if (("X".equalsIgnoreCase(r[1])) && (r.length > 2)) { //$NON-NLS-1$
 						// *** support for additional field types (checkboxes with
 						// multiple items are
 						// special)
@@ -195,7 +197,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 							return false;
 						}
 					}
-					if (r[1].equals("K")) { //$NON-NLS-1$
+					if ("K".equals(r[1])) { //$NON-NLS-1$
 						Kontakt k = Kontakt.load(localReq);
 						if (!k.isValid()) {
 							return false;
@@ -250,14 +252,17 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 
 	/** Anfangsdatum lesen (in der Form dd.mm.yy) */
+	@Override
 	public String getBeginnDatum() {
 		return checkNull(get(FLD_DATUM_VON));
 	}
 
+	@Override
 	public String getBezeichnung() {
 		return checkNull(get(FLD_BEZEICHNUNG));
 	}
 
+	@Override
 	public void setBezeichnung(final String t) {
 		set(FLD_BEZEICHNUNG, t);
 	}
@@ -266,16 +271,19 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * Anfangsdatum setzen Zulässige Formate: dd.mm.yy, dd.mm.yyyy, yyyymmdd,
 	 * yy-mm-dd
 	 */
+	@Override
 	public void setBeginnDatum(final String dat) {
 		set(FLD_DATUM_VON, dat);
 	}
 
 	/** Enddatum lesen oder null: Fall noch nicht abgeschlossen */
+	@Override
 	public String getEndDatum() {
 		return checkNull(get(FLD_DATUM_BIS));
 	}
 
 	/** Enddatum setzen. Setzt zugleich den Fall auf abgeschlossen */
+	@Override
 	public void setEndDatum(final String dat) {
 		set(FLD_DATUM_BIS, dat);
 	}
@@ -286,6 +294,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @return <code>null</code> if not set or equal to patient
 	 * @since 3.6
 	 */
+	@Override
 	public @Nullable Kontakt getCostBearer() {
 		String costBearerId = get(FLD_KOSTENTRAEGER);
 		if (costBearerId != null && costBearerId.length() > 0) {
@@ -303,6 +312,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @param costBearer <code>null</code> to remove override
 	 * @since 3.4
 	 */
+	@Override
 	public void setCostBearer(Kontakt costBearer) {
 		set(FLD_KOSTENTRAEGER, (costBearer != null) ? costBearer.getId() : null);
 	}
@@ -312,6 +322,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 *
 	 * @return the guarantor, if null in the db returns the patient
 	 */
+	@Override
 	public Kontakt getGarant() {
 		Kontakt ret = Kontakt.load(get(FLD_GARANT_ID));
 		if ((ret == null) || (!ret.isValid())) {
@@ -320,6 +331,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return ret;
 	}
 
+	@Override
 	public void setGarant(final Kontakt garant) {
 		set(FLD_GARANT_ID, garant.getId());
 	}
@@ -368,10 +380,12 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		setInfoString(FLD_RECHNUNGSSTELLER_ID, r.getId());
 	}
 
+	@Override
 	public boolean getCopyForPatient() {
 		return StringConstants.ONE.equals(getInfoString(FLD_EXT_COPY_FOR_PATIENT));
 	}
 
+	@Override
 	public void setCopyForPatient(boolean copy) {
 		setInfoString(FLD_EXT_COPY_FOR_PATIENT, copy ? "1" : "0");
 
@@ -391,6 +405,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return Kontakt.load(kid);
 	}
 
+	@Override
 	public void setRequiredContact(final String name, final Kontakt k) {
 		String r = getRequirements();
 		if (!StringTool.isNothing(r)) {
@@ -438,6 +453,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return kid;
 	}
 
+	@Override
 	public void setRequiredString(final String name, final String val) {
 		String[] req = getRequirements().split(";"); //$NON-NLS-1$
 		int idx = StringTool.getIndex(req, name + ":T"); //$NON-NLS-1$
@@ -468,10 +484,12 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return false;
 	}
 
+	@Override
 	public void setAbrechnungsSystem(final String system) {
 		set(FLD_BILLINGSYSTEM, system);
 	}
 
+	@Override
 	public String getAbrechnungsSystem() {
 		String ret = get(FLD_BILLINGSYSTEM);
 		if (StringTool.isNothing(ret)) {
@@ -515,6 +533,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 *         selected index
 	 */
 
+	@Override
 	public String getOptionals() {
 		String req = BillingSystem.getOptionals(getAbrechnungsSystem());
 		return req == null ? StringUtils.EMPTY : req;
@@ -533,6 +552,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 *         selected index
 	 */
 
+	@Override
 	public String getUnused() {
 		String req = BillingSystem.getUnused(getAbrechnungsSystem());
 		return req == null ? StringUtils.EMPTY : req;
@@ -556,7 +576,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		String outputterName = getOutputterName();
 		if (outputterName.length() > 0) {
 			IRnOutputter ret = getRnOutputter(outputterName);
-			if (ret == null || outputterName.equals("Fall-Standard")) {
+			if (ret == null || "Fall-Standard".equals(outputterName)) {
 				ret = getRnOutputter(DEFAULT_RNOUTPUTTER);
 				if (ret != null) {
 					BillingSystem.setConfigurationValue(getAbrechnungsSystem(), "standardausgabe", DEFAULT_RNOUTPUTTER);
@@ -586,6 +606,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 
 	/** Behandlungen zu diesem Fall holen */
+	@Override
 	public Konsultation[] getBehandlungen(final boolean sortReverse) {
 		List<String> list = getList(FLD_BEHANDLUNGEN, sortReverse);
 		int i = 0;
@@ -620,14 +641,17 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return new Konsultation(this);
 	}
 
+	@Override
 	public Patient getPatient() {
 		return Patient.load(get(FLD_PATIENT_ID));
 	}
 
+	@Override
 	public String getGrund() {
 		return checkNull(get(FLD_GRUND));
 	}
 
+	@Override
 	public void setGrund(final String g) {
 		set(FLD_GRUND, g);
 	}
@@ -708,6 +732,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @return the value of that parameter (which might be empty but will never be
 	 *         null)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public String getInfoString(final String name) {
 		Map extinfo = getMap(FLD_EXTINFO);
@@ -720,6 +745,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return StringUtils.EMPTY;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void setInfoString(final String name, final String wert) {
 		Map extinfo = getMap(FLD_EXTINFO);

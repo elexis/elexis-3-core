@@ -24,6 +24,7 @@ import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 public class BriefePerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.BriefePerspektive"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);

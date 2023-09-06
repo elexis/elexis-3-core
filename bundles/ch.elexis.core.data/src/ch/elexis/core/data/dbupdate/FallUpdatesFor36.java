@@ -110,7 +110,7 @@ public class FallUpdatesFor36 {
 					if (StringUtils.isNotBlank(errorString)) {
 						message.append(
 								"Bei der automatisierten Aktualisierung der Abrechnungssysteme sind folgende Fehler aufgetreten:\n\n");
-						message.append(errorString.toString() + "\n\n");
+						message.append(errorString + "\n\n");
 					} else {
 						message.append("Die automatisierte Übernahme wurde ohne Probleme abgeschlossen.");
 					}

@@ -1,6 +1,7 @@
 package ch.elexis.data.dto;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.data.interfaces.ICodeElement;
 
 public class CodeElementDTO implements ICodeElement {

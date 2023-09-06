@@ -125,7 +125,7 @@ public class InvoiceCorrectionDTO {
 	public InvoiceHistoryEntryDTO getHistoryEntryForLeistungTransferFromCache(IFall fall) {
 		if (fall != null && fall.getId() != null) {
 			for (InvoiceHistoryEntryDTO invoiceHistoryEntryDTO : cache) {
-				if (invoiceHistoryEntryDTO.getOperationType().equals(OperationType.LEISTUNG_TRANSFER_TO_FALL_KONS)) {
+				if (invoiceHistoryEntryDTO.getOperationType() == OperationType.LEISTUNG_TRANSFER_TO_FALL_KONS) {
 					if (invoiceHistoryEntryDTO.getAdditional() instanceof IFall
 							&& ((IFall) invoiceHistoryEntryDTO.getAdditional()).getId().equals(fall.getId())) {
 						return invoiceHistoryEntryDTO;

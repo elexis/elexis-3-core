@@ -74,7 +74,7 @@ public class BillingSystem {
 	public static boolean isDisabled(final String billingSystemName) {
 		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystemName + "/disabled", "0"); //$NON-NLS-1$ //$NON-NLS-2$
-		return !ret.equalsIgnoreCase("0");
+		return !"0".equalsIgnoreCase(ret);
 	}
 
 	/**

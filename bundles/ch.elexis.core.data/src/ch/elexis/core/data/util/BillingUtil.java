@@ -509,7 +509,7 @@ public class BillingUtil {
 		TimeTool konsDate = new TimeTool();
 		for (Konsultation consultation : consultations) {
 			konsDate.set(consultation.getDatum());
-			Integer year = new Integer(konsDate.get(TimeTool.YEAR));
+			Integer year = Integer.valueOf(konsDate.get(TimeTool.YEAR));
 			List<Konsultation> list = ret.get(year);
 			if (list == null) {
 				list = new ArrayList<>();

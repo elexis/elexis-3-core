@@ -12,8 +12,9 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.rgw.tools.JdbcLink;
@@ -41,6 +42,7 @@ public class Mandant extends Anwender {
 		addMapping(Kontakt.TABLENAME, FLD_EXTINFO, FLD_IS_MANDATOR, "Label=Bezeichnung3");
 	}
 
+	@Override
 	public boolean isValid() {
 		if (get(FLD_IS_MANDATOR).equals(StringConstants.ZERO)) {
 			return false;
@@ -107,6 +109,7 @@ public class Mandant extends Anwender {
 		set(new String[] { Person.FLD_E_MAIL }, email);
 	}
 
+	@Override
 	protected String getConstraint() {
 		return new StringBuilder(FLD_IS_MANDATOR).append(Query.EQUALS).append(JdbcLink.wrap(StringConstants.ONE))
 				.toString();

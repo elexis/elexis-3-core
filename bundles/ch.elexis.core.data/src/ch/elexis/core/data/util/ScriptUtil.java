@@ -52,9 +52,9 @@ public class ScriptUtil {
 		}
 
 		PersistentObject ref = null;
-		if (dependendObject.equals("Patient")) {
+		if ("Patient".equals(dependendObject)) {
 			ref = ElexisEventDispatcher.getSelectedPatient();
-		} else if (dependendObject.equals("Konsultation")) {
+		} else if ("Konsultation".equals(dependendObject)) {
 			ref = Konsultation.getAktuelleKons();
 		}
 		for (IConfigurationElement ic : Extensions.getExtensions(ExtensionPointConstantsData.DATA_ACCESS,

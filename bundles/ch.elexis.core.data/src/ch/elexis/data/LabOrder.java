@@ -207,6 +207,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		}
 	}
 
+	@Override
 	public LabItem getLabItem() {
 		LabItem ret = new LabItem(get(FLD_ITEM));
 		if (ret.exists()) {
@@ -216,10 +217,12 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		}
 	}
 
+	@Override
 	public void setLabItem(ILabItem item) {
 		set(FLD_ITEM, item.getId());
 	}
 
+	@Override
 	public ILabResult getLabResult() {
 		LabResult ret = new LabResult(get(FLD_RESULT));
 		if (ret.exists()) {
@@ -229,6 +232,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 		}
 	}
 
+	@Override
 	public void setLabResult(ILabResult result) {
 		if (result != null) {
 			set(FLD_RESULT, result.getId());

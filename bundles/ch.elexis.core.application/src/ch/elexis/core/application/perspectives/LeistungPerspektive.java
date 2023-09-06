@@ -26,6 +26,7 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 public class LeistungPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.LeistungPerspektive"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);

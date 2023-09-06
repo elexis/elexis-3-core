@@ -116,7 +116,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	public String getLabel() {
 		String name = getName();
 		String macro = getMacro();
-		if (macro.length() == 0 || macro.equals(name))
+		if (macro.isEmpty() || macro.equals(name))
 			return name;
 		return name + " [" + macro + "]";
 	}
@@ -138,7 +138,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	 */
 	public String getMacro() {
 		String[] vals = get(true, FLD_MACRO, FLD_NAME);
-		if (vals[0].length() == 0)
+		if (vals[0].isEmpty())
 			return vals[1];
 		return vals[0];
 	}
@@ -458,7 +458,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		ArrayList<Leistungsblock> ret = new ArrayList<>();
 		for (Leistungsblock lb : execute) {
 			String macro2 = checkNull(lb.getMacro());
-			if (macro.equals(macro2) || macro2.length() == 0) {
+			if (macro.equals(macro2) || macro2.isEmpty()) {
 				ret.add(lb);
 			}
 		}

@@ -189,6 +189,7 @@ public class NamedBlob extends PersistentObject {
 	public static List<NamedBlob> findSimilar(final String name) {
 		Query<NamedBlob> qbe = new Query<NamedBlob>(NamedBlob.class);
 		qbe.addPostQueryFilter(new IFilter() {
+			@Override
 			public boolean select(Object toTest) {
 				NamedBlob nb = (NamedBlob) toTest;
 				if (nb.getId().matches(name)) {

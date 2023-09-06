@@ -62,6 +62,7 @@ public class ElexisEventListenerImpl implements ElexisEventListener {
 		template = new ElexisEvent(object, class1, eventNotification, prioritySync);
 	}
 
+	@Override
 	public ElexisEvent getElexisEventFilter() {
 		return template;
 	}
@@ -70,6 +71,7 @@ public class ElexisEventListenerImpl implements ElexisEventListener {
 	 * This catches the Event from the EventDispatcher, which is in a Non-UI Thread
 	 * by definition
 	 */
+	@Override
 	public void catchElexisEvent(final ElexisEvent ev) {
 		if (performanceStatisticHandler != null) {
 			performanceStatisticHandler.startCatchEvent(ev, this);

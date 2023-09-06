@@ -58,6 +58,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		return TABLENAME;
 	}
 
+	@Override
 	public String getXidDomain() {
 		return XID_PHARMACODE;
 	}
@@ -141,6 +142,7 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getName() {
 		return checkNull(get(FLD_NAME));
 	}
@@ -388,10 +390,12 @@ public class Artikel extends VerrechenbarAdapter implements IArticle {
 		}
 	}
 
+	@Override
 	public int getTP(final TimeTool date, final IFall fall) {
 		return getPreis(date, fall);
 	}
 
+	@Override
 	public double getFactor(final TimeTool date, final IFall fall) {
 		return 1.0;
 	}

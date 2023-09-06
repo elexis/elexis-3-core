@@ -27,6 +27,7 @@ import ch.elexis.core.ui.views.BBSView;
 public class BBSPerspective implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.SchwarzesBrettV1.0"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);

@@ -12,7 +12,7 @@ public class ElexisPropertyTester extends PropertyTester {
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (PROP_STANDALONE.equals(property)) {
-			return ConnectionStatus.STANDALONE.equals(ElexisServerServiceHolder.get().getConnectionStatus());
+			return ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get().getConnectionStatus();
 		}
 		return false;
 	}

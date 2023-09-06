@@ -71,6 +71,7 @@ public class Person extends Kontakt {
 		return get(MOBILE);
 	}
 
+	@Override
 	public boolean isValid() {
 		return super.isValid();
 	}
@@ -143,6 +144,7 @@ public class Person extends Kontakt {
 	 *
 	 * @return a label describing this Person
 	 */
+	@Override
 	public String getLabel(boolean shortLabel) {
 		StringBuilder sb = new StringBuilder();
 

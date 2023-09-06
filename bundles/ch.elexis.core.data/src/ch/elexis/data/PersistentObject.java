@@ -594,6 +594,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	}
 
 	/** Einen menschenlesbaren Identifikationsstring für dieses Objet liefern */
+	@Override
 	abstract public String getLabel();
 
 	/**
@@ -609,6 +610,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @return true wenn die Daten gültig (nicht notwendigerweise korrekt) sind
 	 */
+	@Override
 	public boolean isValid() {
 		if (state() < EXISTS) {
 			return false;
@@ -623,6 +625,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @return die ID.
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -657,6 +660,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return der code-String, aus dem mit {@link PersistentObjectFactory}
 	 *         .createFromString wieder das Objekt erstellt werden kann
 	 */
+	@Override
 	public String storeToString() {
 		return getClass().getName() + StringConstants.DOUBLECOLON + getId();
 	}
@@ -678,6 +682,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return a value between INEXISTENT and EXISTS
 	 */
 
+	@Override
 	public int state() {
 		if (StringTool.isNothing(getId()) || getId().contains("'")) {
 			return INVALID_ID;
@@ -694,7 +699,7 @@ public abstract class PersistentObject implements IPersistentObject {
 					// 'deleted', the object exists anyway
 					return EXISTS;
 				}
-				return deleted.equals("1") ? DELETED : EXISTS;
+				return "1".equals(deleted) ? DELETED : EXISTS;
 
 			} else {
 				return INEXISTENT;
@@ -711,6 +716,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         wurde
 	 */
 
+	@Override
 	public boolean exists() {
 		return state() == EXISTS;
 	}
@@ -722,6 +728,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @return true, if the object is available in the database, false otherwise
 	 */
+	@Override
 	public boolean isAvailable() {
 		return (state() >= DELETED);
 	}
@@ -733,6 +740,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return an identifier that may be empty but will never be null
 	 */
 
+	@Override
 	public String getXid(final String domain) {
 		if (domain.equals(XidConstants.DOMAIN_ELEXIS)) {
 			return getId();
@@ -752,6 +760,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * quality. If no xid is given for this object, a newly created xid of local
 	 * quality will be returned
 	 */
+	@Override
 	public IXid getXid() {
 		List<IXid> res = getXids();
 		if (res.size() == 0) {
@@ -781,6 +790,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @return a List that might be empty but is never null
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<IXid> getXids() {
 		Query<Xid> qbe = new Query<Xid>(Xid.class);
@@ -798,6 +808,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *                       collision occurs.
 	 * @return true on success, false on failure
 	 */
+	@Override
 	public boolean addXid(final String domain, final String domain_id, final boolean updateIfExists) {
 		Xid oldXID = Xid.findXID(this, domain);
 		if (oldXID != null) {
@@ -933,6 +944,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *
 	 * @return true wenn es gelöscht ist
 	 */
+	@Override
 	public boolean isDeleted() {
 		return get(FLD_DELETED).trim().equals(StringConstants.ONE);
 	}
@@ -1019,6 +1031,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return Der Inhalt des Felds (kann auch null sein), oder **ERROR**, wenn
 	 *         versucht werden sollte, ein nicht existierendes Feld auszulesen
 	 */
+	@Override
 	public @Nullable String get(final String field) {
 		if (getId() == null || getId().isEmpty()) {
 			log.error("Get with no ID on object of type [{}] and field [{}]", this.getClass().getName(), field,
@@ -1473,6 +1486,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @param value Einzusetzender Wert (der vorherige Wert wird überschrieben)
 	 * @return true bei Erfolg
 	 */
+	@Override
 	public boolean set(final String field, String value) {
 		String mapped = map(field);
 		String table = getTableName();
@@ -1636,7 +1650,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true on success, false else
 	 */
 	public boolean setInt(final String field, final int value) {
-		String stringValue = new Integer(value).toString();
+		String stringValue = Integer.toString(value);
 		if (stringValue.length() <= MAX_INT_LENGTH) {
 			return set(field, stringValue);
 		} else {
@@ -2079,6 +2093,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * @return true if values were set, else <code>false</code> and exception is
 	 *         created
 	 */
+	@Override
 	public boolean get(final String[] fields, final String[] values) {
 		if (getId() == null || getId().isEmpty()) {
 			log.error("Get with no ID on object of type [" + this.getClass().getName() + "]");
@@ -2466,6 +2481,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         operation on this object or 0 if there was no valid lastupdate time
 	 * @since 3.1 use direct db access
 	 */
+	@Override
 	public long getLastUpdate() {
 		String result = getDBConnection()
 				.queryString("SELECT LASTUPDATE FROM " + getTableName() + " WHERE ID=" + getWrappedId());
@@ -2727,6 +2743,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			ZipEntry entry = zis.getNextEntry();
 			if (entry != null) {
 				try (ObjectInputStream ois = new ObjectInputStream(zis) {
+					@Override
 					protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
 							throws IOException, ClassNotFoundException {
 						if (resolver != null) {

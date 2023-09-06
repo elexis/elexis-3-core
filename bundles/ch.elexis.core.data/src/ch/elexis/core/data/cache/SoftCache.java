@@ -12,13 +12,14 @@
 
 package ch.elexis.core.data.cache;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.rgw.tools.Log;
 
@@ -33,7 +34,11 @@ import ch.rgw.tools.Log;
 public class SoftCache<K> implements IPersistentObjectCache<K> {
 	private static boolean enabled = true;
 	protected Map<K, CacheEntry> cache;
-	protected long hits, misses, removed, inserts, expired;
+	protected long hits;
+	protected long misses;
+	protected long removed;
+	protected long inserts;
+	protected long expired;
 	protected Log log = Log.get(SoftCache.class.getName());
 
 	public SoftCache() {
@@ -60,6 +65,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#put(K, java.lang.Object,
 	 * int)
 	 */
+	@Override
 	public void put(final K key, final Object object, final int timeToCacheInSeconds) {
 		if (enabled) {
 			cache.put(key, new CacheEntry(object, timeToCacheInSeconds));
@@ -67,6 +73,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 		}
 	}
 
+	@Override
 	public Object get(final K key, final int timeToCacheInSeconds) {
 		return get(key);
 	}
@@ -76,6 +83,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#get(K)
 	 */
+	@Override
 	public Object get(final K key) {
 		if (!enabled) {
 			return null;
@@ -102,6 +110,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#remove(K)
 	 */
+	@Override
 	public void remove(final K key) {
 		synchronized (cache) {
 			cache.remove(key);
@@ -114,6 +123,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#clear()
 	 */
+	@Override
 	public void clear() {
 		synchronized (cache) {
 			purge();
@@ -126,6 +136,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#stat()
 	 */
+	@Override
 	public void stat() {
 		long total = hits + misses + removed + expired;
 		if (total != 0) {
@@ -147,6 +158,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#purge()
 	 */
+	@Override
 	public void purge() {
 		synchronized (cache) {
 			Iterator<Entry<K, CacheEntry>> it = cache.entrySet().iterator();
@@ -174,6 +186,7 @@ public class SoftCache<K> implements IPersistentObjectCache<K> {
 	 *
 	 * @see ch.elexis.data.cache.IPersistentObjectCache#reset()
 	 */
+	@Override
 	public synchronized void reset() {
 		purge();
 		cache.clear();
