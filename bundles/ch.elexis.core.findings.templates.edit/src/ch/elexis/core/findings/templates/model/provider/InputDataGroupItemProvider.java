@@ -2,17 +2,12 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
-import org.apache.commons.lang3.StringUtils;
-import ch.elexis.core.findings.templates.model.DataType;
-import ch.elexis.core.findings.templates.model.InputDataGroup;
-import ch.elexis.core.findings.templates.model.ModelPackage;
-
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -25,6 +20,10 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+
+import ch.elexis.core.findings.templates.model.DataType;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.ModelPackage;
 
 /**
  * This is the item provider adapter for a
@@ -105,7 +104,7 @@ public class InputDataGroupItemProvider extends ItemProviderAdapter
 	public String getText(Object object) {
 		DataType labelValue = ((InputDataGroup) object).getDataType();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ? getString("_UI_InputDataGroup_type")
+		return label == null || label.isEmpty() ? getString("_UI_InputDataGroup_type")
 				: getString("_UI_InputDataGroup_type") + StringUtils.SPACE + label;
 	}
 

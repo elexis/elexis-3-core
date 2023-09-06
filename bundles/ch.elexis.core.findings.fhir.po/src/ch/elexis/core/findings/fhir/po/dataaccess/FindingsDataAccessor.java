@@ -1,12 +1,12 @@
 package ch.elexis.core.findings.fhir.po.dataaccess;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;

@@ -2,7 +2,6 @@ package ch.elexis.core.findings.fhir.po.text;
 
 import java.util.Optional;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor;
 import ch.elexis.core.findings.migration.IMigratorService;

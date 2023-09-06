@@ -2,14 +2,22 @@
  */
 package ch.elexis.core.findings.templates.model.util;
 
-import ch.elexis.core.findings.templates.model.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import ch.elexis.core.findings.templates.model.CodeElement;
+import ch.elexis.core.findings.templates.model.FindingsTemplate;
+import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputData;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.InputDataNumeric;
+import ch.elexis.core.findings.templates.model.InputDataText;
+import ch.elexis.core.findings.templates.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

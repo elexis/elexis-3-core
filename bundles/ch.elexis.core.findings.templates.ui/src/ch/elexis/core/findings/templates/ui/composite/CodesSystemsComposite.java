@@ -100,6 +100,7 @@ public class CodesSystemsComposite extends Composite {
 
 		col = createTableViewerColumn("Sequenz", 50, 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public String getText(Object element) {
 				ILocalCoding iCoding = (ILocalCoding) element;
 				return Integer.toString(iCoding.getPrio());
