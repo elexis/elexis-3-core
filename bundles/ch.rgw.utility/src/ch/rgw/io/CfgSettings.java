@@ -63,7 +63,7 @@ public class CfgSettings extends Settings {
 				return new CfgSettings(name, msg);
 			}
 			String h = System.getProperty("user.home", "");
-			if (!h.equals("")) {
+			if (!"".equals(h)) {
 				h += java.io.File.separator;
 			}
 			if (exists(h + name)) {
@@ -101,6 +101,7 @@ public class CfgSettings extends Settings {
 	/**
 	 * @see ch.rgw.IO.Settings#flush()
 	 */
+	@Override
 	protected void flush_absolute() {
 		if (filename == null) {
 			return;
@@ -125,6 +126,7 @@ public class CfgSettings extends Settings {
 	/**
 	 * @see ch.rgw.IO.Settings#undo()
 	 */
+	@Override
 	public void undo() {
 		if (filename == null) {
 			return;

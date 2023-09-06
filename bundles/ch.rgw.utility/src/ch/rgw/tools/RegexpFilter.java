@@ -21,6 +21,7 @@ public class RegexpFilter implements IFilter {
 		pattern = Pattern.compile(regexp);
 	}
 
+	@Override
 	public boolean select(Object element) {
 		String m = element.toString();
 		return pattern.matcher(m).matches();

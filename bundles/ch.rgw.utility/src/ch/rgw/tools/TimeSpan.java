@@ -88,6 +88,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object arg0) {
 		if (arg0 instanceof TimeSpan) {
 			TimeSpan o = (TimeSpan) arg0;
@@ -102,6 +103,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		return (until.getTimeInSeconds() - from.getTimeInSeconds());
 	}
 
+	@Override
 	public int compareTo(TimeSpan other) {
 		if (equals(other) == true)
 			return 0;
@@ -263,6 +265,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 		return s.toString();
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer s = new StringBuffer(10);
 		s.append(from.toString());
@@ -291,6 +294,7 @@ public class TimeSpan implements Comparable<TimeSpan> {
 
 	public static class TSComparator implements Comparator<TimeSpan> {
 
+		@Override
 		public int compare(TimeSpan ts1, TimeSpan ts2) {
 			return ts1.compareTo(ts2);
 		}

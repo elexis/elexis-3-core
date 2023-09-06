@@ -75,6 +75,7 @@ public class PasswordValidator {
 			this.failResult = failResult;
 		}
 
+		@Override
 		public PasswordValidationResult failResult() {
 			return failResult;
 		}

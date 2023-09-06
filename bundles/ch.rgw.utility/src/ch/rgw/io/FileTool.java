@@ -605,7 +605,7 @@ public class FileTool {
 		int count;
 		byte data[] = new byte[BUFFER];
 
-		if (filenamePath == null || filenamePath.length() == 0) {
+		if (filenamePath == null || filenamePath.isEmpty()) {
 			throw new IllegalArgumentException("No file to unjar!");
 		}
 

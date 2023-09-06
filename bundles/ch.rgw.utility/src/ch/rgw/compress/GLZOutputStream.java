@@ -55,6 +55,7 @@ public class GLZOutputStream extends OutputStream {
 		intermediate.write(arg0);
 	}
 
+	@Override
 	public void close() throws IOException {
 		intermediate.close();
 		byte[] d = intermediate.toByteArray();

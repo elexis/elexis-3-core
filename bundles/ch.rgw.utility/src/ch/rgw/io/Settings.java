@@ -90,6 +90,7 @@ public abstract class Settings implements Serializable, Cloneable {
 		return dirty;
 	}
 
+	@Override
 	public String toString() {
 		return StringTool.enPrintable(StringTool.flatten(node, StringTool.NONE, null));
 	}
@@ -433,7 +434,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	 */
 	public TimeTool getDate(String key) {
 		String d = get(key, "");
-		if (d.equals(""))
+		if ("".equals(d))
 			return null;
 		try {
 			return new TimeTool(d);
@@ -467,10 +468,10 @@ public abstract class Settings implements Serializable, Cloneable {
 		if (v == null) {
 			return defvalue;
 		}
-		if (v.equals("1")) {
+		if ("1".equals(v)) {
 			return true;
 		}
-		if (v.equals("true")) {
+		if ("true".equals(v)) {
 			return true;
 		}
 		return false;
@@ -553,7 +554,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	 * @since 3.6
 	 */
 	public void setAsList(String key, List<String> values) {
-		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		Optional<String> value = values.stream().map(o -> o).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
 			set(key, value.get());
 		} else {

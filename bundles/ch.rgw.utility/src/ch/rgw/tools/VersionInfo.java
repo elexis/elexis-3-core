@@ -97,7 +97,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
 	}
 
 	private boolean matchElements(final String a, final String b) {
-		if (a.equals("*") || b.equals("*")) {
+		if ("*".equals(a) || "*".equals(b)) {
 			return true;
 		}
 		if (compareElem(a, b) == 0) {
@@ -157,6 +157,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
 		return (compareTo(vo) == 0);
 	}
 
+	@Override
 	public int compareTo(final VersionInfo vo) {
 		int c = compareElem(this.getMaior(), vo.getMaior());
 		if (c != 0) {

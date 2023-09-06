@@ -209,7 +209,11 @@ public class BinConverter {
 	 * @return number of extracted bytes
 	 */
 	public final static int hexStrToBytes(String sHex, byte[] data, int nSrcOfs, int nDstOfs, int nLen) {
-		int nI, nJ, nStrLen, nAvailBytes, nDstOfsBak;
+		int nI;
+		int nJ;
+		int nStrLen;
+		int nAvailBytes;
+		int nDstOfsBak;
 		byte bActByte;
 		boolean blConvertOK;
 
@@ -267,7 +271,8 @@ public class BinConverter {
 	 * @return the string
 	 */
 	public final static String byteArrayToStr(byte[] data, int nOfs, int nLen) {
-		int nAvailCapacity, nSBufPos;
+		int nAvailCapacity;
+		int nSBufPos;
 		StringBuffer sbuf;
 
 		// we need two bytes for every character

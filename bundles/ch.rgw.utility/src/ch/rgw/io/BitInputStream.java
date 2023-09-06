@@ -39,6 +39,7 @@ public class BitInputStream extends InputStream {
 	 *
 	 * @see java.io.InputStream#read()
 	 */
+	@Override
 	public int read() throws IOException {
 		return pullBits(8);
 	}
@@ -83,6 +84,7 @@ public class BitInputStream extends InputStream {
 	 * returned number does <b>not</b> accurately indicate the number of waiting
 	 * bits (Only zero or non-zero is guaranteed)
 	 */
+	@Override
 	public int available() throws IOException {
 		if (stream.available() > 0)
 			return 1;
@@ -91,6 +93,7 @@ public class BitInputStream extends InputStream {
 		return 0;
 	}
 
+	@Override
 	public void close() throws IOException {
 		stream.close();
 	}

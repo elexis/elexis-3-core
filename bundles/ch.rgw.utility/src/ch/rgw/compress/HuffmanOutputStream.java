@@ -67,6 +67,7 @@ public class HuffmanOutputStream extends OutputStream {
 
 	}
 
+	@Override
 	public void write(int c) throws IOException {
 		if (Huff.writeByte(tree.getRootNode(), bos, c) == false) { // System.out.println("Escaped");
 		}
@@ -81,6 +82,7 @@ public class HuffmanOutputStream extends OutputStream {
 		}
 	}
 
+	@Override
 	public void flush() throws IOException {
 		bos.flush();
 	}
@@ -91,6 +93,7 @@ public class HuffmanOutputStream extends OutputStream {
 	 * should always end with close(), because HuffmanInputStream can not determine
 	 * the end of the compressed data.
 	 */
+	@Override
 	public void close() throws IOException { // Huff.writeByte(tree.getRootNode(),bos,Huff.escape);
 		// write(Huff.eof);
 		Huff.writeEOF(tree.getRootNode(), bos);

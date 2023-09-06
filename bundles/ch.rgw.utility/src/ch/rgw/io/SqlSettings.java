@@ -85,6 +85,7 @@ public class SqlSettings extends Settings {
 	 *
 	 * @see ch.rgw.tools.Settings#flush()
 	 */
+	@Override
 	protected void flush_absolute() {
 		Iterator it = iterator();
 		PreparedStatement selectStatement = null;
@@ -238,6 +239,7 @@ public class SqlSettings extends Settings {
 	 *
 	 * @see ch.rgw.tools.Settings#undo()
 	 */
+	@Override
 	public void undo() {
 		PreparedStatement selectStatement = null;
 		try {

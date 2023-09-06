@@ -911,7 +911,7 @@ public class JdbcLink {
 			try {
 				if (res != null && res.next()) {
 					String r = res.getString(1);
-					if ((r == null) || (r.equals("null")) || (r.equals(""))) {
+					if ((r == null) || ("null".equals(r)) || ("".equals(r))) {
 						return "";
 					}
 					return r;
@@ -1096,7 +1096,7 @@ public class JdbcLink {
 			sql = sql.replaceAll("BLOB", "LONGBLOB");
 			sql = sql.replaceAll("TEXT", "LONGTEXT");
 			/* experimental - do not use */
-		} else if (DBFlavor.equalsIgnoreCase("db2")) {
+		} else if ("db2".equalsIgnoreCase(DBFlavor)) {
 			sql = sql.replaceAll("VARCHAR\\s*\\([0-9]+\\)", "VARCHAR");
 			sql = sql.replaceAll("TEXT", "CLOB");
 			/* /experimental */

@@ -18,15 +18,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Klasse zur einfachen Datum- und Zeitberarbeitung
@@ -983,7 +980,7 @@ public class TimeTool extends GregorianCalendar {
 	public static void setPreferredFormat(final String full, final String small, final String wr) {
 		pref_full = new SimpleDateFormat(full);
 		pref_small = new SimpleDateFormat(small);
-		if (wr.equals("1")) {
+		if ("1".equals(wr)) {
 			wrap = true;
 		} else {
 			wrap = false;

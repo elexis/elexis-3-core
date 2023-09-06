@@ -133,6 +133,7 @@ public class SysSettings extends Settings {
 	/**
 	 * @see ch.rgw.IO.Settings#flush()
 	 */
+	@Override
 	protected void flush_absolute() {
 		Iterator<?> it = iterator();
 		Preferences pr = getRoot();
@@ -165,6 +166,7 @@ public class SysSettings extends Settings {
 		}
 	}
 
+	@Override
 	public void undo() {
 		clear();
 		loadTree(getRoot(), "");
@@ -181,7 +183,7 @@ public class SysSettings extends Settings {
 			}
 			String[] keys = root.keys();
 			for (int i = 0; i < keys.length; i++) {
-				if (path.equals(""))
+				if ("".equals(path))
 					set(keys[i], root.get(keys[i], ""));
 				else
 					set(path + "/" + keys[i], root.get(keys[i], ""));

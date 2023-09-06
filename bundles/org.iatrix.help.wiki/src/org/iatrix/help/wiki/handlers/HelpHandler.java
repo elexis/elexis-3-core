@@ -42,6 +42,7 @@ public class HelpHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information from
 	 * the application context.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 
@@ -63,7 +64,7 @@ public class HelpHandler extends AbstractHandler {
 			try {
 				IViewPart view = Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 						.showView(WikiView.ID);
-				if (view != null && view instanceof WikiView) {
+				if (view instanceof WikiView) {
 					WikiView wikiView = (WikiView) view;
 					wikiView.setPage(contextId);
 				}

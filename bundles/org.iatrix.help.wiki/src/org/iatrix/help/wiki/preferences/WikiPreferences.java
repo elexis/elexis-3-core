@@ -40,6 +40,7 @@ public class WikiPreferences extends FieldEditorPreferencePage implements IWorkb
 		addField(new StringFieldEditor(Constants.CFG_HANDBOOK, "Handbuch", getFieldEditorParent()));
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 

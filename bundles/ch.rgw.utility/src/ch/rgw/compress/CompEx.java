@@ -103,7 +103,6 @@ public class CompEx {
 		CBZip2OutputStream bzo = new CBZip2OutputStream(baos);
 		int l;
 		int total = 0;
-		;
 		while ((l = in.read(buf, 0, buf.length)) != -1) {
 			bzo.write(buf, 0, l);
 			total += l;
@@ -125,7 +124,6 @@ public class CompEx {
 		zo.putNextEntry(new ZipEntry("Data"));
 		int l;
 		long total = 0;
-		;
 		while ((l = in.read(buf, 0, buf.length)) != -1) {
 			zo.write(buf, 0, l);
 			total += l;

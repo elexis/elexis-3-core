@@ -31,6 +31,7 @@ public class LimitSizeStack<T> extends LinkedList<T> {
 		max = limit;
 	}
 
+	@Override
 	public void push(T elem) {
 		if (size() >= max) {
 			remove(size() - 1);
@@ -38,6 +39,7 @@ public class LimitSizeStack<T> extends LinkedList<T> {
 		add(0, elem);
 	}
 
+	@Override
 	public T pop() {
 		if (size() == 0) {
 			return null;
