@@ -50,6 +50,7 @@ public class ComboField extends ActiveControl {
 	@Override
 	public void push() {
 		UiDesk.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				combo.setText(textContents);
 			}

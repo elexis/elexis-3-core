@@ -75,7 +75,11 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 	private CheckboxTableViewer checkboxTableViewerAssociation;
 	private CheckboxTableViewer checkboxTableViewerRoles;
 
-	private RestrictedAction addUserGroupAction, deleteUserGroupAction, lockUserGroupAction;
+	private RestrictedAction addUserGroupAction;
+
+	private RestrictedAction deleteUserGroupAction;
+
+	private RestrictedAction lockUserGroupAction;
 	private Label userInfoLabel;
 
 	/**
@@ -503,6 +507,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 
 	public class MandantViewerComparator extends ViewerComparator {
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;
@@ -512,6 +517,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 
 	public class UserViewerComparator extends ViewerComparator {
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IUser u1 = (IUser) o1;
 			IUser u2 = (IUser) o2;

@@ -101,6 +101,7 @@ public abstract class BackgroundJob extends Job {
 	protected void fireFinished() {
 		log.log(Messages.BackgroundJob_2 + jobname, Log.INFOS); // $NON-NLS-1$
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				LinkedList<BackgroundJobListener> lCopy = new LinkedList<BackgroundJobListener>(listeners);
 				for (BackgroundJobListener l : lCopy) {

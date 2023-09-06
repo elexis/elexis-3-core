@@ -30,6 +30,7 @@ public class TextField extends ActiveControl {
 		}
 		setControl(new Text(this, swtoption));
 		getTextControl().addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				textContents = getTextControl().getText();
 				fireChangedEvent();
@@ -51,6 +52,7 @@ public class TextField extends ActiveControl {
 	@Override
 	public void push() {
 		UiDesk.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				getTextControl().setText(textContents);
 			}

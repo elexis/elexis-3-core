@@ -132,7 +132,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private Logger log = LoggerFactory.getLogger(KonsDetailView.class);
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
-	private Hyperlink hlMandant, hlDate;
+	private Hyperlink hlMandant;
+
+	private Hyperlink hlDate;
 	ComboViewer comboViewerFall;
 	private IEncounter actEncounter;
 	FormToolkit tk;
@@ -145,7 +147,11 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private Action versionBackAction;
 	private LockedAction<IEncounter> saveAction;
 	private RestrictedAction purgeAction;
-	Action versionFwdAction, assignStickerAction, versionDisplayAction;
+	Action versionFwdAction;
+
+	Action assignStickerAction;
+
+	Action versionDisplayAction;
 	int displayedVersion;
 	Font emFont;
 	Composite cDesc;
@@ -385,6 +391,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		hlDate = tk.createHyperlink(cDesc, NO_CONS_SELECTED, SWT.NONE);
 		hlDate.setFont(emFont);
 		hlDate.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 

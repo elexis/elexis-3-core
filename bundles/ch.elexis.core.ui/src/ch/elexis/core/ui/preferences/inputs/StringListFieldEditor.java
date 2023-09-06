@@ -20,7 +20,8 @@ import ch.elexis.core.ui.Hub;
 import ch.rgw.tools.StringTool;
 
 public class StringListFieldEditor extends ListEditor {
-	String title, message;
+	String title;
+	String message;
 
 	/**
 	 * create a new StringList
@@ -37,6 +38,7 @@ public class StringListFieldEditor extends ListEditor {
 		message = inputMessage;
 	}
 
+	@Override
 	protected String createList(String[] items) {
 		return StringTool.join(items, ","); //$NON-NLS-1$
 	}

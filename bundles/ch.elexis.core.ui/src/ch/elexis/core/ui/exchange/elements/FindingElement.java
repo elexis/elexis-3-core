@@ -33,6 +33,7 @@ public class FindingElement extends XChangeElement {
 	public static final String TYPE_IMAGE = "image"; //$NON-NLS-1$
 	public static final String TYPE_ABSOLUTE = "absolute"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}
@@ -41,14 +42,15 @@ public class FindingElement extends XChangeElement {
 		asExporter(home);
 
 		setAttribute(ATTR_NAME, li.getKuerzel());
-		if (li.getTyp().equals(LabItemTyp.NUMERIC)) {
+		// TODO anpassen
+		if (li.getTyp() == LabItemTyp.NUMERIC) {
 			setAttribute(ATTR_TYPE, TYPE_NUMERIC);
 			setAttribute(ATTR_NORMRANGE, li.getRefM()); // TODO anpassen
 			setAttribute(ATTR_UNITS, li.getEinheit());
 
-		} else if (li.getTyp().equals(LabItemTyp.ABSOLUTE)) {
+		} else if (li.getTyp() == LabItemTyp.ABSOLUTE) {
 			setAttribute(ATTR_TYPE, TYPE_ABSOLUTE);
-		} else if (li.getTyp().equals(LabItemTyp.TEXT)) {
+		} else if (li.getTyp() == LabItemTyp.TEXT) {
 			setAttribute(ATTR_TYPE, TYPE_TEXT);
 		}
 		setAttribute(ATTR_GROUP, li.getGroup());

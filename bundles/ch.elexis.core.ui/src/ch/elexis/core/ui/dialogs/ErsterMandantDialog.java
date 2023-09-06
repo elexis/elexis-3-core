@@ -31,7 +31,18 @@ import ch.elexis.data.Person;
 import ch.rgw.tools.StringTool;
 
 public class ErsterMandantDialog extends TitleAreaDialog {
-	Text tUsername, tPwd1, tPwd2, tTitle, tFirstname, tLastname, tEmail, tStreet, tZip, tPlace, tPhone, tFax;
+	Text tUsername;
+	Text tPwd1;
+	Text tPwd2;
+	Text tTitle;
+	Text tFirstname;
+	Text tLastname;
+	Text tEmail;
+	Text tStreet;
+	Text tZip;
+	Text tPlace;
+	Text tPhone;
+	Text tFax;
 	String[] anreden = { Messages.Contact_SalutationM, Messages.Contact_SalutationF,
 			Messages.ErsterMandantDialog_Firma }; // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	Combo cbAnrede;

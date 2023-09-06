@@ -23,6 +23,7 @@ import ch.elexis.data.StockEntry;
 
 public class StockEntryLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof IStockEntry && columnIndex == 0) {
 			IStockEntry se = (IStockEntry) element;
@@ -34,6 +35,7 @@ public class StockEntryLabelProvider extends LabelProvider implements ITableLabe
 		return null;
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof IStockEntry) {
 			IStockEntry se = (IStockEntry) element;
@@ -79,6 +81,7 @@ public class StockEntryLabelProvider extends LabelProvider implements ITableLabe
 	 * Lagerartikel are shown in blue, articles that should be ordered are shown in
 	 * red
 	 */
+	@Override
 	public Color getForeground(Object element, int columnIndex) {
 		if (element instanceof IStockEntry) {
 			IStockEntry se = (IStockEntry) element;
@@ -97,6 +100,7 @@ public class StockEntryLabelProvider extends LabelProvider implements ITableLabe
 		return null;
 	}
 
+	@Override
 	public Color getBackground(Object element, int columnIndex) {
 		if (element instanceof StockEntry) {
 			StockEntry se = (StockEntry) element;

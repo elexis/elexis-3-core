@@ -137,7 +137,7 @@ public abstract class XChangeElement {
 
 	public String getID() {
 		String rawID = getAttr(ATTR_ID);
-		if (rawID.length() == 0) {
+		if (rawID.isEmpty()) {
 			XidElement eXid = getXid();
 			if (eXid != null) {
 				rawID = eXid.getAttr(ATTR_ID);

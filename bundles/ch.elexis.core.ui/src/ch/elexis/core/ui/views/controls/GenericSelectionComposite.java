@@ -44,7 +44,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 
 	private List<?> input;
 	private IStructuredSelection selection;
-	private String shellTitle, title, message;
+	private String shellTitle;
+
+	private String title;
+
+	private String message;
 
 	private Label selectLabel;
 	private Button selectButton;

@@ -50,6 +50,7 @@ public class ElexisText implements IScannerListener, DisposeListener {
 		return this.text;
 	}
 
+	@Override
 	public void widgetDisposed(DisposeEvent e) {
 		ScannerEvents.getInstance().removeScannerListener(this);
 	}
@@ -85,6 +86,7 @@ public class ElexisText implements IScannerListener, DisposeListener {
 		scannerListener.remove(listener);
 	}
 
+	@Override
 	public void scannerInput(Event e) {
 		if (e.widget == text) {
 			fireScannerEvent(e);

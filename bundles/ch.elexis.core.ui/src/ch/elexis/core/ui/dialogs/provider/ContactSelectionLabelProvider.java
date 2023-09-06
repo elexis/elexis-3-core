@@ -39,6 +39,7 @@ public class ContactSelectionLabelProvider extends DefaultLabelProvider {
 		return element.toString();
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		return getText(element);
 	}

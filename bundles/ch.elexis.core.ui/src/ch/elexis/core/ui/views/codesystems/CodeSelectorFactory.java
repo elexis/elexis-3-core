@@ -93,6 +93,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	public CodeSelectorFactory() {
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 
@@ -124,7 +125,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			String locationUri = contributionElement.getAttribute("locationURI"); //$NON-NLS-1$
 			String[] parts = locationUri.split(":"); //$NON-NLS-1$
 			if (parts.length == 2) {
-				if (parts[0].equals("popup") && parts[1].equals(getClass().getName())) { //$NON-NLS-1$
+				if ("popup".equals(parts[0]) && parts[1].equals(getClass().getName())) { //$NON-NLS-1$
 					IConfigurationElement[] command = contributionElement.getChildren("command"); //$NON-NLS-1$
 					if (command.length > 0) {
 						addMenuContribution(command[0], manager, selection);
@@ -297,7 +298,8 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 *
 	 */
 	public static class cPage extends Composite {
-		private CodeElementStatisticsComposite userStatistics, patientStatistics;
+		private CodeElementStatisticsComposite userStatistics;
+		private CodeElementStatisticsComposite patientStatistics;
 		private CodeSystemDescription description;
 		CommonViewer cv;
 		ViewerConfigurer vc;
@@ -365,6 +367,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 				MenuManager menu = new MenuManager();
 				menu.setRemoveAllWhenShown(true);
 				menu.addMenuListener(new IMenuListener() {
+					@Override
 					public void menuAboutToShow(IMenuManager manager) {
 						Iterable<IAction> actions = (Iterable<IAction>) (Iterable<?>) description.getActions(null);
 						for (IAction ac : actions) {
@@ -487,6 +490,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 */
 	protected PoDoubleClickListener getPoDoubleClickListener() {
 		return new PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {

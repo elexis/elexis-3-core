@@ -46,6 +46,7 @@ public class MedicalElement extends XChangeElement {
 	private AnalysesElement eAnalyses;
 	private EpisodesElement eEpisodes;
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}
@@ -283,6 +284,7 @@ public class MedicalElement extends XChangeElement {
 		return new LinkedList<DocumentElement>();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		List<RecordElement> records = getRecords();

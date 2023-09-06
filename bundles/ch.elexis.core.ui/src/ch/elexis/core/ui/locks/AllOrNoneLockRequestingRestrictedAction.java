@@ -23,6 +23,7 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 		super(evaluatableAce, text, val);
 	}
 
+	@Override
 	public void doRun() {
 		if (!AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
 			return;

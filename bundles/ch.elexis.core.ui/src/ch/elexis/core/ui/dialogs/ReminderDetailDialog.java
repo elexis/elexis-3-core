@@ -453,7 +453,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 			actionType = reminder.getActionType();
 
 			String[] strings = reminder.get(false, Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE);
-			if (strings[0].length() == 0 && strings[1].length() > 0) {
+			if (strings[0].isEmpty() && strings[1].length() > 0) {
 				txtSubject.setText(strings[1]);
 			} else {
 				txtSubject.setText(reminder.getSubject());
@@ -495,7 +495,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 					for (String value : defResponsibles) {
 						Object entry = value;
 						if (!TX_ALL.equals(value)) {
-							entry = Anwender.load(value.toString());
+							entry = Anwender.load(value);
 						}
 						defaultResponsibles.add(entry);
 					}

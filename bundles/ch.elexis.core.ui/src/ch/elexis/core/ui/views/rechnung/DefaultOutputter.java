@@ -38,6 +38,7 @@ import ch.rgw.tools.Result;
 public class DefaultOutputter implements IRnOutputter {
 	private ArrayList<IRnOutputter> configured = new ArrayList<IRnOutputter>();
 
+	@Override
 	public boolean canBill(Fall fall) {
 		if (fall.getOutputter().getDescription().equals(getDescription())) {
 			return false;
@@ -45,6 +46,7 @@ public class DefaultOutputter implements IRnOutputter {
 		return fall.getOutputter().canBill(fall);
 	}
 
+	@Override
 	public boolean canStorno(Rechnung rn) {
 		if (rn == null) {
 			return false;
@@ -52,6 +54,7 @@ public class DefaultOutputter implements IRnOutputter {
 		return rn.getFall().getOutputter().canStorno(rn);
 	}
 
+	@Override
 	public Object createSettingsControl(Object parent) {
 		Composite parComposite = (Composite) parent;
 		Label lbl = new Label(parComposite, SWT.WRAP);
@@ -59,6 +62,7 @@ public class DefaultOutputter implements IRnOutputter {
 		return lbl;
 	}
 
+	@Override
 	public Result<Rechnung> doOutput(TYPE type, Collection<Rechnung> rnn, final Properties props) {
 		Result<Rechnung> res = new Result<Rechnung>(null);
 		props.setProperty(IRnOutputter.PROP_OUTPUT_METHOD, "asDefault"); //$NON-NLS-1$
@@ -67,12 +71,14 @@ public class DefaultOutputter implements IRnOutputter {
 			final IRnOutputter iro = fall.getOutputter();
 			if (!configured.contains(iro)) {
 				SWTHelper.SimpleDialog dlg = new SWTHelper.SimpleDialog(new SWTHelper.IControlProvider() {
+					@Override
 					public Control getControl(Composite parent) {
 						parent.getShell().setText(iro.getDescription());
 						return (Control) iro.createSettingsControl(parent);
 
 					}
 
+					@Override
 					public void beforeClosing() {
 						iro.saveComposite();
 					}
@@ -89,10 +95,12 @@ public class DefaultOutputter implements IRnOutputter {
 		return null;
 	}
 
+	@Override
 	public String getDescription() {
 		return Messages.DefaultOutputter_defaultOutputForCase; // $NON-NLS-1$
 	}
 
+	@Override
 	public void saveComposite() {
 		// Nothing
 	}

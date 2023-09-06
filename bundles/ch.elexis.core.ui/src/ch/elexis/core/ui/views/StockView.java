@@ -124,7 +124,9 @@ public class StockView extends ViewPart implements IRefreshable {
 	private StockEntryLabelProvider labelProvider;
 
 	private ViewMenus viewMenus;
-	private IAction refreshAction, exportAction, scanInventoryAction;
+	private IAction refreshAction;
+	private IAction exportAction;
+	private IAction scanInventoryAction;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 

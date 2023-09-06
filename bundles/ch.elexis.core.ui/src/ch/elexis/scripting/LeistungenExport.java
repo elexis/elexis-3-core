@@ -134,17 +134,17 @@ public class LeistungenExport {
 									col[Code] = vv.getCode();
 									col[Text] = vv.getText();
 									int offset = andere;
-									if (vv.getCodeSystemName().equals("Tarmed")) {
+									if ("Tarmed".equals(vv.getCodeSystemName())) {
 										offset = TarmedAL;
-									} else if (vv.getCodeSystemName().equals("Laborleistung")) {
+									} else if ("Laborleistung".equals(vv.getCodeSystemName())) {
 										offset = Labor;
-									} else if (vv.getCodeSystemName().equals("Physiotherapie")) {
+									} else if ("Physiotherapie".equals(vv.getCodeSystemName())) {
 										offset = Physio;
-									} else if (vv.getCodeSystemName().equals("Medicals")) {
+									} else if ("Medicals".equals(vv.getCodeSystemName())) {
 										offset = Medical;
 									} else if (vv.getCodeSystemName().startsWith("Medikament")) {
 										offset = Medikament;
-									} else if (vv.getCodeSystemName().equals("MiGeL")) {
+									} else if ("MiGeL".equals(vv.getCodeSystemName())) {
 										offset = Migel;
 									}
 									col[offset] = v.getTotal().getAmountAsString();

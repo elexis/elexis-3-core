@@ -76,7 +76,7 @@ public class ClientCustomTextTokenEditDialog extends TitleAreaDialog {
 			return area;
 		}
 
-		if (arr[0].equalsIgnoreCase("Patient")) { //$NON-NLS-1$
+		if ("Patient".equalsIgnoreCase(arr[0])) { //$NON-NLS-1$
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();
 
 			if (arr[1] == null || pat == null) {

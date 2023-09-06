@@ -47,9 +47,15 @@ import ch.rgw.tools.StringTool;
 
 public class UserPreferences extends PreferencePage implements IWorkbenchPreferencePage {
 
-	Button bLoad, bSave, bWorkspaceLoad, bWorkspaceSave;
+	Button bLoad;
+	Button bSave;
+	Button bWorkspaceLoad;
+	Button bWorkspaceSave;
 	// Text tLoad, tSave, tWorkspaceLoad, tWorkspaceSave;
-	Combo cbUserSave, cbWSSave, cbUserLoad, cbWSLoad;
+	Combo cbUserSave;
+	Combo cbWSSave;
+	Combo cbUserLoad;
+	Combo cbWSLoad;
 	String[] userPrefs;
 	String[] WSPrefs;
 
@@ -144,6 +150,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 					if (newloc != null) {
 						ShutdownJob job = new ShutdownJob() {
 
+							@Override
 							public void doit() {
 								try {
 									File file = new File(layoutfile);
@@ -216,6 +223,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 		return ret;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 

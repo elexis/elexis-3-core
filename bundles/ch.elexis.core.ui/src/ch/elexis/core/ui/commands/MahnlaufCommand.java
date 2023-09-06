@@ -39,6 +39,7 @@ public class MahnlaufCommand extends AbstractHandler {
 
 	private Settings rnsSettings;
 
+	@Override
 	public Object execute(ExecutionEvent arg0) throws ExecutionException {
 		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();

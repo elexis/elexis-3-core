@@ -18,11 +18,15 @@ import ch.elexis.core.ui.util.SWTHelper;
 
 public class TextTemplateImportConflictDialog extends TitleAreaDialog {
 	private String name;
-	private Button btnReplace, btnChangeName, btnSkip;
+	private Button btnReplace;
+	private Button btnChangeName;
+	private Button btnSkip;
 	private Text txtNewName;
 
 	private String newFilename;
-	private boolean replaceTemplate, changeTemplateName, skipTemplate;
+	private boolean replaceTemplate;
+	private boolean changeTemplateName;
+	private boolean skipTemplate;
 
 	public TextTemplateImportConflictDialog(Shell parentShell, String name) {
 		super(parentShell);

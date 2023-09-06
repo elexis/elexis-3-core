@@ -531,6 +531,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 			txtFilterKonsByMoney = new MoneyInput(c);
 			txtFilterKonsByMoney.getControl().addListener(SWT.Verify, new Listener() {
+				@Override
 				public void handleEvent(Event e) {
 					// limits only the input the value validation happens at focus lost
 					String string = e.text;

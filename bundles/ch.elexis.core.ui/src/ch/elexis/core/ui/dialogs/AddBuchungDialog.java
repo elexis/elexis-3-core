@@ -37,7 +37,8 @@ import ch.rgw.tools.Money;
  */
 public class AddBuchungDialog extends TitleAreaDialog {
 
-	Text betrag, text;
+	Text betrag;
+	Text text;
 	// int result;
 	Patient pat;
 

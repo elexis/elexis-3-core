@@ -298,6 +298,7 @@ public class XidElement extends XChangeElement {
 
 		}
 
+		@Override
 		public String getXMLName() {
 			return ELEMENT_IDENTITY;
 		}

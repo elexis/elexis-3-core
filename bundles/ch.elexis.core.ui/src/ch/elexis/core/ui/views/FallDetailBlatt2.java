@@ -126,9 +126,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	public static final String[] dgsys = null;
 	Combo cAbrechnung;
 	ComboViewer cReason;
-	CDateTime dpVon, dpBis, dpGestationWeek13;
-	Text tBezeichnung, tGarant, tCostBearer;
-	Hyperlink autoFill, hlGarant, hlCostBearer;
+	CDateTime dpVon;
+	CDateTime dpBis;
+	CDateTime dpGestationWeek13;
+	Text tBezeichnung;
+	Text tGarant;
+	Text tCostBearer;
+	Hyperlink autoFill;
+	Hyperlink hlGarant;
+	Hyperlink hlCostBearer;
 	List<Control> lReqs = new ArrayList<Control>();
 	List<Control> keepEditable = new ArrayList<Control>();
 	Button btnCopyForPatient;
@@ -609,7 +615,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String newval = StringTool.leer;
 			if (control instanceof Combo) {
 				String kind = (String) ((Combo) control).getData("kind"); //$NON-NLS-1$
-				if (kind.equalsIgnoreCase("S")) { //$NON-NLS-1$
+				if ("S".equalsIgnoreCase(kind)) { //$NON-NLS-1$
 					newval = ((Combo) control).getText(); // save as string
 				} else {
 					newval = StringTool.leer + ((Combo) control).getSelectionIndex();
@@ -619,7 +625,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				int[] selection = ((org.eclipse.swt.widgets.List) control).getSelectionIndices();
 				String delim = StringTool.leer;
 				String kind = (String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
-				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited //$NON-NLS-1$
+				if ("S".equalsIgnoreCase(kind)) { // save as string list, tab delimited //$NON-NLS-1$
 					for (int ii = 0; ii < selection.length; ii++) {
 						newval = newval + delim + ((org.eclipse.swt.widgets.List) control).getItem(selection[ii]);
 						delim = ITEMDELIMITER;
@@ -634,7 +640,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				Button button = ((Button) control);
 				if ((button.getStyle() & SWT.RADIO) != 0) {
 					String kind = (String) button.getData("kind"); //$NON-NLS-1$
-					if (kind.equalsIgnoreCase("S")) { // save as string //$NON-NLS-1$
+					if ("S".equalsIgnoreCase(kind)) { // save as string //$NON-NLS-1$
 						if (button.getSelection())
 							newval = button.getText();
 					} else { // save as numeric (index)
@@ -863,7 +869,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			String controlType = controlDefParts[0];
 
 			String[] itemList = { StringTool.leer };
-			if (controlType.equalsIgnoreCase("X")) { //$NON-NLS-1$
+			if ("X".equalsIgnoreCase(controlType)) { //$NON-NLS-1$
 				if (controlDefParts.length > 1) {
 					itemList = controlDefParts[1].split(ITEMDELIMITER);
 				}
@@ -922,7 +928,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					String fldParts = bedArr[ii];
 					String[] flds = fldParts.split(ARGUMENTSSDELIMITER);
 					String fld = flds[0];
-					if ((flds[1].equalsIgnoreCase("X")) && ((flds.length > 2)) //$NON-NLS-1$
+					if (("X".equalsIgnoreCase(flds[1])) && ((flds.length > 2)) //$NON-NLS-1$
 							&& (!flds[2].isEmpty())) {
 						String checkBoxes = flds[2];
 						String[] checkBoxArray = checkBoxes.split(ITEMDELIMITER);
@@ -995,7 +1001,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	private void updateBillElectronicDelivery() {
 		IFall f = getSelectedFall();
 		if (f.getCopyForPatient() && f instanceof Fall
-				&& (BillingLaw.KVG.equals(((Fall) f).getConfiguredBillingSystemLaw()))) {
+				&& (BillingLaw.KVG == ((Fall) f).getConfiguredBillingSystemLaw())) {
 			btnNoElectronicDelivery.setVisible(true);
 			((GridData) btnNoElectronicDelivery.getLayoutData()).exclude = false;
 		} else {
@@ -1008,7 +1014,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	private void updateGestationWeek13() {
 		IFall f = getSelectedFall();
-		if (f instanceof Fall && (BillingLaw.KVG.equals(((Fall) f).getConfiguredBillingSystemLaw()))
+		if (f instanceof Fall && (BillingLaw.KVG == ((Fall) f).getConfiguredBillingSystemLaw())
 				&& FallConstants.TYPE_MATERNITY.equals(f.getGrund())) {
 			dpGestationWeek13Label.setVisible(true);
 			((GridData) dpGestationWeek13Label.getLayoutData()).exclude = false;
@@ -1179,7 +1185,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 			// *** create label or hyperlink for this field
 			Hyperlink hl = null;
-			if (r[1].equals("K")) { //$NON-NLS-1$ // *** Kontakt
+			if ("K".equals(r[1])) { //$NON-NLS-1$ // *** Kontakt
 				hl = tk.createHyperlink(form.getBody(), r[0], SWT.NONE);
 				addControl(hl, optional, r[0]);
 
@@ -1197,16 +1203,16 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 			// *** create String List for combos, lists and checkboxes
 			String[] items = itemsErrorMessage.split(";"); //$NON-NLS-1$
-			if ((r[1].equals("CS")) //$NON-NLS-1$
-					|| (r[1].equals("CN")) //$NON-NLS-1$
-					|| (r[1].equals("LS")) //$NON-NLS-1$
-					|| (r[1].equals("LN")) //$NON-NLS-1$
-					|| (r[1].equals("RS")) //$NON-NLS-1$
-					|| (r[1].equals("RN")) //$NON-NLS-1$
-					|| (r[1].equals("X"))) { //$NON-NLS-1$
+			if (("CS".equals(r[1])) //$NON-NLS-1$
+					|| ("CN".equals(r[1])) //$NON-NLS-1$
+					|| ("LS".equals(r[1])) //$NON-NLS-1$
+					|| ("LN".equals(r[1])) //$NON-NLS-1$
+					|| ("RS".equals(r[1])) //$NON-NLS-1$
+					|| ("RN".equals(r[1])) //$NON-NLS-1$
+					|| ("X".equals(r[1]))) { //$NON-NLS-1$
 				if (r.length >= 4) { // *** must have an sql- or
 					// script-statement
-					if (r[2].equalsIgnoreCase("SQL")) { //$NON-NLS-1$
+					if ("SQL".equalsIgnoreCase(r[2])) { //$NON-NLS-1$
 						// ITextPlugin plugin = null;
 						// final Brief dummyBrief = new Brief("DummyBetreff",
 						// null, null, null, null, "DummyBrief");
@@ -1229,11 +1235,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			Control dataField = null;
 			Composite stretchComposite = null;
 			// *** create data field
-			if (r[1].equals("T")) { //$NON-NLS-1$ // *** simple Text, single line
+			if ("T".equals(r[1])) { //$NON-NLS-1$ // *** simple Text, single line
 				dataField = tk.createText(subParent, val);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 				addFocusReact(dataField, r[0]);
-			} else if (r[1].equals("D")) { //$NON-NLS-1$ // *** Date
+			} else if ("D".equals(r[1])) { //$NON-NLS-1$ // *** Date
 				final DatePickerCombo dp = new DatePickerCombo(subParent, SWT.NONE);
 				TimeTool tt = new TimeTool();
 				if (tt.set(val)) {
@@ -1248,7 +1254,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 				});
 				dataField = dp;
-			} else if (r[1].equals("K")) { //$NON-NLS-1$ // *** Kontakt
+			} else if ("K".equals(r[1])) { //$NON-NLS-1$ // *** Kontakt
 				dataField = tk.createText(subParent, val);
 				if (hl != null) {
 					hl.addHyperlinkListener(new HyperlinkAdapter() {
@@ -1282,7 +1288,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 				((Text) dataField).setEditable(false);
 				dataField.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			} else if (r[1].equals("TM")) { //$NON-NLS-1$ // *** multiline text
+			} else if ("TM".equals(r[1])) { //$NON-NLS-1$ // *** multiline text
 				Text multiText = new Text(subParent, SWT.MULTI + SWT.BORDER);
 				multiText.setText(val);
 				multiText.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1303,7 +1309,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					}
 				});
 				dataField = multiText;
-			} else if (r[1].equals("CS")) { //$NON-NLS-1$ // *** combo, selected value saved as selected string
+			} else if ("CS".equals(r[1])) { //$NON-NLS-1$ // *** combo, selected value saved as selected string
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
 				stretchComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1318,7 +1324,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(combo, r[0]);
 				dataField = combo;
-			} else if (r[1].equals("CN")) { //$NON-NLS-1$ // *** combo, selected value saved as selected index
+			} else if ("CN".equals(r[1])) { //$NON-NLS-1$ // *** combo, selected value saved as selected index
 											// (zero-based)
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
@@ -1338,7 +1344,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				combo.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(combo, r[0]);
 				dataField = combo;
-			} else if (r[1].equals("LS")) { //$NON-NLS-1$ // *** selection list, selection saved as tab-delimited
+			} else if ("LS".equals(r[1])) { //$NON-NLS-1$ // *** selection list, selection saved as tab-delimited
 											// string-list
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
@@ -1361,7 +1367,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(list, r[0]);
 				dataField = list;
-			} else if (r[1].equals("LN")) { //$NON-NLS-1$ // *** selection list numeric, selection saved as
+			} else if ("LN".equals(r[1])) { //$NON-NLS-1$ // *** selection list numeric, selection saved as
 											// tab-delimited list of selected-item-nums
 				stretchComposite = new Composite(subParent, SWT.NONE);
 				stretchComposite.setBackground(new Color(stretchComposite.getDisplay(), 255, 255, 255));
@@ -1384,7 +1390,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				list.setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
 				addFocusReact(list, r[0]);
 				dataField = list;
-			} else if (r[1].equals("RS")) { // radio group //$NON-NLS-1$ // *** radio group, selection saved string
+			} else if ("RS".equals(r[1])) { // radio group //$NON-NLS-1$ // *** radio group, selection saved string
 				Composite radioComposite = new Composite(subParent, SWT.NONE);
 				radioComposite.setBackground(new Color(radioComposite.getDisplay(), 255, 255, 255));
 				radioComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1406,7 +1412,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
-			} else if (r[1].equals("RN")) { // radio group //$NON-NLS-1$ // *** radio group
+			} else if ("RN".equals(r[1])) { // radio group //$NON-NLS-1$ // *** radio group
 				Composite radioComposite = new Composite(subParent, SWT.NONE);
 				radioComposite.setBackground(new Color(radioComposite.getDisplay(), 255, 255, 255));
 				radioComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -1428,7 +1434,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					addFocusReact(radios[rIx], r[0]);
 				}
 				dataField = radioComposite;
-			} else if (r[1].equals("X")) { //$NON-NLS-1$ // *** checkBox, always saved as numeric - 0 or 1
+			} else if ("X".equals(r[1])) { //$NON-NLS-1$ // *** checkBox, always saved as numeric - 0 or 1
 				// if no items supplied: use fieldName r[0] as fieldName in the
 				// database
 				// if items supplied: use the supplied item names as fieldNames
@@ -1453,7 +1459,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						if (val2.isEmpty()) {
 							checks[rIx].setSelection(true);
 							checks[rIx].setGrayed(true);
-						} else if (val2.equalsIgnoreCase("0")) { //$NON-NLS-1$
+						} else if ("0".equalsIgnoreCase(val2)) { //$NON-NLS-1$
 							checks[rIx].setSelection(false);
 							checks[rIx].setGrayed(false);
 						} else {
@@ -1471,7 +1477,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					if (val.isEmpty()) {
 						check.setSelection(true);
 						check.setGrayed(true);
-					} else if (val.equalsIgnoreCase("0")) { //$NON-NLS-1$
+					} else if ("0".equalsIgnoreCase(val)) { //$NON-NLS-1$
 						check.setSelection(false);
 						check.setGrayed(false);
 					} else {

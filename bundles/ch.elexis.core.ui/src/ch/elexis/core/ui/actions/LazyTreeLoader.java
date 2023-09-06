@@ -86,6 +86,7 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		return qbe.size();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean fetchChildren(final LazyTree l) {
 		qbe.clear();
@@ -101,6 +102,7 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 		return false;
 	}
 
+	@Override
 	public boolean hasChildren(final LazyTree l) {
 		fetchChildren(l);
 		return (l.getFirstChild() != null);

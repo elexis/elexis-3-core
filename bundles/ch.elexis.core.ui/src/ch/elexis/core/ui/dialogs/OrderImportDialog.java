@@ -209,10 +209,12 @@ public class OrderImportDialog extends TitleAreaDialog {
 		Button button = new Button(scannerGroup, SWT.PUSH);
 		button.setText("Übernehmen");
 		button.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				applyScanner();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// do nothing
 			}
@@ -234,6 +236,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		final TableViewerFocusCellManager mgr = new TableViewerFocusCellManager(viewer,
 				new FocusCellOwnerDrawHighlighter(viewer));
 		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+			@Override
 			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
 				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
 						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
@@ -254,6 +257,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		if (actionMode == ACTION_MODE_REGISTER) {
 			// in inventory mode we want to stay with the scan order
 			viewer.setComparator(new ViewerComparator() {
+				@Override
 				public int compare(Viewer viewer, Object e1, Object e2) {
 					IArticle a1 = ((OrderElement) e1).getArticle();
 					IArticle a2 = ((OrderElement) e2).getArticle();
@@ -294,6 +298,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		importButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 		importButton.setText("Lagerbestände markierte anpassen");
 		importButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (actionMode == ACTION_MODE_REGISTER) {
 					doImport();
@@ -324,14 +329,17 @@ public class OrderImportDialog extends TitleAreaDialog {
 		column.getColumn().setWidth(50);
 		column.setLabelProvider(new CheckboxLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
+			@Override
 			public boolean canEdit(Object element) {
 				return true;
 			}
 
+			@Override
 			public CellEditor getCellEditor(Object element) {
 				return checkboxCellEditor;
 			}
 
+			@Override
 			public Object getValue(Object element) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
@@ -341,6 +349,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 				}
 			}
 
+			@Override
 			public void setValue(Object element, Object value) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
@@ -359,14 +368,17 @@ public class OrderImportDialog extends TitleAreaDialog {
 		column.getColumn().setWidth(60);
 		column.setLabelProvider(new AmountLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
+			@Override
 			public boolean canEdit(Object element) {
 				return true;
 			}
 
+			@Override
 			public CellEditor getCellEditor(Object element) {
 				return textCellEditor;
 			}
 
+			@Override
 			public Object getValue(Object element) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
@@ -376,6 +388,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 				}
 			}
 
+			@Override
 			public void setValue(Object element, Object value) {
 				if (element instanceof OrderElement) {
 					OrderElement orderElement = (OrderElement) element;
@@ -447,6 +460,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	// Replace OK/Cancel buttons by a close button
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		// Create Close button
 		createButton(parent, IDialogConstants.OK_ID, "Schliessen", false);
@@ -612,20 +626,24 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class ViewerContentProvider implements IStructuredContentProvider {
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return orderElements.toArray();
 		}
 
+		@Override
 		public void dispose() {
 			// do nothing
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// do nothing
 		}
 	}
 
 	private class BaseLabelProvider extends ColumnLabelProvider {
+		@Override
 		public Color getForeground(Object element) {
 			Color color = null;
 
@@ -639,6 +657,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 			return color;
 		}
 
+		@Override
 		public Font getFont(Object element) {
 			Font font = null;
 
@@ -654,6 +673,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class CheckboxLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -669,6 +689,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class AmountLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -682,6 +703,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class StockLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -692,7 +714,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 				if (stockEntry instanceof TransientStockEntry) {
 					if (((TransientStockEntry) stockEntry).isCreated()) {
 						IStockEntry created = ((TransientStockEntry) stockEntry).getCreated();
-						text = Integer.valueOf(created.getCurrentStock()).toString();
+						text = Integer.toString(created.getCurrentStock());
 					} else {
 						if (ACTION_MODE_INVENTORY == actionMode) {
 							text = stockEntry.getStock().getCode();
@@ -701,7 +723,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 						}
 					}
 				} else {
-					text = Integer.valueOf(stockEntry.getCurrentStock()).toString();
+					text = Integer.toString(stockEntry.getCurrentStock());
 				}
 			}
 
@@ -710,6 +732,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class PharamcodeLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -723,6 +746,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class EANLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -736,6 +760,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	}
 
 	private class DescriptionLabelProvider extends BaseLabelProvider {
+		@Override
 		public String getText(Object element) {
 			String text = StringUtils.EMPTY;
 
@@ -1035,7 +1060,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 
 		String getAmountAsString() {
-			return Integer.valueOf(amount).toString();
+			return Integer.toString(amount);
 		}
 
 		public IStockEntry getStockEntry() {

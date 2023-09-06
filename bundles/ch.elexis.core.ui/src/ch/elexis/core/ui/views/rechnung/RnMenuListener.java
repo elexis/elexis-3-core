@@ -36,6 +36,7 @@ public class RnMenuListener implements IMenuListener {
 		this.view = view;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void menuAboutToShow(IMenuManager manager) {
 		Object[] o = view.cv.getSelection();

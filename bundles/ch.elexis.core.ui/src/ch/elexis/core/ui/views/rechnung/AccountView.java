@@ -89,7 +89,9 @@ public class AccountView extends ViewPart implements IActivationListener {
 
 	private Patient actPatient;
 
-	private Action addPaymentAction, removePaymentAction;
+	private Action addPaymentAction;
+
+	private Action removePaymentAction;
 	private int sortColumn;
 	private boolean sortReverse;
 
@@ -132,6 +134,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 		}
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		initializeJobs();
 
@@ -185,11 +188,12 @@ public class AccountView extends ViewPart implements IActivationListener {
 			tc[i] = new TableColumn(table, SWT.NONE);
 			tc[i].setText(COLUMN_TEXT[i]);
 			tc[i].setWidth(COLUMN_WIDTH[i]);
-			tc[i].setData(new Integer(i));
+			tc[i].setData(Integer.valueOf(i));
 			tc[i].addSelectionListener(sortListener);
 		}
 
 		accountViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
 					return new Object[] { Messages.Core_No_patient_selected_point };
@@ -201,27 +205,33 @@ public class AccountView extends ViewPart implements IActivationListener {
 
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		accountViewer.setLabelProvider(new ITableLabelProvider() {
+			@Override
 			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountTransaction)) {
 					return StringUtils.EMPTY;
@@ -260,10 +270,12 @@ public class AccountView extends ViewPart implements IActivationListener {
 				return text;
 			}
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
 
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
@@ -295,6 +307,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 	private void initializeJobs() {
 		accountExcessJob = new AccountExcessJob(ACCOUNT_EXCESS_JOB_NAME);
 		accountExcessJob.addListener(new BackgroundJobListener() {
+			@Override
 			public void jobFinished(BackgroundJob j) {
 				setKontoText();
 			}
@@ -309,6 +322,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		accountViewer.getControl().setFocus();
 	}
@@ -377,10 +391,12 @@ public class AccountView extends ViewPart implements IActivationListener {
 	 * ActivationListener
 	 */
 
+	@Override
 	public void activation(boolean mode) {
 		// nothing to do
 	}
 
+	@Override
 	public void visible(boolean mode) {
 		if (mode == true) {
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
@@ -446,6 +462,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 			super(name);
 		}
 
+		@Override
 		public IStatus execute(IProgressMonitor monitor) {
 			if (AccountView.this.actPatient != null) {
 				result = actPatient.getAccountExcess();
@@ -458,6 +475,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 			return Status.OK_STATUS;
 		}
 
+		@Override
 		public int getSize() {
 			return 1;
 		}

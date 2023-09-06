@@ -81,9 +81,11 @@ public class VerrDetailDialog extends TitleAreaDialog {
 		TreeViewer tv = new TreeViewer(ret, SWT.V_SCROLL);
 		tv.setContentProvider(new ITreeContentProvider() {
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				Tree[] ret = (Tree[]) ((Tree) parentElement).getChildren().toArray(new Tree[0]);
 				Arrays.sort(ret, new Comparator<Tree>() {
+					@Override
 					public int compare(Tree t1, Tree t2) {
 						if (t1.contents instanceof Konsultation) {
 							Konsultation k1 = (Konsultation) t1.contents;
@@ -95,22 +97,27 @@ public class VerrDetailDialog extends TitleAreaDialog {
 				return ret;
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return ((Tree) element).getParent();
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return ((Tree) element).hasChildren();
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				Tree[] ret = (Tree[]) tree.getChildren().toArray(new Tree[0]);
 				return ret;
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 

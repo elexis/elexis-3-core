@@ -76,7 +76,6 @@ public class ODDBView extends ViewPart {
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.getInputStream()));
 			StringBuilder ret = new StringBuilder();
 			String line;
-			;
 			while ((line = in.readLine()) != null) {
 				ret.append(line);
 			}

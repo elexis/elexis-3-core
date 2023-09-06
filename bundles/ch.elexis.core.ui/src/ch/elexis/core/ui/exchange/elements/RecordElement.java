@@ -36,6 +36,7 @@ public class RecordElement extends XChangeElement {
 	static final String ATTR_DATE = "date"; //$NON-NLS-1$
 	public static final String XMLNAME = "record"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}
@@ -113,6 +114,7 @@ public class RecordElement extends XChangeElement {
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

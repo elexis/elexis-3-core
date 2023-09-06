@@ -63,6 +63,7 @@ public class SidebarPreferences extends FieldEditorPreferencePage implements IWo
 				getFieldEditorParent()));
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
 

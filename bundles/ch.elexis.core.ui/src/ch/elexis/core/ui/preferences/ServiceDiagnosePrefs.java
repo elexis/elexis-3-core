@@ -40,9 +40,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.icons.Images;
@@ -51,8 +51,10 @@ import ch.elexis.core.ui.views.IDetailDisplay;
 public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String FAVORITES = "Favoriten";
 	private ComboViewer cmbViewer;
-	private TableViewer viewer, viewerAvailable;
-	private List<String> input, aInput;
+	private TableViewer viewer;
+	private TableViewer viewerAvailable;
+	private List<String> input;
+	private List<String> aInput;
 
 	enum ViewType {
 		Leistungen, Diagnose, Codes
@@ -342,6 +344,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 			}
 		}
 
+		@Override
 		public void dragStart(DragSourceEvent event) {
 		}
 

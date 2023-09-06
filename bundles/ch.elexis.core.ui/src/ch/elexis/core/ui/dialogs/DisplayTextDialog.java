@@ -34,7 +34,9 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
 
 public class DisplayTextDialog extends TitleAreaDialog {
-	String t, m, cnt;
+	String t;
+	String m;
+	String cnt;
 	Boolean hS = true;
 	Font f = null;
 

@@ -24,6 +24,7 @@ public class Gruppen extends FieldEditorPreferencePage implements IWorkbenchPref
 		setDescription("Bitte konfigurieren Sie die Daten in den entsprechenden Unterpunkten");
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 //		String groups = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, null);
 //		if (groups == null) {

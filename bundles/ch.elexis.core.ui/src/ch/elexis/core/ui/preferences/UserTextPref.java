@@ -72,7 +72,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 		for (IConfigurationElement iConfigurationElement : makroExtensions) {
 			String name = iConfigurationElement.getAttribute("name"); //$NON-NLS-1$
 			String clazz = iConfigurationElement.getAttribute("KonsMakro"); //$NON-NLS-1$
-			if (clazz != null && !clazz.isEmpty() && !name.equals("enabled")) { //$NON-NLS-1$
+			if (clazz != null && !clazz.isEmpty() && !"enabled".equals(name)) { //$NON-NLS-1$
 				makros.put(name, clazz);
 			}
 		}
@@ -88,13 +88,13 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 		for (IConfigurationElement iConfigurationElement : makroExtensions) {
 			String name = iConfigurationElement.getAttribute("name"); //$NON-NLS-1$
 			String clazz = iConfigurationElement.getAttribute("KonsMakro"); //$NON-NLS-1$
-			if (clazz != null && !clazz.isEmpty() && !name.equals("enabled")) { //$NON-NLS-1$
+			if (clazz != null && !clazz.isEmpty() && !"enabled".equals(name)) { //$NON-NLS-1$
 				boolean enabled = ConfigServiceHolder.getUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false); //$NON-NLS-1$
 				// set disabled as default ...
 				if (!enabled) {
 					ConfigServiceHolder.setUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, false); //$NON-NLS-1$
 				}
-			} else if (clazz != null && !clazz.isEmpty() && name.equals("enabled")) { //$NON-NLS-1$
+			} else if (clazz != null && !clazz.isEmpty() && "enabled".equals(name)) { //$NON-NLS-1$
 				// set enabled for makros with name enabled
 				ConfigServiceHolder.setUser(EnhancedTextField.MACRO_ENABLED + "/" + clazz, true); //$NON-NLS-1$
 			}

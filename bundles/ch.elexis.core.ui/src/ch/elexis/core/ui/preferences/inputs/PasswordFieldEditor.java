@@ -34,12 +34,14 @@ public class PasswordFieldEditor extends StringFieldEditor {
 	 * @param parent the parent
 	 * @return the text control
 	 */
+	@Override
 	public Text getTextControl(Composite parent) {
 
 		if (textField == null) {
 			textField = new Text(parent, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
 			textField.setFont(parent.getFont());
 			textField.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					textField = null;
 				}

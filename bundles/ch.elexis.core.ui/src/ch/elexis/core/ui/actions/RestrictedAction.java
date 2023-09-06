@@ -72,6 +72,7 @@ abstract public class RestrictedAction extends Action {
 	/**
 	 * Checks the required access rights and then calls doRun().
 	 */
+	@Override
 	final public void run() {
 		if (evaluatableAce != null) {
 			if (AccessControlServiceHolder.get().evaluate(evaluatableAce)) {

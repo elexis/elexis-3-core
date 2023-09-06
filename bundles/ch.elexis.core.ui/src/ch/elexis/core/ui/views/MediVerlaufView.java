@@ -234,7 +234,8 @@ public class MediVerlaufView extends ViewPart implements IRefreshable {
 	}
 
 	private static class MediAbgabe implements Comparable<MediAbgabe> {
-		String von, bis;
+		String von;
+		String bis;
 		String medi;
 		String dosis;
 

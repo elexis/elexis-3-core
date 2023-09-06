@@ -105,6 +105,7 @@ public class ViewMenus {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager, contributionItems);
 			}
@@ -137,6 +138,7 @@ public class ViewMenus {
 		contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				for (IAction iAction : actions) {
 					if (iAction instanceof RestrictedAction) {
@@ -168,6 +170,7 @@ public class ViewMenus {
 		contextMenu = new MenuManager();
 		contextMenu.setRemoveAllWhenShown(true);
 		contextMenu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				for (IAction ac : populator.fillMenu()) {
 					if (ac == null) {

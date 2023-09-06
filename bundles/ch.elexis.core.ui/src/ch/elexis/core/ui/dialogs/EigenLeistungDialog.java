@@ -26,7 +26,11 @@ import ch.elexis.data.Eigenleistung;
 import ch.rgw.tools.TimeTool;
 
 public class EigenLeistungDialog extends TitleAreaDialog {
-	Text tName, tKurz, tEK, tVK, tTime;
+	Text tName;
+	Text tKurz;
+	Text tEK;
+	Text tVK;
+	Text tTime;
 	// Eigenleistung result;
 	private IVerrechenbar result;
 

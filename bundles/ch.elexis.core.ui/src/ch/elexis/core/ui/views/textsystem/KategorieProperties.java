@@ -15,6 +15,7 @@ public class KategorieProperties extends AbstractProperties {
 
 	private final static String KATEGORIE_FILENAME = "Kategorie.txt"; //$NON-NLS-1$
 
+	@Override
 	protected String getFilename() {
 		return KATEGORIE_FILENAME;
 	}

@@ -35,6 +35,7 @@ public class ElexisUiEventListenerImpl extends ElexisEventListenerImpl {
 	public void catchElexisEvent(final ElexisEvent ev) {
 		if (!isStopped()) {
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (performanceStatisticHandler != null) {
 						performanceStatisticHandler.startCatchEvent(ev, ElexisUiEventListenerImpl.this);

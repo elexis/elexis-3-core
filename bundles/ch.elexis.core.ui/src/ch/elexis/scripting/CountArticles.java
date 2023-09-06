@@ -79,7 +79,7 @@ public class CountArticles {
 							mPaid.addMoney(v.getTotal());
 							Double sum = paid.get(iv);
 							if (sum == null) {
-								sum = new Double(v.getAmount());
+								sum = Double.valueOf(v.getAmount());
 								paid.put(iv, sum);
 							} else {
 								sum += v.getAmount();
@@ -88,7 +88,7 @@ public class CountArticles {
 							mUnpaid.addMoney(v.getTotal());
 							Double sum = unpaid.get(iv);
 							if (sum == null) {
-								sum = new Double(v.getAmount());
+								sum = Double.valueOf(v.getAmount());
 								unpaid.put(iv, sum);
 							} else {
 								sum += v.getAmount();

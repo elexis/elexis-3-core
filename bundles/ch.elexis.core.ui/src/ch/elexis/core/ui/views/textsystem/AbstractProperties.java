@@ -225,6 +225,7 @@ public abstract class AbstractProperties extends Properties {
 	 *                                  input.
 	 * @since 1.6
 	 */
+	@Override
 	public synchronized void load(Reader reader) throws IOException {
 		load0(new LineReader(reader));
 	}
@@ -248,6 +249,7 @@ public abstract class AbstractProperties extends Properties {
 	 *                                  Unicode escape sequence.
 	 * @since 1.2
 	 */
+	@Override
 	public synchronized void load(InputStream inStream) throws IOException {
 		load0(new LineReader(inStream));
 	}

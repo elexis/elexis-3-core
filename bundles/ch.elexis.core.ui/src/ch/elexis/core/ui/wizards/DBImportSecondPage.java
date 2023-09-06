@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class DBImportSecondPage extends WizardPage {
-	Text name, pwd;
+	Text name;
+	Text pwd;
 
 	public DBImportSecondPage(String pageName) {
 		super("Credentials"); //$NON-NLS-1$
@@ -37,6 +38,7 @@ public class DBImportSecondPage extends WizardPage {
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		DBImportWizard wiz = (DBImportWizard) getWizard();
 		Composite form = new Composite(parent, SWT.NONE);

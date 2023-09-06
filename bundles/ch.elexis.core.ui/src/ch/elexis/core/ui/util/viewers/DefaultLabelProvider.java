@@ -28,10 +28,12 @@ import ch.elexis.data.PersistentObject;
 
 public class DefaultLabelProvider extends LabelProvider implements ITableLabelProvider {
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof PersistentObject) {
 			PersistentObject po = (PersistentObject) element;

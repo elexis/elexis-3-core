@@ -21,7 +21,8 @@ import ch.rgw.tools.Tree;
 
 public class KonsZumVerrechnenLinkCommand extends AbstractHandler {
 	public static final String CMD_ID = "ch.elexis.core.command.linkViews"; //$NON-NLS-1$
-	private TreeSelectionChangedListener leftSideSelChangeListener, rightSideSelChangeListener;
+	private TreeSelectionChangedListener leftSideSelChangeListener;
+	private TreeSelectionChangedListener rightSideSelChangeListener;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

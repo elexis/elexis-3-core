@@ -245,7 +245,8 @@ public class RnDialogs {
 
 		Rechnung rn;
 		DatePickerCombo dp;
-		Text amount, bemerkung;
+		Text amount;
+		Text bemerkung;
 
 		ComboViewer viewer;
 
@@ -784,7 +785,7 @@ public class RnDialogs {
 					// TODO: Support other date formats based upon location or configured settings
 					SimpleDateFormat df2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 					String dateText = df2.format(date);
-					line[8] = dateText.toString();
+					line[8] = dateText;
 					int st = rn.getStatus();
 					line[9] = Integer.toString(st);
 					if (RnStatus.isActive(st)) {

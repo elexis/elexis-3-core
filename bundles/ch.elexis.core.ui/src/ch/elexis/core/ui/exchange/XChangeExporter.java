@@ -30,6 +30,7 @@ import ch.elexis.data.PersistentObject;
 public abstract class XChangeExporter implements IDataSender {
 	private final XChangeContainer container = new XChangeContainer();
 
+	@Override
 	public boolean canHandle(Class<? extends PersistentObject> clazz) {
 		// TODO Auto-generated method stub
 		return false;

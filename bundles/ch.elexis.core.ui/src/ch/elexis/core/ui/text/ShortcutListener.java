@@ -22,6 +22,7 @@ public class ShortcutListener implements VerifyKeyListener {
 		mine = etf;
 	}
 
+	@Override
 	public void verifyKey(VerifyEvent event) {
 		if (event.stateMask == SWT.MOD1) {
 			switch (event.keyCode) {

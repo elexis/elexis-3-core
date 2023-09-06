@@ -41,10 +41,12 @@ public class EtiketteDruckenDialog extends TitleAreaDialog implements ICallback 
 		this.template = _template;
 	}
 
+	@Override
 	public void setMessage(String newMessage) {
 		this.message = newMessage;
 	}
 
+	@Override
 	public void setTitle(String newTitle) {
 		this.title = newTitle;
 	}

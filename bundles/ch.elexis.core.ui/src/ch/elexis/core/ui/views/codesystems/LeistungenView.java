@@ -124,6 +124,7 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 		getSite().setSelectionProvider(delegatingSelectionProvider);
 	}
 
+	@Override
 	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
@@ -170,6 +171,7 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 		ctRight.setControl(c);
 	}
 
+	@Override
 	public void activation(boolean mode) {
 		if (selected instanceof FavoritenCTabItem)
 			return;
@@ -203,6 +205,7 @@ public class LeistungenView extends ViewPart implements IActivationListener {
 		}
 	}
 
+	@Override
 	public void visible(boolean mode) {
 	}
 

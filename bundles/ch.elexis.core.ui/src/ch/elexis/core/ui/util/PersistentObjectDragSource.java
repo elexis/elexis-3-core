@@ -43,6 +43,7 @@ public class PersistentObjectDragSource implements DragSourceListener {
 		dragSource = v.getControl();
 		renderer = new ISelectionRenderer() {
 
+			@Override
 			public List<PersistentObject> getSelection() {
 				IStructuredSelection sel = (IStructuredSelection) v.getSelection();
 				return sel.toList();
@@ -64,11 +65,13 @@ public class PersistentObjectDragSource implements DragSourceListener {
 		mine.addDragListener(this);
 	}
 
+	@Override
 	public void dragFinished(final DragSourceEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void dragSetData(final DragSourceEvent event) {
 		StringBuilder sb = new StringBuilder();
 		for (PersistentObject s : selection) {
@@ -78,6 +81,7 @@ public class PersistentObjectDragSource implements DragSourceListener {
 		event.data = sb.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
 
+	@Override
 	public void dragStart(final DragSourceEvent event) {
 		selection = renderer.getSelection();
 		if ((selection == null) || (selection.isEmpty())) {

@@ -73,8 +73,12 @@ import ch.rgw.tools.ExHandler;
  */
 public class ScriptView extends ViewPart {
 	public static final String ID = "ch.elexis.scriptsView"; //$NON-NLS-1$
-	private IAction newScriptAction, editScriptAction, removeScriptAction, execScriptAction, exportScriptAction,
-			importScriptAction;
+	private IAction newScriptAction;
+	private IAction editScriptAction;
+	private IAction removeScriptAction;
+	private IAction execScriptAction;
+	private IAction exportScriptAction;
+	private IAction importScriptAction;
 	TableViewer tv;
 	ScrolledForm form;
 

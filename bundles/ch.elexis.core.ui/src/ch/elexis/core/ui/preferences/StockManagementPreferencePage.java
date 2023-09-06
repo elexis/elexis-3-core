@@ -503,6 +503,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,

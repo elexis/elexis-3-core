@@ -47,7 +47,12 @@ import ch.elexis.data.dto.ZusatzAdresseDTO;
 import ch.rgw.tools.StringTool;
 
 public class ZusatzAdresseEingabeDialog extends TitleAreaDialog {
-	private Text str1, str2, plz, ort, land, postanschrift;
+	private Text str1;
+	private Text str2;
+	private Text plz;
+	private Text ort;
+	private Text land;
+	private Text postanschrift;
 	private ComboViewer comboAddressType;
 
 	private final ZusatzAdresseDTO zusatzAdresseDTO;

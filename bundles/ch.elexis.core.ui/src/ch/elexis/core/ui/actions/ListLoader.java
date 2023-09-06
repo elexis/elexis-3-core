@@ -48,6 +48,7 @@ public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJo
 	 *
 	 * @see JobPool
 	 */
+	@Override
 	public IStatus execute(IProgressMonitor monitor) {
 		qbe.clear();
 		List list = load();
@@ -58,6 +59,7 @@ public class ListLoader<T extends PersistentObject> extends AbstractDataLoaderJo
 		return new Status(Status.ERROR, "ch.elexis", 1, Messages.ListLoader_CouldntLoadData, null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getSize() {
 		return qbe.size();
 	}

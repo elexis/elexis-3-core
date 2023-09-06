@@ -58,6 +58,7 @@ public class TemplateDrucker {
 		try {
 			tpw = (TemplatePrintView) page.showView(TemplatePrintView.ID);
 			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(), new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) {
 					monitor.beginTask(Messages.TemplateDrucker_printing + template + "...", 1); //$NON-NLS-1$
 

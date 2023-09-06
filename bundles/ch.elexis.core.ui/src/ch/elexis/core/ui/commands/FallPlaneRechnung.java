@@ -21,10 +21,12 @@ import ch.elexis.core.ui.UiDesk;
 
 public class FallPlaneRechnung extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent arg0) throws ExecutionException {
 		InputDialog dlg = new InputDialog(UiDesk.getTopShell(), Messages.FallPlaneRechnung_PlanBillingHeading,
 				Messages.FallPlaneRechnung_PlanBillingAfterDays, "30", new IInputValidator() { //$NON-NLS-1$
 
+					@Override
 					public String isValid(String newText) {
 						if (newText.matches("[0-9]*")) { //$NON-NLS-1$
 							return null;

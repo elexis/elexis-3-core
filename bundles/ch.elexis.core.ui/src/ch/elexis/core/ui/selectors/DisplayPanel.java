@@ -42,7 +42,9 @@ import ch.rgw.tools.LimitSizeStack;
  *
  */
 public class DisplayPanel extends Composite implements ActiveControlListener {
-	private boolean bCeaseFire, bExclusive, bAutosave;
+	private boolean bCeaseFire;
+	private boolean bExclusive;
+	private boolean bAutosave;
 	private LinkedList<ActiveControlListener> listeners = new LinkedList<ActiveControlListener>();
 	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<TraceElement>(50);
 	private Composite cFields;
@@ -208,6 +210,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		layout();
 	}
 
+	@Override
 	public void contentsChanged(ActiveControl ac) {
 		if (ac != null) {
 			new TraceElement(ac);
@@ -236,6 +239,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 		}
 	}
 
+	@Override
 	public void invalidContents(ActiveControl field) {
 		aClr.setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
 		aClr.setToolTipText((String) field.getData(ActiveControl.PROP_ERRMSG));
@@ -266,6 +270,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 	 * This will in turn notify the SelectorListeners attached to this panel
 	 */
 
+	@Override
 	public void titleClicked(final ActiveControl field) {
 		if (!bCeaseFire) {
 			bCeaseFire = true;

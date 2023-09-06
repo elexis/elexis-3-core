@@ -38,6 +38,7 @@ public class ImporterHost extends PreferencePage implements IWorkbenchPreference
 		return ret;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
 

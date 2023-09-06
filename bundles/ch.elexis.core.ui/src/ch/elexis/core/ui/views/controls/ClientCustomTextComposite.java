@@ -89,7 +89,7 @@ public class ClientCustomTextComposite extends Composite {
 						Desktop.getDesktop().mail(uriMailTo);
 					} catch (Exception xe) {
 					}
-				} else if (tokenAttribute.equals("Balance")) { //$NON-NLS-1$
+				} else if ("Balance".equals(tokenAttribute)) { //$NON-NLS-1$
 					final Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 					if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
 						updateClientCustomArea();
@@ -218,7 +218,7 @@ public class ClientCustomTextComposite extends Composite {
 		// automatic styles for FLD_EMAIL and FLD_BALANCE
 		for (TokenMap tm : tokenMap) {
 			String tokenAttribute = tm.token.split("\\.")[1]; //$NON-NLS-1$
-			if (tokenAttribute.equals(Kontakt.FLD_E_MAIL) || tokenAttribute.equals("Balance")) { //$NON-NLS-1$
+			if (tokenAttribute.equals(Kontakt.FLD_E_MAIL) || "Balance".equals(tokenAttribute)) { //$NON-NLS-1$
 				StyleRange sr = new StyleRange();
 				sr.start = tm.start;
 				sr.length = tm.end - tm.start;
@@ -283,7 +283,7 @@ public class ClientCustomTextComposite extends Composite {
 		String[] arr = replace.split("\\."); //$NON-NLS-1$
 		if (arr == null || arr.length < 2)
 			return "ERR"; //$NON-NLS-1$
-		if (arr[0].equalsIgnoreCase("Patient")) { //$NON-NLS-1$
+		if ("Patient".equalsIgnoreCase(arr[0])) { //$NON-NLS-1$
 			if (arr[1] == null)
 				return StringUtils.EMPTY;
 			Patient pat = ElexisEventDispatcher.getSelectedPatient();

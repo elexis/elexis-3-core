@@ -133,6 +133,7 @@ public class DatePickerCombo extends Composite {
 		arrow = new Button(this, arrowStyle);
 
 		Listener listener = new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				if (popup == event.widget) {
 					popupEvent(event);
@@ -330,6 +331,7 @@ public class DatePickerCombo extends Composite {
 		}
 	}
 
+	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
 
@@ -525,6 +527,7 @@ public class DatePickerCombo extends Composite {
 		dp.setFocus();
 	}
 
+	@Override
 	public Control[] getChildren() {
 		checkWidget();
 		return new Control[0];
@@ -567,12 +570,14 @@ public class DatePickerCombo extends Composite {
 
 	private void initAccessible() {
 		getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getHelp(AccessibleEvent e) {
 				e.result = getToolTipText();
 			}
 		});
 
 		getAccessible().addAccessibleControlListener(new AccessibleControlAdapter() {
+			@Override
 			public void getChildAtPoint(AccessibleControlEvent e) {
 				Point testPoint = toControl(new Point(e.x, e.y));
 
@@ -581,10 +586,12 @@ public class DatePickerCombo extends Composite {
 				}
 			}
 
+			@Override
 			public void getChildCount(AccessibleControlEvent e) {
 				e.detail = 0;
 			}
 
+			@Override
 			public void getLocation(AccessibleControlEvent e) {
 				Rectangle location = getBounds();
 				Point pt = toDisplay(new Point(location.x, location.y));
@@ -594,14 +601,17 @@ public class DatePickerCombo extends Composite {
 				e.height = location.height;
 			}
 
+			@Override
 			public void getRole(AccessibleControlEvent e) {
 				e.detail = ACC.ROLE_COMBOBOX;
 			}
 
+			@Override
 			public void getState(AccessibleControlEvent e) {
 				e.detail = ACC.STATE_NORMAL;
 			}
 
+			@Override
 			public void getValue(AccessibleControlEvent e) {
 				e.result = text.getText();
 			}
@@ -645,6 +655,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @return focus state
 	 */
+	@Override
 	public boolean isFocusControl() {
 		checkWidget();
 
@@ -688,6 +699,7 @@ public class DatePickerCombo extends Composite {
 	 * @param height height
 	 * @param all    must we redraw all of controls?
 	 */
+	@Override
 	public void redraw(int x, int y, int width, int height, boolean all) {
 		checkWidget();
 
@@ -758,6 +770,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @param color background color
 	 */
+	@Override
 	public void setBackground(Color color) {
 		super.setBackground(color);
 
@@ -810,6 +823,7 @@ public class DatePickerCombo extends Composite {
 	 * @author andyglow
 	 * @param enabled
 	 */
+	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		text.setEnabled(enabled);
@@ -822,6 +836,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @return result of action
 	 */
+	@Override
 	public boolean setFocus() {
 		checkWidget();
 
@@ -833,6 +848,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @param font DOCUMENT ME!
 	 */
+	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
 		text.setFont(font);
@@ -845,6 +861,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @param color Foreground color
 	 */
+	@Override
 	public void setForeground(Color color) {
 		super.setForeground(color);
 
@@ -923,6 +940,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @param string Text of tool-tip
 	 */
+	@Override
 	public void setToolTipText(String string) {
 		checkWidget();
 		super.setToolTipText(string);
@@ -935,6 +953,7 @@ public class DatePickerCombo extends Composite {
 	 *
 	 * @param visible visibility state
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
@@ -1042,7 +1061,7 @@ public class DatePickerCombo extends Composite {
 
 		case SWT.Modify: {
 			if (!popup.isVisible()) {
-				if (text.getText().length() == 0) {
+				if (text.getText().isEmpty()) {
 					dp.setDate(null);
 				} else {
 					try {

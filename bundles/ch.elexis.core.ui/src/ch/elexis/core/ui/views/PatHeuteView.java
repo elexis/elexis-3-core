@@ -121,13 +121,21 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 	public static final String ID = "ch.elexis.PatHeuteView"; //$NON-NLS-1$
 	static final String LEISTUNG_HINZU = Messages.Core_Add_Caption; // $NON-NLS-1$
 	static final String STAT_LEEREN = Messages.PatHeuteView_empty; // $NON-NLS-1$
-	private IAction printAction, reloadAction, filterAction, statAction;
+	private IAction printAction;
+	private IAction reloadAction;
+	private IAction filterAction;
+	private IAction statAction;
 	CommonViewer cv;
 	ViewerConfigurer vc;
 	FormToolkit tk = UiDesk.getToolkit();
 	Form form;
-	Text tPat, tTime, tMoney, tTime2, tMoney2;
-	TimeTool datVon, datBis;
+	Text tPat;
+	Text tTime;
+	Text tMoney;
+	Text tTime2;
+	Text tMoney2;
+	TimeTool datVon;
+	TimeTool datBis;
 	// boolean bOnlyOpen;
 	boolean bOpen = true;
 	boolean bClosed = true;
@@ -741,8 +749,10 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 
 		@Override
 		public int compareTo(StatCounter o) {
-			String v1 = null, v2 = null;
-			String vc1 = null, vc2 = null;
+			String v1 = null;
+			String v2 = null;
+			String vc1 = null;
+			String vc2 = null;
 			if (v != null) {
 				v1 = v.getCodeSystemName();
 				vc1 = v.getCode();

@@ -18,38 +18,46 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ICommonViewerContentProvi
 
 public class CommonContentProviderAdapter implements ICommonViewerContentProvider {
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return null;
 	}
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
 	}
 
+	@Override
 	public void startListening() {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void stopListening() {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void changed(HashMap<String, String> values) {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void reorder(String field) {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void selected() {
 		// TODO Automatisch erstellter Methoden-Stub
 	}

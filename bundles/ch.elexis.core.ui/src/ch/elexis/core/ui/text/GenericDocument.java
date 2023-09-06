@@ -112,6 +112,7 @@ public class GenericDocument implements IOpaqueDocument {
 		return bais;
 	}
 
+	@Override
 	public byte[] getContentsAsBytes() throws ElexisException {
 		return contents;
 	}

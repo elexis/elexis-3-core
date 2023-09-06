@@ -28,6 +28,7 @@ public abstract class LockRequestingAction<T> extends Action {
 		setEnabled(true);
 	}
 
+	@Override
 	public void run() {
 		object = getTargetedObject();
 		if (object == null) {

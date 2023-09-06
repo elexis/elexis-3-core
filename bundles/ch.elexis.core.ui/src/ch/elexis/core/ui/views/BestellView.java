@@ -114,9 +114,24 @@ public class BestellView extends ViewPart {
 	private TableViewer tv;
 	private IOrder actOrder;
 	private ViewMenus viewmenus;
-	private IAction removeAction, dailyWizardAction, wizardAction, loadAction, printAction, sendAction, newAction,
-			listenToBarcodeInputAction;
-	private IAction exportClipboardAction, checkInAction;
+	private IAction removeAction;
+
+	private IAction dailyWizardAction;
+
+	private IAction wizardAction;
+
+	private IAction loadAction;
+
+	private IAction printAction;
+
+	private IAction sendAction;
+
+	private IAction newAction;
+
+	private IAction listenToBarcodeInputAction;
+	private IAction exportClipboardAction;
+
+	private IAction checkInAction;
 
 	private BestellungLabelProvider blp;
 

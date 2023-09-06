@@ -375,7 +375,9 @@ public class LabeledInputField extends Composite {
 			STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, EXECSTRING, CHECKBOX, CHECKBOXTRISTATE, COMBO_VIEWER
 		};
 
-		String sAnzeige, sFeldname, sHashname;
+		String sAnzeige;
+		String sFeldname;
+		String sHashname;
 		Typ tFeldTyp;
 		Object ext;
 		LabeledInputField mine;
@@ -628,9 +630,11 @@ public class LabeledInputField extends Composite {
 				def[i].setParent(ltf);
 				cFields[i] = ltf.getControl();
 				cFields[i].addFocusListener(new FocusListener() {
+					@Override
 					public void focusGained(FocusEvent e) {
 					}
 
+					@Override
 					@SuppressWarnings("unchecked")
 					public void focusLost(FocusEvent e) {
 						if (act != null) {
@@ -699,7 +703,8 @@ public class LabeledInputField extends Composite {
 					logger.error("Could not persist [" + val + "] for field [" + inp.sAnzeige + "]\nCause: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							+ pe.getCause().getMessage(), pe);
 
-					if (inp.tFeldTyp.equals(ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING)) {
+					// clear cache to always get the actual the DB value
+					if (inp.tFeldTyp == ch.elexis.core.ui.util.LabeledInputField.InputData.Typ.STRING) {
 						// clear cache to always get the actual the DB value
 						PersistentObject.clearCache();
 						inp.mine.setText((String) get(act, inp.sFeldname));

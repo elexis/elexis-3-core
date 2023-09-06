@@ -52,9 +52,31 @@ import ch.rgw.tools.TimeTool;
 
 public class InvoiceActions {
 
-	public Action addPaymentAction, rnExportAction, increaseLevelAction, addExpenseAction, stornoAction,
-			stornoRecreateAction, addAccountExcessAction, printListeAction, mahnWizardAction, exportListAction,
-			changeStatusAction, deleteAction, reactivateAction;
+	public Action addPaymentAction;
+
+	public Action rnExportAction;
+
+	public Action increaseLevelAction;
+
+	public Action addExpenseAction;
+
+	public Action stornoAction;
+
+	public Action stornoRecreateAction;
+
+	public Action addAccountExcessAction;
+
+	public Action printListeAction;
+
+	public Action mahnWizardAction;
+
+	public Action exportListAction;
+
+	public Action changeStatusAction;
+
+	public Action deleteAction;
+
+	public Action reactivateAction;
 
 	private final StructuredViewer viewer;
 	private final IViewSite iViewSite;

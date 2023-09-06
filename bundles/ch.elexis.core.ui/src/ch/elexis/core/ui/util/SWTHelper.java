@@ -123,6 +123,7 @@ public class SWTHelper {
 	/** Eine Alertbox anzeigen (synchron) */
 	public static void alert(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				if (shell == null) {
@@ -145,6 +146,7 @@ public class SWTHelper {
 	public static void showError(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openError(shell, title, message);
@@ -161,6 +163,7 @@ public class SWTHelper {
 	public static void showError(final String logHeader, final String title, final String message) {
 		log.log(logHeader + ": " + title + "->" + message, Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				MessageDialog.openError(shell, title, message);
@@ -177,6 +180,7 @@ public class SWTHelper {
 	public static void showInfo(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openInformation(shell, title, message);
@@ -214,7 +218,8 @@ public class SWTHelper {
 
 	private static class InSyncMulti implements Runnable {
 		private int ret;
-		private String title, message;
+		private String title;
+		private String message;
 		private String[] dialogButtonLabels;
 
 		InSyncMulti(final String title, final String message, String... dialogButtonLabels) {
@@ -223,6 +228,7 @@ public class SWTHelper {
 			this.dialogButtonLabels = dialogButtonLabels;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.open(MessageDialog.QUESTION, shell, title, message, SWT.SHEET, dialogButtonLabels);
@@ -231,13 +237,15 @@ public class SWTHelper {
 
 	private static class InSync implements Runnable {
 		boolean ret;
-		String title, message;
+		String title;
+		String message;
 
 		InSync(final String title, final String message) {
 			this.title = title;
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.openConfirm(shell, title, message);
@@ -259,13 +267,15 @@ public class SWTHelper {
 
 	private static class InSyncYesNoCancel implements Runnable {
 		Boolean ret = null;
-		String title, message;
+		String title;
+		String message;
 
 		InSyncYesNoCancel(final String title, final String message) {
 			this.title = title;
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			MessageDialog dialog = new MessageDialog(shell, title, null, // accept
@@ -483,11 +493,13 @@ public class SWTHelper {
 	public static void setSelectOnFocus(final Text text) {
 		if (selectOnFocusListener == null) {
 			selectOnFocusListener = new FocusListener() {
+				@Override
 				public void focusGained(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					t.selectAll();
 				}
 
+				@Override
 				public void focusLost(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					if (t.getSelectionCount() > 0) {

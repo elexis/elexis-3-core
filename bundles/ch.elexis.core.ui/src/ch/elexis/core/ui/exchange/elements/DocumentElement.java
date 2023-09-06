@@ -50,6 +50,7 @@ public class DocumentElement extends XChangeElement {
 	public static final String PLACEMENT_INFILE = "infile"; //$NON-NLS-1$
 	public static final String PLACEMENT_URL = "url"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}

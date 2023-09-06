@@ -194,7 +194,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 	private Method getGetPatientMethod(Class<? extends Object> clazz, Class<? extends Object> type) {
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
-			if (method.getName().equalsIgnoreCase("getpatient") //$NON-NLS-1$
+			if ("getpatient".equalsIgnoreCase(method.getName()) //$NON-NLS-1$
 					&& type.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 0) {
 				return method;
 			}

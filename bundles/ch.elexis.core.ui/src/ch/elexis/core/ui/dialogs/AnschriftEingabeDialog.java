@@ -32,7 +32,11 @@ import ch.elexis.data.Kontakt;
 import ch.rgw.tools.StringTool;
 
 public class AnschriftEingabeDialog extends TitleAreaDialog {
-	Text str, plz, ort, land, postanschrift;
+	Text str;
+	Text plz;
+	Text ort;
+	Text land;
+	Text postanschrift;
 	Kontakt k;
 	Anschrift an;
 

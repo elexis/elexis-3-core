@@ -52,6 +52,7 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 	 * Lagerartikel are shown in blue, articles that should be ordered are shown in
 	 * red
 	 */
+	@Override
 	public Color getForeground(Object element, int columnIndex) {
 		if (element instanceof Artikel) {
 			Artikel art = (Artikel) element;
@@ -70,6 +71,7 @@ public class ArtikelLabelProvider extends DefaultLabelProvider implements ITable
 		return null;
 	}
 
+	@Override
 	public Color getBackground(Object element, int columnIndex) {
 		return null;
 	}

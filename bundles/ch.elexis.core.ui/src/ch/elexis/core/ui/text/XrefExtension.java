@@ -45,11 +45,13 @@ import ch.rgw.tools.ExHandler;
 public class XrefExtension implements IKonsExtension {
 	IRichTextDisplay tx;
 
+	@Override
 	public String connect(IRichTextDisplay tf) {
 		tx = tf;
 		return XRefExtensionConstants.providerID;
 	}
 
+	@Override
 	public boolean doLayout(StyleRange n, String provider, String id) {
 
 		n.background = UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
@@ -57,6 +59,7 @@ public class XrefExtension implements IKonsExtension {
 		return true;
 	}
 
+	@Override
 	public boolean doXRef(String refProvider, String refID) {
 		try {
 			if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
@@ -90,22 +93,26 @@ public class XrefExtension implements IKonsExtension {
 		}
 	}
 
+	@Override
 	public IAction[] getActions() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void removeXRef(String refProvider, String refID) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void insert(Object o, int pos) {
 
 	}

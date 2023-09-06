@@ -92,6 +92,7 @@ public class AccountListView extends ViewPart implements IActivationListener {
 
 	private AccountListEntryComparator comparator;
 
+	@Override
 	public void createPartControl(Composite parent) {
 		loader = new DataLoader();
 
@@ -125,6 +126,7 @@ public class AccountListView extends ViewPart implements IActivationListener {
 		}
 
 		accountListViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (loader.isValid()) {
 					Object result = loader.getData();
@@ -140,27 +142,33 @@ public class AccountListView extends ViewPart implements IActivationListener {
 				}
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		accountListViewer.setLabelProvider(new ITableLabelProvider() {
+			@Override
 			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof AccountListEntry)) {
 					return StringUtils.EMPTY;
@@ -187,10 +195,12 @@ public class AccountListView extends ViewPart implements IActivationListener {
 				return text;
 			}
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
 
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
@@ -211,6 +221,7 @@ public class AccountListView extends ViewPart implements IActivationListener {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		accountListViewer.getControl().setFocus();
 	}
@@ -225,10 +236,12 @@ public class AccountListView extends ViewPart implements IActivationListener {
 	 * ActivationListener
 	 */
 
+	@Override
 	public void activation(boolean mode) {
 		// nothing to do
 	}
 
+	@Override
 	public void visible(boolean mode) {
 
 	};
@@ -247,6 +260,7 @@ public class AccountListView extends ViewPart implements IActivationListener {
 			addListener(this);
 		}
 
+		@Override
 		public IStatus execute(IProgressMonitor monitor) {
 			List<AccountListEntry> entries = new ArrayList<AccountListEntry>();
 
@@ -266,11 +280,13 @@ public class AccountListView extends ViewPart implements IActivationListener {
 			return Status.OK_STATUS;
 		}
 
+		@Override
 		public int getSize() {
 			// dummy size
 			return 1;
 		}
 
+		@Override
 		public void jobFinished(BackgroundJob j) {
 			accountListViewer.refresh();
 		}

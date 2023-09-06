@@ -41,6 +41,7 @@ public class KGDrucker {
 		try {
 			kgp = (KGPrintView) kgPage.showView(KGPrintView.ID);
 			progressService.runInUI(PlatformUI.getWorkbench().getProgressService(), new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) {
 					monitor.beginTask(Messages.KGDrucker_printEMR, 1); // $NON-NLS-1$
 					// gw 23.7.2006 an neues Selectionmodell angepasst

@@ -98,6 +98,7 @@ public abstract class PagingComposite extends Composite {
 		}
 
 		UiDesk.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				refresh();
 			}
@@ -144,6 +145,7 @@ public abstract class PagingComposite extends Composite {
 
 	public void mouseClicked(int pageStep) {
 		UiDesk.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (doPaging(currentPage + pageStep)) {
 					runPaging();

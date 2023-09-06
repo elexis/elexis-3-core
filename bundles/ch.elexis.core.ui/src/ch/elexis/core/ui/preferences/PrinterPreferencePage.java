@@ -41,7 +41,14 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String PAPER_PLAIN_A5 = Messages.PrinterPreferencePage_PaperA5Plain;
 	private static final String SHEETFEEDER = Messages.PrinterPreferencePage_SheetFeeder;
 
-	Text tEtiketten, tEtikettenschacht, tA5, tA5Schacht, tA4ESR, tA4ESRSchacht, tA4, tA4Schacht;
+	Text tEtiketten;
+	Text tEtikettenschacht;
+	Text tA5;
+	Text tA5Schacht;
+	Text tA4ESR;
+	Text tA4ESRSchacht;
+	Text tA4;
+	Text tA4Schacht;
 	Text tEinzelblatt;
 	Text tEinzelblattSchacht;
 	Button bEtiketten;
@@ -71,6 +78,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		cEtiketten.setText(Messages.PrinterPreferencePage_ChosePrinterAlways);
 		cEtiketten.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		cEtiketten.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setEtikettenSelection(cEtiketten.getSelection());
 			}
@@ -179,6 +187,7 @@ public class PrinterPreferencePage extends PreferencePage implements IWorkbenchP
 		bEtiketten.setEnabled(!selection);
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 
 	}

@@ -46,11 +46,20 @@ import ch.elexis.data.Prescription;
 
 public class MediDetailDialog extends TitleAreaDialog {
 	private IPrescription prescription;
-	private String dosis, intakeOrder, disposalComment;
-	private Composite stackCompositeDosage, compositeDayTimeDosage, compositeFreeTextDosage;
+	private String dosis;
+	private String intakeOrder;
+	private String disposalComment;
+	private Composite stackCompositeDosage;
+	private Composite compositeDayTimeDosage;
+	private Composite compositeFreeTextDosage;
 	private StackLayout stackLayoutDosage;
-	private Text txtMorning, txtNoon, txtEvening, txtNight, txtFreeText;
-	private Text txtIntakeOrder, txtDisposalComment;
+	private Text txtMorning;
+	private Text txtNoon;
+	private Text txtEvening;
+	private Text txtNight;
+	private Text txtFreeText;
+	private Text txtIntakeOrder;
+	private Text txtDisposalComment;
 	private Artikel article;
 	private Button btnReserveMedication;
 
@@ -142,6 +151,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;

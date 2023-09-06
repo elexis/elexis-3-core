@@ -26,6 +26,7 @@ import ch.rgw.tools.ExHandler;
 public class ExportiereBloeckeCommand extends AbstractHandler {
 	public static final String ID = "serviceblocks.export"; //$NON-NLS-1$
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
 		List<Leistungsblock> bloecke = qbe.execute();

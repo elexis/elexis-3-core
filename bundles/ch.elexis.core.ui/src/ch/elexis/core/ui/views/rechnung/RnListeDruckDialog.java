@@ -124,11 +124,13 @@ public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
 		super.okPressed();
 	}
 
+	@Override
 	public void save() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean saveAs() {
 		// TODO Auto-generated method stub
 		return false;

@@ -192,6 +192,7 @@ public class TristateCheckbox extends Button {
 	 *
 	 * @author H. Marlovits
 	 */
+	@Override
 	protected void checkSubclass() {
 	}
 

@@ -293,6 +293,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	}
 
 	/** Vom ActivationListener */
+	@Override
 	public void activation(boolean mode) {
 		CTabItem selected = ctab.getSelection();
 		if (selected instanceof FavoritenCTabItem)
@@ -308,6 +309,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 		}
 	}
 
+	@Override
 	public void visible(boolean mode) {
 		System.out.println(this.getClass().getName() + " visible " + mode); //$NON-NLS-1$
 	}

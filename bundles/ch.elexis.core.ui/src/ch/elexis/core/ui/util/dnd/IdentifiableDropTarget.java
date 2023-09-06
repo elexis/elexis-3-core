@@ -40,6 +40,7 @@ public class IdentifiableDropTarget implements DropTargetListener {
 		dtarget.addDropListener(this);
 	}
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 		if (receiver.accept(getIdentifiables(event))) {
 			event.detail = DND.DROP_COPY;
@@ -48,6 +49,7 @@ public class IdentifiableDropTarget implements DropTargetListener {
 		}
 	}
 
+	@Override
 	public void drop(DropTargetEvent event) {
 		receiver.dropped(getIdentifiables(event));
 	}
@@ -64,6 +66,7 @@ public class IdentifiableDropTarget implements DropTargetListener {
 		return ret;
 	}
 
+	@Override
 	public void dropAccept(DropTargetEvent event) {
 		if (!receiver.accept(getIdentifiables(event))) {
 			event.detail = DND.DROP_NONE;

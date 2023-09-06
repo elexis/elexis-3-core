@@ -35,8 +35,10 @@ import ch.rgw.tools.StringTool;
 public class DBImportFirstPage extends WizardPage {
 
 	List dbTypes;
-	Text server, dbName;
-	String defaultUser, defaultPassword;
+	Text server;
+	Text dbName;
+	String defaultUser;
+	String defaultPassword;
 	JdbcLink j = null;
 
 	static final String[] supportedDB = new String[] { "mySQl", "PostgreSQL", "H2", "ODBC" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -58,6 +60,7 @@ public class DBImportFirstPage extends WizardPage {
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		DBImportWizard wiz = (DBImportWizard) getWizard();
 

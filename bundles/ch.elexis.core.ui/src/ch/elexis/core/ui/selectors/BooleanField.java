@@ -34,7 +34,7 @@ public class BooleanField extends ActiveControl {
 
 	@Override
 	protected void push() {
-		if (textContents.equals("true")) { //$NON-NLS-1$
+		if ("true".equals(textContents)) { //$NON-NLS-1$
 			((Button) ctl).setSelection(true);
 		} else {
 			((Button) ctl).setSelection(false);

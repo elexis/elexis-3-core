@@ -114,6 +114,7 @@ public class ContactElement extends XChangeElement {
 		return ret;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Messages.ContactElement_Name).append(getAttr(ATTR_LASTNAME)).append(StringTool.lf); // $NON-NLS-1$

@@ -125,6 +125,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		List<Rechnung> rechnungen = patient.getRechnungen();
 		Collections.sort(rechnungen, new Comparator<Rechnung>() {
 			// compare on bill number
+			@Override
 			public int compare(Rechnung r1, Rechnung r2) {
 				// both null, consider as equal
 				if (r1 == null && r2 == null) {
@@ -142,8 +143,8 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				}
 
 				try {
-					Integer number1 = new Integer(r1.getNr());
-					Integer number2 = new Integer(r2.getNr());
+					Integer number1 = Integer.valueOf(r1.getNr());
+					Integer number2 = Integer.valueOf(r2.getNr());
 					return bReverse ? number2.compareTo(number1) : number1.compareTo(number2);
 				} catch (NumberFormatException ex) {
 					// error, consider equal
@@ -152,6 +153,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 			}
 
 			// compare on id
+			@Override
 			public boolean equals(Object obj) {
 				return (this == obj);
 			}
@@ -160,6 +162,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		return rechnungen;
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		tk = UiDesk.getToolkit();
@@ -205,6 +208,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		tc[1].addSelectionListener(sortListener);
 
 		billsViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
 					return new Object[] { Messages.Core_No_patient_selected_point };
@@ -213,27 +217,33 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				return getRechnungen(actPatient).toArray();
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		billsViewer.setLabelProvider(new ITableLabelProvider() {
+			@Override
 			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof Rechnung)) {
 					return StringUtils.EMPTY;
@@ -266,10 +276,12 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				return text;
 			}
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
 
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
@@ -287,6 +299,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		billsViewer.getControl().setFocus();
 	}
@@ -376,6 +389,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				setToolTipText(Messages.BillSummary_SummaryToClipboard); // $NON-NLS-1$
 			}
 
+			@Override
 			public void run() {
 				exportToClipboard();
 			}

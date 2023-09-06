@@ -36,6 +36,7 @@ public class GenericObjectDragSource implements DragSourceListener {
 	public GenericObjectDragSource(final StructuredViewer viewer) {
 		dragSource = viewer.getControl();
 		renderer = new ISelectionRenderer() {
+			@Override
 			@SuppressWarnings("unchecked")
 			public List<Object> getSelection() {
 				if (viewer != null && viewer.getStructuredSelection() != null) {
@@ -65,6 +66,7 @@ public class GenericObjectDragSource implements DragSourceListener {
 		mine.addDragListener(this);
 	}
 
+	@Override
 	public void dragFinished(final DragSourceEvent event) {
 		// TODO Auto-generated method stub
 
@@ -80,6 +82,7 @@ public class GenericObjectDragSource implements DragSourceListener {
 		event.data = sb.toString().replace(",$", StringConstants.EMPTY); //$NON-NLS-1$
 	}
 
+	@Override
 	public void dragStart(final DragSourceEvent event) {
 		List<Object> selection = renderer.getSelection();
 		if ((selection == null) || (selection.isEmpty())) {

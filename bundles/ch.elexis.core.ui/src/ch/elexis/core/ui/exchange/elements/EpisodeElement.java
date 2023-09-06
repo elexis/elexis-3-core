@@ -37,6 +37,7 @@ public class EpisodeElement extends XChangeElement {
 	public static final String ATTR_CODESYSTEM = "codesystem"; //$NON-NLS-1$
 	public static final String ATTR_CODE = "code"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}
@@ -142,6 +143,7 @@ public class EpisodeElement extends XChangeElement {
 	}
 
 	static class DiagnosisElement extends XChangeElement {
+		@Override
 		public String getXMLName() {
 			return ELEMENT_DIAGNOSIS;
 		}

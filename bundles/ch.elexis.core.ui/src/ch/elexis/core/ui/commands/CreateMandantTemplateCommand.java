@@ -33,7 +33,7 @@ public class CreateMandantTemplateCommand extends AbstractHandler {
 			Object firstElement = strucSelection.getFirstElement();
 
 			// get brief via text template and clone it
-			if (firstElement != null && firstElement instanceof TextTemplate) {
+			if (firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				Brief template = textTemplate.getTemplate();
 
