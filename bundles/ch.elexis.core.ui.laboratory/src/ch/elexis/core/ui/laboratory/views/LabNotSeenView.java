@@ -85,7 +85,8 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 	private static final String[] columnHeaders = { Messages.Core_Patient, Messages.Core_Parameter,
 			Messages.LabNotSeenView_normRange, Messages.Core_Date, Messages.Core_Value };
 	private static final int[] colWidths = new int[] { 250, 100, 60, 70, 50 };
-	private IAction markAllAction, markPersonAction;
+	private IAction markAllAction;
+	private IAction markPersonAction;
 
 	public LabNotSeenView() {
 	}
@@ -110,6 +111,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		tv.setUseHashlookup(true);
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
 
+			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if (!sel.isEmpty()) {
@@ -124,6 +126,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		tv.addCheckStateListener(new ICheckStateListener() {
 			boolean bDaempfung;
 
+			@Override
 			public void checkStateChanged(final CheckStateChangedEvent event) {
 				if (bDaempfung == false) {
 					bDaempfung = true;
@@ -156,6 +159,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comparator.setColumn(index);
 				tv.getTable().setSortDirection(comparator.getDirection());
@@ -182,11 +186,13 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	static class LabNotSeenLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
 
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof String) {
 				return columnIndex == 0 ? (String) element : StringUtils.EMPTY;
@@ -199,7 +205,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 				return lr.getItem().getName();
 			case 2:
 				Patient pat = lr.getPatient();
-				if (pat.getGeschlecht().equalsIgnoreCase("m")) { //$NON-NLS-1$
+				if ("m".equalsIgnoreCase(pat.getGeschlecht())) { //$NON-NLS-1$
 					return lr.getItem().getReferenceMale();
 				} else {
 					return lr.getItem().getReferenceFemale();
@@ -212,11 +218,13 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			return "?"; //$NON-NLS-1$
 		}
 
+		@Override
 		public Color getBackground(final Object element) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public Color getForeground(final Object element) {
 			if (element instanceof String) {
 				return UiDesk.getColor(UiDesk.COL_GREY);
@@ -234,6 +242,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 	class LabNotSeenContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public Object[] getElements(final Object inputElement) {
 			if (unseen == null) {
 				return new Object[] { Messages.LabNotSeenView_loading };
@@ -241,15 +250,18 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 			return unseen;
 		}
 
+		@Override
 		public void dispose() { /* don't mind */
 		}
 
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 			// don't mind
 		}
 
 	}
 
+	@Override
 	public void heartbeat() {
 		long last = LabResult.getLastUpdateUnseen();
 		if (lastUpdate != 0) {
@@ -263,6 +275,7 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 		unseen = LabResult.getUnseen().toArray(new LabResult[0]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				if (!inUpdate) {
 					inUpdate = true;

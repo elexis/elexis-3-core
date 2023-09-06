@@ -97,7 +97,15 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private Composite compositeDayTimeDosage;
 	private Composite compositeFreeTextDosage;
 	private StackLayout stackLayoutDosage;
-	private Text txtMorning, txtNoon, txtEvening, txtNight, txtFreeText;
+	private Text txtMorning;
+
+	private Text txtNoon;
+
+	private Text txtEvening;
+
+	private Text txtNight;
+
+	private Text txtFreeText;
 
 	private Composite tablesComposite;
 	private StackLayout tablesLayout;
@@ -183,6 +191,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtSearch.setMessage(Messages.Core_DoSearch);
 		txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 				medicationHistoryFilter.setSearchText(txtSearch.getText());
 			};
@@ -420,6 +429,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtEvening.setLayoutData(gd_txtEvening);
 			txtEvening.addModifyListener(new SignatureArrayModifyListener(2));
 			txtEvening.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -444,6 +454,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtNight.setLayoutData(gd_txtNight);
 			txtNight.addModifyListener(new SignatureArrayModifyListener(3));
 			txtNight.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -473,6 +484,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtFreeText.setTextLimit(255);
 			txtFreeText.addModifyListener(new SignatureArrayModifyListener(0));
 			txtFreeText.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -494,6 +506,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;

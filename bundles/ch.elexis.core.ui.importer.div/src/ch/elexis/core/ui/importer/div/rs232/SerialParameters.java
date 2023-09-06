@@ -32,6 +32,7 @@ package ch.elexis.core.ui.importer.div.rs232;
  */
 
 import org.apache.commons.lang3.StringUtils;
+
 import gnu.io.SerialPort;
 
 /**
@@ -221,13 +222,13 @@ public class SerialParameters {
 	 * @param databits New data bits setting.
 	 */
 	public void setDatabits(final String databits) {
-		if (databits.equals("5")) { //$NON-NLS-1$
+		if ("5".equals(databits)) { //$NON-NLS-1$
 			this.databits = SerialPort.DATABITS_5;
 		}
-		if (databits.equals("6")) { //$NON-NLS-1$
+		if ("6".equals(databits)) { //$NON-NLS-1$
 			this.databits = SerialPort.DATABITS_6;
 		}
-		if (databits.equals("7")) { //$NON-NLS-1$
+		if ("7".equals(databits)) { //$NON-NLS-1$
 			this.databits = SerialPort.DATABITS_7;
 		}
 		if (databits.equals(Messages.SerialParameters_4)) {
@@ -279,13 +280,13 @@ public class SerialParameters {
 	 * @param stopbits New stop bits setting.
 	 */
 	public void setStopbits(final String stopbits) {
-		if (stopbits.equals("1")) { //$NON-NLS-1$
+		if ("1".equals(stopbits)) { //$NON-NLS-1$
 			this.stopbits = SerialPort.STOPBITS_1;
 		}
-		if (stopbits.equals("1.5")) { //$NON-NLS-1$
+		if ("1.5".equals(stopbits)) { //$NON-NLS-1$
 			this.stopbits = SerialPort.STOPBITS_1_5;
 		}
-		if (stopbits.equals("2")) { //$NON-NLS-1$
+		if ("2".equals(stopbits)) { //$NON-NLS-1$
 			this.stopbits = SerialPort.STOPBITS_2;
 		}
 	}
@@ -332,13 +333,13 @@ public class SerialParameters {
 	 * @param parity New parity setting.
 	 */
 	public void setParity(final String parity) {
-		if (parity.equals("None")) { //$NON-NLS-1$
+		if ("None".equals(parity)) { //$NON-NLS-1$
 			this.parity = SerialPort.PARITY_NONE;
 		}
-		if (parity.equals("Even")) { //$NON-NLS-1$
+		if ("Even".equals(parity)) { //$NON-NLS-1$
 			this.parity = SerialPort.PARITY_EVEN;
 		}
-		if (parity.equals("Odd")) { //$NON-NLS-1$
+		if ("Odd".equals(parity)) { //$NON-NLS-1$
 			this.parity = SerialPort.PARITY_ODD;
 		}
 	}
@@ -378,19 +379,19 @@ public class SerialParameters {
 	 * @return An <code>int</code> describing a flow control type.
 	 */
 	private int stringToFlow(final String flowControl) {
-		if (flowControl.equals("None")) { //$NON-NLS-1$
+		if ("None".equals(flowControl)) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_NONE;
 		}
-		if (flowControl.equals("Xon/Xoff Out")) { //$NON-NLS-1$
+		if ("Xon/Xoff Out".equals(flowControl)) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_XONXOFF_OUT;
 		}
-		if (flowControl.equals("Xon/Xoff In")) { //$NON-NLS-1$
+		if ("Xon/Xoff In".equals(flowControl)) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_XONXOFF_IN;
 		}
-		if (flowControl.equals("RTS/CTS In")) { //$NON-NLS-1$
+		if ("RTS/CTS In".equals(flowControl)) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_RTSCTS_IN;
 		}
-		if (flowControl.equals("RTS/CTS Out")) { //$NON-NLS-1$
+		if ("RTS/CTS Out".equals(flowControl)) { //$NON-NLS-1$
 			return SerialPort.FLOWCONTROL_RTSCTS_OUT;
 		}
 		return SerialPort.FLOWCONTROL_NONE;

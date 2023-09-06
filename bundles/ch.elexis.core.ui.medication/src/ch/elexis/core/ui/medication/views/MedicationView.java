@@ -31,6 +31,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	private MedicationComposite tpc;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
+		@Override
 		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef) {
 			super.partActivated(partRef);
 			if (tpc != null && !tpc.isDisposed()) {
@@ -134,6 +135,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		tpc.updateUi(patient, forceUpdate);
 	}
 
+	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
 			if (CoreUiUtil.isActiveControl(tpc)) {

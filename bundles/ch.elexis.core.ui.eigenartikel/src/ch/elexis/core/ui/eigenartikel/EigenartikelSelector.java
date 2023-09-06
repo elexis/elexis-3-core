@@ -123,6 +123,7 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	@Override
 	protected PoDoubleClickListener getPoDoubleClickListener() {
 		return new PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {

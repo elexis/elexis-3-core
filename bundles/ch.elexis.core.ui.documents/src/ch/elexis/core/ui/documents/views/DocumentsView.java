@@ -281,6 +281,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(4, false));
 
@@ -295,6 +296,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 		tSearch.setMessage(Messages.DocumentView_searchLabel);
 		// Add search listener
 		ModifyListener searchListener = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				searchTitle = tSearch.getText();
 				refresh();
@@ -725,6 +727,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		if (viewer != null) {
 			viewer.getControl().setFocus();
@@ -738,6 +741,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 
 	private void makeActions() {
 		doubleClickAction = new Action() {
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
@@ -766,6 +770,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}

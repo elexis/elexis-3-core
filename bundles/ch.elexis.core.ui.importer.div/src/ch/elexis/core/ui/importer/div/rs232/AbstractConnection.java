@@ -11,14 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.rs232;
 
-import org.apache.commons.lang3.StringUtils;
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.UnsupportedCommOperationException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -36,6 +29,12 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.ui.UiDesk;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
+import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.UnsupportedCommOperationException;
 
 public abstract class AbstractConnection implements PortEventListener {
 
@@ -43,7 +42,13 @@ public abstract class AbstractConnection implements PortEventListener {
 
 	protected final StringBuilder sbFrame = new StringBuilder();
 	protected final StringBuilder sbLine = new StringBuilder();
-	protected int frameStart, frameEnd, overhang, checksumBytes;
+	protected int frameStart;
+
+	protected int frameEnd;
+
+	protected int overhang;
+
+	protected int checksumBytes;
 	protected final ComPortListener listener;
 	protected long endTime;
 	protected int timeToWait;
@@ -103,6 +108,7 @@ public abstract class AbstractConnection implements PortEventListener {
 				final AbstractConnection mine = this;
 				new Thread(new Runnable() {
 
+					@Override
 					public void run() {
 						try {
 							Thread.sleep(1000);
@@ -143,7 +149,7 @@ public abstract class AbstractConnection implements PortEventListener {
 			portId = CommPortIdentifier.getPortIdentifier(parameters.getPortName());
 		} catch (NoSuchPortException e) {
 			String msg = e.getMessage();
-			if (msg == null || msg.length() == 0) {
+			if (msg == null || msg.isEmpty()) {
 				msg = e.getClass().getSimpleName();
 			}
 			throw new SerialConnectionException(msg);
@@ -271,6 +277,7 @@ public abstract class AbstractConnection implements PortEventListener {
 	 * BREAK RECEIVED are written to the messageAreaIn.
 	 */
 
+	@Override
 	public void serialEvent(final SerialPortEvent e) {
 		if (adjustEndTime) {
 			endTime = System.currentTimeMillis() + (timeout * 1000);
@@ -302,6 +309,7 @@ public abstract class AbstractConnection implements PortEventListener {
 		// avoid rxtx-deadlock when called from an EventListener
 		new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(500);
@@ -362,6 +370,7 @@ public abstract class AbstractConnection implements PortEventListener {
 
 	class BackgroundWatchdog implements Runnable {
 
+		@Override
 		public void run() {
 			while (System.currentTimeMillis() < endTime && !closed) {
 				try {
@@ -388,10 +397,12 @@ public abstract class AbstractConnection implements PortEventListener {
 			this.text = text;
 		}
 
+		@Override
 		public void run() {
 			final IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 				private int count = 0;
 
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.setTaskName(Messages.AbstractConnection_PleaseWait);
 					while (!monitor.isCanceled() && System.currentTimeMillis() < endTime && !closed) {
@@ -422,6 +433,7 @@ public abstract class AbstractConnection implements PortEventListener {
 			};
 
 			Thread monitorDialogThread = new Thread() {
+				@Override
 				public void run() {
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 					try {

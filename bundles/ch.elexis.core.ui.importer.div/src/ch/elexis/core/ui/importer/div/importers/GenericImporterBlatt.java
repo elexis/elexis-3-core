@@ -12,11 +12,11 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -137,6 +137,7 @@ public class GenericImporterBlatt extends Composite {
 
 	public boolean doImport() {
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				GenericImporterWizard wizard = new GenericImporterWizard(method, filename);
 
@@ -183,6 +184,7 @@ public class GenericImporterBlatt extends Composite {
 			initInput();
 		}
 
+		@Override
 		public boolean performFinish() {
 			if (excel != null) {
 				// TODO close excel sheet
@@ -190,6 +192,7 @@ public class GenericImporterBlatt extends Composite {
 			return true;
 		}
 
+		@Override
 		public boolean performCancel() {
 			// the same action as Finish
 			return performFinish();
@@ -310,7 +313,7 @@ public class GenericImporterBlatt extends Composite {
 									excelFieldsStrings.append(","); //$NON-NLS-1$
 								excelFieldsStrings.append(name);
 								inputAvailableFields.add(new Field(name));
-								inputFieldIndices.put(name, new Integer(i));
+								inputFieldIndices.put(name, Integer.valueOf(i));
 							}
 						}
 
@@ -642,9 +645,11 @@ public class GenericImporterBlatt extends Composite {
 				checkCompleteness();
 			}
 
+			@Override
 			public void createControl(Composite parent) {
 				ArrayContentProvider arrayContentProvider = new ArrayContentProvider();
 				LabelProvider typeLabelProvider = new LabelProvider() {
+					@Override
 					public String getText(Object element) {
 						if (element instanceof PersistentObject) {
 							// TODO persistent objects should provide a human
@@ -656,6 +661,7 @@ public class GenericImporterBlatt extends Composite {
 					}
 				};
 				LabelProvider fieldLabelProvider = new LabelProvider() {
+					@Override
 					public String getText(Object element) {
 						String text = null;
 
@@ -693,6 +699,7 @@ public class GenericImporterBlatt extends Composite {
 				typesViewer.setInput(types);
 				typesViewer.setSelection(new StructuredSelection(typesViewer.getElementAt(0)));
 				typesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						setType();
 					}
@@ -727,10 +734,12 @@ public class GenericImporterBlatt extends Composite {
 				addButton = new Button(leftArea, SWT.PUSH);
 				addButton.setText("+"); //$NON-NLS-1$
 				addButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						addInputField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -738,10 +747,12 @@ public class GenericImporterBlatt extends Composite {
 				delButton = new Button(leftArea, SWT.PUSH);
 				delButton.setText("-"); //$NON-NLS-1$
 				delButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						delInputField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -749,10 +760,12 @@ public class GenericImporterBlatt extends Composite {
 				upButton = new Button(leftArea, SWT.PUSH);
 				upButton.setText("^"); //$NON-NLS-1$
 				upButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						upInputField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -760,10 +773,12 @@ public class GenericImporterBlatt extends Composite {
 				downButton = new Button(leftArea, SWT.PUSH);
 				downButton.setText("v"); //$NON-NLS-1$
 				downButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						downInputField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -771,10 +786,12 @@ public class GenericImporterBlatt extends Composite {
 				keyButton = new Button(leftArea, SWT.PUSH);
 				keyButton.setText("K"); //$NON-NLS-1$
 				keyButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						keyInputField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -832,10 +849,12 @@ public class GenericImporterBlatt extends Composite {
 				addButton = new Button(rightArea, SWT.PUSH);
 				addButton.setText("+"); //$NON-NLS-1$
 				addButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						addDbField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -843,10 +862,12 @@ public class GenericImporterBlatt extends Composite {
 				delButton = new Button(rightArea, SWT.PUSH);
 				delButton.setText("-"); //$NON-NLS-1$
 				delButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						delDbField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -854,10 +875,12 @@ public class GenericImporterBlatt extends Composite {
 				upButton = new Button(rightArea, SWT.PUSH);
 				upButton.setText("^"); //$NON-NLS-1$
 				upButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						upDbField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -865,10 +888,12 @@ public class GenericImporterBlatt extends Composite {
 				downButton = new Button(rightArea, SWT.PUSH);
 				downButton.setText("v"); //$NON-NLS-1$
 				downButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						downDbField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -876,10 +901,12 @@ public class GenericImporterBlatt extends Composite {
 				keyButton = new Button(rightArea, SWT.PUSH);
 				keyButton.setText("K"); //$NON-NLS-1$
 				keyButton.addSelectionListener(new SelectionListener() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						keyDbField();
 					}
 
+					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
@@ -989,6 +1016,7 @@ public class GenericImporterBlatt extends Composite {
 				return null;
 			}
 
+			@Override
 			public void createControl(Composite parent) {
 				Composite composite = new Composite(parent, SWT.NONE);
 				composite.setLayout(new GridLayout(1, false));
@@ -996,6 +1024,7 @@ public class GenericImporterBlatt extends Composite {
 				Button refreshButton = new Button(composite, SWT.PUSH);
 				refreshButton.setText(Messages.Core_Update);
 				refreshButton.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						refresh();
 					}
@@ -1006,12 +1035,14 @@ public class GenericImporterBlatt extends Composite {
 				mainControl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 
 				mainViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						setSyncElement();
 					}
 				});
 
 				mainViewer.setLabelProvider(new ITableLabelProvider() {
+					@Override
 					public Image getColumnImage(Object element, int columnIndex) {
 						Image image = null;
 
@@ -1068,6 +1099,7 @@ public class GenericImporterBlatt extends Composite {
 						return image;
 					}
 
+					@Override
 					public String getColumnText(Object element, int columnIndex) {
 						String text = StringUtils.EMPTY;
 
@@ -1136,31 +1168,38 @@ public class GenericImporterBlatt extends Composite {
 						return text;
 					}
 
+					@Override
 					public void addListener(ILabelProviderListener listener) {
 						// nothing to do
 					}
 
+					@Override
 					public void dispose() {
 						// nothing to do
 					}
 
+					@Override
 					public boolean isLabelProperty(Object element, String property) {
 						return false;
 					}
 
+					@Override
 					public void removeListener(ILabelProviderListener listener) {
 						// nothing to do
 					}
 				});
 				mainViewer.setContentProvider(new IStructuredContentProvider() {
+					@Override
 					public Object[] getElements(Object inputElement) {
 						return syncElements.toArray();
 					}
 
+					@Override
 					public void dispose() {
 						// nothing to do
 					}
 
+					@Override
 					public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 						// nothing to do
 					}
@@ -1205,6 +1244,7 @@ public class GenericImporterBlatt extends Composite {
 				importNewButton.setText(Messages.GenericImporterBlatt_ImportAllDataNewCaption);
 				importNewButton.setImage(getImage(IMAGE_INPUT_ONLY));
 				importNewButton.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						importNew();
 					}
@@ -1218,6 +1258,7 @@ public class GenericImporterBlatt extends Composite {
 				updateButton.setText(Messages.GenericImporterBlatt_ImportAllValues);
 				updateButton.setImage(getImage(IMAGE_DIFF));
 				updateButton.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						updateSelected();
 					}
@@ -1523,6 +1564,7 @@ public class GenericImporterBlatt extends Composite {
 			}
 
 			private class DiffViewerContentProvider implements IStructuredContentProvider {
+				@Override
 				public Object[] getElements(Object inputElement) {
 					if (inputElement instanceof SyncElement) {
 						return new Object[] { inputElement };
@@ -1531,10 +1573,12 @@ public class GenericImporterBlatt extends Composite {
 					}
 				}
 
+				@Override
 				public void dispose() {
 					// nothing to do
 				}
 
+				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 					// nothing to do
 				}
@@ -1550,6 +1594,7 @@ public class GenericImporterBlatt extends Composite {
 					this.type = type;
 				}
 
+				@Override
 				public Image getColumnImage(Object element, int columnIndex) {
 					Image image = null;
 
@@ -1588,6 +1633,7 @@ public class GenericImporterBlatt extends Composite {
 					return image;
 				}
 
+				@Override
 				public String getColumnText(Object element, int columnIndex) {
 					String text = StringUtils.EMPTY;
 
@@ -1652,18 +1698,22 @@ public class GenericImporterBlatt extends Composite {
 					return text;
 				}
 
+				@Override
 				public void addListener(ILabelProviderListener listener) {
 					// nothing to do
 				}
 
+				@Override
 				public void dispose() {
 					// nothing to do
 				}
 
+				@Override
 				public boolean isLabelProperty(Object element, String property) {
 					return false;
 				}
 
+				@Override
 				public void removeListener(ILabelProviderListener listener) {
 					// nothing to do
 				}
@@ -1762,10 +1812,12 @@ public class GenericImporterBlatt extends Composite {
 				this.isKey = isKey;
 			}
 
+			@Override
 			public String toString() {
 				return name;
 			}
 
+			@Override
 			public boolean equals(Object o) {
 				if (o instanceof Field) {
 					Field other = (Field) o;

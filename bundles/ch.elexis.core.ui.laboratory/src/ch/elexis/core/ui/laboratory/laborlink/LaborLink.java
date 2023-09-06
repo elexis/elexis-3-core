@@ -46,11 +46,13 @@ public class LaborLink implements IKonsExtension {
 		return PROVIDER_ID;
 	}
 
+	@Override
 	public boolean doLayout(StyleRange n, String provider, String id) {
 		n.background = UiDesk.getColorFromRGB(LABOR_COLOR);
 		return true;
 	}
 
+	@Override
 	public boolean doXRef(String refProvider, String refID) {
 		// update LaborView and show it
 		LaborView laborView = (LaborView) Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -63,6 +65,7 @@ public class LaborLink implements IKonsExtension {
 		return true;
 	}
 
+	@Override
 	public IAction[] getActions() {
 		IAction[] ret = new IAction[1];
 		ret[0] = new Action("Labor verordnen") {
@@ -84,16 +87,19 @@ public class LaborLink implements IKonsExtension {
 		return ret;
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void removeXRef(String refProvider, String refID) {
 		// nothing to do
 	}
 
+	@Override
 	public void insert(Object o, int pos) {
 		// TODO Auto-generated method stub
 

@@ -84,7 +84,10 @@ import ch.rgw.tools.ExHandler;
 public class FixMediDisplay extends ListDisplay<IPrescription> {
 	public static final String ID = "ch.elexis.FixMediDisplay"; //$NON-NLS-1$
 	private final LDListener dlisten;
-	private IAction stopMedicationAction, changeMedicationAction, removeMedicationAction, addDefaultSignatureAction;
+	private IAction stopMedicationAction;
+	private IAction changeMedicationAction;
+	private IAction removeMedicationAction;
+	private IAction addDefaultSignatureAction;
 	FixMediDisplay self;
 	Label lCost;
 	InteractionLink interactionLink;
@@ -255,6 +258,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			site = s;
 		}
 
+		@Override
 		public void hyperlinkActivated(String l) {
 			try {
 				if (l.equals(HINZU)) {
@@ -283,6 +287,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 
 		}
 
+		@Override
 		public String getLabel(Object o) {
 			if (o instanceof IPrescription) {
 				IPrescription presc = (IPrescription) o;
@@ -302,6 +307,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 				setToolTipText(Messages.FixMediDisplay_Modify); // $NON-NLS-1$
 			}
 
+			@Override
 			public void doRun() {
 				IPrescription pr = getSelection();
 				if (pr != null) {
@@ -319,6 +325,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 				setToolTipText(Messages.FixMediDisplay_StopThisMedicament); // $NON-NLS-1$
 			}
 
+			@Override
 			public void doRun() {
 				IPrescription pr = getSelection();
 				if (pr != null) {
@@ -406,6 +413,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 				setToolTipText(Messages.FixMediDisplay_DeleteUnrecoverable); // $NON-NLS-1$
 			}
 
+			@Override
 			public void doRun() {
 				IPrescription pr = getSelection();
 				if (pr != null) {

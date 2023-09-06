@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.dbcheck.syntactic;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,6 +33,7 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 	 * @param j
 	 * @return
 	 */
+	@Override
 	public String checkCoreTables(JdbcLink j, IProgressMonitor monitor) {
 		String version = CheckExec.getDBVersion();
 		String[] tables = DBModel.getTableModel(version);
@@ -59,7 +60,7 @@ public class SyntacticCheckMySQL extends SyntacticCheck {
 					continue;
 				}
 				String collation = rsColl.getString(1);
-				if (!collation.equalsIgnoreCase("utf8_general_ci")) {
+				if (!"utf8_general_ci".equalsIgnoreCase(collation)) {
 					oklog.append(StringUtils.SPACE + collation + " inkorrekt, erwarte utf8_general_ci\n");
 					errlog.append(tables[l] + ": Collation " + collation + " inkorrekt, erwarte utf8_general_ci\n");
 					fixScript.append(

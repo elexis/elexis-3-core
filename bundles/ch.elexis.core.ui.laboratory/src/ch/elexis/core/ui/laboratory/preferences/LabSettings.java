@@ -116,6 +116,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		new Label(area, SWT.NONE);
 	}
 
+	@Override
 	public void init(final IWorkbench workbench) {
 		daysKeepUnseen = ConfigServiceHolder.getGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, null);
 		if (daysKeepUnseen == null || !isValidNumber(daysKeepUnseen)) {

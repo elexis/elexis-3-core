@@ -70,7 +70,7 @@ public class EigenartikelTreeContentProvider implements ITreeContentProvider, IC
 		if (!showProducts) {
 			return null;
 		}
-		if (parentElement != null && parentElement instanceof IArticle) {
+		if (parentElement instanceof IArticle) {
 			IArticle ea = (IArticle) parentElement;
 			if (ea.isProduct()) {
 				return ea.getPackages().toArray();

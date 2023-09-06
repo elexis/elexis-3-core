@@ -283,7 +283,7 @@ public class MedicationViewerHelper {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ViewerSortOrder comparator = MedicationViewHelper.getSelectedComparator();
-				if (ViewerSortOrder.DEFAULT.equals(comparator)) {
+				if (ViewerSortOrder.DEFAULT == comparator) {
 					comparator.setColumn(index);
 					int dir = comparator.getDirection();
 					viewer.getTable().setSortColumn(column);

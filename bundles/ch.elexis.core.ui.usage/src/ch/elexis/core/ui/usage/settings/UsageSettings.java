@@ -97,6 +97,7 @@ public class UsageSettings extends PreferencePage implements IWorkbenchPreferenc
 		viewer.setContentProvider(cp);
 
 		ECollections.sort(StatisticsManager.INSTANCE.getStatistics().getStatistics(), new Comparator<IStatistic>() {
+			@Override
 			public int compare(IStatistic o1, IStatistic o2) {
 				int i = o2.getTime().compareTo(o1.getTime());
 				// in some cases the time is equal then we sort by action

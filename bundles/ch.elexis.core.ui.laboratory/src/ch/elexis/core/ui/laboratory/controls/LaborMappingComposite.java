@@ -141,6 +141,7 @@ public class LaborMappingComposite extends Composite {
 		column.getColumn().setText(Messages.Core_Laboratory);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getOrigin().getLabel(true);
@@ -156,6 +157,7 @@ public class LaborMappingComposite extends Composite {
 		column.getColumn().setText(Messages.Core_Short_Label);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getItemName();

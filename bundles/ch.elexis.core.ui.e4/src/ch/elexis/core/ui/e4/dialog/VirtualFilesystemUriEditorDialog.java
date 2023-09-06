@@ -217,7 +217,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 		//
 		IConverter<String, URI> stringToUriConverter = IConverter.create(String.class, URI.class,
-				o -> URI.create(o.toString()));
+				o -> URI.create(o));
 		IConverter<URI, String> uriToStringConverter = IConverter.create(URI.class, String.class,
 				(u) -> u != null ? uri.getUri().toString() : "");
 		IObservableValue<String> widgetUri = WidgetProperties.text(SWT.Modify).observe(txtUri);

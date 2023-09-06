@@ -52,7 +52,15 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class PatientErfassenDialog extends TitleAreaDialog {
 	HashMap<String, String> fld;
-	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tTel, tMail, tAHV;
+	Text tName;
+	Text tVorname;
+	Text tGebDat;
+	Text tStrasse;
+	Text tPlz;
+	Text tOrt;
+	Text tTel;
+	Text tMail;
+	Text tAHV;
 	Combo cbSex;
 	private IPatient patient;
 	Object po;

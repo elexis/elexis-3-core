@@ -2,17 +2,15 @@
  */
 package ch.elexis.core.ui.usage.model.impl;
 
-import ch.elexis.core.ui.usage.model.EventStatistic;
-import ch.elexis.core.ui.usage.model.ModelPackage;
-
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import ch.elexis.core.ui.usage.model.EventStatistic;
+import ch.elexis.core.ui.usage.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -219,6 +217,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getAction() {
 		return action;
 	}
@@ -228,6 +227,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAction(String newAction) {
 		String oldAction = action;
 		action = newAction;
@@ -240,6 +240,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -249,6 +250,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(int newValue) {
 		int oldValue = value;
 		value = newValue;
@@ -261,6 +263,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getTime() {
 		return time;
 	}
@@ -270,6 +273,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTime(Date newTime) {
 		Date oldTime = time;
 		time = newTime;
@@ -282,6 +286,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getActionType() {
 		return actionType;
 	}
@@ -291,6 +296,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActionType(String newActionType) {
 		String oldActionType = actionType;
 		actionType = newActionType;
@@ -303,6 +309,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMinDuration() {
 		return minDuration;
 	}
@@ -312,6 +319,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinDuration(int newMinDuration) {
 		int oldMinDuration = minDuration;
 		minDuration = newMinDuration;
@@ -324,6 +332,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getMaxDuration() {
 		return maxDuration;
 	}
@@ -333,6 +342,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxDuration(int newMaxDuration) {
 		int oldMaxDuration = maxDuration;
 		maxDuration = newMaxDuration;
@@ -345,6 +355,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getAvgDuration() {
 		return avgDuration;
 	}
@@ -354,6 +365,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAvgDuration(long newAvgDuration) {
 		long oldAvgDuration = avgDuration;
 		avgDuration = newAvgDuration;
@@ -366,6 +378,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getLastStart() {
 		return lastStart;
 	}
@@ -375,6 +388,7 @@ public class EventStatisticImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLastStart(long newLastStart) {
 		long oldLastStart = lastStart;
 		lastStart = newLastStart;

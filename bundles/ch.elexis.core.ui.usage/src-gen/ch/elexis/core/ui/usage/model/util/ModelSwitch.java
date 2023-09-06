@@ -2,12 +2,15 @@
  */
 package ch.elexis.core.ui.usage.model.util;
 
-import ch.elexis.core.ui.usage.model.*;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import ch.elexis.core.ui.usage.model.EventStatistic;
+import ch.elexis.core.ui.usage.model.IStatistic;
+import ch.elexis.core.ui.usage.model.ModelPackage;
+import ch.elexis.core.ui.usage.model.SimpleStatistic;
+import ch.elexis.core.ui.usage.model.Statistics;
 
 /**
  * <!-- begin-user-doc -->

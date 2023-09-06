@@ -39,7 +39,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 
 	private void openDisplayDialog(LabResult labResult) {
 		ILabItem labItem = labResult.getItem();
-		if (labItem.getTyp().equals(LabItemTyp.TEXT) || (labResult.getComment().length() > 0)) {
+		if (labItem.getTyp() == LabItemTyp.TEXT || (labResult.getComment().length() > 0)) {
 			DisplayTextDialog dlg = new DisplayTextDialog(composite.getShell(),
 					Messages.Core_Textresult, labItem.getName(), labResult.getComment());
 			// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
@@ -63,7 +63,7 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 			}
 			dlg.setWhitespaceNormalized(false);
 			dlg.open();
-		} else if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
+		} else if (labItem.getTyp() == LabItemTyp.DOCUMENT) {
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null) {
 				new DisplayLabDokumenteDialog(composite.getShell(), Messages.Core_Laboratory_Document,

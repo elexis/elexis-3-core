@@ -22,7 +22,9 @@ public class SelectValueAccountingSysFieldDialog extends TitleAreaDialog {
 	private String oldValue;
 	private String newValue;
 
-	private Button btnRememberProceedure, btnOldValue, btnNewValue;
+	private Button btnRememberProceedure;
+	private Button btnOldValue;
+	private Button btnNewValue;
 
 	private boolean useLegacyValue;
 	private boolean rememberProceedure;

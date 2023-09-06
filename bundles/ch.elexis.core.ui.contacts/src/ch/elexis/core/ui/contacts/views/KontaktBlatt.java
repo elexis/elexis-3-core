@@ -94,7 +94,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private final ScrolledForm form;
 	private final FormToolkit tk;
 	AutoForm afDetails;
-	Listener mandantListener, checkIfContactExistsListener;
+	Listener mandantListener;
+
+	Listener checkIfContactExistsListener;
 
 	static final InputData[] def = new InputData[] {
 			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null),
@@ -124,6 +126,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
+				@Override
 				public void displayContent(Object po, InputData ltf) {
 					StringBuilder sb = new StringBuilder();
 					Kontakt k = (Kontakt) po;
@@ -133,6 +136,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					ltf.setText(sb.toString());
 				}
 
+				@Override
 				public void reloadContent(Object po, InputData ltf) {
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
@@ -278,7 +282,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	private List<Kontakt> queryContact() {
-		String tName, tVorname, tSex;
+		String tName;
+		String tVorname;
+		String tSex;
 		tName = def[0].getText();
 		tVorname = def[1].getText();
 		tSex = def[3].getText();
@@ -306,7 +312,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			String type = (String) b.getData();
 
 			if (b.getSelection() == true) {
-				if (type.equals("istOrganisation")) { //$NON-NLS-1$
+				if ("istOrganisation".equals(type)) { //$NON-NLS-1$
 					select("1", "x", "0", "0", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
@@ -314,7 +320,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					def[3].setText(StringUtils.EMPTY);
 					def[10].setLabel(TEL_DIREKT);
 					setOrganisationFieldsVisible(true);
-				} else if (type.equals("istLabor")) { //$NON-NLS-1$
+				} else if ("istLabor".equals(type)) { //$NON-NLS-1$
 					select("1", "1", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					def[0].setLabel(BEZEICHNUNG);
 					def[1].setLabel(ZUSATZ);
@@ -328,11 +334,11 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					setOrganisationFieldsVisible(false);
 					if ("istPerson".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-					} else if (type.equals("istPatient")) { //$NON-NLS-1$
+					} else if ("istPatient".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "1", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					} else if (type.equals(IS_USER)) { // $NON-NLS-1$
 						select("0", "0", "1", "x", "1", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-					} else if (type.equals("istMandant")) { //$NON-NLS-1$
+					} else if ("istMandant".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "1", "1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					}
 				}
@@ -345,7 +351,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			alTypes.clear();
 			alValues.clear();
 			for (int i = 0; i < fields.length; i++) {
-				if (fields[i].equals("x")) { //$NON-NLS-1$
+				if ("x".equals(fields[i])) { //$NON-NLS-1$
 					continue;
 				}
 				alTypes.add(types[i]);

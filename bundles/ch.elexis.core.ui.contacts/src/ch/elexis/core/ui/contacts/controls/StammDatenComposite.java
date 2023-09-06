@@ -489,7 +489,7 @@ public class StammDatenComposite extends AbstractComposite {
 		@Override
 		public void focusGained(FocusEvent e) {
 			Text text = ((Text) e.widget);
-			if (text.getText().length() == 0)
+			if (text.getText().isEmpty())
 				text.setText(ContactGeonames.getDialPrefix());
 		}
 	};

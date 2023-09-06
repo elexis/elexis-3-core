@@ -2,15 +2,17 @@
  */
 package ch.elexis.core.ui.usage.model.impl;
 
-import ch.elexis.core.ui.usage.model.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import ch.elexis.core.ui.usage.model.EventStatistic;
+import ch.elexis.core.ui.usage.model.ModelFactory;
+import ch.elexis.core.ui.usage.model.ModelPackage;
+import ch.elexis.core.ui.usage.model.SimpleStatistic;
+import ch.elexis.core.ui.usage.model.Statistics;
 
 /**
  * <!-- begin-user-doc -->
@@ -69,6 +71,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Statistics createStatistics() {
 		StatisticsImpl statistics = new StatisticsImpl();
 		return statistics;
@@ -79,6 +82,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SimpleStatistic createSimpleStatistic() {
 		SimpleStatisticImpl simpleStatistic = new SimpleStatisticImpl();
 		return simpleStatistic;
@@ -89,6 +93,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EventStatistic createEventStatistic() {
 		EventStatisticImpl eventStatistic = new EventStatisticImpl();
 		return eventStatistic;
@@ -99,6 +104,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModelPackage getModelPackage() {
 		return (ModelPackage)getEPackage();
 	}

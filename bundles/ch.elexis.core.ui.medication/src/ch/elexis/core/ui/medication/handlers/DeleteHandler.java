@@ -36,7 +36,7 @@ public class DeleteHandler extends AbstractHandler {
 		// remove selection first - otherwise selection will try to select removed
 		// item...
 		IWorkbenchPart activePart = activePage.getActivePart();
-		if (activePart != null && activePart instanceof MedicationView) {
+		if (activePart instanceof MedicationView) {
 			MedicationView mediView = (MedicationView) activePart;
 			mediView.resetSelection();
 		}

@@ -1,17 +1,17 @@
 package ch.elexis.core.ui.dbcheck.semantic;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.ui.dbcheck.CheckExec;
 import ch.elexis.core.ui.dbcheck.model.DBModel;
 import ch.elexis.core.ui.dbcheck.model.TableDescriptor;
 import ch.rgw.tools.JdbcLink;
-import ch.rgw.tools.JdbcLinkSyntaxException;
 import ch.rgw.tools.JdbcLink.Stm;
+import ch.rgw.tools.JdbcLinkSyntaxException;
 
 public class SemanticCheckMySQL extends SemanticCheck {
 

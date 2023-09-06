@@ -20,21 +20,25 @@ public class ImporterActionDelegate implements IWorkbenchWindowActionDelegate {
 
 	IWorkbenchWindow myWindow;
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void init(final IWorkbenchWindow window) {
 		myWindow = window;
 	}
 
+	@Override
 	public void run(final IAction action) {
 		// KontaktImporterDialog kib=new KontaktImporterDialog(myWindow.getShell());
 		// kib.open();
 
 	}
 
+	@Override
 	public void selectionChanged(final IAction action, final ISelection selection) {
 		// TODO Auto-generated method stub
 

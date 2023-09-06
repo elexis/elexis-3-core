@@ -2,14 +2,16 @@
  */
 package ch.elexis.core.ui.usage.model.util;
 
-import ch.elexis.core.ui.usage.model.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import ch.elexis.core.ui.usage.model.EventStatistic;
+import ch.elexis.core.ui.usage.model.IStatistic;
+import ch.elexis.core.ui.usage.model.ModelPackage;
+import ch.elexis.core.ui.usage.model.SimpleStatistic;
+import ch.elexis.core.ui.usage.model.Statistics;
 
 /**
  * <!-- begin-user-doc -->
