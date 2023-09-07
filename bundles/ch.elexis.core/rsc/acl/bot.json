@@ -1,6 +1,8 @@
 {
-  "roles-represented" : [ "bot" ],
-  "object" : {
-    "ch.elexis.core.model.IContact" : "crude"
-  }
+	"roles-represented": [
+		"bot"
+	],
+	"object": {
+		"ch.elexis.core.model.IContact": "crude"
+	}
 }

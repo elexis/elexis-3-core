@@ -1,6 +1,8 @@
 {
-  "roles-represented" : [ "mandator" ],
-  "system-command" : {
-    "ch.medelexis.application.imp.abo.change" : "x"
-  }
+	"roles-represented": [
+		"mandator"
+	],
+	"system-command": {
+		"ch.medelexis.application.imp.abo.change": "x"
+	}
 }
