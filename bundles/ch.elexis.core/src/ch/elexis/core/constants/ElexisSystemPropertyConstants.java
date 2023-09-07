@@ -4,6 +4,8 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 
 public class ElexisSystemPropertyConstants {
 
+	public static final boolean VERBOSE_ACL_NOTIFICATION = true;
+
 	public static final String LOGBACK_CONFIG_FILE = "logback.configurationFile";
 
 	public static final String CLIENT_EMAIL = "ch.elexis.clientEmail";

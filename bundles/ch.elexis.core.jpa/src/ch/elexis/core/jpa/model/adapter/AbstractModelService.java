@@ -35,6 +35,7 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
@@ -55,8 +56,6 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 
 public abstract class AbstractModelService implements IModelService {
-
-	private static final boolean VERBOSE_ACL_NOTIFICATION = true;
 
 	private IAccessControlService accessControlService;
 
@@ -326,6 +325,7 @@ public abstract class AbstractModelService implements IModelService {
 		}
 	}
 
+	@Override
 	public void touch(Identifiable identifiable) {
 		if (evaluateRight(identifiable.getClass(), Right.UPDATE)) {
 			Optional<EntityWithId> dbObject = getDbObject(identifiable);
@@ -558,7 +558,7 @@ public abstract class AbstractModelService implements IModelService {
 			if (!ret) {
 				String message = "(ACL " + System.currentTimeMillis() + ") User has no right [" + right
 						+ "] for class [" + clazz.getName() + "]";
-				if (VERBOSE_ACL_NOTIFICATION) {
+				if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION) {
 					fullNotify(message, new Throwable());
 				} else {
 					LoggerFactory.getLogger(getClass()).info(message);
@@ -582,7 +582,7 @@ public abstract class AbstractModelService implements IModelService {
 		boolean ret = evaluateRightNoException(clazz, right);
 		if (!ret) {
 			AccessControlException accessControlException = new AccessControlException(clazz, right);
-			if (VERBOSE_ACL_NOTIFICATION) {
+			if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION) {
 				fullNotify("(ACL " + System.currentTimeMillis() + ") " + accessControlException.getMessage(),
 						accessControlException);
 			}

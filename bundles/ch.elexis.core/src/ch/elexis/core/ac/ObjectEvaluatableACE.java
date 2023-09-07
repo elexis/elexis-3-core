@@ -1,6 +1,7 @@
 package ch.elexis.core.ac;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 					String lSimplename = s.substring(s.lastIndexOf('.') + 1);
 					return Character.isUpperCase(lSimplename.charAt(0)) && Character.isUpperCase(lSimplename.charAt(1));
 				}).findFirst();
-				if(canidate.isPresent()) {
+				if (canidate.isPresent()) {
 					return canidate.get();
 				}
 			}
@@ -80,6 +81,11 @@ public class ObjectEvaluatableACE extends EvaluatableACE {
 
 	public String getStoreToString() {
 		return storeToString;
+	}
+
+	@Override
+	public String toString() {
+		return object + "#" + Arrays.toString(requestedRightMap);
 	}
 
 }
