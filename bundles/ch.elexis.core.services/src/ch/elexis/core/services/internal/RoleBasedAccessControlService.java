@@ -25,6 +25,7 @@ import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
@@ -76,7 +77,13 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			if (!userAclMap.containsKey(user.get())) {
 				refresh(user.get());
 			}
-			return evaluateACE(user.get(), userAclMap.get(user.get()), evaluatableAce);
+			boolean result = evaluateACE(user.get(), userAclMap.get(user.get()), evaluatableAce);
+			if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION && !result) {
+				String message = "(ACL " + System.currentTimeMillis() + ") User has no right ["
+						+ evaluatableAce.toString() + "]";
+				logger.info("", new Throwable(message));
+			}
+			return result;
 		} else {
 			logger.warn("No active user to evalute");
 		}
@@ -190,15 +197,15 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private boolean evaluateAobo(IUser user, ObjectEvaluatableACE _ace) {
 		List<String> aoboIds = getAoboMandatorIds(user);
 		Optional<Identifiable> object = storeToStringService.loadFromString(_ace.getStoreToString());
-		if(object.isPresent()) {
+		if (object.isPresent()) {
 			String id = null;
 			if (object.get() instanceof IEncounter) {
-				if(((IEncounter) object.get()).getMandator() != null) {
-					id = ((IEncounter) object.get()).getMandator().getId();					
+				if (((IEncounter) object.get()).getMandator() != null) {
+					id = ((IEncounter) object.get()).getMandator().getId();
 				}
 			} else if (object.get() instanceof IInvoice) {
 				if (((IInvoice) object.get()).getMandator() != null) {
-					id = ((IInvoice) object.get()).getMandator().getId();					
+					id = ((IInvoice) object.get()).getMandator().getId();
 				}
 			} else if (object.get() instanceof IDocumentLetter) {
 				if (((IDocumentLetter) object.get()).getAuthor() != null) {
@@ -220,8 +227,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			if (user.getAssignedContact().isMandator()) {
 				ret.add(user.getAssignedContact().getId());
 			}
-			userService.getExecutiveDoctorsWorkingFor(user).stream()
-					.forEach(m -> ret.add(m.getId()));
+			userService.getExecutiveDoctorsWorkingFor(user).stream().forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
 	}

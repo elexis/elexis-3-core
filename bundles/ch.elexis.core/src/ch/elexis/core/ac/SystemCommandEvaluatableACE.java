@@ -12,4 +12,9 @@ public class SystemCommandEvaluatableACE extends EvaluatableACE {
 	public String getSystemCommandId() {
 		return systemCommandId;
 	}
+
+	@Override
+	public String toString() {
+		return systemCommandId + "#" + requestedRightMap[Right.EXECUTE.ordinal()];
+	}
 }
