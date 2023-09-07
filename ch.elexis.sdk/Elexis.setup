@@ -12,7 +12,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="elexis"
     label="Elexis">
   <setupTask
@@ -36,7 +36,39 @@
           key="/instance/org.eclipse.m2e.core/eclipse.m2.problem.notCoveredMojoExecution">
         <value>record</value>
       </detail>
+      <detail
+          key="/instance/eu.jsparrow.ui/profile.list">
+        <value>record</value>
+      </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.invert_equals">
+        <value>record</value>
+      </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.valueof_rather_than_instantiation">
+        <value>record</value>
+      </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_redundant_semicolons">
+        <value>record</value>
+      </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_imports">
+        <value>record</value>
+      </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.double_negation">
+        <value>record</value>
+      </detail>
     </annotation>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="eu.jsparrow.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/eu.jsparrow.ui/profile.list"
+          value="None^|Default^AvoidConcatenationInLoggingStatements~CreateTempFilesUsingJavaNIO~PrimitiveBoxedForString~StatementLambdaToExpression~RemoveNullCheckBeforeInstanceof~UseIsEmptyOnCollections~RemoveRedundantTypeCast~LambdaToMethodReference~StringBuildingLoop~InefficientConstructor~IndexOfToContains~UseCollectionsSingletonList~UseComparatorMethods~UseStringJoin~UseSwitchExpression~UseTextBlock~UsePatternMatchingForInstanceof~TryWithResource~MultiCatch~DiamondOperator~WhileToForEach~ForToForEach~EnhancedForLoopToStreamForEach~LambdaForEachIfWrapperToFilter~CodeFormatter|Free Rules^TryWithResource~OverrideAnnotation~MultiVariableDeclarationLine~EnumsWithoutEquals~RemoveDoubleNegation~OptionalFilter~RemoveNullCheckBeforeInstanceof~CollapseIfStatements~RemoveEmptyStatement~RemoveUnnecessaryThrows~UseSecureRandom~InefficientConstructor~PrimitiveBoxedForString~RemoveToStringOnString~UseOffsetBasedStringMethods~StringLiteralEqualityCheck~UseIsEmptyOnCollections~ForToForEach~LambdaToMethodReference~OrganizeImports|Elexis Refactoring^OverrideAnnotation~MultiVariableDeclarationLine~EnumsWithoutEquals~RemoveDoubleNegation~RemoveNullCheckBeforeInstanceof~RemoveEmptyStatement~UseSecureRandom~InefficientConstructor~PrimitiveBoxedForString~RemoveToStringOnString~StringLiteralEqualityCheck~UseIsEmptyOnCollections~OrganizeImports"/>
+    </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
         name="org.eclipse.jdt.core">
@@ -52,6 +84,30 @@
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.potentialNullReference"
           value="error"/>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="org.eclipse.jdt.ui">
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.double_negation"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.invert_equals"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_redundant_semicolons"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.remove_unused_imports"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.valueof_rather_than_instantiation"
+          value="true"/>
     </setupTask>
     <setupTask
         xsi:type="setup:CompoundTask"
