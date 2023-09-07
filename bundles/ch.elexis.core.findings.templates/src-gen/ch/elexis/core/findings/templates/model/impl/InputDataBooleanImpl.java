@@ -2,13 +2,12 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.InputDataBoolean;
 import ch.elexis.core.findings.templates.model.ModelPackage;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

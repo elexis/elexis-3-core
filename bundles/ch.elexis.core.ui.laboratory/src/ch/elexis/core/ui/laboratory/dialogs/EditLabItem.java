@@ -50,9 +50,33 @@ public class EditLabItem extends TitleAreaDialog {
 
 	private LaborMappingComposite mapping;
 
-	Text iKuerzel, iTitel, iRef, iRfF, iUnit, iPrio, iComma;
-	Combo cGroup, cExportTag;
-	Button alph, numeric, abs, formula, document, visible;
+	Text iKuerzel;
+
+	Text iTitel;
+
+	Text iRef;
+
+	Text iRfF;
+
+	Text iUnit;
+
+	Text iPrio;
+
+	Text iComma;
+	Combo cGroup;
+
+	Combo cExportTag;
+	Button alph;
+
+	Button numeric;
+
+	Button abs;
+
+	Button formula;
+
+	Button document;
+
+	Button visible;
 	String formel;
 	org.eclipse.swt.widgets.List labors;
 	Labor actLabor;

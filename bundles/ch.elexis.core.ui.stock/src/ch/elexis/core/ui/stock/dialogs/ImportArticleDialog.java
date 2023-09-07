@@ -232,6 +232,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
 			progress.run(true, true, new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) {
 
 					int importCount = 0;

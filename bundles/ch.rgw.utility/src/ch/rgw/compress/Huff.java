@@ -248,10 +248,10 @@ public class Huff {
 	 */
 	public static void main(String[] argv) {
 		try {
-			if (argv[0].equals("create")) {
+			if ("create".equals(argv[0])) {
 				FileInputStream in = new FileInputStream(argv[2]);
 				HuffmanTree.CreateStandardTableFromStream(argv[1], in);
-			} else if (argv[0].equals("list")) {
+			} else if ("list".equals(argv[0])) {
 				Preferences pr = Preferences.userNodeForPackage(Huff.class);
 				Preferences node = pr.node("StandardTables");
 				String[] tables = node.keys();
@@ -260,7 +260,7 @@ public class Huff {
 				}
 			}
 
-			else if (argv[0].equals("export")) {
+			else if ("export".equals(argv[0])) {
 				Preferences pr = Preferences.userNodeForPackage(Huff.class);
 				Preferences node = pr.node("StandardTables");
 				FileOutputStream exbin = new FileOutputStream(argv[2] + ".bin");
@@ -269,7 +269,8 @@ public class Huff {
 				if (cmpt == null) {
 					System.out.println("Table " + argv[1] + " not found");
 				} else {
-					int i, k = 0;
+					int i;
+					int k = 0;
 					for (i = 0; i < cmpt.length; i++) {
 						exbin.write(cmpt[i]);
 						if (k++ == 20) {

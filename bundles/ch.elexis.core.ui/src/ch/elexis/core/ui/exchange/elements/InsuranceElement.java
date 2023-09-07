@@ -102,6 +102,7 @@ public class InsuranceElement extends XChangeElement {
 		public static final String ATTR_NAME = "name"; //$NON-NLS-1$
 		public static final String ATTR_CASEID = "caseID"; //$NON-NLS-1$
 
+		@Override
 		public String getXMLName() {
 			return XMLNAME;
 		}

@@ -1,11 +1,12 @@
 package ch.elexis.core.lock.types;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 

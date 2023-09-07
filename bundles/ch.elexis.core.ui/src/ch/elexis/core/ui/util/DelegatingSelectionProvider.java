@@ -15,6 +15,7 @@ public class DelegatingSelectionProvider implements ISelectionProvider {
 	private ISelectionProvider delegate;
 
 	private ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				fireSelectionChanged(event.getSelection());
@@ -23,6 +24,7 @@ public class DelegatingSelectionProvider implements ISelectionProvider {
 	};
 
 	private ISelectionChangedListener postSelectionListener = new ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if (event.getSelectionProvider() == delegate) {
 				firePostSelectionChanged(event.getSelection());
@@ -76,10 +78,12 @@ public class DelegatingSelectionProvider implements ISelectionProvider {
 
 	// IPostSelectionProvider Implementation
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.add(listener);
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionListeners.remove(listener);
 	}
@@ -92,10 +96,12 @@ public class DelegatingSelectionProvider implements ISelectionProvider {
 		postSelectionListeners.remove(listener);
 	}
 
+	@Override
 	public ISelection getSelection() {
 		return delegate == null ? null : delegate.getSelection();
 	}
 
+	@Override
 	public void setSelection(ISelection selection) {
 		if (delegate != null) {
 			delegate.setSelection(selection);

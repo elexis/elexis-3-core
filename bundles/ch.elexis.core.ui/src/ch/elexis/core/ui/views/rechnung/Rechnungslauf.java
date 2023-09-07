@@ -54,8 +54,24 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	private List<Konsultation> kons;
 	private List<Konsultation> subResults;
 	private List<Fall> skipCase;
-	private TimeTool tmpTime, now, ttFirstBefore, ttLastBefore, quarterLimit, ttFrom, ttTo;
-	private boolean quarterFilter, billFlagged, skip;
+	private TimeTool tmpTime;
+
+	private TimeTool now;
+
+	private TimeTool ttFirstBefore;
+
+	private TimeTool ttLastBefore;
+
+	private TimeTool quarterLimit;
+
+	private TimeTool ttFrom;
+
+	private TimeTool ttTo;
+	private boolean quarterFilter;
+
+	private boolean billFlagged;
+
+	private boolean skip;
 	private Money lowerLimit;
 	private String accountSys;
 
@@ -77,6 +93,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		calcQuarterLimit();
 	}
 
+	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 

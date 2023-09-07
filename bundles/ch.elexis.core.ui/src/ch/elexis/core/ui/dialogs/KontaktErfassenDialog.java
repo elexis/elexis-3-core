@@ -62,14 +62,46 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class KontaktErfassenDialog extends TitleAreaDialog {
 
-	private Button bOrganisation, bLabor, bPerson, bPatient, bAnwender, bMandant;
+	private Button bOrganisation;
+
+	private Button bLabor;
+
+	private Button bPerson;
+
+	private Button bPatient;
+
+	private Button bAnwender;
+
+	private Button bMandant;
 
 	Kontakt newKontakt = null;
 
 	String[] fld;
-	Text tName, tVorname, tZusatz, tGebDat, tStrasse, tPlz, tOrt, tTel, tFax, tEmail;
+	Text tName;
+
+	Text tVorname;
+
+	Text tZusatz;
+
+	Text tGebDat;
+
+	Text tStrasse;
+
+	Text tPlz;
+
+	Text tOrt;
+
+	Text tTel;
+
+	Text tFax;
+
+	Text tEmail;
 	Combo cbSex;
-	Label lName, lVorname, lZusatz;
+	Label lName;
+
+	Label lVorname;
+
+	Label lZusatz;
 	Hyperlink hlAnschrift;
 
 	public KontaktErfassenDialog(final Shell parent, final String[] fields) {
@@ -90,12 +122,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Organisation, // $NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bOrganisationChanged(bOrganisation.getSelection());
 			}
 		});
 		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Laboratory, SWT.CHECK); // $NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bLaborChanged(bLabor.getSelection());
 			}
@@ -103,12 +137,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Person, SWT.CHECK); // $NON-NLS-1$
 		bPerson.setSelection(true);
 		bPerson.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bPersonChanged(bPerson.getSelection());
 			}
 		});
 		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Patient, SWT.CHECK); // $NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bPatientChanged(bPatient.getSelection());
 			}
@@ -120,12 +156,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		}
 		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.Core_User, SWT.CHECK); // $NON-NLS-1$
 		bAnwender.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bAnwenderChanged(bAnwender.getSelection());
 			}
 		});
 		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Mandator, SWT.CHECK); // $NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bMandantChanged(bMandant.getSelection());
 			}
@@ -171,7 +209,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		new Label(ret, SWT.NONE).setText(Messages.Sex);// $NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
 		cbSex.setItems(new String[] { Messages.KontaktErfassenDialog_male, Messages.KontaktErfassenDialog_female });
-		if (fld.length <= KontaktSelektor.HINT_SEX || fld[KontaktSelektor.HINT_SEX].length() == 0) {
+		if (fld.length <= KontaktSelektor.HINT_SEX || fld[KontaktSelektor.HINT_SEX].isEmpty()) {
 			if (StringTool.isNothing(fld[KontaktSelektor.HINT_FIRSTNAME])) {
 				cbSex.select(0);
 			} else {

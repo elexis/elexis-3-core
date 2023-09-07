@@ -10,8 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.LabItemTyp;
 import java.util.List;
+
+import ch.elexis.core.types.LabItemTyp;
 
 /**
  * <!-- begin-user-doc -->

@@ -34,6 +34,7 @@ public class ElexisUiSyncEventListenerImpl extends ElexisEventListenerImpl {
 	public void catchElexisEvent(final ElexisEvent ev) {
 		if (!isStopped()) {
 			UiDesk.syncExec(new Runnable() {
+				@Override
 				public void run() {
 					runInUi(ev);
 				}

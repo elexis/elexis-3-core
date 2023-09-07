@@ -40,6 +40,7 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 		this.flat = value;
 	}
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		if (newInput instanceof IPatient) {
 			loadByFilterCategory((IPatient) newInput);
@@ -123,9 +124,11 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 		}
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
 		if (documentsMap.isEmpty() && parent != null) {
 			if (parent instanceof IPatient) {
@@ -154,6 +157,7 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 		return new Object[0];
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof ICategory && documentsMap.containsKey(parentElement)) {
 			return documentsMap.get(parentElement).toArray();
@@ -162,6 +166,7 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 		}
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof IDocument) {
 			IDocument dh = (IDocument) element;
@@ -170,6 +175,7 @@ public class DocumentsTreeContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return documentsMap.containsKey(element);
 	}

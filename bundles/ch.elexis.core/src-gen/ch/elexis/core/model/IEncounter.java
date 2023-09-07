@@ -10,10 +10,11 @@
  */
 package ch.elexis.core.model;
 
-import ch.rgw.tools.VersionedResource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import ch.rgw.tools.VersionedResource;
 
 /**
  * <!-- begin-user-doc -->

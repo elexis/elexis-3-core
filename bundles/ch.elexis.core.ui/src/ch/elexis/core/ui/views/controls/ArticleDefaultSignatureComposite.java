@@ -172,6 +172,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;

@@ -32,6 +32,7 @@ public abstract class AllOrNoneLockRequestingAction<T extends PersistentObject> 
 		setEnabled(true);
 	}
 
+	@Override
 	public void run() {
 		objects = getTargetedObjects();
 		if (objects == null || objects.size() == 0) {

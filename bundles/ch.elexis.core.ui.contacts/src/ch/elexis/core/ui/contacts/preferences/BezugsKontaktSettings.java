@@ -310,7 +310,6 @@ public class BezugsKontaktSettings extends PreferencePage implements IWorkbenchP
 				return allowEditing;
 			}
 		});
-		;
 		tableViewer.setInput(loadBezugKonkaktTypes(
 				ConfigServiceHolder.getGlobal(Patientenblatt2.CFG_BEZUGSKONTAKTTYPEN, StringUtils.EMPTY)));
 		return container;

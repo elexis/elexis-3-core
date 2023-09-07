@@ -1,9 +1,9 @@
 package ch.elexis.core.pdfbox;
 
-import org.apache.commons.lang3.StringUtils;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageReaderSpi;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.jbig2.JBIG2ImageReaderSpi;
 import org.apache.pdfbox.jbig2.util.log.LoggerFactory;
 import org.osgi.framework.BundleActivator;

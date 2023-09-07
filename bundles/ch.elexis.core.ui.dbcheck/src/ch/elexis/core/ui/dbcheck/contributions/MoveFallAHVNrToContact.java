@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.XidConstants;
@@ -11,7 +11,6 @@ import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
-import ch.elexis.data.Xid;
 
 /**
  * As defined in bug 1439 - https://redmine.medelexis.ch/issues/1439 We have to

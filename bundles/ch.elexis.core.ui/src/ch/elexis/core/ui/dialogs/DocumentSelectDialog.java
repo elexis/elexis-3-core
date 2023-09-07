@@ -146,6 +146,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		tv = new TableViewer(ret, SWT.V_SCROLL);
 		tv.setContentProvider(new IStructuredContentProvider() {
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				Query<Brief> qbe = new Query<Brief>(Brief.class);
 				if (type == TYPE_LOAD_DOCUMENT) {
@@ -172,9 +173,11 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 				return l.toArray();
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
@@ -183,6 +186,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		menu = new MenuManager();
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				menu.add(editNameAction);
 				if (type == TYPE_LOAD_TEMPLATE) {
@@ -220,6 +224,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 *
 	 */
 	public class MyLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			PersistentObject po = (PersistentObject) element;
 			if (type == TYPE_LOAD_TEMPLATE) {

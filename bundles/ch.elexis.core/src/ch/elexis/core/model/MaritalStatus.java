@@ -18,6 +18,7 @@ public enum MaritalStatus implements INumericEnum, ILocalizedEnum {
 		this.fhirCode = fhirCode;
 	}
 
+	@Override
 	public int numericValue() {
 		return numeric;
 	}

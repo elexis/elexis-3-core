@@ -194,10 +194,10 @@ public class Connection implements SerialPortDataListener {
 	}
 
 	private int getParity(String parity) {
-		if (parity.equalsIgnoreCase("Even")) { //$NON-NLS-1$
+		if ("Even".equalsIgnoreCase(parity)) { //$NON-NLS-1$
 			return SerialPort.EVEN_PARITY;
 		}
-		if (parity.equalsIgnoreCase("Odd")) { //$NON-NLS-1$
+		if ("Odd".equalsIgnoreCase(parity)) { //$NON-NLS-1$
 			return SerialPort.ODD_PARITY;
 		}
 		return SerialPort.NO_PARITY;
@@ -346,6 +346,7 @@ public class Connection implements SerialPortDataListener {
 		// avoid rxtx-deadlock when called from an EventListener
 		new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(sleepTime);

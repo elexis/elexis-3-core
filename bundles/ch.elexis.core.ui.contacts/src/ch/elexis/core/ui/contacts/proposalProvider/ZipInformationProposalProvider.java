@@ -20,6 +20,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 public class ZipInformationProposalProvider implements IContentProposalProvider {
 
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
 		List<String> zips = ContactGeonames.getZip();

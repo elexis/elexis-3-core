@@ -85,7 +85,7 @@ public class TestPathologicDescription {
 		boolean foundpatho2 = false;
 		boolean foundpatho3 = false;
 		for (j = 0; j < qrr.size(); j++) {
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Kalium")) {
+			if ("Kalium".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -93,7 +93,7 @@ public class TestPathologicDescription {
 				assertEquals("3.5-5.1", description.getReference());
 				foundpatho1 = true;
 			}
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Leukozyten")) {
+			if ("Leukozyten".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -101,7 +101,7 @@ public class TestPathologicDescription {
 				assertEquals("H", description.getReference());
 				foundpatho2 = true;
 			}
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
+			if ("Progesteron".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -141,7 +141,7 @@ public class TestPathologicDescription {
 		assertEquals(3, qrr.size());
 		boolean foundpatho1 = false;
 		for (j = 0; j < qrr.size(); j++) {
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("URIN-VACUTAINER - Keimzahl")) {
+			if ("URIN-VACUTAINER - Keimzahl".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -184,7 +184,7 @@ public class TestPathologicDescription {
 		boolean foundpatho2 = false;
 		boolean foundpatho3 = false;
 		for (j = 0; j < qrr.size(); j++) {
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Kalium")) {
+			if ("Kalium".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -193,7 +193,7 @@ public class TestPathologicDescription {
 				assertEquals("3.5-5.1", description.getReference());
 				foundpatho1 = true;
 			}
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Leukozyten")) {
+			if ("Leukozyten".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -202,7 +202,7 @@ public class TestPathologicDescription {
 				assertEquals("H", description.getReference());
 				foundpatho2 = true;
 			}
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
+			if ("Progesteron".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				assertFalse(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
@@ -239,12 +239,12 @@ public class TestPathologicDescription {
 				assertEquals(0, labResult.getFlags());
 				assertTrue(labResult.isPathologicFlagIndetermined(pathologicDescription));
 				assertEquals("", labResult.getItem().getUnit());
-			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestStupidValues")) {
+			} else if ("TestStupidValues".equalsIgnoreCase(labResult.getItem().getLabel())) {
 				assertEquals(Description.PATHO_IMPORT_NO_INFO, pathologicDescription.getDescription());
 				assertEquals("hund", pathologicDescription.getReference());
 				assertEquals("katze", labResult.getResult());
 				assertEquals(0, labResult.getFlags());
-			} else if (labResult.getItem().getLabel().equalsIgnoreCase("TestImportHighFlag")) {
+			} else if ("TestImportHighFlag".equalsIgnoreCase(labResult.getItem().getLabel())) {
 				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
 				assertEquals("bar", pathologicDescription.getReference());
 				assertEquals("foo", labResult.getResult());
@@ -379,8 +379,8 @@ public class TestPathologicDescription {
 	private void parseOneHL7file(File f, boolean deleteAll, boolean alsoFailing) throws IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
-			if (f.getName().equalsIgnoreCase("01TEST5005.hl7")
-					|| f.getName().equalsIgnoreCase("1_Kunde_20090612083757162_10009977_.HL7")) {
+			if ("01TEST5005.hl7".equalsIgnoreCase(f.getName())
+					|| "1_Kunde_20090612083757162_10009977_.HL7".equalsIgnoreCase(f.getName())) {
 				if (!alsoFailing) {
 					// System.out.println("Skipping " + name);
 					return;

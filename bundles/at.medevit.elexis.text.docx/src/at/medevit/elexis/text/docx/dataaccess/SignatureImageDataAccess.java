@@ -1,9 +1,10 @@
 package at.medevit.elexis.text.docx.dataaccess;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.model.IImage;

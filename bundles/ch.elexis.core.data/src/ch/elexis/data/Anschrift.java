@@ -18,7 +18,10 @@ public class Anschrift {
 	private static final String PLACE = "Ort"; //$NON-NLS-1$
 	private static final String ZIP = "Plz"; //$NON-NLS-1$
 	private static final String STREET = "Strasse"; //$NON-NLS-1$
-	String Strasse, Plz, Ort, Land;
+	String Strasse;
+	String Plz;
+	String Ort;
+	String Land;
 	String[] fields = { STREET, ZIP, PLACE, COUNTRY };
 	Kontakt mine;
 

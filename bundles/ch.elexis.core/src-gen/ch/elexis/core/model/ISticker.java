@@ -250,6 +250,7 @@ public interface ISticker extends Comparable<ISticker>, Deleteable, Identifiable
 	 * @model kind="operation"
 	 * @generated
 	 */
+	@Override
 	String getLabel();
 
 } // ISticker

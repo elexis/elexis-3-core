@@ -104,8 +104,16 @@ public class LaborView extends ViewPart implements IRefreshable {
 	private LaborResultsComposite resultsComposite;
 	private LaborOrdersComposite ordersComposite;
 
-	private Action fwdAction, backAction, printAction, importAction, xmlAction, newAction, newColumnAction,
-			refreshAction, expandAllAction, collapseAllAction;
+	private Action fwdAction;
+	private Action backAction;
+	private Action printAction;
+	private Action importAction;
+	private Action xmlAction;
+	private Action newAction;
+	private Action newColumnAction;
+	private Action refreshAction;
+	private Action expandAllAction;
+	private Action collapseAllAction;
 	private ViewMenus menu;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);

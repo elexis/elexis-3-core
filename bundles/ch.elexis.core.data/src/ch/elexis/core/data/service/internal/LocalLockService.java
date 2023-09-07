@@ -280,7 +280,12 @@ public class LocalLockService implements ILocalLockService {
 						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
 				return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 			} finally {
-				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {
+				// RELEASE ACTIONS
+				// releases are also to be performed on occurence of an
+				// exception
+				// e4 should not be connected with else here,
+				// but we have to avoid double calls
+				if (LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
 					// RELEASE ACTIONS
 					// releases are also to be performed on occurence of an
 					// exception
@@ -412,7 +417,7 @@ public class LocalLockService implements ILocalLockService {
 	@Override
 	public List<LockInfo> getCopyOfAllHeldLocks() {
 		Collection<LockInfo> values = locks.values();
-		if (values.size() == 0) {
+		if (values.isEmpty()) {
 			return Collections.emptyList();
 		}
 

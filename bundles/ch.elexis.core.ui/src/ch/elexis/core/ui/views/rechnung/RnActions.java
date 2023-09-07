@@ -54,11 +54,42 @@ public class RnActions {
 	/**
 	 * @deprecated please replace with {@link InvoiceActions}
 	 */
-	Action rnExportAction, increaseLevelAction, addPaymentAction, addExpenseAction, changeStatusAction, stornoAction,
-			addAccountExcessAction;
-	Action editCaseAction, delRnAction, reactivateRnAction, patDetailAction;
-	Action expandAllAction, collapseAllAction, reloadAction, mahnWizardAction;
-	Action printListeAction, exportListAction, rnFilterAction;
+	Action rnExportAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action increaseLevelAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action addPaymentAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action addExpenseAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action changeStatusAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action stornoAction;
+	/**
+	 * @deprecated  please replace with  {@link InvoiceActions}
+	 */
+	Action addAccountExcessAction;
+	Action editCaseAction;
+	Action delRnAction;
+	Action reactivateRnAction;
+	Action patDetailAction;
+	Action expandAllAction;
+	Action collapseAllAction;
+	Action reloadAction;
+	Action mahnWizardAction;
+	Action printListeAction;
+	Action exportListAction;
+	Action rnFilterAction;
 
 	RnActions(final RechnungsListeView view) {
 

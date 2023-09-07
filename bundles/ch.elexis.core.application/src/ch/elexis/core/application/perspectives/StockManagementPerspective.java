@@ -12,6 +12,7 @@ public class StockManagementPerspective implements IPerspectiveFactory {
 	/**
 	 * Creates the initial layout for a page.
 	 */
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		addFastViews(layout);

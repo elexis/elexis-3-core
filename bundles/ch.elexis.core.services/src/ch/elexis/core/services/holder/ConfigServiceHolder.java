@@ -83,7 +83,7 @@ public class ConfigServiceHolder {
 	}
 
 	public static void setGlobalAsList(String key, List<String> values) {
-		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		Optional<String> value = values.stream().map(o -> o).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
 			configService.set(key, value.get());
 		} else {
@@ -141,7 +141,7 @@ public class ConfigServiceHolder {
 	}
 
 	public static void setUserAsList(String key, List<String> values) {
-		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
+		Optional<String> value = values.stream().map(o -> o).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
 			configService.setActiveUserContact(key, value.get());
 		} else {

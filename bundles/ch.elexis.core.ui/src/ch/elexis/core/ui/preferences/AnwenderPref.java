@@ -94,6 +94,7 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 		}
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		List<Mandant> ml = Hub.getMandantenList();
 		String[] mands = new String[ml.size()];

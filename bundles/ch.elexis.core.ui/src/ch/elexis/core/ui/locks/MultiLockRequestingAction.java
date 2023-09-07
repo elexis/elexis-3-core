@@ -52,6 +52,7 @@ public abstract class MultiLockRequestingAction<T extends List<? extends Persist
 		this.strategy = strategy;
 	}
 
+	@Override
 	public void run() {
 		objects = getTargetedObjects();
 		if (objects == null || objects.size() == 0) {

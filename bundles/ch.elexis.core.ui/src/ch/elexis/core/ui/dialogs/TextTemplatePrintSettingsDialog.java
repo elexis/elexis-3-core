@@ -37,11 +37,13 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
-	private ComboViewer cvPrinters, cvTrays;
+	private ComboViewer cvPrinters;
+	private ComboViewer cvTrays;
 	private List<PrintService> printServices;
 	private List<MediaTray> mediaTrays;
 
-	private String selPrinter, selTray;
+	private String selPrinter;
+	private String selTray;
 
 	public TextTemplatePrintSettingsDialog(Shell parentShell, String printer, String tray) {
 		super(parentShell);

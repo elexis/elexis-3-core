@@ -104,6 +104,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			setToolTipText(Messages.RnActions_filterLIstTooltip);
 		}
 
+		@Override
 		public void run() {
 			if (isChecked()) {
 				RnFilterDialog rfd = new RnFilterDialog(UiDesk.getTopShell(), false);

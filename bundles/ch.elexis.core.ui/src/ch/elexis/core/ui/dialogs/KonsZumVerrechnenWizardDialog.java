@@ -61,18 +61,32 @@ public class KonsZumVerrechnenWizardDialog extends TitleAreaDialog {
 	private static final String SKIPSELECTION = Messages.KonsZumVerrechnenWizardDialog_skipProposal; // $NON-NLS-1$
 	private static final String CFG_SKIP = CONFIG + "skipselection"; //$NON-NLS-1$
 
-	Button cbMarked, cbBefore, cbAmount, cbTime, cbQuartal, cbSkip, cbTimespan, cbAccountingSys;
+	Button cbMarked;
+	Button cbBefore;
+	Button cbAmount;
+	Button cbTime;
+	Button cbQuartal;
+	Button cbSkip;
+	Button cbTimespan;
+	Button cbAccountingSys;
 	// DatePickerCombo dp1, dp2;
 	// Spinner sp1, sp2;
 	MoneyInput mi1;
-	DayDateCombo ddc1, ddc2;
+	DayDateCombo ddc1;
+	DayDateCombo ddc2;
 
 	ComboViewer cAccountingSys;
 	public String accountSys;
-	public TimeTool ttFirstBefore, ttLastBefore, ttFrom, ttTo;
+	public TimeTool ttFirstBefore;
+	public TimeTool ttLastBefore;
+	public TimeTool ttFrom;
+	public TimeTool ttTo;
 	public Money mAmount;
-	public boolean bQuartal, bMarked, bSkip;
-	private DateTime timespanFrom, timespanTo;
+	public boolean bQuartal;
+	public boolean bMarked;
+	public boolean bSkip;
+	private DateTime timespanFrom;
+	private DateTime timespanTo;
 
 	public KonsZumVerrechnenWizardDialog(final Shell parentShell) {
 		super(parentShell);

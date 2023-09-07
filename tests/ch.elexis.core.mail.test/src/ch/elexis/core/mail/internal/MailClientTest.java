@@ -139,7 +139,7 @@ public class MailClientTest {
 		assertTrue(server.getReceivedEmailSize() == 1);
 		Iterator<?> emailIter = server.getReceivedEmail();
 		SmtpMessage email = (SmtpMessage) emailIter.next();
-		assertTrue(email.getHeaderValue("Subject").equals("subject"));
+		assertTrue("subject".equals(email.getHeaderValue("Subject")));
 		assertTrue(email.getBody().contains("text"));
 	}
 }

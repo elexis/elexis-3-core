@@ -356,6 +356,7 @@ public class ViewerConfigurer {
 			this.dlg = dlg;
 		}
 
+		@Override
 		public Button createButton(Composite parent) {
 			if (vcf == null) {
 				return null;
@@ -383,6 +384,7 @@ public class ViewerConfigurer {
 			return ret;
 		}
 
+		@Override
 		public boolean isAlwaysEnabled() {
 			return false;
 		}

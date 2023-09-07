@@ -85,6 +85,7 @@ public class VerrechnetCopy extends Verrechnet {
 		return vcQuery.execute();
 	}
 
+	@Override
 	public Money getBruttoPreis() {
 		int tp = checkZero(get(SCALE_TP_SELLING));
 		TimeTool date = new TimeTool(getLastUpdate());

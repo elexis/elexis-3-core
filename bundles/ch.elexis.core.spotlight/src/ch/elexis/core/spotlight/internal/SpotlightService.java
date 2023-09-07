@@ -1,6 +1,5 @@
 package ch.elexis.core.spotlight.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -46,7 +46,7 @@ public class SpotlightService implements ISpotlightService {
 	public void computeResult(String searchInput, Map<String, String> searchParams) {
 		spotlightResult.clear();
 
-		if (searchInput == null || searchInput.length() == 0) {
+		if (searchInput == null || searchInput.isEmpty()) {
 			// TODO or show initial set
 			return;
 		}
@@ -60,7 +60,7 @@ public class SpotlightService implements ISpotlightService {
 		List<Number> numericTerms = new ArrayList<Number>(searchTerms.length);
 
 		for (String term : searchTerms) {
-			if (term.length() == 0) {
+			if (term.isEmpty()) {
 				continue;
 			}
 

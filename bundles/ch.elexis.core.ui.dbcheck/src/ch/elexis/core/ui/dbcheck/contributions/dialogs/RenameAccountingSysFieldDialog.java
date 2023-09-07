@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.dbcheck.contributions.dialogs;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -27,10 +27,13 @@ import ch.elexis.data.BillingSystem;
 
 public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 	private Text txtNewName;
-	private ComboViewer cViewerAccSys, cViewerField;
+	private ComboViewer cViewerAccSys;
+	private ComboViewer cViewerField;
 
 	private String[] accSystems;
-	private String accountingSystem, presentFieldName, newFieldName;
+	private String accountingSystem;
+	private String presentFieldName;
+	private String newFieldName;
 
 	public RenameAccountingSysFieldDialog(Shell parentShell) {
 		super(parentShell);

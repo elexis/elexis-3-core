@@ -2,10 +2,10 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -152,7 +152,7 @@ public class FindingsTemplateItemProvider extends ItemProviderAdapter
 	@Override
 	public String getText(Object object) {
 		String label = ((FindingsTemplate) object).getTitle();
-		return label == null || label.length() == 0 ? StringUtils.EMPTY : label;
+		return label == null || label.isEmpty() ? StringUtils.EMPTY : label;
 	}
 
 	/**

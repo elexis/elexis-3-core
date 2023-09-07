@@ -59,10 +59,13 @@ import ch.elexis.data.Sticker;
 public class Stickers extends PreferencePage implements IWorkbenchPreferencePage {
 
 	Combo combo;
-	Canvas cImage, cFore, cBack;
+	Canvas cImage;
+	Canvas cFore;
+	Canvas cBack;
 	Sticker act;
 	List<Sticker> lEtiketten;
-	Button bNew, bRemove;
+	Button bNew;
+	Button bRemove;
 	Spinner spWert;
 	HashMap<String, Button> classesCheck = new HashMap<String, Button>();
 
@@ -116,8 +119,9 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		});
 		combo.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
-				if (combo.getText().length() == 0) {
+				if (combo.getText().isEmpty()) {
 					bNew.setEnabled(false);
 				} else {
 					bNew.setEnabled(true);
@@ -176,6 +180,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		cImage = new Canvas(bottom, SWT.BORDER);
 		cImage.addPaintListener(new PaintListener() {
 
+			@Override
 			public void paintControl(PaintEvent e) {
 				GC gc = e.gc;
 				if (act != null) {
@@ -250,6 +255,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		spWert.setMinimum(0);
 		spWert.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (act != null) {
 					act.setWert(spWert.getSelection());
@@ -263,6 +269,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		return ret;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		Query<Sticker> qbe = new Query<Sticker>(Sticker.class);
 		lEtiketten = qbe.execute();

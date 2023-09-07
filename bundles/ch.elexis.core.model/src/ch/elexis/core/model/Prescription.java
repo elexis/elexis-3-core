@@ -133,7 +133,7 @@ public class Prescription extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 			if (rezeptId != null && !rezeptId.isEmpty()) {
 				// this is necessary due to a past impl. where self dispensed was
 				// not set as entry type
-				if (rezeptId.equals("Direktabgabe")) {
+				if ("Direktabgabe".equals(rezeptId)) {
 					setEntryType(EntryType.SELF_DISPENSED);
 					getEntityMarkDirty().setRezeptID(StringUtils.EMPTY);
 					CoreModelServiceHolder.get().save(this);

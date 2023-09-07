@@ -52,7 +52,8 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 	private Hyperlink hl;
 	private Text tTitle;
 	private static String NOFILESELECTED = Messages.ImageChooser_PleaseChooseFile; // $NON-NLS-1$
-	private Button bDB, bFile;
+	private Button bDB;
+	private Button bFile;
 	private UiDBImage result;
 
 	public UiDBImage getSelection() {
@@ -91,6 +92,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 	/*
 	 * @see SelectionStatusDialog#computeResult()
 	 */
+	@Override
 	protected void computeResult() {
 		if (bDB.getSelection()) {
 			setResult(Arrays.asList(getSelectedElements()));
@@ -127,6 +129,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 	/*
 	 * @see Dialog#createDialogArea(Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite ret = (Composite) super.createDialogArea(parent);
 		bDB = new Button(ret, SWT.RADIO);

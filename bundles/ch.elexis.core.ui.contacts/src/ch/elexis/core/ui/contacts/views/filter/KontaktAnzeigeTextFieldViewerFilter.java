@@ -57,7 +57,7 @@ public class KontaktAnzeigeTextFieldViewerFilter extends ViewerFilter {
 	}
 
 	public void setSearchText(String s) {
-		if (s == null || s.length() == 0 || s.startsWith("#")) //$NON-NLS-1$
+		if (s == null || s.isEmpty() || s.startsWith("#")) //$NON-NLS-1$
 			searchString = s;
 		else
 			searchString = s.toLowerCase(); // $NON-NLS-1$ //$NON-NLS-2$

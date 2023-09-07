@@ -22,6 +22,7 @@ public class FaelleContentProvider implements IStructuredContentProvider {
 		comparator = new FallComparator();
 	}
 
+	@Override
 	public Object[] getElements(final Object inputElement) {
 		IPatient act = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (act == null) {
@@ -34,10 +35,12 @@ public class FaelleContentProvider implements IStructuredContentProvider {
 
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 
 	}

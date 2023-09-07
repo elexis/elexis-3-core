@@ -307,8 +307,8 @@ public class Interaction extends PersistentObject {
 		double curYearDay = Float.parseFloat(today);
 		Interaction version = load(VERSIONID);
 		String lastParsed = version.get(FLD_ABUSE_ID_FOR_LAST_PARSED);
-		double last = (lastParsed == null || lastParsed.length() == 0) ? 0.0 : Float.parseFloat(lastParsed);
-		if (!(lastParsed == null || lastParsed.length() == 0) && (curYearDay - last) < 1.0) {
+		double last = (lastParsed == null || lastParsed.isEmpty()) ? 0.0 : Float.parseFloat(lastParsed);
+		if (!(lastParsed == null || lastParsed.isEmpty()) && (curYearDay - last) < 1.0) {
 			logger.info("Skip importMappingFromCsv as last '{}' equals today {}", //$NON-NLS-1$
 					lastParsed, today);
 			return;
@@ -374,7 +374,7 @@ public class Interaction extends PersistentObject {
 								while ((line = cr.readNext()) != null) {
 									monitor.worked(1);
 									if (line.length == 9) {
-										if (line[0].equalsIgnoreCase("ATC1")) { //$NON-NLS-1$
+										if ("ATC1".equalsIgnoreCase(line[0])) { //$NON-NLS-1$
 											// skip description line
 											continue;
 										}

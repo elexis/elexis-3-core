@@ -37,9 +37,9 @@ public class VCard {
 		String line;
 		do {
 			line = br.readLine();
-		} while (!line.equalsIgnoreCase("begin:vcard"));
+		} while (!"begin:vcard".equalsIgnoreCase(line));
 		line = br.readLine();
-		while ((line != null) && (!line.equalsIgnoreCase("end:vcard"))) {
+		while ((line != null) && (!"end:vcard".equalsIgnoreCase(line))) {
 			String[] split = line.split("[:;]", 2);
 			if (split.length > 1) {
 				elements.put(split[0], split[1]);

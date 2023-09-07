@@ -58,7 +58,9 @@ import ch.rgw.tools.Tree;
  * @author Gerry
  */
 public class DefaultControlFieldProvider implements ControlFieldProvider {
-	protected String[] dbFields, fields, lastFiltered;
+	protected String[] dbFields;
+	protected String[] fields;
+	protected String[] lastFiltered;
 	protected ElexisText[] selectors;
 	protected final ModListener ml;
 	protected final SelListener sl;

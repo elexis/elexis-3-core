@@ -139,7 +139,7 @@ public class Test_HL7_parser {
 		for (LabResult labResult : qrr) {
 			String name = labResult.getItem().getName();
 			System.out.println(name);
-			if (name.equals("AST (GOT)")) {
+			if ("AST (GOT)".equals(name)) {
 				assertEquals("?", labResult.getResult());
 				foundCnt++;
 			}
@@ -274,7 +274,7 @@ public class Test_HL7_parser {
 		boolean found = false;
 		for (j = 0; j < qrr.size(); j++) {
 			assertTrue(qrr.get(j).getLabel().contains("10.03.2004"));
-			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
+			if ("Progesteron".equalsIgnoreCase(qrr.get(j).getItem().getName())) {
 				found = true;
 				assertEquals(qrr.get(j).getResult(), "2.0");
 			}
@@ -375,9 +375,9 @@ public class Test_HL7_parser {
 		ILabItem item = labResult.getItem();
 		assertEquals("VAGINA-ABSTRICH - Kultur aerob", item.getName());
 		Locale locale = Locale.getDefault();
-		if (locale.getLanguage().equals("de")) {
+		if ("de".equals(locale.getLanguage())) {
 			assertTrue(item.getGroup(), item.getGroup().startsWith("Z Automatisch"));
-		} else if (locale.getLanguage().equals("en")) {
+		} else if ("en".equals(locale.getLanguage())) {
 			// This is the case when running under CI via gitlab/travis
 			assertTrue(item.getGroup(), item.getGroup().startsWith("Z automatic_"));
 		} else {
@@ -424,9 +424,9 @@ public class Test_HL7_parser {
 			switch (item.getKuerzel()) {
 			case "NOTE":
 				Locale locale = Locale.getDefault();
-				if (locale.getLanguage().equals("de")) {
+				if ("de".equals(locale.getLanguage())) {
 					assertEquals("Allgemeine Notiz", item.getName());
-				} else if (locale.getLanguage().equals("en")) {
+				} else if ("en".equals(locale.getLanguage())) {
 					// This is the case when running under CI via gitlab/travis
 					assertEquals("General note", item.getName());
 				} else {

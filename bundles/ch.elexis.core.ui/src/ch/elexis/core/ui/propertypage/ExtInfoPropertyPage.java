@@ -34,7 +34,7 @@ public class ExtInfoPropertyPage extends PropertyPage implements IWorkbenchPrope
 		header.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
 
 		Map<Object, Object> extinfo = po.getMap();
-		if (extinfo == null || extinfo.size() == 0) {
+		if (extinfo == null || extinfo.isEmpty()) {
 			Label lab = new Label(comp, SWT.None);
 			lab.setText("Keine.");
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

@@ -146,8 +146,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
-	private IAction removeZAAction, showZAAction, showBKAction, copySelectedContactInfosToClipboardAction,
-			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction, showAdditionalAddressAction;
+	private IAction removeZAAction;
+	private IAction showZAAction;
+	private IAction showBKAction;
+	private IAction copySelectedContactInfosToClipboardAction;
+	private IAction copySelectedAddressesToClipboardAction;
+	private IAction removeAdditionalAddressAction;
+	private IAction showAdditionalAddressAction;
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
@@ -233,7 +238,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final Hyperlinkreact hr = new Hyperlinkreact();
 	private final ScrolledForm form;
 	private final ViewMenus viewmenu;
-	private final ExpandableComposite ecdm, ecZA, compAdditionalAddresses;
+	private final ExpandableComposite ecdm;
+	private final ExpandableComposite ecZA;
+	private final ExpandableComposite compAdditionalAddresses;
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
@@ -310,7 +317,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				new LabeledInputField.IExecLinkProvider() {
 					@Override
 					public void executeString(InputData ltf) {
-						if (ltf.getText().length() == 0)
+						if (ltf.getText().isEmpty())
 							return;
 						try {
 							URI uriMailTo = new URI("mailto", ltf.getText(), null); //$NON-NLS-1$
@@ -329,10 +336,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
+			@Override
 			public void displayContent(Object po, InputData ltf) {
 				ltf.setText(actPatient.getKontostand().getAmountAsString());
 			}
 
+			@Override
 			public void reloadContent(Object po, InputData ltf) {
 				if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
 					ltf.setText(actPatient.getKontostand().getAmountAsString());
@@ -343,6 +352,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Core_RegularPhysiscion, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
+					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						String result = StringUtils.EMPTY;
@@ -367,6 +377,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						ltf.setText(result);
 					}
 
+					@Override
 					public void reloadContent(Object po, InputData ltf) {
 						if (bLocked) {
 							return;
@@ -390,11 +401,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
 				new LabeledInputField.IContentProvider() {
+					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 					}
 
+					@Override
 					public void reloadContent(final Object po, final InputData ltf) {
 						if (bLocked) {
 							return;
@@ -581,19 +594,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			if (ivc.getClass().getPackage().getName().startsWith("ch.elexis.core.findings.ui.viewcontributions")) { //$NON-NLS-1$
 				if (ivc.isAvailable()) {
 					// remove unstructured diagnosis ui
-					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
+					if ("DiagnoseViewContribution".equals(ivc.getClass().getSimpleName())) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Core_Diagnosis);
 						dfExpandable.remove("Diagnosen"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
+					if ("PersonalAnamnesisViewContribution".equals(ivc.getClass().getSimpleName())) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
 						dfExpandable.remove("PersAnamnese"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) { //$NON-NLS-1$
+					if ("RiskViewContribution".equals(ivc.getClass().getSimpleName())) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
 						dfExpandable.remove("Risiken"); //$NON-NLS-1$
 					}
-					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
+					if ("AllergyIntoleranceViewContribution".equals(ivc.getClass().getSimpleName())) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Allergies);
 						dfExpandable.remove("Allergien"); //$NON-NLS-1$
 					}
@@ -605,7 +618,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			// MacOs specific redraw bug workaround since 3.9
-			if (CoreUtil.isMac() && ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+			if (CoreUtil.isMac() && "DiagnoseViewContribution".equals(ivc.getClass().getSimpleName())) {
 				form.getVerticalBar().addListener(SWT.Selection, e -> ret.redraw());
 			}
 			// end
@@ -623,6 +636,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			 * public boolean dropped(final PersistentObject dropped) { return false; }
 			 */
 
+			@Override
 			public void hyperlinkActivated(final String l) {
 				final String[] sortFields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET };
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
@@ -644,6 +658,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 			}
 
+			@Override
 			public String getLabel(Object o) {
 				BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -707,6 +722,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					 * public boolean dropped(final PersistentObject dropped) { return false; }
 					 */
 
+					@Override
 					public void hyperlinkActivated(final String l) {
 						if (actPatient != null) {
 							ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(),
@@ -718,6 +734,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 
+					@Override
 					public String getLabel(Object o) {
 						ZusatzAdresse address = (ZusatzAdresse) o;
 						if (address != null) {
@@ -747,6 +764,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i));
 			text.addFocusListener(new FocusAdapter() {
+				@Override
 				public void focusLost(FocusEvent e) {
 					saveExpandable((Integer) text.getData("index"));
 				}
@@ -778,12 +796,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			});
 			txExpandable.get(i).addKeyListener(new KeyListener() {
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 					Text tx = (Text) e.getSource();
 					tx.redraw();
 					form.getBody().layout(true);
 				}
 
+				@Override
 				public void keyPressed(KeyEvent e) {
 				}
 			});
@@ -1241,17 +1261,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 							SelectedContactInfosText.append("," + StringTool.space); //$NON-NLS-1$
 						}
-						;
 						SelectedContactInfosText.append(thisAddressFLD_ZIP);
 					}
-					;
-
 					String thisAddressFLD_PLACE = (String) k.get(k.FLD_PLACE);
 					if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY) && StringTool.isNothing(thisAddressFLD_ZIP)) {
 							SelectedContactInfosText.append(","); //$NON-NLS-1$
 						}
-						;
 						SelectedContactInfosText.append(StringTool.space + thisAddressFLD_PLACE);
 					}
 

@@ -13,9 +13,9 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +103,7 @@ public class Presets {
 			String ort = StringTool.getSafe(row, 16);
 			String natel = StringTool.getSafe(row, 13);
 			Kontakt k = null;
-			if (StringTool.isNothing(typ) || typ.equals("0")) { //$NON-NLS-1$
+			if (StringTool.isNothing(typ) || "0".equals(typ)) { //$NON-NLS-1$
 				k = KontaktMatcher.findOrganisation(bez1, null, strasse, plz, ort, CreateMode.CREATE);
 				if (k == null) {
 					continue;
@@ -113,7 +113,7 @@ public class Presets {
 			} else {
 				String sex = StringTool.getSafe(row, 8);
 				String gebdat = StringTool.getSafe(row, 7);
-				if (ispat.equalsIgnoreCase("1")) { //$NON-NLS-1$
+				if ("1".equalsIgnoreCase(ispat)) { //$NON-NLS-1$
 					Patient pat = (Patient) Xid.findObject(KONTAKTID, ID);
 					// avoid duplicate import
 					if (pat == null) {

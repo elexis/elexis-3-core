@@ -86,10 +86,12 @@ public class StockDetailComposite extends Composite {
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				if (stock == null) {
@@ -108,11 +110,13 @@ public class StockDetailComposite extends Composite {
 		StockEntryEditingSupport sees = new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.MIN);
 		tvcMin.setEditingSupport(sees);
 		tvcMin.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
@@ -137,10 +141,12 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.CURR);
 		tvcIst.setEditingSupport(seesIst);
 		tvcIst.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
@@ -164,10 +170,12 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.MAX);
 		tvcMax.setEditingSupport(seesMax);
 		tvcMax.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
@@ -191,10 +199,12 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.FRAC);
 		tvcFraction.setEditingSupport(seesFrac);
 		tvcFraction.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();
@@ -262,10 +272,12 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		tvcProvider.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				IArticle art = (IArticle) wvArtikel.getValue();

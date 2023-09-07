@@ -19,7 +19,9 @@ public class FieldDescriptor<T> {
 		STRING, INT, CURRENCY, LIST, HYPERLINK, DATE, COMBO, BOOLEAN
 	};
 
-	String sAnzeige, sFeldname, sHashname;
+	String sAnzeige;
+	String sFeldname;
+	String sHashname;
 	Typ tFeldTyp;
 	Object ext;
 	Listener listener;

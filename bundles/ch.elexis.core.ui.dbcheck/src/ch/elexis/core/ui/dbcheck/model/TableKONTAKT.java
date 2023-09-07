@@ -2,6 +2,7 @@ package ch.elexis.core.ui.dbcheck.model;
 
 public class TableKONTAKT extends TableDescriptor {
 
+	@Override
 	protected String[] invalidStatesin186() {
 		return new String[] { "istPerson LIKE \'1\' AND istOrganisation LIKE \'1\'",
 				"istPerson LIKE \'0\' AND istPatient LIKE \'1\'",

@@ -26,6 +26,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 
 	private final static String PLATZHALTER_FILENAME = "Platzhalter.txt"; //$NON-NLS-1$
 
+	@Override
 	protected String getFilename() {
 		return PLATZHALTER_FILENAME;
 	}
@@ -92,7 +93,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 			if (name != null && name.length() > 0) {
 				PlatzhalterTreeData categoryPtd = null;
 				int categoryLength = 0;
-				if (category == null || category.length() == 0) {
+				if (category == null || category.isEmpty()) {
 					categoryPtd = noKategorie;
 				} else {
 					categoryLength = category.length();
@@ -114,7 +115,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 						displayName = displayName.substring(1);
 					}
 				}
-				if (value == null || value.length() == 0) {
+				if (value == null || value.isEmpty()) {
 					value = displayName;
 				}
 				categoryPtd.addChild(new PlatzhalterTreeData(displayName, "[" //$NON-NLS-1$

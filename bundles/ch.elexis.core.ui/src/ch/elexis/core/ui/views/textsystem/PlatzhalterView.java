@@ -68,27 +68,33 @@ public class PlatzhalterView extends ViewPart {
 
 	class PlatzhalterContentProvider implements ITreeContentProvider {
 
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return ((List<?>) inputElement).toArray();
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			PlatzhalterTreeData entry = (PlatzhalterTreeData) parentElement;
 			List<PlatzhalterTreeData> childrenList = entry.getChildren();
 			return childrenList.toArray(new PlatzhalterTreeData[childrenList.size()]);
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			PlatzhalterTreeData entry = (PlatzhalterTreeData) element;
 			return entry.getParent();
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			return getChildren(element).length > 0;
 		}
@@ -238,10 +244,12 @@ public class PlatzhalterView extends ViewPart {
 		DragSource dragSource = new DragSource(viewer.getTree(), DND.DROP_COPY);
 		dragSource.setTransfer(new Transfer[] { TextTransfer.getInstance() });
 		dragSource.addDragListener(new DragSourceAdapter() {
+			@Override
 			public void dragStart(DragSourceEvent event) {
 				event.doit = getSelectedKey() != null;
 			}
 
+			@Override
 			public void dragSetData(DragSourceEvent event) {
 				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
 					String key = getSelectedKey();

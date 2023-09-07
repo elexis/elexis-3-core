@@ -122,7 +122,7 @@ public class BriefDocumentStore implements IDocumentStore {
 
 	@Override
 	public boolean isAllowed(Capability restricted) {
-		if (Capability.CATEGORY.equals(restricted) || Capability.KEYWORDS.equals(restricted)) {
+		if (Capability.CATEGORY == restricted || Capability.KEYWORDS == restricted) {
 			return false;
 		}
 		return IDocumentStore.super.isAllowed(restricted);

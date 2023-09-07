@@ -1,6 +1,7 @@
 package ch.elexis.core.findings.util.model;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IObservation.ObservationCode;
 

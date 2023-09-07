@@ -15,6 +15,7 @@
 package ch.elexis.data;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.rgw.tools.TimeTool;
 
 public class DayMessage extends PersistentObject {
@@ -40,6 +41,7 @@ public class DayMessage extends PersistentObject {
 		return get("infos");
 	}
 
+	@Override
 	public String getLabel() {
 		return get("Date") + StringUtils.SPACE + getMessage();
 	}

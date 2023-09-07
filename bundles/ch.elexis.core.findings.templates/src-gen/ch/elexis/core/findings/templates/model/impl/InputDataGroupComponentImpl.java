@@ -2,23 +2,23 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import ch.elexis.core.findings.templates.model.DataType;
-import ch.elexis.core.findings.templates.model.FindingsTemplate;
-import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
-import ch.elexis.core.findings.templates.model.ModelPackage;
-
 import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import ch.elexis.core.findings.templates.model.DataType;
+import ch.elexis.core.findings.templates.model.FindingsTemplate;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

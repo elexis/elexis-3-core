@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.types;
 
-import ch.rgw.tools.Result;
 import org.eclipse.emf.ecore.EFactory;
 
 /**

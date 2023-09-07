@@ -10,9 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IDataAccess;
@@ -61,7 +62,7 @@ public class AllDataAccessor implements IDataAccess {
 			String[] params) {
 		Result<Object> ret = null;
 
-		if (descriptor.equals("Konsultationen")) { //$NON-NLS-1$
+		if ("Konsultationen".equals(descriptor)) { //$NON-NLS-1$
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null)
 				ret = new Result<Object>(getAllKonsultations(patient, false));
@@ -69,7 +70,7 @@ public class AllDataAccessor implements IDataAccess {
 				ret = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 						"Kein Patient selektiert.", //$NON-NLS-1$
 						null, false);
-		} else if (descriptor.equals("KonsultationenFall")) { //$NON-NLS-1$
+		} else if ("KonsultationenFall".equals(descriptor)) { //$NON-NLS-1$
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null)
 				ret = new Result<Object>(getAllKonsultations(patient, true));

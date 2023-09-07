@@ -79,10 +79,12 @@ public class Sticker extends PersistentObject implements ISticker {
 		return get(FLD_NAME);
 	}
 
+	@Override
 	public int getWert() {
 		return checkZero(get(FLD_VALUE));
 	}
 
+	@Override
 	public void setWert(int w) {
 		set(FLD_VALUE, Integer.toString(w));
 	}
@@ -106,6 +108,7 @@ public class Sticker extends PersistentObject implements ISticker {
 		return super.delete();
 	}
 
+	@Override
 	public void setClassForSticker(Class<?> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO " + FLD_CLASSLINK + " (objclass,sticker) VALUES (")
@@ -118,6 +121,7 @@ public class Sticker extends PersistentObject implements ISticker {
 		}
 	}
 
+	@Override
 	public void removeClassForSticker(Class<?> clazz) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DELETE FROM " + FLD_CLASSLINK + " WHERE objclass=").append(JdbcLink.wrap(clazz.getName()))
@@ -133,6 +137,7 @@ public class Sticker extends PersistentObject implements ISticker {
 	private static String queryClassStickerString = "SELECT objclass FROM " + Sticker.FLD_CLASSLINK
 			+ " WHERE sticker=?";
 
+	@Override
 	public List<String> getClassesForSticker() {
 		ArrayList<String> ret = new ArrayList<String>();
 		PreparedStatement queryClasses = null;
@@ -190,6 +195,7 @@ public class Sticker extends PersistentObject implements ISticker {
 		return new ArrayList<Sticker>(uniqueRet);
 	}
 
+	@Override
 	public int compareTo(ISticker o) {
 		if (o != null) {
 			return o.getWert() - getWert();
@@ -197,10 +203,12 @@ public class Sticker extends PersistentObject implements ISticker {
 		return 1;
 	}
 
+	@Override
 	public void setBackground(String bg) {
 		set(FLD_BACKGROUND, bg);
 	}
 
+	@Override
 	public void setForeground(String fg) {
 		set(FLD_FOREGROUND, fg);
 	}

@@ -1,10 +1,10 @@
 package ch.elexis.core.findings.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.findings.ICoding;
@@ -27,7 +27,7 @@ public class FindingsTextUtil {
 	public static String getGroupText(IObservation observation, boolean shouldSet) {
 		StringBuilder stringBuilder = new StringBuilder();
 
-		if (ObservationType.REF.equals(observation.getObservationType())) {
+		if (ObservationType.REF == observation.getObservationType()) {
 			Optional<ICoding> coding = ModelUtil.getCodeBySystem(observation.getCoding(),
 					CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 			String title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
@@ -40,17 +40,17 @@ public class FindingsTextUtil {
 				}
 
 				IObservation iObservation = children.get(i);
-				if (ObservationType.REF.equals(iObservation.getObservationType())) {
+				if (ObservationType.REF == iObservation.getObservationType()) {
 					stringBuilder.append(getGroupText(iObservation, shouldSet));
-				} else if (ObservationType.COMP.equals(iObservation.getObservationType())) {
+				} else if (ObservationType.COMP == iObservation.getObservationType()) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
-				} else if (ObservationType.TEXT.equals(iObservation.getObservationType())) {
+				} else if (ObservationType.TEXT == iObservation.getObservationType()) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
-				} else if (ObservationType.NUMERIC.equals(iObservation.getObservationType())) {
+				} else if (ObservationType.NUMERIC == iObservation.getObservationType()) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
-				} else if (ObservationType.BOOLEAN.equals(iObservation.getObservationType())) {
+				} else if (ObservationType.BOOLEAN == iObservation.getObservationType()) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
-				} else if (ObservationType.DATE.equals(iObservation.getObservationType())) {
+				} else if (ObservationType.DATE == iObservation.getObservationType()) {
 					stringBuilder.append(getObservationText(iObservation, shouldSet));
 				} else {
 					LoggerFactory.getLogger(FindingsTextUtil.class)
@@ -75,9 +75,9 @@ public class FindingsTextUtil {
 
 		ObservationType observationType = component.getTypeFromExtension(ObservationType.class);
 
-		if (ObservationType.TEXT.equals(observationType)) {
+		if (ObservationType.TEXT == observationType) {
 			stringBuilder.append(component.getStringValue().orElse(StringUtils.EMPTY));
-		} else if (ObservationType.NUMERIC.equals(observationType)) {
+		} else if (ObservationType.NUMERIC == observationType) {
 			try {
 				stringBuilder.append(
 						component.getNumericValue().isPresent() ? component.getNumericValue().get().toPlainString()
@@ -101,14 +101,14 @@ public class FindingsTextUtil {
 				CodingSystem.ELEXIS_LOCAL_CODESYSTEM);
 		String title = coding.isPresent() ? coding.get().getDisplay() : StringUtils.EMPTY;
 
-		if (ObservationType.TEXT.equals(observation.getObservationType())) {
+		if (ObservationType.TEXT == observation.getObservationType()) {
 			stringBuilder.append(title);
 			stringBuilder.append(StringUtils.SPACE);
 			stringBuilder.append(observation.getStringValue().orElse(StringUtils.EMPTY));
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
-		} else if (ObservationType.NUMERIC.equals(observation.getObservationType())) {
+		} else if (ObservationType.NUMERIC == observation.getObservationType()) {
 			try {
 				stringBuilder.append(title);
 				stringBuilder.append(StringUtils.SPACE);
@@ -125,7 +125,7 @@ public class FindingsTextUtil {
 			} catch (NumberFormatException e) {
 				LoggerFactory.getLogger(FindingsTextUtil.class).warn("number illegal format", e);
 			}
-		} else if (ObservationType.BOOLEAN.equals(observation.getObservationType())) {
+		} else if (ObservationType.BOOLEAN == observation.getObservationType()) {
 			stringBuilder.append(title);
 			stringBuilder.append(StringUtils.SPACE);
 			observation.getBooleanValue().ifPresent(value -> {
@@ -135,7 +135,7 @@ public class FindingsTextUtil {
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
-		} else if (ObservationType.DATE.equals(observation.getObservationType())) {
+		} else if (ObservationType.DATE == observation.getObservationType()) {
 			stringBuilder.append(title);
 			stringBuilder.append(StringUtils.SPACE);
 			observation.getDateTimeValue().ifPresent(value -> {
@@ -146,7 +146,7 @@ public class FindingsTextUtil {
 			if (observation.getComment().isPresent()) {
 				stringBuilder.append(" [" + observation.getComment().get() + "]");
 			}
-		} else if (ObservationType.COMP.equals(observation.getObservationType())) {
+		} else if (ObservationType.COMP == observation.getObservationType()) {
 			stringBuilder.append(title + StringUtils.SPACE);
 
 			String textSplitter = ", ";

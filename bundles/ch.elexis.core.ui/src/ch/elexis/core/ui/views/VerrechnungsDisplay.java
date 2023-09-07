@@ -140,7 +140,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private String defaultRGB;
 	private IWorkbenchPage page;
 	private final GenericObjectDropTarget dropTarget;
-	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
+	private IAction applyMedicationAction;
+	private IAction chPriceAction;
+	private IAction chCountAction;
+	private IAction chTextAction;
+	private IAction removeAction;
+	private IAction removeAllAction;
 	private TableColumnLayout tableLayout;
 
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;

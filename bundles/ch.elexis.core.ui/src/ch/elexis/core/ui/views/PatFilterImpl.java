@@ -95,9 +95,9 @@ public class PatFilterImpl implements IPatFilter {
 			String op = val[1];
 			if (op.equals(Query.EQUALS)) {
 				return test.equalsIgnoreCase(val[2]) ? ACCEPT : REJECT;
-			} else if (op.equals("LIKE")) { //$NON-NLS-1$
+			} else if ("LIKE".equals(op)) { //$NON-NLS-1$
 				return test.toLowerCase().contains(val[2].toLowerCase()) ? ACCEPT : REJECT;
-			} else if (op.equals("Regexp")) { //$NON-NLS-1$
+			} else if ("Regexp".equals(op)) { //$NON-NLS-1$
 				return test.matches(val[2]) ? ACCEPT : REJECT;
 			}
 		} else if (o instanceof Script) {

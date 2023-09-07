@@ -28,6 +28,7 @@ public class TableViewerSorter {
 		this.tableViewer = tableViewer;
 		addColumnSelectionListeners(tableViewer);
 		tableViewer.setComparator(new ViewerComparator() {
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				return compareElements(e1, e2);
 			}
@@ -43,6 +44,7 @@ public class TableViewerSorter {
 
 	private void addColumnSelectionListener(TableColumn column) {
 		column.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableColumnClicked((TableColumn) e.widget);
 			}

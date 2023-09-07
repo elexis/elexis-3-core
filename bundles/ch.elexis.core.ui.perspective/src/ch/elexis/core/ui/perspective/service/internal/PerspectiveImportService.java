@@ -155,6 +155,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		}
 	}
 
+	@Override
 	public int closePerspective(IPerspectiveDescriptor iPerspectiveDescriptor) {
 		int idx = isPerspectiveInsideStack(iPerspectiveDescriptor);
 		if (idx > -1) {
@@ -185,6 +186,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return idx;
 	}
 
+	@Override
 	public int isPerspectiveInStack(String perspectiveId) {
 		IPerspectiveRegistry iPerspectiveRegistry = PlatformUI.getWorkbench().getPerspectiveRegistry();
 		return isPerspectiveInsideStack(iPerspectiveRegistry.findPerspectiveWithId(perspectiveId));

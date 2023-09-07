@@ -1,10 +1,10 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ServiceRequest;
 import org.osgi.service.component.annotations.Component;

@@ -79,7 +79,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private IWorkbenchWindow window;
 	private IAction[] openPerspectiveActions = null;
-	public static MenuManager fileMenu, editMenu, windowMenu, helpMenu;
+	public static MenuManager fileMenu;
+	public static MenuManager editMenu;
+	public static MenuManager windowMenu;
+	public static MenuManager helpMenu;
 
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);

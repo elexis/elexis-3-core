@@ -37,7 +37,7 @@ public class CoreHubHelper {
 		org.osgi.framework.Version v = bundle.getVersion();
 		sb.append("[Bundle info: ").append(v.toString());
 		String check = System.getProperty("inEclipse"); //$NON-NLS-1$
-		if (check != null && check.equals("true")) { //$NON-NLS-1$
+		if (check != null && "true".equals(check)) { //$NON-NLS-1$
 			sb.append(" (developer version)");
 		}
 		if (withDate) {

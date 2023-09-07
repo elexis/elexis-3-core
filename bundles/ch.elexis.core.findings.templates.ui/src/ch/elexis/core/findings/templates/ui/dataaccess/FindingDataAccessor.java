@@ -140,6 +140,7 @@ public class FindingDataAccessor implements IDataAccess {
 				}
 
 				Collections.sort(observations, new Comparator<IObservation>() {
+					@Override
 					public int compare(IObservation o1, IObservation o2) {
 						Optional<LocalDateTime> d1 = o1.getEffectiveTime();
 						Optional<LocalDateTime> d2 = o2.getEffectiveTime();

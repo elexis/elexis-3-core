@@ -105,14 +105,20 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Text tMacro;
 	private Combo cbMandant;
 	private TableViewer viewer;
-	private Button bNew, bEigen, bDiag;
+	private Button bNew;
+	private Button bEigen;
+	private Button bDiag;
 	private List<IMandator> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
 	private WritableValue<ICodeElementBlock> master = new WritableValue(null, ICodeElementBlock.class);
 
 	private BlockComparator comparator;
 
-	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
+	private Action removeLeistung;
+	private Action moveUpAction;
+	private Action moveDownAction;
+	private Action editAction;
+	private Action countAction;
 	private TableViewerFocusCellManager focusCellManager;
 
 	private final IChangeListener changeListener = (event) -> {
@@ -139,6 +145,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public Composite createDisplay(final Composite parent, final IViewSite site) {
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(parent);
@@ -214,6 +221,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] { textTransfer };
 		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
+			@Override
 			public void dragEnter(final DropTargetEvent event) {
 				if (event.data instanceof IArticle) {
 					if (((IArticle) event.data).isProduct()) {
@@ -224,15 +232,19 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				event.detail = DND.DROP_COPY;
 			}
 
+			@Override
 			public void dragLeave(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void dragOperationChanged(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void dragOver(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void drop(final DropTargetEvent event) {
 				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				String drp = (String) event.data;
@@ -254,6 +266,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				});
 			}
 
+			@Override
 			public void dropAccept(final DropTargetEvent event) {
 
 			}
@@ -328,6 +341,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		makeActions();
 		ViewMenus menus = new ViewMenus(site);
 		menus.createControlContextMenu(viewer.getControl(), new ViewMenus.IMenuPopulator() {
+			@Override
 			public IAction[] fillMenu() {
 				BlockElementViewerItem element = (BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
@@ -346,10 +360,12 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		return body;
 	}
 
+	@Override
 	public Class<?> getElementClass() {
 		return ICodeElementBlock.class;
 	}
 
+	@Override
 	public void display(final Object obj) {
 		ICodeElementBlock block = (ICodeElementBlock) obj;
 		master.setValue(block);
@@ -376,6 +392,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public String getTitle() {
 		return Messages.BlockDetailDisplay_blocks; // $NON-NLS-1$
 	}

@@ -99,7 +99,8 @@ public class FallListeView extends ViewPart implements IActivationListener {
 	public static final String ID = "ch.elexis.FallListeView"; //$NON-NLS-1$
 	CommonViewer fallViewer;
 	CommonViewer behandlViewer;
-	private ViewerConfigurer fallCf, behandlCf;
+	private ViewerConfigurer fallCf;
+	private ViewerConfigurer behandlCf;
 	private FormToolkit tk;
 	private Form form;
 	private Patient actPatient;

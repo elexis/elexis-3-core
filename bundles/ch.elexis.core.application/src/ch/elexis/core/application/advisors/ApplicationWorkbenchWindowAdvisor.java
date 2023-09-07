@@ -38,6 +38,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		super(configurer);
 	}
 
+	@Override
 	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
 		return new ApplicationActionBarAdvisor(configurer);
 	}
@@ -46,6 +47,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 * Diese Methode wird jeweils unmittelbar vor dem öffnen des Anwendungsfensters
 	 * ausgeführt.
 	 */
+	@Override
 	public void preWindowOpen() {
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		// configurer.setInitialSize(new Point(900, 700));

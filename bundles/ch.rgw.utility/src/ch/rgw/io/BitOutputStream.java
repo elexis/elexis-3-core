@@ -40,6 +40,7 @@ public class BitOutputStream extends OutputStream {
 	 *
 	 * @see java.io.OutputStream#write(int)
 	 */
+	@Override
 	public void write(int c) throws IOException {
 		pushbits(c, 8);
 	}
@@ -81,12 +82,14 @@ public class BitOutputStream extends OutputStream {
 	/**
 	 * Empty the buffer, flush the remaining bits with zeroes.
 	 */
+	@Override
 	public void flush() throws IOException {
 		stream.write(buffer);
 		buffer = 0;
 		pos = 128;
 	}
 
+	@Override
 	public void close() throws IOException {
 		flush();
 		stream.write(0);

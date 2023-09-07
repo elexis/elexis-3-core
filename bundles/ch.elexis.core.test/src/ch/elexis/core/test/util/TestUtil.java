@@ -1,10 +1,11 @@
 package ch.elexis.core.test.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.Identifiable;

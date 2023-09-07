@@ -117,6 +117,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 		}
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		String grp = ConfigServiceHolder.getGlobal(Preferences.ACC_GROUPS, Messages.Core_Admin);
 
@@ -129,12 +130,14 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 				new InputData(Messages.Core_Groups, PersistentObject.FLD_EXTINFO, "Groups", grp.split(",")), //$NON-NLS-1$ //$NON-NLS-2$
 				new InputData(Messages.Core_Invoicingparty, PersistentObject.FLD_EXTINFO, new IContentProvider() {
 
+					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Mandant m = (Mandant) po;
 						Kontakt r = m.getRechnungssteller();
 						ltf.setText(r.getLabel());
 					}
 
+					@Override
 					public void reloadContent(Object po, InputData ltf) {
 						Kontakt rsi = (Kontakt) po;
 						KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,

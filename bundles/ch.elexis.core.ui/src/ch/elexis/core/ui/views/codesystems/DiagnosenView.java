@@ -73,6 +73,7 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
+	@Override
 	public void dispose() {
 		GlobalEventDispatcher.removeActivationListener(this, this);
 		super.dispose();
@@ -97,6 +98,7 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 		}
 	}
 
+	@Override
 	public void activation(boolean mode) {
 		if (mode == false) {
 			if (selected != null) {
@@ -116,6 +118,7 @@ public class DiagnosenView extends ViewPart implements IActivationListener {
 
 	}
 
+	@Override
 	public void visible(boolean mode) {
 	}
 

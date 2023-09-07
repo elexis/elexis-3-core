@@ -127,7 +127,7 @@ public class FindingsFormatUtilTest {
 		assertFalse(clinicalStatus.isEmpty());
 		List<org.hl7.fhir.r4.model.Coding> coding = clinicalStatus.getCoding();
 		assertFalse(coding.isEmpty());
-		assertTrue(coding.get(0).getCode().equals("active"));
+		assertTrue("active".equals(coding.get(0).getCode()));
 		// dateRecorded changed to assertedDate
 		Date assertedDate = condition.getRecordedDate();
 		assertNotNull(assertedDate);

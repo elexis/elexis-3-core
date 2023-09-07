@@ -53,10 +53,12 @@ import ch.elexis.core.ui.util.ViewMenus.IMenuPopulator;
 import ch.rgw.tools.ExHandler;
 
 public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
-	IAction exportKGAction, stickerAction;
+	IAction exportKGAction;
+	IAction stickerAction;
 	RestrictedAction delPatAction;
 	PatientenListeView mine;
 
+	@Override
 	public IAction[] fillMenu() {
 		LinkedList<IAction> ret = new LinkedList<IAction>();
 		ret.add(stickerAction);
@@ -115,6 +117,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 				setToolTipText(Messages.PatientMenuPopulator_ExportEMRToolTip); // $NON-NLS-1$
 				setMenuCreator(new IMenuCreator() {
 
+					@Override
 					public void dispose() {
 						if (menu != null) {
 							menu.dispose();
@@ -122,12 +125,14 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 						}
 					}
 
+					@Override
 					public Menu getMenu(Control parent) {
 						menu = new Menu(parent);
 						createMenu();
 						return menu;
 					}
 
+					@Override
 					public Menu getMenu(Menu parent) {
 						menu = new Menu(parent);
 						createMenu();

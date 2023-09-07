@@ -49,7 +49,8 @@ import ch.rgw.tools.ExHandler;
 
 public class LocalUserLoginDialog extends TitleAreaDialog {
 
-	private Text usr, pwd;
+	private Text usr;
+	private Text pwd;
 	private boolean hasUsers;
 	private IUser user;
 

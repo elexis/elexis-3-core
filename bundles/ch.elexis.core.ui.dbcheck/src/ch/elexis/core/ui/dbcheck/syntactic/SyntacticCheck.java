@@ -42,15 +42,15 @@ public abstract class SyntacticCheck {
 		if (found.isCompatibleWith(requested))
 			return true;
 
-		if (dataTypeFound.equalsIgnoreCase("int8(19)") && dataTypeRequested.equalsIgnoreCase("bigint(20)"))
+		if ("int8(19)".equalsIgnoreCase(dataTypeFound) && "bigint(20)".equalsIgnoreCase(dataTypeRequested))
 			return true;
-		if (dataTypeFound.equalsIgnoreCase("blob") && dataTypeRequested.equalsIgnoreCase("longblob"))
+		if ("blob".equalsIgnoreCase(dataTypeFound) && "longblob".equalsIgnoreCase(dataTypeRequested))
 			return true;
-		if (dataTypeFound.equalsIgnoreCase("text") && dataTypeRequested.equalsIgnoreCase("longtext"))
+		if ("text".equalsIgnoreCase(dataTypeFound) && "longtext".equalsIgnoreCase(dataTypeRequested))
 			return true;
-		if (dataTypeFound.equalsIgnoreCase("text(2147483647)") && dataTypeRequested.equalsIgnoreCase("longtext"))
+		if ("text(2147483647)".equalsIgnoreCase(dataTypeFound) && "longtext".equalsIgnoreCase(dataTypeRequested))
 			return true;
-		if (dataTypeFound.equalsIgnoreCase("bytea(2147483647)") && dataTypeRequested.equalsIgnoreCase("longblob"))
+		if ("bytea(2147483647)".equalsIgnoreCase(dataTypeFound) && "longblob".equalsIgnoreCase(dataTypeRequested))
 			return true;
 		return false;
 	}

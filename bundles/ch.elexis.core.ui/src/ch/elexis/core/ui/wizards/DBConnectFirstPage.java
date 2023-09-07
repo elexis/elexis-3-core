@@ -44,8 +44,10 @@ import ch.rgw.tools.StringTool;
 public class DBConnectFirstPage extends WizardPage {
 
 	Combo dbTypes;
-	Text server, dbName;
-	String defaultUser, defaultPassword;
+	Text server;
+	Text dbName;
+	String defaultUser;
+	String defaultPassword;
 	JdbcLink j = null;
 
 	static final String[] supportedDB = new String[] { "mySQl", "PostgreSQL", "H2" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -64,6 +66,7 @@ public class DBConnectFirstPage extends WizardPage {
 		// TODO Automatisch erstellter Konstruktoren-Stub
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		FormToolkit tk = UiDesk.getToolkit();
 		Form form = tk.createForm(parent);

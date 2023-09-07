@@ -2,16 +2,26 @@
  */
 package ch.elexis.core.findings.templates.model.impl;
 
-import ch.elexis.core.findings.templates.model.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import ch.elexis.core.findings.templates.model.CodeElement;
+import ch.elexis.core.findings.templates.model.DataType;
+import ch.elexis.core.findings.templates.model.FindingsTemplate;
+import ch.elexis.core.findings.templates.model.FindingsTemplates;
+import ch.elexis.core.findings.templates.model.InputDataBoolean;
+import ch.elexis.core.findings.templates.model.InputDataDate;
+import ch.elexis.core.findings.templates.model.InputDataGroup;
+import ch.elexis.core.findings.templates.model.InputDataGroupComponent;
+import ch.elexis.core.findings.templates.model.InputDataNumeric;
+import ch.elexis.core.findings.templates.model.InputDataText;
+import ch.elexis.core.findings.templates.model.ModelFactory;
+import ch.elexis.core.findings.templates.model.ModelPackage;
+import ch.elexis.core.findings.templates.model.Type;
 
 /**
  * <!-- begin-user-doc -->

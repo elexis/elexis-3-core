@@ -127,7 +127,7 @@ public class Patient extends Person {
 			return false;
 		}
 		String geb = (get(Person.BIRTHDATE));
-		if (geb.equals("WERT?")) {
+		if ("WERT?".equals(geb)) {
 			return false;
 		}
 		String g = get(Person.SEX);

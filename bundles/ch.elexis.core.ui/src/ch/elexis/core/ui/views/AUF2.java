@@ -69,7 +69,10 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 public class AUF2 extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.auf"; //$NON-NLS-1$
 	TableViewer tv;
-	private Action newAUF, delAUF, modAUF, printAUF;
+	private Action newAUF;
+	private Action delAUF;
+	private Action modAUF;
+	private Action printAUF;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	@Inject

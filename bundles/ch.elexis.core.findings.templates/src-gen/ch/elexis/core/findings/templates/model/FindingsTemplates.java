@@ -2,9 +2,7 @@
  */
 package ch.elexis.core.findings.templates.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

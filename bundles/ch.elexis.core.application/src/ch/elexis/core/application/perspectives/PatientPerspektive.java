@@ -36,6 +36,7 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
  */
 public class PatientPerspektive implements IPerspectiveFactory {
 
+	@Override
 	public void createInitialLayout(final IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);
@@ -72,6 +73,7 @@ public class PatientPerspektive implements IPerspectiveFactory {
 		layout.addShowViewShortcut(FallDetailView.ID);
 
 		UiDesk.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 
 				ElexisFastViewUtil.addToFastView(UiResourceConstants.PatientPerspektive_ID, LeistungenView.ID);

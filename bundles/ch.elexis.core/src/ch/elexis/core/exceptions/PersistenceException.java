@@ -61,6 +61,7 @@ public class PersistenceException extends RuntimeException {
 	 *
 	 * @return the cause for this exception
 	 */
+	@Override
 	public Throwable getCause() {
 		return status.getException();
 	}
@@ -78,6 +79,7 @@ public class PersistenceException extends RuntimeException {
 	 * Prints a stack trace out for the exception, and any nested exception that it
 	 * may have embedded in its Status object.
 	 */
+	@Override
 	public void printStackTrace() {
 		printStackTrace(System.err);
 	}
@@ -88,6 +90,7 @@ public class PersistenceException extends RuntimeException {
 	 *
 	 * @param output the stream to write to
 	 */
+	@Override
 	public void printStackTrace(PrintStream output) {
 		synchronized (output) {
 			super.printStackTrace(output);
@@ -101,6 +104,7 @@ public class PersistenceException extends RuntimeException {
 	 *
 	 * @param output the stream to write to
 	 */
+	@Override
 	public void printStackTrace(PrintWriter output) {
 		synchronized (output) {
 			super.printStackTrace(output);

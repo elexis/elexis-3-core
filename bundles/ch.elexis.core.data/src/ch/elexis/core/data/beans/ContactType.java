@@ -10,11 +10,11 @@
  */
 package ch.elexis.core.data.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
@@ -317,6 +317,7 @@ public enum ContactType implements Enumerator {
 	 *
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 		return value;
 	}
@@ -326,6 +327,7 @@ public enum ContactType implements Enumerator {
 	 *
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -335,6 +337,7 @@ public enum ContactType implements Enumerator {
 	 *
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 		return literal;
 	}

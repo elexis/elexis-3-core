@@ -1,6 +1,5 @@
 package ch.elexis.hl7;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,7 +118,7 @@ public enum HL7ReaderFactory {
 			} else if (match.getName().contains("Big5")) {
 				CharsetMatch[] allMatches = detector.detectAll();
 				for (CharsetMatch charsetMatch : allMatches) {
-					if (charsetMatch.getName().equals("ISO-8859-1") && charsetMatch.getConfidence() > 25) {
+					if ("ISO-8859-1".equals(charsetMatch.getName()) && charsetMatch.getConfidence() > 25) {
 						logger.warn("Reading HL7 file " + fileHandle.getAbsolutePath() + " with unlikely encoding "
 								+ match.getName() + " - trying to use ISO-8859-1 instead");
 
@@ -198,14 +198,14 @@ public enum HL7ReaderFactory {
 			splitted[0] = joinStrings(mshPart, "|");
 		}
 
-		if (!mshPart[8].equals("ORU^R01") && !mshPart[11].startsWith("2.5") && !mshPart[11].startsWith("2.6")) {
+		if (!"ORU^R01".equals(mshPart[8]) && !mshPart[11].startsWith("2.5") && !mshPart[11].startsWith("2.6")) {
 			mshPart[8] = "ORU^R01";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
 
 		// 2.3.2 is no proper Hl7 version and therefore needs to be handled as version
 		// 2.3
-		if (mshPart[11].equals("2.3.2")) {
+		if ("2.3.2".equals(mshPart[11])) {
 			mshPart[11] = "2.3";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
@@ -213,11 +213,11 @@ public enum HL7ReaderFactory {
 		// #2747 BugFix as LabCube_SpotChemD sends occasionally SN which is not allowed
 		// for version
 		// 2.2
-		if (mshPart[11].equals("2.2")) {
+		if ("2.2".equals(mshPart[11])) {
 			for (int i = 0; i < splitted.length; i++) {
 				if (splitted[i].startsWith("OBX")) {
 					String[] obxPart = splitted[i].split("\\|", -1);
-					if (obxPart[2].equals("SN")) {
+					if ("SN".equals(obxPart[2])) {
 						obxPart[2] = "NM";
 						splitted[i] = joinStrings(obxPart, "|");
 					}
@@ -225,7 +225,7 @@ public enum HL7ReaderFactory {
 			}
 		}
 
-		if (mshPart[11].equals("2.7.1")) {
+		if ("2.7.1".equals(mshPart[11])) {
 			mshPart[11] = "2.6";
 			splitted[0] = joinStrings(mshPart, "|");
 		}
@@ -257,27 +257,27 @@ public enum HL7ReaderFactory {
 	private HL7Reader getReaderForMessage(Message message) {
 		String version = message.getVersion();
 
-		if (version.equals("2.1")) {
+		if ("2.1".equals(version)) {
 			return new HL7ReaderV21(message);
-		} else if (version.equals("2.2")) {
+		} else if ("2.2".equals(version)) {
 			return new HL7ReaderV22(message);
 		}
-		if (version.equals("2.3")) {
+		if ("2.3".equals(version)) {
 			return new HL7ReaderV23(message);
 		}
-		if (version.equals("2.3.1")) {
+		if ("2.3.1".equals(version)) {
 			return new HL7ReaderV231(message);
 		}
-		if (version.equals("2.4")) {
+		if ("2.4".equals(version)) {
 			return new HL7ReaderV24(message);
 		}
-		if (version.equals("2.5")) {
+		if ("2.5".equals(version)) {
 			return new HL7ReaderV25(message);
 		}
-		if (version.equals("2.5.1")) {
+		if ("2.5.1".equals(version)) {
 			return new HL7ReaderV251(message);
 		}
-		if (version.equals("2.6")) {
+		if ("2.6".equals(version)) {
 			return new HL7ReaderV26(message);
 		}
 		return null;

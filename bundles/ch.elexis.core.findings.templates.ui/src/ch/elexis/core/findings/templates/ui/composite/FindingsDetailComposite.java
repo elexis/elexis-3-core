@@ -206,6 +206,7 @@ public class FindingsDetailComposite extends Composite {
 		UpdateValueStrategy<String, String> modelToTarget = new UpdateValueStrategy<String, String>();
 		UpdateValueStrategy<String, String> targetToModel = new UpdateValueStrategy<String, String>();
 		targetToModel.setBeforeSetValidator(new IValidator<String>() {
+			@Override
 			public org.eclipse.core.runtime.IStatus validate(String value) {
 				Optional<FindingsTemplate> existing = FindingsServiceHolder.findingsTemplateService
 						.getFindingsTemplate(new TransientCoding(CodingSystem.ELEXIS_LOCAL_CODESYSTEM.getSystem(),

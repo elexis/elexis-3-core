@@ -49,7 +49,8 @@ public class KonsFilterDialog extends TitleAreaDialog {
 	Combo cbFaelle;
 	ICoverage[] faelle;
 	Text tBed;
-	Button bCase, bRegex;
+	Button bCase;
+	Button bRegex;
 
 	public KonsFilterDialog(IPatient p, KonsFilter kf) {
 		super(UiDesk.getTopShell());
@@ -118,11 +119,11 @@ public class KonsFilterDialog extends TitleAreaDialog {
 				List<String> tokens = tk.tokenize();
 				int last = 0;
 				for (String t : tokens) {
-					if (t.equals("OR")) { //$NON-NLS-1$
+					if ("OR".equals(t)) { //$NON-NLS-1$
 						last = KonsFilter.OR;
-					} else if (t.equals("AND")) { //$NON-NLS-1$
+					} else if ("AND".equals(t)) { //$NON-NLS-1$
 						last = KonsFilter.AND;
-					} else if (t.equals("NOT")) { //$NON-NLS-1$
+					} else if ("NOT".equals(t)) { //$NON-NLS-1$
 						last |= KonsFilter.NOT;
 					} else {
 						filter.addConstraint(last, t);

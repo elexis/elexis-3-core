@@ -1,7 +1,8 @@
 package ch.elexis.hl7.v26;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;

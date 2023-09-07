@@ -33,7 +33,7 @@ public class ProxyPoolingDataSourceBuilder {
 
 		Properties properties = new Properties();
 		properties.put("user", username);
-		properties.put("password", password.toString());
+		properties.put("password", password);
 
 		ConnectionFactory connectionFactory = new DriverConnectionFactory(driver, jdbcString, properties);
 

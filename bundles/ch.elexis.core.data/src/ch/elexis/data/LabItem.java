@@ -12,12 +12,13 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.TextContainerConstants;
@@ -167,10 +168,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		set(UNIT, unit);
 	}
 
+	@Override
 	public String getGroup() {
 		return checkNull(get(GROUP));
 	}
 
+	@Override
 	public void setGroup(String group) {
 		set(GROUP, group);
 	}
@@ -183,18 +186,22 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		set(PRIO, prio);
 	}
 
+	@Override
 	public String getKuerzel() {
 		return checkNull(get(SHORTNAME));
 	}
 
+	@Override
 	public void setKuerzel(String shortname) {
 		set(SHORTNAME, shortname);
 	}
 
+	@Override
 	public String getName() {
 		return checkNull(get(TITLE));
 	}
 
+	@Override
 	public void setName(String title) {
 		set(TITLE, title);
 	}
@@ -214,10 +221,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		set(EXPORT, export);
 	}
 
+	@Override
 	public void setTyp(LabItemTyp typ) {
 		set(TYPE, Integer.toString(typ.getType()));
 	}
 
+	@Override
 	public LabItemTyp getTyp() {
 		LabItemTyp type = LabItemTyp.fromType(get(TYPE));
 		if (type != null) {
@@ -246,7 +255,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	}
 
 	public String evaluate(Patient pat, List<ILabResult> results) throws ElexisException {
-		if (!getTyp().equals(LabItemTyp.FORMULA)) {
+		if (getTyp() != LabItemTyp.FORMULA) {
 			return null;
 		}
 		String formel = getFormula();
@@ -258,7 +267,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		for (ILabResult result : results) {
 			String var = ((LabItem) result.getItem()).makeVarName();
 			if (formel.indexOf(var) != -1) {
-				if (result.getResult() != null && !result.getResult().isEmpty() && !result.getResult().equals("?")) { //$NON-NLS-1$
+				if (result.getResult() != null && !result.getResult().isEmpty() && !"?".equals(result.getResult())) { //$NON-NLS-1$
 					formel = formel.replaceAll(var, result.getResult());
 					bMatched = true;
 				}
@@ -323,7 +332,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * @return the result or "?formel?" if no result could be calculated.
 	 */
 	public String evaluate(Patient pat, TimeTool date) throws ElexisException {
-		if (!getTyp().equals(LabItemTyp.FORMULA)) {
+		if (getTyp() != LabItemTyp.FORMULA) {
 			return null;
 		}
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
@@ -344,6 +353,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		return group[0] + "_" + num; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getDigits() {
 		String digits = checkNull(get(DIGITS));
 		if (digits.isEmpty()) {
@@ -353,10 +363,12 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		}
 	}
 
+	@Override
 	public void setDigits(int digits) {
 		set(DIGITS, Integer.toString(digits));
 	}
 
+	@Override
 	public boolean isVisible() {
 		String visible = get(VISIBLE);
 		// not set defaults to true
@@ -367,6 +379,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		return visible.equals(StringConstants.ONE);
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			set(VISIBLE, StringConstants.ONE);
@@ -474,6 +487,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		return sb.toString();
 	}
 
+	@Override
 	public int compareTo(LabItem other) {
 		// check for null; put null values at the end
 		if (other == null) {

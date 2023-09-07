@@ -61,11 +61,13 @@ public class MultilineFieldEditor extends StringFieldEditor {
 			textField = SWTHelper.createText(parent, numOfLines, flags);
 			textField.setFont(parent.getFont());
 			textField.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyReleased(KeyEvent e) {
 					valueChanged();
 				}
 			});
 			textField.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					textField = null;
 				}

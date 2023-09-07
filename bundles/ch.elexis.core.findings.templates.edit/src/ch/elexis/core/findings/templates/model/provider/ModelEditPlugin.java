@@ -3,7 +3,6 @@
 package ch.elexis.core.findings.templates.model.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
 
 /**

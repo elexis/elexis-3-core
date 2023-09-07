@@ -1,8 +1,9 @@
 package ch.elexis.core.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.DefaultSignature;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;

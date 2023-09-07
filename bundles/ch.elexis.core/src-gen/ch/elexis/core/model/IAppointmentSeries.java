@@ -12,8 +12,8 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import java.util.List;
+
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.services.IAppointmentService;

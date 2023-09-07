@@ -1,6 +1,7 @@
 package ch.elexis.core.fhir;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.services.ICodeElementService;
 

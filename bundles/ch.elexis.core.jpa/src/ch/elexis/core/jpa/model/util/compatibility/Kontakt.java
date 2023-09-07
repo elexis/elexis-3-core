@@ -16,6 +16,7 @@ public class Kontakt {
 			c = 1;
 		}
 
+		@Override
 		public int compareTo(statL ot) {
 			return ot.c - c;
 		}

@@ -30,7 +30,9 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.WidgetProvider;
  */
 
 public class SimpleWidgetProvider implements WidgetProvider {
-	int type, style;
+	int type;
+
+	int style;
 
 	CommonViewer cv;
 	public static final int TYPE_TREE = 0;
@@ -44,6 +46,7 @@ public class SimpleWidgetProvider implements WidgetProvider {
 		cv = parent;
 	}
 
+	@Override
 	public StructuredViewer createViewer(Composite parent) {
 		switch (type) {
 		case TYPE_TREE:

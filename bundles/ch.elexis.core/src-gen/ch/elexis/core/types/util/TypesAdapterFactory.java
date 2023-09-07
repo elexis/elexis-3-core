@@ -10,18 +10,16 @@
  */
 package ch.elexis.core.types.util;
 
-import ch.elexis.core.types.TypesPackage;
-
-import ch.rgw.tools.Result;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import ch.elexis.core.types.TypesPackage;
+import ch.rgw.tools.Result;
 
 /**
  * <!-- begin-user-doc -->

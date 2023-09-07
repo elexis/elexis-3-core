@@ -46,6 +46,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.
 	 * Object, int)
 	 */
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		Image image = provider.getColumnImage(element, columnIndex);
 		if (decorator != null) {
@@ -64,6 +65,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
 	 * int)
 	 */
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		String text = provider.getColumnText(element, columnIndex);
 		if (decorator != null) {

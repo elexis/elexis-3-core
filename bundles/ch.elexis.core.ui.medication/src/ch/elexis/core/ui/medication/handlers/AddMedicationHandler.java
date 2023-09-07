@@ -31,7 +31,7 @@ public class AddMedicationHandler extends AbstractHandler {
 			medicationView.getMedicationComposite().setDropChangePrescription(null);
 
 			for (CTabItem cti : leistungenView.ctab.getItems()) {
-				if (cti.getText().equalsIgnoreCase("Artikelstamm")) { //$NON-NLS-1$
+				if ("Artikelstamm".equalsIgnoreCase(cti.getText())) { //$NON-NLS-1$
 					leistungenView.setSelected(cti);
 					leistungenView.setFocus();
 					leistungenView.ctab.setSelection(cti);

@@ -28,17 +28,20 @@ public class ExternalLink implements IKonsExtension {
 	public static final String ID = "ch.elexis.text.ExternalLink"; //$NON-NLS-1$
 
 	// EnhancedTextField mine;
+	@Override
 	public String connect(IRichTextDisplay tf) {
 		tf.addXrefHandler(ID, this);
 		return ID;
 	}
 
+	@Override
 	public boolean doLayout(StyleRange n, String provider, String id) {
 		n.underline = true;
 		n.foreground = UiDesk.getColor(UiDesk.COL_BLUE);
 		return true;
 	}
 
+	@Override
 	public boolean doXRef(String refProvider, String refID) {
 		try {
 			int r = refID.lastIndexOf('.');
@@ -63,16 +66,20 @@ public class ExternalLink implements IKonsExtension {
 		return true;
 	}
 
+	@Override
 	public IAction[] getActions() {
 		return null;
 	}
 
+	@Override
 	public void insert(Object o, int pos) {
 	}
 
+	@Override
 	public void removeXRef(String refProvider, String refID) {
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 	}

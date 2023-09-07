@@ -237,6 +237,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				new PersistentObjectDragSource(viewer.getControl(), viewerConfigurer.poSelectionRenderer);
 			} else {
 				new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
+					@Override
 					public List<PersistentObject> getSelection() {
 						Object[] sel = CommonViewer.this.getSelection();
 						ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
@@ -350,6 +351,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			return;
 		}
 		UiDesk.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				switch (m) {
 				case update:
@@ -391,6 +393,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		Object[] sel = getSelection();
 		if (sel != null && sel.length != 0) {
@@ -481,6 +484,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		public void doubleClicked(PersistentObject obj, CommonViewer cv);
 	}
 
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		if (dlListeners != null) {
 			Iterator<PoDoubleClickListener> it = dlListeners.iterator();

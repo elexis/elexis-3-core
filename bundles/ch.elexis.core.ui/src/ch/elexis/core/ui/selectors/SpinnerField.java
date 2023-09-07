@@ -42,6 +42,7 @@ public class SpinnerField extends ActiveControl {
 	@Override
 	protected void push() {
 		UiDesk.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Spinner spinner = (Spinner) ctl;
 				spinner.setSelection(Integer.parseInt(textContents));

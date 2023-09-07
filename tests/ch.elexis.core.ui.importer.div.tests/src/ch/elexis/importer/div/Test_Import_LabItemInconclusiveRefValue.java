@@ -28,10 +28,10 @@ public class Test_Import_LabItemInconclusiveRefValue {
 		assertEquals(Description.PATHO_REF_ITEM, eyeColor.getPathologicDescription().getDescription());
 		assertFalse(eyeColor.isPathologicFlagIndetermined(null));
 		Locale locale = Locale.getDefault();
-		if (locale.getLanguage().equals("de")) {
+		if ("de".equals(locale.getLanguage())) {
 			// Our most common case
 			assertEquals("Keine Referenzwerte", eyeColor.getPathologicDescription().getReference());
-		} else if (locale.getLanguage().equals("en")) {
+		} else if ("en".equals(locale.getLanguage())) {
 			// This is the case when running under CI via gitlab/travis
 			assertEquals("No reference values", eyeColor.getPathologicDescription().getReference());
 		} else {

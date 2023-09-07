@@ -95,6 +95,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -128,6 +129,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 		}
 
+		@Override
 		public void run() {
 			IStructuredSelection selection = labMPathMNonPathListViewer.getStructuredSelection();
 			if (selection != null && !selection.isEmpty()) {

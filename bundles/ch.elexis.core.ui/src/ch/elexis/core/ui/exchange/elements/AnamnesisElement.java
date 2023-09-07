@@ -34,6 +34,7 @@ public class AnamnesisElement extends XChangeElement {
 		setWriter(sender);
 	}
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}

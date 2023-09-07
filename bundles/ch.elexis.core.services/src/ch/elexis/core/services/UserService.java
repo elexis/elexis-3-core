@@ -146,7 +146,7 @@ public class UserService implements IUserService {
 		List<String> edList = mandators.stream().map(p -> p.getLabel()).collect(Collectors.toList());
 		user.getAssignedContact().setExtInfo("Mandant",
 				edList.isEmpty() ? StringUtils.EMPTY
-						: (String) edList.stream().map(o -> o.toString())
+						: (String) edList.stream().map(o -> o)
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		CoreModelServiceHolder.get().save(user.getAssignedContact());
 		userExecutiveDoctorsWorkingForCache.invalidateAll();
@@ -163,7 +163,7 @@ public class UserService implements IUserService {
 		List<String> edList = mandators.stream().map(p -> p.getLabel()).collect(Collectors.toList());
 		userGroup.setExtInfo("Mandant",
 				edList.isEmpty() ? StringUtils.EMPTY
-						: (String) edList.stream().map(o -> o.toString())
+						: (String) edList.stream().map(o -> o)
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
 		CoreModelServiceHolder.get().save(userGroup);
 		userExecutiveDoctorsWorkingForCache.invalidateAll();

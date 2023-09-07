@@ -88,7 +88,11 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	private final String title;
 	private final String message;
 	private Object selection;
-	Button bAll, bPersons, bOrgs;
+	Button bAll;
+
+	Button bPersons;
+
+	Button bOrgs;
 	FilterButtonAdapter fba;
 	String[] hints;
 	// int type;
@@ -351,6 +355,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 				new DefaultControlFieldProvider(commonViewer, getFilterStrings()),
 				new ViewerConfigurer.ButtonProvider() {
 
+					@Override
 					public Button createButton(final Composite parent) {
 						Button ret = new Button(parent, SWT.PUSH);
 						ret.setText("Neu erstellen...");
@@ -372,6 +377,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 						return ret;
 					}
 
+					@Override
 					public boolean isAlwaysEnabled() {
 						return false;
 					}
@@ -401,6 +407,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 
 		if (showBezugsKontakt) {
 			commonViewer.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (isSelecting) {
 						return;
@@ -523,6 +530,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 		super.okPressed();
 	}
 
+	@Override
 	public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 		okPressed();
 	}
@@ -579,7 +587,8 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 
 	private static class InSync implements Runnable {
 		IContact ret;
-		String title, message;
+		String title;
+		String message;
 		Class<? extends IContact> clazz;
 		String extra;
 		String[] hints;
@@ -601,6 +610,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 			}
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getDisplay().getActiveShell();
 			ContactSelectionDialog ksl = new ContactSelectionDialog(shell, clazz, title, message, extra, orderFields);

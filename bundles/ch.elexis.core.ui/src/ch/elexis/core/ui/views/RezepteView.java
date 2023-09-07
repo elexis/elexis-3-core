@@ -121,8 +121,11 @@ public class RezepteView extends ViewPart implements IRefreshable {
 	TableViewer tv;
 	// Label ausgestellt;
 	ListViewer lvRpLines;
-	private Action newRpAction, deleteRpAction;
-	private Action addLineAction, removeLineAction, changeMedicationAction;
+	private Action newRpAction;
+	private Action deleteRpAction;
+	private Action addLineAction;
+	private Action removeLineAction;
+	private Action changeMedicationAction;
 	private ViewMenus menus;
 	private Action printAction;
 	private GenericObjectDropTarget dropTarget;

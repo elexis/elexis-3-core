@@ -44,7 +44,7 @@ public class Stammdatenexport {
 						Patient.SEX, Patient.FLD_DOB, Patient.FLD_STREET, Patient.FLD_ZIP, Patient.FLD_PLACE,
 						"Anschrift", Patient.FLD_PHONE1, "Telefon2", "Natel", "Bemerkung" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				csv.writeNext(header);
-				if (startDate == null || startDate.length() == 0) {
+				if (startDate == null || startDate.isEmpty()) {
 					for (Patient pat : new Query<Patient>(Patient.class).execute()) {
 						String[] line = new String[header.length];
 						for (int i = 0; i < header.length; i++) {

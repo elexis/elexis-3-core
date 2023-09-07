@@ -50,7 +50,13 @@ public class Connection implements PortEventListener {
 	private final String myPort;
 	private final String[] mySettings;
 	private final String name;
-	private int frameStart, frameEnd, overhang, checksumBytes;
+	private int frameStart;
+
+	private int frameEnd;
+
+	private int overhang;
+
+	private int checksumBytes;
 	private long endTime;
 	private int timeToWait;
 	private static final int PASS_THRU = 0;
@@ -106,6 +112,7 @@ public class Connection implements PortEventListener {
 				final Connection mine = this;
 				new Thread(new Runnable() {
 
+					@Override
 					public void run() {
 						try {
 							Thread.sleep(1000);
@@ -284,6 +291,7 @@ public class Connection implements PortEventListener {
 	 * BREAK RECEIVED are written to the messageAreaIn.
 	 */
 
+	@Override
 	public void serialEvent(final SerialPortEvent e) {
 		int newData;
 		if (e.getEventType() == SerialPortEvent.BI) {
@@ -371,6 +379,7 @@ public class Connection implements PortEventListener {
 		// avoid rxtx-deadlock when called from an EventListener
 		new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(sleepTime);
@@ -433,6 +442,7 @@ public class Connection implements PortEventListener {
 	}
 
 	class Watchdog implements Runnable {
+		@Override
 		public void run() {
 			while (System.currentTimeMillis() < endTime) {
 				try {

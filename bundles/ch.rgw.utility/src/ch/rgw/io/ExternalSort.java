@@ -123,6 +123,7 @@ public class ExternalSort {
 		String inputfile = args[0];
 		String outputfile = args[1];
 		Comparator<String> comparator = new Comparator<String>() {
+			@Override
 			public int compare(String r1, String r2) {
 				return r1.compareTo(r2);
 			}
@@ -181,6 +182,7 @@ public class ExternalSort {
 			return answer;
 		}
 
+		@Override
 		public int compareTo(BinaryFileBuffer b) {
 			return mCMP.compare(peek(), b.peek());
 		}

@@ -215,6 +215,7 @@ public class Result<T> {
 	/**
 	 * Return the result as String, cr-separated list of entries
 	 */
+	@Override
 	public String toString() {
 		return "Result (" + severity + ") msgs: "
 				+ list.stream().map(x -> x.text + "/" + x.code).reduce((x, y) -> x + " , " + y).get();

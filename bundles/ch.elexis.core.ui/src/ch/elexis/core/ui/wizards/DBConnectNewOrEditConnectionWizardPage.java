@@ -53,6 +53,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 	 *
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
@@ -70,6 +71,7 @@ public class DBConnectNewOrEditConnectionWizardPage extends DBConnectWizardPage 
 
 		comboViewerDBType = new ComboViewer(group, SWT.READ_ONLY);
 		comboViewerDBType.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				DBType selection = (DBType) ((StructuredSelection) comboViewerDBType.getSelection()).getFirstElement();
 				txtDBPort.setText(selection.defaultPort);

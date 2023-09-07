@@ -343,7 +343,7 @@ public class Prescription extends PersistentObject {
 						list.add(getNum(d.substring(0, d.indexOf(' '))));
 					else if (d.length() > 0 && hasDigit)
 						list.add(getNum(d));
-					else if (d.length() == 0)
+					else if (d.isEmpty())
 						list.add(0.0f);
 					if (list.size() >= 4)
 						return list;
@@ -552,11 +552,11 @@ public class Prescription extends PersistentObject {
 			if (n.matches(special_num_at_start)) {
 				float value = getNum(n.substring(0, 1)) / getNum(n.substring(2));
 				return value;
-			} else if (n.equalsIgnoreCase("½"))
+			} else if ("½".equalsIgnoreCase(n))
 				return 0.5F;
-			else if (n.equalsIgnoreCase("¼"))
+			else if ("¼".equalsIgnoreCase(n))
 				return 0.25F;
-			else if (n.equalsIgnoreCase("1½"))
+			else if ("1½".equalsIgnoreCase(n))
 				return 1.5F;
 
 			else if (n.indexOf('/') != -1) {
@@ -628,8 +628,8 @@ public class Prescription extends PersistentObject {
 	 * @since 3.1
 	 */
 	public boolean isFixedMedication(String rezeptId, String dateUntil) {
-		boolean rezeptIdIsNull = rezeptId.length() == 0;
-		boolean dateIsNull = dateUntil.length() == 0;
+		boolean rezeptIdIsNull = rezeptId.isEmpty();
+		boolean dateIsNull = dateUntil.isEmpty();
 		if (!dateIsNull) {
 			TimeTool tt = new TimeTool(dateUntil);
 			dateIsNull = tt.isAfter(new TimeTool());

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.eclipse.persistence.config.HintValues;
@@ -444,7 +444,7 @@ public class CoreQueryTest {
 	public void compareExecuteCursorQueryWithLazyBlob() {
 		IBlob blob = modelService.create(IBlob.class);
 		byte[] b = new byte[100];
-		new Random().nextBytes(b);
+		new SecureRandom().nextBytes(b);
 		blob.setId("testblobid");
 		blob.setDate(LocalDate.now());
 		blob.setContent(b);

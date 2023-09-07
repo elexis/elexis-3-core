@@ -133,6 +133,7 @@ public class LabEvaluationRulesPreferencePage extends PreferencePage implements 
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 

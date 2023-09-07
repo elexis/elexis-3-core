@@ -348,13 +348,13 @@ public abstract class ImporterPage implements IExecutableExtension {
 
 		public Result<JdbcLink> getConnection() {
 			JdbcLink ret = null;
-			if (h.results[0].equalsIgnoreCase("mysql")) { //$NON-NLS-1$
+			if ("mysql".equalsIgnoreCase(h.results[0])) { //$NON-NLS-1$
 				ret = JdbcLink.createMySqlLink(h.results[1], h.results[2]);
-			} else if (h.results[0].equalsIgnoreCase("postgresql")) { //$NON-NLS-1$
+			} else if ("postgresql".equalsIgnoreCase(h.results[0])) { //$NON-NLS-1$
 				ret = JdbcLink.createPostgreSQLLink(h.results[1], h.results[2]);
-			} else if (h.results[0].equalsIgnoreCase("h2")) { //$NON-NLS-1$
+			} else if ("h2".equalsIgnoreCase(h.results[0])) { //$NON-NLS-1$
 				ret = JdbcLink.createH2Link(h.results[1]);
-			} else if (h.results[0].equalsIgnoreCase("odbc")) { //$NON-NLS-1$
+			} else if ("odbc".equalsIgnoreCase(h.results[0])) { //$NON-NLS-1$
 				ret = JdbcLink.createODBCLink(h.results[1]);
 			} else {
 				return new Result<JdbcLink>(Result.SEVERITY.ERROR, 1, Messages.ImporterPage_unknownType, null, true); // $NON-NLS-1$

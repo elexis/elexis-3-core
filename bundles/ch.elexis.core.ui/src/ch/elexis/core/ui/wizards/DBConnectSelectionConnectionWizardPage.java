@@ -48,7 +48,10 @@ import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
 
 public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage {
-	private Label lblConnection, lblUser, lblDriver, lblTyp;
+	private Label lblConnection;
+	private Label lblUser;
+	private Label lblDriver;
+	private Label lblTyp;
 	private ComboViewer cViewerConns;
 	private Button btnDelStoredConn;
 	private Button btnCopyStoredConn;

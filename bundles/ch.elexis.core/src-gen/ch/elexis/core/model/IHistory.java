@@ -10,9 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.types.DocumentStatus;
-
 import java.util.Date;
+
+import ch.elexis.core.types.DocumentStatus;
 
 /**
  * <!-- begin-user-doc -->

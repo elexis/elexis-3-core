@@ -130,6 +130,7 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 	 * @since 3.8
 	 * @param Set text to be added to all hyperlinks
 	 */
+	@Override
 	public void setToolTipText(String tooltip) {
 		for (Control c : cLinks.getChildren()) {
 			c.setToolTipText(tooltip);
@@ -168,6 +169,7 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager, actions);
 			}

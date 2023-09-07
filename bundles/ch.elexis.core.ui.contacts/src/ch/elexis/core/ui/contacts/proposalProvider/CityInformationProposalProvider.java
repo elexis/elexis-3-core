@@ -20,6 +20,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 public class CityInformationProposalProvider implements IContentProposalProvider {
 
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		// System.out.println("getProposals()");
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();

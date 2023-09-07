@@ -125,7 +125,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 	CommonViewer cv;
 	ViewerConfigurer vc;
 	FormToolkit tk = UiDesk.getToolkit();
-	Form left, right;
+	Form left;
+	Form right;
 	@SuppressWarnings("unchecked")
 	LazyTree tAll;
 	@SuppressWarnings("unchecked")
@@ -133,7 +134,12 @@ public class KonsZumVerrechnenView extends ViewPart {
 	TreeViewer tvSel;
 	LazyTreeListener ltl;
 	ViewMenus menu;
-	private IAction billAction, printAction, clearAction, wizardAction, refreshAction, detailAction;
+	private IAction billAction;
+	private IAction printAction;
+	private IAction clearAction;
+	private IAction wizardAction;
+	private IAction refreshAction;
+	private IAction detailAction;
 	private IAction removeAction;
 	private IAction expandSelAction;
 	private IAction expandSelAllAction;
@@ -272,6 +278,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 		selMenu.setRemoveAllWhenShown(true);
 		selMenu.addMenuListener(new IMenuListener() {
 
+			@Override
 			public void menuAboutToShow(final IMenuManager manager) {
 				manager.add(removeAction);
 				manager.add(expandSelAction);
@@ -333,6 +340,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 	class RLazyTreeListener implements LazyTreeListener {
 		final LazyTreeListener self = this;
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean fetchChildren(final LazyTree l) {
 			PersistentObject cont = (PersistentObject) l.contents;
@@ -342,6 +350,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 				try {
 					progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 							new IRunnableWithProgress() {
+								@Override
 								public void run(final IProgressMonitor monitor) {
 									monitor.beginTask(Messages.KonsZumVerrechnenView_findCons, 100); // $NON-NLS-1$
 									monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
@@ -419,6 +428,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			return false;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean hasChildren(final LazyTree l) {
 			Object po = l.contents;
@@ -671,6 +681,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 					try {
 						progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 								new IRunnableWithProgress() {
+									@Override
 									public void run(final IProgressMonitor monitor) {
 										doSelectByDate(monitor, fromDate, toDate);
 									}
@@ -881,11 +892,13 @@ public class KonsZumVerrechnenView extends ViewPart {
 			super.okPressed();
 		}
 
+		@Override
 		public void save() {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Override
 		public boolean saveAs() {
 			// TODO Auto-generated method stub
 			return false;

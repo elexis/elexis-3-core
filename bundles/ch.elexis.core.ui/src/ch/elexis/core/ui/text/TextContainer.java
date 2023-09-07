@@ -261,31 +261,37 @@ public class TextContainer {
 					plugin.initTemplatePrintSettings(template.getBetreff());
 
 					plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_INDIRECT_TEMPLATE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceIndirectFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_EXISTS, new ReplaceCallback() {
+						@Override
 						public String replace(final String in) {
 							return exists(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_GENDERIZE, new ReplaceCallback() {
+						@Override
 						public String replace(final String in) {
 							return genderize(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_IDATACCESS, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return ScriptUtil.loadDataFromPlugin(in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_SQLCLAUSE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceSQLClause(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
@@ -324,7 +330,7 @@ public class TextContainer {
 			// ?!?
 			return null;
 		}
-		if (q[0].equals("Datum")) { //$NON-NLS-1$
+		if ("Datum".equals(q[0])) { //$NON-NLS-1$
 			return new TimeTool().toString(TimeTool.DATE_GER);
 		}
 		if (q[0].indexOf(":") != -1) { //$NON-NLS-1$
@@ -609,11 +615,11 @@ public class TextContainer {
 			kl = kl.substring(1);
 		}
 		IPersistentObject ret = null;
-		if (kl.equalsIgnoreCase("Mandant")) { //$NON-NLS-1$
+		if ("Mandant".equalsIgnoreCase(kl)) { //$NON-NLS-1$
 			ret = CoreHub.actMandant;
-		} else if (kl.equalsIgnoreCase("Anwender")) { //$NON-NLS-1$
+		} else if ("Anwender".equalsIgnoreCase(kl)) { //$NON-NLS-1$
 			ret = CoreHub.getLoggedInContact();
-		} else if (kl.equalsIgnoreCase("Adressat")) { //$NON-NLS-1$
+		} else if ("Adressat".equalsIgnoreCase(kl)) { //$NON-NLS-1$
 			ret = actBrief.getAdressat();
 		} else {
 			try {
@@ -797,7 +803,7 @@ public class TextContainer {
 						// if field starts with "extinfo:" then read data from
 						// db-field extinfo/hashtable
 						if ((fieldContent.length() >= "extinfo:".length()) //$NON-NLS-1$
-								&& fieldContent.substring(0, "extinfo:".length()).equalsIgnoreCase("extinfo:")) { //$NON-NLS-1$ //$NON-NLS-2$
+								&& "extinfo:".equalsIgnoreCase(fieldContent.substring(0, "extinfo:".length()))) { //$NON-NLS-1$ //$NON-NLS-2$
 							String extInfoSpec = fieldContent.substring("extinfo:".length()); //$NON-NLS-1$
 							String extInfoField = extInfoSpec.split("\\.")[1]; //$NON-NLS-1$
 							// the actual blob contents can be found in the
@@ -1080,7 +1086,7 @@ public class TextContainer {
 		@Override
 		protected void okPressed() {
 			title = name.getText();
-			if (title.length() == 0) {
+			if (title.isEmpty()) {
 				MessageDialog.openError(getShell(), Messages.TextContainer_TemplateTitleEmptyCaption,
 						Messages.TextContainer_TemplateTitleEmptyBody);
 				return;
@@ -1152,6 +1158,7 @@ public class TextContainer {
 
 	public boolean replace(final String pattern, final String repl) {
 		return plugin.findOrReplace(pattern, new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return repl;
 			}
@@ -1163,6 +1170,7 @@ public class TextContainer {
 				+ Messages.Text_No_Plugin_loaded + Messages.Text_Plugin_Not_Configured
 				+ Messages.Text_External_Cmd_deleted;
 
+		@Override
 		public Composite createContainer(final Composite parent, final ITextPlugin.ICallback h) {
 			parent.setLayout(new FillLayout());
 			// Composite ret=new Composite(parent,SWT.BORDER);
@@ -1174,92 +1182,114 @@ public class TextContainer {
 			return form.getBody();
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void showMenu(final boolean b) {
 		}
 
+		@Override
 		public void showToolbar(final boolean b) {
 		}
 
+		@Override
 		public boolean createEmptyDocument() {
 			return false;
 		}
 
+		@Override
 		public boolean loadFromByteArray(final byte[] bs, final boolean asTemplate) {
 			return false;
 		}
 
+		@Override
 		public boolean findOrReplace(final String pattern, final ReplaceCallback cb) {
 			return false;
 		}
 
+		@Override
 		public byte[] storeToByteArray() {
 			return null;
 		}
 
+		@Override
 		public boolean clear() {
 			return false;
 		}
 
+		@Override
 		public void setInitializationData(final IConfigurationElement config, final String propertyName,
 				final Object data) throws CoreException {
 		}
 
+		@Override
 		public boolean loadFromStream(final InputStream is, final boolean asTemplate) {
 			// TODO Automatisch erstellter Methoden-Stub
 			return false;
 		}
 
+		@Override
 		public boolean print(final String printer, final String tray, final boolean waitUntilFinished) {
 			return false;
 		}
 
+		@Override
 		public boolean insertTable(final String marke, final int props, final String[][] contents,
 				final int[] columnSizes) {
 			return false;
 		}
 
+		@Override
 		public void setFocus() {
 
 		}
 
+		@Override
 		public PageFormat getFormat() {
 			return PageFormat.USER;
 		}
 
+		@Override
 		public void setFormat(final PageFormat f) {
 
 		}
 
+		@Override
 		public Object insertTextAt(final int x, final int y, final int w, final int h, final String text,
 				final int adjust) {
 			return null;
 		}
 
+		@Override
 		public boolean setFont(final String name, final int style, final float size) {
 			return false;
 		}
 
+		@Override
 		public boolean setStyle(final int style) {
 			return false;
 		}
 
+		@Override
 		public Object insertText(final String marke, final String text, final int adjust) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public Object insertText(final Object pos, final String text, final int adjust) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public String getMimeType() {
 			return "text/nothing"; //$NON-NLS-1$
 		}
 
+		@Override
 		public void setSaveOnFocusLost(final boolean bSave) {
 			// TODO Auto-generated method stub
 

@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
@@ -22,7 +23,7 @@ public class BillingLawTest {
 
 	@Test
 	public void testLocalizedBillingNames() {
-		if (Locale.getDefault().toString().equals("de_CH")) {
+		if ("de_CH".equals(Locale.getDefault().toString())) {
 			System.out.println("Billing law Locale german tests");
 			assertTrue(BillingLaw.IV.getLocaleText().startsWith("IVG:"));
 			assertTrue(BillingLaw.KVG.getLocaleText().startsWith("KVG:"));
@@ -32,7 +33,7 @@ public class BillingLawTest {
 			assertTrue(BillingLaw.OTHER.getLocaleText().startsWith("Andere"));
 			assertTrue(BillingLaw.NONE.getLocaleText().startsWith("Keine"));
 		}
-		if (Locale.getDefault().toString().equals("fr_CH")) {
+		if ("fr_CH".equals(Locale.getDefault().toString())) {
 			System.out.println("Billing law Locale french tests");
 			assertTrue(BillingLaw.IV.getLocaleText().startsWith("LAI:"));
 			assertTrue(BillingLaw.KVG.getLocaleText().startsWith("LAMal:"));

@@ -17,6 +17,7 @@ public class Statistics implements Comparable<Statistics>, Serializable {
 		this.count = 1;
 	}
 
+	@Override
 	public int compareTo(Statistics other) {
 		return other.getCount() - count;
 	}

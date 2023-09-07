@@ -41,7 +41,7 @@ public class MetaXid {
 		id = xidElement.getAttributeValue("id"); //$NON-NLS-1$
 		List<Element> ids = xidElement.getChildren();
 		for (Element identity : ids) {
-			if (identity.getName().equalsIgnoreCase("identity")) { //$NON-NLS-1$
+			if ("identity".equalsIgnoreCase(identity.getName())) { //$NON-NLS-1$
 				Identity i = new Identity(identity.getAttributeValue("domain"), identity.getAttributeValue("domainID"), //$NON-NLS-1$ //$NON-NLS-2$
 						mapQuality(identity.getAttributeValue("quality")), //$NON-NLS-1$
 						Boolean.parseBoolean(identity.getAttributeValue("isGUID")), identity.getAttributeValue("date")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -172,11 +172,11 @@ public class MetaXid {
 	}
 
 	private int mapQuality(String q) {
-		if (q.equalsIgnoreCase("local")) { //$NON-NLS-1$
+		if ("local".equalsIgnoreCase(q)) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_LOCAL;
-		} else if (q.equalsIgnoreCase("regional")) { //$NON-NLS-1$
+		} else if ("regional".equalsIgnoreCase(q)) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_REGIONAL;
-		} else if (q.equalsIgnoreCase("global")) { //$NON-NLS-1$
+		} else if ("global".equalsIgnoreCase(q)) { //$NON-NLS-1$
 			return Xid.ASSIGNMENT_GLOBAL;
 		}
 		return -1;

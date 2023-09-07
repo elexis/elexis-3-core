@@ -24,10 +24,10 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
-import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.ExHandler;
 
 public class PersistentObjectFactory implements IExecutableExtension {
@@ -183,6 +183,7 @@ public class PersistentObjectFactory implements IExecutableExtension {
 		return ret;
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 

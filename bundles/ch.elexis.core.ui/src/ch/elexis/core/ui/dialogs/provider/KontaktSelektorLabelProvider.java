@@ -43,6 +43,7 @@ public class KontaktSelektorLabelProvider extends DefaultLabelProvider implement
 		return element.toString();
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		return getText(element);
 	}

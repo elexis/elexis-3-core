@@ -12,6 +12,7 @@
 package ch.elexis.data;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.rgw.tools.StringTool;
 
 // TODO is this used?
@@ -37,6 +38,7 @@ public class Plz extends PersistentObject {
 		super(id);
 	}
 
+	@Override
 	public String getLabel() {
 		String[] f = new String[3];
 		get(new String[] { "Plz", "Ort", "Kanton" }, f);

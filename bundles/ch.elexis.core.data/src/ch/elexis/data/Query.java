@@ -13,7 +13,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,15 +23,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;
@@ -268,7 +268,7 @@ public class Query<T> {
 		for (String a : s) {
 			sql.append(StringConstants.SPACE).append(a);
 		}
-		if (link.equals(" WHERE ") || link.equals(StringConstants.EMPTY)) {
+		if (" WHERE ".equals(link) || link.equals(StringConstants.EMPTY)) {
 			link = " AND ";
 		}
 	}
@@ -302,7 +302,7 @@ public class Query<T> {
 	 * AND-Verknüpfung anfügen.
 	 */
 	public void and() {
-		if (link.equals(" OR ")) {
+		if (" OR ".equals(link)) {
 			link = " AND ";
 		}
 	}
@@ -340,7 +340,7 @@ public class Query<T> {
 			mapped = mapped.substring(4);
 			// if a date should be matched partially
 			wert = (wert == null) ? StringConstants.EMPTY : wert;
-			if (operator.equalsIgnoreCase("LIKE") && !wert.matches("[0-9]{8,8}")) {
+			if ("LIKE".equalsIgnoreCase(operator) && !wert.matches("[0-9]{8,8}")) {
 				StringBuilder sb = null;
 				wert = wert.replaceAll("%", StringUtils.EMPTY);
 				final String filler = "%%%%%%%%";
@@ -399,7 +399,7 @@ public class Query<T> {
 		}
 
 		if (wert == null) {
-			if (operator.equalsIgnoreCase("is") || operator.equals("=")) {
+			if ("is".equalsIgnoreCase(operator) || "=".equals(operator)) {
 				// let's be a bit fault tolerant
 				operator = StringUtils.EMPTY;
 			} else if (NOT_EQUAL.equalsIgnoreCase(operator)) {

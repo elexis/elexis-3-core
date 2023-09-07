@@ -43,7 +43,8 @@ import ch.rgw.tools.StringTool;
  *
  */
 public class SelectorPanel extends Composite implements ActiveControlListener {
-	boolean bCeaseFire, bExclusive;
+	boolean bCeaseFire;
+	boolean bExclusive;
 	private LinkedList<ActiveControlListener> listeners = new LinkedList<ActiveControlListener>();
 	private ArrayList<ActiveControl> activeControls = new ArrayList<ActiveControl>();
 	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<TraceElement>(50);
@@ -262,6 +263,7 @@ public class SelectorPanel extends Composite implements ActiveControlListener {
 	 * From ActiveControlListener: Notify that the contents of a field has changed
 	 * This will in turn notify the SelectorListeners attached to this panel
 	 */
+	@Override
 	public void contentsChanged(ActiveControl field) {
 		if (!autoSearchActivated)
 			return;
@@ -320,6 +322,7 @@ public class SelectorPanel extends Composite implements ActiveControlListener {
 	 * This will in turn notify the SelectorListeners attached to this panel
 	 */
 
+	@Override
 	public void titleClicked(final ActiveControl field) {
 		if (!bCeaseFire) {
 			bCeaseFire = true;
@@ -345,6 +348,7 @@ public class SelectorPanel extends Composite implements ActiveControlListener {
 	/**
 	 * inform the user, that a field has invalid content
 	 */
+	@Override
 	public void invalidContents(ActiveControl field) {
 		aClr.setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
 		aClr.setToolTipText((String) field.getData(ActiveControl.PROP_ERRMSG));

@@ -160,14 +160,17 @@ public class FindingsUiUtil {
 			ObservationComponent obsComponent = iCompositeSaveable.getObservationComponent();
 			ObservationType observationType = iCompositeSaveable.getObservationType();
 
-			if (ObservationType.TEXT.equals(observationType)) {
+			// text fields inside component
+			// numeric fields inside component
+			// numeric fields
+			if (ObservationType.TEXT == observationType) {
 				// text fields inside component
 				if (obsComponent != null) {
 					obsComponent.setStringValue(text);
 				} else {
 					iObservation.setStringValue(text);
 				}
-			} else if (ObservationType.NUMERIC.equals(observationType)) {
+			} else if (ObservationType.NUMERIC == observationType) {
 				try {
 					if (obsComponent != null) {
 						// numeric fields inside component
@@ -184,11 +187,11 @@ public class FindingsUiUtil {
 				} catch (NumberFormatException e) {
 					LoggerFactory.getLogger(FindingsUiUtil.class).warn("cannot save number illegal format", e);
 				}
-			} else if (ObservationType.BOOLEAN.equals(observationType)) {
+			} else if (ObservationType.BOOLEAN == observationType) {
 				if (StringUtils.isNotBlank(text)) {
 					iObservation.setBooleanValue(Boolean.valueOf(text));
 				}
-			} else if (ObservationType.DATE.equals(observationType)) {
+			} else if (ObservationType.DATE == observationType) {
 				if (StringUtils.isNotBlank(text)) {
 					LocalDateTime dateTime = LocalDateTime.parse(text);
 					iObservation.setDateTimeValue(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));

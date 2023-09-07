@@ -25,6 +25,7 @@ public class PlatzhalterTreeData {
 	final private String description;
 
 	class TreeComparator implements Comparator<PlatzhalterTreeData> {
+		@Override
 		public int compare(PlatzhalterTreeData o1, PlatzhalterTreeData o2) {
 			return o1.getName().compareTo(o2.getName());
 		}

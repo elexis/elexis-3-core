@@ -27,7 +27,7 @@ public class IsMonth<T> extends TypeSafeDiagnosingMatcher<T> {
 	@Override
 	protected boolean matchesSafely(final T actual, final Description mismatchDescription) {
 		Month actualMonth = Month.of(this.accessor.asTemporal(actual).get(ChronoField.MONTH_OF_YEAR));
-		if (!this.expectedMonth.equals(actualMonth)) {
+		if (this.expectedMonth != actualMonth) {
 			mismatchDescription.appendText("the date is in " + describeMonth(actualMonth));
 			return false;
 		} else {

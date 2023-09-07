@@ -110,8 +110,8 @@ public class ConditionTest {
 		List<String> notes = readcondition.getNotes();
 		assertNotNull(notes);
 		assertFalse(notes.isEmpty());
-		assertTrue(notes.get(0).equals("first note"));
-		assertTrue(notes.get(1).equals("second note\nthird note"));
+		assertTrue("first note".equals(notes.get(0)));
+		assertTrue("second note\nthird note".equals(notes.get(1)));
 
 		assertTrue(readcondition.getStart().isPresent());
 		assertEquals(startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), readcondition.getStart().get());

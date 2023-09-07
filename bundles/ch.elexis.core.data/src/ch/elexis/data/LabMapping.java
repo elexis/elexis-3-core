@@ -71,7 +71,7 @@ public class LabMapping extends PersistentObject {
 		if (chargeStr.isEmpty()) {
 			return false;
 		} else {
-			return chargeStr.equals("1"); //$NON-NLS-1$
+			return "1".equals(chargeStr); //$NON-NLS-1$
 		}
 	}
 
@@ -223,7 +223,7 @@ public class LabMapping extends PersistentObject {
 				notImported.append(reason);
 				notImported.append(StringUtils.LF);
 				continue;
-			} else if (parts[0].equalsIgnoreCase("CONTACT_NAME")) { //$NON-NLS-1$
+			} else if ("CONTACT_NAME".equalsIgnoreCase(parts[0])) { //$NON-NLS-1$
 				// skip description line
 				continue;
 			}
@@ -325,11 +325,11 @@ public class LabMapping extends PersistentObject {
 	}
 
 	private static LabItemTyp getLabItemTyp(String labItemTyp) {
-		if (labItemTyp.equalsIgnoreCase("numeric")) { //$NON-NLS-1$
+		if ("numeric".equalsIgnoreCase(labItemTyp)) { //$NON-NLS-1$
 			return LabItemTyp.NUMERIC;
-		} else if (labItemTyp.equalsIgnoreCase("absolute")) { //$NON-NLS-1$
+		} else if ("absolute".equalsIgnoreCase(labItemTyp)) { //$NON-NLS-1$
 			return LabItemTyp.ABSOLUTE;
-		} else if (labItemTyp.equalsIgnoreCase("text")) { //$NON-NLS-1$
+		} else if ("text".equalsIgnoreCase(labItemTyp)) { //$NON-NLS-1$
 			return LabItemTyp.TEXT;
 		}
 		return LabItemTyp.NUMERIC;

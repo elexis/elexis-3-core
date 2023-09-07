@@ -204,7 +204,8 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 
 	static class XidEditDialog extends Dialog {
 		Text tShort;
-		Button bPerson, bOrg;
+		Button bPerson;
+		Button bOrg;
 		XIDDomain mine;
 
 		public XidEditDialog(Shell shell, XIDRow xidDom) {

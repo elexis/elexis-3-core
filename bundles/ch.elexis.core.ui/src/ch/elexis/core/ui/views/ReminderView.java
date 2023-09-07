@@ -110,8 +110,17 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 	public static final String ID = "ch.elexis.reminderview"; //$NON-NLS-1$
 
-	private IAction newReminderAction, deleteReminderAction, showOnlyOwnDueReminderToggleAction,
-			showSelfCreatedReminderAction, toggleAutoSelectPatientAction, reloadAction;
+	private IAction newReminderAction;
+
+	private IAction deleteReminderAction;
+
+	private IAction showOnlyOwnDueReminderToggleAction;
+
+	private IAction showSelfCreatedReminderAction;
+
+	private IAction toggleAutoSelectPatientAction;
+
+	private IAction reloadAction;
 	private IAction sortByDueDate;
 	private RestrictedAction showOthersRemindersAction;
 	private RestrictedAction selectPatientAction;

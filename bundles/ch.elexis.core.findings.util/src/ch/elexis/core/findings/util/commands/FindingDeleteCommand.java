@@ -33,6 +33,7 @@ public class FindingDeleteCommand implements IFindingCommand {
 	 *
 	 * @throws ElexisException if locking failed
 	 */
+	@Override
 	public void execute() throws ElexisException {
 		if (iFinding instanceof IObservation) {
 			IObservation iObservation = (IObservation) iFinding;

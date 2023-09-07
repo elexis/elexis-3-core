@@ -32,9 +32,9 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
@@ -163,7 +163,7 @@ public class Rechnung extends PersistentObject {
 					if (l.getNettoPreis().isZero()
 							&& ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false)) {
 						Patient pat = b.getFall().getPatient();
-						String msg = "Eine Konsultation vom " + b.getDatum().toString() + " für\nPatient Nr. "
+						String msg = "Eine Konsultation vom " + b.getDatum() + " für\nPatient Nr. "
 								+ pat.getPatCode() + ", " + pat.getName() + ", " + pat.getVorname() + ", "
 								+ pat.getGeburtsdatum() + StringUtils.LF
 								+ "enthält mindestens eine Leistung zum Preis 0.00.\n"
@@ -402,7 +402,7 @@ public class Rechnung extends PersistentObject {
 	public List<Konsultation> stornoBill(final boolean reopen) {
 		InvoiceState invoiceState = InvoiceState.fromState(getStatus());
 		List<Konsultation> kons = null;
-		if (!InvoiceState.CANCELLED.equals(invoiceState) && !InvoiceState.DEPRECIATED.equals(invoiceState)) {
+		if (InvoiceState.CANCELLED != invoiceState && InvoiceState.DEPRECIATED != invoiceState) {
 			Money betrag = getBetrag();
 			Money remindersBetrag = getRemindersBetrag();
 			if (!remindersBetrag.isZero()) {
@@ -415,7 +415,7 @@ public class Rechnung extends PersistentObject {
 			} else {
 				setStatus(InvoiceState.DEPRECIATED.getState());
 			}
-		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
+		} else if (reopen && InvoiceState.CANCELLED == invoiceState) {
 			// if bill is canceled ensure that all kons are opened
 			kons = removeBillFromKons();
 		}
@@ -926,7 +926,7 @@ public class Rechnung extends PersistentObject {
 	public String getRnId() {
 		Patient p = getFall().getPatient();
 		String pid;
-		if (ConfigServiceHolder.getGlobal("PatIDMode", "number").equals("number")) {
+		if ("number".equals(ConfigServiceHolder.getGlobal("PatIDMode", "number"))) {
 			pid = StringTool.pad(StringTool.LEFT, '0', p.getPatCode(), 6);
 		} else {
 			pid = new TimeTool(p.getGeburtsdatum()).toString(TimeTool.DATE_COMPACT);
@@ -1014,7 +1014,7 @@ public class Rechnung extends PersistentObject {
 
 	public static boolean isStorno(Rechnung rechnung) {
 		InvoiceState invoiceState = rechnung.getInvoiceState();
-		return InvoiceState.CANCELLED.equals(invoiceState) || InvoiceState.DEPRECIATED.equals(invoiceState);
+		return InvoiceState.CANCELLED == invoiceState || InvoiceState.DEPRECIATED == invoiceState;
 	}
 
 	public static boolean hasStornoBeforeDate(Rechnung rechnung, TimeTool date) {
@@ -1022,7 +1022,7 @@ public class Rechnung extends PersistentObject {
 		TimeTool stornoDate = new TimeTool();
 		List<Zahlung> zahlungen = rechnung.getZahlungen();
 		for (Zahlung zahlung : zahlungen) {
-			if (zahlung.getBemerkung().equals("Storno")) {
+			if ("Storno".equals(zahlung.getBemerkung())) {
 				stornoSet = true;
 				stornoDate.set(zahlung.getDatum());
 				break;

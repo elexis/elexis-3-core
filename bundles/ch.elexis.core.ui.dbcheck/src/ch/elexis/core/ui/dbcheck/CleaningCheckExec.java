@@ -5,6 +5,7 @@
 package ch.elexis.core.ui.dbcheck;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheck;
 import ch.elexis.core.ui.dbcheck.cleaning.CleaningCheckPGSQL;
 

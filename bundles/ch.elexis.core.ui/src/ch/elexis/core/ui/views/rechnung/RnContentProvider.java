@@ -60,8 +60,10 @@ class RnContentProvider
 	// private Query<Rechnung> q1;
 	CommonViewer cv;
 	Tree[] result;
-	int iPat, iRn;
-	Money mAmount, mOpen;
+	int iPat;
+	int iRn;
+	Money mAmount;
+	Money mOpen;
 	TreeComparator treeComparator = new TreeComparator();
 	PatientComparator patientComparator = new PatientComparator();
 	RechnungsListeView rlv;
@@ -75,14 +77,17 @@ class RnContentProvider
 		rlv = l;
 	}
 
+	@Override
 	public void startListening() {
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(this);
 	}
 
+	@Override
 	public void stopListening() {
 		cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getElements(final Object inputElement) {
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -116,21 +121,25 @@ class RnContentProvider
 		return result == null ? new Tree[0] : result;
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
 	// Vom ControlFieldListener
+	@Override
 	public void changed(HashMap<String, String> values) {
 		cv.notify(CommonViewer.Message.update);
 	}
 
+	@Override
 	public void reorder(final String field) {
 		cv.getViewerWidget().setSorter(new ViewerSorter() {
 
@@ -144,6 +153,7 @@ class RnContentProvider
 		});
 	}
 
+	@Override
 	public void selected() {
 		// nothing to do
 	}
@@ -183,6 +193,7 @@ class RnContentProvider
 		return tL;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getChildren(final Object parentElement) {
 		if (parentElement instanceof Tree) {
@@ -193,6 +204,7 @@ class RnContentProvider
 		return new Object[0];
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getParent(final Object element) {
 		if (element instanceof Tree) {
@@ -201,6 +213,7 @@ class RnContentProvider
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(final Object element) {
 		if (element instanceof Tree) {
 			if (((Tree) element).contents instanceof Rechnung) {
@@ -282,6 +295,7 @@ class RnContentProvider
 		if (val[4] != null) {
 			q1.addPostQueryFilter(new IFilter() {
 
+				@Override
 				public boolean select(Object toTest) {
 					if (toTest instanceof Rechnung) {
 						Rechnung rn = (Rechnung) toTest;
@@ -385,7 +399,7 @@ class RnContentProvider
 		Money total = new Money();
 		for (Zahlung z : lz) {
 			Money abzahlung = z.getBetrag();
-			if (!z.getBemerkung().equalsIgnoreCase("storno")) { //$NON-NLS-1$
+			if (!"storno".equalsIgnoreCase(z.getBemerkung())) { //$NON-NLS-1$
 				total.addMoney(abzahlung);
 			}
 		}
@@ -393,6 +407,7 @@ class RnContentProvider
 	}
 
 	private static class PatientComparator implements Comparator {
+		@Override
 		public int compare(final Object o1, final Object o2) {
 			Patient p1 = (Patient) o1;
 			Patient p2 = (Patient) o2;
@@ -404,6 +419,7 @@ class RnContentProvider
 		TimeTool tt0 = new TimeTool();
 		TimeTool tt1 = new TimeTool();
 
+		@Override
 		public int compare(final Object arg0, final Object arg1) {
 			Tree t0 = (Tree) arg0;
 			Tree t1 = (Tree) arg1;

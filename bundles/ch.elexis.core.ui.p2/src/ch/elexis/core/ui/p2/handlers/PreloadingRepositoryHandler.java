@@ -38,6 +38,7 @@ abstract class PreloadingRepositoryHandler extends AbstractHandler {
 	/**
 	 * Execute the command.
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) {
 		doExecuteAndLoad();
 		return null;
@@ -51,10 +52,12 @@ abstract class PreloadingRepositoryHandler extends AbstractHandler {
 			setLoadJobProperties(loadJob);
 			if (waitForPreload()) {
 				loadJob.addJobChangeListener(new JobChangeAdapter() {
+					@Override
 					public void done(IJobChangeEvent event) {
 						if (PlatformUI.isWorkbenchRunning())
 							if (event.getResult().isOK()) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									@Override
 									public void run() {
 										doExecute(loadJob);
 									}

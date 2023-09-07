@@ -48,6 +48,7 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		reverse = rev;
 	}
 
+	@Override
 	public void startListening() {
 		ViewerConfigurer.ControlFieldProvider cfp = cv.getConfigurer().getControlFieldProvider();
 		if (cfp != null) {
@@ -55,6 +56,7 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		}
 	}
 
+	@Override
 	public void stopListening() {
 		ViewerConfigurer.ControlFieldProvider cfp = cv.getConfigurer().getControlFieldProvider();
 		if (cfp != null) {
@@ -62,6 +64,7 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Object[] getElements(Object inputElement) {
 		Query qbe = new Query(source);
@@ -80,14 +83,17 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		stopListening();
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
 	}
 
+	@Override
 	public void changed(HashMap<String, String> values) {
 		cv.notify(CommonViewer.Message.update);
 		if (cv.getConfigurer().getControlFieldProvider().isEmpty()) {
@@ -98,11 +104,13 @@ public class DefaultContentProvider implements ICommonViewerContentProvider {
 
 	}
 
+	@Override
 	public void reorder(String field) {
 		cv.notify(CommonViewer.Message.update);
 
 	}
 
+	@Override
 	public void selected() {
 		// nothing to do
 	}

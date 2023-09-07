@@ -178,6 +178,7 @@ public class TextTemplateView extends ViewPart {
 		txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 		txtSearch.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent ke) {
 				searchFilter.setSearchTerm(txtSearch.getText());
 				tableViewer.refresh();
@@ -227,6 +228,7 @@ public class TextTemplateView extends ViewPart {
 
 		final Transfer[] transfer = new Transfer[] { FileTransfer.getInstance(), TextTransfer.getInstance() };
 		tableViewer.addDragSupport(DND.DROP_COPY, transfer, new DragSourceAdapter() {
+			@Override
 			public void dragStart(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 				for (Object object : selection.toList()) {
@@ -238,6 +240,7 @@ public class TextTemplateView extends ViewPart {
 				}
 			}
 
+			@Override
 			public void dragSetData(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {

@@ -63,10 +63,12 @@ public class DocumentsFilterBarComposite extends Composite implements ISelection
 		manager.update(true);
 	}
 
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.add(listener);
 	}
 
+	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.remove(listener);
 	}

@@ -2,18 +2,18 @@
  */
 package ch.elexis.core.ui.usage.model.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import ch.elexis.core.ui.usage.model.EventStatistic;
 import ch.elexis.core.ui.usage.model.IStatistic;
 import ch.elexis.core.ui.usage.model.ModelFactory;
 import ch.elexis.core.ui.usage.model.ModelPackage;
 import ch.elexis.core.ui.usage.model.SimpleStatistic;
 import ch.elexis.core.ui.usage.model.Statistics;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -116,6 +116,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getStatistics() {
 		return statisticsEClass;
 	}
@@ -125,6 +126,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getStatistics_Statistics() {
 		return (EReference)statisticsEClass.getEStructuralFeatures().get(0);
 	}
@@ -134,6 +136,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStatistics_From() {
 		return (EAttribute)statisticsEClass.getEStructuralFeatures().get(1);
 	}
@@ -143,6 +146,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getStatistics_To() {
 		return (EAttribute)statisticsEClass.getEStructuralFeatures().get(2);
 	}
@@ -152,6 +156,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIStatistic() {
 		return iStatisticEClass;
 	}
@@ -161,6 +166,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStatistic_Action() {
 		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(0);
 	}
@@ -170,6 +176,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStatistic_Value() {
 		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(1);
 	}
@@ -179,6 +186,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStatistic_Time() {
 		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(2);
 	}
@@ -188,6 +196,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIStatistic_ActionType() {
 		return (EAttribute)iStatisticEClass.getEStructuralFeatures().get(3);
 	}
@@ -197,6 +206,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSimpleStatistic() {
 		return simpleStatisticEClass;
 	}
@@ -206,6 +216,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getEventStatistic() {
 		return eventStatisticEClass;
 	}
@@ -215,6 +226,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEventStatistic_MinDuration() {
 		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(0);
 	}
@@ -224,6 +236,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEventStatistic_MaxDuration() {
 		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(1);
 	}
@@ -233,6 +246,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEventStatistic_AvgDuration() {
 		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(2);
 	}
@@ -242,6 +256,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getEventStatistic_LastStart() {
 		return (EAttribute)eventStatisticEClass.getEStructuralFeatures().get(3);
 	}
@@ -251,6 +266,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}

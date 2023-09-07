@@ -127,18 +127,43 @@ public class GlobalActions {
 	public static final String PROPERTIES_COMMAND = "org.eclipse.ui.file.properties"; //$NON-NLS-1$
 	public static final String DEFAULTPERSPECTIVECFG = "/default_perspective"; //$NON-NLS-1$
 
-	public static IWorkbenchAction exitAction, newWindowAction, copyAction, cutAction, pasteAction;
-	public static IAction loginAction, importAction, aboutAction, helpAction, prefsAction;
-	public static IAction connectWizardAction, savePerspectiveAction, savePerspectiveAsAction;
-	public static IAction savePerspectiveAsDefaultAction, resetPerspectiveAction, homeAction, fixLayoutAction;
-	public static IAction printEtikette, printBlatt, printAdresse, printVersionedEtikette, showBlatt;
+	public static IWorkbenchAction exitAction;
+	public static IWorkbenchAction newWindowAction;
+	public static IWorkbenchAction copyAction;
+	public static IWorkbenchAction cutAction;
+	public static IWorkbenchAction pasteAction;
+	public static IAction loginAction;
+	public static IAction importAction;
+	public static IAction aboutAction;
+	public static IAction helpAction;
+	public static IAction prefsAction;
+	public static IAction connectWizardAction;
+	public static IAction savePerspectiveAction;
+	public static IAction savePerspectiveAsAction;
+	public static IAction savePerspectiveAsDefaultAction;
+	public static IAction resetPerspectiveAction;
+	public static IAction homeAction;
+	public static IAction fixLayoutAction;
+	public static IAction printEtikette;
+	public static IAction printBlatt;
+	public static IAction printAdresse;
+	public static IAction printVersionedEtikette;
+	public static IAction showBlatt;
 	public static IAction printRoeBlatt;
-	public static IAction openFallaction, closeFallAction, filterAction, makeBillAction, planeRechnungAction;
-	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction;
-	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
+	public static IAction openFallaction;
+	public static IAction closeFallAction;
+	public static IAction filterAction;
+	public static IAction makeBillAction;
+	public static IAction planeRechnungAction;
+	public static RestrictedAction delKonsAction;
+	public static RestrictedAction delFallAction;
+	public static RestrictedAction reopenFallAction;
+	public static LockedAction<Konsultation> moveBehandlungAction;
+	public static LockedAction<Konsultation> redateAction;
 	public static IAction neuerFallAction;
 
-	public static MenuManager perspectiveMenu, viewMenu;
+	public static MenuManager perspectiveMenu;
+	public static MenuManager viewMenu;
 	public static IContributionItem viewList;
 	public IWorkbenchWindow mainWindow;
 	public static Action printKontaktEtikette;
@@ -731,6 +756,7 @@ public class GlobalActions {
 			}
 		};
 		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) {
+			@Override
 			public void run() {
 
 			}

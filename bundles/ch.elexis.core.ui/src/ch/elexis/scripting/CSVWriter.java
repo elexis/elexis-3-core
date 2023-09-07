@@ -238,7 +238,6 @@ public class CSVWriter {
 			java.sql.Date date = rs.getDate(colIndex);
 			if (date != null) {
 				value = DATE_FORMATTER.format(date);
-				;
 			}
 			break;
 		case Types.TIME:

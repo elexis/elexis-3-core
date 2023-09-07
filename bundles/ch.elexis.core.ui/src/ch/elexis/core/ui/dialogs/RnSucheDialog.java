@@ -20,8 +20,10 @@ import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.SWTHelper;
 
 public class RnSucheDialog extends TitleAreaDialog {
-	LabeledInputField liNummer, liName;
-	String nummer, name;
+	LabeledInputField liNummer;
+	LabeledInputField liName;
+	String nummer;
+	String name;
 
 	public RnSucheDialog(Shell shell) {
 		super(shell);

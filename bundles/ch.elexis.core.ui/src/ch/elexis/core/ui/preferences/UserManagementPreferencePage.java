@@ -119,7 +119,11 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private Button btnMandatorIsInactive;
 	private Color lblRespPhysColorDefColor;
 	private Link linkRechnungssteller;
-	private RestrictedAction addUserAction, deleteUserAction, lockUserAction;
+	private RestrictedAction addUserAction;
+
+	private RestrictedAction deleteUserAction;
+
+	private RestrictedAction lockUserAction;
 	private Button btnUserIsLocked;
 	private Label userInfoLabel;
 
@@ -604,10 +608,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 										.getDefaultExecutiveDoctorWorkingFor(user).orElse(null);
 								if (stdWorkingFor != null && stdWorkingFor.equals(selected)) {
 									manager.add(new Action() {
+										@Override
 										public String getText() {
 											return "Std. Mandant entfernen";
 										};
 
+										@Override
 										public void run() {
 											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user, null);
 											checkboxTableViewerAssociation.refresh();
@@ -615,10 +621,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 									});
 								} else {
 									manager.add(new Action() {
+										@Override
 										public String getText() {
 											return "Std. Mandant setzen";
 										};
 
+										@Override
 										public void run() {
 											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user,
 													(IMandator) selected);
@@ -883,6 +891,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		public MandantViewerComparator(Viewer viewer) {
 		}
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;

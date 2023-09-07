@@ -1,6 +1,5 @@
 package ch.elexis.core.mail;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +12,7 @@ import java.util.Optional;
 import java.util.StringJoiner;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

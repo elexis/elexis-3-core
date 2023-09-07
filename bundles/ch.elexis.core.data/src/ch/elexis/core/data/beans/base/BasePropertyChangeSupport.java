@@ -18,18 +18,22 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 public abstract class BasePropertyChangeSupport extends EObjectImpl implements IPropertyChangeSupport {
 	private transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}
 
+	@Override
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 
+	@Override
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
 	}

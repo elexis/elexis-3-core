@@ -84,30 +84,36 @@ public class DatePicker extends Composite {
 			rowSize = (int) (p.y * 1.4);
 
 			addPaintListener(new PaintListener() {
+				@Override
 				public void paintControl(PaintEvent event) {
 					onPaint(event);
 				}
 			});
 			addControlListener(new ControlAdapter() {
+				@Override
 				public void controlResized(ControlEvent e) {
 					redraw();
 				}
 			});
 			addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					onKeyDown(e);
 				}
 			});
 			addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					onMouseDoubleClick();
 				}
 
+				@Override
 				public void mouseDown(MouseEvent e) {
 					onMouseDown(e);
 				}
 			});
 			addMouseMoveListener(new MouseMoveListener() {
+				@Override
 				public void mouseMove(MouseEvent e) {
 					onMouseMove(e);
 				}
@@ -135,6 +141,7 @@ public class DatePicker extends Composite {
 			return -1;
 		}
 
+		@Override
 		public Point computeSize(int wHint, int hHint, boolean changed) { // Höhe vergrössert (gerry)
 			return new Point(colSize * 7, rowSize * 8);
 		}
@@ -404,6 +411,7 @@ public class DatePicker extends Composite {
 		prevYear.setText("<<"); //$NON-NLS-1$
 		prevYear.setSelection(false);
 		prevYear.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cal.roll(Calendar.YEAR, -1);
 				updateDate();
@@ -417,6 +425,7 @@ public class DatePicker extends Composite {
 		prevMonth.setLayoutData(gridData);
 		prevMonth.setText("<"); //$NON-NLS-1$
 		prevMonth.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cal.add(Calendar.MONTH, -1);
 				updateDate();
@@ -437,6 +446,7 @@ public class DatePicker extends Composite {
 		nextMonth.setLayoutData(gridData);
 		nextMonth.setText(">"); //$NON-NLS-1$
 		nextMonth.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cal.add(Calendar.MONTH, 1);
 				updateDate();
@@ -450,6 +460,7 @@ public class DatePicker extends Composite {
 		nextYear.setLayoutData(gridData);
 		nextYear.setText(">>"); //$NON-NLS-1$
 		nextYear.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				cal.roll(Calendar.YEAR, 1);
 				updateDate();
@@ -491,6 +502,7 @@ public class DatePicker extends Composite {
 		addListener(SWT.DefaultSelection, typedListener);
 	}
 	
+	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		Point pSize = datePanel.computeSize(wHint, hHint, changed);
 		Point labelSize = monthLabel.computeSize(wHint, hHint, changed);

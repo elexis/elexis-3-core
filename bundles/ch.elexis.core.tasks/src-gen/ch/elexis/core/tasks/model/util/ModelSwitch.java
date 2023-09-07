@@ -10,15 +10,16 @@
  */
 package ch.elexis.core.tasks.model.util;
 
-import ch.elexis.core.model.Deleteable;
-import ch.elexis.core.model.Identifiable;
-
-import ch.elexis.core.tasks.model.*;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

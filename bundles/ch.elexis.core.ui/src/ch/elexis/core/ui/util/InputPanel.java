@@ -25,7 +25,8 @@ import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 
 public class InputPanel extends Composite implements IUnlockable {
-	int min, max;
+	int min;
+	int max;
 	Composite top;
 	InputData[] fields;
 	AutoForm af;

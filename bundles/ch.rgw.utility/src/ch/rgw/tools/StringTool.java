@@ -179,12 +179,13 @@ public class StringTool {
 	@SuppressWarnings("unchecked")
 	public static Vector splitV(final String m, final String delim) {
 		String mi = m;
-		if (mi.equals("")) {
+		if ("".equals(mi)) {
 			return null;
 		}
 		Vector v = new Vector(30, 30);
 
-		int i = 0, j = 0;
+		int i = 0;
+		int j = 0;
 		while (true) {
 			j = mi.indexOf(delim, i);
 			if (j == -1) {
@@ -192,7 +193,7 @@ public class StringTool {
 				break;
 			}
 			String l = mi.substring(i, j).trim();
-			if (!l.equals("")) {
+			if (!"".equals(l)) {
 				v.add(l);
 			}
 			i = j + 1;
@@ -212,7 +213,8 @@ public class StringTool {
 	public static List<String> splitAL(final String m, final String delim) {
 		ArrayList al = new ArrayList();
 		String mi = m;
-		int i = 0, j = 0;
+		int i = 0;
+		int j = 0;
 		while (true) {
 			j = mi.indexOf(delim, i);
 			if (j == -1) {
@@ -220,7 +222,7 @@ public class StringTool {
 				break;
 			}
 			String l = mi.substring(i, j).trim();
-			if (!l.equals("")) {
+			if (!"".equals(l)) {
 				al.add(l);
 			}
 			i = j + 1;
@@ -460,7 +462,7 @@ public class StringTool {
 		case 'A':
 			return sx;
 		case 'B':
-			return (new Integer(Integer.parseInt(sx)));
+			return (Integer.valueOf(Integer.parseInt(sx)));
 		case 'Z':
 			byte[] b = dePrintable(sx);
 			try {
@@ -485,7 +487,7 @@ public class StringTool {
 			return h;
 		}
 		String[] elems = s.split(flattenSeparator);
-		if (!elems[0].equals("FS1")) {
+		if (!"FS1".equals(elems[0])) {
 			return null;
 		}
 		for (int i = 1; i < elems.length; i++) {
@@ -510,7 +512,7 @@ public class StringTool {
 			return true;
 		}
 		if (n instanceof String) { // if(((String)n).equals("")) return true;
-			if (((String) n).trim().equals("")) {
+			if ("".equals(((String) n).trim())) {
 				return true;
 			}
 			return false;

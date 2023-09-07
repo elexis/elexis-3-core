@@ -220,10 +220,12 @@ public class DailyOrderDialog extends TitleAreaDialog {
 
 	class OrderLabelProvider extends LabelProvider implements ITableLabelProvider {
 
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(final Object element, final int columnIndex) {
 			IOrderEntry be = (IOrderEntry) element;
 			switch (columnIndex) {

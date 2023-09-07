@@ -33,7 +33,7 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
 
 	@Override
 	public LocalDateTime convertToEntityAttribute(String dateValue) {
-		if (dateValue == null || dateValue.length() == 0) {
+		if (dateValue == null || dateValue.isEmpty()) {
 			return null;
 		}
 

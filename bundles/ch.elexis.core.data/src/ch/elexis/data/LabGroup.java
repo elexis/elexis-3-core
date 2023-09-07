@@ -68,6 +68,7 @@ public class LabGroup extends PersistentObject implements Comparable<LabGroup> {
 		addItems(items);
 	}
 
+	@Override
 	public boolean delete() {
 		removeAll();
 		return super.delete();
@@ -95,6 +96,7 @@ public class LabGroup extends PersistentObject implements Comparable<LabGroup> {
 		return new LabGroup(id);
 	}
 
+	@Override
 	public String getLabel() {
 		return getName();
 	}
@@ -102,6 +104,7 @@ public class LabGroup extends PersistentObject implements Comparable<LabGroup> {
 	/**
 	 * Compare the names of two groups
 	 */
+	@Override
 	public int compareTo(LabGroup arg0) {
 		LabGroup other = (LabGroup) arg0;
 		return getName().compareTo(other.getName());

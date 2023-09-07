@@ -70,6 +70,7 @@ public class LabItemSelektor extends TitleAreaDialog {
 		return composite;
 	}
 
+	@Override
 	protected void okPressed() {
 		List<GroupItem> groupItems = treeSelectionComposite.getSelectedItems();
 		selection = new ArrayList<LabItem>();

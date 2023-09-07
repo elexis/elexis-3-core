@@ -31,7 +31,7 @@ public class ExportTemplateCommand extends AbstractHandler {
 		if (selection != null) {
 			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
 
-			if (firstElement != null && firstElement instanceof TextTemplate) {
+			if (firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 
 				if (textTemplate.getTemplate() != null) {

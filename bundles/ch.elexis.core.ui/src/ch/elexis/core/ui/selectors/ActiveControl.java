@@ -206,6 +206,7 @@ public abstract class ActiveControl extends Composite {
 		lbl.setText(displayName);
 	}
 
+	@Override
 	public void setEnabled(boolean bEnable) {
 		if (ctl != null) {
 			ctl.setEnabled(bEnable);

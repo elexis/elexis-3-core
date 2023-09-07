@@ -39,8 +39,12 @@ public class GLZ {
 
 	private static final int LZBUFFSIZE = 0x8cf2;
 	private static final short ofb = 4;
-	private int[] buff1, buff2, buff3;
-	int LZCode, MaxCode, bitcount;
+	private int[] buff1;
+	private int[] buff2;
+	private int[] buff3;
+	int LZCode;
+	int MaxCode;
+	int bitcount;
 
 	public GLZ() {
 		buff1 = new int[LZBUFFSIZE];
@@ -122,7 +126,10 @@ public class GLZ {
 	}
 
 	public void expand(InputStream i, OutputStream o) throws IOException {
-		int Prev, Prev1, Act, dx;
+		int Prev;
+		int Prev1;
+		int Act;
+		int dx;
 		BitInputStream bis = new BitInputStream(i);
 
 		newdic: while (true) {

@@ -45,10 +45,12 @@ public class VKPreis extends AbstractEntityWithId implements EntityWithId {
 		this.typ = typ;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}

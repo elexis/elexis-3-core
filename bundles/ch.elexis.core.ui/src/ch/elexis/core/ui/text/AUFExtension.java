@@ -26,6 +26,7 @@ public class AUFExtension implements IKonsExtension {
 		return XRefExtensionConstants.providerAUFID;
 	}
 
+	@Override
 	public boolean doLayout(StyleRange n, String provider, String id) {
 
 		n.background = UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
@@ -33,6 +34,7 @@ public class AUFExtension implements IKonsExtension {
 		return true;
 	}
 
+	@Override
 	public boolean doXRef(String refProvider, String refID) {
 		AUF auf = AUF.load(refID);
 		if (auf != null && auf.exists()) {

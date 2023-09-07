@@ -1,9 +1,10 @@
 package ch.elexis.hl7;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;

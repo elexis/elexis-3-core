@@ -13,7 +13,8 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.ui.util.LimitedText;
 
 public class NeueBestellungDialog extends TitleAreaDialog {
-	private String title, message;
+	private String title;
+	private String message;
 	private LimitedText ltTitle;
 
 	public NeueBestellungDialog(Shell parentShell, String title, String message) {

@@ -142,7 +142,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	ScrolledForm form;
 	FormToolkit tk = UiDesk.getToolkit();
 	// Button bBuchung,bPrint,bStorno,bGebuehr,bGutschrift;
-	Text tRejects, tBemerkungen, tInternalRemarks;
+	Text tRejects;
+	Text tBemerkungen;
+	Text tInternalRemarks;
 	Label rnAdressat;
 	ListViewer konsultationenViewer;
 	ListViewer stornoViewer;

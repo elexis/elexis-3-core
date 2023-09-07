@@ -92,10 +92,12 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		return z;
 	}
 
+	@Override
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
 	public boolean contains(String name) {
 		if (base.get(name, null) == null) {
 			return false;
@@ -103,54 +105,64 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		return true;
 	}
 
+	@Override
 	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
 		for (IPropertyChangeListener l : listeners) {
 			l.propertyChange(new PropertyChangeEvent(this, name, oldValue, newValue));
 		}
 	}
 
+	@Override
 	public boolean getBoolean(String name) {
 		String z = get(name);
 		if (z.isEmpty()) {
 			return false;
 		}
-		if (z.equals("0")) { //$NON-NLS-1$
+		if ("0".equals(z)) { //$NON-NLS-1$
 			return false;
 		}
-		if (z.equalsIgnoreCase("FALSE")) { //$NON-NLS-1$
+		if ("FALSE".equalsIgnoreCase(z)) { //$NON-NLS-1$
 			return false;
 		}
 		return true;
 	}
 
+	@Override
 	public boolean getDefaultBoolean(String name) {
 		return getBoolean(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public double getDefaultDouble(String name) {
 		return getDouble(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public float getDefaultFloat(String name) {
 		return getFloat(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public int getDefaultInt(String name) {
 		return getInt(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public long getDefaultLong(String name) {
 		return getLong(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public String getDefaultString(String name) {
 		return getString(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 	}
 
+	@Override
 	public double getDouble(String name) {
 		return Double.parseDouble(get(name));
 	}
 
+	@Override
 	public float getFloat(String name) {
 		return Float.parseFloat(get(name));
 	}
@@ -159,6 +171,7 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 	 * return an Integer. If the Value is not an Integer ot nonexistent, we return 0
 	 * (@see IPreferenceStore)
 	 */
+	@Override
 	public int getInt(String name) {
 		try {
 			return Integer.parseInt(get(name));
@@ -167,24 +180,29 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		}
 	}
 
+	@Override
 	public long getLong(String name) {
 		return Long.parseLong(get(name));
 	}
 
+	@Override
 	public String getString(String name) {
 		return get(name);
 	}
 
+	@Override
 	public boolean isDefault(String name) {
 		String def = get(name + SETTINGS_PREFERENCE_STORE_DEFAULT);
 		String act = get(name);
 		return def.equals(act);
 	}
 
+	@Override
 	public boolean needsSaving() {
 		return base.isDirty();
 	}
 
+	@Override
 	public void putValue(String name, String value) {
 		set(name, value);
 	}
@@ -193,71 +211,85 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 		base.remove(name);
 	}
 
+	@Override
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.remove(listener);
 	}
 
+	@Override
 	public void setDefault(String name, double value) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, Double.toString(value));
 
 	}
 
+	@Override
 	public void setDefault(String name, float value) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, Float.toString(value));
 
 	}
 
+	@Override
 	public void setDefault(String name, int value) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, Integer.toString(value));
 	}
 
+	@Override
 	public void setDefault(String name, long value) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, Long.toString(value));
 
 	}
 
+	@Override
 	public void setDefault(String name, String defaultObject) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, defaultObject);
 
 	}
 
+	@Override
 	public void setDefault(String name, boolean value) {
 		set(name + SETTINGS_PREFERENCE_STORE_DEFAULT, Boolean.toString(value));
 
 	}
 
+	@Override
 	public void setToDefault(String name) {
 		set(name, get(name + SETTINGS_PREFERENCE_STORE_DEFAULT));
 
 	}
 
+	@Override
 	public void setValue(String name, double value) {
 		firePropertyChangeEvent(name, getDouble(name), value);
 		set(name, Double.toString(value));
 	}
 
+	@Override
 	public void setValue(String name, float value) {
 		firePropertyChangeEvent(name, getFloat(name), value);
 		set(name, Float.toString(value));
 
 	}
 
+	@Override
 	public void setValue(String name, int value) {
 		firePropertyChangeEvent(name, getInt(name), value);
 		set(name, Integer.toString(value));
 	}
 
+	@Override
 	public void setValue(String name, long value) {
 		firePropertyChangeEvent(name, getLong(name), value);
 		set(name, Long.toString(value));
 
 	}
 
+	@Override
 	public void setValue(String name, String value) {
 		firePropertyChangeEvent(name, getString(name), value);
 		set(name, value);
 	}
 
+	@Override
 	public void setValue(String name, boolean value) {
 		firePropertyChangeEvent(name, getBoolean(name), value);
 		set(name, Boolean.toString(value));

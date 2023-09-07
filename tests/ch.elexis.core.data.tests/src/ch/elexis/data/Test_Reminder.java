@@ -26,7 +26,9 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 	private Anwender anwender;
 	private Patient patient;
 
-	private Reminder reminderA, reminderB, reminderC;
+	private Reminder reminderA;
+	private Reminder reminderB;
+	private Reminder reminderC;
 
 	public Test_Reminder() {
 		super();

@@ -40,9 +40,12 @@ import ch.rgw.io.Settings;
  */
 public class Datenbank extends PreferencePage implements IWorkbenchPreferencePage {
 
-	Button bKons, bRn, bRepair;
+	Button bKons;
+	Button bRn;
+	Button bRepair;
 	Label lOutputFile;
-	Button bOutputFile, bCheck;
+	Button bOutputFile;
+	Button bCheck;
 	Settings cfg;
 
 	private static Logger log = LoggerFactory.getLogger(Datenbank.class);

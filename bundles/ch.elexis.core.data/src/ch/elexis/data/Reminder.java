@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +24,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -607,6 +608,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * sorted set. To allow multiple different reminders at the same day, we use the
 	 * id to differentiate reminders with identical dates.
 	 */
+	@Override
 	public int compareTo(final Reminder r) {
 		int i = TimeTool.compare(getDateDue(), r.getDateDue());
 		if (i == 0) {

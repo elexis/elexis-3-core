@@ -87,11 +87,14 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	private boolean bDateAsStatus;
 	private HyperlinkAdapter /* hlStatus, */ hlPatient;
 	private Label /* hDateFrom, hDateUntil, */ lPatient;
-	Text tNr, tBetrag;
+	Text tNr;
+
+	Text tBetrag;
 	String oldSelectedBillingSystem = StringUtils.EMPTY;
 
 	Patient actPatient;
 
+	@Override
 	public Composite createControl(final Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
 		listeners = new ArrayList<ControlFieldListener>();
@@ -195,7 +198,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		tNr.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				if (tNr.getText().length() == 0) {
+				if (tNr.getText().isEmpty()) {
 					cbStat.select(STAT_DEFAULT_INDEX);
 				}
 				fireChangedEvent();
@@ -206,7 +209,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		tBetrag.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				if (tNr.getText().length() == 0) {
+				if (tNr.getText().isEmpty()) {
 					cbStat.select(STAT_DEFAULT_INDEX);
 				}
 				fireChangedEvent();
@@ -219,10 +222,12 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		return ret;
 	}
 
+	@Override
 	public void addChangeListener(final ControlFieldListener cl) {
 		listeners.add(cl);
 	}
 
+	@Override
 	public void removeChangeListener(final ControlFieldListener cl) {
 		listeners.remove(cl);
 	}
@@ -231,6 +236,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		return bDateAsStatus;
 	}
 
+	@Override
 	public String[] getValues() {
 		String[] ret = new String[5];
 		int selIdx = cbStat.getSelectionIndex();
@@ -269,6 +275,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		return ret;
 	}
 
+	@Override
 	public void clearValues() {
 		cbStat.select(0);
 		tNr.setText(StringUtils.EMPTY);
@@ -276,6 +283,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		lPatient.setText(ALLE);
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return false;
 	}
@@ -291,17 +299,21 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 
 	}
 
+	@Override
 	public IFilter createFilter() {
 		return new IFilter() {
 
+			@Override
 			public boolean select(final Object element) {
 				return true;
 			}
 		};
 	}
 
+	@Override
 	public void fireChangedEvent() {
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				HashMap<String, String> hm = new HashMap<String, String>();
 				hm.put(Messages.Core_Status, StringConstants.ZERO); // $NON-NLS-1$
@@ -313,6 +325,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		});
 	}
 
+	@Override
 	public void fireSortEvent(final String text) {
 		for (ControlFieldListener lis : listeners) {
 			lis.reorder(text);
@@ -320,6 +333,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 		}
 	}
 
+	@Override
 	public void setFocus() {
 
 	}

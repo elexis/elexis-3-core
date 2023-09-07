@@ -341,7 +341,8 @@ public class HuffmanTree {
 	}
 
 	class Node implements Comparable {
-		Node left, right;
+		Node left;
+		Node right;
 		byte[] ch;
 		int lfreq;
 
@@ -355,6 +356,7 @@ public class HuffmanTree {
 			lfreq = f;
 		}
 
+		@Override
 		public int compareTo(Object arg0) {
 			Node other = (Node) arg0;
 			if (lfreq > other.lfreq)

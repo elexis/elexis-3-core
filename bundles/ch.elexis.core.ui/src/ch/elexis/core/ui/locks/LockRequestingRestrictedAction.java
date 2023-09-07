@@ -14,6 +14,7 @@ public abstract class LockRequestingRestrictedAction<T> extends RestrictedAction
 		super(necessaryRight, text);
 	}
 
+	@Override
 	public void doRun() {
 		if (!AccessControlServiceHolder.get().evaluate(evaluatableAce)) {
 			return;

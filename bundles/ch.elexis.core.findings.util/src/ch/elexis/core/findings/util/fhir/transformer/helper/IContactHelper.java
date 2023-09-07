@@ -163,8 +163,10 @@ public class IContactHelper extends AbstractHelper {
 				address.setType(AddressType.PHYSICAL);
 			}
 
-			if (AddressUse.HOME.equals(address.getUse())) {
-				if (AddressType.PHYSICAL.equals(address.getType())) {
+			// ignore
+			if (AddressUse.HOME == address.getUse()) {
+				// ignore
+				if (AddressType.PHYSICAL == address.getType()) {
 					target.setCity(address.getCity());
 					target.setZip(address.getPostalCode());
 					if(address.hasLine()) {
@@ -180,7 +182,7 @@ public class IContactHelper extends AbstractHelper {
 					}
 					target.setCountry(country);
 				}
-				if (AddressType.POSTAL.equals(address.getType())) {
+				if (AddressType.POSTAL == address.getType()) {
 					String postalAddressText = address.getText();
 					if (!StringUtils.equals(target.getPostalAddress(), postalAddressText)) {
 						target.setPostalAddress(postalAddressText);
@@ -200,19 +202,19 @@ public class IContactHelper extends AbstractHelper {
 		target.setWebsite(null);
 
 		for (ContactPoint contactPoint : sourceTelecoms) {
-			if (ContactPointSystem.PHONE.equals(contactPoint.getSystem())) {
-				if (ContactPointUse.MOBILE.equals(contactPoint.getUse())) {
+			if (ContactPointSystem.PHONE == contactPoint.getSystem()) {
+				if (ContactPointUse.MOBILE == contactPoint.getUse()) {
 					target.setMobile(contactPoint.getValue());
 				} else if (0 == contactPoint.getRank() || 1 == contactPoint.getRank()) {
 					target.setPhone1(contactPoint.getValue());
 				} else if (2 == contactPoint.getRank()) {
 					target.setPhone2(contactPoint.getValue());
 				}
-			} else if (ContactPointSystem.EMAIL.equals(contactPoint.getSystem())) {
+			} else if (ContactPointSystem.EMAIL == contactPoint.getSystem()) {
 				target.setEmail(contactPoint.getValue());
-			} else if (ContactPointSystem.FAX.equals(contactPoint.getSystem())) {
+			} else if (ContactPointSystem.FAX == contactPoint.getSystem()) {
 				target.setFax(contactPoint.getValue());
-			} else if (ContactPointSystem.URL.equals(contactPoint.getSystem())) {
+			} else if (ContactPointSystem.URL == contactPoint.getSystem()) {
 				target.setWebsite(contactPoint.getValue());
 			}
 		}

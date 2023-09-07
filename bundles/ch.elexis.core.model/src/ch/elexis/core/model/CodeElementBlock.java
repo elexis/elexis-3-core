@@ -295,7 +295,7 @@ public class CodeElementBlock extends AbstractIdDeleteModelAdapter<Leistungsbloc
 	public String getLabel() {
 		String name = getEntity().getName();
 		String macro = getEntity().getMacro();
-		if (macro == null || macro.length() == 0 || macro.equals(name))
+		if (macro == null || macro.isEmpty() || macro.equals(name))
 			return name;
 		return name + " [" + macro + "]";
 	}

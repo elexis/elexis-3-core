@@ -50,7 +50,7 @@ public class DateInput extends Composite {
 
 	public TimeTool getDate() {
 		String t = dpc.getText();
-		if (t.length() == 0) {
+		if (t.isEmpty()) {
 			Date d = dpc.getDate();
 			return d == null ? null : new TimeTool(d.getTime());
 		} else {

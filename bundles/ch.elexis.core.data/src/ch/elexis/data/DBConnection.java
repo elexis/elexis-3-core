@@ -132,15 +132,15 @@ public class DBConnection {
 				+ dbUser;
 		logger.info(msg);
 
-		if (dbFlavor.equalsIgnoreCase("mysql"))
+		if ("mysql".equalsIgnoreCase(dbFlavor))
 			dbDriver = JdbcLink.MYSQL_DRIVER_CLASS_NAME;
-		else if (dbFlavor.equalsIgnoreCase("postgresql"))
+		else if ("postgresql".equalsIgnoreCase(dbFlavor))
 			dbDriver = JdbcLink.POSTGRESQL_DRIVER_CLASS_NAME;
-		else if (dbFlavor.equalsIgnoreCase("h2"))
+		else if ("h2".equalsIgnoreCase(dbFlavor))
 			dbDriver = JdbcLink.H2_DRIVER_CLASS_NAME;
 		else
 			dbDriver = "invalid";
-		if (!dbDriver.equalsIgnoreCase("invalid")) {
+		if (!"invalid".equalsIgnoreCase(dbDriver)) {
 			if (dbConnectString.startsWith("jdbc:h2:")
 					&& System.getProperty(ElexisSystemPropertyConstants.CONN_DB_H2_AUTO_SERVER) != null
 					&& !dbConnectString.contains(";AUTO_SERVER")) {
@@ -314,7 +314,7 @@ public class DBConnection {
 	 *        adding this parameter if not yet included
 	 */
 	public void applyMySqlTimeZoneWorkaround() {
-		if (dbFlavor.equalsIgnoreCase("mysql") && !dbConnectString.contains("serverTimezone")) {
+		if ("mysql".equalsIgnoreCase(dbFlavor) && !dbConnectString.contains("serverTimezone")) {
 			if (dbConnectString.contains("?")) {
 				dbConnectString += "&serverTimezone=Europe/Zurich";
 			} else {

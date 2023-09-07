@@ -1,10 +1,11 @@
 package ch.elexis.hl7.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.hl7.util.HL7Helper;
 
@@ -95,7 +96,7 @@ public class ObservationMessage {
 	}
 
 	public String getPatientId() {
-		if (this.patientId == null || this.patientId.trim().length() == 0) {
+		if (this.patientId == null || this.patientId.trim().isEmpty()) {
 			return this.alternatePatientId;
 		}
 		return patientId;

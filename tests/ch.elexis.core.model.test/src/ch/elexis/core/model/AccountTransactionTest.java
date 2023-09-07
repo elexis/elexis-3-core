@@ -16,12 +16,14 @@ import ch.rgw.tools.Money;
 
 public class AccountTransactionTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
 		createPatient();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();

@@ -74,6 +74,7 @@ public class TreeLoader<T> extends AbstractDataLoaderJob {
 	 * @see JobPool
 	 * @see AbstractDataLoaderJob
 	 */
+	@Override
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public IStatus execute(IProgressMonitor moni) {
 		monitor = moni;
@@ -101,6 +102,7 @@ public class TreeLoader<T> extends AbstractDataLoaderJob {
 		}
 	}
 
+	@Override
 	public int getSize() {
 		return qbe.size();
 	}

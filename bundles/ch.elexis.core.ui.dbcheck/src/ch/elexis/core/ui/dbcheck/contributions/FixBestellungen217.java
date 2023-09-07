@@ -1,10 +1,10 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;

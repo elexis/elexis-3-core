@@ -36,6 +36,7 @@ public class PatientenListeControlFieldProvider extends DefaultControlFieldProvi
 		super(viewer, flds);
 	}
 
+	@Override
 	public void setQuery(Query q) {
 		// specially handle search string with space in the first field.
 		// if the first field contains a space, we consider the value as

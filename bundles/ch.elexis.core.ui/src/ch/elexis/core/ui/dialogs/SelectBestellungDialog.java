@@ -58,6 +58,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 		super(parent);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite container) {
 		Composite parent = (Composite) super.createDialogArea(container);
 		createMessageArea(parent);
@@ -69,6 +70,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 		setComparator();
 
 		fTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				if (fAddCancelButton) {
 					okPressed();
@@ -192,6 +194,7 @@ public class SelectBestellungDialog extends SelectionDialog {
 	/*
 	 * Overrides method from Dialog
 	 */
+	@Override
 	protected void okPressed() {
 		// Build a list of selected children.
 		IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();

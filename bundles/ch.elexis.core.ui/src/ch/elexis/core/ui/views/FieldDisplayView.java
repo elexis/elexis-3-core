@@ -71,7 +71,9 @@ public class FieldDisplayView extends ViewPart implements IRefreshable {
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
-	private IAction newViewAction, editDataAction;
+	private IAction newViewAction;
+
+	private IAction editDataAction;
 	Text text;
 	Class<? extends PersistentObject> myClass;
 	Class<?> myModelInterface;

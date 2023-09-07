@@ -10,26 +10,9 @@
  */
 package ch.elexis.core.tasks.model.impl;
 
-import ch.elexis.core.model.tasks.IIdentifiedRunnable;
-import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
-import ch.elexis.core.model.tasks.TaskException;
-
-import ch.elexis.core.tasks.model.ITask;
-import ch.elexis.core.tasks.model.ITaskDescriptor;
-import ch.elexis.core.tasks.model.ITaskService;
-import ch.elexis.core.tasks.model.ModelFactory;
-import ch.elexis.core.tasks.model.ModelPackage;
-import ch.elexis.core.tasks.model.OwnerTaskNotification;
-import ch.elexis.core.tasks.model.TaskState;
-import ch.elexis.core.tasks.model.TaskTriggerType;
-
-import ch.elexis.core.types.TypesPackage;
-
-import com.cronutils.model.Cron;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -38,11 +21,24 @@ import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.slf4j.Logger;
+
+import com.cronutils.model.Cron;
+
+import ch.elexis.core.model.tasks.IIdentifiedRunnable;
+import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
+import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.tasks.model.ITask;
+import ch.elexis.core.tasks.model.ITaskDescriptor;
+import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.ModelFactory;
+import ch.elexis.core.tasks.model.ModelPackage;
+import ch.elexis.core.tasks.model.OwnerTaskNotification;
+import ch.elexis.core.tasks.model.TaskState;
+import ch.elexis.core.tasks.model.TaskTriggerType;
+import ch.elexis.core.types.TypesPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -39,7 +39,7 @@ public class LoadTemplateCommand extends AbstractHandler {
 		if (selection != null) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
 			Object firstElement = strucSelection.getFirstElement();
-			if (firstElement != null && firstElement instanceof TextTemplate) {
+			if (firstElement instanceof TextTemplate) {
 				TextTemplate textTemplate = (TextTemplate) firstElement;
 				template = textTemplate.getTemplate();
 			}

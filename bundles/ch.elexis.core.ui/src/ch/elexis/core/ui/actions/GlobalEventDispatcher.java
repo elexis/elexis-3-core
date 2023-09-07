@@ -94,6 +94,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 		}
 	}
 
+	@Override
 	public void partActivated(final IWorkbenchPartReference partRef) {
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
@@ -103,16 +104,19 @@ public class GlobalEventDispatcher implements IPartListener2 {
 		}
 	}
 
+	@Override
 	public void partBroughtToTop(final IWorkbenchPartReference partRef) {
 		// partActivated(partRef);
 
 	}
 
+	@Override
 	public void partClosed(final IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void partDeactivated(final IWorkbenchPartReference partRef) {
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
 		if (list != null) {
@@ -123,11 +127,13 @@ public class GlobalEventDispatcher implements IPartListener2 {
 
 	}
 
+	@Override
 	public void partOpened(final IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void partHidden(final IWorkbenchPartReference partRef) {
 		logger.debug("partHidden " + partRef.getPart(false)); //$NON-NLS-1$
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
@@ -140,6 +146,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 
 	}
 
+	@Override
 	public void partVisible(final IWorkbenchPartReference partRef) {
 		logger.debug("partVisible " + partRef.getPart(false)); //$NON-NLS-1$
 		LinkedList<IActivationListener> list = activationListeners.get(partRef.getPart(false));
@@ -152,6 +159,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 
 	}
 
+	@Override
 	public void partInputChanged(final IWorkbenchPartReference partRef) {
 		// TODO Auto-generated method stub
 
@@ -159,6 +167,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 
 	private static class GlobalListener implements ISelectionChangedListener {
 
+		@Override
 		public void selectionChanged(final SelectionChangedEvent event) {
 			StructuredSelection sel = (StructuredSelection) event.getSelection();
 

@@ -10,8 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.rgw.tools.Result;
 import java.util.Optional;
+
+import ch.rgw.tools.Result;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>IBillable

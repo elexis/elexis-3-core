@@ -148,6 +148,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							Query<Patient> query = new Query<>(Patient.class);
@@ -230,6 +231,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							Query<Patient> query = new Query<>(Patient.class);
@@ -321,6 +323,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							Query<Patient> query = new Query<>(Patient.class);
@@ -412,6 +415,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							Query<Patient> query = new Query<>(Patient.class);
@@ -493,6 +497,7 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
 				try {
 					progressDialog.run(true, true, new IRunnableWithProgress() {
+						@Override
 						public void run(IProgressMonitor monitor)
 								throws InvocationTargetException, InterruptedException {
 							Query<Patient> query = new Query<>(Patient.class);

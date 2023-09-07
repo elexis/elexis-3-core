@@ -14,6 +14,7 @@ public class CompatibilityObjectInputStream extends ObjectInputStream {
 		super(in);
 	}
 
+	@Override
 	protected java.lang.Class<?> resolveClass(java.io.ObjectStreamClass desc)
 			throws IOException, ClassNotFoundException {
 		if (resolver != null) {

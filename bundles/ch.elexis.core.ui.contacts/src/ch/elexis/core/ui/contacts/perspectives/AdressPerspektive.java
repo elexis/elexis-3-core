@@ -25,6 +25,7 @@ import ch.elexis.core.ui.contacts.views.KontakteView;
 public class AdressPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.AdressPerspektive"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);

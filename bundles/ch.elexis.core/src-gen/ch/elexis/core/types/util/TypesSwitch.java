@@ -10,16 +10,15 @@
  */
 package ch.elexis.core.types.util;
 
-import ch.elexis.core.types.TypesPackage;
-
-import ch.rgw.tools.Result;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import ch.elexis.core.types.TypesPackage;
+import ch.rgw.tools.Result;
 
 /**
  * <!-- begin-user-doc -->

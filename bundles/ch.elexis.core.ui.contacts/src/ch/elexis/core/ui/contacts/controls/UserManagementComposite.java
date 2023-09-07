@@ -30,8 +30,12 @@ public class UserManagementComposite extends AbstractComposite {
 	private Group anwenderGroup;
 	private GridData gdAnwenderGroup;
 	private Group mandantGroup;
-	private Label lblUsername, lblPassword;
-	private Text txtUSERNAME, txtPASSWORD;
+	private Label lblUsername;
+
+	private Label lblPassword;
+	private Text txtUSERNAME;
+
+	private Text txtPASSWORD;
 	private Label lblKuerzel;
 	private Text txtKUERZEL;
 

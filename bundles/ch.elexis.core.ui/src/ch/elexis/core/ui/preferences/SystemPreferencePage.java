@@ -25,6 +25,7 @@ public class SystemPreferencePage extends FieldEditorPreferencePage implements I
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(prefs);
 	}

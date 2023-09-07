@@ -175,7 +175,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 
 		// add favorites tab if settings desire it
 		for (int i = 0; i < userSettings.length; i++) {
-			if (userSettings[i].equals("Favoriten")) { //$NON-NLS-1$
+			if ("Favoriten".equals(userSettings[i])) { //$NON-NLS-1$
 				iceMap.put(i, null);
 			}
 		}
@@ -327,6 +327,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 	}
 
 	/** Vom ActivationListener */
+	@Override
 	public void activation(boolean mode) {
 		CTabItem selected = ctab.getSelection();
 		if (selected instanceof FavoritenCTabItem || selected instanceof MakrosCTabItem)
@@ -342,6 +343,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 		}
 	}
 
+	@Override
 	public void visible(boolean mode) {
 
 	}

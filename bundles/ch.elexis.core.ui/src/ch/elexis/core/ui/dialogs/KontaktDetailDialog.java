@@ -52,7 +52,16 @@ public class KontaktDetailDialog extends TitleAreaDialog {
 	private static final String LBL_FIRSTNAME = Messages.Core_Firstname; // $NON-NLS-1$
 	private static final String LBL_NAME = Messages.Core_Name; // $NON-NLS-1$
 	Kontakt k;
-	LabeledInputField liName, liVorname, liGebDat, liSex, liStrasse, liPlz, liOrt, liTel, liFax, liMail;
+	LabeledInputField liName;
+	LabeledInputField liVorname;
+	LabeledInputField liGebDat;
+	LabeledInputField liSex;
+	LabeledInputField liStrasse;
+	LabeledInputField liPlz;
+	LabeledInputField liOrt;
+	LabeledInputField liTel;
+	LabeledInputField liFax;
+	LabeledInputField liMail;
 	String[] vals;
 	int type = 0;
 	ButtonAdapter ba = new ButtonAdapter();

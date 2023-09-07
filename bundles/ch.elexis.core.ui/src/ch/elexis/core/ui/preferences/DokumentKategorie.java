@@ -35,6 +35,7 @@ public class DokumentKategorie extends FieldEditorPreferencePage implements IWor
 		 */
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
 

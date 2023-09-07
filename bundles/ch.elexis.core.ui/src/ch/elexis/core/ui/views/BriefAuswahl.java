@@ -110,8 +110,12 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private Form form;
-	private Action briefNeuAction, briefLadenAction, editNameAction, startLocalEditAction, endLocalEditAction,
-			cancelLocalEditAction;
+	private Action briefNeuAction;
+	private Action briefLadenAction;
+	private Action editNameAction;
+	private Action startLocalEditAction;
+	private Action endLocalEditAction;
+	private Action cancelLocalEditAction;
 	private Action deleteAction;
 	private ViewMenus menus;
 	private ArrayList<sPage> pages = new ArrayList<sPage>();
@@ -504,7 +508,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 							startLocalEditAction.run();
 						} else {
 							TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
-							if (brief.getMimeType().equalsIgnoreCase("pdf")) { //$NON-NLS-1$
+							if ("pdf".equalsIgnoreCase(brief.getMimeType())) { //$NON-NLS-1$
 								try {
 									File temp = File.createTempFile("letter_", ".pdf"); //$NON-NLS-1$ //$NON-NLS-2$
 									temp.deleteOnExit();

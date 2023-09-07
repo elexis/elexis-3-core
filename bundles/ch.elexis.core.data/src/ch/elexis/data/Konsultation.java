@@ -105,6 +105,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	// keep a list of all ch.elexis.VerrechenbarAdjuster extensions
 	private static ArrayList<IVerrechenbarAdjuster> adjusters = new ArrayList<IVerrechenbarAdjuster>();
 
+	@Override
 	protected String getTableName() {
 		return TABLENAME;
 	}
@@ -139,6 +140,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * der Datenbank existiert und wenn sie einen zugeordneten Mandanten und einen
 	 * zugeordeten Fall hat.
 	 */
+	@Override
 	public boolean isValid() {
 		if (!super.isValid()) {
 			return false;
@@ -649,6 +651,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 
 	/** Eine einzeilige Beschreibung dieser Konsultation holen */
+	@Override
 	public String getLabel() {
 		StringBuffer ret = new StringBuffer();
 		Mandant m = getMandant();
@@ -1086,6 +1089,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * Interface Comparable, um die Behandlungen nach Datum und Zeit sortieren zu
 	 * können
 	 */
+	@Override
 	public int compareTo(Konsultation b) {
 		LocalDateTime me = getDateTime();
 		LocalDateTime other = b.getDateTime();
@@ -1124,6 +1128,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			rev = reverse;
 		}
 
+		@Override
 		public int compare(Konsultation b1, Konsultation b2) {
 			TimeTool t1 = new TimeTool(b1.getDatum());
 			TimeTool t2 = new TimeTool(b2.getDatum());
@@ -1260,7 +1265,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @return
 	 */
 	public boolean isBillable() {
-		return get(FLD_BILLABLE).equals("1");
+		return "1".equals(get(FLD_BILLABLE));
 	}
 
 	/**

@@ -27,11 +27,11 @@ public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 		Assert.assertEquals(1, bezugsKontakte.size());
 
 		BezugsKontakt bezogenerKontakt = bezugsKontakte.get(0);
-		if (Locale.getDefault().toString().equals("de_CH")) {
+		if ("de_CH".equals(Locale.getDefault().toString())) {
 			// System.out.println("found de_CH: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("Kind"));
 		}
-		if (Locale.getDefault().toString().equals("en_US")) {
+		if ("en_US".equals(Locale.getDefault().toString())) {
 			// System.out.println("found en_US: " + savedZusatzAdresse.getLabel());
 			Assert.assertTrue(bezogenerKontakt.getLabel().startsWith("child"));
 		}

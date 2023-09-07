@@ -10,8 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.data.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;
@@ -50,6 +51,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		cache = new ContactCache();
 	}
 
+	@Override
 	public ContactType getContactType() {
 		if (cache.isOrganization)
 			return ContactType.ORGANIZATION;
@@ -58,6 +60,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		return ContactType.UNKNOWN;
 	}
 
+	@Override
 	public void setContactType(ContactType type) {
 		ContactType old = getContactType();
 		switch (type) {
@@ -313,6 +316,7 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 		firePropertyChange("country", old, value);
 	}
 
+	@Override
 	public boolean isDeleted() {
 		return cache.isDeleted;
 	}
@@ -471,8 +475,18 @@ public class ContactBean extends BeanPersistentObject<Kontakt> implements IConta
 	 * executed synchronous to the DB.
 	 */
 	private class ContactCache {
-		boolean isDeleted, isPerson, isOrganization, isMandator, isUser, isPatient;
-		String code, description1, description2, description3, titel, titelSuffix;
+		boolean isDeleted;
+		boolean isPerson;
+		boolean isOrganization;
+		boolean isMandator;
+		boolean isUser;
+		boolean isPatient;
+		String code;
+		String description1;
+		String description2;
+		String description3;
+		String titel;
+		String titelSuffix;
 		TimeTool dateOfBirth;
 		Gender sex;
 

@@ -251,6 +251,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @since 3.5
 	 */
+	@Override
 	public @Nullable LabOrder getLabOrder() {
 		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabOrder.FLD_RESULT, getId());
 		List<LabOrder> execute = qre.execute();
@@ -314,7 +315,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 
 	public boolean isLongText() {
-		if (getItem().getTyp() == LabItemTyp.TEXT && getResult().equalsIgnoreCase("text") && !getComment().isEmpty()) {
+		if (getItem().getTyp() == LabItemTyp.TEXT && "text".equalsIgnoreCase(getResult()) && !getComment().isEmpty()) {
 			return true;
 		}
 
@@ -392,6 +393,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	/**
 	 * @deprecated use analysetime, observationtime and transmissiontime
 	 */
+	@Override
 	@Deprecated
 	public String getDate() {
 		return get(DATE);
@@ -424,6 +426,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				+ time.substring(2, 4) + StringConstants.COLON + time.substring(4, 6));
 	}
 
+	@Override
 	public ILabItem getItem() {
 		return LabItem.load(get(ITEM_ID));
 	}
@@ -433,6 +436,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		set(ITEM_ID, value.getId());
 	}
 
+	@Override
 	public String getResult() {
 		String result = checkNull(get(RESULT));
 		if (getItem().getTyp() == LabItemTyp.FORMULA) {
@@ -443,7 +447,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 			if (orders != null && !orders.isEmpty()) {
 				value = evaluteWithOrderContext(orders.get(0));
 			}
-			if (value == null || value.equals("?formel?")) { //$NON-NLS-1$
+			if (value == null || "?formel?".equals(value)) { //$NON-NLS-1$
 				TimeTool time = getObservationTime();
 				if (time == null) {
 					time = getDateTime();
@@ -478,15 +482,18 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return ret;
 	}
 
+	@Override
 	public void setResult(final String res) {
 		int flags = isPathologic(getPatient().getGender(), getItem(), res) ? PATHOLOGIC : 0;
 		set(new String[] { RESULT, FLAGS }, new String[] { checkNull(res), Integer.toString(flags) });
 	}
 
+	@Override
 	public String getComment() {
 		return checkNull(get(COMMENT));
 	}
 
+	@Override
 	public void setComment(String comment) {
 		set(COMMENT, comment);
 	}
@@ -513,6 +520,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * {@link Description#PATHO_NOREF}, {@link Description#UNKNOWN} and
 	 * {@link Description#PATHO_IMPORT_NO_INFO}
 	 */
+	@Override
 	public int getFlags() {
 		return checkZero(get(FLAGS));
 	}
@@ -539,6 +547,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		set(FLAGS, Integer.toString(value));
 	}
 
+	@Override
 	public String getUnit() {
 		String ret = checkNull(get(UNIT));
 		if (ret.isEmpty()) {
@@ -547,6 +556,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		return ret;
 	}
 
+	@Override
 	public void setUnit(String unit) {
 		set(UNIT, unit);
 	}
@@ -556,6 +566,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public TimeTool getAnalyseTime() {
 		String timestr = checkNull(get(ANALYSETIME));
 		if (timestr.isEmpty()) {
@@ -570,6 +581,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public void setAnalyseTime(TimeTool time) {
 		set(ANALYSETIME, time.toString(TimeTool.TIMESTAMP));
 	}
@@ -579,6 +591,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public TimeTool getObservationTime() {
 		String timestr = checkNull(get(OBSERVATIONTIME));
 		if (timestr.isEmpty()) {
@@ -593,6 +606,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public void setObservationTime(TimeTool time) {
 		if (time != null) {
 			set(OBSERVATIONTIME, time.toString(TimeTool.TIMESTAMP));
@@ -604,6 +618,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public TimeTool getTransmissionTime() {
 		String timestr = checkNull(get(TRANSMISSIONTIME));
 		if (timestr.isEmpty()) {
@@ -618,23 +633,28 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 *
 	 * @param time
 	 */
+	@Override
 	public void setTransmissionTime(TimeTool time) {
 		set(TRANSMISSIONTIME, time.toString(TimeTool.TIMESTAMP));
 	}
 
+	@Override
 	public String getRefMale() {
 		return resolvePreferedRefValue(getItem().getReferenceMale(), REFMALE);
 	}
 
+	@Override
 	public void setRefMale(String value) {
 		set(REFMALE, value);
 		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));
 	}
 
+	@Override
 	public String getRefFemale() {
 		return resolvePreferedRefValue(getItem().getReferenceFemale(), REFFEMALE);
 	}
 
+	@Override
 	public void setRefFemale(String value) {
 		set(REFFEMALE, value);
 		setFlag(PATHOLOGIC, isPathologic(getPatient().getGender(), getItem(), getResult()));

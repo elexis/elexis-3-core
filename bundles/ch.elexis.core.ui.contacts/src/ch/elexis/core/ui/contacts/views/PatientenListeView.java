@@ -100,7 +100,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private ViewMenus menus;
 	private RestrictedAction newPatAction;
 	// private IAction filterAction;
-	private IAction copySelectedPatInfosToClipboardAction, copySelectedAddressesToClipboardAction;
+	private IAction copySelectedPatInfosToClipboardAction;
+	private IAction copySelectedAddressesToClipboardAction;
 	private String[] currentUserFields;
 	// PatListFilterBox plfb;
 	PatListeContentProvider plcp;
@@ -306,7 +307,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				if (sticker != null && sticker.getImage() != null) {
 					return CoreUiUtil.getImageAsIcon(sticker.getImage());
 				} else {
-					if (pat.getGender().equals(Gender.MALE)) {
+					if (pat.getGender() == Gender.MALE) {
 						return Images.IMG_MANN.getImage();
 					} else {
 						return Images.IMG_FRAU.getImage();

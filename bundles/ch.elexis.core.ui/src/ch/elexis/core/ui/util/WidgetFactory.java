@@ -135,6 +135,7 @@ public class WidgetFactory {
 		client.setParent(ret);
 		ret.setClient(client);
 		ret.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -147,6 +148,7 @@ public class WidgetFactory {
 		ExpandableComposite ret = t.createExpandableComposite(f.getBody(), ExpandableComposite.TWISTIE);
 		ret.setText(text);
 		ret.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				f.reflow(true);
 			}

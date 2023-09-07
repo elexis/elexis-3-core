@@ -280,6 +280,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			setToolTipText(Messages.ReminderView_activatePatientTooltip);
 		}
 
+		@Override
 		public void doRun() {
 			StructuredSelection sel = (StructuredSelection) getSelection();
 			if (sel != null && sel.size() != 1) {
@@ -330,6 +331,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			if (!ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, true)) {
 				UiDesk.asyncExec(new Runnable() {
 
+					@Override
 					public void run() {
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 								false, selectedPatient, true);

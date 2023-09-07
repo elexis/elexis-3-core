@@ -13,11 +13,10 @@ import org.hl7.fhir.r4.model.Coverage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.l10n.Messages;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;

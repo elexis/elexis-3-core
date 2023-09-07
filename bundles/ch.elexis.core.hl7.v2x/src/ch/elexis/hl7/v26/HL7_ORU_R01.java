@@ -1,11 +1,11 @@
 package ch.elexis.hl7.v26;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractPrimitive;
@@ -265,7 +265,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 					if (cweIdentifier.getCwe2_Text() != null) {
 						name = cweIdentifier.getCwe2_Text().getValue();
 					}
-					if (name == null || name.trim().length() == 0) {
+					if (name == null || name.trim().isEmpty()) {
 						name = cweIdentifier.getCwe1_Identifier().getValue();
 					}
 					observation.add(new TextData(name, appendedTX, obrDateOfObservation, null, null));
@@ -402,7 +402,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 */
 	private void fillOBR(final OBR obr, final int index, final HL7LaborItem labItem)
 			throws DataTypeException, HL7Exception {
-		obr.getObr1_SetIDOBR().setValue(new Integer(index + 1).toString());
+		obr.getObr1_SetIDOBR().setValue(Integer.toString(index + 1));
 
 		// OBR-4: Observation Identifier
 		// <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
@@ -430,7 +430,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 */
 	private void fillOBX_TX(final OBX obx, final int index, final String text) throws DataTypeException, HL7Exception {
 		// OBX|35|TX||| Augmentin S
-		obx.getObx1_SetIDOBX().setValue(new Integer(index + 1).toString()); // $NON-NLS-1$
+		obx.getObx1_SetIDOBX().setValue(Integer.toString(index + 1)); // $NON-NLS-1$
 		obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_TX);
 		TX textType = new TX(null);
 		textType.setValue(text);
@@ -541,7 +541,19 @@ public class HL7_ORU_R01 extends HL7Writer {
 		obx.getObx1_SetIDOBX().setValue("1"); //$NON-NLS-1$
 
 		Type type = null;
-		if (laborItem.getTyp().equals(Typ.NUMERIC)) {
+		// Entweder NM bei numerischen Resultat oder TX bei Textresultat
+		// Do nothing. Just go on as text
+		// Numerisch
+		//$NON-NLS-1$ //$NON-NLS-2$
+		// Entweder NM bei numerischen Resultat oder TX bei Textresultat
+		// Do nothing. Just go on as text
+		// Numerisch
+		// Text
+		// ^application^^BASE64^<LabResult.RESULTAT(Base64-codiert)>
+		//$NON-NLS-1$
+		//$NON-NLS-1$
+		// Sonst einfach TX Wert
+		if (laborItem.getTyp() == Typ.NUMERIC) {
 			obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_NM);
 			// Entweder NM bei numerischen Resultat oder TX bei Textresultat
 			Double doubleObj = null;
@@ -561,12 +573,12 @@ public class HL7_ORU_R01 extends HL7Writer {
 				textType.setValue(laborWert.getResultat());
 				type = textType;
 			}
-		} else if (laborItem.getTyp().equals(Typ.TEXT)) {
+		} else if (laborItem.getTyp() == Typ.TEXT) {
 			obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_TX);
 			TX textType = new TX(null);
 			textType.setValue(laborWert.getResultat());
 			type = textType;
-		} else if (laborItem.getTyp().equals(Typ.ABSOLUTE)) {
+		} else if (laborItem.getTyp() == Typ.ABSOLUTE) {
 			obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_CWE);
 			CWE codedEntryType = new CWE(null);
 			String labResult = Messages.HL7_ORU_R01_LabResult_Abs_Neg;
@@ -579,7 +591,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 			codedEntryType.getCwe1_Identifier().setValue(labResult);
 			codedEntryType.getCwe2_Text().setValue(laborWert.getResultat());
 			type = codedEntryType;
-		} else if (laborItem.getTyp().equals(Typ.FORMULA)) {
+		} else if (laborItem.getTyp() == Typ.FORMULA) {
 			// Entweder NM bei numerischen Resultat oder TX bei Textresultat
 			Double doubleObj = null;
 			try {
@@ -600,7 +612,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 				textType.setValue(laborWert.getResultat());
 				type = textType;
 			}
-		} else if (laborItem.getTyp().equals(Typ.DOCUMENT)) {
+		} else if (laborItem.getTyp() == Typ.DOCUMENT) {
 			if (laborWert.getDocData() != null) {
 				obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_ED);
 				// ^application^^BASE64^<LabResult.RESULTAT(Base64-codiert)>

@@ -39,7 +39,9 @@ public class BenchmarkTimer {
 		int minutes = (int) (((ms / 1000) / 60) % 60);
 		int hours = (int) ((((ms / 1000) / 60) / 60) % 24);
 
-		String sec, min, hrs;
+		String sec;
+		String min;
+		String hrs;
 		if (seconds < 10)
 			sec = "0" + seconds;
 		else

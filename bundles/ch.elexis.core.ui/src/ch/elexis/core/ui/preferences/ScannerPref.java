@@ -47,6 +47,7 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 			this.textfield = textfield;
 		}
 
+		@Override
 		public void handleEvent(Event event) {
 			if (textfield.isFocusControl()) {
 				String str = textfield.getText();
@@ -114,10 +115,12 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 		hiddenBtn.setVisible(false);
 		txtTest.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				getShell().setDefaultButton(hiddenBtn);
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				getShell().setDefaultButton(backupDefaultButton);
 			}
@@ -155,6 +158,7 @@ public class ScannerPref extends FieldEditorPreferencePage implements IWorkbench
 		return ok;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 

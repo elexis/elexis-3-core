@@ -52,6 +52,7 @@ public interface IOcrMyPdfService {
 			return type;
 		}
 
+		@Override
 		public String getMessage() {
 			switch (getType()) {
 			case ENCRYPTED_FILE:

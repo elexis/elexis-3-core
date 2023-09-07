@@ -13,13 +13,13 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -55,7 +55,8 @@ public class KontaktImporterBlatt extends Composite {
 	String filename;
 	Label lbFileName;
 	Combo cbMethods;
-	boolean bKeepID, mediportInsuererList;
+	boolean bKeepID;
+	boolean mediportInsuererList;
 	int method;
 	private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 	static final String[] methods = new String[] { "XLS", "CSV", Messages.KontaktImporterBlatt_kklistHeading }; //$NON-NLS-1$ //$NON-NLS-2$
@@ -270,7 +271,11 @@ public class KontaktImporterBlatt extends Composite {
 		try {
 			// Please keep in sync with doc/import.textile !!
 			VCard vcard = new VCard(new FileInputStream(file));
-			String name, vorname, tel, email, title;
+			String name;
+			String vorname;
+			String tel;
+			String email;
+			String title;
 			String gebdat = StringUtils.EMPTY;
 			String strasse = StringUtils.EMPTY;
 			String plz = StringUtils.EMPTY;

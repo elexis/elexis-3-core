@@ -1,7 +1,8 @@
 package ch.elexis.hl7.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class TextData extends AbstractData {
 	private String text;

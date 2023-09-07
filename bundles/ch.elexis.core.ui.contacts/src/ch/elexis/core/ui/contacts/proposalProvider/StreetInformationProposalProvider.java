@@ -22,6 +22,7 @@ public class StreetInformationProposalProvider implements IContentProposalProvid
 
 	private static List<String> streets;
 
+	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
 		List<ContentProposal> cp = new LinkedList<ContentProposal>();
 		for (int i = 0; i < streets.size(); i++) {

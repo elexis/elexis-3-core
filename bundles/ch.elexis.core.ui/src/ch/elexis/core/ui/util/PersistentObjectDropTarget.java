@@ -78,6 +78,7 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		this(name, target, r, true);
 	}
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 
 		boolean bOk = false;
@@ -94,20 +95,24 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		}
 	}
 
+	@Override
 	public void dragLeave(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void dragOperationChanged(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void dragOver(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void drop(DropTargetEvent event) {
 		String drp = (String) event.data;
 		String[] dl = drp.split(","); //$NON-NLS-1$
@@ -119,6 +124,7 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		}
 	}
 
+	@Override
 	public void dropAccept(DropTargetEvent event) {
 		if (!rc.accept(PersistentObjectDragSource.getDraggedObject())) {
 			event.detail = DND.DROP_NONE;
@@ -134,10 +140,12 @@ public class PersistentObjectDropTarget implements DropTargetListener, ICodeSele
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void registered(boolean bIsRegistered) {
 		if (normalColor != null)
 			highlight(bIsRegistered);

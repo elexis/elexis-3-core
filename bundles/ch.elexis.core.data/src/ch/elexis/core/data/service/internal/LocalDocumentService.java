@@ -353,7 +353,7 @@ public class LocalDocumentService implements ILocalDocumentService {
 			return false;
 		}
 		String lowerName = method.getName().toLowerCase();
-		if (lowerName.equals("getid")) {
+		if ("getid".equals(lowerName)) {
 			return true;
 		}
 		return false;

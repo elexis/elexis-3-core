@@ -147,6 +147,7 @@ public class Log {
 								.append(": ").append(message).toString(); //$NON-NLS-1$
 						if (doAlert != null) {
 							UiDesk.asyncExec(new Runnable() {
+								@Override
 								public void run() {
 									MessageBox msg = new MessageBox(doAlert, SWT.ICON_ERROR | SWT.OK);
 									msg.setMessage(lastError);
@@ -169,9 +170,9 @@ public class Log {
 	 * @param level   der level
 	 */
 	public void log(final Throwable t, String message, final int level) {
-		if (message == null || message.length() == 0) {
+		if (message == null || message.isEmpty()) {
 			message = t.getMessage();
-			if (message == null || message.length() == 0) {
+			if (message == null || message.isEmpty()) {
 				message = t.getClass().toString();
 			}
 		}

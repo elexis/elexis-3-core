@@ -42,6 +42,7 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 	};
 	Text tComment;
 
+	@Override
 	public Composite createDisplay(Composite parent, IViewSite site) {
 		form = UiDesk.getToolkit().createForm(parent);
 		TableWrapLayout twl = new TableWrapLayout();
@@ -59,6 +60,7 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		return form.getBody();
 	}
 
+	@Override
 	public void display(Object obj) {
 		if (obj instanceof IDiagnosisTree) {
 			IDiagnosisTree diag = (IDiagnosisTree) obj;
@@ -72,6 +74,7 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public Class<?> getElementClass() {
 		return IDiagnosisTree.class;
 	}
@@ -83,6 +86,7 @@ public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public String getTitle() {
 		return Messages.Eigendiagnosen_CodeSystemName;
 	}

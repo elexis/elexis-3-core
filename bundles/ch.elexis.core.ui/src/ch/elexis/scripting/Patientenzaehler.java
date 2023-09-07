@@ -32,8 +32,12 @@ import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
 
 public class Patientenzaehler extends TitleAreaDialog {
-	DatePicker dpVon, dpBis;
-	public int kons, cases, men, women;
+	DatePicker dpVon;
+	DatePicker dpBis;
+	public int kons;
+	public int cases;
+	public int men;
+	public int women;
 
 	public String getResult() {
 		StringBuilder sb = new StringBuilder();

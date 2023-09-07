@@ -48,6 +48,7 @@ public class TaskLogFilterDialog {
 		List<ITaskDescriptor> list = taskDescriptorQuery.execute();
 
 		LabelProvider lp = new LabelProvider() {
+			@Override
 			public String getText(Object element) {
 				ITaskDescriptor iTaskDescriptor = (ITaskDescriptor) element;
 				return iTaskDescriptor.getReferenceId();

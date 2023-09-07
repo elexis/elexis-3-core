@@ -195,9 +195,9 @@ public class DBConnectWizard extends Wizard {
 		// ch.elexis.core.common
 		@Override
 		public Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
-			if (desc.getName().equals("ch.elexis.core.data.util.DBConnection")) { //$NON-NLS-1$
+			if ("ch.elexis.core.data.util.DBConnection".equals(desc.getName())) { //$NON-NLS-1$
 				return Thread.currentThread().getContextClassLoader().loadClass("ch.elexis.core.common.DBConnection"); //$NON-NLS-1$
-			} else if (desc.getName().equals("ch.elexis.core.data.util.DBConnection$DBType")) { //$NON-NLS-1$
+			} else if ("ch.elexis.core.data.util.DBConnection$DBType".equals(desc.getName())) { //$NON-NLS-1$
 				return Thread.currentThread().getContextClassLoader()
 						.loadClass("ch.elexis.core.common.DBConnection$DBType"); //$NON-NLS-1$
 			}

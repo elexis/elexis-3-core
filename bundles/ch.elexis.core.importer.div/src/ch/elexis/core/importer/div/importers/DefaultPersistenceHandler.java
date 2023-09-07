@@ -25,6 +25,7 @@ public class DefaultPersistenceHandler implements IPersistenceHandler {
 		return query.execute();
 	}
 
+	@Override
 	public IPatient loadPatient(String id) {
 		Optional<IPatient> loaded = CoreModelServiceHolder.get().load(id, IPatient.class);
 		return loaded.orElse(null);

@@ -57,6 +57,7 @@ public class AddressElement extends XChangeElement {
 		return ret;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		ret.append(getAttr(ATTR_STREET)).append(", ").append(getAttr(ATTR_ZIP)).append(StringTool.space) //$NON-NLS-1$

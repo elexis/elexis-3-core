@@ -10,8 +10,9 @@
  */
 package ch.elexis.core.model;
 
-import ch.rgw.tools.Money;
 import java.time.LocalDate;
+
+import ch.rgw.tools.Money;
 
 /**
  * <!-- begin-user-doc -->

@@ -36,6 +36,7 @@ public class MedicationElement extends XChangeElement {
 	public static final String ELEMENT_XID = "xid"; //$NON-NLS-1$
 	public static final String ELEMENT_META = "meta"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return XMLNAME;
 	}

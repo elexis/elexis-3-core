@@ -31,7 +31,9 @@ import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.data.Artikel;
 
 public class ArtikelContextMenu {
-	private IAction deleteAction, createAction, editAction;
+	private IAction deleteAction;
+	private IAction createAction;
+	private IAction editAction;
 	CommonViewer cv;
 	ArtikelDetailDisplay add;
 	ArtikelMenuListener menuListener = new ArtikelMenuListener();
@@ -128,6 +130,7 @@ public class ArtikelContextMenu {
 	}
 
 	class ArtikelMenuListener implements IMenuListener {
+		@Override
 		public void menuAboutToShow(final IMenuManager manager) {
 			menu.removeAll();
 			for (IAction ac : actions) {

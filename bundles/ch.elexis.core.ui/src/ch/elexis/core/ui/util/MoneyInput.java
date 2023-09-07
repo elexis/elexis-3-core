@@ -70,7 +70,7 @@ public class MoneyInput extends Composite {
 			public void focusLost(final FocusEvent e) {
 				try {
 					String t = text.getText();
-					if (t.length() == 0) {
+					if (t.isEmpty()) {
 						text.setText(new ch.rgw.tools.Money().getAmountAsString());
 					} else {
 						ch.rgw.tools.Money.checkInput(t);

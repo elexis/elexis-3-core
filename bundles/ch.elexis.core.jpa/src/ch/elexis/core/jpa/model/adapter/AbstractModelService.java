@@ -326,6 +326,7 @@ public abstract class AbstractModelService implements IModelService {
 		}
 	}
 
+	@Override
 	public void touch(Identifiable identifiable) {
 		if (evaluateRight(identifiable.getClass(), Right.UPDATE)) {
 			Optional<EntityWithId> dbObject = getDbObject(identifiable);

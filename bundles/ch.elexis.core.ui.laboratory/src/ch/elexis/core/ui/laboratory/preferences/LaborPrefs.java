@@ -92,6 +92,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		super(Messages.LaborPrefs_labTitle);
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		noDefaultAndApplyButton();
 
@@ -140,13 +141,16 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tableViewer.setContentProvider(new IStructuredContentProvider() {
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return LabItem.getLabItems().toArray();
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 
@@ -154,6 +158,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = tableViewer.getStructuredSelection();
 				Object o = sel.getFirstElement();
@@ -170,7 +175,8 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				LabItem li1 = (LabItem) e1;
 				LabItem li2 = (LabItem) e2;
-				String s1 = StringUtils.EMPTY, s2 = StringUtils.EMPTY; // $NON-NLS-1$
+				String s1 = StringUtils.EMPTY; // $NON-NLS-1$
+				String s2 = StringUtils.EMPTY;
 				switch (sortC) {
 				case 1:
 					s1 = li1.getKuerzel();
@@ -223,6 +229,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 
 	static class LabListLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			LabItem li = (LabItem) element;
 
@@ -367,6 +374,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelItem = new Button(parent, SWT.PUSH);
 		bDelItem.setText(Messages.LaborPrefs_deleteItem);
 		bDelItem.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) tableViewer.getSelection();
 				Object o = sel.getFirstElement();
@@ -390,6 +398,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelAllItems = new Button(parent, SWT.PUSH);
 		bDelAllItems.setText(Messages.LaborPrefs_deleteAllItems);
 		bDelAllItems.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (SWTHelper.askYesNo(Messages.LaborPrefs_deleteReallyAllItems,
 						Messages.LaborPrefs_deleteAllExplain)) {
@@ -442,6 +451,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		}
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// Nothing to initialize
 	}

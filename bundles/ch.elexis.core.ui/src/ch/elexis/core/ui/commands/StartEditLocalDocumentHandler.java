@@ -163,7 +163,7 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	 */
 	public static boolean isConvertDocx2Pdf(String extension) {
 		String convert2pdf = System.getProperty(CONVERT_DOCX_2_PDF, StringUtils.EMPTY);
-		return (extension.equalsIgnoreCase("docx") && //$NON-NLS-1$
+		return ("docx".equalsIgnoreCase(extension) && //$NON-NLS-1$
 				!convert2pdf.equals(StringUtils.EMPTY));
 	}
 

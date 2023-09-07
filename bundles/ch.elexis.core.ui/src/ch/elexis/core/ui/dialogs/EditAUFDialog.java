@@ -52,8 +52,11 @@ import ch.rgw.tools.TimeTool;
 public class EditAUFDialog extends TitleAreaDialog {
 	private ISickCertificate auf;
 	private ICoverage fall;
-	private DatePicker dpVon, dpBis;
-	private Text tProzent, tGrund, tZusatz;
+	private DatePicker dpVon;
+	private DatePicker dpBis;
+	private Text tProzent;
+	private Text tGrund;
+	private Text tZusatz;
 	TimeTool tt = new TimeTool();
 
 	public EditAUFDialog(Shell shell, ISickCertificate a, ICoverage fall) {

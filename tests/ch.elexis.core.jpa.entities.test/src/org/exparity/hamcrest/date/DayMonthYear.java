@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @Deprecated
 public class DayMonthYear {
 
-	private final int day, year;
+	private final int day;
+	private final int year;
 	private final Months month;
 
 	public DayMonthYear(final int day, final Months month, final int year) {

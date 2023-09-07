@@ -58,6 +58,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 		this.actKontact = k;
 		fieldDefinitions = defvalues;
 		Arrays.sort(fieldDefinitions, new Comparator<String>() {
+			@Override
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
 			}

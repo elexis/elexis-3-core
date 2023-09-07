@@ -18,7 +18,8 @@ import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 public class SetMobileOfContact extends ExternalMaintenance {
 	private static final Pattern SWISS = Pattern.compile("^(07[5-9])(\\d{3})(\\d{2})(\\d{2})$");
 	private static final Pattern PREFIXSWISS = Pattern.compile("^((\\+|00)41)(7[5-9])(\\d{3})(\\d{2})(\\d{2})$");
-	int count, countLock;
+	int count;
+	int countLock;
 	String newPhone;
 
 	@Override

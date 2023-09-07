@@ -118,7 +118,7 @@ public class FuzzyMatcher {
 			return wort.equals(pattern);
 		}
 		String[] pat = wort.split("[\\s,\\.]");
-		if ((pat.length < 1) || (StringTool.isNothing(pat[0])) || pat[0].equals(" ")) {
+		if ((pat.length < 1) || (StringTool.isNothing(pat[0])) || " ".equals(pat[0])) {
 			return emptyMatches;
 		}
 		switch (type) {
@@ -153,9 +153,20 @@ public class FuzzyMatcher {
 	 */
 	public static int WLD(String wort, String muster, char modus, int limit) {
 		final int maxlen = 100;
-		int spmin, p, q, r, d1, d2, i, k, x1, x2, x3;
+		int spmin;
+		int p;
+		int q;
+		int r;
+		int d1;
+		int d2;
+		int i;
+		int k;
+		int x1;
+		int x2;
+		int x3;
 		char c;
-		String ww, mm;
+		String ww;
+		String mm;
 		int[] d = new int[maxlen];
 
 		if (modus == '+' || modus == '*') {
@@ -187,7 +198,7 @@ public class FuzzyMatcher {
 				d[k] = 0;
 			}
 		} else {
-			d[0] = (muster.equals("")) ? 0 : 1;
+			d[0] = ("".equals(muster)) ? 0 : 1;
 			i = (muster.charAt(0) == '?') ? 0 : 1;
 			for (k = 1; k <= wort.length(); k++) {
 				if (muster.charAt(0) == wort.charAt(k - 1)) {
@@ -197,7 +208,7 @@ public class FuzzyMatcher {
 			}
 		}
 
-		spmin = (d[0] == 0 || wort.length() == 0) ? d[0] : d[1];
+		spmin = (d[0] == 0 || wort.isEmpty()) ? d[0] : d[1];
 		if (spmin > limit) {
 			return (maxlen);
 		}

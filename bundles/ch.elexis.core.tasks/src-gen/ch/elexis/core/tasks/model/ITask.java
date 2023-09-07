@@ -10,15 +10,15 @@
  */
 package ch.elexis.core.tasks.model;
 
-import ch.elexis.core.model.Deleteable;
-import ch.elexis.core.model.Identifiable;
 import java.io.Serializable;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.Identifiable;
 
 /**
  * <!-- begin-user-doc -->
@@ -66,6 +66,7 @@ public interface ITask extends Identifiable, Deleteable {
 	 * @model id="true" required="true" changeable="false"
 	 * @generated
 	 */
+	@Override
 	String getId();
 
 	/**

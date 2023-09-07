@@ -79,6 +79,7 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 		this(name, target, r, true);
 	}
 
+	@Override
 	public void dragEnter(DropTargetEvent event) {
 		boolean bOk = false;
 		if (rc.accept(getDataObjects(event))) {
@@ -107,20 +108,24 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 		return Collections.emptyList();
 	}
 
+	@Override
 	public void dragLeave(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void dragOperationChanged(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void dragOver(DropTargetEvent event) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void dropAccept(DropTargetEvent event) {
 		if (!rc.accept(getDataObjects(event))) {
 			event.detail = DND.DROP_NONE;
@@ -134,10 +139,12 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 		}
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void registered(boolean bIsRegistered) {
 		if (normalColor != null) {
 			highlight(bIsRegistered);

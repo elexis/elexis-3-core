@@ -38,15 +38,18 @@ public class ETFTextPlugin implements ITextPlugin {
 	boolean bSaveOnFocusLost = false;
 	IKonsExtension ike;
 
+	@Override
 	public boolean clear() {
 		etf.setText(StringTool.leer);
 		return true;
 	}
 
+	@Override
 	public void setSaveOnFocusLost(boolean mode) {
 		bSaveOnFocusLost = mode;
 	}
 
+	@Override
 	public Composite createContainer(Composite parent, ICallback h) {
 		handler = h;
 		etf = new EnhancedTextField(parent);
@@ -67,33 +70,40 @@ public class ETFTextPlugin implements ITextPlugin {
 		return etf;
 	}
 
+	@Override
 	public boolean createEmptyDocument() {
 		etf.setText(StringTool.leer);
 		return true;
 	}
 
+	@Override
 	public void dispose() {
 		etf.dispose();
 	}
 
+	@Override
 	public boolean findOrReplace(String pattern, ReplaceCallback cb) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public PageFormat getFormat() {
 		return PageFormat.USER;
 	}
 
+	@Override
 	public String getMimeType() {
 		return "text/xml"; //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean insertTable(String place, int properties, String[][] contents, int[] columnSizes) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public Object insertText(String marke, String text, int adjust) {
 		int pos = 0;
 		if (StringTool.isNothing(marke)) {
@@ -104,9 +114,10 @@ public class ETFTextPlugin implements ITextPlugin {
 			etf.text.setSelection(pos, pos + marke.length());
 		}
 		etf.text.insert(text);
-		return new Integer(pos + text.length());
+		return Integer.valueOf(pos + text.length());
 	}
 
+	@Override
 	public Object insertText(Object pos, String text, int adjust) {
 		if (!(pos instanceof Integer)) {
 			return null;
@@ -114,14 +125,16 @@ public class ETFTextPlugin implements ITextPlugin {
 		Integer px = (Integer) pos;
 		etf.text.setSelection(px);
 		etf.text.insert(text);
-		return new Integer(px + text.length());
+		return Integer.valueOf(px + text.length());
 	}
 
+	@Override
 	public Object insertTextAt(int x, int y, int w, int h, String text, int adjust) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public boolean loadFromByteArray(byte[] bs, boolean asTemplate) {
 		try {
 			byte[] exp = CompEx.expand(bs);
@@ -137,6 +150,7 @@ public class ETFTextPlugin implements ITextPlugin {
 		}
 	}
 
+	@Override
 	public byte[] storeToByteArray() {
 		try {
 			String cnt = etf.getContentsAsXML();
@@ -149,44 +163,53 @@ public class ETFTextPlugin implements ITextPlugin {
 
 	}
 
+	@Override
 	public boolean loadFromStream(InputStream is, boolean asTemplate) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public boolean print(String toPrinter, String toTray, boolean waitUntilFinished) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void setFocus() {
 		etf.setFocus();
 	}
 
+	@Override
 	public boolean setFont(String name, int style, float size) {
 		// Font font=new Font(Desk.theDisplay,name,Math.round(size),style);
 		return true;
 	}
 
+	@Override
 	public boolean setStyle(final int style) {
 		return false;
 	}
 
+	@Override
 	public void setFormat(PageFormat f) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void showMenu(boolean b) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void showToolbar(boolean b) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		// TODO Auto-generated method stub

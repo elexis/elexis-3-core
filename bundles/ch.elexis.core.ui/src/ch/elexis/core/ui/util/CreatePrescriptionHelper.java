@@ -90,7 +90,7 @@ public class CreatePrescriptionHelper {
 		prescription.setRemark(signature.getComment());
 		prescription.setEntryType(signature.getMedicationType());
 		// a new symptomatic medication can have a stop date
-		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType()) && signature.getEndDate() != null) {
+		if (EntryType.SYMPTOMATIC_MEDICATION == signature.getMedicationType() && signature.getEndDate() != null) {
 			prescription.setDateTo(signature.getEndDate().atTime(23, 59, 59));
 			prescription.setStopReason("Stop geplant");
 		}

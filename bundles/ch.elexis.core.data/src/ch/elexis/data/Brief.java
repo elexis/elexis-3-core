@@ -11,12 +11,12 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
@@ -115,7 +115,8 @@ public class Brief extends PersistentObject {
 			if (Datum == null) {
 				Datum = new TimeTool();
 			}
-			String pat = StringTool.leer, bhdl = StringTool.leer;
+			String pat = StringTool.leer;
+			String bhdl = StringTool.leer;
 			if (bh != null) {
 				bhdl = bh.getId();
 				pat = bh.getFall().getPatient().getId();

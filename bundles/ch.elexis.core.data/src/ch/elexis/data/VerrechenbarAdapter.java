@@ -35,26 +35,32 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 	@Override
 	protected abstract String getTableName();
 
+	@Override
 	public String getCode() {
 		return null;
 	}
 
+	@Override
 	public String getCodeSystemName() {
 		return null;
 	}
 
+	@Override
 	public String getText() {
 		return null;
 	}
 
+	@Override
 	public IOptifier getOptifier() {
 		return optifier;
 	}
 
+	@Override
 	public Comparator<IVerrechenbar> getComparator() {
 		return comparator;
 	}
 
+	@Override
 	public IFilter getFilter(final Mandant m) {
 		return ifilter;
 	}
@@ -97,10 +103,12 @@ public abstract class VerrechenbarAdapter extends PersistentObject implements IV
 		return multis.getMultiplikator(date);
 	}
 
+	@Override
 	public Money getKosten(final TimeTool dat) {
 		return new Money(0);
 	}
 
+	@Override
 	public int getMinutes() {
 		return 0;
 	}

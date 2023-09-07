@@ -62,6 +62,7 @@ public class DauerMediView extends ViewPart implements IRefreshable {
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
+	@Override
 	public void dispose() {
 		getSite().getPage().removePartListener(udpateOnVisible);
 

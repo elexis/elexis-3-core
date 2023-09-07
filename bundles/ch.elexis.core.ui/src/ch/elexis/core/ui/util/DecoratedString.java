@@ -24,7 +24,8 @@ import org.eclipse.swt.graphics.Image;
 public class DecoratedString {
 	String text;
 	String value;
-	Color foreground, background;
+	Color foreground;
+	Color background;
 	Image icon;
 
 	public DecoratedString(String t) {

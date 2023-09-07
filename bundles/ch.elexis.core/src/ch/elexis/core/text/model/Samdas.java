@@ -377,7 +377,7 @@ public class Samdas {
 		}
 
 		public boolean isAbnormal() {
-			return (el.getAttributeValue("abormal").equals("true")); //$NON-NLS-1$ //$NON-NLS-2$
+			return ("true".equals(el.getAttributeValue("abormal"))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

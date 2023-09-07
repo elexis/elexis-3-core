@@ -83,7 +83,12 @@ public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter"; //$NON-NLS-1$
 	protected static final String BLOCK_FILTER_ONLY_MANDATOR = "blockselector/blockfilteronlymandator"; //$NON-NLS-1$
 
-	private IAction deleteAction, createAction, exportAction, copyAction, searchBlocksOnly, searchFilterMandator;
+	private IAction deleteAction;
+	private IAction createAction;
+	private IAction exportAction;
+	private IAction copyAction;
+	private IAction searchBlocksOnly;
+	private IAction searchFilterMandator;
 	private CommonViewer cv;
 	private MenuManager mgr;
 	static SelectorPanelProvider slp;
@@ -117,6 +122,7 @@ public class BlockSelector extends CodeSelectorFactory {
 		mgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		mgr.addMenuListener(new IMenuListener() {
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				Object selected = cv.getSelection()[0];
 				if (selected instanceof BlockTreeViewerItem) {
@@ -265,6 +271,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				setChecked(ConfigServiceHolder.getUser(BLOCK_ONLY_FILTER_ENABLED, false));
 			}
 
+			@Override
 			public void run() {
 				ConfigServiceHolder.setUser(BLOCK_ONLY_FILTER_ENABLED, isChecked());
 			};
@@ -276,6 +283,7 @@ public class BlockSelector extends CodeSelectorFactory {
 				setChecked(ConfigServiceHolder.getUser(BLOCK_FILTER_ONLY_MANDATOR, false));
 			}
 
+			@Override
 			public void run() {
 				ConfigServiceHolder.setUser(BLOCK_FILTER_ONLY_MANDATOR, isChecked());
 
@@ -313,14 +321,17 @@ public class BlockSelector extends CodeSelectorFactory {
 			CoreUiUtil.injectServicesWithContext(this);
 		}
 
+		@Override
 		public void startListening() {
 			cv.getConfigurer().getControlFieldProvider().addChangeListener(this);
 		}
 
+		@Override
 		public void stopListening() {
 			cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			IQuery<ICodeElementBlock> query = CoreModelServiceHolder.get().getQuery(ICodeElementBlock.class);
 			query.and("id", COMPARATOR.NOT_EQUALS, "Version"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -355,14 +366,17 @@ public class BlockSelector extends CodeSelectorFactory {
 			return true;
 		}
 
+		@Override
 		public void dispose() {
 			stopListening();
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 		/** Vom ControlFieldProvider */
+		@Override
 		public void changed(HashMap<String, String> vals) {
 			queryFilter = vals.get("Name"); //$NON-NLS-1$
 			refreshViewer();
@@ -393,15 +407,18 @@ public class BlockSelector extends CodeSelectorFactory {
 		}
 
 		/** Vom ControlFieldProvider */
+		@Override
 		public void reorder(String field) {
 
 		}
 
 		/** Vom ControlFieldProvider */
+		@Override
 		public void selected() {
 			// nothing to do
 		}
 
+		@Override
 		public Object[] getChildren(Object element) {
 			if (element instanceof BlockTreeViewerItem) {
 				BlockTreeViewerItem item = (BlockTreeViewerItem) element;
@@ -410,10 +427,12 @@ public class BlockSelector extends CodeSelectorFactory {
 			return Collections.emptyList().toArray();
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof BlockTreeViewerItem) {
 				BlockTreeViewerItem item = (BlockTreeViewerItem) element;

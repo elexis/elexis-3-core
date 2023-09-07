@@ -21,6 +21,7 @@ public class ContactRefElement extends XChangeElement {
 	public static final String CONTACTREF_DESCRIPTION = "description"; //$NON-NLS-1$
 	public static final String CONTACTREF_REFID = "refID"; //$NON-NLS-1$
 
+	@Override
 	public String getXMLName() {
 		return "contactref"; //$NON-NLS-1$
 	}

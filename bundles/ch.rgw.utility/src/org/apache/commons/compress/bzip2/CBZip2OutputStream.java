@@ -329,6 +329,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		// throw new CError();
 	}
 
+	@Override
 	public void close() throws IOException {
 		if (m_closed) {
 			return;
@@ -345,10 +346,12 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 		m_bsStream.close();
 	}
 
+	@Override
 	public void finalize() throws Throwable {
 		close();
 	}
 
+	@Override
 	public void flush() throws IOException {
 		super.flush();
 		m_bsStream.flush();
@@ -360,6 +363,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 	 * @param bv Description of Parameter
 	 * @exception java.io.IOException Description of Exception
 	 */
+	@Override
 	public void write(int bv) throws IOException {
 		int b = (256 + bv) % 256;
 		if (m_currentChar != -1) {
@@ -483,8 +487,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 				break;
 			}
 		}
-		;
-
 		if (m_origPtr == -1) {
 			panic();
 		}
@@ -670,13 +672,10 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 				i1 -= m_last;
 				i1--;
 			}
-			;
 			if (i2 > m_last) {
 				i2 -= m_last;
 				i2--;
 			}
-			;
-
 			k -= 4;
 			m_workDone++;
 		} while (k >= 0);
@@ -720,7 +719,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 				tmp = yy[j];
 				yy[j] = tmp2;
 			}
-			;
 			yy[0] = tmp;
 
 			if (j == 0) {
@@ -741,13 +739,11 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 							m_mtfFreq[RUNB]++;
 							break;
 						}
-						;
 						if (zPend < 2) {
 							break;
 						}
 						zPend = (zPend - 2) / 2;
 					}
-					;
 					zPend = 0;
 				}
 				m_szptr[wr] = (short) (j + 1);
@@ -798,7 +794,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 					vec++;
 				}
 			}
-			;
 			vec <<= 1;
 		}
 	}
@@ -1117,7 +1112,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 						unLo++;
 						continue;
 					}
-					;
 					if (n > 0) {
 						break;
 					}
@@ -1137,7 +1131,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 						unHi--;
 						continue;
 					}
-					;
 					if (n < 0) {
 						break;
 					}
@@ -1387,7 +1380,6 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 						bt = t;
 					}
 				}
-				;
 				fave[bt]++;
 				m_selector[nSelectors] = (char) bt;
 				nSelectors++;

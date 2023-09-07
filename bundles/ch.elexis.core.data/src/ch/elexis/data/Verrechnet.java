@@ -464,7 +464,7 @@ public class Verrechnet extends PersistentObject {
 	public boolean isChangedPrice() {
 		String value = getDetail(Verrechnet.FLD_EXT_CHANGEDPRICE);
 		if (value != null) {
-			return value.equalsIgnoreCase("true");
+			return "true".equalsIgnoreCase(value);
 		}
 		return false;
 	}

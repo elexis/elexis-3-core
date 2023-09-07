@@ -237,7 +237,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	public boolean isChangedPrice() {
 		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);
 		if (changedPrice instanceof String) {
-			return ((String) changedPrice).equalsIgnoreCase("true");
+			return "true".equalsIgnoreCase(((String) changedPrice));
 		} else if (changedPrice instanceof Boolean) {
 			return (Boolean) changedPrice;
 		}

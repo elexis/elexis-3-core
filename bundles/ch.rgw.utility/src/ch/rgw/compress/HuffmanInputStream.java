@@ -57,6 +57,7 @@ public class HuffmanInputStream extends InputStream {
 	/*
 	 * Read a bit sequence long enough to make up a byte an return that byte
 	 */
+	@Override
 	public int read() throws IOException {
 		int ret = Huff.readByte(tree.getRootNode(), bis);
 		if ((ret != -1) && (dyn > 0)) {
@@ -71,6 +72,7 @@ public class HuffmanInputStream extends InputStream {
 		return ret;
 	}
 
+	@Override
 	public int available() throws IOException {
 		return bis.available();
 	}

@@ -1,6 +1,5 @@
 package ch.elexis.hl7.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -9,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class HL7Helper {
 
@@ -26,7 +27,7 @@ public class HL7Helper {
 	 * @return java.util.Date
 	 */
 	public static Date stringToDate(final String dateTimeStr) throws ParseException {
-		if (dateTimeStr == null || dateTimeStr.length() == 0) {
+		if (dateTimeStr == null || dateTimeStr.isEmpty()) {
 			return null;
 		}
 

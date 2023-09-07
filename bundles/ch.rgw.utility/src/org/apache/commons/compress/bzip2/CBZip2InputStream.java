@@ -129,6 +129,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		cadvise();
 	}
 
+	@Override
 	public int read() {
 		if (m_streamEnd) {
 			return -1;
@@ -801,6 +802,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		}
 	}
 
+	@Override
 	public void close() throws IOException {
 		bsFinishedWithStream();
 	}

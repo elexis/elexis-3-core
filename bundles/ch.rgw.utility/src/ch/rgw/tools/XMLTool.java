@@ -97,7 +97,7 @@ public class XMLTool {
 			List<String> messageList = new Vector<String>();
 			for (Exception ex : exceptions) {
 				String msg = ex.getMessage();
-				if (msg == null || msg.length() == 0) {
+				if (msg == null || msg.isEmpty()) {
 					msg = ex.toString();
 				}
 				messageList.add(msg);

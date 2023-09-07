@@ -32,7 +32,6 @@ public class NetTool {
 
 	static {
 		Enumeration<NetworkInterface> nis = null;
-		;
 		try {
 			nis = NetworkInterface.getNetworkInterfaces();
 

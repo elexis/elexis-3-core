@@ -56,6 +56,7 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 	/**
 	 * From @see DelayableJob.IWorker
 	 */
+	@Override
 	public IStatus work(IProgressMonitor monitor, HashMap<String, Object> params) {
 		if (isSuspended()) {
 			return Status.CANCEL_STATUS;
@@ -77,6 +78,7 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 				return Status.CANCEL_STATUS;
 			}
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					// Avoid access to disposed table
 					if (tv != null && !tv.getTable().isDisposed()) {
@@ -103,6 +105,7 @@ public class FlatDataLoader extends PersistentObjectLoader implements ILazyConte
 		}
 	}
 
+	@Override
 	public void updateElement(int index) {
 		if (filtered != null) {
 			synchronized (this) {

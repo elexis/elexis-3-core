@@ -161,6 +161,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		GridData gd = (GridData) this.dateTimeField.getLayoutData();
 		gd.horizontalSpan = numColumns - 2;
@@ -178,6 +179,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	 * <code>super.doFillIntoGrid</code>.
 	 * </p>
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		getLabelControl(parent);
 
@@ -210,6 +212,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 			this.checkControl.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 			this.checkControl.setSelection(true);
 			this.checkControl.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					valueChanged();
 				}
@@ -223,6 +226,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoad() {
 		if (this.dateTimeField != null) {
 			long value = getLongByPrefName(getPreferenceName(), false);
@@ -268,6 +272,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoadDefault() {
 		if (this.dateTimeField != null) {
 			long value = getLongByPrefName(getPreferenceName(), true);
@@ -286,6 +291,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doStore() {
 		doStore(getValue());
 		if (this.checkControl != null) {
@@ -296,6 +302,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
@@ -348,11 +355,13 @@ public class DateTimeFieldEditor extends FieldEditor {
 			this.dateTimeField = new DateTime(parent, SWT.DATE | SWT.MEDIUM);
 			this.dateTimeField.setFont(parent.getFont());
 			this.dateTimeField.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					valueChanged();
 				}
 			});
 			this.dateTimeField.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent event) {
 					DateTimeFieldEditor.this.dateTimeField = null;
 				}
@@ -366,6 +375,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public void setFocus() {
 		if (this.dateTimeField != null) {
 			this.dateTimeField.setFocus();
@@ -433,7 +443,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 
 		long newValue = getValue();
 		if (newValue != this.oldValue) {
-			fireValueChanged(VALUE, new Long(this.oldValue), new Long(newValue));
+			fireValueChanged(VALUE, Long.valueOf(this.oldValue), Long.valueOf(newValue));
 			this.oldValue = newValue;
 		}
 	}
@@ -441,6 +451,7 @@ public class DateTimeFieldEditor extends FieldEditor {
 	/*
 	 * @see FieldEditor.setEnabled(boolean,Composite).
 	 */
+	@Override
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		if (this.checkControl != null) {

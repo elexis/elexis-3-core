@@ -32,6 +32,7 @@ abstract public class LockedRestrictedAction<T> extends RestrictedAction {
 		setEnabled(LocalLockServiceHolder.get().isLocked(object));
 	}
 
+	@Override
 	public void doRun() {
 		if (LocalLockServiceHolder.get().isLocked(object)
 				&& AccessControlServiceHolder.get().evaluate(evaluatableAce)) {

@@ -35,7 +35,9 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 	private List<?> input;
 	private List<Object> selection = new LinkedList<>();
 
-	private String shellTitle, title, message;
+	private String shellTitle;
+	private String title;
+	private String message;
 	private Image image;
 	private int style;
 
@@ -104,6 +106,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		structuredViewer.setContentProvider(ArrayContentProvider.getInstance());
 
 		structuredViewer.setLabelProvider(new LabelProvider() {
+			@Override
 			public String getText(Object elements) {
 				if (elements instanceof PersistentObject) {
 					return ((PersistentObject) elements).getLabel();
@@ -116,6 +119,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		structuredViewer.setInput(input.toArray());
 
 		text.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent keyEvent) {
 				filter.setSearchText(text.getText());
 				structuredViewer.refresh();
@@ -186,7 +190,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (searchString == null || searchString.length() == 0) {
+			if (searchString == null || searchString.isEmpty()) {
 				return true;
 			}
 

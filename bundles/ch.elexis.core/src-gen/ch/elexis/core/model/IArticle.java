@@ -407,6 +407,7 @@ public interface IArticle extends Identifiable, IBillable, Deleteable, WithExtIn
 	 * @model
 	 * @generated
 	 */
+	@Override
 	void setCode(String code);
 
 	/**

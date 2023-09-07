@@ -94,6 +94,7 @@ public class InMemorySettings extends Settings {
 	 *
 	 * @see ch.rgw.tools.Settings#flush()
 	 */
+	@Override
 	protected void flush_absolute() { /* empty */
 	}
 
@@ -102,6 +103,7 @@ public class InMemorySettings extends Settings {
 	 *
 	 * @see ch.rgw.tools.Settings#undo()
 	 */
+	@Override
 	public void undo() { /* empty */
 	}
 

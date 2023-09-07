@@ -36,6 +36,7 @@ public class SerialConnectionUi {
 			this.endTime = endTime;
 		}
 
+		@Override
 		public void run() {
 			while (System.currentTimeMillis() < endTime && connection.isOpen()) {
 				try {
@@ -65,10 +66,12 @@ public class SerialConnectionUi {
 			this.text = text;
 		}
 
+		@Override
 		public void run() {
 			final IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 				private int count = 0;
 
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.setTaskName(Messages.AbstractConnection_PleaseWait);
 					while (!monitor.isCanceled() && System.currentTimeMillis() < endTime && connection.isOpen()) {
@@ -93,6 +96,7 @@ public class SerialConnectionUi {
 			};
 
 			Thread monitorDialogThread = new Thread() {
+				@Override
 				public void run() {
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 					try {

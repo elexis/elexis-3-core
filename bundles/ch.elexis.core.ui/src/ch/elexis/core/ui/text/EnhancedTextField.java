@@ -107,7 +107,9 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private static Pattern bold = Pattern.compile("\\*\\S+\\*"); //$NON-NLS-1$
 	private static Pattern italic = Pattern.compile("\\/\\S+\\/"); //$NON-NLS-1$
 	private static Pattern underline = Pattern.compile("_\\S+_"); //$NON-NLS-1$
-	private IAction copyAction, cutAction, pasteAction;
+	private IAction copyAction;
+	private IAction cutAction;
+	private IAction pasteAction;
 	private IMenuListener globalMenuListener;
 	private List<IKonsMakro> externalMakros;
 	private int lastCurserPosition = 0;
@@ -461,13 +463,13 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 			StyleRange n = new StyleRange();
 			n.start = m.getPos();
 			n.length = m.getLength();
-			if (type.equalsIgnoreCase("emphasized")) { //$NON-NLS-1$
+			if ("emphasized".equalsIgnoreCase(type)) { //$NON-NLS-1$
 				n.strikeout = true;
-			} else if (type.equalsIgnoreCase("bold")) { //$NON-NLS-1$
+			} else if ("bold".equalsIgnoreCase(type)) { //$NON-NLS-1$
 				n.fontStyle = SWT.BOLD;
-			} else if (type.equalsIgnoreCase("italic")) { //$NON-NLS-1$
+			} else if ("italic".equalsIgnoreCase(type)) { //$NON-NLS-1$
 				n.fontStyle = SWT.ITALIC;
-			} else if (type.equalsIgnoreCase("underlined")) { //$NON-NLS-1$
+			} else if ("underlined".equalsIgnoreCase(type)) { //$NON-NLS-1$
 				n.underline = true;
 			}
 			if ((n.start + n.length) > textlen) {
@@ -648,7 +650,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				// Wenn ein : gedrückt wurde, prüfen, ob es ein Wort am
 				// Zeilenanfang ist und ggf.
 				// fett formatieren.
-			} else if (e.text.equals(":")) { //$NON-NLS-1$
+			} else if (":".equals(e.text)) { //$NON-NLS-1$
 				int lineStart = text.getOffsetAtLine(text.getLineAtOffset(e.start));
 				String line = text.getText(lineStart, e.start - 1);
 				if (line.matches("^\\S+")) { //$NON-NLS-1$

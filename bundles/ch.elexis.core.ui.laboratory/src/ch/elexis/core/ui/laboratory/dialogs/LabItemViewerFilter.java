@@ -24,7 +24,7 @@ public class LabItemViewerFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (searchString == null || searchString.length() == 0) {
+		if (searchString == null || searchString.isEmpty()) {
 			return true;
 		}
 		String label = labelProvider.getText(element);

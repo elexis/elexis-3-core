@@ -10,15 +10,15 @@
  */
 package ch.elexis.core.tasks.model;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.model.tasks.TaskException;
-
-import java.util.List;
-import java.util.Map;
-
-import java.util.Optional;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <!-- begin-user-doc -->

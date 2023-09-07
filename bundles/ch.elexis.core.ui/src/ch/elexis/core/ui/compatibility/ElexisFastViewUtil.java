@@ -150,6 +150,7 @@ public class ElexisFastViewUtil {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (workbenchWindow != null) {
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					for (String viewId : viewIds) {
 						ElexisFastViewUtil.addToFastView(perspectiveId, viewId);

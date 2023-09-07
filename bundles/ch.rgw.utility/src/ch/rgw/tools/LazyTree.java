@@ -40,11 +40,13 @@ public class LazyTree<T> extends Tree<T> {
 		listen = l;
 	}
 
+	@Override
 	public Collection<Tree<T>> getChildren() {
 		loadChildren();
 		return super.getChildren();
 	}
 
+	@Override
 	public boolean hasChildren() {
 		if (first == null) {
 			return (listen == null ? false : listen.hasChildren(this));
@@ -64,6 +66,7 @@ public class LazyTree<T> extends Tree<T> {
 		}
 	}
 
+	@Override
 	public Tree<T> getFirstChild() {
 		loadChildren();
 		return first;

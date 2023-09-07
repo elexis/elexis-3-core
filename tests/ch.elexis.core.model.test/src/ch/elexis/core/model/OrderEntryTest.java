@@ -24,7 +24,9 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 public class OrderEntryTest {
 	private IModelService modelService;
 
-	private IArticle article, article1;
+	private IArticle article;
+
+	private IArticle article1;
 
 	private IStock stock;
 

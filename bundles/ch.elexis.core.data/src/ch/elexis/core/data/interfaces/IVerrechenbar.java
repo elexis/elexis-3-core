@@ -155,6 +155,7 @@ public interface IVerrechenbar extends ICodeElement {
 	// public String[] getDisplayedFields();
 
 	public static class DefaultComparator implements Comparator<IVerrechenbar> {
+		@Override
 		public int compare(final IVerrechenbar v1, final IVerrechenbar v2) {
 			int i = v1.getCodeSystemName().compareTo(v2.getCodeSystemName());
 			if (i == 0) {
@@ -166,6 +167,7 @@ public interface IVerrechenbar extends ICodeElement {
 	}
 
 	public static class DefaultFilter implements IFilter {
+		@Override
 		public boolean select(final Object toTest) {
 			return true;
 		}
@@ -177,10 +179,12 @@ public interface IVerrechenbar extends ICodeElement {
 		private Logger log;
 		private Verrechnet newVerrechnet;
 
+		@Override
 		public Result<Object> optify(final Konsultation kons) {
 			return new Result<Object>(kons);
 		}
 
+		@Override
 		public Result<IVerrechenbar> add(final IVerrechenbar code, final Konsultation kons) {
 			List<Verrechnet> old = kons.getLeistungen();
 			Verrechnet foundVerrechnet = null;
@@ -213,6 +217,7 @@ public interface IVerrechenbar extends ICodeElement {
 			return new Result<IVerrechenbar>(code);
 		}
 
+		@Override
 		public Result<Verrechnet> remove(final Verrechnet v, final Konsultation kons) {
 			List<Verrechnet> old = kons.getLeistungen();
 			old.remove(v);

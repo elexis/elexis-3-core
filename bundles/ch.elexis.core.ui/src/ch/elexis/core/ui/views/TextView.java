@@ -79,8 +79,15 @@ public class TextView extends ViewPart implements IActivationListener {
 	Composite textContainer = null;
 	private Brief actBrief;
 	private Logger log = LoggerFactory.getLogger("TextView");//$NON-NLS-1$
-	private IAction briefLadenAction, loadTemplateAction, loadSysTemplateAction, saveTemplateAction, showMenuAction,
-			showToolbarAction, importAction, newDocAction, exportAction;
+	private IAction briefLadenAction;
+	private IAction loadTemplateAction;
+	private IAction loadSysTemplateAction;
+	private IAction saveTemplateAction;
+	private IAction showMenuAction;
+	private IAction showToolbarAction;
+	private IAction importAction;
+	private IAction newDocAction;
+	private IAction exportAction;
 	private ViewMenus menus;
 
 	public TextView() {
@@ -152,7 +159,7 @@ public class TextView extends ViewPart implements IActivationListener {
 			if (CoreHub.localCfg.get(Preferences.P_TEXT_SUPPORT_LEGACY, false) == true) {
 				setName();
 				String ext = MimeTool.getExtension(doc.getMimeType());
-				if (ext.length() == 0) {
+				if (ext.isEmpty()) {
 					log.warn("TextView.openDocument no extension found for mime type: " + doc.getMimeType()); //$NON-NLS-1$
 					ext = "odt"; //$NON-NLS-1$
 				}

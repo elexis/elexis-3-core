@@ -72,6 +72,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	 * CommonViewer. If the user enters text or clicks the headings, a changed() or
 	 * reorder() event will be fired
 	 */
+	@Override
 	public void startListening() {
 		// viewerFilter =
 		// cv.getConfigurer().getControlFieldProvider().createFilter();
@@ -81,15 +82,18 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	/**
 	 * stop listening the selector fields
 	 */
+	@Override
 	public void stopListening() {
 		cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void dispose() {
 		stopListening();
 		if (job != null) {
@@ -100,6 +104,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	/**
 	 * This will be called by the CommonViewer on construction
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		job.schedule(0);
 	}
@@ -111,6 +116,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	 *
 	 * @param values the new values
 	 */
+	@Override
 	public void changed(HashMap<String, String> values) {
 		ControlFieldProvider cfp = cv.getConfigurer().getControlFieldProvider();
 		if (cfp != null) {
@@ -129,11 +135,13 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	 *
 	 * @param field the field name after which the table should e reordered
 	 */
+	@Override
 	public void reorder(String field) {
 		setOrderFields(new String[] { field });
 		job.schedule();
 	}
 
+	@Override
 	public void selected() {
 
 	}
@@ -202,6 +210,7 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 		return bSuspended;
 	}
 
+	@Override
 	public void init() {
 	}
 }

@@ -44,11 +44,15 @@ public class DayDateCombo extends Composite {
 	private DatePickerCombo dp;
 	private SpinnerListener spl;
 	private DateListener dl;
-	private TimeTool ttBase, ttNow;
+	private TimeTool ttBase;
+	private TimeTool ttNow;
 	private boolean spinBack;
 	private Label frontLabel;
 	private Label middleLabel;
-	private final String text1, text2, text1Neg, text2Neg;
+	private final String text1;
+	private final String text2;
+	private final String text1Neg;
+	private final String text2Neg;
 
 	/**
 	 * Create the Composite
@@ -95,6 +99,7 @@ public class DayDateCombo extends Composite {
 		spinBack = true;
 	}
 
+	@Override
 	public void setEnabled(boolean bEnable) {
 		dp.setEnabled(bEnable);
 		spinner.setEnabled(bEnable);
@@ -211,6 +216,7 @@ public class DayDateCombo extends Composite {
 
 	class SpinnerListener implements ModifyListener {
 
+		@Override
 		public void modifyText(ModifyEvent me) {
 			removeListeners();
 			int d = spinner.getSelection();
@@ -242,6 +248,7 @@ public class DayDateCombo extends Composite {
 			setListeners();
 		}
 
+		@Override
 		public void modifyText(ModifyEvent me) {
 			// String t = dp.getText();
 			Event e = new Event();

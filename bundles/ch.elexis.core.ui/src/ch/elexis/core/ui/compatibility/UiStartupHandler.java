@@ -29,6 +29,7 @@ public class UiStartupHandler implements EventHandler {
 			EModelService modelService = application.getContext().get(EModelService.class);
 
 			UiDesk.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					addMandantSelectionItem(application, modelService);
 					ElexisFastViewUtil.registerPerspectiveListener();

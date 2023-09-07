@@ -39,7 +39,8 @@ import ch.elexis.data.Reminder;
 public class ReminderPrefences extends PreferencePage implements IWorkbenchPreferencePage {
 	DecoratedString[] strings;
 	private Button showRemindersOnPatientSelectionEventBtn;
-	private ListViewer lViewerChoosen, lViewerAvailable;
+	private ListViewer lViewerChoosen;
+	private ListViewer lViewerAvailable;
 	private String[] choosenFields;
 	private String[] availableFields;
 	private Label lblInfo;
@@ -194,6 +195,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		return prefixPrevLabel + ":\t\t" + sb.toString(); //$NON-NLS-1$
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}

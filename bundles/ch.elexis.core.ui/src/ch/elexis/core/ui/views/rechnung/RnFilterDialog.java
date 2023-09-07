@@ -34,8 +34,14 @@ public class RnFilterDialog extends TitleAreaDialog {
 	static final String FROM = Messages.RnFilterDialog_fromDate; // $NON-NLS-1$
 	static final String UNTIL = Messages.Core_Until; // $NON-NLS-1$
 	String[] ret;
-	MoneyInput miVon, miBis;
-	DateInput diRnVon, diRnBis, diStatVon, diStatBis, diOutVon, diOutBis;
+	MoneyInput miVon;
+	MoneyInput miBis;
+	DateInput diRnVon;
+	DateInput diRnBis;
+	DateInput diStatVon;
+	DateInput diStatBis;
+	DateInput diOutVon;
+	DateInput diOutBis;
 
 	private TimeTool invoiceDateFrom;
 	private TimeTool invoiceDateTo;

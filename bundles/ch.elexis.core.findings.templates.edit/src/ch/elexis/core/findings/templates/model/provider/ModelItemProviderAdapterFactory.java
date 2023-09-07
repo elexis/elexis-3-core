@@ -2,15 +2,12 @@
  */
 package ch.elexis.core.findings.templates.model.provider;
 
-import ch.elexis.core.findings.templates.model.util.ModelAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -23,6 +20,8 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITableItemLabelProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+
+import ch.elexis.core.findings.templates.model.util.ModelAdapterFactory;
 
 /**
  * This is the factory that is used to provide the interfaces needed to support
@@ -257,6 +256,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public ComposeableAdapterFactory getRootAdapterFactory() {
 		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
 	}
@@ -267,6 +267,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}
@@ -314,6 +315,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public void addListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.addListener(notifyChangedListener);
 	}
@@ -323,6 +325,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public void removeListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.removeListener(notifyChangedListener);
 	}
@@ -333,6 +336,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public void fireNotifyChanged(Notification notification) {
 		changeNotifier.fireNotifyChanged(notification);
 
@@ -347,6 +351,7 @@ public class ModelItemProviderAdapterFactory extends ModelAdapterFactory
 	 *
 	 * @generated
 	 */
+	@Override
 	public void dispose() {
 		if (findingsTemplatesItemProvider != null)
 			findingsTemplatesItemProvider.dispose();

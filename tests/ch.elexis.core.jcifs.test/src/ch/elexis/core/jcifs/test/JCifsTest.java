@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,7 +83,7 @@ public class JCifsTest {
 		if (skipTest) {
 			return;
 		}
-		; // Avoid error No tests found in maven builds
+		// Avoid error No tests found in maven builds
 		try {
 			servicesAreReachable = InetAddress.getByName(server).isReachable(300)
 					|| InetAddress.getAllByName(server)[0].isReachable(300);

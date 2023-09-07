@@ -43,9 +43,9 @@ public class ExHandler {
 	 * @param name der Ausgabestream
 	 */
 	public static void setOutput(String name) {
-		if ((name == null) || (name.equals("")) || (name.equals("none"))) {
+		if ((name == null) || ("".equals(name)) || ("none".equals(name))) {
 			out = System.err;
-		} else if (name.equals("sysout")) {
+		} else if ("sysout".equals(name)) {
 			out = System.out;
 		} else {
 			try {

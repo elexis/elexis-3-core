@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.StringConstants;
@@ -39,23 +39,23 @@ public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 				continue;
 			} else {
 				String artikelTyp = artikel.get(Artikel.FLD_TYP).trim();
-				if (artikelTyp.equalsIgnoreCase("Medical")) {
+				if ("Medical".equalsIgnoreCase(artikelTyp)) {
 					artikel.set(Artikel.FLD_KLASSE, "ch.elexis.artikel_ch.data.Medical");
 					output.append("Fixing " + artikel.getName()
 							+ " from no Klasse field entry to ch.elexis.artikel_ch.data.Medical\n");
-				} else if (artikelTyp.equalsIgnoreCase("Medikament")) {
+				} else if ("Medikament".equalsIgnoreCase(artikelTyp)) {
 					artikel.set(Artikel.FLD_KLASSE, "ch.elexis.artikel_ch.data.Medikament");
 					output.append("Setting " + artikel.getName()
 							+ " from no Klasse field entry to ch.elexis.artikel_ch.data.Medikament\n");
-				} else if (artikelTyp.equalsIgnoreCase("Medikamente")) {
+				} else if ("Medikamente".equalsIgnoreCase(artikelTyp)) {
 					artikel.set(Artikel.FLD_KLASSE, "ch.elexis.artikel_ch.data.Medikament");
 					output.append("Setting " + artikel.getName()
 							+ " from no Klasse field entry to ch.elexis.artikel_ch.data.Medikament\n");
-				} else if (artikelTyp.equalsIgnoreCase("Eigenartikel")) {
+				} else if ("Eigenartikel".equalsIgnoreCase(artikelTyp)) {
 					artikel.set(Artikel.FLD_KLASSE, "ch.elexis.data.Eigenartikel");
 					output.append("Setting " + artikel.getName()
 							+ " from no Klasse field entry to ch.elexis.data.Eigenartikel\n");
-				} else if (artikelTyp.equalsIgnoreCase("MiGeL")) {
+				} else if ("MiGeL".equalsIgnoreCase(artikelTyp)) {
 					artikel.set(Artikel.FLD_KLASSE, "ch.elexis.artikel_ch.data.MiGelArtikel");
 					output.append("Setting " + artikel.getName()
 							+ " from no Klasse field entry to ch.elexis.artikel_ch.data.MiGelArtikel\n");

@@ -10,14 +10,83 @@
  */
 package ch.elexis.core.model.util;
 
-import ch.elexis.core.model.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import ch.elexis.core.model.Deleteable;
+import ch.elexis.core.model.IAccount;
+import ch.elexis.core.model.IAccountTransaction;
+import ch.elexis.core.model.IAddress;
+import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.IAppointmentSeries;
+import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IArticleDefaultSignature;
+import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableOptifier;
+import ch.elexis.core.model.IBillableVerifier;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystem;
+import ch.elexis.core.model.IBillingSystemFactor;
+import ch.elexis.core.model.IBlob;
+import ch.elexis.core.model.IBlobSecondary;
+import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.IConfig;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.ICustomDiagnosis;
+import ch.elexis.core.model.ICustomService;
+import ch.elexis.core.model.IDayMessage;
+import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IDiagnosisReference;
+import ch.elexis.core.model.IDiagnosisTree;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IFreeTextDiagnosis;
+import ch.elexis.core.model.IHistory;
+import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBilled;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IMessage;
+import ch.elexis.core.model.IOrder;
+import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPayment;
+import ch.elexis.core.model.IPeriod;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.IRelatedContact;
+import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.IReminderResponsibleLink;
+import ch.elexis.core.model.IRight;
+import ch.elexis.core.model.IRole;
+import ch.elexis.core.model.IService;
+import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ITextTemplate;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserConfig;
+import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.IXid;
+import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.WithAssignableId;
+import ch.elexis.core.model.WithExtInfo;
 
 /**
  * <!-- begin-user-doc -->

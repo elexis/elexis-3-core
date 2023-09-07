@@ -22,6 +22,7 @@ import ch.elexis.core.ui.views.artikel.ArtikelSelektor;
 public class BestellPerspektive implements IPerspectiveFactory {
 	public static final String ID = "ch.elexis.bestellperspektive"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(false);

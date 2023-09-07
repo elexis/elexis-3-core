@@ -3,10 +3,10 @@ package ch.elexis.core.eigendiagnosen.model;
 import java.util.List;
 import java.util.Map;
 
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.eigendiagnosen.model.service.ModelUtil;
 import ch.elexis.core.jpa.entities.Eigendiagnose;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
