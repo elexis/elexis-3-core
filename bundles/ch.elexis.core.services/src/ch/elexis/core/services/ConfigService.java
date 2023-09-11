@@ -162,10 +162,11 @@ public class ConfigService implements IConfigService {
 				}
 			}
 
-			String workstation = "unknown";
+			String workstation = NetTool.hostname;
 			if (StringUtils.isEmpty(workstation)) {
-				workstation = StringUtils.abbreviate(NetTool.hostname, 40);
+				workstation = "unknown";
 			}
+			workstation = StringUtils.abbreviate(workstation, 40);
 			String _action = (StringUtils.isEmpty(action)) ? StringUtils.EMPTY : action;
 
 			String insertStatement = "INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
@@ -259,7 +260,7 @@ public class ConfigService implements IConfigService {
 		}
 		return defaultValue;
 	}
-	
+
 	@Override
 	public Map<String, String> getAsMap() {
 		// TODO Auto-generated method stub
@@ -593,7 +594,7 @@ public class ConfigService implements IConfigService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public boolean getActiveMandator(String key, boolean defaultValue) {
 		String defaultValueString = Boolean.toString(defaultValue);
