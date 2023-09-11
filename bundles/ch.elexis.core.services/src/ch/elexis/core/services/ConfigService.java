@@ -151,10 +151,11 @@ public class ConfigService implements IConfigService {
 				}
 			}
 
-			String workstation = "unknown";
+			String workstation = NetTool.hostname;
 			if (StringUtils.isEmpty(workstation)) {
-				workstation = StringUtils.abbreviate(NetTool.hostname, 40);
+				workstation = "unknown";
 			}
+			workstation = StringUtils.abbreviate(workstation, 40);
 			String _action = (StringUtils.isEmpty(action)) ? "" : action;
 
 			String insertStatement = "INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
