@@ -40,7 +40,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -157,10 +156,11 @@ public class ConfigService implements IConfigService {
 				}
 			}
 
-			String workstation = "unknown";
+			String workstation = NetTool.hostname;
 			if (StringUtils.isEmpty(workstation)) {
-				workstation = StringUtils.abbreviate(NetTool.hostname, 40);
+				workstation = "unknown";
 			}
+			workstation = StringUtils.abbreviate(workstation, 40);
 			String _action = (StringUtils.isEmpty(action)) ? StringUtils.EMPTY : action;
 
 			String insertStatement = "INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
