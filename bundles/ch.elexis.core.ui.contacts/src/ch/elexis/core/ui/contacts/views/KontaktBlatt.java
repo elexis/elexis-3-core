@@ -71,8 +71,7 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 
-public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
-{
+public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable {
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
@@ -85,9 +84,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private static final String BEZEICHNUNG = Messages.Core_Description; // $NON-NLS-1$
 	static final String[] types = { "istOrganisation", "istLabor", "istPerson", "istPatient", IS_USER, "istMandant" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
 	}; // $NON-NLS-6$
-	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory,
-			Messages.Core_Person, Messages.Core_Patient, Messages.Core_User,
-			Messages.Core_Mandator };
+	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory, Messages.Core_Person,
+			Messages.Core_Patient, Messages.Core_User, Messages.Core_Mandator };
 	private final Button[] bTypes = new Button[types.length];
 	private final TypButtonAdapter tba = new TypButtonAdapter();
 	private final IViewSite site;
@@ -181,7 +179,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IContact contact) {
 		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
 		if (kontakt != null && kontakt.equals(actKontakt)) {
-			save();
+
 			setUnlocked(true);
 		}
 	}
@@ -220,21 +218,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
-
-		mandantListener = new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				if (MessageDialog.openConfirm(getShell(), "Mandant bearbeiten",
-						"Sie nehmen Änderungen an einem Mandanten vor\nÄnderung speichern?") == false) {
-					event.doit = false;
-				}
-				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
-				}
-			}
-
-		};
 
 		checkIfContactExistsListener = new Listener() {
 
@@ -421,12 +404,12 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			boolean mandatorEditGuard = kontakt.istMandant();
 
 			for (int i = 0; i < def.length; i++) {
-				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
+				def[i].getWidget().getControl().removeListener(SWT.FocusOut, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
+					def[i].getWidget().getControl().addListener(SWT.FocusOut, mandantListener);
 				}
 			} else {
 				// Listener deliberately applied to name1, name2 and sex

@@ -16,7 +16,9 @@ package ch.elexis.core.ui.util;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -38,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -70,6 +73,7 @@ import ch.rgw.tools.StringTool;
  */
 public class LabeledInputField extends Composite {
 	final static Logger logger = LoggerFactory.getLogger(LabeledInputField.class);
+	private static Set<InputData> modifiedInputDataSet = new HashSet<>();
 
 	/**
 	 *
@@ -633,11 +637,35 @@ public class LabeledInputField extends Composite {
 
 					@SuppressWarnings("unchecked")
 					public void focusLost(FocusEvent e) {
-						if (act != null) {
-							Control src = (Control) e.getSource();
-							InputData inp = (InputData) src.getData();
-							save(inp);
-						}
+						Control src = (Control) e.getSource();
+						InputData inp = (InputData) src.getData();
+
+						modifiedInputDataSet.add(inp);
+
+						src.getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								Control newFocusControl = src.getDisplay().getFocusControl();
+
+								if (!(newFocusControl.getParent() instanceof LabeledInputField) && act != null) {
+									MessageBox dialog = new MessageBox(src.getShell(),
+											SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
+									dialog.setText("Bestätigung");
+									dialog.setMessage("Möchten Sie die Daten speichern?");
+
+									int response = dialog.open();
+
+									if (response == SWT.OK) {
+										for (InputData modifiedInputData : modifiedInputDataSet) {
+											save(modifiedInputData);
+										}
+										modifiedInputDataSet.clear();
+									} else {
+										modifiedInputDataSet.clear();
+									}
+								}
+							}
+						});
 					}
 				});
 				cFields[i].setData(def[i]);
