@@ -43,3 +43,5 @@ How to prepare a new Elexis release
 - Adjust the number
 - Save the xcf file
 - Export as splash.bmp
+# Start build cycle
+- mvn -V clean verify -Dtycho.localArtifacts=ignore -DskipTests 
