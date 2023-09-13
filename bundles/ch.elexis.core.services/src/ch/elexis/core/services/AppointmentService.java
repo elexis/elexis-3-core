@@ -83,7 +83,7 @@ public class AppointmentService implements IAppointmentService {
 
 	@Reference
 	private IContextService contextService;
-	
+
 	private LoadingCache<String, Map<String, Area>> cache;
 
 	@Override
@@ -99,6 +99,7 @@ public class AppointmentService implements IAppointmentService {
 		accessControlService.doPrivileged(() -> {
 			states = getStates();
 			cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(new AreaLoader());
+			assertConfigInitialization();
 		});
 	}
 
@@ -114,6 +115,15 @@ public class AppointmentService implements IAppointmentService {
 				return _map;
 			}
 			return null;
+		}
+	}
+
+	private void assertConfigInitialization() {
+		List<String> ret = new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
+		if (ret.isEmpty() || ret.size() < 3) {
+			ret = Arrays.asList(Messages.Core_free, Messages.Agenda_Appointement_Locked,
+					Messages.Agenda_Appointement_Normal);
+			configService.setFromList(AG_TERMINTYPEN, ret);
 		}
 	}
 
@@ -330,13 +340,7 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public List<String> getTypes() {
-		List<String> ret = new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
-		if (ret.isEmpty() || ret.size() < 3) {
-			ret = Arrays.asList(Messages.Core_free, Messages.Agenda_Appointement_Locked,
-					Messages.Agenda_Appointement_Normal);
-			configService.setFromList(AG_TERMINTYPEN, ret);
-		}
-		return ret;
+		return new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 	}
 
 	@Override
@@ -425,6 +429,7 @@ public class AppointmentService implements IAppointmentService {
 		return ret;
 	}
 
+	@Override
 	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries) {
 		List<IAppointment> series = new ArrayList<>();
 		IAppointment root = appointmentSeries.getRootAppointment();
@@ -642,7 +647,7 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public List<Area> getAoboAreas() {
 		Optional<IUser> user = contextService.getActiveUser();
-		if(user.isPresent()) {
+		if (user.isPresent()) {
 			List<String> aoboMandatorIds = accessControlService.getAoboMandatorIds();
 			return getAreas().stream()
 					.filter(a -> a.getType() == AreaType.GENERIC || aoboMandatorIds.contains(a.getContactId()))
