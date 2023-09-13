@@ -221,21 +221,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
 
-		mandantListener = new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				if (MessageDialog.openConfirm(getShell(), "Mandant bearbeiten",
-						"Sie nehmen Änderungen an einem Mandanten vor\nÄnderung speichern?") == false) {
-					event.doit = false;
-				}
-				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
-				}
-			}
-
-		};
-
 		checkIfContactExistsListener = new Listener() {
 
 			@Override
@@ -378,9 +363,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = kontakt;
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
-			boolean updateRight = AccessControlServiceHolder.get()
-					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
-							StoreToStringServiceHolder.getStoreToString(actKontakt)));
+			boolean updateRight = AccessControlServiceHolder.get().evaluate(
+					EvACE.of(IContact.class, Right.UPDATE, StoreToStringServiceHolder.getStoreToString(actKontakt)));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);
@@ -423,12 +407,12 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			boolean mandatorEditGuard = kontakt.istMandant();
 
 			for (int i = 0; i < def.length; i++) {
-				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
+				def[i].getWidget().getControl().removeListener(SWT.FocusOut, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
+					def[i].getWidget().getControl().addListener(SWT.FocusOut, mandantListener);
 				}
 			} else {
 				// Listener deliberately applied to name1, name2 and sex
