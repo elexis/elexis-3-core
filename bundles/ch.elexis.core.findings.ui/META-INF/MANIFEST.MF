@@ -27,13 +27,14 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
 Bundle-ActivationPolicy: lazy
 Import-Package: ca.odell.glazedlists,
  ch.elexis.core.services.holder,
+ javax.inject;version="1.0.0",
  org.apache.commons.lang3;version="3.1.0",
  org.apache.commons.lang3.math;version="3.1.0",
  org.eclipse.core.databinding.property.value,
  org.eclipse.e4.core.contexts
 Export-Package: ch.elexis.core.findings.ui.composites,
  ch.elexis.core.findings.ui.util
-Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml,
+Service-Component: OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.FindingsServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.ui.services.CodingServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.ui.services.FindingsTemplateServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.ui.services.MigratorServiceComponent.xml
