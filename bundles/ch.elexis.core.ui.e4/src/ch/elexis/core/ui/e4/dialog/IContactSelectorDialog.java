@@ -131,6 +131,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 		if (initialInput != null) {
 			tableViewerContacts.setInput(initialInput);
+			tableViewerContacts.setItemCount(12);
 		}
 
 		return area;
