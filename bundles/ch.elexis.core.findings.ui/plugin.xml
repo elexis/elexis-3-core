@@ -64,6 +64,7 @@
             class="ch.elexis.core.findings.ui.views.FindingsViewDynamic"
             icon="icons/chart_curve.png"
             id="ch.elexis.core.findings.ui.views.FindingsView"
+            inject="true"
             name="%view.name">
       </view>
    </extension>
