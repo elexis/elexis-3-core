@@ -1,6 +1,7 @@
 How to prepare a new Elexis release
 
-*Framsteg GmbH\<admin@framsteg.ch\>* Last update: 14.9.2023
+*Framsteg GmbH\<admin@framsteg.ch\>* Last update: 13.9.2023
+
 
 # Preparations
 - cd /PATH/TO/ELEXIS_CORE
