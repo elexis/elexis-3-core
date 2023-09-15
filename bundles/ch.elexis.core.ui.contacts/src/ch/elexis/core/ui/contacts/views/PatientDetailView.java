@@ -229,6 +229,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
 
+				@Override
 				public void hyperlinkActivated(final String l) {
 					Patient sp = ElexisEventDispatcher.getSelectedPatient();
 					if (sp == null) {
@@ -254,6 +255,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					}
 				}
 
+				@Override
 				public String getLabel(Object o) {
 					BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -263,10 +265,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					Kontakt other = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 					if (other.exists()) {
 						List<String> tokens = new ArrayList<String>();
+						String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 
 						String telefon1 = other.get(Kontakt.FLD_PHONE1);
 						String telefon2 = other.get(Kontakt.FLD_PHONE2);
-						String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 						String eMail = other.get(Kontakt.FLD_E_MAIL);
 						String fax = other.get(Kontakt.FLD_FAX);
 
@@ -309,6 +311,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
 					new ListDisplay.LDListener() {
+						@Override
 						public void hyperlinkActivated(final String l) {
 							Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 							if (actPatient != null) {
@@ -321,6 +324,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							}
 						}
 
+						@Override
 						public String getLabel(Object o) {
 							ZusatzAdresse address = (ZusatzAdresse) o;
 							if (address != null) {
@@ -460,6 +464,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
+	@Override
 	public void dispose() {
 		toolkit.dispose();
 		super.dispose();

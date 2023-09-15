@@ -92,9 +92,10 @@ public class Kontakt extends PersistentObject {
 		addMapping(TABLENAME, "BezugsKontakte = JOINT:myID:otherID:KONTAKT_ADRESS_JOINT", //$NON-NLS-1$
 				"MyReminders		= LIST:IdentID:REMINDERS", //$NON-NLS-1$
 				FLD_NAME1, FLD_NAME2, FLD_NAME3, FLD_SHORT_LABEL + "= PatientNr", //$NON-NLS-1$
-				FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_E_MAIL2, FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
+				FLD_REMARK, FLD_MOBILEPHONE, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_E_MAIL2, FLD_WEBSITE, //$NON-NLS-1$
+				FLD_EXTINFO,
 				FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR, FLD_IS_LAB,
-				FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT, FLD_MOBILEPHONE, "PatientNr"); //$NON-NLS-1$
+				FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT, "PatientNr"); //$NON-NLS-1$
 
 		AccessControlServiceHolder.get().doPrivileged(() -> {
 			// TODO move to NoPo initialisation
@@ -208,6 +209,10 @@ public class Kontakt extends PersistentObject {
 	 */
 	public String getTelephoneLabel() {
 		List<String> phoneData = new ArrayList<>();
+		String mobile = get(FLD_MOBILEPHONE);
+		if (StringUtils.isNotBlank(mobile)) {
+			phoneData.add("M: " + mobile);
+		}
 		String t1 = get(FLD_PHONE1);
 		if (StringUtils.isNotBlank(t1)) {
 			phoneData.add("T1: " + t1);
@@ -215,10 +220,6 @@ public class Kontakt extends PersistentObject {
 		String t2 = get(FLD_PHONE2);
 		if (StringUtils.isNotBlank(t2)) {
 			phoneData.add("T2: " + t2);
-		}
-		String mobile = get(FLD_MOBILEPHONE);
-		if (StringUtils.isNotBlank(mobile)) {
-			phoneData.add("M: " + mobile);
 		}
 		return StringUtils.join(phoneData, ", ");
 	}
@@ -234,6 +235,7 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * @deprecated use {@link IContact#getPostalAddress()}
 	 */
+	@Deprecated
 	public String getPostAnschrift() {
 		return getPostAnschrift(false);
 	}
@@ -241,6 +243,7 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * @deprecated use {@link IContact#getPostalAddress()}
 	 */
+	@Deprecated
 	public String getPostAnschrift(boolean multiline) {
 		String an = get(FLD_ANSCHRIFT);
 		if (StringTool.isNothing(an)) {
@@ -253,6 +256,7 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * @deprecated use {@link IContact#getPostalAddress()}
 	 */
+	@Deprecated
 	public String createStdAnschrift() {
 		Anschrift an = getAnschrift();
 		String ret = getSalutation() + an.getEtikette(false, true);
@@ -267,6 +271,7 @@ public class Kontakt extends PersistentObject {
 	/**
 	 * @deprecated use {@link IContact#getPostalAddress()}
 	 */
+	@Deprecated
 	public String getSalutation() {
 		StringBuilder sb = new StringBuilder();
 		if (istPerson() == true) {
@@ -362,6 +367,14 @@ public class Kontakt extends PersistentObject {
 		// }
 		//
 		if (including_phone) {
+			String thisAddressFLD_MOBILEPHONE = get(FLD_MOBILEPHONE);
+			if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
+				// With a colon after the label:
+				thisAddress.append(FLD_MOBILEPHONE + ":" + StringTool.space + thisAddressFLD_MOBILEPHONE
+						+ System.getProperty("line.separator"));
+				// Without a colon after the label:
+				// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+StringTool.space+thisAddressFLD_MOBILEPHONE);
+			}
 			String thisAddressFLD_PHONE1 = get(FLD_PHONE1);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 				thisAddress.append(thisAddressFLD_PHONE1 + System.getProperty("line.separator"));
@@ -370,15 +383,6 @@ public class Kontakt extends PersistentObject {
 			String thisAddressFLD_PHONE2 = get(FLD_PHONE2);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 				thisAddress.append(thisAddressFLD_PHONE2 + System.getProperty("line.separator"));
-			}
-
-			String thisAddressFLD_MOBILEPHONE = get(FLD_MOBILEPHONE);
-			if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
-				// With a colon after the label:
-				thisAddress.append(FLD_MOBILEPHONE + ":" + StringTool.space + thisAddressFLD_MOBILEPHONE
-						+ System.getProperty("line.separator"));
-				// Without a colon after the label:
-				// selectedPatInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+StringTool.space+thisAddressFLD_MOBILEPHONE);
 			}
 		}
 

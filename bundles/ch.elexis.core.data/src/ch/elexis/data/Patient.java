@@ -84,7 +84,7 @@ public class Patient extends Person {
 	public static final String FLD_STREET = "Strasse";
 	public static final String FLD_ZIP = "Plz";
 	public static final String FLD_PLACE = "Ort";
-	public static final String FLD_PHONE1 = "Telefon1";
+	public static final String FLD_Mobile = "Mobil-Tel.";
 	public static final String FLD_FAX = "Fax";
 	public static final String FLD_BALANCE = "Konto";
 	public static final String FLD_PERS_ANAMNESE = "PersAnamnese";
@@ -114,6 +114,7 @@ public class Patient extends Person {
 	/**
 	 * @deprecated unused, to be removed
 	 */
+	@Deprecated
 	public String getSystemAnamnese() {
 		return get("Systemanamnese");
 	}
@@ -238,6 +239,7 @@ public class Patient extends Person {
 	 * @deprecated does not filter by EntryType, use
 	 *             {@link Patient#getMedication(EntryType)} instead.
 	 */
+	@Deprecated
 	public Prescription[] getFixmedikation() {
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());

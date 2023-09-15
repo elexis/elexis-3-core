@@ -98,6 +98,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getContentProvider().startListening();
 		vc.getControlFieldProvider().addChangeListener(this);
 		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
@@ -114,6 +115,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		});
 	}
 
+	@Override
 	public void dispose() {
 		vc.getContentProvider().stopListening();
 		vc.getControlFieldProvider().removeChangeListener(this);
@@ -125,10 +127,12 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getControlFieldProvider().setFocus();
 	}
 
+	@Override
 	public void changed(HashMap<String, String> values) {
 		ElexisEventDispatcher.clearSelection(Kontakt.class);
 	}
 
+	@Override
 	public void reorder(String field) {
 		loader.reorder(field);
 	}
@@ -137,6 +141,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
+	@Override
 	public void selected() {
 		StructuredViewer viewer = cv.getViewerWidget();
 		Object[] elements = cv.getConfigurer().getContentProvider().getElements(viewer.getInput());
@@ -214,6 +219,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				setToolTipText("Die in der Liste markierten Kontakte als Tabelle ausdrucken");
 			}
 
+			@Override
 			public void run() {
 				Object[] sel = cv.getSelection();
 				String[][] adrs = new String[sel.length][];
@@ -224,7 +230,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 					for (int i = 0; i < sel.length; i++) {
 						Kontakt k = (Kontakt) sel[i];
 						String[] f = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 						String[] v = new String[f.length];
 						k.get(f, v);
 						adrs[i] = new String[4];
@@ -246,7 +252,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		@Override
 		public String getText(Object element) {
 			String[] fields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 			String[] values = new String[fields.length];
 			((Kontakt) element).get(fields, values);
 			return StringTool.join(values, StringConstants.COMMA);

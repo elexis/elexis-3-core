@@ -107,9 +107,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_City, Kontakt.FLD_PLACE, Typ.STRING, null),
 			new InputData(Messages.Core_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
 			new InputData(Messages.KontaktBlatt_XMLName, Patient.FLD_ALLERGIES, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
-			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.Core_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX, null),
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
@@ -124,6 +124,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
+				@Override
 				public void displayContent(Object po, InputData ltf) {
 					StringBuilder sb = new StringBuilder();
 					Kontakt k = (Kontakt) po;
@@ -133,6 +134,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					ltf.setText(sb.toString());
 				}
 
+				@Override
 				public void reloadContent(Object po, InputData ltf) {
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
@@ -312,7 +314,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					def[1].setLabel(ZUSATZ);
 					def[2].setLabel(ANSPRECHPERSON);
 					def[3].setText(StringUtils.EMPTY);
-					def[10].setLabel(TEL_DIREKT);
+					def[10].setLabel(MOBIL);
 					setOrganisationFieldsVisible(true);
 				} else if (type.equals("istLabor")) { //$NON-NLS-1$
 					select("1", "1", "0", "0", "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
@@ -324,7 +326,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					def[0].setLabel(NAME);
 					def[1].setLabel(VORNAME);
 					def[2].setLabel(ZUSATZ);
-					def[10].setLabel(MOBIL);
+					def[10].setLabel(TEL_DIREKT);
 					setOrganisationFieldsVisible(false);
 					if ("istPerson".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
