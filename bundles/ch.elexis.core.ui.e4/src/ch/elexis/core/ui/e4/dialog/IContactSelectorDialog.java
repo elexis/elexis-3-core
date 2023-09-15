@@ -94,7 +94,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		int h = Math.round(text.getLineHeight());
-		gridData.minimumHeight = (12 + 1) * (h + 2);
+		gridData.minimumHeight = (13 + 1) * (h + 3);
 		gridData.heightHint = gridData.minimumHeight;
 		composite.setLayoutData(gridData);
 
