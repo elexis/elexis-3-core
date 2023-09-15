@@ -89,7 +89,13 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		text.setMessage("Suche ... mindestens 3 Zeichen");
 
 		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		int h = Math.round(text.getLineHeight());
+		gridData.minimumHeight = (12 + 1) * (h + 3);
+		gridData.heightHint = gridData.minimumHeight;
+		composite.setLayoutData(gridData);
+
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
 
