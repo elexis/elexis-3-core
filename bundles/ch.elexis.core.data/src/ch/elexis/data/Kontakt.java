@@ -113,7 +113,7 @@ public class Kontakt extends PersistentObject {
 			Xid.getDomain(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
 		});
 	}
-
+	
 	/**
 	 * Returns a label describing this Kontakt.
 	 *

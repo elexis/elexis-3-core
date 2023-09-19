@@ -265,10 +265,10 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					Kontakt other = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 					if (other.exists()) {
 						List<String> tokens = new ArrayList<String>();
-						String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 
 						String telefon1 = other.get(Kontakt.FLD_PHONE1);
 						String telefon2 = other.get(Kontakt.FLD_PHONE2);
+						String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 						String eMail = other.get(Kontakt.FLD_E_MAIL);
 						String fax = other.get(Kontakt.FLD_FAX);
 
