@@ -33,7 +33,6 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
-import ch.rgw.tools.TimeTool;
 
 public class IContactSelectorDialog extends TitleAreaDialog {
 
@@ -151,41 +150,30 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
 
 			String[] patterns = _text.split(" ");
-			boolean isPatientQuery = queryClass.equals(IPatient.class);
-			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
-			query.startGroup();
 
-			if (isLetterFormat(patterns[0])) {
+			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
+
+			if (StringUtils.isAlpha(patterns[0])) {
 				String value = "%" + patterns[0] + "%";
+				query.startGroup();
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
 			}
 
-			if (isPatientQuery) {
-				if (isDateFormat(patterns[0])) {
-					query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
-							getTimeTool(patterns[0]).toLocalDate(), true);
-				}
-			}
-
 			result = query.execute();
 
 			for (int i = 1; i < patterns.length; ++i) {
-				if (isLetterFormat(patterns[i])) {
+				if (StringUtils.isAlpha(patterns[i])) {
 					String value = patterns[i];
 					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
 				}
-				// TODO
-//				else if (isPatientQuery && isDateFormat(patterns[i])) {
-//					result.removeIf(c -> !c.get);
-//					// getTimeTool(patterns[i]).toLocalDate()
-//				}
 			}
-			if (isPatientQuery) {
+
+			if (queryClass.isInstance(IPatient.class)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
 			tableViewerContacts.setInput(result);
@@ -193,18 +181,6 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			tableViewerContacts.setInput(Collections.emptyList());
 		}
 
-	}
-
-	private boolean isLetterFormat(String pattern) {
-		return pattern.matches("[a-zA-Z]+");
-	}
-
-	private boolean isDateFormat(String pattern) {
-		return pattern.matches("[0-9.]+");
-	}
-
-	private TimeTool getTimeTool(String pattern) {
-		return new TimeTool(pattern);
 	}
 
 	/**
