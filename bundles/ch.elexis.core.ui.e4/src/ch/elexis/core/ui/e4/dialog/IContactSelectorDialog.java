@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.e4.dialog;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -144,7 +143,6 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	}
 
 	private void refresh() {
-		List<? extends IContact> result = new ArrayList<IContact>();
 		String _text = text.getText();
 
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
@@ -162,7 +160,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				query.andJoinGroups();
 			}
 
-			result = query.execute();
+			List<? extends IContact> result = query.execute();
 
 			for (int i = 1; i < patterns.length; ++i) {
 				if (StringUtils.isAlpha(patterns[i])) {
