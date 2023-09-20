@@ -144,19 +144,37 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 	private void refresh() {
 		String _text = text.getText();
+
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
-			String value = "%" + _text + "%";
+
+			String[] patterns = _text.split(" ");
 
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
-			query.startGroup();
-			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
-			query.andJoinGroups();
-			if (queryClass.equals(IPatient.class)) {
+
+			if (StringUtils.isAlpha(patterns[0])) {
+				String value = "%" + patterns[0] + "%";
+				query.startGroup();
+				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
+				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
+				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
+				query.andJoinGroups();
+			}
+
+			List<? extends IContact> result = query.execute();
+
+			for (int i = 1; i < patterns.length; ++i) {
+				if (StringUtils.isAlpha(patterns[i])) {
+					String value = patterns[i];
+					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
+							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
+							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
+				}
+			}
+
+			if (queryClass.isInstance(IPatient.class)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
-			tableViewerContacts.setInput(query.execute());
+			tableViewerContacts.setInput(result);
 		} else {
 			tableViewerContacts.setInput(Collections.emptyList());
 		}
