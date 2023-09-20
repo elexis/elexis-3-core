@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -214,13 +215,19 @@ public class MandantSelectionContributionItem {
 	}
 
 	public static Image getBoxSWTColorImage(Color color) {
-		Display display = Display.getCurrent();
-		Image image = new Image(display, 16, 16);
-		GC gc = new GC(image);
-		gc.setBackground(color);
-		gc.fillRoundRectangle(0, 0, 16, 16, 8, 8);
-		gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
-		gc.dispose();
-		return image;
+		String colorName = String.valueOf(color.hashCode());
+	
+		if (JFaceResources.getImageRegistry().get(colorName) == null) {
+			Display display = Display.getCurrent();
+			Image image = new Image(display, 16, 16);
+			GC gc = new GC(image);
+			gc.setBackground(color);
+			gc.fillRoundRectangle(0, 0, 16, 16, 8, 8);
+			gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+			gc.dispose();
+			JFaceResources.getImageRegistry().put(colorName, image);
+		}
+		
+		return JFaceResources.getImageRegistry().get(colorName);
 	}
 }

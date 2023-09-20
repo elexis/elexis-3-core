@@ -234,7 +234,7 @@ public class ElexisServerService implements IElexisServerService {
 
 			connectionOk = (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 		} catch (IOException e) {
-			log.warn("Error connecting to elexis-server", e);
+			log.warn("Error connecting to [{}]: {}", restUrl, e.getMessage());
 		}
 
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {

@@ -318,10 +318,10 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public void setImage(IImage value) {
-		IImage image = getImage();
+		IImage image = CoreModelServiceHolder.get().load(getId(), IImage.class, true).orElse(null);
 		if (value == null) {
 			if (image != null) {
-				CoreModelServiceHolder.get().remove(image);
+				CoreModelServiceHolder.get().delete(image);
 			}
 			return;
 		}
@@ -334,6 +334,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 		image.setPrefix("ch.elexis.data.Kontakt");
 		image.setImage(value.getImage());
 		image.setMimeType(value.getMimeType());
+		image.setDeleted(false);
 		CoreModelServiceHolder.get().save(image);
 	}
 
