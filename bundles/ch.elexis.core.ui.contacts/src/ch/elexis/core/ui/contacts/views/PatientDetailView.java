@@ -229,7 +229,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
 
-				@Override
+
 				public void hyperlinkActivated(final String l) {
 					Patient sp = ElexisEventDispatcher.getSelectedPatient();
 					if (sp == null) {
@@ -255,7 +255,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					}
 				}
 
-				@Override
+				
 				public String getLabel(Object o) {
 					BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -311,7 +311,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
 					new ListDisplay.LDListener() {
-						@Override
+						
 						public void hyperlinkActivated(final String l) {
 							Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 							if (actPatient != null) {
@@ -324,7 +324,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							}
 						}
 
-						@Override
+						
 						public String getLabel(Object o) {
 							ZusatzAdresse address = (ZusatzAdresse) o;
 							if (address != null) {
@@ -464,7 +464,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
-	@Override
+	
 	public void dispose() {
 		toolkit.dispose();
 		super.dispose();

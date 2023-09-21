@@ -114,7 +114,7 @@ public class Patient extends Person {
 	/**
 	 * @deprecated unused, to be removed
 	 */
-	@Deprecated
+	
 	public String getSystemAnamnese() {
 		return get("Systemanamnese");
 	}
@@ -239,7 +239,7 @@ public class Patient extends Person {
 	 * @deprecated does not filter by EntryType, use
 	 *             {@link Patient#getMedication(EntryType)} instead.
 	 */
-	@Deprecated
+
 	public Prescription[] getFixmedikation() {
 		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
