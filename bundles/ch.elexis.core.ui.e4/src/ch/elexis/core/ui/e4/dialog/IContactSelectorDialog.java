@@ -193,12 +193,6 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 	}
 
-	/**
-	 * Checks if the given String contains only numbers or
-	 * 
-	 * @param pattern
-	 * @return
-	 */
 	private boolean possibleDate(String pattern) {
 		return pattern.matches("[0-9./-]{5,}");
 	}
