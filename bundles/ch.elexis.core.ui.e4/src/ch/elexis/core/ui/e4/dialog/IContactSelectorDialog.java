@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.e4.dialog;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -152,6 +153,8 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
 
+			List<? extends IContact> result = new ArrayList<IContact>();
+
 			if (patterns[0].matches("[a-zA-Z-]+")) {
 				String value = "%" + patterns[0] + "%";
 				query.startGroup();
@@ -159,12 +162,12 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
-			} else if (IPerson.class.isAssignableFrom(queryClass) && StringUtils.isAsciiPrintable(patterns[0])) {
+				result = query.execute();
+			} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[0])) {
 				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
 						new TimeTool(patterns[0]).toLocalDate(), true);
+				result = query.execute();
 			}
-
-			List<? extends IContact> result = query.execute();
 
 			for (int i = 1; i < patterns.length; ++i) {
 				if (StringUtils.isAlpha(patterns[i])) {
@@ -172,7 +175,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
-				} else if (IPerson.class.isAssignableFrom(queryClass) && StringUtils.isAsciiPrintable(patterns[0])) {
+				} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[0])) {
 					TimeTool value = new TimeTool(patterns[i]);
 					List<IPerson> matches = (List<IPerson>) result;
 					matches.removeIf(p -> !(p.getDateOfBirth().toLocalDate().equals(value.toLocalDate())));
@@ -188,6 +191,10 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			tableViewerContacts.setInput(Collections.emptyList());
 		}
 
+	}
+
+	private boolean possibleDate(String pattern) {
+		return pattern.matches("[0-9./-]{5,}");
 	}
 
 	/**
