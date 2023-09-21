@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
@@ -154,15 +153,15 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
 			query.startGroup();
 
-			if (StringUtils.isAlpha(patterns[0])) {
+			if (patterns[0].matches("[a-zA-Z-]+")) {
 				String value = "%" + patterns[0] + "%";
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
-			} else if (queryClass.isAssignableFrom(IPerson.class) && StringUtils.isAsciiPrintable(patterns[0])) {
-				TimeTool tt = new TimeTool(patterns[0]);
-				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, tt.toLocalDate(), true);
+			} else if (IPerson.class.isAssignableFrom(queryClass) && StringUtils.isAsciiPrintable(patterns[0])) {
+				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+						new TimeTool(patterns[0]).toLocalDate(), true);
 			}
 
 			List<? extends IContact> result = query.execute();
@@ -173,10 +172,15 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
+				} else if (IPerson.class.isAssignableFrom(queryClass) && StringUtils.isAsciiPrintable(patterns[0])) {
+					TimeTool value = new TimeTool(patterns[i]);
+					List<IPerson> matches = (List<IPerson>) result;
+					matches.removeIf(p -> !(p.getDateOfBirth().toLocalDate().equals(value.toLocalDate())));
+					result = matches;
 				}
 			}
 
-			if (queryClass.isAssignableFrom(IPatient.class)) {
+			if (IPerson.class.isAssignableFrom(queryClass)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
 			tableViewerContacts.setInput(result);
