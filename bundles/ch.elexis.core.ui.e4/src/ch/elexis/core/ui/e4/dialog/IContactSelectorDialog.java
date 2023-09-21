@@ -160,7 +160,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
-			} else if ((queryClass.getClass()).isInstance(IPerson.class) && StringUtils.isAsciiPrintable(patterns[0])) {
+			} else if (queryClass.isAssignableFrom(IPerson.class) && StringUtils.isAsciiPrintable(patterns[0])) {
 				TimeTool tt = new TimeTool(patterns[0]);
 				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, tt.toLocalDate(), true);
 			}
@@ -176,7 +176,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				}
 			}
 
-			if ((queryClass.getClass()).isInstance(IPatient.class)) {
+			if (queryClass.isAssignableFrom(IPatient.class)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
 			tableViewerContacts.setInput(result);
