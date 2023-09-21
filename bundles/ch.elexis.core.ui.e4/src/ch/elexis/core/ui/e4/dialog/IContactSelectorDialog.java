@@ -151,10 +151,10 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			String[] patterns = _text.split(" ");
 
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
-			query.startGroup();
 
 			if (patterns[0].matches("[a-zA-Z-]+")) {
 				String value = "%" + patterns[0] + "%";
+				query.startGroup();
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
