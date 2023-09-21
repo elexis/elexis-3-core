@@ -175,7 +175,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
-				} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[0])) {
+				} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[i])) {
 					TimeTool value = new TimeTool(patterns[i]);
 					List<IPerson> matches = (List<IPerson>) result;
 					matches.removeIf(p -> !(p.getDateOfBirth().toLocalDate().equals(value.toLocalDate())));
@@ -193,6 +193,12 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 	}
 
+	/**
+	 * Checks if the given String contains only numbers or
+	 * 
+	 * @param pattern
+	 * @return
+	 */
 	private boolean possibleDate(String pattern) {
 		return pattern.matches("[0-9./-]{5,}");
 	}
