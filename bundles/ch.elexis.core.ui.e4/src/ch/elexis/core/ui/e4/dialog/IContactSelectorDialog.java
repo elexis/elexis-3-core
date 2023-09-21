@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -32,6 +33,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
+import ch.rgw.tools.TimeTool;
 
 public class IContactSelectorDialog extends TitleAreaDialog {
 
@@ -150,14 +152,17 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			String[] patterns = _text.split(" ");
 
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
+			query.startGroup();
 
 			if (StringUtils.isAlpha(patterns[0])) {
 				String value = "%" + patterns[0] + "%";
-				query.startGroup();
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
+			} else if ((queryClass.getClass()).isInstance(IPerson.class) && StringUtils.isAsciiPrintable(patterns[0])) {
+				TimeTool tt = new TimeTool(patterns[0]);
+				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, tt.toLocalDate(), true);
 			}
 
 			List<? extends IContact> result = query.execute();
@@ -171,7 +176,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				}
 			}
 
-			if (queryClass.isInstance(IPatient.class)) {
+			if ((queryClass.getClass()).isInstance(IPatient.class)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
 			tableViewerContacts.setInput(result);
