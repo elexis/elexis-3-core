@@ -170,7 +170,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			}
 
 			for (int i = 1; i < patterns.length; ++i) {
-				if (StringUtils.isAlpha(patterns[i])) {
+				if (patterns[i].matches("[a-zA-Z-]+")) {
 					String value = patterns[i];
 					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
 							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
