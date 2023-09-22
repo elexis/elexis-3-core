@@ -6060,6 +6060,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iUserEClass, ecorePackage.getEBoolean(), "isInternal", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = addEOperation(iUserEClass, null, "setRoles", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getList());
+		g2 = createEGenericType(this.getIRole());
+		g1.getETypeArguments().add(g2);
+		addEParameter(op, g1, "roles", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iUserGroupEClass, IUserGroup.class, "IUserGroup", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIUserGroup_Users(), this.getIUser(), null, "users", null, 0, -1, IUserGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIUserGroup_Roles(), this.getIRole(), null, "roles", null, 0, -1, IUserGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

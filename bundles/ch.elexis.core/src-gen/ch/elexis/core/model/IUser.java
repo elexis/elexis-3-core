@@ -257,5 +257,13 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	boolean isInternal();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model rolesType="ch.elexis.core.types.List&lt;ch.elexis.core.model.IRole&gt;" rolesMany="false"
+	 * @generated
+	 */
+	void setRoles(List<IRole> roles);
 	
 } // IUser
