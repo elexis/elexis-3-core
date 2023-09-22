@@ -11,8 +11,8 @@ Containing the core files of the Elexis Application.
 ### From source
 Install Java JDK 17 and maven. Then execute the following commands:
 
-git clone https://github.com/elexis/elexis-3-core
-mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests
+`git clone https://github.com/elexis/elexis-3-core`
+`mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests`
 
 
 
