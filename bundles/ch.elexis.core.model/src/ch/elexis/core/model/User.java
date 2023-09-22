@@ -66,6 +66,13 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 
 	@Override
+	public void setRoles(List<IRole> roles) {
+		Set<Role> _roles = roles.stream().map(role -> (Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity())
+				.collect(Collectors.toSet());
+		getEntityMarkDirty().setRoles(_roles);
+	}
+
+	@Override
 	public IRole addRole(IRole role) {
 		if (role instanceof AbstractIdDeleteModelAdapter) {
 			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
@@ -150,7 +157,7 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public boolean isInternal() {
 		return true;
 	}
-	
+
 	public Set<String> getContactIdsOfExecutiveDoctorsWorkingFor() {
 		String mandators = (String) getAssignedContact().getExtInfo("Mandant");
 		if (mandators == null) {
@@ -158,4 +165,5 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		}
 		return new HashSet<String>(Arrays.asList(mandators.split(",")));
 	}
+
 }
