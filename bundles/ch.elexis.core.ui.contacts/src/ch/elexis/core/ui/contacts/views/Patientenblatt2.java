@@ -551,7 +551,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
 		for (IViewContribution ivc : _buttonTabContributions) {
