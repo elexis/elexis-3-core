@@ -120,7 +120,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textTelefon2 = new Text(comp, SWT.BORDER);
 		textTelefon2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-
 		Label lblFax = new Label(comp, SWT.NONE);
 		lblFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFax.setText(Messages.Core_Fax);
@@ -153,7 +152,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		geburtsdatum.setSelection(getGeburtsdatum());
 		comboGeschlecht.setSelection(new StructuredSelection(pat.getGender()));
 		textHandy.setText(StringUtils.defaultString(pat.getMobile()));
-
 		textTelefon1.setText(StringUtils.defaultString(pat.getPhone1()));
 		textTelefon2.setText(StringUtils.defaultString(pat.getPhone2()));
 		textFax.setText(StringUtils.defaultString(pat.getFax()));

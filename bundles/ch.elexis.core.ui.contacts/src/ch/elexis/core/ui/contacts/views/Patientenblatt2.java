@@ -158,7 +158,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID);
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> buttonTabContributions = Extensions.getClasses(VIEWCONTRIBUTION,
-			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID+":buttonTab");
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID + ":buttonTab");
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
@@ -329,12 +329,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
-			
 			public void displayContent(Object po, InputData ltf) {
 				ltf.setText(actPatient.getKontostand().getAmountAsString());
 			}
 
-			
 			public void reloadContent(Object po, InputData ltf) {
 				if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
 					ltf.setText(actPatient.getKontostand().getAmountAsString());
@@ -345,7 +343,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields.add(new InputData(Messages.Core_RegularPhysiscion, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
-					
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						String result = StringUtils.EMPTY;
@@ -370,7 +367,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						ltf.setText(result);
 					}
 
-					
 					public void reloadContent(Object po, InputData ltf) {
 						if (bLocked) {
 							return;
@@ -394,13 +390,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
 				new LabeledInputField.IContentProvider() {
-					
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 					}
 
-					
 					public void reloadContent(final Object po, final InputData ltf) {
 						if (bLocked) {
 							return;
@@ -557,7 +551,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		
+
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
 		for (IViewContribution ivc : _buttonTabContributions) {
@@ -629,7 +623,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			 * public boolean dropped(final PersistentObject dropped) { return false; }
 			 */
 
-			
 			public void hyperlinkActivated(final String l) {
 				final String[] sortFields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET };
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
@@ -651,7 +644,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 			}
 
-			@Override
 			public String getLabel(Object o) {
 				BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -715,7 +707,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					 * public boolean dropped(final PersistentObject dropped) { return false; }
 					 */
 
-					
 					public void hyperlinkActivated(final String l) {
 						if (actPatient != null) {
 							ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(),
@@ -727,7 +718,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 
-					
 					public String getLabel(Object o) {
 						ZusatzAdresse address = (ZusatzAdresse) o;
 						if (address != null) {
@@ -757,7 +747,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i));
 			text.addFocusListener(new FocusAdapter() {
-				
 				public void focusLost(FocusEvent e) {
 					saveExpandable((Integer) text.getData("index"));
 				}
@@ -789,14 +778,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			});
 			txExpandable.get(i).addKeyListener(new KeyListener() {
 
-				
 				public void keyReleased(KeyEvent e) {
 					Text tx = (Text) e.getSource();
 					tx.redraw();
 					form.getBody().layout(true);
 				}
 
-				
 				public void keyPressed(KeyEvent e) {
 				}
 			});

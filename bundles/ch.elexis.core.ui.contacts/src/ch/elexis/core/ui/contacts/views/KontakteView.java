@@ -98,7 +98,6 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getContentProvider().startListening();
 		vc.getControlFieldProvider().addChangeListener(this);
 		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
-
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
@@ -121,17 +120,14 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		super.dispose();
 	}
 
-	@Override
 	public void setFocus() {
 		vc.getControlFieldProvider().setFocus();
 	}
 
-	
 	public void changed(HashMap<String, String> values) {
 		ElexisEventDispatcher.clearSelection(Kontakt.class);
 	}
 
-	
 	public void reorder(String field) {
 		loader.reorder(field);
 	}
@@ -140,7 +136,6 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
-	
 	public void selected() {
 		StructuredViewer viewer = cv.getViewerWidget();
 		Object[] elements = cv.getConfigurer().getContentProvider().getElements(viewer.getInput());
@@ -217,7 +212,6 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				setToolTipText("Die in der Liste markierten Kontakte als Tabelle ausdrucken");
 			}
 
-			
 			public void run() {
 				Object[] sel = cv.getSelection();
 				String[][] adrs = new String[sel.length][];

@@ -124,7 +124,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
-				
 				public void displayContent(Object po, InputData ltf) {
 					StringBuilder sb = new StringBuilder();
 					Kontakt k = (Kontakt) po;
@@ -134,7 +133,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					ltf.setText(sb.toString());
 				}
 
-				
 				public void reloadContent(Object po, InputData ltf) {
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
@@ -169,8 +167,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (LocalLockServiceHolder.get().isLockedLocal(deselectedKontakt)) {
 						LocalLockServiceHolder.get().releaseLock(deselectedKontakt);
 					}
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
+					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 					commandService.refreshElements(ToggleCurrentKontaktLockHandler.COMMAND_ID, null);
 				}
 			} else {
@@ -245,7 +242,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 				List<Kontakt> list = queryContact();
 
 				if ((list != null) && (!list.isEmpty())) {
-					Kontakt kontakt = (Kontakt) list.get(0);
+					Kontakt kontakt = list.get(0);
 					if (kontakt.istPerson()) {
 						MessageDialog.openInformation(getShell(), "Kontakt existiert",
 								"Ein Kontakt mit diesen Daten existiert bereits in der Datenbank");
@@ -380,9 +377,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = kontakt;
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
-			boolean updateRight = AccessControlServiceHolder.get()
-					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
-							StoreToStringServiceHolder.getStoreToString(actKontakt)));
+			boolean updateRight = AccessControlServiceHolder.get().evaluate(
+					EvACE.of(IContact.class, Right.UPDATE, StoreToStringServiceHolder.getStoreToString(actKontakt)));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);

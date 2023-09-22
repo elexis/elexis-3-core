@@ -229,7 +229,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
 
-
 				public void hyperlinkActivated(final String l) {
 					Patient sp = ElexisEventDispatcher.getSelectedPatient();
 					if (sp == null) {
@@ -255,7 +254,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					}
 				}
 
-				
 				public String getLabel(Object o) {
 					BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -311,7 +309,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
 					new ListDisplay.LDListener() {
-						
 						public void hyperlinkActivated(final String l) {
 							Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 							if (actPatient != null) {
@@ -324,7 +321,6 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							}
 						}
 
-						
 						public String getLabel(Object o) {
 							ZusatzAdresse address = (ZusatzAdresse) o;
 							if (address != null) {
@@ -464,13 +460,11 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
-	
 	public void dispose() {
 		toolkit.dispose();
 		super.dispose();
 	}
 
-	@Override
 	public void setFocus() {
 		// COMPAT
 		// Initialize the current patient if view is about to be opened and no

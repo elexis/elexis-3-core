@@ -361,7 +361,6 @@ public class Kontakt extends PersistentObject {
 		// selectedAddressesText.append(k.FLD_E_MAIL+System.getProperty("line.separator"));
 		// }
 		//
-
 		if (including_phone) {
 			String thisAddressFLD_PHONE1 = get(FLD_PHONE1);
 			if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
