@@ -120,6 +120,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		super.dispose();
 	}
 
+	@Override
 	public void setFocus() {
 		vc.getControlFieldProvider().setFocus();
 	}

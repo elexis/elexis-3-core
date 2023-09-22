@@ -465,6 +465,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		super.dispose();
 	}
 
+	@Override
 	public void setFocus() {
 		// COMPAT
 		// Initialize the current patient if view is about to be opened and no
