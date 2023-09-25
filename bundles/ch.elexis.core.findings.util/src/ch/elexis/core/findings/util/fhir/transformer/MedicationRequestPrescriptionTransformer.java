@@ -344,8 +344,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 						medicationCodes.add(coding.getSystem() + "|" + coding.getCode());
 					}
 				}
-				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown medication ["
-						+ medicationCodes.toString() + "]");
+				LoggerFactory.getLogger(getClass())
+						.error("MedicationRequest with unknown medication [" + medicationCodes.toString() + "]");
 			}
 			if (!patient.isPresent()) {
 				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown patient ["

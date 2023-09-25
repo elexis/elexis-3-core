@@ -48,9 +48,8 @@ public class EigendiagnoseSelector extends CodeSelectorFactory {
 		commonViewer = cv;
 		ViewerConfigurer vc = new ViewerConfigurer(new EigendiagnoseContentProvider(commonViewer),
 				new DefaultLabelProvider(),
-				new DefaultControlFieldProvider(commonViewer,
-						new String[] { "code=" + Messages.Core_Short_Label, //$NON-NLS-1$
-								"title=" + Messages.Core_Text }), //$NON-NLS-1$
+				new DefaultControlFieldProvider(commonViewer, new String[] { "code=" + Messages.Core_Short_Label, //$NON-NLS-1$
+						"title=" + Messages.Core_Text }), //$NON-NLS-1$
 				new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_TREE, SWT.NONE, null));
 

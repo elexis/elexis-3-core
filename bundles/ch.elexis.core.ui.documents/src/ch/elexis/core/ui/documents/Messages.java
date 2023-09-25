@@ -2,7 +2,6 @@ package ch.elexis.core.ui.documents;
 
 public class Messages {
 
-
 	public static String Core_Category = ch.elexis.core.l10n.Messages.Core_Category;
 	public static String DocumentView_lastChangedColumn = ch.elexis.core.l10n.Messages.DocumentView_lastChangedColumn;
 	public static String DocumentView_dateCreatedColumn = ch.elexis.core.l10n.Messages.DocumentView_dateCreatedColumn;

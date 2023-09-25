@@ -84,10 +84,8 @@ public class EigenleistungCodeSelectorFactory extends CodeSelectorFactory {
 				ICustomService act = (ICustomService) ContextServiceHolder.get()
 						.getNamed("ch.elexis.core.ui.eigenleistung.selection").orElse(null); //$NON-NLS-1$
 				if (act != null && MessageDialog.openConfirm(commonViewer.getViewerWidget().getControl().getShell(),
-						ch.elexis.core.ui.eigenleistung.Messages.Core_Confirm_delete,
-						MessageFormat.format(
-								ch.elexis.core.ui.eigenleistung.Messages.Core_Want_to_delete_0,
-								act.getText()))) {
+						ch.elexis.core.ui.eigenleistung.Messages.Core_Confirm_delete, MessageFormat.format(
+								ch.elexis.core.ui.eigenleistung.Messages.Core_Want_to_delete_0, act.getText()))) {
 					CoreModelServiceHolder.get().delete(act);
 					commonViewer.getConfigurer().getControlFieldProvider().fireChangedEvent();
 					commonViewer.notify(CommonViewer.Message.update);

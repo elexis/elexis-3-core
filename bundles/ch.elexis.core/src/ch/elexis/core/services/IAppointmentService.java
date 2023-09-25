@@ -123,8 +123,9 @@ public interface IAppointmentService {
 	public List<String> getTypes();
 
 	/**
-	 * Get all configured state strings. The first element (idx: 0) is considered to denote empty or blocked,
-	 * the second element (idx: 1) is considered to be the default state, according to {@link AppointmentState}
+	 * Get all configured state strings. The first element (idx: 0) is considered to
+	 * denote empty or blocked, the second element (idx: 1) is considered to be the
+	 * default state, according to {@link AppointmentState}
 	 *
 	 * @return
 	 */

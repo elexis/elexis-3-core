@@ -6,18 +6,18 @@ import ch.elexis.core.interfaces.INumericEnum;
 
 public enum ESRCode implements INumericEnum {
 	//@formatter:off
-	Gutschrift_edv(0), 
-	Storno_edv(1), 
-	Korrektur_edv(2), 
-	Gutschrift_Schalter(3), 
-	Storno_Schalter(4), 
+	Gutschrift_edv(0),
+	Storno_edv(1),
+	Korrektur_edv(2),
+	Gutschrift_Schalter(3),
+	Storno_Schalter(4),
 	Korrektur_Schalter(5),
-	Summenrecord(6), 
+	Summenrecord(6),
 	Unbekannt(7);
 	//@formatter:on
-	
+
 	private int numeric;
-	
+
 	private static HashMap<Integer, ESRCode> numericMap = new HashMap<>();
 
 	ESRCode(int numeric) {

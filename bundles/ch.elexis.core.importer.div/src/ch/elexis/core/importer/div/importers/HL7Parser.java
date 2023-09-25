@@ -340,8 +340,7 @@ public class HL7Parser {
 
 		} catch (Exception e) {
 			logger.error("Parsing HL7 failed", e);
-			return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, e.getMessage(),
-					true);
+			return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, e.getMessage(), true);
 		}
 		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
 	}

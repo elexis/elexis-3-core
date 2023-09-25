@@ -72,7 +72,6 @@ public class Messages {
 	public static String KontaktImporterBlatt_DatatypeErrorText = ch.elexis.core.l10n.Messages.KontaktImporterBlatt_DatatypeErrorText;
 	public static String KontaktImporterBlatt_DatatypeErrorNoCSV = ch.elexis.core.l10n.Messages.KontaktImporterBlatt_DatatypeErrorNoCSV;
 
-
 	public static String KontaktImporterBlatt_Importing = ch.elexis.core.l10n.Messages.KontaktImporterBlatt_Importing;
 	public static String KontaktImporterBlatt_KeepID = ch.elexis.core.l10n.Messages.KontaktImporterBlatt_KeepID;
 	public static String KontaktImporterBlatt_MediportInsurer = ch.elexis.core.l10n.Messages.KontaktImporterBlatt_MediportInsurer;

@@ -163,8 +163,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	}
 
 	private void makeActions() {
-		delKontakt = new LockedRestrictedAction<Kontakt>(EvACE.of(IContact.class, Right.DELETE),
-				Messages.Core_Delete) {
+		delKontakt = new LockedRestrictedAction<Kontakt>(AccessControlDefaults.KONTAKT_DELETE, Messages.Core_Delete) {
 			@Override
 			public void doRun(Kontakt k) {
 				if (SWTHelper.askYesNo("Wirklich löschen?", k.getLabel())) {

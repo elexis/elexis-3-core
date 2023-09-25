@@ -86,8 +86,7 @@ public class LaborMappingComposite extends Composite {
 			@Override
 			public void run() {
 				KontaktSelektor selektor = new KontaktSelektor(getShell(), Labor.class,
-						Messages.Core_Laboratory_Selection,
-						Messages.Core_Select_Laboratory, Kontakt.DEFAULT_SORT);
+						Messages.Core_Laboratory_Selection, Messages.Core_Select_Laboratory, Kontakt.DEFAULT_SORT);
 				if (selektor.open() == Dialog.OK) {
 					Labor labor = (Labor) selektor.getSelection();
 					if (labItem != null) {

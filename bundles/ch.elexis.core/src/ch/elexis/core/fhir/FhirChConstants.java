@@ -21,7 +21,7 @@ public class FhirChConstants {
 
 	/**
 	 * OID for Swiss AHV Number
-	 * 
+	 *
 	 * @see XidConstants#CH_AHV
 	 * @see http://fhir.ch/ig/ch-core/NamingSystem-ahvn13-navs13.json.html
 	 */
@@ -34,7 +34,7 @@ public class FhirChConstants {
 
 	/**
 	 * OID for Swiss Versichertennummer
-	 * 
+	 *
 	 * @see http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-coverage.html
 	 */
 	public static final String OID_VERSICHERTENNUMMER = "2.16.756.5.30.1.123.100.1.1.1";
@@ -53,9 +53,10 @@ public class FhirChConstants {
 	 * @see http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode
 	 */
 	public static final String HEALTHCARE_FACILITY_TYPE_CODE_SYSTEM = "http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode";
-	
+
 	/**
 	 * SNOMED CT Code for a Laboratory environment
+	 *
 	 * @see https://browser.ihtsdotools.org/?perspective=full&conceptId1=261904005&edition=MAIN/SNOMEDCT-CH/2022-12-07&release=&languages=en,fr,de,it
 	 */
 	public static final String SCTID_LABORATORY_ENVIRONMENT = "261904005";

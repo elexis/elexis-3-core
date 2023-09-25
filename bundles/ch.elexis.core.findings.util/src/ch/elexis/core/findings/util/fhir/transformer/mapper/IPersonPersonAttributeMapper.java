@@ -47,7 +47,7 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
 		identifiers.add(getElexisObjectIdentifier(source));
 		target.setIdentifier(identifiers);
-		
+
 		target.setName(personHelper.getHumanNames(source));
 		target.setGender(personHelper.getGender(source.getGender()));
 		target.setBirthDate(personHelper.getBirthDate(source));
@@ -79,16 +79,17 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 
 	private void checkPromoteToPatient(Person source, IPerson target) {
 		if (!target.isPatient() && !source.getLink().isEmpty()) {
-			Optional<Reference> patientReference = source.getLink().stream().filter(e -> Objects.nonNull(e.getTarget())).map(e -> e.getTarget())
+			Optional<Reference> patientReference = source.getLink().stream().filter(e -> Objects.nonNull(e.getTarget()))
+					.map(e -> e.getTarget())
 					.filter(e -> StringUtils.startsWith(e.getReference(), Patient.class.getSimpleName())).findFirst();
-			if(patientReference.isPresent()) {
+			if (patientReference.isPresent()) {
 				String value = patientReference.get().getReference();
-				if(StringUtils.equals(value, Patient.class.getSimpleName()+"/"+target.getId())) {
+				if (StringUtils.equals(value, Patient.class.getSimpleName() + "/" + target.getId())) {
 					target.setCode(null);
 					target.setPatient(true); // patient-number is transparently created on save
 				}
 			}
-			
+
 		}
 	}
 
