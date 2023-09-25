@@ -1,7 +1,6 @@
 package ch.elexis.core.services;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +30,7 @@ import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -273,30 +273,22 @@ public class EncounterService implements IEncounterService {
 		return Optional.empty();
 	}
 
-	// private static final String ENCOUNTER_LAST_QUERY =
-	// " ON BH.FallID = FA.id AND BH.deleted = FA.deleted WHERE FA.PatientID =
-	// :patientid and FA.deleted = '0' order by BH.Datum desc, BH.lastupdate desc
-	// limit 1";
-
-	// @formatter:off
-	private static final String ENCOUNTER_LAST_QUERY = "SELECT behandlungen.ID FROM behandlungen, faelle"
-			+ " WHERE behandlungen.FallID = faelle.id"
-			+ " AND behandlungen.deleted = faelle.deleted"
-			+ " AND faelle.deleted = '0'"
-			+ " AND faelle.patientID = ?1"
-			+ " ORDER BY behandlungen.datum desc, behandlungen.lastupdate desc"
-			+ " LIMIT 1";
-	// @formatter:on
-
 	@Override
 	public Optional<IEncounter> getLatestEncounter(IPatient patient) {
-		INativeQuery nativeQuery = CoreModelServiceHolder.get().getNativeQuery(ENCOUNTER_LAST_QUERY);
-		Iterator<?> result = nativeQuery
-				.executeWithParameters(nativeQuery.getIndexedParameterMap(Integer.valueOf(1), patient.getId()))
-				.iterator();
-		if (result.hasNext()) {
-			String next = result.next().toString();
-			return CoreModelServiceHolder.get().load(next, IEncounter.class);
+		List<IEncounter> result = null;
+		if(AccessControlServiceHolder.get().isAobo(EvACE.of(IEncounter.class, Right.READ))) {
+			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
+					IEncounter.class, "Behandlung.patient.last.aobo");
+			result = query.executeWithParameters(
+					query.getParameterMap("patient", patient, "aoboids",
+							AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn()));
+		} else {
+			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
+					IEncounter.class, "Behandlung.patient.last");
+			result = query.executeWithParameters(query.getParameterMap("patient", patient));
+		}
+		if (result != null && !result.isEmpty()) {
+			return Optional.of(result.get(0));
 		}
 		return Optional.empty();
 	}
