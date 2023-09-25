@@ -36,11 +36,11 @@
 		"ch.elexis.core.model.IEncounter": "cruvd:aobo",
 		"ch.elexis.core.model.IInvoice": "crudv:aobo",
 		"ch.elexis.core.model.IInvoiceBilled": "crudv",
-		"ch.elexis.core.model.ILabItem": "cruvd",
+		"ch.elexis.core.model.ILabItem": "cruvdx",
 		"ch.elexis.core.model.ILabMapping": "cruvd",
 		"ch.elexis.core.model.ILaboratory": "cruvd",
 		"ch.elexis.core.model.ILabOrder": "cruvd",
-		"ch.elexis.core.model.ILabResult": "cruvd",
+		"ch.elexis.core.model.ILabResult": "cruvdx",
 		"ch.elexis.core.model.IObservation": "cruvd",
 		"ch.elexis.core.model.IPatient": "cruvd",
 		"ch.elexis.core.model.IPerson": "cruvd",
@@ -51,6 +51,6 @@
 		"ch.elexis.core.model.IStockEntry": "cruvd",
 		"ch.elexis.core.model.IXid": "crudv",
 		"ch.elexis.omnivore.model.IDocumentHandle": "cruvd",
-		"ch.elexis.omnivore.model.IDocumentTemplate": "rv"
+		"ch.elexis.core.model.IDocumentTemplate": "rv"
 	}
 }

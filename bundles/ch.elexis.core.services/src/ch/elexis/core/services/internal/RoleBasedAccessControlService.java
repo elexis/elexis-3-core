@@ -26,7 +26,6 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IRole;
@@ -57,7 +56,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private ThreadLocal<Boolean> privileged;
 
-	private String[] aoboObjects = { "IEncounter", "IDocumentLetter", "IInvoice" };
+	private String[] aoboObjects = { "IEncounter", "IInvoice" };
 
 	public RoleBasedAccessControlService() {
 		logger = LoggerFactory.getLogger(getClass());
@@ -207,10 +206,6 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				if (((IInvoice) object.get()).getMandator() != null) {
 					id = ((IInvoice) object.get()).getMandator().getId();
 				}
-			} else if (object.get() instanceof IDocumentLetter) {
-				if (((IDocumentLetter) object.get()).getAuthor() != null) {
-					id = ((IDocumentLetter) object.get()).getAuthor().getId();
-				}
 			} else {
 				logger.warn("Unknown aobo object [{}]", _ace.getStoreToString());
 			}
@@ -224,9 +219,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private List<String> getAoboMandatorIds(IUser user) {
 		List<String> ret = new ArrayList<>();
 		if (user.getAssignedContact() != null) {
-			if (user.getAssignedContact().isMandator()) {
-				ret.add(user.getAssignedContact().getId());
-			}
+			ret.add(user.getAssignedContact().getId());
 			userService.getExecutiveDoctorsWorkingFor(user).stream().forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
