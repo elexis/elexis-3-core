@@ -30,11 +30,11 @@ import com.google.common.cache.LoadingCache;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
@@ -76,6 +76,7 @@ public class AppointmentService implements IAppointmentService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
+	@Reference
 	private IContextService contextService;
 
 	private LoadingCache<String, Map<String, Area>> cache;
