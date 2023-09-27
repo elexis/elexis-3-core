@@ -90,12 +90,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bOrganisation = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Organisation, // $NON-NLS-1$
 				SWT.CHECK);
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bOrganisationChanged(bOrganisation.getSelection());
 			}
 		});
 		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Laboratory, SWT.CHECK); // $NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bLaborChanged(bLabor.getSelection());
 			}
@@ -103,12 +105,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Person, SWT.CHECK); // $NON-NLS-1$
 		bPerson.setSelection(true);
 		bPerson.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bPersonChanged(bPerson.getSelection());
 			}
 		});
 		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Patient, SWT.CHECK); // $NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bPatientChanged(bPatient.getSelection());
 			}
@@ -120,12 +124,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		}
 		bAnwender = UiDesk.getToolkit().createButton(cTypes, Messages.Core_User, SWT.CHECK); // $NON-NLS-1$
 		bAnwender.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bAnwenderChanged(bAnwender.getSelection());
 			}
 		});
 		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Mandator, SWT.CHECK); // $NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				bMandantChanged(bMandant.getSelection());
 			}
@@ -403,7 +409,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
-				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Mobile", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "NatelNr", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				}, new String[] { ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText() });
 
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);

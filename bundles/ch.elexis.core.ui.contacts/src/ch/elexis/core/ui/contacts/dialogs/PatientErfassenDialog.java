@@ -118,9 +118,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tOrt.setText(getField(Patient.FLD_PLACE));
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Mobilphone); // $NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
-		tTel.setText(getField(Patient.FLD_PHONE1));
+		tTel.setText(getField(Patient.FLD_MOBILEPHONE));
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		new Label(ret, SWT.NONE).setText(Messages.Core_E_Mail); // $NON-NLS-1$
@@ -240,7 +240,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			patient.setStreet(tStrasse.getText());
 			patient.setZip(tPlz.getText());
 			patient.setCity(tOrt.getText());
-			patient.setPhone1(tTel.getText());
+			patient.setMobile(tTel.getText());
 			patient.setEmail(tMail.getText());
 			CoreModelServiceHolder.get().save(patient);
 
