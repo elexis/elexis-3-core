@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -77,10 +76,6 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private Button defaultBtn;
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
-
-	private Text subjectText;
-	private String subjectString = "";
-	private Label subjectLabel;
 
 	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
 
