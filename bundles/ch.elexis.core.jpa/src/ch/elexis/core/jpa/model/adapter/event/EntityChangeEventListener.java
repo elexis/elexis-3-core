@@ -49,18 +49,20 @@ public class EntityChangeEventListener implements EventHandler {
 		while (entitiesIter.hasNext()) {
 			EntityWithId entity = entitiesIter.next();
 			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = listenerMap.get(entity);
-			Iterator<WeakReference<AbstractIdModelAdapter<?>>> iter = listeners.iterator();
-			while (iter.hasNext()) {
-				WeakReference<AbstractIdModelAdapter<?>> reference = iter.next();
-				if (reference != null) {
-					AbstractIdModelAdapter<?> adapter = reference.get();
-					if (adapter == null) {
-						iter.remove();
+			if (listeners != null) {
+				Iterator<WeakReference<AbstractIdModelAdapter<?>>> iter = listeners.iterator();
+				while (iter.hasNext()) {
+					WeakReference<AbstractIdModelAdapter<?>> reference = iter.next();
+					if (reference != null) {
+						AbstractIdModelAdapter<?> adapter = reference.get();
+						if (adapter == null) {
+							iter.remove();
+						}
 					}
 				}
-			}
-			if (listeners.isEmpty()) {
-				entitiesIter.remove();
+				if (listeners.isEmpty()) {
+					entitiesIter.remove();
+				}
 			}
 		}
 	}
