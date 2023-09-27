@@ -428,7 +428,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		createKontakt();
 		super.okPressed();
 	}
-
+	
 	/**
 	 * Use getContact()
 	 *
