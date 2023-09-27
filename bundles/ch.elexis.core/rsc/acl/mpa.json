@@ -52,7 +52,7 @@
 		"ch.elexis.core.model.IXid": "crudv",
 		"ch.elexis.omnivore.model.IDocumentHandle": "cruvd",
 		"ch.elexis.core.model.IDocumentTemplate": "rv",
-		"ch.elexis.core.model.ITextTemplate": "cruvd",
-		"ch.elexis.core.model.IBlobSecondary": "cruvd"
+		"ch.elexis.core.model.IBlobSecondary": "cruvd",
+		"ch.elexis.core.model.ITextTemplate": "cruvd"
 	}
 }
