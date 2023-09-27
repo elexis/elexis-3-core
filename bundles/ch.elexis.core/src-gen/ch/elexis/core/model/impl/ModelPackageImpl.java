@@ -5872,6 +5872,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iMessageEClass.getESuperTypes().add(this.getDeleteable());
 		iTextTemplateEClass.getESuperTypes().add(this.getIdentifiable());
 		iTextTemplateEClass.getESuperTypes().add(this.getDeleteable());
+		iTextTemplateEClass.getESuperTypes().add(this.getWithExtInfo());
 		iAppointmentEClass.getESuperTypes().add(this.getIPeriod());
 		iAppointmentSeriesEClass.getESuperTypes().add(this.getIAppointment());
 		iSickCertificateEClass.getESuperTypes().add(this.getIdentifiable());

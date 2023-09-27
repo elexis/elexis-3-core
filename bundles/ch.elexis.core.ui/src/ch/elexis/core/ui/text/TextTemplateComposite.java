@@ -36,6 +36,8 @@ public class TextTemplateComposite extends Composite {
 
 	private StyledText templateText;
 
+	private Text subjectText;
+
 	private ITextTemplate template;
 
 	public TextTemplateComposite(Composite parent, int style) {
@@ -57,7 +59,7 @@ public class TextTemplateComposite extends Composite {
 				if (templateText.getCaretOffset() > 0) {
 					String beforeChar = templateText.getText(templateText.getCaretOffset() - 1,
 							templateText.getCaretOffset() - 1);
-					insertSpace = !(beforeChar.equals(StringUtils.SPACE) || beforeChar.equals(StringUtils.LF));
+					insertSpace = !(StringUtils.SPACE.equals(beforeChar) || StringUtils.LF.equals(beforeChar));
 				}
 				String insertText = (insertSpace ? " [" : "[") + proposal.getContent() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				templateText.insert(insertText);
@@ -66,6 +68,10 @@ public class TextTemplateComposite extends Composite {
 			}
 		});
 		replacementProposals.setMessage("Platzhalter Suche und Auswahl");
+
+		subjectText = new Text(this, SWT.BORDER);
+		subjectText.setMessage("Betreff");
+		subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
 		templateText = new StyledText(this, SWT.MULTI | SWT.BORDER);
 		templateText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -81,6 +87,11 @@ public class TextTemplateComposite extends Composite {
 		this.template = template;
 		if (template != null && template.getTemplate() != null) {
 			templateText.setText(template.getTemplate());
+			if (template.getExtInfo("subject") != null) {
+				subjectText.setText((String) template.getExtInfo("subject"));
+			} else {
+				subjectText.setText(StringUtils.EMPTY);
+			}
 			return;
 		}
 		templateText.setText(StringUtils.EMPTY);
@@ -93,6 +104,7 @@ public class TextTemplateComposite extends Composite {
 	public void updateModel() {
 		if (template != null) {
 			template.setTemplate(templateText.getText());
+			template.setExtInfo("subject", subjectText.getText());
 		}
 	}
 

@@ -23,7 +23,7 @@ import ch.elexis.core.types.TextTemplateCategory;
 @Table(name = "CH_ELEXIS_CORE_TEXTTEMPLATE")
 @Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
-public class TextTemplate extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+public class TextTemplate extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -51,6 +51,9 @@ public class TextTemplate extends AbstractEntityWithId implements EntityWithId, 
 	@Column
 	@Lob
 	protected String template;
+
+	@Lob
+	protected byte[] extInfo;
 
 	@Override
 	public boolean isDeleted() {
@@ -112,5 +115,16 @@ public class TextTemplate extends AbstractEntityWithId implements EntityWithId, 
 
 	public void setTemplate(String template) {
 		this.template = template;
+	}
+
+	@Override
+	public byte[] getExtInfo() {
+		return extInfo;
+	}
+
+	@Override
+	public void setExtInfo(byte[] extInfo) {
+		this.extInfo = extInfo;
+
 	}
 }
