@@ -44,11 +44,13 @@
                 <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+              <!--
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>info.elexis.server.core.logging</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+              --
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.services.test.ws-bind</id>

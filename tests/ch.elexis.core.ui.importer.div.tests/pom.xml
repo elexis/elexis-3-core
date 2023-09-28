@@ -34,21 +34,25 @@
                 <id>ch.elexis.core.ui.importer.div.tests</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+	     <!--
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>info.elexis.server.core.logging</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+	     -->
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.test.logging</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+              <!--
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.medelexis.medication.ui</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+              -->
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>org.eclipse.swt.nl_fr</id>

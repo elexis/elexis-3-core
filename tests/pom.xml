@@ -23,10 +23,6 @@
 	</properties>
 
 	<modules>
-		<!--
-		<module>ch.elexis.core.jpa.test</module>
-		<module>ch.elexis.core.jpa.entities.test</module>
-		-->
 		<module>at.medevit.elexis.text.docx.test</module>
 		<module>ch.elexis.core.ui.tests</module>
 		<module>ch.elexis.core.mail.test</module>
