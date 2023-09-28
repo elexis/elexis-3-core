@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import ch.elexis.core.mail.PreferenceConstants;
+import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -88,8 +88,8 @@ public class TextTemplateComposite extends Composite {
 		this.template = template;
 		if (template != null && template.getTemplate() != null) {
 			templateText.setText(template.getTemplate());
-			if (template.getExtInfo(PreferenceConstants.TEXTTEMPLATE_SUBJECT) != null) {
-				subjectText.setText((String) template.getExtInfo(PreferenceConstants.TEXTTEMPLATE_SUBJECT));
+			if (template.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
+				subjectText.setText((String) template.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT));
 			} else {
 				subjectText.setText(StringUtils.EMPTY);
 			}
@@ -105,7 +105,7 @@ public class TextTemplateComposite extends Composite {
 	public void updateModel() {
 		if (template != null) {
 			template.setTemplate(templateText.getText());
-			template.setExtInfo(PreferenceConstants.TEXTTEMPLATE_SUBJECT, subjectText.getText());
+			template.setExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT, subjectText.getText()); // TODO change
 		}
 	}
 
