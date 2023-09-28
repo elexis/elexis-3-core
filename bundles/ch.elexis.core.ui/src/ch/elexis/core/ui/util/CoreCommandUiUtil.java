@@ -18,7 +18,6 @@ public class CoreCommandUiUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(CoreUiUtil.class);
 
-
 	/**
 	 * This method queries the <i>org.eclipse.ui.menus</i> extensions, and looks for
 	 * menu contributions with a locationURI <i>popup:classname</i>. Found
@@ -58,9 +57,5 @@ public class CoreCommandUiUtil {
 		}
 		return Optional.empty();
 	}
-
-
-
-
 
 }

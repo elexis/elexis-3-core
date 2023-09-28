@@ -68,7 +68,7 @@ import ch.elexis.data.PersistentObject;
  * @since 3.8 must explicitly {@link #start()} queue execution
  * @deprecated since 3.11, use {@link IContextService} to set active context or
  *             post/send events
- * 
+ *
  */
 public final class ElexisEventDispatcher implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);

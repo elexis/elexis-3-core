@@ -6,16 +6,16 @@ import ch.elexis.core.interfaces.INumericEnum;
 
 public enum ESRRejectCode implements INumericEnum {
 	//@formatter:off
-	OK(0), 
+	OK(0),
 	ESRREJECT(1),
-	MASSENREJECT(2), 
-	BETRAG(3), 
-	MANDANT(4), 
-	RN_NUMMER(5), 
-	PAT_NUMMER(6), 
-	DUPLIKAT(7), 
-	ANDERE(8), 
-	PAT_FALSCH(9), 
+	MASSENREJECT(2),
+	BETRAG(3),
+	MANDANT(4),
+	RN_NUMMER(5),
+	PAT_NUMMER(6),
+	DUPLIKAT(7),
+	ANDERE(8),
+	PAT_FALSCH(9),
 	REFERNECE(10);
 	//@formatter:on
 

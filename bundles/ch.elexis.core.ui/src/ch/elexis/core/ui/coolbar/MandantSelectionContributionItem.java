@@ -96,7 +96,6 @@ public class MandantSelectionContributionItem {
 		}
 	}
 
-
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().asyncExec(() -> {

@@ -964,8 +964,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 
 	@Override
 	public void refresh() {
-		selection(
-				(Konsultation) NoPoUtil
-						.loadAsPersistentObject(ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null)));
+		selection((Konsultation) NoPoUtil
+				.loadAsPersistentObject(ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null)));
 	}
 }

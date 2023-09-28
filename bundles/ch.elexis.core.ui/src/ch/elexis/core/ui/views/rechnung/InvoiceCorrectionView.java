@@ -851,7 +851,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							LeistungDTO leistungDTO = new LeistungDTO((IBillable) object,
 									invoiceCorrectionDTO.getFallDTO());
 
-								konsultationDTO.getLeistungDTOs().add(leistungDTO);
+							konsultationDTO.getLeistungDTOs().add(leistungDTO);
 							if (leistungDTO.calcPrice(konsultationDTO, invoiceCorrectionDTO.getFallDTO(),
 									new ShowBilledResult())) {
 								invoiceCorrectionDTO.addToCache(new InvoiceHistoryEntryDTO(OperationType.LEISTUNG_ADD,

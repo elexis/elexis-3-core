@@ -12,7 +12,6 @@ public class Messages {
 	public static String Core_No_patient_selected = ch.elexis.core.l10n.Messages.Core_No_patient_selected;
 	public static String LaborOrdersComposite_actionTooltipShowHistory = ch.elexis.core.l10n.Messages.LaborOrdersComposite_actionTooltipShowHistory;
 
-
 	public static String Core_Reference = ch.elexis.core.l10n.Messages.Core_Reference;
 	public static String Core_Laboratory_Document = ch.elexis.core.l10n.Messages.Core_Laboratory_Document;
 	public static String Core_Textresult = ch.elexis.core.l10n.Messages.Core_Textresult;

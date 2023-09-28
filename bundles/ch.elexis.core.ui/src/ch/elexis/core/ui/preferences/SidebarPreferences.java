@@ -59,8 +59,7 @@ public class SidebarPreferences extends FieldEditorPreferencePage implements IWo
 				Messages.SidebarPreferences_SchowPerspectives, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.SHOWTOOLBARITEMS, Messages.SidebarPreferences_PerspectivesInToolbar,
 				getFieldEditorParent()));
-		addField(new Perspektivenliste(Preferences.SIDEBAR, Messages.Core_Perspectives,
-				getFieldEditorParent()));
+		addField(new Perspektivenliste(Preferences.SIDEBAR, Messages.Core_Perspectives, getFieldEditorParent()));
 	}
 
 	public void init(IWorkbench workbench) {

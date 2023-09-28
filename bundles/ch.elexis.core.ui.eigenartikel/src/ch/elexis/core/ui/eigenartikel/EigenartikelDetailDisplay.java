@@ -104,8 +104,7 @@ public class EigenartikelDetailDisplay implements IDetailDisplay {
 	};
 
 	private RestrictedAction deleteAction = new LockRequestingRestrictedAction<IArticle>(
-			new ObjectEvaluatableACE(IArticle.class, Right.UPDATE),
-			ch.elexis.core.ui.views.artikel.Messages.Core_Delete) {
+			ACLContributor.EIGENARTIKEL_MODIFY, ch.elexis.core.ui.views.artikel.Messages.Core_Delete) {
 		{
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 			setToolTipText(ch.elexis.core.ui.views.artikel.Messages.ArtikelContextMenu_deleteProductToolTipText);

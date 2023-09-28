@@ -40,8 +40,8 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 	private void openDisplayDialog(LabResult labResult) {
 		ILabItem labItem = labResult.getItem();
 		if (labItem.getTyp().equals(LabItemTyp.TEXT) || (labResult.getComment().length() > 0)) {
-			DisplayTextDialog dlg = new DisplayTextDialog(composite.getShell(),
-					Messages.Core_Textresult, labItem.getName(), labResult.getComment());
+			DisplayTextDialog dlg = new DisplayTextDialog(composite.getShell(), Messages.Core_Textresult,
+					labItem.getName(), labResult.getComment());
 			// HL7 Befunde enthalten oft mit Leerzeichen formatierte Bemerkungen,
 			// die nur mit nicht-proportionalen Fonts dargestellt werden k��nnen
 			// Wir versuchen also, die Anzeige mit Courier New, ohne zu wissen ob die

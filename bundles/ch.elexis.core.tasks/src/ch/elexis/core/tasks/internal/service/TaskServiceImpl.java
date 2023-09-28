@@ -199,7 +199,7 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param taskDescriptor
 	 * @return to incur? only iff not delete, active, and this station is a
 	 *         designated runner
@@ -319,7 +319,7 @@ public class TaskServiceImpl implements ITaskService {
 	 * !A,B,!C: do nothing<br>
 	 * !A,!B,C: do nothing<br>
 	 * !A,!B,!C: do nothing <br>
-	 * 
+	 *
 	 * @param taskDescriptor
 	 * @return
 	 * @throws TaskException

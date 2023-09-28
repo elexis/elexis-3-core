@@ -455,11 +455,11 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			}
 			return target;
 		}
-		
+
 		Optional<WebdavFile> webdavFile = toWebdavFile();
-		if(webdavFile.isPresent()) {
+		if (webdavFile.isPresent()) {
 			Optional<WebdavFile> webdavTarget = ((VirtualFilesystemHandle) target).toWebdavFile();
-			if(webdavTarget.isPresent()) {
+			if (webdavTarget.isPresent()) {
 				webdavFile.get().move(webdavTarget.get().getURL());
 				return target;
 			}
@@ -589,10 +589,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			if (ff == null) {
 				return true;
 			}
-			
+
 			return ff.accept(new TransientVirtualFilesystemHandle(webdavFileName));
 		}
-		
+
 	}
 
 	/**
@@ -600,7 +600,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	 * in testing scenario), in order not to override the original "http" and
 	 * "https" protocl handling. To keep using these handlers, we need to rewrite
 	 * the "internally" used http protocol to our davs/dav scheme.
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 * @throws URISyntaxException

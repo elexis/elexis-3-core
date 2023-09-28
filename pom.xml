@@ -1,11 +1,21 @@
 <!-- 
-	Maven/Tycho configuration to start different/distinctive build cycles: 
-	
-	- test: mvn clean test 
-	- product-build: mvn clean verify 
-	- product-build-sign: mvn clean install 
-	- format-enforce: mvn checkstyle:checkstyle
-	 
+	Maven/Tycho configuration to pass through different/distinctive build cycles: 
+	- test: 			  mvn -V clean test 
+	- build: 			  mvn -V clean process-classes
+	- product-build: 	  mvn -V clean verify -Dtycho.localArtifacts=ignore -DskipTests 
+	- product-build-sign: mvn -V clean install -Dtycho.localArtifacts=ignore -DskipTests
+	- format-enforce: 	  mvn -V formatter:format
+
+	To get buildplans execute one of the following commands:
+	- mvn buildplan:list
+    - mvn buildplan:list-phase -Dbuildplan.tasks=clean,test
+    - mvn buildplan:list-phase -Dbuildplan.showLifecycles
+    - mvn buildplan:list-phase
+    - mvn buildplan:list-plugin
+    - mvn buildplan:list-plugin -Dbuildplan.plugin=maven-compiler-plugin
+    - mvn buildplan:list-plugin -Dbuildplan.outputFile=buildplan_output.txt
+    
+	2023/Olivier Debenath
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -34,6 +44,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
+		<jsign.plugin.version>3.0</jsign.plugin.version>
+		<jsigner-win32-exe>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</jsigner-win32-exe>
+		<jsigner-osx-app>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/macosx/cocoa/x86_64/Elexis3.app</jsigner-osx-app>
+		<buildplan.plugin.version>1.5</buildplan.plugin.version>
+		<formatter.plugin.version>2.18.0</formatter.plugin.version>
+		<clean.plugin.version>2.5</clean.plugin.version>	
 	</properties>
 	<repositories>
 		<repository>
@@ -91,7 +107,7 @@
 			<plugin>
 				<groupId>net.revelc.code.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
-				<version>2.18.0</version>
+				<version>${formatter.plugin.version}</version>
 				<configuration>
 					<goals>
 						<goal>format</goal>
@@ -171,7 +187,7 @@
 			<plugin>
 				<groupId>net.jsign</groupId>
 				<artifactId>jsign-maven-plugin</artifactId>
-				<version>3.0</version>
+				<version>${jsign.plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -179,8 +195,8 @@
 						</goals>
 						<phase>install</phase>
 						<configuration>
-							<file>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</file>
-							<name>Elexis</name>
+							<file>${jsigner-win32-exe}</file>
+							<name>Windows Signature</name>
 							<url>https://github.com/elexis</url>
 							<keystore>/home/lzadmin/keystore.jks</keystore>
 							<alias>server</alias>
@@ -196,16 +212,16 @@
 				<plugin>
 					<groupId>fr.jcgay.maven.plugins</groupId>
 					<artifactId>buildplan-maven-plugin</artifactId>
-					<version>1.5</version>
+					<version>${buildplan.plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>net.revelc.code.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
-					<version>2.18.0</version>
+					<version>${formatter.plugin.version}</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
+					<version>${clean.plugin.version}</version>
 					<configuration>
 						<filesets>
 							<fileset>
@@ -270,6 +286,9 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
 					<version>${tycho.version}</version>
+					<configuration>
+  						<createArtifactRepository>true</createArtifactRepository>
+ 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>

@@ -22,10 +22,6 @@ public class Messages {
 
 	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 
-
-
-
-
 	public static String FallPlaneRechnung_PlanBillingAfterDays = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingAfterDays;
 	public static String FallPlaneRechnung_PlanBillingHeading = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingHeading;
 	public static String FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger = ch.elexis.core.l10n.Messages.FallPlaneRechnung_PlanBillingPleaseEnterPositiveInteger;
@@ -45,8 +41,6 @@ public class Messages {
 	public static String StartEditLocalDocumentHandler_conflicttitle = ch.elexis.core.l10n.Messages.StartEditLocalDocumentHandler_conflicttitle;
 
 	public static String Core_Document_Not_Opened_Locally = ch.elexis.core.l10n.Messages.Core_Document_Not_Opened_Locally;
-
-
 
 	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
 

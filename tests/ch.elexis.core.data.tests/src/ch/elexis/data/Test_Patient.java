@@ -41,7 +41,7 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 //		System.out.println("Search via " + dbFlavor + " returned " + res.size() + " patients");
 		assert (res.size() == 1);
 	}
-	
+
 	@Test
 	public void getPostAnschriftPatient() {
 		Person person = new Person("Name", "Vorname", "26.07.1979", "m");
@@ -50,19 +50,19 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 		person.set(Person.FLD_PLACE, "City");
 		person.set(Person.TITLE, "Dr.");
 		person.set(Person.FLD_ZIP, "4433");
-		
+
 		String postAnschrift = person.getPostAnschrift(true);
-		
+
 		person.set(Person.FLD_ANSCHRIFT, null);
-		
+
 		IContact contact = CoreModelServiceHolder.get().load(person.getId(), IContact.class).orElseThrow();
 		String postalAddress = contact.getPostalAddress();
-		
+
 		assertEquals(postAnschrift, postalAddress);
-		
+
 		person.removeFromDatabase();
 	}
-	
+
 	@Test
 	public void getPostAnschriftOrganisation() {
 		Organisation organization = new Organisation("Name", "Zusatz1");
@@ -70,16 +70,16 @@ public class Test_Patient extends AbstractPersistentObjectTest {
 		organization.set(Person.FLD_COUNTRY, "CH");
 		organization.set(Person.FLD_PLACE, "City");
 		organization.set(Person.FLD_ZIP, "4433");
-		
+
 		String postAnschrift = organization.getPostAnschrift(true);
-		
+
 		organization.set(Person.FLD_ANSCHRIFT, null);
-		
+
 		IContact contact = CoreModelServiceHolder.get().load(organization.getId(), IContact.class).orElseThrow();
 		String postalAddress = contact.getPostalAddress();
-		
+
 		assertEquals(postAnschrift, postalAddress);
-		
+
 		organization.removeFromDatabase();
 	}
 }

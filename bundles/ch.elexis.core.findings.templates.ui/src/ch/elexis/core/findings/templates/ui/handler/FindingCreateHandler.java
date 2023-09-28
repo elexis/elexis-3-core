@@ -47,7 +47,7 @@ public class FindingCreateHandler extends AbstractHandler implements IHandler {
 							} catch (ElexisException e) {
 								MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler", e.getMessage());
 							}
-						}						
+						}
 					}
 				} catch (ElexisException e) {
 					MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Befunde Vorlagen",
