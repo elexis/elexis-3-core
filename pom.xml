@@ -249,7 +249,7 @@
 						<dependency>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
-							<version>${tycho.version}</version>
+							<version>3.0.5</version>
 						</dependency>
 					</dependencies>
 					<configuration>
