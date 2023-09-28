@@ -126,7 +126,7 @@ public interface IModelService {
 
 	/**
 	 * Update {@link Identifiable#getLastupdate()} to current
-	 * 
+	 *
 	 * @param identifiable
 	 */
 	public void touch(Identifiable identifiable);

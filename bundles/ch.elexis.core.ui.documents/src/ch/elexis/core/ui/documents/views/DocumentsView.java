@@ -134,8 +134,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 	private IStructuredSelection currentDragSelection;
 
 	private final String[] colLabels = { StringUtils.EMPTY, StringUtils.EMPTY, Messages.Core_Category,
-			Messages.Core_Date, Messages.DocumentView_dateCreatedColumn, Messages.Core_Title, 
-			Messages.Core_Keywords };
+			Messages.Core_Date, Messages.DocumentView_dateCreatedColumn, Messages.Core_Title, Messages.Core_Keywords };
 	private final String colWidth = "20,20,150,100,100,250,500"; //$NON-NLS-1$
 	private final String sortSettings = "0,1,-1,false"; //$NON-NLS-1$
 	private String searchTitle = StringUtils.EMPTY;
@@ -164,7 +163,6 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 			ConfigServiceHolder.setUser(SETTING_COLUMN_WIDTH, sb.toString());
 		}
 	};
-
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {

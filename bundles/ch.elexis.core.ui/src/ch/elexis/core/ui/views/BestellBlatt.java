@@ -66,8 +66,8 @@ public class BestellBlatt extends ViewPart implements ICallback {
 		String[][] tbl = new String[orders.size() + 2][];
 		int i = 1;
 		Money sum = new Money();
-		tbl[0] = new String[] { Messages.Core_Count, Messages.Core_Phamacode,
-				Messages.Core_Name, Messages.BestellBlatt_UnitPrice, Messages.BestellBlatt_LinePrice };
+		tbl[0] = new String[] { Messages.Core_Count, Messages.Core_Phamacode, Messages.Core_Name,
+				Messages.BestellBlatt_UnitPrice, Messages.BestellBlatt_LinePrice };
 		for (IOrderEntry orderEntry : orders) {
 			String[] row = new String[5];
 			row[0] = Integer.toString(orderEntry.getAmount());
@@ -121,8 +121,7 @@ public class BestellBlatt extends ViewPart implements ICallback {
 			if (file.isPresent()) {
 				Program.launch(file.get().getAbsolutePath());
 			} else {
-				MessageDialog.openError(getSite().getShell(),
-						ch.elexis.core.ui.commands.Messages.Core_Error,
+				MessageDialog.openError(getSite().getShell(), ch.elexis.core.ui.commands.Messages.Core_Error,
 						ch.elexis.core.ui.commands.Messages.Core_Document_Not_Opened_Locally);
 			}
 			if (service.contains(brief)) {

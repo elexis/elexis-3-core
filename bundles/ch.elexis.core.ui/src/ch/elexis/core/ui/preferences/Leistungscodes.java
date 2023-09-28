@@ -1824,8 +1824,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					Messages.GlobalActions_Redate, Messages.Leistungscodes_comboHL, Messages.Core_List_ellipsis,
 					Messages.Leistungscodes_checkboxHL, Messages.Leistungscodes_radioHL };
 			AbrechnungsTypDialog_InputDialog inputDlg = new AbrechnungsTypDialog_InputDialog(getShell(),
-					ll + (isChanging ? Messages.Core_doChange : Messages.Leistungscodes_add), msg,
-					fieldName, noDuplicatesListCreate, optionsIn, isNumericChecked, isStyledChecked, isMultilineChecked,
+					ll + (isChanging ? Messages.Core_doChange : Messages.Leistungscodes_add), msg, fieldName,
+					noDuplicatesListCreate, optionsIn, isNumericChecked, isStyledChecked, isMultilineChecked,
 					isChanging ? changeItems : null);
 			if (inputDlg.open() == Dialog.OK) {
 				String[] result = inputDlg.getResult();

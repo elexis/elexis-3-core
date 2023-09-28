@@ -82,8 +82,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 
 	private void updateCloseablePlaceholder(MPerspective mPerspective) {
 		EModelService modelService = getService(EModelService.class);
-		List<MPlaceholder> foundMPlaceholders = modelService.findElements(mPerspective, null, MPlaceholder.class,
-				null);
+		List<MPlaceholder> foundMPlaceholders = modelService.findElements(mPerspective, null, MPlaceholder.class, null);
 		for (MPlaceholder mPlaceholder : foundMPlaceholders) {
 			// set closeable true
 			if (!mPlaceholder.isCloseable()) {

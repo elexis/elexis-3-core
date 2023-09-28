@@ -225,7 +225,7 @@ public interface IConfigService {
 
 	/**
 	 * (SQL Transaction) Either get or insert the value if not found.
-	 * 
+	 *
 	 * @param contact     if set: the contact the contact this configuration entry
 	 *                    is accounted to (userconfig);<br>
 	 *                    if <code>null</code> global config

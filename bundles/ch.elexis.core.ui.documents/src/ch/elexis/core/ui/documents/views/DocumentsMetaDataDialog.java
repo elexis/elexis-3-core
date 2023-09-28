@@ -119,18 +119,18 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		GridData gd_lastchangedDate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lastchangedDate.widthHint = 150;
 		lastchangedDate.setLayoutData(gd_lastchangedDate);
-		if(document.getLastchanged() != null && document.getLastupdate() > 0) {
+		if (document.getLastchanged() != null && document.getLastupdate() > 0) {
 			lastchangedDate.setSelection(document.getLastchanged());
 		} else {
 			lastchangedDate.setSelection(new Date());
 		}
-		
+
 		new Label(ret, SWT.NONE).setText("Erstelldatum");
 		creationDate = new CDateTime(ret, CDT.DATE_SHORT | CDT.DROP_DOWN | SWT.BORDER | CDT.TAB_FIELDS);
 		GridData gd_archivingDate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_archivingDate.widthHint = 150;
 		creationDate.setLayoutData(gd_archivingDate);
-		if(document.getCreated() != null && document.getLastupdate() > 0) {
+		if (document.getCreated() != null && document.getLastupdate() > 0) {
 			creationDate.setSelection(document.getCreated());
 		} else {
 			creationDate.setSelection(new Date());

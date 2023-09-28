@@ -276,8 +276,7 @@ public class Presets {
 					k = new Organisation(unfallvers, Messages.Case_UVG_Short);
 					k.set("Kuerzel", Messages.Case_UVG_Short); //$NON-NLS-1$
 				}
-				Fall fall = pat.neuerFall(Messages.Core_Accident, Messages.Core_Accident,
-						Messages.Case_UVG_Short);
+				Fall fall = pat.neuerFall(Messages.Core_Accident, Messages.Core_Accident, Messages.Case_UVG_Short);
 				fall.setGarant(k);
 				fall.setRequiredContact(INSURANCE, k);
 				fall.setRequiredString(Messages.Core_Accidentnumber, unfallnr);

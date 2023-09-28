@@ -108,13 +108,13 @@ public class TimeTool extends GregorianCalendar {
 			"Nov", "Dec" };
 
 	/** Weekdays as abbreviations */
-	public final static String[] wdays = { Messages.Core_Sunday_Short, Messages.Core_Monday_Short, Messages.Core_Tuesday_Short,
-			Messages.Core_Wednesday_Short, Messages.Core_Thursday_Short, Messages.Core_Friday_Short, Messages.Core_Saturday_Short // $NON-NLS-1$
+	public final static String[] wdays = { Messages.Core_Sunday_Short, Messages.Core_Monday_Short,
+			Messages.Core_Tuesday_Short, Messages.Core_Wednesday_Short, Messages.Core_Thursday_Short,
+			Messages.Core_Friday_Short, Messages.Core_Saturday_Short // $NON-NLS-1$
 	};
 	/** weekdays as full words */
-	public final static String[] Wochentage = { Messages.Core_Sunday, Messages.Core_Monday,
-			Messages.Core_Tuesday, Messages.Core_Wednesday, Messages.Core_Thursday,
-			Messages.Core_Friday, Messages.Core_Saturday // $NON-NLS-1$
+	public final static String[] Wochentage = { Messages.Core_Sunday, Messages.Core_Monday, Messages.Core_Tuesday,
+			Messages.Core_Wednesday, Messages.Core_Thursday, Messages.Core_Friday, Messages.Core_Saturday // $NON-NLS-1$
 	};
 
 	/**

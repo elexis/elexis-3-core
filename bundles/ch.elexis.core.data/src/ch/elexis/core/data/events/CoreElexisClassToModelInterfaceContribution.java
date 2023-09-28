@@ -73,4 +73,3 @@ public class CoreElexisClassToModelInterfaceContribution implements ElexisClassT
 		return Optional.empty();
 	}
 }
-

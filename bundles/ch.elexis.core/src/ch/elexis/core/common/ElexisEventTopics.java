@@ -86,8 +86,9 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_STATUS = "status";
 
 	/**
-	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a model class.
-	 * 
+	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a
+	 * model class.
+	 *
 	 */
 	public static final String EVENT_INVALIDATE_CACHE = BASE_MODEL + "invalidatecache";
 

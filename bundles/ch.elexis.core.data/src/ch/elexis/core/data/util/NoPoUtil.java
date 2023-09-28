@@ -37,7 +37,7 @@ public class NoPoUtil {
 	 * {@link Identifiable}. If loading via {@link PersistentObjectFactory} and the
 	 * {@link IStoreToStringService} does not load an instanceof clazz, the load
 	 * method of the clazz.
-	 * 
+	 *
 	 * @param identifiable
 	 * @param clazz
 	 * @return
@@ -66,7 +66,7 @@ public class NoPoUtil {
 	 * Load {@link PersistentObject} implementation for the provided
 	 * {@link Identifiable} using the {@link PersistentObjectFactory} and the
 	 * {@link IStoreToStringService}.
-	 * 
+	 *
 	 * @param identifiable
 	 * @return
 	 */
@@ -78,7 +78,7 @@ public class NoPoUtil {
 	 * Load {@link PersistentObject} implementation for the provided
 	 * {@link Identifiable} using the {@link PersistentObjectFactory} and the
 	 * {@link IStoreToStringService}.
-	 * 
+	 *
 	 * @param identifiable
 	 * @param throwException
 	 * @return

@@ -16,7 +16,7 @@ import ch.elexis.core.tasks.model.TaskTriggerType;
 
 /**
  * Incoming event from E to ES
- * 
+ *
  * @see info.elexis.server.core.connector.elexis.rest.legacy.EventService
  */
 @Component(property = EventConstants.EVENT_TOPIC + "=" + "remote/" + ElexisEventTopics.TASK_SERVICE + "*")

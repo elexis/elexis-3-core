@@ -249,7 +249,22 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
 				patient.addXid(DOMAIN_AHV, formattedAHV, true);
 			}
+			AcquireLockUi.aquireAndRun(result, new ILockHandler() {
 
+				@Override
+				public void lockFailed() {
+					result.delete();
+				}
+
+				@Override
+				public void lockAcquired() {
+					result.set(new String[] { Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE,
+							Kontakt.FLD_PHONE1, Kontakt.FLD_E_MAIL },
+							new String[] { ret[4], ret[5], ret[6], ret[7], ret[8] });
+
+					ElexisEventDispatcher.fireSelectionEvent(result);
+				}
+			});
 			super.okPressed();
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);

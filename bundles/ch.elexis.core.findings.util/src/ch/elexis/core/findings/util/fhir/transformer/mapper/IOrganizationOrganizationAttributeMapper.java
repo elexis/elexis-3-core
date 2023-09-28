@@ -71,7 +71,7 @@ public class IOrganizationOrganizationAttributeMapper
 	@Override
 	public void fhirToElexis(Organization source, IOrganization target) {
 		target.setDescription1(source.getName());
-		
+
 		contactHelper.mapIdentifiers(source.getIdentifier(), target);
 		contactHelper.mapAddress(source.getAddress(), target);
 		contactHelper.mapTelecom(source.getTelecom(), target);
