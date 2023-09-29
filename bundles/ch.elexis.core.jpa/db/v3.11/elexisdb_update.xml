@@ -71,6 +71,34 @@
 		</insert>
 	</changeSet>
 
+	<changeSet author="thomas" id="manual_insert_ROLE_medical-user">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='medical-user'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="medical-user" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_insert_ROLE_poweruser">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='poweruser'
+			</sqlCheck>
+		</preConditions>
+		<insert tableName="ROLE">
+			<column name="ID" value="poweruser" />
+			<column name="ISSYSTEMROLE" value="1" />
+		</insert>
+	</changeSet>
+
 	<changeSet author="thomas" id="manual_insert_ROLE_bot">
 		<preConditions onFail="MARK_RAN">
 			<sqlCheck expectedResult="0">
@@ -115,11 +143,11 @@
 
 	<changeSet author="thomas" id="manual_delete_old_ROLE_and_USER_ROLE_JOINT">
 		<delete tableName="ROLE">
-			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner')</where>
+			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner', 'poweruser', 'medical-user')</where>
 		</delete>
 		
 		<delete tableName="USER_ROLE_JOINT">
-			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner')</where>
+			<where>id not in ('mpa','mpk','bot','ict-administrator','user','medical-assistant','mandator','medical-practitioner', 'poweruser', 'medical-user')</where>
 		</delete>
 	</changeSet>
 	
@@ -138,6 +166,21 @@
 		</insert>
 	</changeSet>
 	
+	<changeSet author="thomas" id="manual_insert_USER_ROLE_JOINT_users_medical-user">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM USER_ROLE_JOINT
+				WHERE ID='medical-user'
+			</sqlCheck>
+		</preConditions>
+		<sql>
+<![CDATA[
+INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'medical-user', '0' FROM USER_ROLE_JOINT;
+]]>
+	    </sql>
+	</changeSet>
+
 	<changeSet author="thomas" id="manual_insert_USER_ROLE_JOINT_Administrator_user">
 		<preConditions onFail="MARK_RAN">
 			<sqlCheck expectedResult="0">
