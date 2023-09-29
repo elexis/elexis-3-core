@@ -100,6 +100,13 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		new Label(comp, SWT.NONE);
 		new Label(comp, SWT.NONE);
 
+		Label lblHandy = new Label(comp, SWT.NONE);
+		lblHandy.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblHandy.setText(Messages.KontaktBlatt_Mobile);
+
+		textHandy = new Text(comp, SWT.BORDER);
+		textHandy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 		Label lblTelefon1 = new Label(comp, SWT.NONE);
 		lblTelefon1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTelefon1.setText(Messages.KontaktBlatt_Phone1);
@@ -113,13 +120,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		textTelefon2 = new Text(comp, SWT.BORDER);
 		textTelefon2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		Label lblHandy = new Label(comp, SWT.NONE);
-		lblHandy.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHandy.setText(Messages.KontaktBlatt_Mobile);
-
-		textHandy = new Text(comp, SWT.BORDER);
-		textHandy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblFax = new Label(comp, SWT.NONE);
 		lblFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

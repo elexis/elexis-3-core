@@ -107,9 +107,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_City, Kontakt.FLD_PLACE, Typ.STRING, null),
 			new InputData(Messages.Core_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
 			new InputData(Messages.KontaktBlatt_XMLName, Patient.FLD_ALLERGIES, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
-			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.Core_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX, null),
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
@@ -167,8 +167,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (LocalLockServiceHolder.get().isLockedLocal(deselectedKontakt)) {
 						LocalLockServiceHolder.get().releaseLock(deselectedKontakt);
 					}
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
+					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 					commandService.refreshElements(ToggleCurrentKontaktLockHandler.COMMAND_ID, null);
 				}
 			} else {
@@ -179,20 +178,18 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IContact contact) {
-		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
-		if (kontakt != null && kontakt.equals(actKontakt)) {
-			save();
-			setUnlocked(true);
-		}
+
+		setUnlocked(true);
+		setEnabled(true);
+
 	}
 
 	@Inject
 	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IContact contact) {
-		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
-		if (kontakt != null && kontakt.equals(actKontakt)) {
-			save();
-			setUnlocked(false);
-		}
+
+		setUnlocked(false);
+		setEnabled(false);
+
 	}
 
 	public KontaktBlatt(Composite parent, int style, IViewSite vs) {
@@ -220,21 +217,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
-
-		mandantListener = new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				if (MessageDialog.openConfirm(getShell(), "Mandant bearbeiten",
-						"Sie nehmen Änderungen an einem Mandanten vor\nÄnderung speichern?") == false) {
-					event.doit = false;
-				}
-				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
-				}
-			}
-
-		};
 
 		checkIfContactExistsListener = new Listener() {
 
@@ -378,9 +360,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = kontakt;
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
-			boolean updateRight = AccessControlServiceHolder.get()
-					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
-							StoreToStringServiceHolder.getStoreToString(actKontakt)));
+			boolean updateRight = AccessControlServiceHolder.get().evaluate(
+					EvACE.of(IContact.class, Right.UPDATE, StoreToStringServiceHolder.getStoreToString(actKontakt)));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);
@@ -423,12 +404,12 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			boolean mandatorEditGuard = kontakt.istMandant();
 
 			for (int i = 0; i < def.length; i++) {
-				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
+				def[i].getWidget().getControl().removeListener(SWT.FocusOut, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
+					def[i].getWidget().getControl().addListener(SWT.FocusOut, mandantListener);
 				}
 			} else {
 				// Listener deliberately applied to name1, name2 and sex
