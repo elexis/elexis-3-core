@@ -113,13 +113,13 @@ public class RoleBasedAccessControlServiceTest {
 	}
 
 	@Test
-	public void userHasRightToLoadPerson() {
-		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
-		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.VIEW)));
+	public void userHasNoRightToLoadPerson() {
+		assertFalse(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
+		assertFalse(accessControlService.evaluate(EvACE.of(IPerson.class, Right.VIEW)));
 
 		Optional<IPerson> load = CoreModelServiceHolder.get().load(AllServiceTests.getPatient().getId(),
 				IPerson.class);
-		assertTrue(load.isPresent());
+		assertFalse(load.isPresent());
 	}
 
 	@Test(expected = AccessControlException.class)
@@ -177,7 +177,7 @@ public class RoleBasedAccessControlServiceTest {
 	@Test
 	public void medicalPractitionerRole() {
 		assertTrue(accessControlService.evaluate(EvACE.of(IRole.class, Right.READ)));
-		assertTrue(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
+		assertFalse(accessControlService.evaluate(EvACE.of(IPerson.class, Right.READ)));
 		assertFalse(accessControlService.evaluate(EvACE.of(IEncounter.class, Right.READ)));
 
 		IRole role = CoreModelServiceHolder.get()
