@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.12.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.12.0.qualifier" useFeatures="true" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
