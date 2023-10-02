@@ -18,6 +18,7 @@ import ch.rgw.tools.TimeTool;
 
 @Component
 public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
+	private Object peaUrl;
 
 	@Override
 	public String getSupportedType() {
@@ -44,12 +45,16 @@ public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 		LocalDateTime value;
 
 		TerminAttribute attribute = searchEnum(TerminAttribute.class, lcAttribute);
+
 		switch (attribute) {
 		case Tag:
 			value = appointment.getStartTime();
 			return new TimeTool(value).toString(TimeTool.DATE_GER);
 		case Bereich:
 			return appointment.getSchedule();
+		case PEAUrl:
+
+			return (String) peaUrl;
 		case Zeit:
 			value = appointment.getStartTime();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -60,7 +65,7 @@ public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 	}
 
 	private enum TerminAttribute implements ILocalizedEnum {
-		Tag("Tag des Termins im Format dd.MM.yyyy"), Bereich("Zugehöriger Bereich"),
+		Tag("Tag des Termins im Format dd.MM.yyyy"), Bereich("Zugehöriger Bereich"), PEAUrl("Die PEA Erfassungs URL"),
 		Zeit("Startzeitpunkt im Format hh:mm");
 
 		final String description;

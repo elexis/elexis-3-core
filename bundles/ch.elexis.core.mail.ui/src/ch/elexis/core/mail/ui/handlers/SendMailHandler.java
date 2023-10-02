@@ -8,7 +8,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.handlers.HandlerUtil;
-
+import at.medevit.elexis.agenda.ui.composite.EmailState;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
@@ -52,10 +52,38 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		if (subject != null) {
 			sendMailDialog.setSubject(subject);
 		}
+		String hideLabelParam = event.getParameter("ch.elexis.core.mail.ui.sendMail.hideLabel");
+		boolean hideLabelValue = "true".equals(hideLabelParam);
+		sendMailDialog.setHideLabel(hideLabelValue);
+
+		String account = event.getParameter("ch.elexis.core.mail.ui.sendMail.account");
+		if (account != null) {
+			sendMailDialog.setAccount(account);
+		}
 		String text = event.getParameter("ch.elexis.core.mail.ui.sendMail.text");
 		if (text != null) {
 			sendMailDialog.setText(text);
 		}
+		String template = event.getParameter("ch.elexis.core.mail.ui.sendMail.emailTemplate");
+		if (template != null) {
+			sendMailDialog.setTemplate(template);
+
+		}
+
+		String time = event.getParameter("ch.elexis.core.mail.ui.sendMail.time");
+		if (time != null) {
+			sendMailDialog.setTime(time);
+
+		}
+		String bereich = event.getParameter("ch.elexis.core.mail.ui.sendMail.bereich");
+		if (bereich != null) {
+			sendMailDialog.setBereich(bereich);
+
+		}
+
+		String autoSend1 = event.getParameter("ch.elexis.core.mail.ui.sendMail.autoSend");
+		boolean autoSend = "true".equals(autoSend1);
+		sendMailDialog.setAutoSend(autoSend);
 
 		if (sendMailDialog.open() == Dialog.OK) {
 			MailMessage message = new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
@@ -67,6 +95,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			if (taskDescriptor.isPresent()) {
 				ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event),
 						taskDescriptor.get());
+				EmailState.getInstance().setEmailSent(true);
 				return task.getState() == TaskState.COMPLETED;
 			}
 		}

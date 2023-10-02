@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -57,7 +58,9 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Kontakt;
+import ch.medelexis.pea.PeaService;
 
 public class SendMailDialog extends TitleAreaDialog {
 
@@ -75,14 +78,22 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
-
 	private String accountId;
 	private String attachmentsString;
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-
+	private boolean hideLabel = false;
+	private String preselectedAccount = null;
 	private LocalDateTime sentTime;
+	private String emailTemplate = null;
+	private List<Object> templatesInput = new ArrayList<>();
+	private boolean autoSend;
+	private String peaUrl;
+
+	private String time = null;
+
+	private String bereich;
 
 	public SendMailDialog(Shell parentShell) {
 		super(parentShell);
@@ -98,7 +109,6 @@ public class SendMailDialog extends TitleAreaDialog {
 		} else {
 			setTitle("E-Mail versand nicht möglich");
 		}
-
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
@@ -106,13 +116,22 @@ public class SendMailDialog extends TitleAreaDialog {
 
 		if (MailClientComponent.getMailClient() != null) {
 			Label lbl = new Label(container, SWT.NONE);
+
 			lbl.setText("Von");
 			accountsViewer = new ComboViewer(container);
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
 			accountsViewer.setLabelProvider(new LabelProvider());
 			accountsViewer.setInput(getSendMailAccounts());
 			accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			if (accountId != null) {
+
+			// Überprüfen, ob ein preselectedAccount vorhanden ist und versuchen, ihn
+			// auszuwählen
+			if (preselectedAccount != null && !preselectedAccount.isEmpty()) {
+				List<String> availableAccounts = getSendMailAccounts();
+				if (availableAccounts.contains(preselectedAccount)) {
+					accountsViewer.setSelection(new StructuredSelection(preselectedAccount));
+				}
+			} else if (accountId != null) {
 				accountsViewer.setSelection(new StructuredSelection(accountId));
 			}
 
@@ -245,26 +264,17 @@ public class SendMailDialog extends TitleAreaDialog {
 					return super.getText(element);
 				}
 			});
-			List<Object> templatesInput = new ArrayList<>();
+
 			templatesInput.add("Keine Vorlage");
 			templatesInput.addAll(MailTextTemplate.load());
 			templatesViewer.setInput(templatesInput);
-			templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				@Override
-				public void selectionChanged(SelectionChangedEvent event) {
-					if (event.getStructuredSelection() != null
-							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
-						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
-								.getFirstElement();
-						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
-								selectedTemplate.getTemplate()));
-					} else {
-						textText.setText(StringUtils.EMPTY);
-					}
-					updateLayout();
-				}
-			});
 
+			if (hideLabel) {
+				lbl.setVisible(false);
+				templatesViewer.getControl().setVisible(false);
+			} else {
+				templatesViewer.getControl().setVisible(true);
+			}
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
@@ -272,8 +282,30 @@ public class SendMailDialog extends TitleAreaDialog {
 			textText.setLayoutData(gd);
 			textText.setText(textString);
 
+			if (emailTemplate != null && !emailTemplate.isEmpty()) {
+				List<Object> availableTemplates = templatesInput;
+				Optional<Object> matchingTemplate = availableTemplates.stream()
+						.filter(temp -> temp instanceof ITextTemplate
+								&& ((ITextTemplate) temp).getName().trim().equals(emailTemplate.trim()))
+						.findFirst();
+
+				if (matchingTemplate.isPresent()) {
+					templatesViewer.setSelection(new StructuredSelection(matchingTemplate.get()));
+					applySelectedTemplate(matchingTemplate.get());
+				}
+			}
+
+			templatesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
+				public void selectionChanged(SelectionChangedEvent event) {
+					if (event.getSelection() instanceof StructuredSelection) {
+						StructuredSelection selection = (StructuredSelection) event.getSelection();
+						applySelectedTemplate(selection.getFirstElement());
+					}
+				}
+			});
+
 			if (accountId == null) {
-				// set selected account for mandant
 				IMandator selectedMandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
 					List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
@@ -392,7 +424,16 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 				}
 			}
+
+			if (autoSend) {
+				Display.getCurrent().timerExec(0, () -> {
+					if (okButton != null && !okButton.isDisposed()) {
+						okButton.notifyListeners(SWT.Selection, new Event());
+					}
+				});
+			}
 		}
+
 		outboxBtn.setEnabled(!disableOutbox && OutboxUtil.isOutboxAvailable());
 		outboxBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -419,6 +460,7 @@ public class SendMailDialog extends TitleAreaDialog {
 				cancelPressed();
 			}
 		});
+
 		parent.layout();
 	}
 
@@ -486,6 +528,14 @@ public class SendMailDialog extends TitleAreaDialog {
 		return attachments.getDocuments();
 	}
 
+	public void setHideLabel(boolean hide) {
+		this.hideLabel = hide;
+	}
+
+	public void setAccount(String account) {
+		this.preselectedAccount = account;
+	}
+
 	public void setMailMessage(MailMessage message) {
 		setTo(StringUtils.defaultString(message.getTo()));
 		setCc(StringUtils.defaultString(message.getCc()));
@@ -533,4 +583,73 @@ public class SendMailDialog extends TitleAreaDialog {
 	public void sent(LocalDateTime sentTime) {
 		this.sentTime = sentTime;
 	}
+
+	public void setTemplate(String template) {
+		this.emailTemplate = template;
+
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+
+	}
+
+	public void setBereich(String bereich) {
+		this.bereich = bereich;
+
+	}
+
+	public void setAutoSend(boolean autoSend) {
+		this.autoSend = autoSend;
+	}
+
+	private void applySelectedTemplate(Object selectedTemplate) {
+		if (selectedTemplate instanceof ITextTemplate) {
+			ITextTemplate template = (ITextTemplate) selectedTemplate;
+			String templateText = template.getTemplate();
+			Optional<PeaService> peaService = OsgiServiceUtil.getService(PeaService.class);
+
+			if (peaService.isPresent()) {
+				peaUrl = peaService.get().getPeaUrl();
+			}
+
+			String[] dateAndTime = time.split(" ");
+			String[] dateParts = dateAndTime[0].split("\\.");
+			String[] timeParts = dateAndTime[1].split(":");
+
+			int day = Integer.parseInt(dateParts[0]);
+			int month = Integer.parseInt(dateParts[1]);
+			int year = Integer.parseInt(dateParts[2]);
+			int hour = Integer.parseInt(timeParts[0]);
+			int minute = Integer.parseInt(timeParts[1]);
+			int second = Integer.parseInt(timeParts[2]);
+
+			LocalDateTime dateTimeFrom = LocalDateTime.of(year, month, day, hour, minute, second);// Holen Sie sich das
+
+			templateText = replacePlaceholders(templateText, dateTimeFrom, peaUrl, bereich);
+
+			// Führen Sie die restlichen Ersetzungen durch
+			textText.setText(
+					textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(), templateText));
+		} else {
+			textText.setText(StringUtils.EMPTY);
+		}
+		updateLayout();
+	}
+
+	private String replacePlaceholders(String text, LocalDateTime dateTime, String peaUrl, String bereich) {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		text = text.replace("[Termin.Tag]", dateTime.format(dateFormatter));
+		text = text.replace("[Termin.Zeit]", dateTime.format(timeFormatter));
+		text = text.replace("[Termin.Bereich]", bereich);
+		if (peaUrl != null) {
+			text = text.replace("[Termin.PEAUrl]", peaUrl);
+		} else {
+			text = text.replace("[Termin.PEAUrl]", "");
+		}
+
+		return text;
+	}
+
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +15,8 @@ import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,6 +54,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,14 +80,15 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private Button defaultBtn;
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
-
+	private static final String TEMPLATE_PATH = "rsc/";
+	private File folder;
 	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
 
 	private static Logger logger = LoggerFactory.getLogger(TextTemplates.class);
 
 	@Override
 	public void init(IWorkbench workbench) {
-
+		checkAndAddTemplates();
 	}
 
 	@Override
@@ -101,6 +106,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 					return ((ITextTemplate) element).getName() + (((ITextTemplate) element).getMandator() != null
 							? " (" + ((ITextTemplate) element).getMandator().getLabel() + ")"
 							: StringUtils.EMPTY);
+
 				}
 				return super.getText(element);
 			}
@@ -176,8 +182,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 						Files.write(temp, fileList.get(index).getData());
 						Program.launch(temp.toString());
 					} catch (IOException | ClassNotFoundException e) {
-						MessageDialog.openError(getShell(), "Fehler",
-								"Das Dokument kann nicht geladen werden.");
+						MessageDialog.openError(getShell(), "Fehler", "Das Dokument kann nicht geladen werden.");
 						logger.info("Error loading document", e);
 					}
 				}
@@ -385,13 +390,13 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						if (textTemplate.getContent() != null) {
 							byte[] DBArrayList = textTemplate.getContent();
-								List<SerializableFile> deserializedContent = SerializableFileUtil
-										.deserializeData(DBArrayList);
+							List<SerializableFile> deserializedContent = SerializableFileUtil
+									.deserializeData(DBArrayList);
 
-								for (SerializableFile serializableFile : deserializedContent) {
-									fileList.add(new SerializableFile(serializableFile.getName(),
-											serializableFile.getMimeType(), serializableFile.getData()));
-								}
+							for (SerializableFile serializableFile : deserializedContent) {
+								fileList.add(new SerializableFile(serializableFile.getName(),
+										serializableFile.getMimeType(), serializableFile.getData()));
+							}
 						}
 
 						byte[] data = SerializableFileUtil.serializeData(fileList);
@@ -399,8 +404,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						CoreModelServiceHolder.get().save(textTemplate);
 					} catch (IOException | ClassNotFoundException e) {
-						MessageDialog.openError(getShell(), "Fehler",
-								"Das Dokument kann nicht hinzugefügt werden.");
+						MessageDialog.openError(getShell(), "Fehler", "Das Dokument kann nicht hinzugefügt werden.");
 						logger.info("Error saving document", e);
 					}
 				}
@@ -454,4 +458,64 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 		}
 
 	}
+
+	private void checkAndAddTemplates() {
+		List<ITextTemplate> templates = MailTextTemplate.load();
+		boolean hasTerminbestaetigung = templates.stream().anyMatch(t -> "Terminbestätigung".equals(t.getName()));
+		boolean hasTerminbestaetigungInkl = templates.stream()
+				.anyMatch(t -> "Terminbestätigung inkl. Anmeldeformular".equals(t.getName()));
+
+		if (!hasTerminbestaetigung || !hasTerminbestaetigungInkl) {
+			addMissingTemplates();
+		}
+	}
+
+	private void addMissingTemplates() {
+		Bundle bundle = Platform.getBundle("ch.elexis.core.mail");
+		URL folderUrl = bundle.getEntry(TEMPLATE_PATH);
+
+		try {
+			folder = new File(FileLocator.toFileURL(folderUrl).getPath());
+		} catch (IOException e) {
+			logger.error("Error converting folder URL to file.", e);
+			folder = null;
+		}
+
+		File[] listOfFiles = folder.listFiles();
+
+		for (File file : listOfFiles) {
+			if (file.isFile() && file.getName().endsWith(".txt")) {
+				try {
+					String content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+					String fileNameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.'));
+
+					String name = convertFileNameToTemplateName(fileNameWithoutExtension);
+
+					if (!templateExists(name)) {
+						addTemplate(name, content);
+					}
+				} catch (IOException e) {
+					logger.error("Error reading template file: " + file.getName(), e);
+				}
+			}
+		}
+	}
+
+	private String convertFileNameToTemplateName(String fileName) {
+		if ("Terminbestätigung_Anmeldeformular".equals(fileName)) {
+			return "Terminbestätigung inkl. Anmeldeformular";
+		}
+		return fileName.replace("_", " ");
+	}
+
+	private boolean templateExists(String name) {
+		return MailTextTemplate.load(name).isPresent();
+	}
+
+	private void addTemplate(String name, String content) {
+		ITextTemplate template = new MailTextTemplate.Builder().name(name).buildAndSave();
+		template.setTemplate(content);
+		CoreModelServiceHolder.get().save(template);
+	}
+
 }

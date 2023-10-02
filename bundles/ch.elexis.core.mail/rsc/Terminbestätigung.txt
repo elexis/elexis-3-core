@@ -1,0 +1,11 @@
+Guten Tag Herr/Frau [Patient.Name]
+
+Gerne bestätigigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.
+
+Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.
+
+Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.
+
+Bei Fragen stehen wir Ihnen gerne zur Verfügung
+
+Vielen Dank

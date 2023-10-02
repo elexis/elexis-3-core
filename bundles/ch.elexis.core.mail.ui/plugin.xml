@@ -14,6 +14,12 @@
             id="ch.elexis.core.mail.ui.preference.texttemplates"
             name="E-Mail Vorlagen">
       </page>
+      <page
+            category="ch.elexis.core.mail.ui.preference"
+            class="ch.elexis.core.mail.ui.preference.AppointmentConfirmations"
+            id="ch.elexis.core.mail.ui.preference.appointmentconfirmations"
+            name="E-Mail-Terminbestätigungen">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -44,6 +50,36 @@
          <commandParameter
                id="ch.elexis.core.mail.ui.sendMail.documents"
                name="documents"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.hideLabel"
+               name="hideLabel"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.account"
+               name="account"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.emailTemplate"
+               name="emailTemplate"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.autoSend"
+               name="autoSend"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.time"
+               name="time"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.bereich"
+               name="bereich"
                optional="true">
          </commandParameter>
       </command>

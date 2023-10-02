@@ -101,10 +101,15 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 		defaultBtn.addListener(SWT.Selection, e -> {
 			IStructuredSelection selectedAccount = accountsViewer.getStructuredSelection();
 			if (selectedAccount != null) {
-				ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT,
-						(String) selectedAccount.getFirstElement());
+				if (defaultBtn.getSelection()) {
+					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT,
+							(String) selectedAccount.getFirstElement());
+				} else {
+					ConfigServiceHolder.get().set(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null);
+				}
 			}
 		});
+
 		defaultBtn.setEnabled(false);
 
 		new Label(parentComposite, SWT.NONE);
