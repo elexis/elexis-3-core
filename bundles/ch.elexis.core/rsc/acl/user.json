@@ -63,7 +63,7 @@
 		"ch.elexis.core.model.IRight": "rv",
 		"ch.elexis.core.model.IRole": "rv",
 		"ch.elexis.core.model.IUser": "rv",
-		"ch.elexis.core.model.IUserConfig": "rv",
+		"ch.elexis.core.model.IUserConfig": "cruv",
 		"ch.elexis.core.model.IUserGroup": "rv",
 		"ch.elexis.core.model.IXid": "rv",
 		"ch.elexis.core.tasks.model.ITask": "rv",
