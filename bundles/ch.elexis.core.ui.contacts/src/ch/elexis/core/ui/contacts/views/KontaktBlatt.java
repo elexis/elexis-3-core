@@ -124,6 +124,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
+				@Override
 				public void displayContent(Object po, InputData ltf) {
 					StringBuilder sb = new StringBuilder();
 					Kontakt k = (Kontakt) po;
@@ -133,6 +134,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					ltf.setText(sb.toString());
 				}
 
+				@Override
 				public void reloadContent(Object po, InputData ltf) {
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
@@ -178,18 +180,10 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IContact contact) {
-
-		setUnlocked(true);
-		setEnabled(true);
-
 	}
 
 	@Inject
 	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IContact contact) {
-
-		setUnlocked(false);
-		setEnabled(false);
-
 	}
 
 	public KontaktBlatt(Composite parent, int style, IViewSite vs) {
@@ -218,6 +212,21 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
 
+		mandantListener = new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				if (MessageDialog.openConfirm(getShell(), "Mandant bearbeiten",
+						"Sie nehmen Änderungen an einem Mandanten vor\nÄnderung speichern?") == false) {
+					event.doit = false;
+				}
+				for (int i = 0; i < def.length; i++) {
+					def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
+				}
+			}
+
+		};
+
 		checkIfContactExistsListener = new Listener() {
 
 			@Override
@@ -225,7 +234,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 				List<Kontakt> list = queryContact();
 
 				if ((list != null) && (!list.isEmpty())) {
-					Kontakt kontakt = (Kontakt) list.get(0);
+					Kontakt kontakt = list.get(0);
 					if (kontakt.istPerson()) {
 						MessageDialog.openInformation(getShell(), "Kontakt existiert",
 								"Ein Kontakt mit diesen Daten existiert bereits in der Datenbank");
@@ -404,12 +413,12 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			boolean mandatorEditGuard = kontakt.istMandant();
 
 			for (int i = 0; i < def.length; i++) {
-				def[i].getWidget().getControl().removeListener(SWT.FocusOut, mandantListener);
+				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
-					def[i].getWidget().getControl().addListener(SWT.FocusOut, mandantListener);
+					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
 				}
 			} else {
 				// Listener deliberately applied to name1, name2 and sex
