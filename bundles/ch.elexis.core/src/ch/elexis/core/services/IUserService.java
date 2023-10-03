@@ -48,9 +48,9 @@ public interface IUserService {
 
 	/**
 	 * Add or remove the {@link IMandator} to the list of mandators the user
-	 * {@link IContact} is working for. Depending on the add parameter add or remove
-	 * is performed.
-	 *
+	 * {@link IUser} is working for. Depending on the add parameter add or remove is
+	 * performed.
+	 * 
 	 * @param user
 	 * @param mandator
 	 * @param add
@@ -78,7 +78,7 @@ public interface IUserService {
 
 	/**
 	 * Set the default executive doctor this user is working for.
-	 *
+	 * 
 	 * @param userContact
 	 * @param mandator
 	 */

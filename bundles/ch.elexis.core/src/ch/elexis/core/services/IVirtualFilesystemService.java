@@ -102,7 +102,7 @@ public interface IVirtualFilesystemService {
 
 		/**
 		 * Write the given content into the file, fails if directory
-		 *
+		 * 
 		 * @throws IOException
 		 * @since 3.10
 		 */
@@ -166,7 +166,7 @@ public interface IVirtualFilesystemService {
 
 		/**
 		 * Checks a possibly existing file entry if it is a directory
-		 *
+		 * 
 		 * @return <code>false</code> if not found or not a directory
 		 * @throws IOException
 		 * @since 3.10

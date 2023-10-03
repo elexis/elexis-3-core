@@ -113,6 +113,10 @@ public class Messages {
 
 	public static String Core_Could_not_reread_correctly_document = ch.elexis.core.l10n.Messages.Core_Could_not_reread_correctly_document;
 
+
+
+
+
 	public static String BriefAuswahlAllLetters = ch.elexis.core.l10n.Messages.BriefAuswahlAllLetters;
 	public static String Core_All = ch.elexis.core.l10n.Messages.Core_All;
 	public static String BriefAuswahlCouldNotLoadText = ch.elexis.core.l10n.Messages.BriefAuswahlCouldNotLoadText;
@@ -202,6 +206,8 @@ public class Messages {
 	public static String FieldDisplayView_WrongTypeBody = ch.elexis.core.l10n.Messages.FieldDisplayView_WrongTypeBody;
 	public static String FieldDisplayView_WrongTypeCaption = ch.elexis.core.l10n.Messages.FieldDisplayView_WrongTypeCaption;
 
+
+
 	public static String FixMediDisplay_DailyCost = ch.elexis.core.l10n.Messages.FixMediDisplay_DailyCost;
 
 	public static String FixMediDisplay_DeleteUnrecoverable = ch.elexis.core.l10n.Messages.FixMediDisplay_DeleteUnrecoverable;
@@ -238,6 +244,7 @@ public class Messages {
 	public static String KonsListe_FilterListAction = ch.elexis.core.l10n.Messages.KonsListe_FilterListAction;
 	public static String KonsListe_FilterListToolTip = ch.elexis.core.l10n.Messages.KonsListe_FilterListToolTip;
 	public static String Core_Common = ch.elexis.core.l10n.Messages.Core_Common;
+
 
 	public static String KonsListe_NoCaseSelectedBody = ch.elexis.core.l10n.Messages.KonsListe_NoCaseSelectedBody;
 
@@ -292,6 +299,9 @@ public class Messages {
 	public static String Contact_SalutationM = ch.elexis.core.l10n.Messages.Contact_SalutationM;
 
 	public static String Core_Kuerzel = ch.elexis.core.l10n.Messages.Core_Kuerzel;
+
+
+
 
 	public static String LagerView_controlled = ch.elexis.core.l10n.Messages.LagerView_controlled;
 
@@ -388,6 +398,7 @@ public class Messages {
 	public static String PatientMenuPopulator_StickerToolTip = ch.elexis.core.l10n.Messages.PatientMenuPopulator_StickerToolTip;
 	public static String Core_Filter_List = ch.elexis.core.l10n.Messages.Core_Filter_List;
 
+
 	public static String PatientenListeView_NewPatientAction = ch.elexis.core.l10n.Messages.PatientenListeView_NewPatientAction;
 	public static String PatientenListeView_NewPationtToolTip = ch.elexis.core.l10n.Messages.PatientenListeView_NewPationtToolTip;
 	public static String PatientenListeView_copySelectedPatInfosToClipboard = ch.elexis.core.l10n.Messages.PatientenListeView_copySelectedPatInfosToClipboard;
@@ -405,7 +416,14 @@ public class Messages {
 	public static String Patientenblatt2_civilState = ch.elexis.core.l10n.Messages.Patientenblatt2_civilState;
 	public static String Patientenblatt2_contactForAdditionalAddress = ch.elexis.core.l10n.Messages.Patientenblatt2_contactForAdditionalAddress;
 
+
+
+
+
+
 	public static String Patientenblatt2_kindOfRelation = ch.elexis.core.l10n.Messages.Patientenblatt2_kindOfRelation;
+
+
 
 	public static String Patientenblatt2_persAnamnesisLbl = ch.elexis.core.l10n.Messages.Patientenblatt2_persAnamnesisLbl;
 	public static String Patientenblatt2_phone1 = ch.elexis.core.l10n.Messages.Patientenblatt2_phone1;
@@ -456,6 +474,7 @@ public class Messages {
 	public static String RezeptBlatt_TemplateNameList = ch.elexis.core.l10n.Messages.RezeptBlatt_TemplateNameList;
 	public static String Core_Prescription = ch.elexis.core.l10n.Messages.Core_Prescription;
 
+
 	public static String RezepteView_ChangeTooltip = ch.elexis.core.l10n.Messages.RezepteView_ChangeTooltip;
 	public static String RezepteView_CreatePrescription = ch.elexis.core.l10n.Messages.RezepteView_CreatePrescription;
 	public static String RezepteView_DragMedicamentsHere = ch.elexis.core.l10n.Messages.RezepteView_DragMedicamentsHere;
@@ -488,6 +507,8 @@ public class Messages {
 	public static String ScriptView_newScriptAction = ch.elexis.core.l10n.Messages.ScriptView_newScriptAction;
 	public static String ScriptView_newScriptTooltip = ch.elexis.core.l10n.Messages.ScriptView_newScriptTooltip;
 
+
+
 	public static String SearchView_dosearch = ch.elexis.core.l10n.Messages.SearchView_dosearch;
 	public static String SearchView_entry = ch.elexis.core.l10n.Messages.SearchView_entry;
 
@@ -507,6 +528,9 @@ public class Messages {
 	public static String TextView_couldNotCreateTextView = ch.elexis.core.l10n.Messages.TextView_couldNotCreateTextView;
 	public static String TextView_couldNotLoadTextPlugin = ch.elexis.core.l10n.Messages.TextView_couldNotLoadTextPlugin;
 	public static String TextView_enterTitle = ch.elexis.core.l10n.Messages.TextView_enterTitle;
+
+
+
 
 	public static String TextView_exportText = ch.elexis.core.l10n.Messages.TextView_exportText;
 	public static String TextView_importText = ch.elexis.core.l10n.Messages.TextView_importText;
@@ -532,6 +556,7 @@ public class Messages {
 	public static String VerrechnungsDisplay_badAmountBody = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_badAmountBody;
 	public static String VerrechnungsDisplay_badAmountCaption = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_badAmountCaption;
 	public static String VerrechnungsDisplay_billed = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_billed;
+
 
 	public static String VerrechnungsDisplay_changeNumberBody = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_changeNumberBody;
 	public static String VerrechnungsDisplay_changeNumberCaption = ch.elexis.core.l10n.Messages.VerrechnungsDisplay_changeNumberCaption;

@@ -20,7 +20,7 @@ public class RelatedPersonIPersonTransformer implements IFhirTransformer<Related
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
-
+	
 	private IPersonRelatedPersonAttributeMapper attributeMapper;
 
 	@Activate

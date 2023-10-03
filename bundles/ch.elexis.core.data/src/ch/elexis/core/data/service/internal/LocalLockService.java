@@ -206,8 +206,8 @@ public class LocalLockService implements ILocalLockService {
 		if (elexisServerService == null) {
 			String message = "System not configured for standalone mode, and elexis-server not available!";
 			logger.error(message);
-			ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
-					ElexisStatus.CODE_NONE, message, null));
+			ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
 			return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 		}
 
@@ -277,8 +277,8 @@ public class LocalLockService implements ILocalLockService {
 				// deleted!!!
 				String message = "Error trying to acquireOrReleaseLocks.";
 				logger.error(message);
-				ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
-						ElexisStatus.CODE_NONE, message, e));
+				ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
+						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
 				return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 			} finally {
 				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {

@@ -80,7 +80,7 @@ public interface IXidService {
 	/**
 	 * Find a object with a {@link IXid} entry matching the provided domain
 	 * information.
-	 *
+	 * 
 	 * Use this method if it is important that only one object is identified with
 	 * the domain information. If there is more than 1 object found with matching
 	 * domain information an {@link IllegalStateException} is thrown.
@@ -95,7 +95,7 @@ public interface IXidService {
 	/**
 	 * Find all objects with a {@link IXid} entry matching the provided domain
 	 * information.
-	 *
+	 * 
 	 * This is not the expected behaviour of an identifier, but there are use cases
 	 * in elexis where it is needed. E.g. multi contacts for same entity with
 	 * different addresses.

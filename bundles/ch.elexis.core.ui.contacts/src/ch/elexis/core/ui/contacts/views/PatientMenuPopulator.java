@@ -71,7 +71,8 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 
 	PatientMenuPopulator(PatientenListeView plv, final StructuredViewer structuredViewer) {
 		mine = plv;
-		stickerAction = new RestrictedAction(AccessControlDefaults.KONTAKT_ETIKETTE, Messages.Core_Sticker_ellipsis) { // $NON-NLS-1$
+		stickerAction = new RestrictedAction(EvACE.of(ISticker.class, Right.CREATE),
+				Messages.Core_Sticker_ellipsis) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.PatientMenuPopulator_StickerToolTip); // $NON-NLS-1$
 			}
@@ -89,8 +90,8 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 
 			@Override
 			public void doRun(IPatient p) {
-				if (MessageDialog.openConfirm(mine.getViewSite().getShell(), Messages.Core_Really_delete_caption,
-						p.getLabel()) == true) {
+				if (MessageDialog.openConfirm(mine.getViewSite().getShell(),
+						Messages.Core_Really_delete_caption, p.getLabel()) == true) {
 					List<ICoverage> coverages = p.getCoverages();
 					if (coverages.isEmpty()) {
 						CoreModelServiceHolder.get().delete(p);

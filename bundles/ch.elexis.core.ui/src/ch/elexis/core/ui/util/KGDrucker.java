@@ -46,8 +46,8 @@ public class KGDrucker {
 					// gw 23.7.2006 an neues Selectionmodell angepasst
 					Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 					if (kgp.doPrint(actPatient, monitor) == false) {
-						ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting, Messages.KGDrucker_couldntprint
-								+ patient.getLabel() + Messages.Core_Backslash_could_not_be_printed, null); // $NON-NLS-1$
+						ErrorDialog.openError(null, Messages.KGDrucker_errorPrinting,
+								Messages.KGDrucker_couldntprint + patient.getLabel() + Messages.Core_Backslash_could_not_be_printed, null); // $NON-NLS-1$
 					}
 
 					monitor.done();

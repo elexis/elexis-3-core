@@ -30,8 +30,8 @@ public class MedicationViewerHelper {
 	public static TableViewerColumn createTypeColumn(TableViewer viewer, TableColumnLayout layout, int columnIndex) {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();
-		tblclmnStateDisposition
-				.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Core_Type);
+		tblclmnStateDisposition.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
+				+ Messages.Core_Type);
 		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
 		tblclmnStateDisposition.addSelectionListener(getSelectionAdapter(viewer, tblclmnStateDisposition, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
@@ -53,8 +53,8 @@ public class MedicationViewerHelper {
 		final TableColumn tblclmnArticle = ret.getColumn();
 		layout.setColumnData(tblclmnArticle, new ColumnPixelData(250, true, true));
 		tblclmnArticle.setText(Messages.Core_Article);
-		tblclmnArticle
-				.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Core_Article);
+		tblclmnArticle.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
+				+ Messages.Core_Article);
 		tblclmnArticle.addSelectionListener(getSelectionAdapter(viewer, tblclmnArticle, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 
@@ -132,8 +132,8 @@ public class MedicationViewerHelper {
 		layout.setColumnData(tblclmnEnacted, new ColumnPixelData(60, true, true));
 		tblclmnEnacted
 				.setImage(Images.resize(Images.IMG_NEXT_WO_SHADOW.getImage(), ImageSize._12x12_TableColumnIconSize));
-		tblclmnEnacted.setToolTipText(
-				Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Core_Date_Startdate);
+		tblclmnEnacted.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
+				+ Messages.Core_Date_Startdate);
 		tblclmnEnacted.addSelectionListener(getSelectionAdapter(viewer, tblclmnEnacted, columnIndex));
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 
@@ -152,11 +152,11 @@ public class MedicationViewerHelper {
 		TableColumn tblclmnComment = ret.getColumn();
 		layout.setColumnData(tblclmnComment, new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
 		tblclmnComment.setText(Messages.Prescription_Instruction);
-		tblclmnComment.setToolTipText(
-				Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Prescription_Instruction);
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
+				+ Messages.Prescription_Instruction);
 		tblclmnComment.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
-		tblclmnComment.setToolTipText(
-				Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Prescription_Instruction);
+		tblclmnComment.setToolTipText(Messages.MedicationComposite_column_sortBy + StringUtils.SPACE
+				+ Messages.Prescription_Instruction);
 		ret.setLabelProvider(new MedicationCellLabelProvider() {
 
 			@Override

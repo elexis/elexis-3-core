@@ -120,7 +120,7 @@ public class CoreUiUtil implements EventHandler {
 	public static void injectServices(Object object, IEclipseContext context) {
 		ContextInjectionFactory.inject(object, context);
 	}
-
+	
 	public static void uninjectServices(Object object, IEclipseContext context) {
 		ContextInjectionFactory.uninject(object, context);
 	}

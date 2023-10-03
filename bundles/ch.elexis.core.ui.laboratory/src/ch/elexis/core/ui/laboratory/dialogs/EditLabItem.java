@@ -198,7 +198,8 @@ public class EditLabItem extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-						Messages.Laboratory_Please_Select_Origin, Messages.Laboratory_Please_Select_Origin, false);
+						Messages.Laboratory_Please_Select_Origin,
+						Messages.Laboratory_Please_Select_Origin, false);
 				if (ksl.open() == Dialog.OK) {
 					actLabor = (Labor) ksl.getSelection();
 					originLaboratory.setText(actLabor.getLabel());

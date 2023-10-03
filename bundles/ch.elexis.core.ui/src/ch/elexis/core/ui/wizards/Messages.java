@@ -31,9 +31,18 @@ public class Messages {
 	public static String DBConnectWizard_newConnection = ch.elexis.core.l10n.Messages.DBConnectWizard_newConnection;
 	public static String DBConnectWizardPage_enterSettings = ch.elexis.core.l10n.Messages.DBConnectWizardPage_enterSettings;
 
+
+
+
 	public static String DBImportFirstPage_enterNameODBC = ch.elexis.core.l10n.Messages.DBImportFirstPage_enterNameODBC;
 	public static String DBImportFirstPage_selectType = ch.elexis.core.l10n.Messages.DBImportFirstPage_selectType;
 	public static String DBImportFirstPage_serverAddress = ch.elexis.core.l10n.Messages.DBImportFirstPage_serverAddress;
+
+
+
+
+
+
 
 	public static String DBConnectWizardPage_lblGespeicherteVerbindungen_text = ch.elexis.core.l10n.Messages.DBConnectWizardPage_lblGespeicherteVerbindungen_text;
 	public static String DBConnectWizardPage_btnNewButton_text = ch.elexis.core.l10n.Messages.DBConnectWizardPage_btnNewButton_text;

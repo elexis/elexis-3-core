@@ -41,6 +41,7 @@ public class Messages {
 	public static String Core_Import_Data = ch.elexis.core.l10n.Messages.Core_Import_Data;
 	public static String CodeSelectorFactory_16 = ch.elexis.core.l10n.Messages.CodeSelectorFactory_16;
 
+
 	public static String CodeSelectorFactory_patientsMostFrequent = ch.elexis.core.l10n.Messages.CodeSelectorFactory_patientsMostFrequent;
 	public static String CodeSelectorFactory_yourMostFrequent = ch.elexis.core.l10n.Messages.CodeSelectorFactory_yourMostFrequent;
 	public static String CodeSelectorFactory_resetStatistic = ch.elexis.core.l10n.Messages.CodeSelectorFactory_resetStatistic;

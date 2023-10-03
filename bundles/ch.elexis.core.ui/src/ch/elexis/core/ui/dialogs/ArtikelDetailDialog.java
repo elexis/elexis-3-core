@@ -64,10 +64,8 @@ public class ArtikelDetailDialog extends TitleAreaDialog {
 				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Phamacode, "extInfo", Typ.STRING, //$NON-NLS-1$
 						"Pharmacode"), // $NON-NLS-2$ //$NON-NLS-1$
 				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Einkaufspreis, "purchasePrice", //$NON-NLS-1$
-						Typ.CURRENCY, null),
-				new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Verkaufspreis, "sellingPrice", //$NON-NLS-1$
-						Typ.CURRENCY, null),
-				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_per_pack, "extInfo", Typ.INT, //$NON-NLS-1$
+						Typ.CURRENCY, null), new InputData(ch.elexis.core.ui.views.artikel.Messages.Artikeldetail_Verkaufspreis, "sellingPrice", //$NON-NLS-1$
+						Typ.CURRENCY, null), new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_per_pack, "extInfo", Typ.INT, //$NON-NLS-1$
 						"VerpackungsEinheit"), // $NON-NLS-2$ //$NON-NLS-1$
 				new InputData(ch.elexis.core.ui.views.artikel.Messages.Core_Pieces_by_dose, "extInfo", Typ.INT, //$NON-NLS-1$
 						"Verkaufseinheit") }; //$NON-NLS-1$

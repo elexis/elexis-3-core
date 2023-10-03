@@ -39,7 +39,7 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 
 	/**
 	 * calls are idempotent
-	 *
+	 * 
 	 * @param taskDescriptorId
 	 * @param url
 	 * @param fileExtensionFilter

@@ -97,7 +97,6 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Person;
-import ch.elexis.data.User;
 
 public class UserManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUsers;
@@ -188,7 +187,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		};
 		popManager.add(addUserAction);
 
-		deleteUserAction = new LockedRestrictedAction<IUser>(AccessControlDefaults.USER_DELETE, Messages.Core_Delete) {
+		deleteUserAction = new LockedRestrictedAction<IUser>(EvACE.of(IUser.class, Right.DELETE),
+				Messages.Core_Delete) {
 
 			@Override
 			public IUser getTargetedObject() {

@@ -17,7 +17,7 @@ public class WebdavURLStreamHandlerService extends AbstractURLStreamHandlerServi
 
 	@Override
 	public URLConnection openConnection(URL url) throws IOException {
-
+		
 		String replaced = url.toString().replaceFirst("davs", "https");
 		// TODO fetch token from context?
 		return new WebdavFile(new URL(replaced));

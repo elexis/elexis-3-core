@@ -65,10 +65,9 @@ public class TemplateDrucker {
 					if (tpw.doPrint(actPatient, template, printer, tray, monitor) == false) {
 						Status status = new Status(Status.ERROR, "ch.elexis", Status.ERROR, //$NON-NLS-1$
 								Messages.Core_Error_while_printing, null);
-						ErrorDialog.openError(null, Messages.Core_Error_while_printing, Messages.TemplateDrucker_docname
-								+ template + Messages.Core_Backslash_could_not_be_printed, status); // $NON-NLS-1$
-																									// //$NON-NLS-2$
-																									// //$NON-NLS-3$
+						ErrorDialog.openError(null, Messages.Core_Error_while_printing,
+								Messages.TemplateDrucker_docname + template + Messages.Core_Backslash_could_not_be_printed,
+								status); // $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 					}
 

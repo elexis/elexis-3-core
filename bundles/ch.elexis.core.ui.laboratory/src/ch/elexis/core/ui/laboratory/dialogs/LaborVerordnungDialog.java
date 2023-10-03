@@ -252,7 +252,8 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
 		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
-			message.append(StringUtils.SPACE).append(ch.elexis.core.ui.laboratory.controls.Messages.Order_ID)
+			message.append(StringUtils.SPACE)
+					.append(ch.elexis.core.ui.laboratory.controls.Messages.Order_ID)
 					.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 		}

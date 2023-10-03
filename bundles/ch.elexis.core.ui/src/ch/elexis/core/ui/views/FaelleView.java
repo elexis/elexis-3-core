@@ -103,7 +103,8 @@ public class FaelleView extends ViewPart implements IRefreshable {
 			if (actPatient != patient) {
 				actPatient = patient;
 				tv.refresh(true);
-				actCoverage = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class).orElse(null);
+				actCoverage = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class)
+						.orElse(null);
 				if (actCoverage != null) {
 					tv.setSelection(new StructuredSelection(actCoverage));
 				}

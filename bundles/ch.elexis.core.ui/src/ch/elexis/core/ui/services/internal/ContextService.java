@@ -77,7 +77,7 @@ public class ContextService implements IContextService, EventHandler {
 			delayedRunAndTrack.forEach(rt -> runAndTrackConsumer.accept(rt));
 		}
 	}
-
+	
 	@Activate
 	public void activate() {
 		logger.info("ACTIVATE"); //$NON-NLS-1$

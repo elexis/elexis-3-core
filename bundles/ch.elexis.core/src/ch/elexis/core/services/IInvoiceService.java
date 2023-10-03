@@ -89,8 +89,8 @@ public interface IInvoiceService {
 
 	/**
 	 * Get the an {@link IAccountTransaction} matching the {@link IPayment}.
-	 *
-	 *
+	 * 
+	 * 
 	 * @param payment
 	 * @return
 	 */

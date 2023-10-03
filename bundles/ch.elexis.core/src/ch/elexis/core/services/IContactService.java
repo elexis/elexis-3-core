@@ -11,7 +11,7 @@ public interface IContactService {
 	/**
 	 * Find possible duplicates of a person. Must provide exact date of birth and
 	 * gender
-	 *
+	 * 
 	 * @param dateOfBirth    required
 	 * @param gender         required
 	 * @param familyName     fuzzy matched

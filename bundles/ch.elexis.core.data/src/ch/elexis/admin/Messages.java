@@ -67,6 +67,8 @@ public class Messages {
 	public static String Core_Mandator = ch.elexis.core.l10n.Messages.Core_Mandator;
 	public static String Core_Merge_laboratory_parameters = ch.elexis.core.l10n.Messages.Core_Merge_laboratory_parameters;
 
+
+
 	public static String AccessControlDefaults_modifyBills = ch.elexis.core.l10n.Messages.AccessControlDefaults_modifyBills;
 	public static String AccessControlDefaults_modifySticker = ch.elexis.core.l10n.Messages.AccessControlDefaults_modifySticker;
 	public static String AccessControlDefaults_newWindow = ch.elexis.core.l10n.Messages.AccessControlDefaults_newWindow;

@@ -142,7 +142,7 @@ public interface IContextService {
 
 	/**
 	 * Set an {@link Object} typed to the root context.
-	 *
+	 * 
 	 * @param object
 	 */
 	default public void setTyped(Object object) {
@@ -151,7 +151,7 @@ public interface IContextService {
 
 	/**
 	 * Remove the object set for the type clazz from the root context.
-	 *
+	 * 
 	 * @param object
 	 */
 	default public void removeTyped(Class<?> clazz) {

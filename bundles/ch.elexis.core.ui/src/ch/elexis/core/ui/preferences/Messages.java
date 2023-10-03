@@ -61,6 +61,7 @@ public class Messages {
 	public static String LabGroupPrefs_deleteGroup = ch.elexis.core.l10n.Messages.LabGroupPrefs_deleteGroup;
 	public static String Core_Group_ellipsis = ch.elexis.core.l10n.Messages.Core_Group_ellipsis;
 
+
 	public static String Core_New_ellipsis = ch.elexis.core.l10n.Messages.Core_New_ellipsis;
 	public static String LabGroupPrefs_newLabGroup = ch.elexis.core.l10n.Messages.LabGroupPrefs_newLabGroup;
 	public static String LabGroupPrefs_pleaseSelectLabItems = ch.elexis.core.l10n.Messages.LabGroupPrefs_pleaseSelectLabItems;
@@ -100,6 +101,7 @@ public class Messages {
 	public static String Core_Sequence_number = ch.elexis.core.l10n.Messages.Core_Sequence_number;
 	public static String Core_Sequence_inside_group = ch.elexis.core.l10n.Messages.Core_Sequence_inside_group;
 
+
 	public static String LaborPrefs_deleteAllExplain = ch.elexis.core.l10n.Messages.LaborPrefs_deleteAllExplain;
 	public static String LaborPrefs_deleteAllItems = ch.elexis.core.l10n.Messages.LaborPrefs_deleteAllItems;
 	public static String LaborPrefs_deleteItem = ch.elexis.core.l10n.Messages.LaborPrefs_deleteItem;
@@ -119,7 +121,10 @@ public class Messages {
 	public static String LaborPrefs_pleaseEditParam = ch.elexis.core.l10n.Messages.LaborPrefs_pleaseEditParam;
 	public static String LaborPrefs_pleaseEnterLabParam = ch.elexis.core.l10n.Messages.LaborPrefs_pleaseEnterLabParam;
 
+
+
 	public static String Core_Sortmode = ch.elexis.core.l10n.Messages.Core_Sortmode;
+
 
 	public static String Core_Unknown = ch.elexis.core.l10n.Messages.ArticleSubTyp_UNKNOWN;
 	public static String LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder = ch.elexis.core.l10n.Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder;
@@ -191,6 +196,7 @@ public class Messages {
 
 	public static String Leistungscodes_mustSelectALine = ch.elexis.core.l10n.Messages.Leistungscodes_mustSelectALine;
 
+
 	public static String Leistungscodes_necessaryData = ch.elexis.core.l10n.Messages.Leistungscodes_necessaryData;
 
 	public static String Leistungscodes_notUndoable = ch.elexis.core.l10n.Messages.Leistungscodes_notUndoable;
@@ -224,6 +230,8 @@ public class Messages {
 	public static String Core_Admin = ch.elexis.core.l10n.Messages.Core_Admin;
 	public static String Core_Invoicingparty = ch.elexis.core.l10n.Messages.Core_Invoicingparty;
 
+
+
 	public static String Mandanten_pleaseSelectBiller = ch.elexis.core.l10n.Messages.Mandanten_pleaseSelectBiller;
 	public static String Mandanten_selectBiller = ch.elexis.core.l10n.Messages.Mandanten_selectBiller;
 	public static String Core_Common = ch.elexis.core.l10n.Messages.Core_Common;
@@ -252,6 +260,7 @@ public class Messages {
 	public static String ScannerPref_printSheet = ch.elexis.core.l10n.Messages.ScannerPref_printSheet;
 	public static String ScannerPref_test = ch.elexis.core.l10n.Messages.ScannerPref_test;
 	public static String Services_ExplanationLine1 = ch.elexis.core.l10n.Messages.Services_ExplanationLine1;
+
 
 	public static String SidebarPreferences_AvailablePerspectives = ch.elexis.core.l10n.Messages.SidebarPreferences_AvailablePerspectives;
 	public static String SidebarPreferences_DefinitisonStarterBar = ch.elexis.core.l10n.Messages.SidebarPreferences_DefinitisonStarterBar;
@@ -339,6 +348,7 @@ public class Messages {
 	public static String ServiceDiagnosis_UpTooltip = ch.elexis.core.l10n.Messages.ServiceDiagnosis_UpTooltip;
 	public static String ServiceDiagnosis_DownTooltip = ch.elexis.core.l10n.Messages.ServiceDiagnosis_DownTooltip;
 	public static String ServiceDiagnosis_View = ch.elexis.core.l10n.Messages.ServiceDiagnosis_View;
+
 
 	public static String StockManagementPreferencePage_tblclmnNewColumn_text_2 = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_tblclmnNewColumn_text_2;
 
