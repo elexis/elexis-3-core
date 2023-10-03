@@ -37,9 +37,11 @@ public class WebdavFile extends URLConnection {
 	/**
 	 * The properties to fetch with PROPFIND
 	 */
-	private static final Set<QName> PROPERTIES = Set.of(new QName("DAV:", "getetag", "d"),
+	private static final Set<QName> PROPERTIES = Set.of(
+			new QName("DAV:", "getetag", "d"),
 			// contains child <d:collection/> if its a directory
-			new QName("DAV:", "resourcetype", "d"), new QName("DAV:", "getlastmodified", "d"),
+			new QName("DAV:", "resourcetype", "d"),
+			new QName("DAV:", "getlastmodified", "d"),
 			new QName("DAV:", "getcontentlength", "d"),
 			// https://github.com/owncloud/client/blob/master/src/common/remotepermissions.h
 			new QName("http://owncloud.org/ns", "permissions", "oc"));

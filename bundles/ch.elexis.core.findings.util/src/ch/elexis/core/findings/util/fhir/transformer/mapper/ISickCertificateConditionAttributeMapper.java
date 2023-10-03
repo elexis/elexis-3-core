@@ -75,41 +75,39 @@ public class ISickCertificateConditionAttributeMapper
 			throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
 		}
 		target.setPatient(patient.get());
-
-		if (source.hasRecordedDate()) {
+		
+		if(source.hasRecordedDate()) {
 			target.setDate(TimeUtil.toLocalDate(source.getRecordedDate()));
 		}
-		if (source.hasOnsetDateTimeType()) {
+		if(source.hasOnsetDateTimeType()) {
 			target.setStart(TimeUtil.toLocalDate(source.getOnsetDateTimeType().getValue()));
 		}
-		if (source.hasAbatementDateTimeType()) {
+		if(source.hasAbatementDateTimeType()) {
 			target.setEnd(TimeUtil.toLocalDate(source.getAbatementDateTimeType().getValue()));
 		}
-
-		if (source.hasCode()) {
+		
+		if(source.hasCode()) {
 			List<Coding> codings = source.getCode().getCoding();
-			List<Coding> reasonCodings = codings.stream()
-					.filter(c -> !FhirConstants.DE_EAU_SYSTEM.equals(c.getSystem())).collect(Collectors.toList());
-			if (!reasonCodings.isEmpty()) {
+			List<Coding> reasonCodings = codings.stream().filter(c -> !FhirConstants.DE_EAU_SYSTEM.equals(c.getSystem())).collect(Collectors.toList());
+			if(!reasonCodings.isEmpty()) {
 				target.setReason(reasonCodings.get(0).getDisplay());
 			}
 		}
-
-		if (source.hasStage() && source.getStageFirstRep().hasType()) {
+		
+		if(source.hasStage() && source.getStageFirstRep().hasType()) {
 			CodeableConcept stageType = source.getStageFirstRep().getType();
-			for (Coding coding : stageType.getCoding()) {
-				if (coding.hasSystem()
-						&& (coding.getSystem().endsWith("degree") || coding.getSystem().endsWith("percent"))) {
+			for(Coding coding : stageType.getCoding()) {
+				if(coding.hasSystem() && (coding.getSystem().endsWith("degree") || coding.getSystem().endsWith("percent"))) {
 					String code = coding.getCode().replaceAll("%", "").trim();
-					if (StringUtils.isNotBlank(code) && StringUtils.isNumeric(code)) {
+					if(StringUtils.isNotBlank(code) && StringUtils.isNumeric(code)) {
 						target.setPercent(Integer.valueOf(code));
 						break;
 					}
 				}
 			}
 		}
-
-		if (source.hasNote()) {
+		
+		if(source.hasNote()) {
 			target.setNote(source.getNote().stream().map(n -> n.getText()).collect(Collectors.joining("\n\n")));
 		}
 	}

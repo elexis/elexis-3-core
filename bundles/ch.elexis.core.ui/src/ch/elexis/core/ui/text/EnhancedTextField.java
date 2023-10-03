@@ -114,6 +114,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	private RangeTracker rangeTracker;
 	private boolean unlocked = false;
 
+
 	@Inject
 	void activeUser(@Optional IUser user) {
 		Display.getDefault().syncExec(() -> {

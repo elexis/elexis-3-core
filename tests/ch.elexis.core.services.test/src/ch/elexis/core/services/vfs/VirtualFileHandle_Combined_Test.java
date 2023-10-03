@@ -81,14 +81,14 @@ public class VirtualFileHandle_Combined_Test extends AbstractVirtualFileHandleTe
 			assertFalse(_target.exists());
 		}
 	}
-
+	
 	@Test
 	public void copyFromFileToWebdav() {
-
+		
 	}
-
+	
 	public void copyFromSmbToWebav() {
-
+		
 	}
 
 	@Test
@@ -99,5 +99,6 @@ public class VirtualFileHandle_Combined_Test extends AbstractVirtualFileHandleTe
 	@Test
 	public void testCopyToAndDelete() throws IOException {
 	}
+
 
 }

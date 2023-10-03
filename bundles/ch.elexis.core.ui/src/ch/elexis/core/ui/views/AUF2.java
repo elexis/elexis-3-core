@@ -126,7 +126,8 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof ISickCertificate) {
 					ContextServiceHolder.get().getRootContext()
-							.setTyped(event.getStructuredSelection().getFirstElement());
+							.setTyped(
+									event.getStructuredSelection().getFirstElement());
 				}
 			}
 		});

@@ -16,7 +16,7 @@ public class StatusDialog {
 
 	/**
 	 * Present a status information dialog to the user
-	 *
+	 * 
 	 * @param status   to show
 	 * @param showIfOk show the status if its ok
 	 */

@@ -40,8 +40,8 @@ public class LabOrderView extends ViewPart implements ICallback {
 	private String[] headers;
 
 	public LabOrderView() {
-		headers = new String[] { Messages.LabOrderView_Order, Messages.LabOrderView_RefValue, Messages.Core_Date_Time,
-				Messages.LabOrderView_Value };
+		headers = new String[] { Messages.LabOrderView_Order, Messages.LabOrderView_RefValue,
+				Messages.Core_Date_Time, Messages.LabOrderView_Value };
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class FormatValidator {
 
 	/**
 	 * Validates a AHV (swiss social number)
-	 *
+	 * 
 	 * @param ahvNum
 	 * @return true if argument is a valid AHV number
 	 */

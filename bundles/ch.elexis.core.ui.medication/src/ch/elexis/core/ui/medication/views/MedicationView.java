@@ -56,7 +56,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		if (CoreUiUtil.isActiveControl(tpc)) {
 			// only update with info of selected patient
 			if (patient != null && patient.equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
-				updateUi(patient, false);
+				updateUi(patient, false);				
 			}
 		}
 	}

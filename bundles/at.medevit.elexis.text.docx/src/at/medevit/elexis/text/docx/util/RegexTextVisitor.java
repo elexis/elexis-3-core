@@ -59,46 +59,46 @@ public class RegexTextVisitor extends TraversalUtilVisitor<Text> {
 	}
 
 	public void replaceMatchingTexts(ReplaceCallback replaceCallback) {
-		for (Text text : foundElements) {
-			Object cursor = getTextCursor(text);
-			// make sure each Run contains only 1 text
-			if (TextUtil.isMultiTextRun((R) cursor)) {
-				TextUtil.convertToSingleTextRun((R) cursor);
-				cursor = text.getParent();
-			}
-			String origText = text.getValue();
-
-			String replaced = origText;
-			Matcher matcher = pattern.matcher(origText);
-			Object replacement;
-			while (matcher.find()) {
-				try {
-					replacement = replaceCallback.replace(replaced.substring(matcher.start(), matcher.end()));
-					if (replacement instanceof String) {
-						replaced = matcher.replaceFirst(Matcher.quoteReplacement((String) replacement));
-					} else if (replacement instanceof String[][]) {
-						// insert a table
-						Tbl table = TableUtil.insertTable((R) cursor, 0, (String[][]) replacement, null,
-								DocxUtil.getDocumentWidth(currentDocument), true);
-						TableUtil.addBorders(table, 1);
-						replaced = StringUtils.EMPTY;
-					} else if (replacement instanceof IImage) {
-						try {
-							ImageUtil.insertImage((R) cursor, (IImage) replacement, currentDocument);
-						} catch (Exception e) {
-							LoggerFactory.getLogger(getClass()).error("Error inserting image", e);
-						}
-						replaced = StringUtils.EMPTY;
-					} else if (replacement == null) {
-						replaced = matcher.replaceFirst(Matcher.quoteReplacement("??Auswahl??"));
-					}
-					matcher = pattern.matcher(replaced);
-				} catch (Error | Exception e) {
-					LoggerFactory.getLogger(getClass()).error("Error repacing [" + replaced + "]", e);
+			for (Text text : foundElements) {
+				Object cursor = getTextCursor(text);
+				// make sure each Run contains only 1 text
+				if (TextUtil.isMultiTextRun((R) cursor)) {
+					TextUtil.convertToSingleTextRun((R) cursor);
+					cursor = text.getParent();
 				}
+				String origText = text.getValue();
+
+				String replaced = origText;
+				Matcher matcher = pattern.matcher(origText);
+				Object replacement;
+				while (matcher.find()) {
+					try {
+						replacement = replaceCallback.replace(replaced.substring(matcher.start(), matcher.end()));
+						if (replacement instanceof String) {
+							replaced = matcher.replaceFirst(Matcher.quoteReplacement((String) replacement));
+						} else if (replacement instanceof String[][]) {
+							// insert a table
+							Tbl table = TableUtil.insertTable((R) cursor, 0, (String[][]) replacement, null,
+									DocxUtil.getDocumentWidth(currentDocument), true);
+							TableUtil.addBorders(table, 1);
+							replaced = StringUtils.EMPTY;
+						} else if (replacement instanceof IImage) {
+							try {
+								ImageUtil.insertImage((R) cursor, (IImage) replacement, currentDocument);
+							} catch (Exception e) {
+								LoggerFactory.getLogger(getClass()).error("Error inserting image", e);
+							}
+							replaced = StringUtils.EMPTY;
+						} else if (replacement == null) {
+							replaced = matcher.replaceFirst(Matcher.quoteReplacement("??Auswahl??"));
+						}
+						matcher = pattern.matcher(replaced);
+					} catch (Error | Exception e) {
+						LoggerFactory.getLogger(getClass()).error("Error repacing [" + replaced + "]", e);
+					}
+				}
+				cursor = TextUtil.replaceText(cursor, replaced, 1 << 14, styleInfo);
 			}
-			cursor = TextUtil.replaceText(cursor, replaced, 1 << 14, styleInfo);
-		}
 	}
 
 	/**

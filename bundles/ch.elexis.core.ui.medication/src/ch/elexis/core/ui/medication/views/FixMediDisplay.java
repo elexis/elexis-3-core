@@ -313,7 +313,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			}
 		};
 
-		stopMedicationAction = new RestrictedAction(AccessControlDefaults.MEDICATION_MODIFY, Messages.Core_DoStop) { // $NON-NLS-1$
+		stopMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.UPDATE), Messages.Core_DoStop) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_REMOVEITEM.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_StopThisMedicament); // $NON-NLS-1$
@@ -400,11 +400,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 			}
 		};
 
-<<<<<<< HEAD
 		removeMedicationAction = new RestrictedAction(EvACE.of(IPrescription.class, Right.DELETE), Messages.Core_Delete) { // $NON-NLS-1$
-=======
-		removeMedicationAction = new RestrictedAction(AccessControlDefaults.DELETE_MEDICATION, Messages.Core_Delete) { // $NON-NLS-1$
->>>>>>> 3555fe6e4 (Added unstaged files)
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.FixMediDisplay_DeleteUnrecoverable); // $NON-NLS-1$

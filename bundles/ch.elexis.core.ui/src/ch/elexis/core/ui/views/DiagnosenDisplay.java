@@ -296,7 +296,8 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	}
 
 	private void createColumns() {
-		String[] titles = { StringUtils.EMPTY, Messages.Core_Code, Messages.Core_Description, StringTool.leer };
+		String[] titles = { StringUtils.EMPTY, Messages.Core_Code, Messages.Core_Description,
+				StringTool.leer };
 		int[] weights = { 0, 15, 70, 15 };
 
 		TableViewerColumn col = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);

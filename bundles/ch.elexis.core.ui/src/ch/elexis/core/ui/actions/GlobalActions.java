@@ -293,6 +293,10 @@ public class GlobalActions {
 				boolean value = ConfigServiceHolder.getUser(Preferences.USR_FIX_LAYOUT, false);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, !value);
 				ContextServiceHolder.get().getRootContext().setNamed(Preferences.USR_FIX_LAYOUT, value);
+
+				// run access control after perspective reset
+				ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/update",
+						getActivePerspective(modelService));
 			}
 
 			@Override

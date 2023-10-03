@@ -35,7 +35,8 @@ import ch.rgw.tools.StringTool;
 public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 	Form form;
 	LabeledInputField.AutoForm tblPls;
-	InputData[] data = new InputData[] { new InputData(Messages.Core_Short_Label, "code", InputData.Typ.STRING, null), //$NON-NLS-1$
+	InputData[] data = new InputData[] {
+			new InputData(Messages.Core_Short_Label, "code", InputData.Typ.STRING, null), //$NON-NLS-1$
 			new InputData(Messages.Core_Text, "text", InputData.Typ.STRING, null) //$NON-NLS-1$
 
 	};

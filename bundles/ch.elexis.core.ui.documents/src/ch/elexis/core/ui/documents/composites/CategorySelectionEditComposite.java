@@ -87,8 +87,8 @@ public class CategorySelectionEditComposite extends Composite {
 		bNewCat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog id = new InputDialog(getShell(), Messages.Core_New_Category, Messages.Core_New_Category,
-						null, null);
+				InputDialog id = new InputDialog(getShell(), Messages.Core_New_Category,
+						Messages.Core_New_Category, null, null);
 				if (id.open() == Dialog.OK) {
 					addAndSelectCategory(id.getValue());
 				}

@@ -167,7 +167,7 @@ public class IContactHelper extends AbstractHelper {
 				if (AddressType.PHYSICAL.equals(address.getType())) {
 					target.setCity(address.getCity());
 					target.setZip(address.getPostalCode());
-					if (address.hasLine()) {
+					if(address.hasLine()) {
 						StringBuilder sb = new StringBuilder();
 						address.getLine().forEach(e -> sb.append(e));
 						target.setStreet(sb.toString());

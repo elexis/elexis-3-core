@@ -92,8 +92,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 			public void widgetSelected(SelectionEvent arg0) {
 				String name = cbUserLoad.getText();
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-							Messages.Core_Please_Enter_Configuration_to_load);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.Core_Please_Enter_Configuration_to_load);
 				} else if (NamedBlob.exists(Messages.UserPreferences_14 + name)) {
 					NamedBlob blob = NamedBlob.load("UserCfg:" + name); //$NON-NLS-1$
 					ConfigServiceHolder.setUserFromMap(blob.getHashtable());
@@ -137,8 +136,7 @@ public class UserPreferences extends PreferencePage implements IWorkbenchPrefere
 				String name = cbWSLoad.getText();
 
 				if (StringTool.isNothing(name)) {
-					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven,
-							Messages.Core_Please_Enter_Configuration_to_load);
+					SWTHelper.showInfo(Messages.UserPreferences_NoNameGiven, Messages.Core_Please_Enter_Configuration_to_load);
 				} else if (NamedBlob.exists("Workspace:" + name)) { //$NON-NLS-1$
 					NamedBlob blob = NamedBlob.load("Workspace:" + name); //$NON-NLS-1$
 					InMemorySettings ims = new InMemorySettings(blob.getHashtable());

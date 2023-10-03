@@ -38,8 +38,7 @@ public class AllergyIntoleranceEditDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle(
-				category.getLocalized() + " Daten " + (allergyIntolerance.isPresent() ? "editieren" : "anlegen") + ".");
+		setTitle(category.getLocalized() + " Daten " + (allergyIntolerance.isPresent() ? "editieren" : "anlegen") + ".");
 	}
 
 	@Override

@@ -495,7 +495,7 @@ public class TestDatabaseInitializer {
 			isBehandlungInitialized = true;
 		}
 	}
-
+	
 	public void initializeAUF() throws IOException, SQLException {
 		if (!isFallInitialized) {
 			initializeFall();
@@ -513,7 +513,7 @@ public class TestDatabaseInitializer {
 			modelService.save(sickCertificate);
 		}
 	}
-
+	
 	public ISickCertificate getAUFs() {
 		return sickCertificate;
 	}

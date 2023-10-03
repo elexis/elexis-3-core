@@ -64,7 +64,7 @@ public class InvoiceListBottomComposite extends Composite {
 						mi3rd.getMoney(false).getAmountAsString());
 			}
 		};
-
+		
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = false;
 		rowLayout.pack = true;

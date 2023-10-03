@@ -212,7 +212,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-			MessageDialog.openError(getShell(), Messages.Core_Error, Messages.Core_Could_not_reread_correctly_document);
+			MessageDialog.openError(getShell(), Messages.Core_Error,
+					Messages.Core_Could_not_reread_correctly_document);
 		}
 	}
 
@@ -226,7 +227,8 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 			command.executeWithChecks(new ExecutionEvent(command, Collections.EMPTY_MAP, this, null));
 			tableViewer.setInput(service.getAll());
 		} catch (ExecutionException | NotDefinedException | NotEnabledException | NotHandledException e) {
-			MessageDialog.openError(getShell(), Messages.Core_Error, Messages.Core_Could_not_abort_editing);
+			MessageDialog.openError(getShell(), Messages.Core_Error,
+					Messages.Core_Could_not_abort_editing);
 		}
 	}
 

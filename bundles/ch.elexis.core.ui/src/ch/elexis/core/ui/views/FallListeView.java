@@ -285,7 +285,8 @@ public class FallListeView extends ViewPart implements IActivationListener {
 				return new Object[0];
 			}
 		}, new DefaultLabelProvider(),
-				new DefaultControlFieldProvider(behandlViewer, new String[] { Messages.Core_Date }), behandlButton,
+				new DefaultControlFieldProvider(behandlViewer, new String[] { Messages.Core_Date }),
+				behandlButton,
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LIST, SWT.SINGLE | SWT.V_SCROLL, behandlViewer));
 		Composite cf = new Composite(sash, SWT.BORDER);
 		cf.setLayout(new GridLayout());

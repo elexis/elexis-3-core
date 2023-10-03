@@ -218,7 +218,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				public void reloadContent(Object po, InputData ltf) {
 					if (new RnDialogs.StatusAendernDialog(
 							Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getShell(), (Rechnung) po)
-									.open() == Dialog.OK) {
+							.open() == Dialog.OK) {
 						ElexisEventDispatcher.update((PersistentObject) po);
 					}
 				}
