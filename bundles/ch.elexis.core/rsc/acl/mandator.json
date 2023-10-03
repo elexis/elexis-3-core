@@ -4,8 +4,5 @@
 	],
 	"system-command": {
 		"ch.medelexis.application.imp.abo.change": "x"
-	},
-	"object": {
-		"ch.elexis.core.model.IMandator": "ruv:aobo"
 	}
 }
