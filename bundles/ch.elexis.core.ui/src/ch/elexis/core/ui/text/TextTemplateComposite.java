@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.text;
 
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,8 +16,9 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.w3c.dom.Text;
+import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.model.ITextTemplate;
