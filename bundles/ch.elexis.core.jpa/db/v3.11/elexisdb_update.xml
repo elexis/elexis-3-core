@@ -230,5 +230,16 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
             </column>
         </createTable>
     </changeSet>
+   	
+   	<changeSet author="alexandra" id="manual_update_TEXTTEMPLATE_extinfo">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_CORE_TEXTTEMPLATE" columnName="EXTINFO" />
+			</not>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+			<column name="EXTINFO" type="${blob_type}"/>
+		</addColumn>
+	</changeSet>
     
 </databaseChangeLog>
