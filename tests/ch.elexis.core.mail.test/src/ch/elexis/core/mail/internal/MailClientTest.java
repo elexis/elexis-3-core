@@ -33,7 +33,7 @@ public class MailClientTest {
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
-		client = OsgiServiceUtil.getService(IMailClient.class).get();
+		client = OsgiServiceUtil.getServiceWait(IMailClient.class, 5000).get();
 		server = SimpleSmtpServer.start(10025);
 	}
 
