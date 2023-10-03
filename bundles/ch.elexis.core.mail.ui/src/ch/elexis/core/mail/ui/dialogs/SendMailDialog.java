@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
+import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
@@ -258,8 +259,13 @@ public class SendMailDialog extends TitleAreaDialog {
 								.getFirstElement();
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
+						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
+							subjectText
+									.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT));
+						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
+						subjectText.setText(StringUtils.EMPTY);
 					}
 					updateLayout();
 				}

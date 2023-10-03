@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import java.util.Map;
+
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
@@ -7,7 +9,7 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.types.TextTemplateCategory;
 
 public class TextTemplate extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.TextTemplate>
-		implements IdentifiableWithXid, Deleteable, ITextTemplate {
+		implements IdentifiableWithXid, Deleteable, ITextTemplate, WithExtInfo {
 
 	public TextTemplate(ch.elexis.core.jpa.entities.TextTemplate entity) {
 		super(entity);
@@ -56,5 +58,20 @@ public class TextTemplate extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public void setTemplate(String value) {
 		getEntityMarkDirty().setTemplate(value);
+	}
+
+	@Override
+	public Object getExtInfo(Object key) {
+		return extInfoHandler.getExtInfo(key);
+	}
+
+	@Override
+	public void setExtInfo(Object key, Object value) {
+		extInfoHandler.setExtInfo(key, value);
+	}
+
+	@Override
+	public Map<Object, Object> getMap() {
+		return extInfoHandler.getMap();
 	}
 }
