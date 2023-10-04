@@ -64,6 +64,10 @@
           key="/instance/org.eclipse.jdt.ui/sp_cleanup.on_save_use_additional_actions">
         <value>record</value>
       </detail>
+      <detail
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.format_source_code_changes_only">
+        <value>record</value>
+      </detail>
     </annotation>
     <setupTask
         xsi:type="setup:CompoundTask"
@@ -107,6 +111,10 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.jdt.ui/sp_cleanup.format_source_code"
+          value="true"/>
+      <setupTask
+          xsi:type="setup:PreferenceTask"
+          key="/instance/org.eclipse.jdt.ui/sp_cleanup.format_source_code_changes_only"
           value="true"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
