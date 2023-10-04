@@ -38,7 +38,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.elexis.AllTests"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.data.tests"/>
@@ -53,7 +53,7 @@
         <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.eclipsesource.jaxrs.consumer@default:default"/>
-        <setEntry value="com.equo.chromium.cef.gtk.linux.x86_64@default:default"/>
+        <setEntry value="com.equo.chromium.cef.gtk.linux.x86_64@default:false"/>
         <setEntry value="com.equo.chromium@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
@@ -187,7 +187,8 @@
         <setEntry value="org.eclipse.persistence.core@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
-        <setEntry value="org.eclipse.persistence.oracle@default:false"/>
+        <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:false"/>
+        <setEntry value="org.eclipse.swt.cocoa.macosx.x86_64@default:false"/>
         <setEntry value="org.eclipse.swt.gtk.linux.x86_64@default:false"/>
         <setEntry value="org.eclipse.swt.nl_de@default:false"/>
         <setEntry value="org.eclipse.swt.nl_fr@default:false"/>
@@ -197,9 +198,9 @@
         <setEntry value="org.eclipse.ui.nl_de@default:false"/>
         <setEntry value="org.eclipse.ui.nl_fr@default:false"/>
         <setEntry value="org.eclipse.ui.nl_it@default:false"/>
-        <setEntry value="org.eclipse.ui.views.nl_de@default:default"/>
-        <setEntry value="org.eclipse.ui.views.nl_fr@default:default"/>
-        <setEntry value="org.eclipse.ui.views.nl_it@default:default"/>
+        <setEntry value="org.eclipse.ui.views.nl_de@default:false"/>
+        <setEntry value="org.eclipse.ui.views.nl_fr@default:false"/>
+        <setEntry value="org.eclipse.ui.views.nl_it@default:false"/>
         <setEntry value="org.eclipse.ui.views.properties.tabbed@default:default"/>
         <setEntry value="org.eclipse.ui.views@default:default"/>
         <setEntry value="org.eclipse.ui.workbench.nl_de@default:false"/>
@@ -254,18 +255,15 @@
         <setEntry value="ch.elexis.core.documents@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
-        <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.mail@default:default"/>
         <setEntry value="ch.elexis.core.model@default:false"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.tasks@default:default"/>
-        <setEntry value="ch.elexis.core.test.context@default:false"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.ui.contacts@default:default"/>
@@ -276,9 +274,7 @@
         <setEntry value="ch.elexis.core.ui@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
-        <setEntry value="ch.medelexis.medication.ui@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="info.elexis.server.core.logging@default:false"/>
         <setEntry value="org.iatrix.help.wiki@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
