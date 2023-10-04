@@ -9,6 +9,7 @@ import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkException;
@@ -23,6 +24,11 @@ public class AbstractPersistentObjectTest {
 
 	public AbstractPersistentObjectTest() {
 		assertNotNull(CoreHub.localCfg);
+
+		PersistentObjectDataSourceActivator serviceActivator = OsgiServiceUtil
+				.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
+		OsgiServiceUtil.ungetService(serviceActivator);
+
 		jdbcLink = PersistentObject.getConnection();
 		PersistentObject.clearCache();
 
