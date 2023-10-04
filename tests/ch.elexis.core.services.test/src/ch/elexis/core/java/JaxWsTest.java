@@ -42,9 +42,20 @@ public class JaxWsTest {
 		// Override default setting in <code>info.elexis.target.jaxws.core</code> which
 		// is wrong
 		System.setProperty("javax.xml.ws.spi.Provider", "com.sun.xml.ws.spi.ProviderImpl");
-		Endpoint endpoint = Endpoint.publish("http://localhost:14429/ws/helloworld", new HelloWorldImpl());
-		assertTrue(endpoint.isPublished());
-		assertEquals("http://schemas.xmlsoap.org/wsdl/soap/http", endpoint.getBinding().getBindingID());
+
+		// mitigate java.lang.InternalError: MASM0010: Unable to unmarshall metro config
+		// file from location
+		// [ bundleresource://32.fwk1691013457/META-INF/jaxws-tubes-default.xml
+		ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(Service.class.getClassLoader());
+		Endpoint endpoint;
+		try {
+			endpoint = Endpoint.publish("http://localhost:14429/ws/helloworld", new HelloWorldImpl());
+			assertTrue(endpoint.isPublished());
+			assertEquals("http://schemas.xmlsoap.org/wsdl/soap/http", endpoint.getBinding().getBindingID());
+		} finally {
+			Thread.currentThread().setContextClassLoader(tccl);
+		}
 
 		// Data to access the web service
 		String namespaceURI = "http://ws.wstutorial.com/";
@@ -54,10 +65,15 @@ public class JaxWsTest {
 		QName portQN = new QName(namespaceURI, portName);
 
 		URL wsdlDocumentLocation = getClass().getResource("helloworld.wsdl.xml");
-		Service service = Service.create(wsdlDocumentLocation, serviceQN);
-		HelloWorld testInterface = service.getPort(portQN, HelloWorld.class);
+		Thread.currentThread().setContextClassLoader(Service.class.getClassLoader());
+		try {
+			Service service = Service.create(wsdlDocumentLocation, serviceQN);
+			HelloWorld testInterface = service.getPort(portQN, HelloWorld.class);
 
-		assertEquals("Hello Junge !", testInterface.sayHelloWorld("Junge"));
+			assertEquals("Hello Junge !", testInterface.sayHelloWorld("Junge"));
+		} finally {
+			Thread.currentThread().setContextClassLoader(tccl);
+		}
 
 		// Unpublishes the SOAP Web Service
 		endpoint.stop();
