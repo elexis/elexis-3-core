@@ -515,11 +515,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.event</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.workbench3</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -646,6 +641,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.jxpath</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.osgi.service.event</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -1038,6 +1038,11 @@
             <bundle>
               <id>org.eclipse.gemini.jpa</id>
               <level>3</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>org.osgi.service.event</id>
+              <level>2</level>
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
