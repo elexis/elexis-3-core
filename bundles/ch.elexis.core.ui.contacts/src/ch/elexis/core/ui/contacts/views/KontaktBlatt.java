@@ -167,7 +167,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (LocalLockServiceHolder.get().isLockedLocal(deselectedKontakt)) {
 						LocalLockServiceHolder.get().releaseLock(deselectedKontakt);
 					}
-					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
+					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+							.getService(ICommandService.class);
 					commandService.refreshElements(ToggleCurrentKontaktLockHandler.COMMAND_ID, null);
 				}
 			} else {
@@ -178,10 +179,20 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IContact contact) {
+		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
+		if (kontakt != null && kontakt.equals(actKontakt)) {
+			save();
+			setUnlocked(true);
+		}
 	}
 
 	@Inject
 	void unlockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) IContact contact) {
+		Kontakt kontakt = (Kontakt) NoPoUtil.loadAsPersistentObject(contact);
+		if (kontakt != null && kontakt.equals(actKontakt)) {
+			save();
+			setUnlocked(false);
+		}
 	}
 
 	public KontaktBlatt(Composite parent, int style, IViewSite vs) {
@@ -367,8 +378,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		actKontakt = kontakt;
 		afDetails.reload(actKontakt);
 		if (actKontakt != null) {
-			boolean updateRight = AccessControlServiceHolder.get().evaluate(
-					EvACE.of(IContact.class, Right.UPDATE, StoreToStringServiceHolder.getStoreToString(actKontakt)));
+			boolean updateRight = AccessControlServiceHolder.get()
+					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
+							StoreToStringServiceHolder.getStoreToString(actKontakt)));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);
