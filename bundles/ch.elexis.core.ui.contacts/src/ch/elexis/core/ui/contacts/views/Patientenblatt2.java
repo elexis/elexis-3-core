@@ -155,7 +155,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID);
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> buttonTabContributions = Extensions.getClasses(VIEWCONTRIBUTION,
-			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID+":buttonTab");
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID + ":buttonTab");
 
 	private ElexisEventListener eeli_pat = new ElexisUiEventListenerImpl(Patient.class) {
 		public void runInUi(ElexisEvent ev) {
@@ -296,10 +296,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						return super.getText(element);
 					}
 				}, isr, MaritalStatus.values()));
+		fields.add(new InputData(Messages.Core_Mobilphone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Mobilphone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Fax, Patient.FLD_FAX, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_E_Mail, Patient.FLD_E_MAIL, // $NON-NLS-1$
 				new LabeledInputField.IExecLinkProvider() {
@@ -547,7 +547,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		
+
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
 		for (IViewContribution ivc : _buttonTabContributions) {
@@ -653,10 +653,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				Kontakt other = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 				if (other.exists()) {
 					List<String> tokens = new ArrayList<String>();
+					String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 
 					String telefon1 = other.get(Kontakt.FLD_PHONE1);
 					String telefon2 = other.get(Kontakt.FLD_PHONE2);
-					String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 					String eMail = other.get(Kontakt.FLD_E_MAIL);
 					String fax = other.get(Kontakt.FLD_FAX);
 
@@ -1262,6 +1262,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						SelectedContactInfosText.append(StringTool.space + thisAddressFLD_PLACE);
 					}
 
+					String thisAddressFLD_MOBILEPHONE = k.get(k.FLD_MOBILEPHONE);
+					if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
+						// With a colon after the label:
+						// SelectedContactInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
+						// Without a colon after the label:
+						SelectedContactInfosText.append("," + StringTool.space + k.FLD_MOBILEPHONE + StringTool.space //$NON-NLS-1$
+								+ thisAddressFLD_MOBILEPHONE);
+					}
 					String thisAddressFLD_PHONE1 = (String) k.get(k.FLD_PHONE1);
 					if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 						SelectedContactInfosText
@@ -1272,15 +1280,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 						SelectedContactInfosText
 								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE2); //$NON-NLS-1$
-					}
-
-					String thisAddressFLD_MOBILEPHONE = (String) k.get(k.FLD_MOBILEPHONE);
-					if (!StringTool.isNothing(thisAddressFLD_MOBILEPHONE)) {
-						// With a colon after the label:
-						// SelectedContactInfosText.append(","+StringTool.space+k.FLD_MOBILEPHONE+":"+StringTool.space+thisAddressFLD_MOBILEPHONE);
-						// Without a colon after the label:
-						SelectedContactInfosText.append("," + StringTool.space + k.FLD_MOBILEPHONE + StringTool.space //$NON-NLS-1$
-								+ thisAddressFLD_MOBILEPHONE);
 					}
 
 					String thisAddressFLD_FAX = (String) k.get(k.FLD_FAX);

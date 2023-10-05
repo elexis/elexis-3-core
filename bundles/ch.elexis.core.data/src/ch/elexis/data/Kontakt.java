@@ -204,6 +204,10 @@ public class Kontakt extends PersistentObject {
 	 */
 	public String getTelephoneLabel() {
 		List<String> phoneData = new ArrayList<>();
+		String mobile = get(FLD_MOBILEPHONE);
+		if (StringUtils.isNotBlank(mobile)) {
+			phoneData.add("M: " + mobile);
+		}
 		String t1 = get(FLD_PHONE1);
 		if (StringUtils.isNotBlank(t1)) {
 			phoneData.add("T1: " + t1);
@@ -211,10 +215,6 @@ public class Kontakt extends PersistentObject {
 		String t2 = get(FLD_PHONE2);
 		if (StringUtils.isNotBlank(t2)) {
 			phoneData.add("T2: " + t2);
-		}
-		String mobile = get(FLD_MOBILEPHONE);
-		if (StringUtils.isNotBlank(mobile)) {
-			phoneData.add("M: " + mobile);
 		}
 		return StringUtils.join(phoneData, ", ");
 	}

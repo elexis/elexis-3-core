@@ -222,7 +222,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 					for (int i = 0; i < sel.length; i++) {
 						Kontakt k = (Kontakt) sel[i];
 						String[] f = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 						String[] v = new String[f.length];
 						k.get(f, v);
 						adrs[i] = new String[4];
@@ -244,7 +244,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		@Override
 		public String getText(Object element) {
 			String[] fields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 			String[] values = new String[fields.length];
 			((Kontakt) element).get(fields, values);
 			return StringTool.join(values, StringConstants.COMMA);
