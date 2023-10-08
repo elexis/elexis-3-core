@@ -184,6 +184,7 @@
 					</execution>
 				</executions>
 			</plugin>
+<!--
 			<plugin>
 				<groupId>net.jsign</groupId>
 				<artifactId>jsign-maven-plugin</artifactId>
@@ -206,6 +207,7 @@
 					</execution>
 				</executions>
 			</plugin>
+		-->
 		</plugins>
 		<pluginManagement>
 			<plugins>
