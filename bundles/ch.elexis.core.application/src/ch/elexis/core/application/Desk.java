@@ -106,7 +106,9 @@ public class Desk implements IApplication {
 		initIdentifiers();
 
 		// wait for persistent object to be ready
-		OsgiServiceUtil.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
+		PersistentObjectDataSourceActivator service = OsgiServiceUtil
+				.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
+		OsgiServiceUtil.ungetService(service);
 
 		// close splash
 		context.applicationRunning();
