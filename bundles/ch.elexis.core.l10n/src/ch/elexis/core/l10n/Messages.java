@@ -1063,6 +1063,9 @@ public class Messages extends NLS {
 	public static String Core_Short_Label;
 	public static String Core_Since;
 	public static String Core_Sortmode;
+	public static String Core_Standard_E_Mail_Title;
+	public static String Core_Standard_E_Mail_Template;
+	public static String Core_Standard_E_Mail;
 	public static String Core_Status;
 	public static String Core_Sticker_ellipsis;
 	public static String Core_Stock;
