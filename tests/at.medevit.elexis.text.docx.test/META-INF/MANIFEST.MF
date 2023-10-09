@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: at.medevit.elexis.text.docx.test
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.11.0.qualifier
 Fragment-Host: at.medevit.elexis.text.docx;bundle-version="1.0.0"
 Automatic-Module-Name: at.medevit.elexis.text.docx.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
