@@ -9,13 +9,14 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.text.ITextPlaceholderResolver;
 
 @Component
 public class TextReplacementService implements ITextReplacementService {
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE)
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	private List<ITextPlaceholderResolver> placeholderResolvers;
 
 	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*";
@@ -57,7 +58,7 @@ public class TextReplacementService implements ITextReplacementService {
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 			String found = matcher.group();
-			matcher.appendReplacement(sb, Matcher.quoteReplacement((String) replacePlaceholder(context, found)));
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacePlaceholder(context, found)));
 		}
 		matcher.appendTail(sb);
 		return sb.toString().replaceAll("(\r\n|\n\r|\r|\n)", newLinePattern);
