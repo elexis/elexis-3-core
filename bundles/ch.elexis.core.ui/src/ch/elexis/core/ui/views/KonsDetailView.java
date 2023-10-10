@@ -385,7 +385,6 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		hlDate = tk.createHyperlink(cDesc, NO_CONS_SELECTED, SWT.NONE);
 		hlDate.setFont(emFont);
 		hlDate.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 
