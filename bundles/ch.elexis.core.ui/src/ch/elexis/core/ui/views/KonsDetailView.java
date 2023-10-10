@@ -385,6 +385,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		hlDate = tk.createHyperlink(cDesc, NO_CONS_SELECTED, SWT.NONE);
 		hlDate.setFont(emFont);
 		hlDate.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 
@@ -629,7 +630,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				hlDate.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
-				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_WHITE));
 				hlDate.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {
