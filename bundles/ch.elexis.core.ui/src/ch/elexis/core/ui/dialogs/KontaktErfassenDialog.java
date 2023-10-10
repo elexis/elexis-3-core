@@ -207,7 +207,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tOrt.setTextLimit(50);
 
-		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
+		new Label(ret, SWT.NONE).setText(Messages.Core_Mobilphone); // $NON-NLS-1$
 		tTel = new Text(ret, SWT.BORDER);
 		tTel.setText(fld.length > 6 ? fld[6] : StringUtils.EMPTY);
 		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
@@ -403,7 +403,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
-				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "NatelNr", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				}, new String[] { ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText() });
 
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);
