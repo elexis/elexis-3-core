@@ -93,7 +93,7 @@ public class AddressFormatUtil {
 		String thisAddressMobile = person.getMobile();
 		if (!StringTool.isNothing(thisAddressMobile)) {
 			ret.append(
-					"," + StringTool.space + Messages.Core_Mobilphone + StringTool.space + thisAddressMobile);
+					"," + StringTool.space + Messages.Core_Mobilephone + StringTool.space + thisAddressMobile);
 		}
 		String thisAddressFax = person.getFax();
 		if (!StringTool.isNothing(thisAddressFax)) {
@@ -216,7 +216,7 @@ public class AddressFormatUtil {
 			}
 
 			if (StringUtils.isNotBlank(contact.getMobile())) {
-				thisAddress.append(Messages.Core_Mobilphone + ":" + StringTool.space + contact.getMobile()
+				thisAddress.append(Messages.Core_Mobilephone + ":" + StringTool.space + contact.getMobile()
 						+ System.lineSeparator());
 			}
 		}
