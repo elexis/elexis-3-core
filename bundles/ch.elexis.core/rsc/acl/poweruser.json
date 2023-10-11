@@ -1,0 +1,25 @@
+{
+	"roles-represented": [
+		"poweruser"
+	],
+	"system-configuration": {
+		"global": "r",
+		"user": "rvu:self",
+		"local": [
+			"rv:verbindung/*",
+			"rvu/*"
+		],
+		"mandator": "r:aobo",
+		"contact": ""
+	},
+	"system-command": {
+		"ch.elexis.core.ui.login": "x",
+		"ACL_AUTO_INSTALL_FEATURES": "x"
+	},
+	"object": {
+		"at.medevit.ch.artikelstamm.model.IArtikelstammItem":"cruvdx",
+		"at.medevit.elexis.inbox.model.IInboxElement":"cruvdx",
+		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung":"cruvdx",
+		"ch.elexis.core.model.IConfig":"cruvdx"		
+	}
+}

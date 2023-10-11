@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.ITextReplacementService"/>
    </service>
-   <reference cardinality="0..n" field="placeholderResolvers" interface="ch.elexis.core.text.ITextPlaceholderResolver" name="placeholderResolvers"/>
+   <reference cardinality="0..n" field="placeholderResolvers" interface="ch.elexis.core.text.ITextPlaceholderResolver" name="placeholderResolvers" policy-option="greedy"/>
    <implementation class="ch.elexis.core.services.TextReplacementService"/>
 </scr:component>
