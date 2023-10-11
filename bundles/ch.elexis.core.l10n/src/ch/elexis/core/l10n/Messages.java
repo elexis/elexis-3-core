@@ -4966,6 +4966,8 @@ public class Messages extends NLS {
 	public static String ConditionCategory_UNKNOWN;
 	public static String ConditionCategory_PROBLEMLISTITEM;
 	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
+	public static String PatientEMailListe;
+	public static String PatientEMailListe_description;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
