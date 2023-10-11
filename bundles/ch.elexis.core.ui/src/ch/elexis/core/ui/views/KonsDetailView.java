@@ -614,7 +614,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				hlDate.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
-				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_WHITE));
 				hlDate.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {
