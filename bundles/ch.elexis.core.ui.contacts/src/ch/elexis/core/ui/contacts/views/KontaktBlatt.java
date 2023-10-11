@@ -72,7 +72,7 @@ public class KontaktBlatt extends Composite implements IActivationListener, IUnl
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
-	private static final String MOBIL = Messages.Core_Mobilphone; // $NON-NLS-1$
+	private static final String MOBIL = Messages.Core_Mobilephone; // $NON-NLS-1$
 	private static final String VORNAME = Messages.Core_Firstname; // $NON-NLS-1$
 	private static final String NAME = Messages.Core_Name; // $NON-NLS-1$
 	private static final String TEL_DIREKT = Messages.KontaktBlatt_OhoneDirect; // $NON-NLS-1$

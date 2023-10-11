@@ -184,7 +184,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
 
@@ -296,7 +296,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						return super.getText(element);
 					}
 				}, isr, MaritalStatus.values()));
-		fields.add(new InputData(Messages.Core_Mobilphone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Mobilephone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
@@ -322,23 +322,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}));
 		fields.add(new InputData(Messages.Core_Group, Patient.FLD_GROUP, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE,
-				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
+		fields.add(new InputData(Messages.Core_Account, Patient.FLD_BALANCE, new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
-					public void displayContent(Object po, InputData ltf) {
-						ltf.setText(actPatient.getKontostand().getAmountAsString());
-					}
+			@Override
+			public void displayContent(Object po, InputData ltf) {
+				ltf.setText(actPatient.getKontostand().getAmountAsString());
+			}
 
-					public void reloadContent(Object po, InputData ltf) {
-						if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
-							ltf.setText(actPatient.getKontostand().getAmountAsString());
-						}
-					}
+			@Override
+			public void reloadContent(Object po, InputData ltf) {
+				if (new AddBuchungDialog(getShell(), actPatient).open() == Dialog.OK) {
+					ltf.setText(actPatient.getKontostand().getAmountAsString());
+				}
+			}
 
-				}));
+		}));
 		fields.add(new InputData(Messages.Core_RegularPhysiscion, PatientConstants.FLD_EXTINFO_STAMMARZT,
 				new LabeledInputField.IContentProvider() { // $NON-NLS-1$
 
+					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						String result = StringUtils.EMPTY;
@@ -363,6 +365,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						ltf.setText(result);
 					}
 
+					@Override
 					public void reloadContent(Object po, InputData ltf) {
 						if (bLocked) {
 							return;
@@ -386,11 +389,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		fields.add(new InputData(Messages.Patientenblatt2_ahvNumber, XidConstants.DOMAIN_AHV,
 				new LabeledInputField.IContentProvider() {
+					@Override
 					public void displayContent(Object po, InputData ltf) {
 						Patient p = (Patient) po;
 						ltf.setText(p.getXid(XidConstants.DOMAIN_AHV));
 					}
 
+					@Override
 					public void reloadContent(final Object po, final InputData ltf) {
 						if (bLocked) {
 							return;
@@ -623,6 +628,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			 * public boolean dropped(final PersistentObject dropped) { return false; }
 			 */
 
+			@Override
 			public void hyperlinkActivated(final String l) {
 				final String[] sortFields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_STREET };
 				KontaktSelektor ksl = new KontaktSelektor(getShell(), Kontakt.class,
@@ -644,6 +650,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 			}
 
+			@Override
 			public String getLabel(Object o) {
 				BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -707,6 +714,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					 * public boolean dropped(final PersistentObject dropped) { return false; }
 					 */
 
+					@Override
 					public void hyperlinkActivated(final String l) {
 						if (actPatient != null) {
 							ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(),
@@ -718,6 +726,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 
+					@Override
 					public String getLabel(Object o) {
 						ZusatzAdresse address = (ZusatzAdresse) o;
 						if (address != null) {
@@ -747,6 +756,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i));
 			text.addFocusListener(new FocusAdapter() {
+				@Override
 				public void focusLost(FocusEvent e) {
 					saveExpandable((Integer)text.getData("index"));
 				}
@@ -778,12 +788,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			});
 			txExpandable.get(i).addKeyListener(new KeyListener() {
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 					Text tx = (Text) e.getSource();
 					tx.redraw();
 					form.getBody().layout(true);
 				}
 
+				@Override
 				public void keyPressed(KeyEvent e) {
 				}
 			});
@@ -963,7 +975,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			@Override
 			public void run() {
 				if (!bLocked) {
-					ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+					ZusatzAdresse a = additionalAddresses.getSelection();
 					a.delete();
 					setPatient(actPatient);
 				}
@@ -973,7 +985,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		showAdditionalAddressAction = new Action(Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void run() {
-				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresse zusatzAdresse = additionalAddresses.getSelection();
 				ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(form.getShell(), actPatient,
 						zusatzAdresse, bLocked);
 				if (aed.open() == Dialog.OK) {
@@ -988,7 +1000,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			@Override
 			public void run() {
 				if (!bLocked) {
-					BezugsKontakt a = (BezugsKontakt) inpZusatzAdresse.getSelection();
+					BezugsKontakt a = inpZusatzAdresse.getSelection();
 					a.delete();
 					setPatient(actPatient);
 				}
@@ -999,7 +1011,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
-				Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
+				Kontakt a = Kontakt.load(inpZusatzAdresse.getSelection().get(BezugsKontakt.OTHER_ID));
 				KontaktDetailDialog kdd = new KontaktDetailDialog(form.getShell(), a, bLocked);
 				if (kdd.open() == Dialog.OK) {
 					setPatient(actPatient);
@@ -1011,7 +1023,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				Messages.Patientenblatt2_showBezugKontaktRelation) {
 			@Override
 			public void doRun() {
-				BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+				BezugsKontakt bezugsKontakt = inpZusatzAdresse.getSelection();
 				if (bezugsKontakt != null) {
 					Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 					BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(actPatient.getLabel(true),
@@ -1062,7 +1074,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				// Object[] sel = inpZusatzAdresse.getSelection(); //This would
 				// not work for
 				// inpZusatzAdresse
-				BezugsKontakt sel = (BezugsKontakt) inpZusatzAdresse.getSelection(); // This
+				BezugsKontakt sel = inpZusatzAdresse.getSelection(); // This
 				// works, but returns only one entry.
 
 				// If you enable the following line for debug output,
@@ -1199,7 +1211,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							SelectedContactInfosText.append(",").append(StringTool.space).append(thisPersonFLD_NAME3); //$NON-NLS-1$
 						}
 
-						String thisPatientBIRTHDATE = (String) p.get(p.BIRTHDATE);
+						String thisPatientBIRTHDATE = p.get(p.BIRTHDATE);
 						if (!StringTool.isNothing(thisPatientBIRTHDATE)) {
 							// This would add the term "geb." (born on the)
 							// before the date of
@@ -1213,9 +1225,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 									+ new TimeTool(thisPatientBIRTHDATE).toString(TimeTool.DATE_GER));
 						}
 					} else { // if (k.istPerson())... else...
-						String thisAddressFLD_NAME1 = (String) k.get(k.FLD_NAME1);
-						String thisAddressFLD_NAME2 = (String) k.get(k.FLD_NAME2);
-						String thisAddressFLD_NAME3 = (String) k.get(k.FLD_NAME3);
+						String thisAddressFLD_NAME1 = k.get(k.FLD_NAME1);
+						String thisAddressFLD_NAME2 = k.get(k.FLD_NAME2);
+						String thisAddressFLD_NAME3 = k.get(k.FLD_NAME3);
 						if (!StringTool.isNothing(thisAddressFLD_NAME1)) {
 							SelectedContactInfosText.append(thisAddressFLD_NAME1);
 							if (!StringTool.isNothing(thisAddressFLD_NAME2 + thisAddressFLD_NAME3)) {
@@ -1233,17 +1245,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 
-					String thisAddressFLD_STREET = (String) k.get(k.FLD_STREET);
+					String thisAddressFLD_STREET = k.get(k.FLD_STREET);
 					if (!StringTool.isNothing(thisAddressFLD_STREET)) {
 						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_STREET); //$NON-NLS-1$
 					}
 
-					String thisAddressFLD_COUNTRY = (String) k.get(k.FLD_COUNTRY);
+					String thisAddressFLD_COUNTRY = k.get(k.FLD_COUNTRY);
 					if (!StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_COUNTRY + "-"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
-					String thisAddressFLD_ZIP = (String) k.get(k.FLD_ZIP);
+					String thisAddressFLD_ZIP = k.get(k.FLD_ZIP);
 					if (!StringTool.isNothing(thisAddressFLD_ZIP)) {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY)) {
 							SelectedContactInfosText.append("," + StringTool.space); //$NON-NLS-1$
@@ -1253,7 +1265,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 					;
 
-					String thisAddressFLD_PLACE = (String) k.get(k.FLD_PLACE);
+					String thisAddressFLD_PLACE = k.get(k.FLD_PLACE);
 					if (!StringTool.isNothing(thisAddressFLD_PLACE)) {
 						if (StringTool.isNothing(thisAddressFLD_COUNTRY) && StringTool.isNothing(thisAddressFLD_ZIP)) {
 							SelectedContactInfosText.append(","); //$NON-NLS-1$
@@ -1270,19 +1282,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						SelectedContactInfosText.append("," + StringTool.space + k.FLD_MOBILEPHONE + StringTool.space //$NON-NLS-1$
 								+ thisAddressFLD_MOBILEPHONE);
 					}
-					String thisAddressFLD_PHONE1 = (String) k.get(k.FLD_PHONE1);
+					String thisAddressFLD_PHONE1 = k.get(k.FLD_PHONE1);
 					if (!StringTool.isNothing(thisAddressFLD_PHONE1)) {
 						SelectedContactInfosText
 								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE1); //$NON-NLS-1$
 					}
 
-					String thisAddressFLD_PHONE2 = (String) k.get(k.FLD_PHONE2);
+					String thisAddressFLD_PHONE2 = k.get(k.FLD_PHONE2);
 					if (!StringTool.isNothing(thisAddressFLD_PHONE2)) {
 						SelectedContactInfosText
 								.append("," + StringTool.space + StringTool.space + thisAddressFLD_PHONE2); //$NON-NLS-1$
 					}
 
-					String thisAddressFLD_FAX = (String) k.get(k.FLD_FAX);
+					String thisAddressFLD_FAX = k.get(k.FLD_FAX);
 					if (!StringTool.isNothing(thisAddressFLD_FAX)) {
 						// With a colon after the label:
 						// SelectedContactInfosText.append(","+StringTool.space+k.FLD_FAX+":"+StringTool.space+thisAddressFLD_FAX);
@@ -1291,7 +1303,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								.append("," + StringTool.space + k.FLD_FAX + StringTool.space + thisAddressFLD_FAX); //$NON-NLS-1$
 					}
 
-					String thisAddressFLD_E_MAIL = (String) k.get(k.FLD_E_MAIL);
+					String thisAddressFLD_E_MAIL = k.get(k.FLD_E_MAIL);
 					if (!StringTool.isNothing(thisAddressFLD_E_MAIL)) {
 						SelectedContactInfosText.append("," + StringTool.space + thisAddressFLD_E_MAIL); //$NON-NLS-1$
 					}
@@ -1375,7 +1387,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				// Object[] sel = inpZusatzAdresse.getSelection(); //This would
 				// not work for
 				// inpZusatzAdresse
-				BezugsKontakt sel = (BezugsKontakt) inpZusatzAdresse.getSelection(); // This
+				BezugsKontakt sel = inpZusatzAdresse.getSelection(); // This
 				// works, but returns only one entry.
 
 				// If you enable the following line for debug output,
