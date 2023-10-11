@@ -951,7 +951,7 @@ public class Messages extends NLS {
 	public static String Core_Message;
 	public static String Core_Midday;
 	public static String Core_Missing_rights;
-	public static String Core_Mobilphone;
+	public static String Core_Mobilephone;
 	public static String Core_Monday;
 	public static String Core_Monday_Short;
 	public static String Core_Multiplicator;
