@@ -208,11 +208,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	};
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_famAnamnesisLbl, Messages.Allergies,
 			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
-	private ArrayList<String> dfExpandable = new ArrayList<>(Arrays.asList("Diagnosen", "PersAnamnese", //$NON-NLS-1$ //$NON-NLS-2$
-			"Allergien", "Risiken", "Bemerkung" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+	private ArrayList<String> dfExpandable = new ArrayList<>(
+			Arrays.asList(Patient.FLD_DIAGNOSES, Patient.FLD_PERS_ANAMNESE, Patient.FLD_FAM_ANAMNESE, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Patient.FLD_ALLERGIES, Patient.FLD_RISKS, Kontakt.FLD_REMARK //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication; // $NON-NLS-1$
@@ -578,19 +579,23 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					// remove unstructured diagnosis ui
 					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Core_Diagnosis);
-						dfExpandable.remove("Diagnosen"); //$NON-NLS-1$
+						dfExpandable.remove(Patient.FLD_DIAGNOSES); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
-						dfExpandable.remove("PersAnamnese"); //$NON-NLS-1$
+						dfExpandable.remove(Patient.FLD_PERS_ANAMNESE); //$NON-NLS-1$
+					}
+					if (ivc.getClass().getSimpleName().equals("FamilyAnamnesisViewContribution")) { //$NON-NLS-1$
+						lbExpandable.remove(Messages.Patientenblatt2_famAnamnesisLbl);
+						dfExpandable.remove(Patient.FLD_FAM_ANAMNESE); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
-						dfExpandable.remove("Risiken"); //$NON-NLS-1$
+						dfExpandable.remove(Patient.FLD_RISKS); //$NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Allergies);
-						dfExpandable.remove("Allergien"); //$NON-NLS-1$
+						dfExpandable.remove(Patient.FLD_ALLERGIES); //$NON-NLS-1$
 					}
 				}
 			}
