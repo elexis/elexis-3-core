@@ -2597,10 +2597,10 @@ WHERE kontakt.id IN (
 	<changeSet author="marco" id="manual_idx1_AT_MEDEVIT_ELEXIS_GDT_PROTOKOLL">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<indexExists tableName="AT_MEDEVIT_ELEXIS_GDT_PROTOKOLL" indexName="idx1" />
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_GDT_PROTOKOLL" indexName="at_medevit_elexis_gdt_protokollidx1" />
 			</not>
 		</preConditions>
-		<createIndex indexName="idx1" tableName="AT_MEDEVIT_ELEXIS_GDT_PROTOKOLL">
+		<createIndex indexName="at_medevit_elexis_gdt_protokollidx1" tableName="AT_MEDEVIT_ELEXIS_GDT_PROTOKOLL">
 			<column name="DATETIME" />
 		</createIndex>
 	</changeSet>
