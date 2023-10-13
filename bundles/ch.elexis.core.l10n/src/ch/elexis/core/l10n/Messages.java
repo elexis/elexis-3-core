@@ -365,6 +365,7 @@ public class Messages extends NLS {
 	public static String AppointmentDetailComposite_search;
 	public static String AppointmentDetailComposite_tag;
 	public static String AppointmentDetailComposite_until;
+	public static String Appointment_Confirmation;
 	public static String ArticleDefaultSignatureComposite_date_none;
 	public static String ArticleDefaultSignatureComposite_dispensation;
 	public static String ArticleDefaultSignatureComposite_fix;
@@ -951,7 +952,7 @@ public class Messages extends NLS {
 	public static String Core_Message;
 	public static String Core_Midday;
 	public static String Core_Missing_rights;
-	public static String Core_Mobilephone;
+	public static String Core_Mobilphone;
 	public static String Core_Monday;
 	public static String Core_Monday_Short;
 	public static String Core_Multiplicator;
@@ -1082,6 +1083,7 @@ public class Messages extends NLS {
 	public static String Core_Sum;
 	public static String Core_Sunday;
 	public static String Core_Sunday_Short;
+	public static String Core_Temlate;
 	public static String Core_Text;
 	public static String Core_TextColour;
 	public static String Core_Textresult;
@@ -4966,8 +4968,8 @@ public class Messages extends NLS {
 	public static String ConditionCategory_UNKNOWN;
 	public static String ConditionCategory_PROBLEMLISTITEM;
 	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
-	public static String PatientEMailListe;
-	public static String PatientEMailListe_description;
+	public static String Warning;
+	public static String Warning_No_Pea;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

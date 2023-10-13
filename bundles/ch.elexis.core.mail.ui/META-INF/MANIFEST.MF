@@ -32,4 +32,5 @@ Import-Package: ch.elexis.core.model.tasks,
 Service-Component: OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml,
  OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml,
  OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml
-Export-Package: ch.elexis.core.mail.ui.client
+Export-Package: ch.elexis.core.mail.ui.client,
+ ch.elexis.core.mail.ui.handlers
