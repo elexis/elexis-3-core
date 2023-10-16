@@ -2760,10 +2760,10 @@ WHERE kontakt.id IN (
 	<changeSet author="marco" id="manual_idxCode_AT_MEDEVIT_ELEXIS_MEDIDATA_ERRORS">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<indexExists tableName="AT_MEDEVIT_ELEXIS_MEDIDATA_ERRORS" indexName="idxMedidataId" />
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_MEDIDATA_ERRORS" indexName="idxMedidataErrorsId" />
 			</not>
 		</preConditions>
-		<createIndex indexName="idxMedidataId" tableName="AT_MEDEVIT_ELEXIS_MEDIDATA_ERRORS">
+		<createIndex indexName="idxMedidataErrorsId" tableName="AT_MEDEVIT_ELEXIS_MEDIDATA_ERRORS">
 			<column name="MEDIDATAID" />
 		</createIndex>
 	</changeSet>
