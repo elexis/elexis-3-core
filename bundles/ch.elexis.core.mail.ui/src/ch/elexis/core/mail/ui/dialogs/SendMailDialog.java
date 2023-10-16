@@ -260,8 +260,8 @@ public class SendMailDialog extends TitleAreaDialog {
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
 						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
-							subjectText
-									.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT));
+							subjectText.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT)
+									+ StringUtils.SPACE + subjectString);
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
