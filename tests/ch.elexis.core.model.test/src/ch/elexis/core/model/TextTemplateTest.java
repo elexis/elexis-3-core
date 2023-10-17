@@ -17,12 +17,14 @@ import ch.elexis.core.types.TextTemplateCategory;
 
 public class TextTemplateTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
 		createMandator();
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();

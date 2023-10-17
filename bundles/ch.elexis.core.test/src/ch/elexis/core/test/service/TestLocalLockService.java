@@ -95,4 +95,15 @@ public class TestLocalLockService implements ILocalLockService {
 
 	}
 
+	@Override
+	public LockResponse releaseLock(String storeToString) {
+		return LockResponse.OK;
+	}
+
+	@Override
+	public boolean isLocked(String storeToString) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

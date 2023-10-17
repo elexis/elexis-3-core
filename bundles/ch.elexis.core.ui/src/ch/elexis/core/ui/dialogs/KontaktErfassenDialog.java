@@ -67,7 +67,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 	Kontakt newKontakt = null;
 
 	String[] fld;
-	Text tName, tVorname, tZusatz, tGebDat, tStrasse, tPlz, tOrt, tTel, tFax, tEmail;
+	Text tName, tVorname, tZusatz, tGebDat, tStrasse, tPlz, tOrt, tMobile, tFax, tEmail;
 	Combo cbSex;
 	Label lName, lVorname, lZusatz;
 	Hyperlink hlAnschrift;
@@ -207,11 +207,11 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tOrt.setTextLimit(50);
 
-		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
-		tTel = new Text(ret, SWT.BORDER);
-		tTel.setText(fld.length > 6 ? fld[6] : StringUtils.EMPTY);
-		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		tTel.setTextLimit(30);
+		new Label(ret, SWT.NONE).setText(Messages.Core_Mobilephone); // $NON-NLS-1$
+		tMobile = new Text(ret, SWT.BORDER);
+		tMobile.setText(fld.length > 6 ? fld[6] : StringUtils.EMPTY);
+		tMobile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		tMobile.setTextLimit(30);
 
 		new Label(ret, SWT.NONE).setText(Messages.Core_Fax); // $NON-NLS-1$
 		tFax = new Text(ret, SWT.BORDER);
@@ -335,7 +335,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			ret[4] = tStrasse.getText();
 			ret[5] = tPlz.getText();
 			ret[6] = tOrt.getText();
-			ret[7] = tTel.getText();
+			ret[7] = tMobile.getText();
 			if (newKontakt == null) {
 				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
 				qbe.add("Bezeichnung1", "=", ret[0]); //$NON-NLS-1$ //$NON-NLS-2$
@@ -403,7 +403,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				}
 			}
 			if (LocalLockServiceHolder.get().acquireLock(newKontakt).isOk()) {
-				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "Telefon1", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				newKontakt.set(new String[] { "Strasse", "Plz", "Ort", "NatelNr", "Fax", "E-Mail" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 				}, new String[] { ret[4], ret[5], ret[6], ret[7], tFax.getText(), tEmail.getText() });
 
 				ElexisEventDispatcher.fireSelectionEvent(newKontakt);

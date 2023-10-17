@@ -5,6 +5,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	// BUNDLE_NAME is needed for core.data
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	public static String Core_Area_Bereiche;
 	public static String MedicationComposite_btnConfirm_toolTipText;
 	public static String MedicationComposite_btnCheckButton_Confirm_text;
 	public static String Core_Barcode_global_settings;
@@ -950,7 +951,7 @@ public class Messages extends NLS {
 	public static String Core_Message;
 	public static String Core_Midday;
 	public static String Core_Missing_rights;
-	public static String Core_Mobilphone;
+	public static String Core_Mobilephone;
 	public static String Core_Monday;
 	public static String Core_Monday_Short;
 	public static String Core_Multiplicator;
@@ -1068,6 +1069,9 @@ public class Messages extends NLS {
 	public static String Core_Short_Label;
 	public static String Core_Since;
 	public static String Core_Sortmode;
+	public static String Core_Standard_E_Mail_Title;
+	public static String Core_Standard_E_Mail_Template;
+	public static String Core_Standard_E_Mail;
 	public static String Core_Status;
 	public static String Core_Sticker_ellipsis;
 	public static String Core_Stock;
@@ -3421,6 +3425,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_kindOfRelation;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_persAnamnesisLbl;
+	public static String Patientenblatt2_famAnamnesisLbl;
 	public static String Patientenblatt2_phone1;
 	public static String Patientenblatt2_phone2;
 	public static String Patientenblatt2_pleaseEnterKindOfRelationship;
@@ -4965,6 +4970,7 @@ public class Messages extends NLS {
 	public static String RemoveDSGWhenDeceased_no_deceased_found;
 	public static String RemoveDSGWhenDeceased_no_dsg_found;
 	public static String RemoveDSGWhenDeceased_description;
+
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

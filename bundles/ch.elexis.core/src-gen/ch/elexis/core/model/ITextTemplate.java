@@ -31,7 +31,7 @@ import ch.elexis.core.types.TextTemplateCategory;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface ITextTemplate extends Identifiable, Deleteable {
+public interface ITextTemplate extends Identifiable, Deleteable, WithExtInfo {
 	/**
 	 * Returns the value of the '<em><b>Category</b></em>' attribute.
 	 * The literals are from the enumeration {@link ch.elexis.core.types.TextTemplateCategory}.
