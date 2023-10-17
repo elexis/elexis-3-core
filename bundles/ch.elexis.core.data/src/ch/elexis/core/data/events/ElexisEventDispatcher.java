@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.server.ServerEventMapper;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
@@ -70,6 +70,7 @@ import ch.elexis.data.PersistentObject;
  *             post/send events
  * 
  */
+@Deprecated
 public final class ElexisEventDispatcher implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(ElexisEventDispatcher.class);
 
@@ -137,6 +138,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public void addListeners(final ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
 			listeners.add(el);
@@ -151,6 +153,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public void removeListeners(ElexisEventListener... els) {
 		for (ElexisEventListener el : els) {
 			listeners.remove(el);
@@ -166,6 +169,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public synchronized void setBlockEventTypes(List<Integer> blockEventTypes) {
 		this.blockEventTypes = blockEventTypes;
 	}
@@ -184,6 +188,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public void fire(final ElexisEvent... ees) {
 		for (ElexisEvent ee : ees) {
 //			Throwable trace = new Throwable().fillInStackTrace();
@@ -318,7 +323,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	private void removeExisting(ElexisEvent elexisEvent) {
 		Iterator<ElexisEvent> queueIter = eventQueue.iterator();
 		while (queueIter.hasNext()) {
-			ElexisEvent queuedEvent = (ElexisEvent) queueIter.next();
+			ElexisEvent queuedEvent = queueIter.next();
 			if (queuedEvent.getType() == elexisEvent.getType()
 					&& queuedEvent.getObjectClass() == elexisEvent.getObjectClass()) {
 				// remove old selection of same class
@@ -367,6 +372,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public static void fireSelectionEvent(PersistentObject po) {
 		if (po != null) {
 			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_SELECTED));
@@ -380,6 +386,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public static void fireSelectionEvents(PersistentObject... objects) {
 		if (objects != null) {
 			ElexisEvent[] ees = new ElexisEvent[objects.length];
@@ -397,6 +404,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public static void clearSelection(Class<?> clazz) {
 		if (clazz != null) {
 			getInstance().fire(new ElexisEvent(null, clazz, ElexisEvent.EVENT_DESELECTED));
@@ -411,6 +419,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public static void reload(Class<?> clazz) {
 		if (clazz != null) {
 			getInstance().fire(new ElexisEvent(null, clazz, ElexisEvent.EVENT_RELOAD));
@@ -425,6 +434,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	 * @deprecated use {@link IContextService} to set active context or post/send
 	 *             events
 	 */
+	@Deprecated
 	public static void update(PersistentObject po) {
 		if (po != null) {
 			getInstance().fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_UPDATE));
