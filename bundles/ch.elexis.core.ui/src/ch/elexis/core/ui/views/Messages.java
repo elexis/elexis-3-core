@@ -48,6 +48,7 @@ public class Messages {
 	public static String Core_Phamacode = ch.elexis.core.l10n.Messages.Core_Phamacode;
 	public static String Core_Sum = ch.elexis.core.l10n.Messages.Core_Sum;
 	public static String Core_Areas = ch.elexis.core.l10n.Messages.Core_Areas;
+	public static String Core_Area_Bereiche = ch.elexis.core.l10n.Messages.Core_Area_Bereiche;
 	public static String BestellBlatt_UnitPrice = ch.elexis.core.l10n.Messages.BestellBlatt_UnitPrice;
 	public static String Core_Article = ch.elexis.core.l10n.Messages.Core_Article;
 	public static String Core_Automatic = ch.elexis.core.l10n.Messages.Core_Automatic;
