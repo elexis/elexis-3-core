@@ -102,6 +102,7 @@ public class Messages {
 	public static String ErsterMandantDialog_passwordErrorBody = ch.elexis.core.l10n.Messages.ErsterMandantDialog_passwordErrorBody;
 	public static String ErsterMandantDialog_passwordErrorCaption = ch.elexis.core.l10n.Messages.ErsterMandantDialog_passwordErrorCaption;
 	public static String Core_Phone = ch.elexis.core.l10n.Messages.Core_Phone;
+	public static String Core_Mobilephone = ch.elexis.core.l10n.Messages.Core_Mobilephone;
 
 	public static String ImageChooser_PleaseChooseFile = ch.elexis.core.l10n.Messages.ImageChooser_PleaseChooseFile;
 	public static String Core_All_Files = ch.elexis.core.l10n.Messages.Core_All_Files;
