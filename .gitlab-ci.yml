@@ -20,7 +20,7 @@ build:
   script:
   - env
   - docker pull gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET}
-  - docker run --rm --init --user 998:997 -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET} xvfb-run mvn -V clean verify -B -DelexisJcfsTest=true -Dno_materialize_products
+  - docker run --rm --init -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET} xvfb-run mvn -V clean verify -B -DelexisJcfsTest=true -Dno_materialize_products
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
   - rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/p2/elexis-3-core/
