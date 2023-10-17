@@ -26,11 +26,6 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.test.context</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -1052,7 +1047,7 @@
             </bundle>
             <bundle>
               <id>org.eclipse.osgi</id>
-              <level>-1</level>
+              <level>1</level>
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
