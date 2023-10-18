@@ -241,5 +241,43 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
 			<column name="EXTINFO" type="${blob_type}"/>
 		</addColumn>
 	</changeSet>
-    
+    <changeSet author="dalibor" id="manual_insert_ch_elexis_core_texttemplate_terminbestätigung">
+    	<preConditions onFail="MARK_RAN">
+        	<sqlCheck expectedResult="0">
+            	SELECT COUNT(ID)
+            	FROM `CH_ELEXIS_CORE_TEXTTEMPLATE`
+            	WHERE `NAME`='Terminbestätigung'
+        	</sqlCheck>
+    	</preConditions>
+    	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+        	<column name="ID" valueComputed="SUBSTR(REPLACE(UUID(), '-', ''), 1, 25)" />
+        	<column name="LASTUPDATE" valueComputed="UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000" />
+        	<column name="DELETED" value="0" />
+        	<column name="MANDATORID" valueComputed="NULL" />
+        	<column name="CATEGORY" value="MAIL" />
+        	<column name="NAME" value="Terminbestätigung" />
+        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung&#10;&#10;Vielen Dank" /> 
+        	<column name="EXTINFO" valueComputed="NULL" />
+    	</insert>
+	</changeSet>
+	<changeSet author="dalibor" id="manual_insert_ch_elexis_core_texttemplate_terminbestätigung_inkl_anmeldeformular">
+    	<preConditions onFail="MARK_RAN">
+       		<sqlCheck expectedResult="0">
+           		SELECT COUNT(ID)
+            	FROM `CH_ELEXIS_CORE_TEXTTEMPLATE`
+            	WHERE `NAME`='TerminbestätigungInklAnmeldeformular'
+        	</sqlCheck>
+    	</preConditions>
+    	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+        	<column name="ID" valueComputed="SUBSTR(REPLACE(UUID(), '-', ''), 1, 25)" />
+        	<column name="LASTUPDATE" valueComputed="UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000" />
+        	<column name="DELETED" value="0" />
+        	<column name="MANDATORID" valueComputed="NULL" />
+        	<column name="CATEGORY" value="MAIL" />
+        	<column name="NAME" value="Terminbestätigung inkl. Anmeldeformular" />
+        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Online Anmeldeformular: [Pea.SiteUrl]&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung&#10;&#10;Vielen Dank" />
+        	<column name="EXTINFO" valueComputed="NULL" />
+    	</insert>
+	</changeSet>
+
 </databaseChangeLog>
