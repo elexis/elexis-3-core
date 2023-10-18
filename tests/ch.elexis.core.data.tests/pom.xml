@@ -41,22 +41,7 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>org.eclipse.swt.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.workbench.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>jakarta.xml.bind-api</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.swt.nl_de</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -71,97 +56,7 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>org.eclipse.swt.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.views.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.views.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.swt.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.jface.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.workbench.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.views.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>org.eclipse.jetty.osgi.alpn.fragment</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.jface.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.swt.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.renderers.swt.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.renderers.swt.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.workbench.nl_it</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.jface.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.renderers.swt.nl_fr</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.e4.ui.workbench.swt.nl_de</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.ui.nl_it</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -290,11 +185,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.bindings</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.emf.ecore.change</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -310,27 +200,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.widgets.nattable.extension.nebula</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-pool2</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.workbench.renderers.swt</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.model.workbench</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -405,22 +280,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.jface.databinding</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.observable</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-beanutils</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.workbench.swt</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -445,11 +310,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.widgets.cdatetime</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.expressions</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -461,11 +321,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.emf.common</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.dialogs</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -500,22 +355,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.cwt</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.property</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.w3c.dom.events</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.workbench3</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -540,22 +385,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.workbench</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.external.jakarta.inject</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.widgets.tablecombo</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -571,21 +406,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.cm</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.views.properties.tabbed</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.css.swt.theme</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.jface</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -630,11 +450,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.forms</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.registry</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -656,21 +471,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>com.google.guava</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.services</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.equo.chromium</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.widgets</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -735,11 +535,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.workbench</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.slf4j.apis.jcl</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -756,11 +551,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.lucene.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui.views</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -826,11 +616,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jaxb-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.workbench.addons.swt</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -935,37 +720,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.css.swt</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.logging</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.di</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.swt</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.widgets.nattable.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.nebula.widgets.richtext</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -990,11 +750,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ui</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.keycloak.keycloak-common</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -1006,11 +761,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.beans</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.e4.ui.css.core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
