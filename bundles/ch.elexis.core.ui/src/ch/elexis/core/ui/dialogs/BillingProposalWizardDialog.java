@@ -17,8 +17,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -84,6 +86,8 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	private FilterByMoneyComposite filterKonsByMoneyComposite;
 
 	private DaysOrDateSelectionComposite beforeDaysOrDate;
+
+	private Button converageMarkedOnly;
 
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
@@ -168,6 +172,10 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		beforeDaysOrDate.setDate(LocalDate.now().minusDays(30));
 
 		filterSeriesByMoneyComposite = new FilterByMoneyComposite(content, true);
+
+		converageMarkedOnly = new Button(content, SWT.CHECK);
+		converageMarkedOnly.setText(Messages.KonsZumVerrechnenWizardDialog_selectCasesToCharge);
+		new Label(content, SWT.NONE);
 
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
@@ -268,6 +276,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private IFilter insurerOnlyFilter;
 		private IFilter accountingOnlyFilter;
 		private IFilter errorneousOnlyFilter;
+		private IFilter mandatorsOnlyFilter;
 		private Query<Konsultation> query;
 
 		private boolean addSeries;
@@ -306,6 +315,20 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					}
 				}
 			}
+			if (converageMarkedOnly.getSelection()) {
+				Query<Fall> coverageQuery = new Query<>(Fall.class);
+				coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.LESS_OR_EQUAL,
+						new TimeTool().toString(TimeTool.DATE_COMPACT));
+				coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.NOT_EQUAL, StringUtils.EMPTY);
+				List<Fall> coverages = coverageQuery.execute();
+				if (coverages.isEmpty()) {
+					query.addToken("1 = 2");
+				} else {
+					query.addToken(Konsultation.FLD_CASE_ID + " IN ("
+							+ coverages.stream().map(c -> "'" + c.getId() + "'").collect(Collectors.joining(","))
+							+ ")");
+				}
+			}
 			if (mandatorOnly.getSelection()) {
 				IStructuredSelection selection = (IStructuredSelection) mandatorSelector.getSelection();
 				if (selection != null && !selection.isEmpty()) {
@@ -320,6 +343,24 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					}
 					query.endGroup();
 				}
+				// add filter for series
+				mandatorsOnlyFilter = new IFilter() {
+
+					private Set<String> mandatorIds = null;
+
+					@SuppressWarnings("unchecked")
+					@Override
+					public boolean select(Object element) {
+						if(mandatorIds == null) {
+							mandatorIds = new HashSet<String>();
+							IStructuredSelection selection = (IStructuredSelection) mandatorSelector.getSelection();
+							if (selection != null && !selection.isEmpty()) {
+								selection.forEach(o -> mandatorIds.add(((Mandant) o).getId()));
+							}
+						}
+						return mandatorIds.contains(((Konsultation) element).getMandant().getId());
+					}
+				};
 			}
 
 			if (insurerOnly.getSelection()) {
@@ -473,6 +514,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				return false;
 			}
 			if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
+				return false;
+			}
+			if (mandatorsOnlyFilter != null && !mandatorsOnlyFilter.select(konsultation)) {
 				return false;
 			}
 			return true;

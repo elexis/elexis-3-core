@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class UserService implements IUserService {
 	private LoadingCache<IUserGroup, Set<IMandator>> groupExecutiveDoctorsWorkingForCache;
 
 	private IAccessControlService accessControlService;
-	
+
 	@Activate()
 	public void activate() {
 		userExecutiveDoctorsWorkingForCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS)
@@ -202,7 +203,7 @@ public class UserService implements IUserService {
 
 				List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
 				return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
-						.collect(Collectors.toSet());				
+						.collect(Collectors.toSet());
 			}
 			return Collections.emptySet();
 		}
@@ -276,5 +277,19 @@ public class UserService implements IUserService {
 			return new ArrayList<IRole>(roles);
 		}
 		return user.getRoles();
+	}
+
+	@Override
+	public Set<String> setUserRoles(IUser user, Set<String> userRoles) {
+		List<IRole> targetUserRoleSet = new LinkedList<IRole>();
+		for (String roleId : userRoles) {
+			Optional<IRole> _role = modelService.load(roleId, IRole.class);
+			if (_role.isPresent()) {
+				targetUserRoleSet.add(_role.get());
+			}
+		}
+		user.setRoles(targetUserRoleSet);
+		modelService.save(user);
+		return targetUserRoleSet.stream().map(r -> r.getId()).collect(Collectors.toSet());
 	}
 }

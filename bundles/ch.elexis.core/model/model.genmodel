@@ -145,6 +145,9 @@
         <genParameters ecoreParameter="model.ecore#//IUser/login/password"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IUser/isInternal"/>
+      <genOperations ecoreOperation="model.ecore#//IUser/setRoles">
+        <genParameters ecoreParameter="model.ecore#//IUser/setRoles/roles"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IUserGroup">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IUserGroup/users"/>

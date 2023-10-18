@@ -20,7 +20,7 @@
 		"ch.elexis.core.model.IDayMessage": "crudv",
 		"ch.elexis.core.model.IDiagnosisReference": "cruvd",
 		"ch.elexis.core.model.IDocumentLetter": "cruvd:aobo",
-		"ch.elexis.core.model.IEncounter": "cruvd:aobo",
+		"ch.elexis.core.model.IEncounter": "cruvdx:aobo",
 		"ch.elexis.core.model.IInvoice": "rv:aobo",
 		"ch.elexis.core.model.ILabItem": "cruvd",
 		"ch.elexis.core.model.ILabMapping": "cruvd",

@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.e4.dialog;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -32,6 +33,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.icons.Images;
+import ch.rgw.tools.TimeTool;
 
 public class IContactSelectorDialog extends TitleAreaDialog {
 
@@ -91,7 +93,13 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		text.setMessage("Suche ... mindestens 3 Zeichen");
 
 		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		int h = Math.round(text.getLineHeight());
+		gridData.minimumHeight = (12 + 1) * (h + 3);
+		gridData.heightHint = gridData.minimumHeight;
+		composite.setLayoutData(gridData);
+
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
 
@@ -138,23 +146,55 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 	private void refresh() {
 		String _text = text.getText();
+
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
-			String value = "%" + _text + "%";
+
+			String[] patterns = _text.split(" ");
 
 			IQuery<? extends IContact> query = coreModelService.getQuery(queryClass);
-			query.startGroup();
-			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
-			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
-			query.andJoinGroups();
-			if (queryClass.equals(IPatient.class)) {
+
+			List<? extends IContact> result = new ArrayList<IContact>();
+
+			if (patterns[0].matches("[a-zA-Z-]+")) {
+				String value = "%" + patterns[0] + "%";
+				query.startGroup();
+				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
+				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
+				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
+				query.andJoinGroups();
+				result = query.execute();
+			} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[0])) {
+				query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
+						new TimeTool(patterns[0]).toLocalDate(), true);
+				result = query.execute();
+			}
+
+			for (int i = 1; i < patterns.length; ++i) {
+				if (patterns[i].matches("[a-zA-Z-]+")) {
+					String value = patterns[i];
+					result.removeIf(c -> !(StringUtils.containsIgnoreCase(c.getDescription1(), value)
+							|| StringUtils.containsIgnoreCase(c.getDescription2(), value)
+							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
+				} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[i])) {
+					TimeTool value = new TimeTool(patterns[i]);
+					List<IPerson> matches = (List<IPerson>) result;
+					matches.removeIf(p -> !(p.getDateOfBirth().toLocalDate().equals(value.toLocalDate())));
+					result = matches;
+				}
+			}
+
+			if (IPerson.class.isAssignableFrom(queryClass)) {
 				query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
 			}
-			tableViewerContacts.setInput(query.execute());
+			tableViewerContacts.setInput(result);
 		} else {
 			tableViewerContacts.setInput(Collections.emptyList());
 		}
 
+	}
+
+	private boolean possibleDate(String pattern) {
+		return pattern.matches("[0-9./-]{5,}");
 	}
 
 	/**

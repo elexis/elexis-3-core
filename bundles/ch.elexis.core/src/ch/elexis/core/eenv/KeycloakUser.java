@@ -1,9 +1,10 @@
 package ch.elexis.core.eenv;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IRole;
@@ -189,6 +190,11 @@ public class KeycloakUser implements IUser {
 	public String toString() {
 		return getClass().getName() + ": " + getLabel() + " assignedContactId=" + assignedContactId + ", roles="
 				+ roles;
+	}
+
+	@Override
+	public void setRoles(List<IRole> roles) {
+		throw new UnsupportedOperationException();
 	}
 
 }
