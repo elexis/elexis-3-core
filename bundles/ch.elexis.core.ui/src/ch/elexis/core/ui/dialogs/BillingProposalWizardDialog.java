@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -275,6 +276,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private IFilter insurerOnlyFilter;
 		private IFilter accountingOnlyFilter;
 		private IFilter errorneousOnlyFilter;
+		private IFilter mandatorsOnlyFilter;
 		private Query<Konsultation> query;
 
 		private boolean addSeries;
@@ -341,6 +343,24 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					}
 					query.endGroup();
 				}
+				// add filter for series
+				mandatorsOnlyFilter = new IFilter() {
+
+					private Set<String> mandatorIds = null;
+
+					@SuppressWarnings("unchecked")
+					@Override
+					public boolean select(Object element) {
+						if(mandatorIds == null) {
+							mandatorIds = new HashSet<String>();
+							IStructuredSelection selection = (IStructuredSelection) mandatorSelector.getSelection();
+							if (selection != null && !selection.isEmpty()) {
+								selection.forEach(o -> mandatorIds.add(((Mandant) o).getId()));
+							}
+						}
+						return mandatorIds.contains(((Konsultation) element).getMandant().getId());
+					}
+				};
 			}
 
 			if (insurerOnly.getSelection()) {
@@ -494,6 +514,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				return false;
 			}
 			if (errorneousOnlyFilter != null && !errorneousOnlyFilter.select(konsultation)) {
+				return false;
+			}
+			if (mandatorsOnlyFilter != null && !mandatorsOnlyFilter.select(konsultation)) {
 				return false;
 			}
 			return true;

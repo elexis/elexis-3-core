@@ -17,7 +17,7 @@
 		"ACL_AUTO_INSTALL_FEATURES": "x"
 	},
 	"object": {
-		"at.medevit.ch.artikelstamm.model.IArtikelstammItem":"cruvdx",
+		"at.medevit.ch.artikelstamm.IArtikelstammItem":"cruvdx",
 		"at.medevit.elexis.inbox.model.IInboxElement":"cruvdx",
 		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung":"cruvdx",
 		"ch.elexis.core.model.IConfig":"cruvdx"		
