@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import org.docx4j.Docx4J;
@@ -52,7 +53,7 @@ public class DocxTextPluginTest {
 		int foundCount = plugin.findTextCount("test replace text");
 		assertTrue(foundCount > 0);
 
-		Docx4J.save(document, new File("c:\\Users\\thomas\\tmp\\ueberweisungSie.docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
+		saveToTempFileAndDelete(document, "ueberweisungSie");
 	}
 
 	@Test
@@ -95,7 +96,7 @@ public class DocxTextPluginTest {
 		TraversalUtil.visit(document.getMainDocumentPart(), visitor);
 		assertEquals(1, visitor.getFound().size());
 		assertNotNull(DocxUtil.getParentTbl(visitor.getFound().get(0)));
-		Docx4J.save(document, new File("c:\\Users\\thomas\\tmp\\laborblatt.docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
+		saveToTempFileAndDelete(document, "laborblatt");
 	}
 
 	@Test
@@ -108,7 +109,7 @@ public class DocxTextPluginTest {
 
 		plugin.prepare();
 
-		Docx4J.save(document, new File("c:\\Users\\thomas\\tmp\\tarmed44s1_prepared.docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
+		saveToTempFileAndDelete(document, "tarmed44s1_prepared");
 	}
 
 	@Test
@@ -182,6 +183,16 @@ public class DocxTextPluginTest {
 		plugin.setFont("Helvetica", SWT.NORMAL, 7); //$NON-NLS-1$
 		cursor = plugin.insertText(cursor, secondLine, SWT.LEFT);
 
-		Docx4J.save(document, new File("c:\\Users\\thomas\\tmp\\tarmed44s1.docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
+		saveToTempFileAndDelete(document, "tarmed44s1");
+	}
+
+	private void saveToTempFileAndDelete(WordprocessingMLPackage document, String prefix) throws Docx4JException {
+		try {
+			File tempFile = File.createTempFile(prefix, ".docx");
+			Docx4J.save(document, tempFile, Docx4J.FLAG_SAVE_ZIP_FILE);
+			tempFile.delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
