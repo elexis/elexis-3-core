@@ -30,7 +30,7 @@ public class DocxTextPluginTest {
 			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
 
 	@Test
-	public void ueberweisungSie() throws Docx4JException {
+	public void ueberweisungSie() throws Docx4JException, IOException {
 		DocxTextPlugin plugin = new DocxTextPlugin();
 
 		// replacements in header 10
@@ -57,7 +57,7 @@ public class DocxTextPluginTest {
 	}
 
 	@Test
-	public void laborBlatt() throws Docx4JException {
+	public void laborBlatt() throws Docx4JException, IOException {
 		DocxTextPlugin plugin = new DocxTextPlugin();
 
 		// replacements in body 12, 1 x tabelle
@@ -100,7 +100,7 @@ public class DocxTextPluginTest {
 	}
 
 	@Test
-	public void tarmed44s1Prepare() throws Docx4JException {
+	public void tarmed44s1Prepare() throws Docx4JException, IOException {
 		DocxTextPlugin plugin = new DocxTextPlugin();
 
 		assertTrue(plugin.loadFromStream(getClass().getResourceAsStream("/rsc/tarmed44s1.docx"), true));
@@ -113,7 +113,7 @@ public class DocxTextPluginTest {
 	}
 
 	@Test
-	public void tarmed44s1() throws Docx4JException {
+	public void tarmed44s1() throws Docx4JException, IOException {
 		DocxTextPlugin plugin = new DocxTextPlugin();
 
 		assertTrue(plugin.loadFromStream(getClass().getResourceAsStream("/rsc/tarmed44s1.docx"), true));
@@ -186,13 +186,10 @@ public class DocxTextPluginTest {
 		saveToTempFileAndDelete(document, "tarmed44s1");
 	}
 
-	private void saveToTempFileAndDelete(WordprocessingMLPackage document, String prefix) throws Docx4JException {
-		try {
+	private void saveToTempFileAndDelete(WordprocessingMLPackage document, String prefix)
+			throws Docx4JException, IOException {
 			File tempFile = File.createTempFile(prefix, ".docx");
 			Docx4J.save(document, tempFile, Docx4J.FLAG_SAVE_ZIP_FILE);
 			tempFile.delete();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
