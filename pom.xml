@@ -184,30 +184,6 @@
 					</execution>
 				</executions>
 			</plugin>
-<!--
-			<plugin>
-				<groupId>net.jsign</groupId>
-				<artifactId>jsign-maven-plugin</artifactId>
-				<version>${jsign.plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-						<phase>install</phase>
-						<configuration>
-							<file>${jsigner-win32-exe}</file>
-							<name>Windows Signature</name>
-							<url>https://github.com/elexis</url>
-							<keystore>/home/lzadmin/keystore.jks</keystore>
-							<alias>server</alias>
-							<storepass>12345678</storepass>
-							<tsaurl>http://timestamp.sectigo.com</tsaurl>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		-->
 		</plugins>
 		<pluginManagement>
 			<plugins>
