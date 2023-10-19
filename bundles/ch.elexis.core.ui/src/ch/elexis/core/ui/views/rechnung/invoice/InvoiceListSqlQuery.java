@@ -14,11 +14,13 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.activator.CoreHub;
@@ -69,9 +71,16 @@ public class InvoiceListSqlQuery {
 	}
 
 	private static String addAobo() {
-		if (AccessControlServiceHolder.get().isAobo(EvACE.of(IInvoice.class, Right.READ))) {
-			return " AND (r.MandantID IN (" + AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn().stream() //$NON-NLS-1$
-					.map(s -> "\'" + s + "\'").collect(Collectors.joining(",")) + ") OR r.MandantID is null)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		Optional<ACEAccessBitMapConstraint> aoboOrSelf = AccessControlServiceHolder.get()
+				.isAoboOrSelf(EvACE.of(IInvoice.class, Right.READ));
+		if (aoboOrSelf.isPresent()) {
+			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
+				return " AND (r.MandantID IN (" + AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn().stream() //$NON-NLS-1$
+						.map(s -> "\'" + s + "\'").collect(Collectors.joining(",")) + ") OR r.MandantID is null)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			} else if (aoboOrSelf.get() == ACEAccessBitMapConstraint.SELF) {
+				return " AND (r.MandantID = \'" + AccessControlServiceHolder.get().getSelfMandatorId() //$NON-NLS-1$
+						+ "\' OR r.MandantID is null)"; //$NON-NLS-1$
+			}
 		}
 		return StringUtils.EMPTY;
 	}

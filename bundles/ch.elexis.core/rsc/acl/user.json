@@ -46,7 +46,7 @@
 		"ch.elexis.core.model.IDiagnosisReference": "rv",
 		"ch.elexis.core.model.IDiagnosisTree": "rv",
 		"ch.elexis.core.model.IDocumentTemplate": "rv",
-		"ch.elexis.core.model.IInvoice": "rv",
+		"ch.elexis.core.model.IInvoice": "rv:self",
 		"ch.elexis.core.model.IInvoiceBilled": "rv",
 		"ch.elexis.core.model.ILabItem": "rv",
 		"ch.elexis.core.model.ILabMapping": "rv",
