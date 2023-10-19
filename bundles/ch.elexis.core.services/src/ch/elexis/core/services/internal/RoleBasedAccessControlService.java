@@ -94,8 +94,11 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		// calculate user ACL by combining the users roles
 		AccessControlList userAccessControlList = determineUserAccessControlList(userService.getUserRoles(user));
 		userAclMap.put(user, userAccessControlList);
-		logger.info("ACE User=[{}] Roles=[{}]", user.getId(),
-				userAclMap.get(user) != null ? userAclMap.get(user).getRolesRepresented() : "");
+		if (userAccessControlList.getRolesRepresented().isEmpty()) {
+			logger.warn("ACE User=[{}] Empty Role Set", user.getId());
+		} else {
+			logger.info("ACE User=[{}] Roles=[{}]", user.getId(), userAccessControlList.getRolesRepresented());
+		}
 	}
 
 	@Override
@@ -106,7 +109,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private AccessControlList determineUserAccessControlList(List<IRole> roles) {
 		if (roles.isEmpty()) {
-			return null;
+			return new AccessControlList();
 		}
 
 		AccessControlList accessControlList = null;
