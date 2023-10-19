@@ -18,7 +18,7 @@ build:
   tags:
   - docker-host
   script:
-  - mkdir /home/maven/m2-$CI_COMMIT_REF_NAME
+  - mkdir -p /home/maven/m2-$CI_COMMIT_REF_NAME
   - docker pull gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET}
   - docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "/home/maven/m2-$CI_COMMIT_REF_NAME":/root/.m2 -w /usr/src/mymaven gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET} xvfb-run mvn -V clean install -B -DelexisJcfsTest=true -Dno_materialize_products
   - eval $(ssh-agent -s)
