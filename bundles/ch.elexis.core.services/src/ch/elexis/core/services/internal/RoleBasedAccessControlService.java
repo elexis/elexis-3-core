@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.elexis.core.ac.ACEAccessBitMap;
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.AccessControlListUtil;
 import ch.elexis.core.ac.EvaluatableACE;
@@ -166,7 +167,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 					if (aceBitMap[i] == (byte) 4) {
 						aceBitMap[i] = (byte) 1;
 						flattenedbitmap |= 1 << i;
-					} else if (aceBitMap[i] == (byte) 2) {
+					} else if (aceBitMap[i] == (byte) 2 || aceBitMap[i] == (byte) 1) {
 						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
 							if (evaluateAobo(user, _ace)) {
 								aceBitMap[i] = (byte) 1;
@@ -214,6 +215,17 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			logger.warn("Could not load aobo object [{}]", _ace.getStoreToString());
 		}
 		return false;
+	}
+
+	@Override
+	public String getSelfMandatorId() {
+		Optional<IUser> user = contextService.getActiveUser();
+		if (user.isPresent()) {
+			if (user.get().getAssignedContact() != null) {
+				return user.get().getAssignedContact().getId();
+			}
+		}
+		return "-1";
 	}
 
 	private List<String> getAoboMandatorIds(IUser user) {
@@ -266,13 +278,14 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	}
 
 	@Override
-	public boolean isAobo(ObjectEvaluatableACE evaluatableAce) {
+	public Optional<ACEAccessBitMapConstraint> isAoboOrSelf(ObjectEvaluatableACE evaluatableAce) {
 		if (isPrivileged()) {
-			return false;
+			return Optional.empty();
 		}
 		if (!isAoboObject(evaluatableAce.getObject())) {
-			return false;
+			return Optional.empty();
 		}
+		Optional<ACEAccessBitMapConstraint> ret = Optional.empty();
 		Optional<IUser> user = contextService.getActiveUser();
 		if (user.isPresent()) {
 			if (!userAclMap.containsKey(user.get())) {
@@ -284,14 +297,16 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				byte[] aceBitMap = useracebm.getAccessRightMap();
 				byte[] requested = evaluatableAce.getRequestedRightMap();
 				for (int i = 0; i < requested.length; i++) {
-					if (requested[i] == 1 && aceBitMap[i] != 2) {
-						return false;
+					if (requested[i] == 1 && (aceBitMap[i] == 1)) {
+						return Optional.of(ACEAccessBitMapConstraint.SELF);
+					} else if (requested[i] == 1 && (aceBitMap[i] == 2)) {
+						return Optional.of(ACEAccessBitMapConstraint.AOBO);
 					}
 				}
 			}
 		} else {
 			logger.warn("No active user to test aobo");
 		}
-		return true;
+		return Optional.empty();
 	}
 }

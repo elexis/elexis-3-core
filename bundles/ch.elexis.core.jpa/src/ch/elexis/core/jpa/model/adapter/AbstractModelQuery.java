@@ -31,6 +31,7 @@ import org.eclipse.persistence.sessions.DatabaseRecord;
 import org.eclipse.persistence.sessions.Session;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
@@ -109,11 +110,16 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 
 	private void addAobo() {
 		if (isAoboClass(entityClazz)) {
+			Optional<ACEAccessBitMapConstraint> aoboOrSelf = isAoboOrSelf(entityClazz);
 			Field aoboColumn = getAoboColumn(entityClazz);
 
 			startGroup();
 			or(aoboColumn.getName(), COMPARATOR.EQUALS, null);
-			or(aoboColumn.getName(), COMPARATOR.IN, getAoboMandatorIds());
+			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
+				or(aoboColumn.getName(), COMPARATOR.IN, getAoboMandatorIds());
+			} else if (aoboOrSelf.get() == ACEAccessBitMapConstraint.SELF) {
+				or(aoboColumn.getName(), COMPARATOR.EQUALS, getSelfMandatorId());
+			}
 			andJoinGroups();
 		}
 	}
@@ -132,6 +138,13 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return entityClazz.isAnnotationPresent(AoboEntity.class) && isAoboAccessControl(entityClazz);
 	}
 
+	private String getSelfMandatorId() {
+		if (accessControlService == null) {
+			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+		}
+		return accessControlService != null ? accessControlService.getSelfMandatorId() : "-1";
+	}
+
 	private List<String> getAoboMandatorIds() {
 		if (accessControlService == null) {
 			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
@@ -141,11 +154,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	}
 
 	private boolean isAoboAccessControl(Class<? extends EntityWithId> entityClazz) {
+		return accessControlService != null ? isAoboOrSelf(entityClazz).isPresent() : false;
+	}
+
+	private Optional<ACEAccessBitMapConstraint> isAoboOrSelf(Class<? extends EntityWithId> entityClazz) {
 		if (accessControlService == null) {
 			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
 		}
-		return accessControlService != null ? accessControlService.isAobo(new ObjectEvaluatableACE(clazz, Right.READ))
-				: false;
+		return accessControlService.isAoboOrSelf(new ObjectEvaluatableACE(entityClazz, Right.READ));
 	}
 
 	/**
