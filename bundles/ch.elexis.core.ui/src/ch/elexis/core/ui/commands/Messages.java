@@ -54,4 +54,12 @@ public class Messages {
 
 	public static String GenericReallyDeleteContents = ch.elexis.core.l10n.Messages.Core_Really_delete_0;
 
+	public static String Edit_Template_Description = ch.elexis.core.l10n.Messages.Edit_Template_Description;
+
+	public static String Edit_Template = ch.elexis.core.l10n.Messages.Edit_Template;
+
+	public static String Template_not_editable = ch.elexis.core.l10n.Messages.Template_not_editable;
+
+	public static String Template_not_editable_text = ch.elexis.core.l10n.Messages.Template_not_editable_text;
+
 }

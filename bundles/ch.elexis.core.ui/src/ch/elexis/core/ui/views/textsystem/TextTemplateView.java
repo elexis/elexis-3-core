@@ -624,7 +624,7 @@ public class TextTemplateView extends ViewPart {
 		tableViewer.refresh();
 	}
 
-	private void refresh() {
+	public void refresh() {
 		// load existing templates from database
 		Query<Brief> qbe = new Query<Brief>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
