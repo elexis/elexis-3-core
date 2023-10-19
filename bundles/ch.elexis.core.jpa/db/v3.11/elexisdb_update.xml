@@ -245,13 +245,13 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
     	<preConditions onFail="MARK_RAN">
         	<sqlCheck expectedResult="0">
             	SELECT COUNT(ID)
-            	FROM `CH_ELEXIS_CORE_TEXTTEMPLATE`
-            	WHERE `NAME`='Terminbestätigung'
+            	FROM CH_ELEXIS_CORE_TEXTTEMPLATE
+            	WHERE NAME='Terminbestätigung'
         	</sqlCheck>
     	</preConditions>
     	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
-        	<column name="ID" valueComputed="SUBSTR(REPLACE(UUID(), '-', ''), 1, 25)" />
-        	<column name="LASTUPDATE" valueComputed="UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000" />
+        	<column name="ID" valueComputed="${elexisid}" />
+        	<column name="LASTUPDATE" valueComputed="${timestamp}" />
         	<column name="DELETED" value="0" />
         	<column name="MANDATORID" valueComputed="NULL" />
         	<column name="CATEGORY" value="MAIL" />
@@ -264,13 +264,13 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
     	<preConditions onFail="MARK_RAN">
        		<sqlCheck expectedResult="0">
            		SELECT COUNT(ID)
-            	FROM `CH_ELEXIS_CORE_TEXTTEMPLATE`
-            	WHERE `NAME`='TerminbestätigungInklAnmeldeformular'
+            	FROM CH_ELEXIS_CORE_TEXTTEMPLATE
+            	WHERE NAME='TerminbestätigungInklAnmeldeformular'
         	</sqlCheck>
     	</preConditions>
     	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
-        	<column name="ID" valueComputed="SUBSTR(REPLACE(UUID(), '-', ''), 1, 25)" />
-        	<column name="LASTUPDATE" valueComputed="UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000" />
+        	<column name="ID" valueComputed="${elexisid}" />
+        	<column name="LASTUPDATE" valueComputed="${timestamp}" />
         	<column name="DELETED" value="0" />
         	<column name="MANDATORID" valueComputed="NULL" />
         	<column name="CATEGORY" value="MAIL" />

@@ -22,6 +22,8 @@ public class TextTemplateTest extends AbstractTest {
 	public void before() {
 		super.before();
 		createMandator();
+		IQuery<ITextTemplate> query = coreModelService.getQuery(ITextTemplate.class);
+		query.execute().forEach(t -> coreModelService.remove(t));
 	}
 
 	@Override

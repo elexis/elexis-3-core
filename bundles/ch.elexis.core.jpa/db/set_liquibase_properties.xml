@@ -5,4 +5,11 @@
   <property name="blob_type" value="blob" dbms="h2"/>
   <property name="blob_type" value="longblob" dbms="mysql, mariadb"/>
 
+  <property name="timestamp" value="extract(epoch from now()) * 1000" dbms="postgresql"/>
+  <property name="timestamp" value="DATEDIFF('SECOND', DATE '1970-01-01', CURRENT_TIMESTAMP()) * 1000" dbms="h2"/>
+  <property name="timestamp" value="UNIX_TIMESTAMP(CURRENT_TIMESTAMP(3)) * 1000" dbms="mysql, mariadb"/>
+
+  <property name="elexisid" value="SUBSTR(REPLACE(gen_random_uuid()::text, '-', ''), 1, 25)" dbms="postgresql"/>
+  <property name="elexisid" value="SUBSTR(REPLACE(UUID(), '-', ''), 1, 25)" dbms="mysql, mariadb, h2"/>
+
 </databaseChangeLog>
