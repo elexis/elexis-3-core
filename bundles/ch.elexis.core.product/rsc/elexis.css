@@ -18,7 +18,7 @@ Text {
 
 CTabFolder#Links-folder {
   /* actual values */
-  //background-color: #FFFFFF;
+  background-color: #FFFFFF;
   background-image: none;
   border-visible: true;
   color: #000000;
