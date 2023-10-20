@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,8 +50,16 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.ui.e4.fieldassist.PatientSearchToken;
 import ch.elexis.core.ui.util.MoneyInput;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.DaysOrDateSelectionComposite;
@@ -91,6 +100,9 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
+
+	private Button patientOnly;
+	private GenericSelectionComposite patientSelector;
 
 	private Button accountingOnly;
 	private GenericSelectionComposite accountingSelector;
@@ -207,6 +219,36 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					mandatorOnly.setSelection(true);
 				} else {
 					mandatorOnly.setSelection(false);
+				}
+			}
+		});
+
+		patientOnly = new Button(content, SWT.CHECK);
+		patientOnly.setText("nur von folgenden Patienten");
+		patientSelector = new GenericSelectionComposite(content, SWT.NONE,
+				ch.elexis.core.l10n.Messages.Core_Select_Patient,
+				ch.elexis.core.l10n.Messages.Core_Select_Patient, ch.elexis.core.l10n.Messages.Core_Select_Patient);
+		Function<String, List<?>> inputFunction = (String s) -> {
+			IQuery<IPatient> query = CoreModelServiceHolder.get().getQuery(IPatient.class);
+			query.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+			if (s != null && s.length() > 2) {
+				List<PatientSearchToken> searchParts = PatientSearchToken
+						.getPatientSearchTokens(s.toLowerCase().split(StringUtils.SPACE));
+				searchParts.forEach(st -> st.apply(query));
+			}
+			query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, ORDER.ASC);
+			query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION2, ORDER.ASC);
+			return query.execute();
+		};
+		patientSelector.setInputFunction(inputFunction);
+		patientSelector.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		patientSelector.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (event.getSelection() != null && !event.getSelection().isEmpty()) {
+					patientOnly.setSelection(true);
+				} else {
+					patientOnly.setSelection(false);
 				}
 			}
 		});
@@ -361,6 +403,23 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 						return mandatorIds.contains(((Konsultation) element).getMandant().getId());
 					}
 				};
+			}
+
+			if (patientOnly.getSelection()) {
+				IStructuredSelection selection = (IStructuredSelection) patientSelector.getSelection();
+				if (selection != null && !selection.isEmpty()) {
+					@SuppressWarnings("unchecked")
+					List<IPatient> patients = selection.toList();
+					List<ICoverage> coverages = patients.stream().flatMap(p -> p.getCoverages().stream())
+							.collect(Collectors.toList());
+					if (coverages.isEmpty()) {
+						query.addToken("1 = 2");
+					} else {
+						query.addToken(Konsultation.FLD_CASE_ID + " IN ("
+								+ coverages.stream().map(c -> "'" + c.getId() + "'").collect(Collectors.joining(","))
+								+ ")");
+					}
+				}
 			}
 
 			if (insurerOnly.getSelection()) {
