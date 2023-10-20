@@ -1485,6 +1485,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	@Override
 	public void setUnlocked(boolean unlocked) {
+		// update enabled / locked before resetting bLocked
+		// else new value is reset in saveExpandable on focus lost
+		for (ExpandableComposite ex : ec) {
+			ex.getClient().setEnabled(unlocked);
+		}
+		detailComposites.forEach(dc -> dc.setUnlocked(unlocked));
 		bLocked = !unlocked;
 		ipp.setUnlocked(unlocked);
 		inpZusatzAdresse.setUnlocked(unlocked);
@@ -1500,9 +1506,5 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 
 		}
-		for (ExpandableComposite ex : ec) {
-			ex.getClient().setEnabled(unlocked);
-		}
-		detailComposites.forEach(dc -> dc.setUnlocked(unlocked));
 	}
 }
