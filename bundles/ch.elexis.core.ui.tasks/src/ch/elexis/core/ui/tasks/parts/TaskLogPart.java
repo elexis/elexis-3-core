@@ -39,6 +39,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -346,7 +347,8 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 
 		MPartStack detailPartStack = (MPartStack) modelService.find("ch.elexis.core.ui.tasks.partstack.details", //$NON-NLS-1$
 				application);
-		if (detailPartStack != null && detailPartStack.isVisible()) {
+		if (detailPartStack != null && detailPartStack.isVisible() && detailPartStack.getWidget() instanceof Control
+				&& ((Control) detailPartStack.getWidget()).getVisible()) {
 			detailPartStack.getChildren().add(taskDetailPart);
 			partService.activate(taskDetailPart);
 		} else {
