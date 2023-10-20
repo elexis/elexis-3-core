@@ -46,6 +46,16 @@
                name="documents"
                optional="true">
          </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.okLabel"
+               name="okLabel"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.accountid"
+               name="accountid"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler"

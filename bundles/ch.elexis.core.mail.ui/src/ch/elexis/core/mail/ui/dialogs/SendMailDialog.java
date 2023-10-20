@@ -82,7 +82,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-
+	private String okLabelString;
 	private LocalDateTime sentTime;
 
 	public SendMailDialog(Shell parentShell) {
@@ -270,7 +270,11 @@ public class SendMailDialog extends TitleAreaDialog {
 					updateLayout();
 				}
 			});
-
+			if ("true".equals(getOkLabel())) {
+				lbl.setVisible(false);
+				templatesViewer.getCombo().setVisible(false);
+				attachments.setVisible(false);
+			}
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
@@ -355,6 +359,11 @@ public class SendMailDialog extends TitleAreaDialog {
 		updateLayout();
 	}
 
+	public void setOkLabel(String okLabel) {
+		if (okLabel != null && !okLabel.isEmpty()) {
+			okLabelString = okLabel;
+		}
+	}
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<String>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
@@ -384,7 +393,11 @@ public class SendMailDialog extends TitleAreaDialog {
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);
-			okButton.setText("Senden");
+			if ("true".equals(getOkLabel())) {
+				okButton.setText("OK");
+			} else {
+				okButton.setText("Senden");
+			}
 			if (sentTime != null) {
 				setTitle("E-Mail Anzeige");
 				setMessage("Diese E-Mail wurde versendet am "
@@ -538,5 +551,9 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	public void sent(LocalDateTime sentTime) {
 		this.sentTime = sentTime;
+	}
+
+	public String getOkLabel() {
+		return okLabelString;
 	}
 }
