@@ -33,4 +33,5 @@ Service-Component: OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreH
  OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml,
  OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml
 Export-Package: ch.elexis.core.mail.ui.client,
+ ch.elexis.core.mail.ui.dialogs,
  ch.elexis.core.mail.ui.handlers

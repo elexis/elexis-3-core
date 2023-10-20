@@ -32,6 +32,8 @@ import ch.elexis.core.tasks.model.TaskState;
  *
  */
 public class SendMailHandler extends AbstractHandler implements IHandler {
+	boolean skipSend = false;
+	public static Optional<ITaskDescriptor> taskDescriptor;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -48,6 +50,10 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		if (to != null) {
 			sendMailDialog.setTo(to);
 		}
+		String accountId = event.getParameter("ch.elexis.core.mail.ui.sendMail.accountid");
+		if (to != null) {
+			sendMailDialog.setAccountId(accountId);
+		}
 		String subject = event.getParameter("ch.elexis.core.mail.ui.sendMail.subject");
 		if (subject != null) {
 			sendMailDialog.setSubject(subject);
@@ -56,15 +62,22 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		if (text != null) {
 			sendMailDialog.setText(text);
 		}
-
+		String okLabel = event.getParameter("ch.elexis.core.mail.ui.sendMail.okLabel");
+		if (okLabel != null) {
+			sendMailDialog.setOkLabel(okLabel);
+		}
+		if (okLabel != null) {
+			sendMailDialog.setOkLabel(okLabel);
+			skipSend = true;
+		}
 		if (sendMailDialog.open() == Dialog.OK) {
 			MailMessage message = new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
 					.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
 			message.setAttachments(sendMailDialog.getAttachmentsString());
 			message.setDocuments(sendMailDialog.getDocumentsString());
-			Optional<ITaskDescriptor> taskDescriptor = TaskUtil
+			taskDescriptor = TaskUtil
 					.createSendMailTaskDescriptor(sendMailDialog.getAccount().getId(), message);
-			if (taskDescriptor.isPresent()) {
+			if (!skipSend && taskDescriptor.isPresent()) {
 				ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event),
 						taskDescriptor.get());
 				return task.getState() == TaskState.COMPLETED;
