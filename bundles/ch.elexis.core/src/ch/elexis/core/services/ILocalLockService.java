@@ -16,11 +16,30 @@ public interface ILocalLockService extends ILockService {
 
 	public LockResponse acquireLock(Object object);
 
+	/**
+	 * Release a lock via a StoreToString
+	 * 
+	 * @param storeToString
+	 * @return
+	 * @since 3.10
+	 */
+	public LockResponse releaseLock(String storeToString);
+
 	public LockResponse releaseLock(Object object);
 
 	public LockResponse releaseLock(LockInfo lockInfo);
 
 	public boolean isLocked(Object object);
+	
+	/**
+	 * A variant of {@link #isLocked(Object)} where the StoreToString is used for
+	 * comparison
+	 * 
+	 * @param storeToString
+	 * @return
+	 * @since 3.10
+	 */
+	public boolean isLocked(String storeToString);
 
 	/**
 	 * Use this only for performance optimization, it is not guaranteed that the

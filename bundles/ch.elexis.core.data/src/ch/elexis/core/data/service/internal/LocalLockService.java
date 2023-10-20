@@ -1,6 +1,5 @@
 package ch.elexis.core.data.service.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +9,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -111,7 +111,8 @@ public class LocalLockService implements ILocalLockService {
 		return releaseLock(lockInfo.getElementStoreToString());
 	}
 
-	private LockResponse releaseLock(String storeToString) {
+	@Override
+	public LockResponse releaseLock(String storeToString) {
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lil = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
 				contextService.getStationIdentifier(),
@@ -376,13 +377,21 @@ public class LocalLockService implements ILocalLockService {
 		}
 		logger.debug("Checking lock on [" + object + "]");
 
-		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		String storeToString = StoreToStringServiceHolder.getStoreToString(object);
+		return isLocked(storeToString);
+	}
+
+	@Override
+	public boolean isLocked(String storeToString) {
+		if (storeToString == null) {
+			return false;
+		}
+
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
 				contextService.getStationIdentifier(),
 				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
-
 		return isLocked(lockRequest);
 	}
 
