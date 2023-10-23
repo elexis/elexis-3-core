@@ -1,13 +1,15 @@
 package ch.elexis.core.ui.property;
 
+import java.util.Optional;
+
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.BriefExternUtil;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.util.DocumentLetterUtil;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Rechnung;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class PropertyTester extends org.eclipse.core.expressions.PropertyTester {
 
@@ -27,10 +29,12 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 		} else if ("billable".equals(property)) { //$NON-NLS-1$
 			if (args != null && args.length == 1) {
 				if ("activeencounter".equals(args[0])) { //$NON-NLS-1$
-					Konsultation selectedEncounter = (Konsultation) ElexisEventDispatcher
-							.getSelected(Konsultation.class);
-					return selectedEncounter != null && (selectedEncounter.getRechnung() == null
-							|| Rechnung.isStorno(selectedEncounter.getRechnung()));
+					Optional<IEncounter> selectedEncounter = ContextServiceHolder.get().getTyped(IEncounter.class);
+					if (selectedEncounter.isPresent() && selectedEncounter.get().isBillable()) {
+						return selectedEncounter.get().getInvoice() == null
+								|| (selectedEncounter.get().getInvoice().getState() == InvoiceState.CANCELLED
+										|| selectedEncounter.get().getInvoice().getState() == InvoiceState.DEPRECIATED);
+					}
 				}
 			}
 		}

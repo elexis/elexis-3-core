@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -51,6 +52,13 @@ public class InvoiceService implements IInvoiceService {
 	@Override
 	public Result<IInvoice> invoice(List<IEncounter> encounters) {
 		Result<IInvoice> result = new Result<>();
+
+		int origSize = encounters.size();
+		encounters = encounters.stream().filter(e -> e.isBillable()).collect(Collectors.toList());
+		if (encounters.size() < origSize) {
+			LoggerFactory.getLogger(getClass())
+					.warn("Ignoring [" + (origSize - encounters.size()) + "] not billable encounters.");
+		}
 
 		if (encounters == null || encounters.isEmpty()) {
 			return result.add(Result.SEVERITY.WARNING, 1, "Die Rechnung enthält keine Behandlungen (Konsultationen)",
