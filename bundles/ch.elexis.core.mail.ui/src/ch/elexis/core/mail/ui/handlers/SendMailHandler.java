@@ -32,7 +32,6 @@ import ch.elexis.core.tasks.model.TaskState;
  *
  */
 public class SendMailHandler extends AbstractHandler implements IHandler {
-	boolean skipSend = false;
 	public static Optional<ITaskDescriptor> taskDescriptor;
 
 	@Override
@@ -64,11 +63,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		}
 		String okLabel = event.getParameter("ch.elexis.core.mail.ui.sendMail.okLabel");
 		if (okLabel != null) {
-			sendMailDialog.setOkLabel(okLabel);
-		}
-		if (okLabel != null) {
-			sendMailDialog.setOkLabel(okLabel);
-			skipSend = true;
+			sendMailDialog.setOk(okLabel);
 		}
 		if (sendMailDialog.open() == Dialog.OK) {
 			MailMessage message = new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
@@ -77,7 +72,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			message.setDocuments(sendMailDialog.getDocumentsString());
 			taskDescriptor = TaskUtil
 					.createSendMailTaskDescriptor(sendMailDialog.getAccount().getId(), message);
-			if (!skipSend && taskDescriptor.isPresent()) {
+			if (!Boolean.valueOf(okLabel) && taskDescriptor.isPresent()) {
 				ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event),
 						taskDescriptor.get());
 				return task.getState() == TaskState.COMPLETED;
