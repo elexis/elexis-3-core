@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,9 +14,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.views.rechnung.RnOutputDialog;
 import ch.elexis.data.Fall;
@@ -30,11 +33,12 @@ public class BillActiveEncounterHandler extends AbstractHandler implements IHand
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Konsultation selectedEncounter = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-		if (selectedEncounter != null) {
-			Result<Konsultation> result = BillingUtil.getBillableResult(selectedEncounter);
+		Optional<IEncounter> selectedEncounter = ContextServiceHolder.get().getTyped(IEncounter.class);
+		if (selectedEncounter.isPresent()) {
+			Konsultation selectedKonsultation = (Konsultation) NoPoUtil.loadAsPersistentObject(selectedEncounter.get());
+			Result<Konsultation> result = BillingUtil.getBillableResult(selectedKonsultation);
 			if (result.isOK()) {
-				List<Result<IInvoice>> results = BillingUtil.createBills(getBillMap(selectedEncounter));
+				List<Result<IInvoice>> results = BillingUtil.createBills(getBillMap(selectedKonsultation));
 				if (!results.isEmpty() && results.get(0).isOK()) {
 					Rechnung invoice = Rechnung.load(results.get(0).get().getId());
 					new RnOutputDialog(UiDesk.getTopShell(), Collections.singletonList(invoice)).open();
