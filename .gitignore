@@ -4,12 +4,13 @@
 # *.jar
 *.war
 *.ear
+.polyglot.*
+.DS_Store
 rebel.xml
 bin/
 target/
 jetty.log
 workspace/
 profile.tmp
-.polyglot.build.properties
 bundles/ch.elexis.core.data/rsc/version.properties
 jre.bundles/downloaded/
