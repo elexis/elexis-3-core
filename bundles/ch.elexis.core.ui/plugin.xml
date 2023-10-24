@@ -126,7 +126,7 @@
             locationURI="toolbar:ch.elexis.FallDetailView">
          <command
                commandId="ch.elexis.core.command.copyFall"
-               icon="icon://IMG_COPY"
+               icon="icon://IMG_DOCUMENT_TEXT"
                label="Fall kopieren"
                style="push">
          </command>
