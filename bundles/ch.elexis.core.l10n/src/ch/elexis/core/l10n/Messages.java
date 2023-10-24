@@ -3344,6 +3344,8 @@ public class Messages extends NLS {
 	public static String PRESCRIPTIONS_OVERVIEW_HEADING_AVG_TIME;
 	public static String PRESCRIPTIONS_OVERVIEW_HEADING_COUNT;
 	public static String PRESCRIPTIONS_OVERVIEW_TITLE;
+	public static String PatientEMailListe;
+	public static String PatientEMailListe_description;
 	public static String PatHeuteView_accAmount;
 	public static String PatHeuteView_accTime;
 	public static String PatHeuteView_billed;
