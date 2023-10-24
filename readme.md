@@ -1,5 +1,5 @@
 # Elexis 3 Core Repository
-[![pipeline status](https://gitlab.medelexis.ch/elexis/elexis-3-core/badges/master/pipeline.svg)](https://gitlab.medelexis.ch/elexis/elexis-3-core/-/commits/f25569)
+[![pipeline status](https://gitlab.medelexis.ch/elexis/elexis-3-core/badges/master/pipeline.svg)](https://gitlab.medelexis.ch/elexis/elexis-3-core/-/commits/master)
 
 Containing the core files of the Elexis Application.
 ## Installation
