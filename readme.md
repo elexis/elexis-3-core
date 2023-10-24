@@ -11,10 +11,8 @@ Containing the core files of the Elexis Application.
 - [Linux](http://download.elexis.info/elexis/3.10/products/Elexis3-linux.gtk.x86_64.zip)
 
 ### From source
-Install Java JDK 17 and maven. Then execute the following commands:
 
-`git clone https://github.com/elexis/elexis-3-core`
-`mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests`
-
-
-
+A correct setup of a build machine includes settings like the `de_CH` locale and other.
+To ease this process, a docker build image is provided in 
+[gitlab.medelexis.ch](https://gitlab.medelexis.ch/elexis/docker-build/container_registry "gitlab.medelexis.ch") 
+Have a look at the file `.gitlab-ci.yml` on how to use this image to generate your own build.

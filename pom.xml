@@ -42,11 +42,6 @@
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
 		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
-		<jsign.plugin.version>3.0</jsign.plugin.version>
-		<jsigner-win32-exe>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/win32/win32/x86_64/Elexis3.exe</jsigner-win32-exe>
-		<jsigner-osx-app>/home/lzadmin/elexis-master/git/elexis-3-core/ch.elexis.core.p2site/target/products/Elexis3/macosx/cocoa/x86_64/Elexis3.app</jsigner-osx-app>
 		<buildplan.plugin.version>1.5</buildplan.plugin.version>
 		<formatter.plugin.version>2.18.0</formatter.plugin.version>
 		<clean.plugin.version>2.5</clean.plugin.version>	
