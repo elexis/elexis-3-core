@@ -1,8 +1,11 @@
 package ch.elexis.data;
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({ Test_DBInitialState.class, Test_PersistentObject.class, Test_Prescription.class, Test_Patient.class,
@@ -13,5 +16,10 @@ import org.junit.runners.Suite.SuiteClasses;
 public class AllDataTests {
 
 	public static final boolean PERFORM_UPDATE_TESTS = false;
+
+	@BeforeClass
+	public static void beforeClass() {
+		OsgiServiceUtil.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
+	}
 
 }

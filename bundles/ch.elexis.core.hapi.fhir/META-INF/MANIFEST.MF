@@ -5,6 +5,6 @@ Bundle-SymbolicName: ch.elexis.core.hapi.fhir
 Bundle-Version: 5.4.2.qualifier
 Bundle-Vendor: hapifhir.io
 Automatic-Module-Name: ch.elexis.core.hapi-fhir
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: info.elexis.target.hapi.fhir;bundle-version="5.4.2";visibility:=reexport
 Export-Package: ch.elexis.core.hapi.fhir

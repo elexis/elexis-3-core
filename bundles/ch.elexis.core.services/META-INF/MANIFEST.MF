@@ -52,4 +52,4 @@ Import-Package: bsh,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
 Export-Package: ch.elexis.core.services.holder
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

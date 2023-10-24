@@ -8,5 +8,5 @@ Fragment-Host: ch.elexis.core.ui;bundle-version="3.11.0"
 Require-Bundle: org.junit,
  ch.elexis.core.test;bundle-version="3.9.0",
  ch.elexis.core.application;bundle-version="3.11.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: ch.elexis.data
