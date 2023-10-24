@@ -62,4 +62,6 @@ public class Messages {
 
 	public static String Template_not_editable_text = ch.elexis.core.l10n.Messages.Template_not_editable_text;
 
+	public static String Template_not_editable_empty = ch.elexis.core.l10n.Messages.Template_not_editable_empty;
+
 }
