@@ -47,8 +47,8 @@
                optional="true">
          </commandParameter>
          <commandParameter
-               id="ch.elexis.core.mail.ui.sendMail.okLabel"
-               name="okLabel"
+               id="ch.elexis.core.mail.ui.sendMail.doSend "
+               name="doSend"
                optional="true">
          </commandParameter>
          <commandParameter
@@ -94,6 +94,11 @@
          <commandParameter
                id="ch.elexis.core.mail.ui.sendMailNoUi.documents"
                name="documents"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMailNoUi.doSend"
+               name="name"
                optional="true">
          </commandParameter>
       </command>

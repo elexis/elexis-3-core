@@ -82,7 +82,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-	private String okString;
+	private boolean doSend;
 	private LocalDateTime sentTime;
 
 	public SendMailDialog(Shell parentShell) {
@@ -270,7 +270,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					updateLayout();
 				}
 			});
-			if (Boolean.valueOf(getOk())) {
+			if (Boolean.valueOf(doSend)) {
 				lbl.setVisible(false);
 				templatesViewer.getCombo().setVisible(false);
 				attachments.setVisible(false);
@@ -359,11 +359,10 @@ public class SendMailDialog extends TitleAreaDialog {
 		updateLayout();
 	}
 
-	public void setOk(String ok) {
-		if (StringUtils.isNotBlank(ok)) {
-			okString = ok;
-		}
+	public void doSend(boolean doSend) {
+		this.doSend = doSend;
 	}
+	
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<String>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
@@ -393,8 +392,8 @@ public class SendMailDialog extends TitleAreaDialog {
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);
-			if (Boolean.valueOf(getOk())) {
-				okButton.setText("OK");
+			if (doSend) {
+				okButton.setText(IDialogConstants.OK_LABEL);
 			} else {
 				okButton.setText("Senden");
 			}
@@ -553,7 +552,7 @@ public class SendMailDialog extends TitleAreaDialog {
 		this.sentTime = sentTime;
 	}
 
-	public String getOk() {
-		return okString;
+	public Boolean doSend() {
+		return doSend;
 	}
 }

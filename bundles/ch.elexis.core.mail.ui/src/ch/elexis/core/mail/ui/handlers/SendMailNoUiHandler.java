@@ -17,6 +17,7 @@ import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.data.Mandant;
@@ -40,6 +41,16 @@ public class SendMailNoUiHandler extends AbstractHandler implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		String doSend = event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.doSend");
+		if (Boolean.valueOf(doSend)) {
+	        Optional<?> descriptor = ContextServiceHolder.get().getNamed("sendMailDialog.taskDescriptor");
+	        if (descriptor != null && descriptor.isPresent()) {
+	            OutboxUtil.getOrCreateElement((ITaskDescriptor) descriptor.get(), true);
+	            EncounterUtil.addMailToEncounter((ITaskDescriptor) descriptor.get());
+				ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor", null);
+	        }
+			return null;
+	    }
 		MailAccount mailAccount = null;
 		String accountId = event.getParameter("ch.elexis.core.mail.ui.sendMailNoUi.accountid");
 		if (StringUtils.isNoneBlank(accountId)) {
