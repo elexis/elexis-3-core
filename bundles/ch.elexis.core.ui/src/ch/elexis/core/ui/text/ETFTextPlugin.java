@@ -104,7 +104,7 @@ public class ETFTextPlugin implements ITextPlugin {
 			etf.text.setSelection(pos, pos + marke.length());
 		}
 		etf.text.insert(text);
-		return new Integer(pos + text.length());
+		return Integer.valueOf(pos + text.length());
 	}
 
 	public Object insertText(Object pos, String text, int adjust) {
@@ -114,7 +114,7 @@ public class ETFTextPlugin implements ITextPlugin {
 		Integer px = (Integer) pos;
 		etf.text.setSelection(px);
 		etf.text.insert(text);
-		return new Integer(px + text.length());
+		return Integer.valueOf(px + text.length());
 	}
 
 	public Object insertTextAt(int x, int y, int w, int h, String text, int adjust) {

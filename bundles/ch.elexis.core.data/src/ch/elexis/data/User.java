@@ -45,17 +45,6 @@ public class User extends PersistentObject {
 		addMapping(TABLENAME, FLD_ID, FLD_IS_ACTIVE, FLD_IS_ADMINISTRATOR, FLD_ASSOC_CONTACT, FLD_HASHED_PASSWORD,
 				FLD_SALT, FLD_KEYSTORE, FLD_TOTP, FLD_ALLOW_EXTERNAL,
 				FLD_JOINT_ROLES + "=LIST:USER_ID:USER_ROLE_JOINT");
-
-		initTables();
-	}
-
-	// TODO move to NoPo initialisation
-	@Deprecated(forRemoval = true)
-	protected static void initTables() {
-		if (!tableExists(TABLENAME)) {
-			executeDBInitScriptForClass(User.class, null);
-			User.migrateToNewStructure();
-		}
 	}
 
 	public User() {
@@ -93,64 +82,6 @@ public class User extends PersistentObject {
 	 */
 	public static @NonNull User load(final String id) {
 		return new User(id);
-	}
-
-	/**
-	 * Transfer existing users into the new separated table.<br>
-	 * Every {@link Anwender} is automatically assigned to the role
-	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_USER}. Every {@link Mandant} is
-	 * additionally assigned to the role
-	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER} and
-	 * {@link RoleConstants#ACCESSCONTROLE_ROLE_MANDATOR}.
-	 *
-	 * @see https://redmine.medelexis.ch/issues/771
-	 *
-	 */
-	@Deprecated(forRemoval = true)
-	private static void migrateToNewStructure() {
-		Role.initTables();
-
-		log.info("Starting migration to new user structure");
-
-		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
-		List<Anwender> users = qbe.execute();
-		for (Anwender anwender : users) {
-			String username = anwender.get(Kontakt.FLD_NAME3);
-			if (username == null || username.length() == 0) {
-				log.warn("Username for Anwender " + anwender.getLabel() + " not set. Skipping user creation.");
-				continue;
-			}
-
-			String password = (String) anwender.getExtInfoStoredObjectByKey("UsrPwd");
-			boolean setActive = true;
-			if (password == null || password.length() == 0) {
-				password = "pass";
-				log.warn("Password for Anwender " + anwender.getLabel()
-						+ " is empty, setting 'pass' and deactivating user.");
-				setActive = false;
-			}
-
-			User u;
-			if (username.equals(USERNAME_ADMINISTRATOR)) {
-				u = User.load(USERNAME_ADMINISTRATOR);
-				u.setAssignedContact(anwender);
-				u.setPassword(password);
-				log.info("Overriding Administrator password with password from anwender [{}]", anwender.getLabel());
-			} else {
-				u = new User(anwender, username, password);
-			}
-			u.setActive(setActive);
-
-			boolean isMandator = anwender.getBoolean(Anwender.FLD_IS_MANDATOR);
-			if (isMandator) {
-				u.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER), true);
-				u.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MANDATOR), true);
-			}
-
-			log.info("Migrated anwender [{}] to new user structure with id [{}]", anwender.getLabel(), u.getId());
-
-			// TODO delete the information from contact table?
-		}
 	}
 
 	/**

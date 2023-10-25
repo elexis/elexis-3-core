@@ -77,9 +77,6 @@
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeTarmedOpenConsLastYear">
             </ExternalMaintenance>
             <ExternalMaintenance
-                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.MoveFallExtInfoBillingToFallBillingSystem">
-            </ExternalMaintenance>
-            <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.CloseAllOpenOrders">
             </ExternalMaintenance>
             <ExternalMaintenance

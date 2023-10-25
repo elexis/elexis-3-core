@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.Money;
 
@@ -22,30 +23,31 @@ public class Test_Rechnung extends AbstractPersistentObjectTest {
 
 		// Rechnung MAHNUNG_1 full amount
 		Rechnung rechnung = new Rechnung("1", mandant, fall, kons.getDatum(), kons.getDatum(), new Money(10000),
-				RnStatus.OFFEN);
-		rechnung.setStatus(RnStatus.MAHNUNG_1);
+				InvoiceState.OPEN.getState());
+		rechnung.setStatus(InvoiceState.DEMAND_NOTE_1);
 		rechnung.addZahlung(new Money(10).multiply(-1.0), Messages.Rechnung_Mahngebuehr1, null);
-		assertTrue(rechnung.getStatus() == RnStatus.MAHNUNG_1);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.DEMAND_NOTE_1);
 		assertTrue(rechnung.hasReminders());
 
 		rechnung.addZahlung(new Money(10000), "initial amount", null);
-		assertTrue(rechnung.getStatus() == RnStatus.BEZAHLT);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.PAID);
 		assertFalse(rechnung.hasReminders());
 
 		// Rechnung MAHNUNG_2 partial amount
-		rechnung = new Rechnung("2", mandant, fall, kons.getDatum(), kons.getDatum(), new Money(10000), RnStatus.OFFEN);
-		rechnung.setStatus(RnStatus.MAHNUNG_1);
+		rechnung = new Rechnung("2", mandant, fall, kons.getDatum(), kons.getDatum(), new Money(10000),
+				InvoiceState.OPEN.getState());
+		rechnung.setStatus(InvoiceState.DEMAND_NOTE_1);
 		rechnung.addZahlung(new Money(10).multiply(-1.0), Messages.Rechnung_Mahngebuehr1, null);
-		assertTrue(rechnung.getStatus() == RnStatus.MAHNUNG_1);
-		rechnung.setStatus(RnStatus.MAHNUNG_2);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.DEMAND_NOTE_1);
+		rechnung.setStatus(InvoiceState.DEMAND_NOTE_2);
 		rechnung.addZahlung(new Money(10).multiply(-1.0), Messages.Rechnung_Mahngebuehr2, null);
-		assertTrue(rechnung.getStatus() == RnStatus.MAHNUNG_2);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.DEMAND_NOTE_2);
 		assertTrue(rechnung.hasReminders());
 
 		rechnung.addZahlung(new Money(5000), "partial amount", null);
-		assertTrue(rechnung.getStatus() == RnStatus.TEILZAHLUNG);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.PARTIAL_PAYMENT);
 		rechnung.addZahlung(new Money(5000), "partial amount", null);
-		assertTrue(rechnung.getStatus() == RnStatus.BEZAHLT);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.PAID);
 		assertFalse(rechnung.hasReminders());
 	}
 
@@ -60,14 +62,14 @@ public class Test_Rechnung extends AbstractPersistentObjectTest {
 
 		// Rechnung MAHNUNG_1 full amount
 		Rechnung rechnung = new Rechnung("1", mandant, fall, kons.getDatum(), kons.getDatum(), new Money(10000),
-				RnStatus.OFFEN);
-		rechnung.setStatus(RnStatus.MAHNUNG_1);
+				InvoiceState.OPEN.getState());
+		rechnung.setStatus(InvoiceState.DEMAND_NOTE_1);
 		rechnung.addZahlung(new Money(10).multiply(-1.0), Messages.Rechnung_Mahngebuehr1, null);
-		assertTrue(rechnung.getStatus() == RnStatus.MAHNUNG_1);
+		assertTrue(rechnung.getInvoiceState() == InvoiceState.DEMAND_NOTE_1);
 		assertTrue(rechnung.hasReminders());
 
 		rechnung.addZahlung(new Money(10000), "initial amount", null);
-		assertFalse(rechnung.getStatus() == RnStatus.BEZAHLT);
+		assertFalse(rechnung.getInvoiceState() == InvoiceState.PAID);
 		assertTrue(rechnung.hasReminders());
 	}
 }

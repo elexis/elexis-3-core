@@ -26,6 +26,7 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.commands.Handler;
 import ch.elexis.core.ui.commands.MahnlaufCommand;
 import ch.elexis.core.ui.constants.UiResourceConstants;
@@ -40,7 +41,6 @@ import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 
@@ -54,6 +54,7 @@ public class RnActions {
 	/**
 	 * @deprecated please replace with {@link InvoiceActions}
 	 */
+	@Deprecated
 	Action rnExportAction, increaseLevelAction, addPaymentAction, addExpenseAction, changeStatusAction, stornoAction,
 			addAccountExcessAction;
 	Action editCaseAction, delRnAction, reactivateRnAction, patDetailAction;
@@ -155,7 +156,7 @@ public class RnActions {
 			@Override
 			public void doRun(List<Rechnung> lockedElements) {
 				for (Rechnung rn : lockedElements) {
-					rn.setStatus(RnStatus.OFFEN);
+					rn.setStatus(InvoiceState.OPEN);
 				}
 			}
 		};
@@ -302,19 +303,13 @@ public class RnActions {
 				List<Rechnung> list = view.createList();
 				if (list.size() > 0) {
 					for (Rechnung actRn : list) {
-						switch (actRn.getStatus()) {
-						case RnStatus.OFFEN_UND_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_1);
-							break;
-						case RnStatus.MAHNUNG_1_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_2);
-							break;
-						case RnStatus.MAHNUNG_2_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_3);
-							break;
-						default:
-							SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption, // $NON-NLS-1$
-									Messages.RnActions_changeStateErrorMessage); // $NON-NLS-1$
+						InvoiceState invoiceState = actRn.getInvoiceState();
+						switch (invoiceState) {
+						case OPEN_AND_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_1);
+						case DEMAND_NOTE_1_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_2);
+						case DEMAND_NOTE_2_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_3);
+						default -> SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption,
+								Messages.RnActions_changeStateErrorMessage);
 						}
 					}
 				}

@@ -553,11 +553,12 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, datVon.toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, datBis.toString(TimeTool.DATE_COMPACT));
 			if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
-				if (CoreHub.actMandant == null) {
+				if (ContextServiceHolder.getActiveMandatorOrNull() == null) {
 					monitor.done();
 					return Status.OK_STATUS;
 				}
-				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS,
+						ContextServiceHolder.getActiveMandatorOrNull().getId());
 			}
 
 			if (bOpen && !bClosed) {
@@ -869,7 +870,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 				Konsultation k = kons[i];
 				table[i + 1][0] = k.getFall().getPatient().getLabel() + StringUtils.LF + k.getLabel();
 				StringBuilder sb = new StringBuilder();
-				IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+				IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
 				Money subsum = new Money();
 				for (IBilled b : encounter.getBilled()) {
 					Money preis = b.getTotal();

@@ -90,10 +90,10 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	protected Leistungsblock() {
 	}
 
-	public Leistungsblock(String Name, Mandant m) {
+	public Leistungsblock(String Name, String mandatorId) {
 		create(null);
 		String[] f = new String[] { FLD_NAME, FLD_MANDANT_ID, FLD_MACRO };
-		set(f, Name, m.getId(), Name);
+		set(f, Name, mandatorId, Name);
 	}
 
 	public static Leistungsblock load(String id) {

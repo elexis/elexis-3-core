@@ -21,7 +21,7 @@ public class PdfPreviewPartZoomHandler {
 
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
 				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
-		Float _zoomLevel = new Float(zoomLevel);
+		Float _zoomLevel = Float.valueOf(zoomLevel);
 
 		String zoomDirection = toolItem.getTags().get(0);
 		if ("ZoomIn".equals(zoomDirection)) {

@@ -73,6 +73,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -261,31 +262,37 @@ public class TextContainer {
 					plugin.initTemplatePrintSettings(template.getBetreff());
 
 					plugin.findOrReplace(MATCH_TEMPLATE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_INDIRECT_TEMPLATE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceIndirectFields(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_EXISTS, new ReplaceCallback() {
+						@Override
 						public String replace(final String in) {
 							return exists(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_GENDERIZE, new ReplaceCallback() {
+						@Override
 						public String replace(final String in) {
 							return genderize(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_IDATACCESS, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return ScriptUtil.loadDataFromPlugin(in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
 					});
 					plugin.findOrReplace(MATCH_SQLCLAUSE, new ReplaceCallback() {
+						@Override
 						public Object replace(final String in) {
 							return replaceSQLClause(ret, in.replaceAll(MATCH_SQUARE_BRACKET, StringTool.leer));
 						}
@@ -610,7 +617,7 @@ public class TextContainer {
 		}
 		IPersistentObject ret = null;
 		if (kl.equalsIgnoreCase("Mandant")) { //$NON-NLS-1$
-			ret = CoreHub.actMandant;
+			ret = Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId());
 		} else if (kl.equalsIgnoreCase("Anwender")) { //$NON-NLS-1$
 			ret = CoreHub.getLoggedInContact();
 		} else if (kl.equalsIgnoreCase("Adressat")) { //$NON-NLS-1$
@@ -1152,6 +1159,7 @@ public class TextContainer {
 
 	public boolean replace(final String pattern, final String repl) {
 		return plugin.findOrReplace(pattern, new ReplaceCallback() {
+			@Override
 			public String replace(final String in) {
 				return repl;
 			}
@@ -1163,6 +1171,7 @@ public class TextContainer {
 				+ Messages.Text_No_Plugin_loaded + Messages.Text_Plugin_Not_Configured
 				+ Messages.Text_External_Cmd_deleted;
 
+		@Override
 		public Composite createContainer(final Composite parent, final ITextPlugin.ICallback h) {
 			parent.setLayout(new FillLayout());
 			// Composite ret=new Composite(parent,SWT.BORDER);
@@ -1174,92 +1183,114 @@ public class TextContainer {
 			return form.getBody();
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void showMenu(final boolean b) {
 		}
 
+		@Override
 		public void showToolbar(final boolean b) {
 		}
 
+		@Override
 		public boolean createEmptyDocument() {
 			return false;
 		}
 
+		@Override
 		public boolean loadFromByteArray(final byte[] bs, final boolean asTemplate) {
 			return false;
 		}
 
+		@Override
 		public boolean findOrReplace(final String pattern, final ReplaceCallback cb) {
 			return false;
 		}
 
+		@Override
 		public byte[] storeToByteArray() {
 			return null;
 		}
 
+		@Override
 		public boolean clear() {
 			return false;
 		}
 
+		@Override
 		public void setInitializationData(final IConfigurationElement config, final String propertyName,
 				final Object data) throws CoreException {
 		}
 
+		@Override
 		public boolean loadFromStream(final InputStream is, final boolean asTemplate) {
 			// TODO Automatisch erstellter Methoden-Stub
 			return false;
 		}
 
+		@Override
 		public boolean print(final String printer, final String tray, final boolean waitUntilFinished) {
 			return false;
 		}
 
+		@Override
 		public boolean insertTable(final String marke, final int props, final String[][] contents,
 				final int[] columnSizes) {
 			return false;
 		}
 
+		@Override
 		public void setFocus() {
 
 		}
 
+		@Override
 		public PageFormat getFormat() {
 			return PageFormat.USER;
 		}
 
+		@Override
 		public void setFormat(final PageFormat f) {
 
 		}
 
+		@Override
 		public Object insertTextAt(final int x, final int y, final int w, final int h, final String text,
 				final int adjust) {
 			return null;
 		}
 
+		@Override
 		public boolean setFont(final String name, final int style, final float size) {
 			return false;
 		}
 
+		@Override
 		public boolean setStyle(final int style) {
 			return false;
 		}
 
+		@Override
 		public Object insertText(final String marke, final String text, final int adjust) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public Object insertText(final Object pos, final String text, final int adjust) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+		@Override
 		public String getMimeType() {
 			return "text/nothing"; //$NON-NLS-1$
 		}
 
+		@Override
 		public void setSaveOnFocusLost(final boolean bSave) {
 			// TODO Auto-generated method stub
 
@@ -1308,7 +1339,7 @@ public class TextContainer {
 				return null;
 			}
 			ret = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
-			ret.setMandant(CoreHub.actMandant);
+			ret.setMandant(Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId()));
 			ElexisEventDispatcher.fireSelectionEvent(ret);
 		}
 		return ret;

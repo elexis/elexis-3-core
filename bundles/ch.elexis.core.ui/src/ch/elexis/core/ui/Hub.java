@@ -47,6 +47,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
@@ -245,11 +246,11 @@ public class Hub extends AbstractUIPlugin {
 		} else {
 			sb.append(StringUtils.SPACE).append(CoreHub.getLoggedInContact().getLabel());
 		}
-		if (CoreHub.actMandant == null) {
+		if (ContextServiceHolder.getActiveMandatorOrNull() == null) {
 			sb.append(Messages.Hub_nomandantor);
 
 		} else {
-			sb.append(" / ").append(CoreHub.actMandant.getLabel()); //$NON-NLS-1$
+			sb.append(" / ").append(ContextServiceHolder.getActiveMandatorOrNull().getLabel()); //$NON-NLS-1$
 		}
 		if (pat == null) {
 			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
@@ -320,6 +321,7 @@ public class Hub extends AbstractUIPlugin {
 	 * @param job
 	 * @deprecated Use <code>PlatformUI.getWorkbench().addWorkbenchListener()</code>
 	 */
+	@Deprecated
 	public static void addShutdownJob(final ShutdownJob job) {
 		if (!shutdownJobs.contains(job)) {
 			shutdownJobs.add(job);

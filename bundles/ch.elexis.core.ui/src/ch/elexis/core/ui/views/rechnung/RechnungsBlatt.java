@@ -124,7 +124,6 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
@@ -168,7 +167,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 			Rechnung invoice = (Rechnung) po;
 			Money openAmount = invoice.getOffenerBetrag();
 			ltf.setText(openAmount.getAmountAsString());
-			if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
+			if (InvoiceState.CANCELLED == invoice.getInvoiceState()) {
 				ltf.setLabel(Messages.RechnungsBlatt_compensateAmount);
 			} else {
 				ltf.setLabel(Messages.Invoice_Amount_Unpaid);
@@ -178,7 +177,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		@Override
 		public void reloadContent(Object po, InputData ltf) {
 			Rechnung invoice = (Rechnung) po;
-			if (InvoiceState.CANCELLED.numericValue() == invoice.getStatus()) {
+			if (InvoiceState.CANCELLED == invoice.getInvoiceState()) {
 				Money openAmount = invoice.getOffenerBetrag();
 				if (openAmount.isZero()) {
 					return;
@@ -210,7 +209,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				@Override
 				public void displayContent(Object po, InputData ltf) {
 					Rechnung r = (Rechnung) po;
-					ltf.setText(RnStatus.getStatusText(r.getStatus()));
+					ltf.setText(r.getInvoiceState().getLocaleText());
 
 				}
 
@@ -829,7 +828,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					String[] stm = s.split("\\s*:\\s"); //$NON-NLS-1$
 					StringBuilder sb = new StringBuilder();
 					sb.append(stm[0]).append(" : ").append( //$NON-NLS-1$
-							RnStatus.getStatusText(Integer.parseInt(stm[1])));
+							InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText());
 					lbJournal.add(sb.toString());
 				}
 				if (journalSelection != null && journalSelection.length > 0) {
@@ -841,7 +840,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						}
 					}
 				}
-				if (actRn.getStatus() == InvoiceState.DEFECTIVE.numericValue()) {
+				if (actRn.getInvoiceState() == InvoiceState.DEFECTIVE) {
 					List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
 					StringBuilder rjj = new StringBuilder();
 					for (String r : rejects) {

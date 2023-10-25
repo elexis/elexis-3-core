@@ -18,12 +18,12 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
@@ -55,7 +55,7 @@ public class CountArticles {
 			qbe.add(Konsultation.FLD_DATE, Query.GREATER_OR_EQUAL,
 					new TimeTool(fromDate).toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, new TimeTool(untilDate).toString(TimeTool.DATE_COMPACT));
-			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, ContextServiceHolder.getActiveMandatorOrNull().getId());
 			TimeTool refDate = new TimeTool(referenceDate);
 			for (Konsultation k : qbe.execute()) {
 				boolean bPaid = false;
@@ -71,7 +71,7 @@ public class CountArticles {
 						}
 					}
 				}
-				IEncounter encounter = NoPoUtil.loadAsIdentifiable((Konsultation) k, IEncounter.class).get();
+				IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
 				for (IBilled v : encounter.getBilled()) {
 					IBillable iv = v.getBillable();
 					if (iv instanceof IArticle) {
@@ -79,7 +79,7 @@ public class CountArticles {
 							mPaid.addMoney(v.getTotal());
 							Double sum = paid.get(iv);
 							if (sum == null) {
-								sum = new Double(v.getAmount());
+								sum = v.getAmount();
 								paid.put(iv, sum);
 							} else {
 								sum += v.getAmount();
@@ -88,7 +88,7 @@ public class CountArticles {
 							mUnpaid.addMoney(v.getTotal());
 							Double sum = unpaid.get(iv);
 							if (sum == null) {
-								sum = new Double(v.getAmount());
+								sum = v.getAmount();
 								unpaid.put(iv, sum);
 							} else {
 								sum += v.getAmount();

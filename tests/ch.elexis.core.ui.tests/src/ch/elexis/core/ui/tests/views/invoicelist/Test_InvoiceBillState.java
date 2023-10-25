@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery;
 import ch.elexis.data.Fall;
@@ -15,7 +16,6 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Money;
 
 public class Test_InvoiceBillState {
@@ -31,7 +31,7 @@ public class Test_InvoiceBillState {
 
 		// Rechnung MAHNUNG_1 full amount
 		Rechnung rechnung = new Rechnung("1", mandant, fall, kons.getDatum(), kons.getDatum(), new Money(10000),
-				RnStatus.OFFEN);
+				InvoiceState.OPEN.getState());
 
 		AtomicInteger countPatients = new AtomicInteger(0);
 		AtomicInteger countInvoices = new AtomicInteger(0);

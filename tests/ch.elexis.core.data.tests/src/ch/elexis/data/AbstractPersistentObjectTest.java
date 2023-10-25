@@ -26,9 +26,6 @@ public class AbstractPersistentObjectTest {
 		jdbcLink = PersistentObject.getConnection();
 		PersistentObject.clearCache();
 
-		// reset the datasource
-		User.initTables();
-
 		if (testUserName == null) {
 			testUserName = "ut_user_";
 		}

@@ -1,5 +1,7 @@
 package ch.elexis.core.model;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
@@ -25,19 +27,23 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	PARTIAL_PAYMENT(15),
 	PAID(16),
 	EXCESSIVE_PAYMENT(17),
-	CANCELLED(18), // entspricht Rn.Status STORNIERT
+	/** entspricht Rn.Status STORNIERT */
+	CANCELLED(18),
 	FROM_TODAY(19),
 	NOT_FROM_TODAY(20),
 	NOT_FROM_YOU(21),
+	/** entspricht Rn.Status FEHLERHAFT */
 	DEFECTIVE(22),
 	TO_PRINT(23),
+	/** entspricht Rn.Status AUSSTEHEND */
 	OWING(24),
 	STOP_LEGAL_PROCEEDING(25),
-	DEPRECIATED(26), // (Abgeschrieben) Storniert und Kons nicht mehr freigegeben
+	/** (Abgeschrieben) Storniert und Kons nicht mehr freigegeben */
+	DEPRECIATED(26),
 	REJECTED(27);
 	//@formatter:on
 
-	private int state;
+	private final int state;
 
 	public static enum REJECTCODE {
 		RG_KONS_NO_BILLABLES_NOR_REVENUE, NO_DIAG, NO_MANDATOR, NO_CASE, NO_DEBITOR, NO_GUARANTOR, VALIDATION_ERROR,
@@ -55,6 +61,17 @@ public enum InvoiceState implements INumericEnum, ILocalizedEnum {
 	@Override
 	public int numericValue() {
 		return state;
+	}
+
+	public static InvoiceState[] getInOrder() {
+		InvoiceState[] values = InvoiceState.values();
+		Arrays.sort(values, Comparator.comparingInt(InvoiceState::getState));
+		return values;
+	}
+
+	public static String[] getInvoiceStatesAsTextInOrder() {
+		return Arrays.asList(InvoiceState.getInOrder()).stream().map(s -> s.getLocaleText()).toList()
+				.toArray(new String[] {});
 	}
 
 	/**

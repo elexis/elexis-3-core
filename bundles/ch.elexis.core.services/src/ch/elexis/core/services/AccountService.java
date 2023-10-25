@@ -107,31 +107,31 @@ public class AccountService implements IAccountService {
 	@Override
 	public void initDefaults() {
 		HashMap<Integer, IAccount> existingAccounts = getAccounts();
-		if (!existingAccounts.containsKey(new Integer(1000))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(1000))) {
 			addAccount(new Account(1000, "Kasse"));
 		}
-		if (!existingAccounts.containsKey(new Integer(1100))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(1100))) {
 			addAccount(new Account(1100, "Post"));
 		}
-		if (!existingAccounts.containsKey(new Integer(1200))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(1200))) {
 			addAccount(new Account(1200, "BESR"));
 		}
-		if (!existingAccounts.containsKey(new Integer(1201))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(1201))) {
 			addAccount(new Account(1201, "Manuelle Bankeingänge"));
 		}
-		if (!existingAccounts.containsKey(new Integer(1209))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(1209))) {
 			addAccount(new Account(1209, "EFT-Zahlungen"));
 		}
-		if (!existingAccounts.containsKey(new Integer(4590))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(4590))) {
 			addAccount(new Account(4590, "Differenz"));
 		}
-		if (!existingAccounts.containsKey(new Integer(4595))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(4595))) {
 			addAccount(new Account(4595, "Debitorenverlust"));
 		}
-		if (!existingAccounts.containsKey(new Integer(6060))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(6060))) {
 			addAccount(new Account(6060, "Mahngebühren (Ertrag)"));
 		}
-		if (!existingAccounts.containsKey(new Integer(9999))) {
+		if (!existingAccounts.containsKey(Integer.valueOf(9999))) {
 			addAccount(new Account(9999, "Diverses"));
 		}
 	}

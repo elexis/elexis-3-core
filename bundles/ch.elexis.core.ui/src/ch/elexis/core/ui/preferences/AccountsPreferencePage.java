@@ -113,7 +113,7 @@ public class AccountsPreferencePage extends PreferencePage implements IWorkbench
 
 	private void updateViewer() {
 		HashMap<Integer, Account> accounts = Account.getAccounts();
-		accounts.remove(new Integer(-1));
+		accounts.remove(Integer.valueOf(-1));
 		viewer.setInput(accounts.values());
 	}
 

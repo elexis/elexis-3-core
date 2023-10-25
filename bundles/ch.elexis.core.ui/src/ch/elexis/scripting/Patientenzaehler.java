@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.tiff.common.ui.datepicker.DatePicker;
 
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
@@ -37,7 +37,8 @@ public class Patientenzaehler extends TitleAreaDialog {
 
 	public String getResult() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Mandant ").append(CoreHub.actMandant.getLabel()).append(":\n").append("Total ").append(men + women) //$NON-NLS-2$
+		sb.append("Mandant ").append(ContextServiceHolder.getActiveMandatorOrNull().getLabel()).append(":\n") //$NON-NLS-2$
+				.append("Total ").append(men + women)
 				.append(" Patienten; ").append(women).append(" Frauen und ").append(men).append(" Männer.\n")
 				.append("in ").append(kons).append(" Konsultationen zu ").append(cases).append(" Fällen.");
 		return sb.toString();
@@ -74,7 +75,7 @@ public class Patientenzaehler extends TitleAreaDialog {
 		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
 		qbe.add("Datum", ">=", ttVon.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.add("Datum", "<=", ttBis.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$ //$NON-NLS-2$
-		qbe.add("MandantID", "=", CoreHub.actMandant.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+		qbe.add("MandantID", "=", ContextServiceHolder.getActiveMandatorOrNull().getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		HashMap<String, Patient> maenner = new HashMap<String, Patient>();
 		HashMap<String, Patient> frauen = new HashMap<String, Patient>();
 		HashMap<String, Fall> faelle = new HashMap<String, Fall>();

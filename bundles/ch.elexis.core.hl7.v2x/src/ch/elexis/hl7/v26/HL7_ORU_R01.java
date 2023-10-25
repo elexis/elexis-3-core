@@ -402,7 +402,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 */
 	private void fillOBR(final OBR obr, final int index, final HL7LaborItem labItem)
 			throws DataTypeException, HL7Exception {
-		obr.getObr1_SetIDOBR().setValue(new Integer(index + 1).toString());
+		obr.getObr1_SetIDOBR().setValue(Integer.valueOf(index + 1).toString());
 
 		// OBR-4: Observation Identifier
 		// <LabResult.ID>^<LabItems.KUERZEL>^^^^^^^<LabItems.TITEL>
@@ -430,7 +430,7 @@ public class HL7_ORU_R01 extends HL7Writer {
 	 */
 	private void fillOBX_TX(final OBX obx, final int index, final String text) throws DataTypeException, HL7Exception {
 		// OBX|35|TX||| Augmentin S
-		obx.getObx1_SetIDOBX().setValue(new Integer(index + 1).toString()); // $NON-NLS-1$
+		obx.getObx1_SetIDOBX().setValue(Integer.valueOf(index + 1).toString()); // $NON-NLS-1$
 		obx.getObx2_ValueType().setValue(HL7Constants.OBX_VALUE_TYPE_TX);
 		TX textType = new TX(null);
 		textType.setValue(text);
