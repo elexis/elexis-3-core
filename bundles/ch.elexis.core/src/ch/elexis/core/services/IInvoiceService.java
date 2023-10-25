@@ -78,7 +78,10 @@ public interface IInvoiceService {
 
 	/**
 	 * Add a {@link IPayment} to the {@link IInvoice}. Also creates a
-	 * {@link IAccountTransaction} for the {@link IPayment}.
+	 * {@link IAccountTransaction} for the {@link IPayment}. </br>
+	 * The state of the {@link IInvoice} is updated. For example if there is nothing
+	 * left to pay, the invoice state is set to {@link InvoiceState#PAID}.
+	 * 
 	 *
 	 * @param invoice
 	 * @param amount
