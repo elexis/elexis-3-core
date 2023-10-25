@@ -1,5 +1,9 @@
 package ch.elexis.core.mail.ui.dialogs;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,11 +54,16 @@ import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
+import ch.elexis.core.mail.ui.preference.SerializableFile;
+import ch.elexis.core.mail.ui.preference.SerializableFileUtil;
+import ch.elexis.core.mail.ui.preference.TextTemplates;
+import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -257,6 +266,9 @@ public class SendMailDialog extends TitleAreaDialog {
 							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
 						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
 								.getFirstElement();
+
+						setTemplateAttachments(selectedTemplate);
+
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
 						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
@@ -426,6 +438,33 @@ public class SendMailDialog extends TitleAreaDialog {
 			}
 		});
 		parent.layout();
+	}
+
+	private void setTemplateAttachments(ITextTemplate selectedTemplate) {
+		IBlobSecondary textTemplate = CoreModelServiceHolder.get()
+				.load(TextTemplates.NAMED_BLOB_PREFIX + selectedTemplate.getId(), IBlobSecondary.class).orElse(null);// $NON-NLS-1$
+		if (textTemplate != null) {
+			byte[] DBArrayList = textTemplate.getContent();
+
+			Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+			List<String> attachmentPaths = new ArrayList<>();
+			try {
+				List<SerializableFile> deserializedContent = SerializableFileUtil.deserializeData(DBArrayList);
+				for (SerializableFile serializableFile : deserializedContent) {
+					Path tempFile = tempDir.resolve(serializableFile.getName());
+					if (!Files.exists(tempFile)) {
+						Files.write(tempFile, serializableFile.getData());
+						tempFile.toFile().deleteOnExit();
+					}
+					attachmentPaths.add(tempFile.toString());
+				}
+				attachments.setAttachments(String.join(AttachmentsComposite.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			attachments.setAttachments(null);
+		}
 	}
 
 	private String getValidation() {

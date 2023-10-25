@@ -77,7 +77,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
 
-	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
+	public static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
 
 	private static Logger logger = LoggerFactory.getLogger(TextTemplates.class);
 
