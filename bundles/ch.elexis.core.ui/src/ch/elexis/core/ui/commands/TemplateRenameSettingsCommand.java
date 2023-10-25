@@ -1,5 +1,8 @@
 package ch.elexis.core.ui.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,7 +18,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.services.IQuery;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 
@@ -50,13 +56,19 @@ public class TemplateRenameSettingsCommand extends AbstractHandler {
 					if (inputDialogResult == InputDialog.OK) {
 						String newName = inputDialog.getValue();
 						if (StringUtils.isNotBlank(newName)) {
-							Brief template = textTemplate.getTemplate();
-							if (template != null) {
-								template.set(Brief.FLD_SUBJECT, newName);
-								IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
-								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-										IDocumentLetter.class);
-								shouldShowInputDialog = false;
+							boolean isDuplicate = isDuplicateName(newName);
+							if (isDuplicate) {
+								MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Name schon vergeben",
+										"Dieser Name ist bereits vergeben. Bitte wählen Sie einen anderen.");
+							} else {
+								Brief template = textTemplate.getTemplate();
+								if (template != null) {
+									template.set(Brief.FLD_SUBJECT, newName);
+									IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
+									ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
+											IDocumentLetter.class);
+									shouldShowInputDialog = false;
+								}
 							}
 						}
 					} else {
@@ -75,7 +87,31 @@ public class TemplateRenameSettingsCommand extends AbstractHandler {
 			if (newText.trim().isEmpty()) {
 				return "Das Feld darf nicht leer sein.";
 			}
-			return null; // Gültig
+			return null;
 		}
 	}
+
+	private boolean isDuplicateName(String newName) {
+		IQuery<IDocumentTemplate> ret = CoreModelServiceHolder.get().getQuery(IDocumentTemplate.class);
+		List<IDocumentTemplate> existingTemplates = ret.execute();
+		List<String> existingNames = new ArrayList();
+
+		for (IDocumentTemplate template : existingTemplates) {
+			existingNames.add(template.getTitle());
+		}
+		if (existingNames.contains(newName)) {
+			return true;
+		}
+		existingNames.add(newName);
+		saveExistingTitles(existingNames);
+		return false;
+	}
+
+	private List<String> getexistingNames() {
+		return new ArrayList<>();
+	}
+
+	private void saveExistingTitles(List<String> existingTitles) {
+	}
 }
+
