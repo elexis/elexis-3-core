@@ -374,7 +374,6 @@ public class InvoiceService implements IInvoiceService {
 		new IAccountTransactionBuilder(CoreModelServiceHolder.get(), payment).buildAndSave();
 
 		Money newOffen = invoice.getOpenAmount();
-		newOffen.subtractMoney(amount);
 		if (newOffen.isNeglectable()) {
 			invoice.setState(InvoiceState.PAID);
 		} else if (newOffen.isNegative()) {
