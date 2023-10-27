@@ -58,6 +58,40 @@ public class IInvoiceServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
+	public void updateInvoiceState() {
+		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+		ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+				ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
+
+		Result<IBilled> billed = billingService.bill(customService, testEncounters.get(0), 1.0);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
+		IFreeTextDiagnosis diagnosis = coreModelService.create(IFreeTextDiagnosis.class);
+		diagnosis.setDescription("test");
+		diagnosis.setText("testText");
+		coreModelService.save(diagnosis);
+		testEncounters.get(0).addDiagnosis(diagnosis);
+		coreModelService.save(testEncounters.get(0));
+		Result<IInvoice> invoice = invoiceService.invoice(testEncounters);
+		assertTrue(invoice.toString(), invoice.isOK());
+
+		IQuery<IAccountTransaction> transactionQuery = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		transactionQuery.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PATIENT, COMPARATOR.EQUALS,
+				invoice.get().getCoverage().getPatient());
+		assertEquals(1, transactionQuery.execute().size());
+
+		IPayment payment = invoiceService.addPayment(invoice.get(), new Money(1024), "test");
+		assertNotNull(payment);
+		assertEquals(10.24, invoice.get().getPayedAmount().getAmount(), 0.0001);
+		assertEquals(2, transactionQuery.execute().size());
+		assertEquals(InvoiceState.PAID, invoice.get().getState());
+
+		CoreModelServiceHolder.get().remove(payment);
+		CoreModelServiceHolder.get().remove(billed.get());
+		CoreModelServiceHolder.get().remove(invoice.get());
+	}
+
+	@Test
 	public void removePayment() {
 		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
 		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
