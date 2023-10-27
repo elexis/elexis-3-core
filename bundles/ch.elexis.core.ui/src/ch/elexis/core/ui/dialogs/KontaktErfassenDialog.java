@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -90,12 +94,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bOrganisation.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bOrganisationChanged(bOrganisation.getSelection());
+				updateOkButtonState();
 			}
 		});
 		bLabor = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Laboratory, SWT.CHECK); // $NON-NLS-1$
 		bLabor.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bLaborChanged(bLabor.getSelection());
+				updateOkButtonState();
 			}
 		});
 		bPerson = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Person, SWT.CHECK); // $NON-NLS-1$
@@ -103,12 +109,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bPerson.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bPersonChanged(bPerson.getSelection());
+				updateOkButtonState();
 			}
 		});
 		bPatient = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Patient, SWT.CHECK); // $NON-NLS-1$
 		bPatient.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bPatientChanged(bPatient.getSelection());
+				updateOkButtonState();
 			}
 		});
 		if (fld.length > KontaktSelektor.HINT_PATIENT) {
@@ -120,12 +128,14 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 		bAnwender.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bAnwenderChanged(bAnwender.getSelection());
+				updateOkButtonState();
 			}
 		});
 		bMandant = UiDesk.getToolkit().createButton(cTypes, Messages.Core_Mandator, SWT.CHECK); // $NON-NLS-1$
 		bMandant.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				bMandantChanged(bMandant.getSelection());
+				updateOkButtonState();
 			}
 		});
 		// Not everybody may create users and mandators
@@ -159,6 +169,12 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				fld[KontaktSelektor.HINT_FIRSTNAME] == null ? StringUtils.EMPTY : fld[KontaktSelektor.HINT_FIRSTNAME]);
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		tVorname.setTextLimit(80);
+		tName.addModifyListener(e -> {
+			updateOkButtonState();
+		});
+		tVorname.addModifyListener(e -> {
+			updateOkButtonState();
+		});
 
 		lZusatz = new Label(ret, SWT.NONE);
 		lZusatz.setText(Messages.Core_Additional); // $NON-NLS-1$
@@ -244,6 +260,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
+		updateOkButtonState();
 		setMessage(Messages.KontaktErfassenDialog_message); // $NON-NLS-1$
 		setTitle(Messages.KontaktErfassenDialog_subTitle); // $NON-NLS-1$
 		getShell().setText(Messages.KontaktErfassenDialog_title); // $NON-NLS-1$
@@ -442,5 +459,23 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 	@Override
 	protected boolean isResizable() {
 		return true;
+	}
+
+	private void updateOkButtonState() {
+		IValidator<String> notEmptyValidator = value -> {
+			if (value == null || value.trim().isEmpty()) {
+				return ValidationStatus.error("Eingabefeld darf nicht leer sein.");
+			}
+			return ValidationStatus.ok();
+		};
+		IStatus statusName = notEmptyValidator.validate(tName.getText());
+		IStatus statusVorname = ValidationStatus.ok();
+		if (!bOrganisation.getSelection()) {
+			statusVorname = notEmptyValidator.validate(tVorname.getText());
+		}
+		Button okButton = getButton(IDialogConstants.OK_ID);
+		if (okButton != null) {
+			okButton.setEnabled(statusName.isOK() && statusVorname.isOK());
+		}
 	}
 }
