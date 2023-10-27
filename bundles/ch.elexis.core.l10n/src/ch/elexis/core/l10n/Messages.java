@@ -7,7 +7,6 @@ public class Messages extends NLS {
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	public static String Core_Area_Bereiche;
 	public static String MedicationComposite_btnConfirm_toolTipText;
-	public static String MedicationComposite_btnCheckButton_Confirm_text;
 	public static String Core_Barcode_global_settings;
 	public static String Core_BarcodePat;
 	public static String Core_BarcodeElexis;
@@ -4953,19 +4952,16 @@ public class Messages extends NLS {
 	public static String ZuweiserUebersicht_Name;
 	public static String iMedAction_nameAction;
 	public static String xChangeContributor_thisIsAnOmnivoreDoc;
-	public static String ConditionStatus_UNKNOWN;
 	public static String ConditionStatus_RECURRENCE;
 	public static String ConditionStatus_ACTIVE;
 	public static String ConditionStatus_RELAPSE;
 	public static String ConditionStatus_INACTIVE;
 	public static String ConditionStatus_REMISSION;
 	public static String ConditionStatus_RESOLVED;
-	public static String AllergyIntoleranceCategory_UNKNOWN;
 	public static String AllergyIntoleranceCategory_FOOD;
 	public static String AllergyIntoleranceCategory_MEDICATION;
 	public static String AllergyIntoleranceCategory_ENVIRONMENT;
 	public static String AllergyIntoleranceCategory_BIOLOGIC;
-	public static String ConditionCategory_UNKNOWN;
 	public static String ConditionCategory_PROBLEMLISTITEM;
 	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
 	public static String RemoveDSGWhenDeceased_deleted_successfully;
