@@ -256,7 +256,7 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
         	<column name="MANDATORID" valueComputed="NULL" />
         	<column name="CATEGORY" value="MAIL" />
         	<column name="NAME" value="Terminbestätigung" />
-        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung&#10;&#10;Vielen Dank" /> 
+        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung. &#10;&#10;Vielen Dank" /> 
         	<column name="EXTINFO" valueComputed="NULL" />
     	</insert>
 	</changeSet>
@@ -275,7 +275,7 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
         	<column name="MANDATORID" valueComputed="NULL" />
         	<column name="CATEGORY" value="MAIL" />
         	<column name="NAME" value="Terminbestätigung inkl. Anmeldeformular" />
-        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Online Anmeldeformular: [Pea.SiteUrl]&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung&#10;&#10;Vielen Dank" />
+        	<column name="TEMPLATE" value="Guten Tag Herr/Frau [Patient.Name]&#10;&#10;Gerne bestätigen wir hiermit Ihren Termin am [Termin.Tag] um [Termin.Zeit] Uhr.&#10;&#10;Aufgrund des neuen DSG per 1.9.2023, benötigen wir von jedem Patienten eine Bestätigung, dass wir Sie behandeln dürfen.&#10;&#10;Bitte füllen Sie dieses Formular aus und bestätigen Sie mit ihrer Unterschrift, dass Sie damit einverstanden sind.&#10;&#10;Online Anmeldeformular: [Pea.SiteUrl]&#10;&#10;Bei Fragen stehen wir Ihnen gerne zur Verfügung. &#10;&#10;Vielen Dank" />
         	<column name="EXTINFO" valueComputed="NULL" />
     	</insert>
 	</changeSet>
