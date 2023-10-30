@@ -45,8 +45,12 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 			if (ContextServiceHolder.isAvailable() && ContextServiceHolder.get().getActiveUser().isPresent()) {
 				value += (" [" + ContextServiceHolder.get().getActiveUser().get().getLabel() + "]");
 			}
-			getEntityMarkDirty().setStatusHistory(
-					getStateHistory() + StringTool.lf + toMinutesTimeStamp(LocalDateTime.now()) + ";" + value);
+			String currentStateHistory = getStateHistory();
+			if (!currentStateHistory.isEmpty()) {
+				currentStateHistory += StringTool.lf;
+			}
+			getEntityMarkDirty()
+					.setStatusHistory(currentStateHistory + toMinutesTimeStamp(LocalDateTime.now()) + ";" + value);
 		}
 	}
 
