@@ -384,4 +384,18 @@ public class CoreUiUtil implements EventHandler {
 		}
 	}
 
+
+	/**
+	 * Compare the provided objects checking if both, return 0, or o1 is null return
+	 * -1, or o2 is null return 1, or both not null return
+	 * {@link Integer#MAX_VALUE}.
+	 * 
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	public static int compareNullSafe(Object o1, Object o2) {
+		return o1 == null ? (o2 == null ? 0 : -1) : (o2 == null ? 1 : Integer.MAX_VALUE);
+
+	}
 }
