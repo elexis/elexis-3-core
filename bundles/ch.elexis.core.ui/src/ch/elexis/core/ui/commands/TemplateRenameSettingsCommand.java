@@ -13,8 +13,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
@@ -49,7 +52,7 @@ public class TemplateRenameSettingsCommand extends AbstractHandler {
 						Brief template = textTemplate.getTemplate();
 						if (template != null) {
 							template.set(Brief.FLD_SUBJECT, newName);
-
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 						}
 					}
 				}
