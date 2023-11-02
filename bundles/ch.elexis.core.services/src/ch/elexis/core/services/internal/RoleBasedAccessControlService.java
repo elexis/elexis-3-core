@@ -273,7 +273,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	public void doPrivileged(Runnable runnable) {
 		try {
 			privileged.set(Boolean.TRUE);
-			logger.info("Executing priviledged [" + runnable + "]");
+			logger.debug("Executing priviledged [" + runnable + "]");
 			runnable.run();
 		} finally {
 			privileged.set(Boolean.FALSE);
@@ -288,7 +288,6 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (!isAoboObject(evaluatableAce.getObject())) {
 			return Optional.empty();
 		}
-		Optional<ACEAccessBitMapConstraint> ret = Optional.empty();
 		Optional<IUser> user = contextService.getActiveUser();
 		if (user.isPresent()) {
 			if (!userAclMap.containsKey(user.get())) {
