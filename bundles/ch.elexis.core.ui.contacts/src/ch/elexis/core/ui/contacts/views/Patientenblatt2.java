@@ -49,6 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
@@ -493,10 +495,19 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		viewsite = site;
 		makeActions();
 		parent.setLayout(new FillLayout());
-		setLayout(new FillLayout());
+		setLayout(new GridLayout());
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(this);
+		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		form.getBody().setLayout(new GridLayout());
+
+		parent.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				updateExpandableLayoutWidth();
+			}
+		});
+
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
 
 		cUserfields = new Composite(form.getBody(), SWT.NONE);
@@ -759,7 +770,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
-			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI);
+			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i));
 			text.addFocusListener(new FocusAdapter() {
@@ -963,6 +974,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			txExpandable.get(i).setText(StringTool.unNull(actPatient.get(dfExpandable.get(i))));
 		}
 		dmd.reload();
+
+		updateExpandableLayoutWidth();
 		refresh();
 	}
 
@@ -1492,6 +1505,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}; // copySelectedAddressesToClipboardAction.run()
 
 		};
+	}
+
+	private void updateExpandableLayoutWidth() {
+		if (ec != null && form != null && !form.isDisposed()) {
+			for (ExpandableComposite expandable : ec) {
+				if (expandable.getLayoutData() instanceof GridData) {
+					((GridData) expandable.getLayoutData()).widthHint = Patientenblatt2.this.getClientArea().width;
+				}
+			}
+			form.getBody().layout(true);
+		}
 	}
 
 	@Override
