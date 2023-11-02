@@ -441,8 +441,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 			setTitle("Inventurmodus");
 			getShell().setText("Inventurmodus");
 			setMessage(
-					"Bitte scannen Sie die Medikamente zur Inventur. Mehrfaches Scannen desselben Artikels führ zur Erhöhung der Anzahl."
-							+ " Gescannte Medikamente werden unten angezeigt und können anschliessend als IST-Bestand übernommen werden.");
+					"Scannen Sie die Medikamente zur Inventur. Mehrfach-Scans möglich."
+							+ " Gescannte Medikamente werden unten angezeigt und können als IST-Bestand übernommen werden.");
 		}
 	}
 
