@@ -1,6 +1,7 @@
 package ch.elexis.core.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
@@ -36,4 +37,18 @@ public class Role extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				.map(f -> ModelUtil.getAdapter(f, IRight.class, true)).collect(Collectors.toList());
 	}
 
+	@Override
+	public Object getExtInfo(Object key) {
+		return extInfoHandler.getExtInfo(key);
+	}
+
+	@Override
+	public void setExtInfo(Object key, Object value) {
+		extInfoHandler.setExtInfo(key, value);
+	}
+
+	@Override
+	public Map<Object, Object> getMap() {
+		return extInfoHandler.getMap();
+	}
 }

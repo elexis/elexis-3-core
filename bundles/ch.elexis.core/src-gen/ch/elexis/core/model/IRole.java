@@ -30,7 +30,7 @@ import java.util.List;
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IRole extends Identifiable, WithAssignableId {
+public interface IRole extends Identifiable, WithAssignableId, WithExtInfo {
 
 	/**
 	 * Returns the value of the '<em><b>System Role</b></em>' attribute.

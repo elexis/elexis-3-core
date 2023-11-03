@@ -1,6 +1,8 @@
 package ch.elexis.core.services.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -135,21 +137,43 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private AccessControlList getOrLoadRoleAccessControlList(IRole iRole) {
 		String _role = iRole.getId().toLowerCase();
 		if (!roleAclMap.containsKey(_role)) {
-			InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
+			InputStream jsonStream = null;
+			if(iRole.isSystemRole()) {
+				jsonStream = AccessControlList.class.getClassLoader()
 					.getResourceAsStream("/rsc/acl/" + _role + ".json");
-			if (roleAccessDefaultUserFile != null) {
-				try {
-					AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-							.readValue(roleAccessDefaultUserFile, AccessControlList.class);
-					roleAclMap.put(_role, acl);
-				} catch (Exception e) {
-					logger.error("Error loading role acl [{}]", _role, e);
+			} else {
+				String jsonValue = (String) iRole.getExtInfo("json");
+				if (StringUtils.isNotBlank(jsonValue)) {
+					try {
+						jsonStream = new ByteArrayInputStream(jsonValue.getBytes("UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						logger.error("Invalid role custom json acl [{}]", _role, e);
+					}
+				}
+			}
+			if (jsonStream != null) {
+				Optional<AccessControlList> acl = readAccessControlList(jsonStream);
+				if (acl.isPresent()) {
+					roleAclMap.put(_role, acl.get());
+				} else {
+					logger.error("Error loading role acl [{}]", _role);
 				}
 			} else {
 				logger.warn("No role acl [{}] file", _role);
 			}
 		}
 		return roleAclMap.get(_role);
+	}
+
+	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream) {
+		try {
+			AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true).readValue(jsonStream,
+					AccessControlList.class);
+			return Optional.of(acl);
+		} catch (Exception e) {
+			logger.error("Error reading acl json", e);
+		}
+		return Optional.empty();
 	}
 
 	private boolean evaluateACE(IUser user, AccessControlList acl, EvaluatableACE ace) {

@@ -1,9 +1,11 @@
 package ch.elexis.core.services;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
+import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.exceptions.AccessControlException;
@@ -78,4 +80,14 @@ public interface IAccessControlService {
 	 * @return
 	 */
 	public String getSelfMandatorId();
+
+	/**
+	 * Get the {@link AccessControlList} object represented by the provided
+	 * jsonStream. If the provided {@link InputStream} is not a valid
+	 * {@link AccessControlList} {@link Optional#empty()} is returned.
+	 * 
+	 * @param jsonStream
+	 * @return
+	 */
+	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream);
 }
