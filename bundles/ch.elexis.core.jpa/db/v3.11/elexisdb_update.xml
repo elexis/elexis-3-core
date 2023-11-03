@@ -140,6 +140,28 @@
 			<column name="ISSYSTEMROLE" value="1" />
 		</insert>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_system_ROLE_mpa">
+		<preConditions onFail="MARK_RAN">
+			<and>
+			<sqlCheck expectedResult="1">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='mpa'
+			</sqlCheck>
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(id)
+				FROM ROLE
+				WHERE id='mpa'
+				AND ISSYSTEMROLE='1'
+			</sqlCheck>
+			</and>
+		</preConditions>
+		<update tableName="ROLE">
+			<column name="ISSYSTEMROLE" value="1" />
+			<where>id='mpa'</where>
+		</update>
+	</changeSet>
 
 	<changeSet author="thomas" id="manual_delete_old_ROLE_and_USER_ROLE_JOINT">
 		<delete tableName="ROLE">
