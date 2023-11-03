@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -201,4 +204,15 @@ public class ContextService implements IContextService, EventHandler {
 	public void sendEvent(String topic, Object object, Map<String, Object> additionalProperties) {
 		postEvent(topic, object, additionalProperties, true);
 	}
+
+	@Override
+	public <T> T submitContextInheriting(Callable<T> callable) {
+		try {
+			return ForkJoinPool.commonPool().submit(callable).get();
+		} catch (InterruptedException | ExecutionException e) {
+			LoggerFactory.getLogger(getClass()).error("", e);
+			return null;
+		}
+	}
+
 }

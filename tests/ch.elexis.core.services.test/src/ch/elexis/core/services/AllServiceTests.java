@@ -20,8 +20,8 @@ import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
-@SuiteClasses({ RoleBasedAccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
-		IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
+@SuiteClasses({ RoleBasedAccessControlServiceTest.class, IContextServiceTest.class, IAppointmentServiceTest.class,
+		IBillingServiceTest.class, IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
 		IStoreToStringServiceTest.class, IStickerServiceTest.class, BriefDocumentStoreTest.class,
 		IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
 		IMedicationServiceTest.class, ITextReplacementServiceTest.class, IEncounterServiceTest.class,
