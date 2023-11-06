@@ -104,6 +104,8 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	private boolean showDisableLimit;
 	private Button disableLimitBtn;
 
+	private boolean changeContextSelection = true;
+
 	public Composite getParent() {
 		return parent;
 	}
@@ -397,24 +399,27 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 			if (sel[0] instanceof Tree<?>) {
 				sel[0] = ((Tree<?>) sel[0]).contents;
 			}
-			if (sel[0] instanceof PersistentObject) {
-				Optional<Class<?>> modelClass = ElexisEventDispatcher
-						.getCoreModelInterfaceForElexisClass(sel[0].getClass());
-				if (modelClass.isPresent()) {
-					NoPoUtil.loadAsIdentifiable((PersistentObject) sel[0], modelClass.get())
-							.ifPresent(indentifiable -> {
-								ContextServiceHolder.get().getRootContext().setTyped(indentifiable);
-							});
-				} else {
-					LoggerFactory.getLogger(getClass()).warn("PersistentObject selection [" + sel[0] + "] in context");
-					ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
-				}
-			} else {
-				if (StringUtils.isNotBlank(namedSelection)) {
-					ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
-				} else {
-					if (sel[0] instanceof Identifiable) {
+			if (changeContextSelection) {
+				if (sel[0] instanceof PersistentObject) {
+					Optional<Class<?>> modelClass = ElexisEventDispatcher
+							.getCoreModelInterfaceForElexisClass(sel[0].getClass());
+					if (modelClass.isPresent()) {
+						NoPoUtil.loadAsIdentifiable((PersistentObject) sel[0], modelClass.get())
+								.ifPresent(indentifiable -> {
+									ContextServiceHolder.get().getRootContext().setTyped(indentifiable);
+								});
+					} else {
+						LoggerFactory.getLogger(getClass())
+								.warn("PersistentObject selection [" + sel[0] + "] in context");
 						ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
+					}
+				} else {
+					if (StringUtils.isNotBlank(namedSelection)) {
+						ContextServiceHolder.get().getRootContext().setNamed(namedSelection, sel[0]);
+					} else {
+						if (sel[0] instanceof Identifiable) {
+							ContextServiceHolder.get().getRootContext().setTyped(sel[0]);
+						}
 					}
 				}
 			}
@@ -575,5 +580,9 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 		}
 		composite.layout();
 		viewer.getControl().getParent().layout();
+	}
+
+	public void disableContextSelection() {
+		this.changeContextSelection = false;
 	}
 }

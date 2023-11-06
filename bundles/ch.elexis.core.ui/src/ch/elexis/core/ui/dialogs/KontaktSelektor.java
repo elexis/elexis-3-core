@@ -666,4 +666,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 	protected boolean isResizable() {
 		return true;
 	}
+
+	public void disableContextSelection() {
+		cv.disableContextSelection();
+	}
 }
