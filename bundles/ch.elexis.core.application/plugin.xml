@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         id="applicationCSS"
          point="org.eclipse.ui.views">
       <view
             class="ch.elexis.core.ui.views.TemplatePrintView"
@@ -592,7 +593,7 @@
        </property>
        <property
              name="aboutText"
-             value="Elexis 3.11 - www.elexis.info&#x0A;         Copyright 2005-2023 G. Weirich und Elexis-Team">
+             value="Elexis 3.12 - www.elexis.info&#x0A;         Copyright 2005-2023 G. Weirich und Elexis-Team">
        </property>
        <property
              name="aboutImage"
@@ -606,6 +607,10 @@
         name="rendererFactoryUri"
         value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
       </property>
+       <property
+             name="applicationCSS"
+             value="platform:/plugin/ch.elexis.core.product/rsc/elexis.css">
+       </property>
     </product>
  </extension>
  <extension

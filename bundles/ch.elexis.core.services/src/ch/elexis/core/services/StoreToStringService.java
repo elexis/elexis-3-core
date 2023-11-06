@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ import ch.elexis.core.model.Identifiable;
 @Component
 public class StoreToStringService implements IStoreToStringService {
 
-	private List<IStoreToStringContribution> contributions = new ArrayList<>();
+	private List<IStoreToStringContribution> contributions = new CopyOnWriteArrayList<>();
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public synchronized void setCodeElementServiceContribution(IStoreToStringContribution contribution) {

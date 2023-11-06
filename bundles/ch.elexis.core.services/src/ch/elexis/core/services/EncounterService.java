@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -276,12 +278,17 @@ public class EncounterService implements IEncounterService {
 	@Override
 	public Optional<IEncounter> getLatestEncounter(IPatient patient) {
 		List<IEncounter> result = null;
-		if(AccessControlServiceHolder.get().isAobo(EvACE.of(IEncounter.class, Right.READ))) {
+		Optional<ACEAccessBitMapConstraint> aoboOrSelf = AccessControlServiceHolder.get().isAoboOrSelf(EvACE.of(IEncounter.class, Right.READ));
+		if(aoboOrSelf.isPresent()) {
 			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
 					IEncounter.class, "Behandlung.patient.last.aobo");
-			result = query.executeWithParameters(
-					query.getParameterMap("patient", patient, "aoboids",
-							AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn()));
+			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
+				result = query.executeWithParameters(query.getParameterMap("patient", patient, "aoboids",
+						AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn()));
+			} else if (aoboOrSelf.get() == ACEAccessBitMapConstraint.SELF) {
+				result = query.executeWithParameters(query.getParameterMap("patient", patient, "aoboids",
+						Collections.singletonList(AccessControlServiceHolder.get().getSelfMandatorId())));
+			}
 		} else {
 			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
 					IEncounter.class, "Behandlung.patient.last");

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
@@ -51,6 +52,13 @@ public class InvoiceService implements IInvoiceService {
 	@Override
 	public Result<IInvoice> invoice(List<IEncounter> encounters) {
 		Result<IInvoice> result = new Result<>();
+
+		int origSize = encounters.size();
+		encounters = encounters.stream().filter(e -> e.isBillable()).collect(Collectors.toList());
+		if (encounters.size() < origSize) {
+			LoggerFactory.getLogger(getClass())
+					.warn("Ignoring [" + (origSize - encounters.size()) + "] not billable encounters.");
+		}
 
 		if (encounters == null || encounters.isEmpty()) {
 			return result.add(Result.SEVERITY.WARNING, 1, "Die Rechnung enthält keine Behandlungen (Konsultationen)",
@@ -359,8 +367,23 @@ public class InvoiceService implements IInvoiceService {
 
 	@Override
 	public IPayment addPayment(IInvoice invoice, Money amount, String remark) {
+		Money oldOpen = invoice.getOpenAmount();
+		InvoiceState oldInvoiceState = invoice.getState();
+
 		IPayment payment = new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, remark).buildAndSave();
 		new IAccountTransactionBuilder(CoreModelServiceHolder.get(), payment).buildAndSave();
+
+		Money newOffen = invoice.getOpenAmount();
+		if (newOffen.isNeglectable()) {
+			invoice.setState(InvoiceState.PAID);
+		} else if (newOffen.isNegative()) {
+			invoice.setState(InvoiceState.EXCESSIVE_PAYMENT);
+		} else if (newOffen.getCents() < oldOpen.getCents()) {
+			invoice.setState(InvoiceState.PARTIAL_PAYMENT);
+		}
+		if (invoice.getState() != oldInvoiceState) {
+			CoreModelServiceHolder.get().save(invoice);
+		}
 		return payment;
 	}
 }

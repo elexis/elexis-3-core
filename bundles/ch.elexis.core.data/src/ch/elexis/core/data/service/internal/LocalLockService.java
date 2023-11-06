@@ -111,7 +111,8 @@ public class LocalLockService implements ILocalLockService {
 		return releaseLock(lockInfo.getElementStoreToString());
 	}
 
-	private LockResponse releaseLock(String storeToString) {
+	@Override
+	public LockResponse releaseLock(String storeToString) {
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lil = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
 				contextService.getStationIdentifier(),
@@ -205,8 +206,8 @@ public class LocalLockService implements ILocalLockService {
 		if (elexisServerService == null) {
 			String message = "System not configured for standalone mode, and elexis-server not available!";
 			logger.error(message);
-			ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-					CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, null));
+			ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
+					ElexisStatus.CODE_NONE, message, null));
 			return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 		}
 
@@ -276,8 +277,8 @@ public class LocalLockService implements ILocalLockService {
 				// deleted!!!
 				String message = "Error trying to acquireOrReleaseLocks.";
 				logger.error(message);
-				ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR,
-						CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE, message, e));
+				ElexisStatus.fire(new ElexisStatus(org.eclipse.core.runtime.Status.ERROR, CoreHub.PLUGIN_ID,
+						ElexisStatus.CODE_NONE, message, e));
 				return new LockResponse(LockResponse.Status.ERROR, lockRequest.getLockInfo());
 			} finally {
 				if (LockRequest.Type.RELEASE.equals(lockRequest.getRequestType())) {
@@ -376,13 +377,20 @@ public class LocalLockService implements ILocalLockService {
 		}
 		logger.debug("Checking lock on [" + object + "]");
 
-		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		String storeToString = StoreToStringServiceHolder.getStoreToString(object);
+		return isLocked(storeToString);
+	}
+
+	@Override
+	public boolean isLocked(String storeToString) {
+		if (storeToString == null) {
+			return false;
+		}
+		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
 		LockInfo lockInfo = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
 				contextService.getStationIdentifier(),
 				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
 		LockRequest lockRequest = new LockRequest(LockRequest.Type.INFO, lockInfo);
-
 		return isLocked(lockRequest);
 	}
 

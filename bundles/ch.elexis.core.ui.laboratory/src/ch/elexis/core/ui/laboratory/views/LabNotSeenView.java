@@ -361,9 +361,12 @@ public class LabNotSeenView extends ViewPart implements HeartListener {
 
 				switch (propertyIndex) {
 				case 0:
-					rc = l1.getLabOrder().getPatient().getLabel().compareTo(l2.getLabOrder().getPatient().getLabel());
+					rc = CoreUiUtil.compareNullSafe(l1.getLabOrder(), l2.getLabOrder());
+					if (rc == Integer.MAX_VALUE) {
+						rc = l1.getLabOrder().getPatient().getLabel()
+								.compareTo(l2.getLabOrder().getPatient().getLabel());
+					}
 					break;
-
 				case 1:
 					rc = l1.getLabOrder().getLabItem().getLabel()
 							.compareToIgnoreCase(l2.getLabOrder().getLabItem().getLabel());

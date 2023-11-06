@@ -17,12 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -52,7 +56,7 @@ import ch.rgw.tools.TimeTool.TimeFormatException;
 
 public class PatientErfassenDialog extends TitleAreaDialog {
 	HashMap<String, String> fld;
-	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tTel, tMail, tAHV;
+	Text tName, tVorname, tGebDat, tStrasse, tPlz, tOrt, tMobile, tMail, tAHV;
 	Combo cbSex;
 	private IPatient patient;
 	Object po;
@@ -87,6 +91,12 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tVorname = new Text(ret, SWT.BORDER);
 		tVorname.setText(getField(Patient.FLD_FIRSTNAME));
 		tVorname.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		tName.addModifyListener(e -> {
+			updateOkButtonState();
+		});
+		tVorname.addModifyListener(e -> {
+			updateOkButtonState();
+		});
 		new Label(ret, SWT.NONE).setText(Messages.Sex); // $NON-NLS-1$
 		cbSex = new Combo(ret, SWT.SINGLE);
 		String toolTip = String.format(Messages.Patient_male_female_tooltip, Messages.Patient_male_short,
@@ -118,10 +128,10 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tOrt.setText(getField(Patient.FLD_PLACE));
 		tOrt.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
-		new Label(ret, SWT.NONE).setText(Messages.Core_Phone); // $NON-NLS-1$
-		tTel = new Text(ret, SWT.BORDER);
-		tTel.setText(getField(Patient.FLD_PHONE1));
-		tTel.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		new Label(ret, SWT.NONE).setText(Messages.Core_Mobilephone); // $NON-NLS-1$
+		tMobile = new Text(ret, SWT.BORDER);
+		tMobile.setText(getField(Patient.FLD_MOBILEPHONE));
+		tMobile.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		new Label(ret, SWT.NONE).setText(Messages.Core_E_Mail); // $NON-NLS-1$
 		tMail = new Text(ret, SWT.BORDER);
@@ -189,6 +199,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
+		updateOkButtonState();
 		setMessage(Messages.PatientErfassenDialog_pleaseEnterPersonalia); // $NON-NLS-1$
 		setTitle(Messages.PatientErfassenDialog_enterData); // $NON-NLS-1$
 		getShell().setText(Messages.PatientErfassenDialog_enterPatient); // $NON-NLS-1$
@@ -240,7 +251,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			patient.setStreet(tStrasse.getText());
 			patient.setZip(tPlz.getText());
 			patient.setCity(tOrt.getText());
-			patient.setPhone1(tTel.getText());
+			patient.setMobile(tMobile.getText());
 			patient.setEmail(tMail.getText());
 			CoreModelServiceHolder.get().save(patient);
 
@@ -261,5 +272,20 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 	@Override
 	protected boolean isResizable() {
 		return true;
+	}
+
+	private void updateOkButtonState() {
+		IValidator<String> notEmptyValidator = value -> {
+			if (value == null || value.trim().isEmpty()) {
+				return ValidationStatus.error("Eingabefeld darf nicht leer sein.");
+			}
+			return ValidationStatus.ok();
+		};
+		IStatus statusName = notEmptyValidator.validate(tName.getText());
+		IStatus statusVorname = notEmptyValidator.validate(tVorname.getText());
+		Button okButton = getButton(IDialogConstants.OK_ID);
+		if (okButton != null) {
+			okButton.setEnabled(statusName.isOK() && statusVorname.isOK());
+		}
 	}
 }

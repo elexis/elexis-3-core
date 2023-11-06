@@ -1,10 +1,14 @@
 package ch.elexis.core.ui.preferences;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -14,6 +18,7 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -52,6 +57,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -61,7 +67,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -646,6 +654,158 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		compositeRoles.setLayout(new FillLayout(SWT.HORIZONTAL));
 		compositeRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
+		MenuManager rolePopManager = new MenuManager();
+		rolePopManager.add(new Action() {
+
+			public void run() {
+				List<String> existingRoleIds = CoreModelServiceHolder.get().getQuery(IRole.class).execute().stream()
+						.map(r -> r.getId()).collect(Collectors.toList());
+
+				InputDialog dialog = new InputDialog(getShell(), "Neue Rolle", "Rollen Name", null, new IInputValidator() {
+					
+					@Override
+					public String isValid(String newText) {
+						if (StringUtils.isBlank(newText)) {
+							return "Rollen Name kann nicht leer sein.";
+						} else if (existingRoleIds.contains(newText)) {
+							return "Rollen mit Name existiert bereits.";
+						}
+						return null;
+					}
+				});
+				if (dialog.open() == Dialog.OK) {
+					IRole role = CoreModelServiceHolder.get().create(IRole.class);
+					role.setId(dialog.getValue());
+					role.setSystemRole(false);
+					CoreModelServiceHolder.get().save(role);
+					updateRoles();
+				}
+			};
+
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_NEW.getImageDescriptor();
+			};
+
+			public String getText() {
+				return "Neue Rolle";
+			};
+		});
+		rolePopManager.add(new Action() {
+			
+			public void run() {
+				IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement();
+				// remove from all users
+				for (IUser user : CoreModelServiceHolder.get().getQuery(IUser.class).execute()) {
+					if (user.getRoles().contains(role)) {
+						user.getRoles().remove(role);
+						CoreModelServiceHolder.get().save(user);
+					}
+				}
+				CoreModelServiceHolder.get().remove(role);
+				updateRoles();
+			};
+
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_DELETE.getImageDescriptor();
+			};
+
+			public String getText() {
+				return "Rolle entfernen";
+			};
+
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+		rolePopManager.add(new Action() {
+			
+			public void run() {
+				FileDialog dialog = new FileDialog(getShell());
+				dialog.setFilterExtensions(new String[] { "*.json" });
+				if (dialog.open() != null) {
+					File file = new File(dialog.getFilterPath() + File.separator + dialog.getFileName());
+					if (file.exists()) {
+						try {
+							String jsonContent = FileUtils.readFileToString(file, "UTF-8");
+							
+							Optional<AccessControlList> acl = AccessControlServiceHolder.get()
+									.readAccessControlList(new ByteArrayInputStream(jsonContent.getBytes("UTF-8")));
+							if (acl.isPresent()) {
+								IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection()
+										.getFirstElement();
+								role.setExtInfo("json", jsonContent);
+								CoreModelServiceHolder.get().save(role);
+								updateRoles();
+							} else {
+								MessageDialog.openError(getShell(), "Fehler", "Fehlerhafter Berechtigungs Definition");
+							}
+						} catch (IOException e) {
+							LoggerFactory.getLogger(getClass()).error("Error reading json file", e);
+						}
+					}
+				}
+			};
+
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_IMPORT.getImageDescriptor();
+			};
+
+			public String getText() {
+				return "Berechtigungen importieren";
+			};
+
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+		rolePopManager.add(new Action() {
+
+			public void run() {
+				IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement();
+				String jsonString = (String) role.getExtInfo("json");
+				if (StringUtils.isNotBlank(jsonString)) {
+					FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+					if (dialog.open() != null) {
+						File file = new File(dialog.getFilterPath() + File.separator + dialog.getFileName());
+						try {
+							FileUtils.writeStringToFile(file, jsonString, "UTF-8");
+						} catch (IOException e) {
+							LoggerFactory.getLogger(getClass()).error("Error writing json file", e);
+						}
+					}
+				} else {
+					MessageDialog.openError(getShell(), "Fehler", "Die Rolle hat keine Berechtigungs Definition");
+				}
+			};
+
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_EXPORT.getImageDescriptor();
+			};
+
+			public String getText() {
+				return "Berechtigungen exportieren";
+			};
+
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+
 		checkboxTableViewerRoles = CheckboxTableViewer.newCheckList(compositeRoles, SWT.BORDER | SWT.FULL_SELECTION);
 		new Label(compositeEdit, SWT.NONE);
 		new Label(compositeEdit, SWT.NONE);
@@ -653,8 +813,17 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		checkboxTableViewerRoles.setLabelProvider(new DefaultLabelProvider() {
 			@Override
 			public String getColumnText(Object element, int columnIndex) {
+				StringBuilder sb = new StringBuilder();
 				IRole r = (IRole) element;
-				return r.getId();
+				sb.append(r.getId());
+				if (!r.isSystemRole()) {
+					sb.append(" *");
+					String jsonString = (String) r.getExtInfo("json");
+					if(StringUtils.isEmpty(jsonString)) {
+						sb.append(" (leer)");
+					}
+				}
+				return sb.toString();
 			}
 		});
 		checkboxTableViewerRoles.addCheckStateListener((e) -> {
@@ -669,6 +838,18 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			}
 			CoreModelServiceHolder.get().save(user);
 		});
+		Menu roleContextmenu = rolePopManager.createContextMenu(checkboxTableViewerRoles.getControl());
+		checkboxTableViewerRoles.getControl().setMenu(roleContextmenu);
+		rolePopManager.addMenuListener(new IMenuListener() {
+			
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				for (IContributionItem item : manager.getItems()) {
+					item.update();
+				}
+			}
+		});
+
 		checkboxTableViewerAssociation.setContentProvider(ArrayContentProvider.getInstance());
 		checkboxTableViewerAssociation.setLabelProvider(new DefaultLabelProvider() {
 			@Override

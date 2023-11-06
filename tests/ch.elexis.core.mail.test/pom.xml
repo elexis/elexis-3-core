@@ -230,6 +230,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -335,6 +340,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-annotations</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>jaxb-api</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -420,6 +430,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.resources</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -456,6 +471,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.postgresql.jdbc</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-text</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

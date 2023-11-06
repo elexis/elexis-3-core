@@ -19,7 +19,10 @@ public class AccessControlList {
 	private Map<String, ACEAccessBitMap> object;
 
 	public AccessControlList() {
-		// required for de-/serialization
+		rolesRepresented = new HashSet<>();
+		systemCommand = new HashMap<>();
+		systemConfiguration = new HashMap<>();
+		object = new HashMap<>();
 	}
 
 	/**
@@ -28,22 +31,20 @@ public class AccessControlList {
 	 * @param acl
 	 */
 	public AccessControlList(AccessControlList acl) {
-		rolesRepresented = new HashSet<>();
+		this();
+
 		if (acl.rolesRepresented != null) {
 			rolesRepresented.addAll(acl.rolesRepresented);
 		}
 
-		systemCommand = new HashMap<>();
 		if (acl.systemCommand != null) {
 			systemCommand.putAll(acl.systemCommand);
 		}
 
-		systemConfiguration = new HashMap<>();
 		if (acl.systemConfiguration != null) {
 			systemConfiguration.putAll(acl.systemConfiguration);
 		}
 
-		object = new HashMap<>();
 		if (acl.object != null) {
 			object.putAll(acl.object);
 		}

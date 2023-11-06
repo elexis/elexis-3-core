@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.eenv.AccessToken;
@@ -232,4 +233,16 @@ public interface IContextService {
 	 * @param object
 	 */
 	public void sendEvent(String eventTopic, Object object, Map<String, Object> additionalProperties);
+
+	/**
+	 * Executes the runnable in a custom thread pool that uses the current root
+	 * context within all threads. This is currently relevant for Elexis-server,
+	 * where IContext is implemented ThreadLocal, and if parallel streams are used.
+	 * 
+	 * @param <T>      the result type of method {@code call}
+	 * @param callable that uses a parallel stream of some type
+	 * @return
+	 * @since 3.11
+	 */
+	public <T> T submitContextInheriting(Callable<T> callable);
 }

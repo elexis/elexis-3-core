@@ -44,7 +44,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private Text textNachname;
 	private Text textTelefon1;
 	private Text textTelefon2;
-	private Text textHandy;
+	private Text textMobile;
 	private Text textFax;
 	private Text textEmail;
 	private Text textBemerkungen;
@@ -100,6 +100,13 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		new Label(comp, SWT.NONE);
 		new Label(comp, SWT.NONE);
 
+		Label lblMobile = new Label(comp, SWT.NONE);
+		lblMobile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblMobile.setText(Messages.KontaktBlatt_Mobile);
+
+		textMobile = new Text(comp, SWT.BORDER);
+		textMobile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 		Label lblTelefon1 = new Label(comp, SWT.NONE);
 		lblTelefon1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTelefon1.setText(Messages.KontaktBlatt_Phone1);
@@ -113,13 +120,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		textTelefon2 = new Text(comp, SWT.BORDER);
 		textTelefon2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		Label lblHandy = new Label(comp, SWT.NONE);
-		lblHandy.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHandy.setText(Messages.KontaktBlatt_Mobile);
-
-		textHandy = new Text(comp, SWT.BORDER);
-		textHandy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblFax = new Label(comp, SWT.NONE);
 		lblFax.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -155,7 +155,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textTelefon1.setText(StringUtils.defaultString(pat.getPhone1()));
 		textTelefon2.setText(StringUtils.defaultString(pat.getPhone2()));
 		textFax.setText(StringUtils.defaultString(pat.getFax()));
-		textHandy.setText(StringUtils.defaultString(pat.getMobile()));
+		textMobile.setText(StringUtils.defaultString(pat.getMobile()));
 		textEmail.setText(StringUtils.defaultString(pat.getEmail()));
 		textBemerkungen.setText(StringUtils.defaultString(pat.getComment()));
 
@@ -199,7 +199,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		pat.setEmail(textEmail.getText());
 		pat.setPhone1(textTelefon1.getText());
 		pat.setPhone2(textTelefon2.getText());
-		pat.setMobile(textHandy.getText());
+		pat.setMobile(textMobile.getText());
 		pat.setComment(textBemerkungen.getText());
 		pat.setFax(textFax.getText());
 		CoreModelServiceHolder.get().save(pat);
@@ -217,7 +217,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textNachname.setEditable(unlocked);
 		textTelefon1.setEditable(unlocked);
 		textTelefon2.setEditable(unlocked);
-		textHandy.setEditable(unlocked);
+		textMobile.setEditable(unlocked);
 		textFax.setEditable(unlocked);
 		textEmail.setEditable(unlocked);
 		textBemerkungen.setEditable(unlocked);

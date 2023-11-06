@@ -263,7 +263,7 @@ public class Messages {
 	public static String KontaktBlatt_Mail2 = ch.elexis.core.l10n.Messages.KontaktBlatt_Mail2;
 	public static String Core_Mandator = ch.elexis.core.l10n.Messages.Core_Mandator;
 	public static String KontaktBlatt_Mobile = ch.elexis.core.l10n.Messages.KontaktBlatt_Mobile;
-	public static String Core_Mobilphone = ch.elexis.core.l10n.Messages.Core_Mobilphone;
+	public static String Core_Mobilephone = ch.elexis.core.l10n.Messages.Core_Mobilephone;
 
 	public static String KontaktBlatt_OhoneDirect = ch.elexis.core.l10n.Messages.KontaktBlatt_OhoneDirect;
 	public static String Core_Organisation = ch.elexis.core.l10n.Messages.Core_Organisation;

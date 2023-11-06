@@ -1,6 +1,8 @@
 package ch.elexis.core.services.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +21,7 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.elexis.core.ac.ACEAccessBitMap;
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.AccessControlListUtil;
 import ch.elexis.core.ac.EvaluatableACE;
@@ -94,8 +97,11 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		// calculate user ACL by combining the users roles
 		AccessControlList userAccessControlList = determineUserAccessControlList(userService.getUserRoles(user));
 		userAclMap.put(user, userAccessControlList);
-		logger.info("ACE User=[{}] Roles=[{}]", user.getId(),
-				userAclMap.get(user) != null ? userAclMap.get(user).getRolesRepresented() : "");
+		if (userAccessControlList.getRolesRepresented().isEmpty()) {
+			logger.warn("ACE User=[{}] Empty Role Set", user.getId());
+		} else {
+			logger.info("ACE User=[{}] Roles=[{}]", user.getId(), userAccessControlList.getRolesRepresented());
+		}
 	}
 
 	@Override
@@ -106,7 +112,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private AccessControlList determineUserAccessControlList(List<IRole> roles) {
 		if (roles.isEmpty()) {
-			return null;
+			return new AccessControlList();
 		}
 
 		AccessControlList accessControlList = null;
@@ -131,21 +137,43 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private AccessControlList getOrLoadRoleAccessControlList(IRole iRole) {
 		String _role = iRole.getId().toLowerCase();
 		if (!roleAclMap.containsKey(_role)) {
-			InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
+			InputStream jsonStream = null;
+			if(iRole.isSystemRole()) {
+				jsonStream = AccessControlList.class.getClassLoader()
 					.getResourceAsStream("/rsc/acl/" + _role + ".json");
-			if (roleAccessDefaultUserFile != null) {
-				try {
-					AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-							.readValue(roleAccessDefaultUserFile, AccessControlList.class);
-					roleAclMap.put(_role, acl);
-				} catch (Exception e) {
-					logger.error("Error loading role acl [{}]", _role, e);
+			} else {
+				String jsonValue = (String) iRole.getExtInfo("json");
+				if (StringUtils.isNotBlank(jsonValue)) {
+					try {
+						jsonStream = new ByteArrayInputStream(jsonValue.getBytes("UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						logger.error("Invalid role custom json acl [{}]", _role, e);
+					}
+				}
+			}
+			if (jsonStream != null) {
+				Optional<AccessControlList> acl = readAccessControlList(jsonStream);
+				if (acl.isPresent()) {
+					roleAclMap.put(_role, acl.get());
+				} else {
+					logger.error("Error loading role acl [{}]", _role);
 				}
 			} else {
 				logger.warn("No role acl [{}] file", _role);
 			}
 		}
 		return roleAclMap.get(_role);
+	}
+
+	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream) {
+		try {
+			AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true).readValue(jsonStream,
+					AccessControlList.class);
+			return Optional.of(acl);
+		} catch (Exception e) {
+			logger.error("Error reading acl json", e);
+		}
+		return Optional.empty();
 	}
 
 	private boolean evaluateACE(IUser user, AccessControlList acl, EvaluatableACE ace) {
@@ -166,7 +194,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 					if (aceBitMap[i] == (byte) 4) {
 						aceBitMap[i] = (byte) 1;
 						flattenedbitmap |= 1 << i;
-					} else if (aceBitMap[i] == (byte) 2) {
+					} else if (aceBitMap[i] == (byte) 2 || aceBitMap[i] == (byte) 1) {
 						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
 							if (evaluateAobo(user, _ace)) {
 								aceBitMap[i] = (byte) 1;
@@ -216,6 +244,17 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return false;
 	}
 
+	@Override
+	public String getSelfMandatorId() {
+		Optional<IUser> user = contextService.getActiveUser();
+		if (user.isPresent()) {
+			if (user.get().getAssignedContact() != null) {
+				return user.get().getAssignedContact().getId();
+			}
+		}
+		return "-1";
+	}
+
 	private List<String> getAoboMandatorIds(IUser user) {
 		List<String> ret = new ArrayList<>();
 		if (user.getAssignedContact() != null) {
@@ -258,7 +297,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	public void doPrivileged(Runnable runnable) {
 		try {
 			privileged.set(Boolean.TRUE);
-			logger.info("Executing priviledged [" + runnable + "]");
+			logger.debug("Executing priviledged [" + runnable + "]");
 			runnable.run();
 		} finally {
 			privileged.set(Boolean.FALSE);
@@ -266,12 +305,12 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	}
 
 	@Override
-	public boolean isAobo(ObjectEvaluatableACE evaluatableAce) {
+	public Optional<ACEAccessBitMapConstraint> isAoboOrSelf(ObjectEvaluatableACE evaluatableAce) {
 		if (isPrivileged()) {
-			return false;
+			return Optional.empty();
 		}
 		if (!isAoboObject(evaluatableAce.getObject())) {
-			return false;
+			return Optional.empty();
 		}
 		Optional<IUser> user = contextService.getActiveUser();
 		if (user.isPresent()) {
@@ -284,14 +323,16 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				byte[] aceBitMap = useracebm.getAccessRightMap();
 				byte[] requested = evaluatableAce.getRequestedRightMap();
 				for (int i = 0; i < requested.length; i++) {
-					if (requested[i] == 1 && aceBitMap[i] != 2) {
-						return false;
+					if (requested[i] == 1 && (aceBitMap[i] == 1)) {
+						return Optional.of(ACEAccessBitMapConstraint.SELF);
+					} else if (requested[i] == 1 && (aceBitMap[i] == 2)) {
+						return Optional.of(ACEAccessBitMapConstraint.AOBO);
 					}
 				}
 			}
 		} else {
 			logger.warn("No active user to test aobo");
 		}
-		return true;
+		return Optional.empty();
 	}
 }

@@ -1,7 +1,11 @@
 package ch.elexis.core.services;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
+import ch.elexis.core.ac.ACEAccessBitMapConstraint;
+import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.exceptions.AccessControlException;
@@ -44,13 +48,14 @@ public interface IAccessControlService {
 
 	/**
 	 * Test if the current user provided by the {@link IContextService} has rights
-	 * with acts on behalf of (aobo) attribute for the provided
-	 * {@link ObjectEvaluatableACE}.
+	 * with acts on behalf of (aobo) or self attribute for the provided
+	 * {@link ObjectEvaluatableACE}. If more than one right is provided in the
+	 * {@link ObjectEvaluatableACE} the first found aobo or self right returns.
 	 * 
 	 * @param clazz
 	 * @return
 	 */
-	public boolean isAobo(ObjectEvaluatableACE evaluatableAce);
+	public Optional<ACEAccessBitMapConstraint> isAoboOrSelf(ObjectEvaluatableACE evaluatableAce);
 
 	/**
 	 * Get a list of all ids of the {@link IMandator}s the current user provided by
@@ -68,4 +73,21 @@ public interface IAccessControlService {
 	 * @return
 	 */
 	public List<String> getAoboMandatorIdsForSqlIn();
+
+	/**
+	 * Get the id of the {@link IMandator} of the current user.
+	 * 
+	 * @return
+	 */
+	public String getSelfMandatorId();
+
+	/**
+	 * Get the {@link AccessControlList} object represented by the provided
+	 * jsonStream. If the provided {@link InputStream} is not a valid
+	 * {@link AccessControlList} {@link Optional#empty()} is returned.
+	 * 
+	 * @param jsonStream
+	 * @return
+	 */
+	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream);
 }

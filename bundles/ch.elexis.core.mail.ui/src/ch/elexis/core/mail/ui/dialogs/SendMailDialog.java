@@ -1,5 +1,9 @@
 package ch.elexis.core.mail.ui.dialogs;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,11 +54,16 @@ import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
+import ch.elexis.core.mail.ui.preference.SerializableFile;
+import ch.elexis.core.mail.ui.preference.SerializableFileUtil;
+import ch.elexis.core.mail.ui.preference.TextTemplates;
+import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -82,7 +91,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-
+	private boolean doSend;
 	private LocalDateTime sentTime;
 
 	public SendMailDialog(Shell parentShell) {
@@ -257,11 +266,14 @@ public class SendMailDialog extends TitleAreaDialog {
 							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
 						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
 								.getFirstElement();
+
+						setTemplateAttachments(selectedTemplate);
+
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
 						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
-							subjectText
-									.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT));
+							subjectText.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT)
+									+ StringUtils.SPACE + subjectString);
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
@@ -270,7 +282,11 @@ public class SendMailDialog extends TitleAreaDialog {
 					updateLayout();
 				}
 			});
-
+			if (Boolean.valueOf(doSend)) {
+				lbl.setVisible(false);
+				templatesViewer.getCombo().setVisible(false);
+				attachments.setVisible(false);
+			}
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
@@ -355,6 +371,10 @@ public class SendMailDialog extends TitleAreaDialog {
 		updateLayout();
 	}
 
+	public void doSend(boolean doSend) {
+		this.doSend = doSend;
+	}
+	
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<String>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
@@ -384,7 +404,11 @@ public class SendMailDialog extends TitleAreaDialog {
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);
-			okButton.setText("Senden");
+			if (doSend) {
+				okButton.setText(IDialogConstants.OK_LABEL);
+			} else {
+				okButton.setText("Senden");
+			}
 			if (sentTime != null) {
 				setTitle("E-Mail Anzeige");
 				setMessage("Diese E-Mail wurde versendet am "
@@ -426,6 +450,33 @@ public class SendMailDialog extends TitleAreaDialog {
 			}
 		});
 		parent.layout();
+	}
+
+	private void setTemplateAttachments(ITextTemplate selectedTemplate) {
+		IBlobSecondary textTemplate = CoreModelServiceHolder.get()
+				.load(TextTemplates.NAMED_BLOB_PREFIX + selectedTemplate.getId(), IBlobSecondary.class).orElse(null);// $NON-NLS-1$
+		if (textTemplate != null) {
+			byte[] DBArrayList = textTemplate.getContent();
+
+			Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+			List<String> attachmentPaths = new ArrayList<>();
+			try {
+				List<SerializableFile> deserializedContent = SerializableFileUtil.deserializeData(DBArrayList);
+				for (SerializableFile serializableFile : deserializedContent) {
+					Path tempFile = tempDir.resolve(serializableFile.getName());
+					if (!Files.exists(tempFile)) {
+						Files.write(tempFile, serializableFile.getData());
+						tempFile.toFile().deleteOnExit();
+					}
+					attachmentPaths.add(tempFile.toString());
+				}
+				attachments.setAttachments(String.join(AttachmentsComposite.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			attachments.setAttachments(null);
+		}
 	}
 
 	private String getValidation() {
@@ -538,5 +589,9 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	public void sent(LocalDateTime sentTime) {
 		this.sentTime = sentTime;
+	}
+
+	public Boolean doSend() {
+		return doSend;
 	}
 }

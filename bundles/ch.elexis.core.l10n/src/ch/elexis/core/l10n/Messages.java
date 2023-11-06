@@ -7,7 +7,6 @@ public class Messages extends NLS {
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
 	public static String Core_Area_Bereiche;
 	public static String MedicationComposite_btnConfirm_toolTipText;
-	public static String MedicationComposite_btnCheckButton_Confirm_text;
 	public static String Core_Barcode_global_settings;
 	public static String Core_BarcodePat;
 	public static String Core_BarcodeElexis;
@@ -365,6 +364,7 @@ public class Messages extends NLS {
 	public static String AppointmentDetailComposite_search;
 	public static String AppointmentDetailComposite_tag;
 	public static String AppointmentDetailComposite_until;
+	public static String Appointment_Confirmation;
 	public static String ArticleDefaultSignatureComposite_date_none;
 	public static String ArticleDefaultSignatureComposite_dispensation;
 	public static String ArticleDefaultSignatureComposite_fix;
@@ -951,7 +951,7 @@ public class Messages extends NLS {
 	public static String Core_Message;
 	public static String Core_Midday;
 	public static String Core_Missing_rights;
-	public static String Core_Mobilphone;
+	public static String Core_Mobilephone;
 	public static String Core_Monday;
 	public static String Core_Monday_Short;
 	public static String Core_Multiplicator;
@@ -1069,6 +1069,9 @@ public class Messages extends NLS {
 	public static String Core_Short_Label;
 	public static String Core_Since;
 	public static String Core_Sortmode;
+	public static String Core_Standard_E_Mail_Title;
+	public static String Core_Standard_E_Mail_Template;
+	public static String Core_Standard_E_Mail;
 	public static String Core_Status;
 	public static String Core_Sticker_ellipsis;
 	public static String Core_Stock;
@@ -1079,6 +1082,7 @@ public class Messages extends NLS {
 	public static String Core_Sum;
 	public static String Core_Sunday;
 	public static String Core_Sunday_Short;
+	public static String Core_Temlate;
 	public static String Core_Text;
 	public static String Core_TextColour;
 	public static String Core_Textresult;
@@ -3341,6 +3345,8 @@ public class Messages extends NLS {
 	public static String PRESCRIPTIONS_OVERVIEW_HEADING_AVG_TIME;
 	public static String PRESCRIPTIONS_OVERVIEW_HEADING_COUNT;
 	public static String PRESCRIPTIONS_OVERVIEW_TITLE;
+	public static String PatientEMailListe;
+	public static String PatientEMailListe_description;
 	public static String PatHeuteView_accAmount;
 	public static String PatHeuteView_accTime;
 	public static String PatHeuteView_billed;
@@ -3422,6 +3428,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_kindOfRelation;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_persAnamnesisLbl;
+	public static String Patientenblatt2_famAnamnesisLbl;
 	public static String Patientenblatt2_phone1;
 	public static String Patientenblatt2_phone2;
 	public static String Patientenblatt2_pleaseEnterKindOfRelationship;
@@ -4947,19 +4954,16 @@ public class Messages extends NLS {
 	public static String ZuweiserUebersicht_Name;
 	public static String iMedAction_nameAction;
 	public static String xChangeContributor_thisIsAnOmnivoreDoc;
-	public static String ConditionStatus_UNKNOWN;
 	public static String ConditionStatus_RECURRENCE;
 	public static String ConditionStatus_ACTIVE;
 	public static String ConditionStatus_RELAPSE;
 	public static String ConditionStatus_INACTIVE;
 	public static String ConditionStatus_REMISSION;
 	public static String ConditionStatus_RESOLVED;
-	public static String AllergyIntoleranceCategory_UNKNOWN;
 	public static String AllergyIntoleranceCategory_FOOD;
 	public static String AllergyIntoleranceCategory_MEDICATION;
 	public static String AllergyIntoleranceCategory_ENVIRONMENT;
 	public static String AllergyIntoleranceCategory_BIOLOGIC;
-	public static String ConditionCategory_UNKNOWN;
 	public static String ConditionCategory_PROBLEMLISTITEM;
 	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
 	public static String Edit_Template;
@@ -4967,7 +4971,12 @@ public class Messages extends NLS {
 	public static String Template_not_editable;
 	public static String Template_not_editable_text;
 	public static String Template_not_editable_empty;
-
+	public static String RemoveDSGWhenDeceased_deleted_successfully;
+	public static String RemoveDSGWhenDeceased_no_deceased_found;
+	public static String RemoveDSGWhenDeceased_no_dsg_found;
+	public static String RemoveDSGWhenDeceased_description;
+	public static String Warning;
+	public static String Warning_No_Pea;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
