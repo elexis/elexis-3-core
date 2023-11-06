@@ -169,6 +169,13 @@
                label="Löschen"
                style="push">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.command.TemplateRenameSettingsCommand"
+               icon="icon://IMG_EDIT"
+               label="Vorlage umbenennen"
+               style="push"
+               tooltip="Selektierte Vorlage umbenennen">
+         </command>
          <separator
                name="Separator1.textTemplateView"
                visible="true">
@@ -837,6 +844,11 @@
       <command
             id="ch.elexis.core.ui.BillActiveEncounter"
             name="Bill active encounter">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.TemplateRenameSettingsCommand"
+            id="ch.elexis.core.ui.command.TemplateRenameSettingsCommand"
+            name="Vorlage umbenennen">
       </command>
    </extension>
       <extension
