@@ -380,6 +380,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								Messages.Patientenblatt2_selectRegularPhysicianTitle,
 								Messages.Patientenblatt2_selectRegularPhysicianMessage, false, true);
 						ks.enableEmptyFieldButton();
+						ks.disableContextSelection();
 						if (ks.open() == Dialog.OK) {
 							Object contactSel = ks.getSelection();
 							if (contactSel == null) {
