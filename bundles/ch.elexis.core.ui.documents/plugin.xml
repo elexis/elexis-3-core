@@ -99,7 +99,7 @@
          </command>
          <command
                commandId="ch.elexis.core.ui.documents.commandDelete"
-               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.gif"
+               icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/delete.png"
                label="%command.label.0"
                style="push">
             <visibleWhen
