@@ -61,6 +61,7 @@ public class XidConstants {
 	public static final String DOMAIN_AHV = CH_AHV;
 	public static final int CH_AHV_QUALITY = ASSIGNMENT_REGIONAL;
 	public static final String DOMAIN_BSVNUM = "www.xid.ch/id/kknum";
+	public static final String DOMAIN_KSK = "www.xid.ch/id/ksk";
 
 	/**
 	 * AUSTRIA
