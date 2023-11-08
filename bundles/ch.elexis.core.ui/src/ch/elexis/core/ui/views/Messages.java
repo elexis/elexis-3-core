@@ -11,7 +11,9 @@ package ch.elexis.core.ui.views;
 
 public class Messages {
 
+	public static String Feature_filter = ch.elexis.core.l10n.Messages.Feature_filter;
 	public static String Core_No_patient_selected = ch.elexis.core.l10n.Messages.Core_No_patient_selected;
+	public static String AUF2_LIST_TOOLBAR = ch.elexis.core.l10n.Messages.AUF2_List_Toolbar;
 	public static String AUF2_PleaseDoSelectPatient = ch.elexis.core.l10n.Messages.AUF2_PleaseDoSelectPatient;
 	public static String AUF2_certificate = ch.elexis.core.l10n.Messages.AUF2_certificate;
 	public static String AUF2_createNewCert = ch.elexis.core.l10n.Messages.AUF2_createNewCert;

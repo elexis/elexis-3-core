@@ -69,6 +69,7 @@ public class ElexisEventTopics {
 	public static final String EVENT_DELETE = BASE_MODEL + "delete";
 	public static final String EVENT_UPDATE = BASE_MODEL + "update";
 	public static final String EVENT_RELOAD = BASE_MODEL + "reload";
+	public static final String EVENT_SELECTED = BASE_MODEL + "selected";
 	/**
 	 * Generic reload configuration event
 	 */
