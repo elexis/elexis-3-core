@@ -196,8 +196,6 @@ public class FaelleView extends ViewPart implements IRefreshable {
 						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
 						if (selectedCoverage != null && !selectedCoverage.equals(actCoverage)) {
 							ContextServiceHolder.get().getRootContext().setTyped(selectedCoverage);
-							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_SELECTED,
-									selectedCoverage.getId());
 						}
 					}
 				}

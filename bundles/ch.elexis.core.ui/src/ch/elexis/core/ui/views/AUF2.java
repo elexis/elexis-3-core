@@ -20,7 +20,6 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -45,8 +44,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.INamedQuery;
@@ -112,16 +111,18 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		}, tv);
 	}
 
-	@Inject
 	@Optional
-	public void onFallSelectionChanged(@UIEventTopic(ElexisEventTopics.EVENT_SELECTED) String fallId) {
-		CoreUiUtil.runAsyncIfActive(() -> {
-			if (isFilterActive) {
-				aufFilter.setFallID(fallId);
-				tv.refresh();
-			}
-			currentFallID = fallId;
-		}, tv);
+	@Inject
+	void activeCoverage(ICoverage iCoverage) {
+		ContextServiceHolder.get().getActiveCoverage().ifPresent(coverage -> {
+			CoreUiUtil.runAsyncIfActive(() -> {
+				if (isFilterActive) {
+					aufFilter.setFallID(coverage.getId().toString());
+					tv.refresh();
+				}
+				currentFallID = coverage.getId().toString();
+			}, tv);
+		});
 	}
 
 	public AUF2() {
