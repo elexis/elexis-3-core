@@ -16,4 +16,15 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="thomas" id="manual_update_artikel_fixmigelids">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="ARTIKEL"/>
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE ARTIKEL SET ID = REPLACE(ID, ' ', '') WHERE Typ = 'MiGeL';
+]]>
+	    </sql>
+	</changeSet>
+
 </databaseChangeLog>
