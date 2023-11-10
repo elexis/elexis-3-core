@@ -590,6 +590,7 @@ public class BillingUtil {
 		private Optional<Fall> srcFall = Optional.empty();
 		private Optional<Fall> copyFall = Optional.empty();
 		private List<Konsultation> releasedKonsultations = new ArrayList<>();
+		private List<Konsultation> transferedKonsultations = new ArrayList<>();
 		private LeistungDTO leistungDTO = null;
 		private DiagnosesDTO diagnosesDTO = null;
 		private Konsultation konsultation = null;
@@ -761,7 +762,7 @@ public class BillingUtil {
 					NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get(),
 					NoPoUtil.loadAsIdentifiable(fallToTransfer, ICoverage.class).get(), true);
 
-			Iterator<Konsultation> it = releasedKonsultations.iterator();
+			Iterator<Konsultation> it = transferedKonsultations.iterator();
 			while (it.hasNext()) {
 				Konsultation k = it.next();
 				if (konsultation.getId().equals(k.getId())) {
@@ -916,7 +917,7 @@ public class BillingUtil {
 		}
 
 		private void transferKonsultations() {
-			releasedKonsultations.clear();
+			transferedKonsultations.clear();
 			Konsultation[] consultations = srcFall.get().getBehandlungen(true);
 			if (consultations != null) {
 				for (Konsultation openedKons : consultations) {
@@ -928,7 +929,7 @@ public class BillingUtil {
 									NoPoUtil.loadAsIdentifiable(copyFall.get(), ICoverage.class).get(), true);
 							log.debug("invoice correction: transfered kons id [{}] to copied fall id  [{}] ",
 									openedKons.getId(), copyFall.get().getId());
-							releasedKonsultations.add(openedKons);
+							transferedKonsultations.add(openedKons);
 
 							// if validation of cons is failed the bill correction will be reseted
 							Result<?> result = BillingUtil.getBillableResult(openedKons);
