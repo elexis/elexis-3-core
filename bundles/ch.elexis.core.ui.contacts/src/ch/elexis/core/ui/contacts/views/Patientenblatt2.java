@@ -40,6 +40,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -584,13 +585,21 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				if (actPatient != null) {
 					IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 					if (activateMedicationOrder.getSelection()) {
-						StickerServiceHolder.get().addSticker(sticker, patient);
+						if (!patient.getEmail().isEmpty() && patient.getDateOfBirth() != null) {
+							if (MessageDialog.openConfirm(getShell(), Messages.Patientenblatt2_mediOrder,
+									Messages.Patientenblatt2_consentSigned)) {
+								StickerServiceHolder.get().addSticker(sticker, patient);
+							}
+						} else {
+							MessageDialog.openInformation(getShell(), Messages.Core_Patient,
+									Messages.Patientenblatt2_missingPatientData);
+						}
 					} else {
 						StickerServiceHolder.get().removeSticker(sticker, patient);
 					}
 					CoreModelServiceHolder.get().save(patient);
-				refreshUi();
-			}
+					refreshUi();
+				}
 			}
 		});
 		activateMedicationOrder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
