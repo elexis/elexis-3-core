@@ -391,7 +391,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								Kontakt k = (Kontakt) contactSel;
 								((Patient) po).setStammarzt(k);
 							}
-
 							displayContent(po, ltf);
 						}
 					}
@@ -411,7 +410,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							return;
 						}
 						ArrayList<String> extFlds = new ArrayList<String>();
-
 						Kontakt k = (Kontakt) po;
 						for (String dom : Xid.getXIDDomains()) {
 							XIDDomain xd = Xid.getDomain(dom);
