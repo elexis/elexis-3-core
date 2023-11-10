@@ -304,7 +304,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						return super.getText(element);
 					}
 				}, isr, MaritalStatus.values()));
-		fields.add(new InputData(Messages.Core_Mobilephone, Patient.MOBILE, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 
 		fields.add(new InputData(Messages.Patientenblatt2_phone1, Patient.FLD_PHONE1, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Patientenblatt2_phone2, Patient.FLD_PHONE2, InputData.Typ.STRING, null, 30)); // $NON-NLS-1$
@@ -477,6 +476,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				fields.add(new InputData(extfield, Patient.FLD_EXTINFO, InputData.Typ.STRING, extfield));
 			}
 		}
+
+		int positionForMobileField = (fields.size() + 1 + 2) / 3;
+		fields.add(positionForMobileField,
+				new InputData(Messages.Core_Mobilephone, Patient.MOBILE, InputData.Typ.STRING, null, 30));
+
 		ipp = new InputPanel(cUserfields, 3, 3, fields.toArray(new InputData[0]));
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
