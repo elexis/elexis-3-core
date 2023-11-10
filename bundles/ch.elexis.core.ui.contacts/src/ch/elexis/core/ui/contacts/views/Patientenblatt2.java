@@ -226,6 +226,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication; // $NON-NLS-1$
+	private static final int COLUMNCOUNT = 3;
 	// private final static String[] lbLists={"Fixmedikation"/*,"Reminders" */};
 	private final FormText inpAdresse;
 	private final ListDisplay<BezugsKontakt> inpZusatzAdresse;
@@ -390,6 +391,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 								Kontakt k = (Kontakt) contactSel;
 								((Patient) po).setStammarzt(k);
 							}
+
 							displayContent(po, ltf);
 						}
 					}
@@ -409,6 +411,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							return;
 						}
 						ArrayList<String> extFlds = new ArrayList<String>();
+
 						Kontakt k = (Kontakt) po;
 						for (String dom : Xid.getXIDDomains()) {
 							XIDDomain xd = Xid.getDomain(dom);
@@ -477,14 +480,16 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		}
 
-		int positionForMobileField = (fields.size() + 1 + 2) / 3;
+		int positionForMobileField = (fields.size() + COLUMNCOUNT) / COLUMNCOUNT;
 		fields.add(positionForMobileField,
 				new InputData(Messages.Core_Mobilephone, Patient.MOBILE, InputData.Typ.STRING, null, 30));
 
-		ipp = new InputPanel(cUserfields, 3, 3, fields.toArray(new InputData[0]));
+		ipp = new InputPanel(cUserfields, COLUMNCOUNT, COLUMNCOUNT, fields.toArray(new InputData[0]));
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
+
 		// cUserfields.setRedraw(true);
+
 		cUserfields.setBounds(ipp.getBounds());
 
 		refresh();
