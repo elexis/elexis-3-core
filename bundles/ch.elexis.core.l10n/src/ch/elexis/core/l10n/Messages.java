@@ -3443,6 +3443,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_selectRegularPhysicianTitle;
 	public static String Patientenblatt2_showAddress;
 	public static String Patientenblatt2_showBezugKontaktRelation;
+	public static String Patientenblatt2_activateMediOrder;
 	public static String PdfPreview_NoPDFSelected;
 	public static String PercentileChecklist_DBError;
 	public static String PercentileChecklist_DBErrorTable;

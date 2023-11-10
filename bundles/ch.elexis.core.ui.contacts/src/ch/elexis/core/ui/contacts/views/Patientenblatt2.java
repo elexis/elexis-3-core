@@ -91,11 +91,15 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -245,6 +249,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
 	private Button increasedTreatmentBtn;
+	private Button activateMedicationOrder;
 
 	void recreateUserpanel() {
 		// cUserfields.setRedraw(false);
@@ -570,6 +575,25 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		
+		activateMedicationOrder = tk.createButton(cPersonalien, Messages.Patientenblatt2_activateMediOrder, SWT.CHECK);
+		activateMedicationOrder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ISticker sticker = getPatientOrderSticker();
+				if (actPatient != null) {
+					IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+					if (activateMedicationOrder.getSelection()) {
+						StickerServiceHolder.get().addSticker(sticker, patient);
+					} else {
+						StickerServiceHolder.get().removeSticker(sticker, patient);
+					}
+					CoreModelServiceHolder.get().save(patient);
+				refreshUi();
+			}
+			}
+		});
+		activateMedicationOrder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
@@ -932,6 +956,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
+		activateMedicationOrder
+				.setSelection(StickerServiceHolder.get().getSticker(patient, getPatientOrderSticker()) != null);
 		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
 			increasedTreatmentBtn.setSelection(
 					Boolean.parseBoolean((String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
@@ -1541,5 +1567,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 
 		}
+	}
+
+	private ISticker getPatientOrderSticker() {
+		IQuery<ISticker> query = CoreModelServiceHolder.get().getQuery(ISticker.class);
+		query.and("ID", COMPARATOR.EQUALS, "activate_medi_order"); //$NON-NLS-1$
+		return query.execute().get(0);
 	}
 }

@@ -313,4 +313,18 @@ UPDATE ARTIKEL SET ID = REPLACE(ID, ' ', '') WHERE Typ = 'MiGeL';
 	    </sql>
 	</changeSet>
 	
+	<changeSet author="pdenzler" id="add_patient_medication_order_sticker">
+        <insert tableName="ETIKETTEN">
+        	<column name="ID" value="activate_medi_order" />
+        	<column name="LASTUPDATE" valueComputed="${timestamp}" />
+        	<column name="IMAGE" value="NULL" />
+        	<column name="DELETED" value="0" />
+        	<column name="IMPORTANCE" value="1000" />
+        	<column name="NAME" value="Medikamentenbestellung aktiviert" />
+        	<column name="FOREGROUND" value="000000" />
+        	<column name="BACKGROUND" value="FFFFFF" />
+        	<column name="CLASSES" value="NULL" />
+    	</insert>
+    </changeSet>
+	
 </databaseChangeLog>
