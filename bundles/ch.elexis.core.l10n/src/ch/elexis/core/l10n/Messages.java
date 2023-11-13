@@ -50,6 +50,9 @@ public class Messages extends NLS {
 	public static String AUF2_deleteCertificate;
 	public static String AUF2_deleteReally;
 	public static String AUF2_doyoywantdeletereally;
+	public static String AUF2_List;
+	public static String AUF2_List_Toolbar;
+	public static String AUF2_No_List;
 	public static String AUF2_editCertificate;
 	public static String AUF2_selectCase;
 	public static String AbacusJuniorAction_ButtonName;
@@ -2299,6 +2302,7 @@ public class Messages extends NLS {
 	public static String InboxView_title;
 	public static String InboxView_view;
 	public static String InboxView_viewThisDocument;
+	public static String Information;
 	public static String Info_NoAppointment_Message;
 	public static String Info_NoAppointment_Title;
 	public static String Info_NoCase_Message;
@@ -3243,6 +3247,7 @@ public class Messages extends NLS {
 	public static String Overview_restore;
 	public static String Overview_restoresequence;
 	public static String Overview_selectSequence;
+	public static String Patient_AUF;
 	public static String PATIENTS_PROFITS_DESCRIPTION;
 	public static String PATIENTS_PROFITS_TITLE;
 	public static String PCHK_AGE;

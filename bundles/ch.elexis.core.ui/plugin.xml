@@ -838,6 +838,11 @@
             id="ch.elexis.core.ui.BillActiveEncounter"
             name="Bill active encounter">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.AufPrintListHandler"
+            id="ch.elexis.core.ui.commands.AufPrintList"
+            name="Auf Liste Drucken">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
