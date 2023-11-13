@@ -10,6 +10,17 @@
 package ch.elexis.core.ui.commands;
 
 public class Messages {
+
+	public static String AUF_LISTE = ch.elexis.core.l10n.Messages.AUF2_List;
+
+	public static String AUF_No_List = ch.elexis.core.l10n.Messages.AUF2_No_List;
+
+	public static String ChecklistView_KeinPatient = ch.elexis.core.l10n.Messages.ChecklistView_KeinPatient;
+
+	public static String INFORMATION = ch.elexis.core.l10n.Messages.Information;
+
+	public static String PATIENT_AUF = ch.elexis.core.l10n.Messages.Patient_AUF;
+
 	public static String Core_Document_was_not_opened_to_edit = ch.elexis.core.l10n.Messages.Core_Document_was_not_opened_to_edit;
 
 	public static String Core_Info = ch.elexis.core.l10n.Messages.Core_Info;
