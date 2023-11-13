@@ -114,15 +114,12 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	@Optional
 	@Inject
 	void activeCoverage(ICoverage iCoverage) {
-		ContextServiceHolder.get().getActiveCoverage().ifPresent(coverage -> {
-			CoreUiUtil.runAsyncIfActive(() -> {
-				if (isFilterActive) {
-					aufFilter.setFallID(coverage.getId().toString());
-					tv.refresh();
-				}
-				currentFallID = coverage.getId().toString();
-			}, tv);
-		});
+		String fallId = iCoverage.getId().toString();
+		if (isFilterActive) {
+			aufFilter.setFallID(fallId);
+			tv.refresh();
+		}
+		currentFallID = fallId;
 	}
 
 	public AUF2() {
