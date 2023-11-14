@@ -154,6 +154,9 @@
       <genOperations ecoreOperation="model.ecore#//ITaskService/refresh">
         <genParameters ecoreParameter="model.ecore#//ITaskService/refresh/taskDescriptor"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//ITaskService/assertIncurOnThisStation">
+        <genParameters ecoreParameter="model.ecore#//ITaskService/assertIncurOnThisStation/taskDescriptor"/>
+      </genOperations>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

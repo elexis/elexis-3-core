@@ -90,7 +90,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
-		logger.debug("Binding " + runnableWithContextFactory.getClass().getName());
+		logger.info("Binding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
 
 		try {
@@ -204,7 +204,8 @@ public class TaskServiceImpl implements ITaskService {
 	 * @return to incur? only iff not delete, active, and this station is a
 	 *         designated runner
 	 */
-	private boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor) {
+	@Override
+	public boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor) {
 		if (taskDescriptor != null && !taskDescriptor.isDeleted() && taskDescriptor.isActive()) {
 			String runner = taskDescriptor.getRunner();
 			if (StringUtils.isNotBlank(runner)) {
@@ -324,6 +325,7 @@ public class TaskServiceImpl implements ITaskService {
 	 * @return
 	 * @throws TaskException
 	 */
+	@Override
 	public void refresh(ITaskDescriptor taskDescriptor) throws TaskException {
 		boolean toIncurOnThisStation = assertIncurOnThisStation(taskDescriptor);
 		Optional<ITaskDescriptor> incurredTask = getIncurredTasks().stream()
@@ -483,6 +485,10 @@ public class TaskServiceImpl implements ITaskService {
 		if (!taskDescriptor.isActive() && TaskTriggerType.MANUAL != triggerType) {
 			throw new TaskException(TaskException.EXECUTION_REJECTED,
 					"Task Descriptor [" + taskDescriptor.getId() + "] is not active");
+		}
+		
+		if(sync) {
+			runContext.put("isTriggerSync", Boolean.TRUE.toString());
 		}
 
 		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType, taskDescriptor.getId(),
