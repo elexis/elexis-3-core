@@ -49,6 +49,7 @@ Export-Package: ch.elexis.core.ac,
  ch.elexis.core.model.tasks,
  ch.elexis.core.model.util,
  ch.elexis.core.model.verrechnet,
+ ch.elexis.core.osgi,
  ch.elexis.core.preferences,
  ch.elexis.core.server,
  ch.elexis.core.services,
@@ -74,4 +75,5 @@ Import-Package: com.fasterxml.jackson.annotation;version="2.13.3",
 Bundle-Activator: ch.elexis.core.internal.Activator
 Eclipse-BundleShape: dir
 Service-Component: OSGI-INF/ch.elexis.core.console.internal.ConsoleCommandPovider.xml,
- OSGI-INF/ch.elexis.core.jfr.JavaFlightRecorderService.xml
+ OSGI-INF/ch.elexis.core.jfr.JavaFlightRecorderService.xml,
+ OSGI-INF/ch.elexis.core.osgi.ConsoleCommandPovider.xml
