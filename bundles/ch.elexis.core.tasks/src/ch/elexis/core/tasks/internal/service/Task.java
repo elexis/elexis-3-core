@@ -49,6 +49,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	private IProgressMonitor progressMonitor;
 
 	private String taskId;
+	private boolean isTriggerSync = false;
 
 	public Task(ch.elexis.core.jpa.entities.Task entity) {
 		super(entity);
@@ -80,6 +81,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 						.getEntityMarkDirty());
 		if (runContext != null) {
 			getEntity().setRunContext(GSON.toJson(runContext));
+			isTriggerSync = Boolean.valueOf(runContext.get("isTriggerSync"));
 		}
 		String stationIdentifier = ContextServiceHolder.get().getRootContext().getStationIdentifier();
 		getEntity().setRunner(StringUtils.abbreviate(stationIdentifier, 64));
@@ -224,8 +226,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 
 	private void removeTaskRecord() {
-		logger.debug("removing record");
-		CoreModelServiceHolder.get().remove(this);
+		AccessControlServiceHolder.get().doPrivileged(() -> CoreModelServiceHolder.get().remove(this));
 	}
 
 	@Override
@@ -235,9 +236,14 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
 
 		try {
-			IUser owner = originTaskDescriptor.getOwner();
-			if (owner == null) {
-				throw new TaskException(TaskException.EXECUTION_REJECTED, "No task owner defined");
+			IUser owner;
+			if (isTriggerSync) {
+				owner = ContextServiceHolder.get().getActiveUser().orElse(null);
+			} else {
+				owner = originTaskDescriptor.getOwner();
+				if (owner == null) {
+					throw new TaskException(TaskException.EXECUTION_REJECTED, "No task owner defined");
+				}
 			}
 
 			if (isThreadLocalContextService()) {
