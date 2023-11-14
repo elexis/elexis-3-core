@@ -19,7 +19,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
@@ -208,6 +208,12 @@ public class ETFTextPlugin implements ITextPlugin {
 	public void initTemplatePrintSettings(String template) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Object getCurrentDocument() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -16,8 +16,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.text.MimeTypeUtil;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.rgw.io.FileTool;
 

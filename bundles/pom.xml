@@ -80,6 +80,7 @@
     <module>org.iatrix.help.wiki</module>
     <module>ch.elexis.core.pdfbox</module>
     <module>ch.elexis.core.pdfbox.ui</module>
+    <module>ch.elexis.core.text.docx</module>
 	<module>at.medevit.elexis.text.docx</module>
   </modules>
 </project>

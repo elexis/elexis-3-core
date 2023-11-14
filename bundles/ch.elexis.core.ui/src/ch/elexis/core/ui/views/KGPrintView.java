@@ -29,7 +29,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;

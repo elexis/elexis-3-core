@@ -3,7 +3,7 @@ package ch.elexis.core.ui.views.textsystem;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.jdt.Nullable;
-import ch.elexis.core.ui.text.MimeTypeUtil;
+import ch.elexis.core.text.MimeTypeUtil;
 import ch.elexis.data.Mandant;
 
 public class TextTemplatePrintSettings {
