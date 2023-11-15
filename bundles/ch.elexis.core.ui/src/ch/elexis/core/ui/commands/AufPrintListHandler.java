@@ -26,36 +26,35 @@ public class AufPrintListHandler extends AbstractHandler {
 		Shell activeShell = HandlerUtil.getActiveShellChecked(event);
 		AUF2 view = (AUF2) HandlerUtil.getActivePartChecked(event);
 		IPatient pat = ContextServiceHolder.get().getActivePatient().orElse(null);
-		if (pat != null) {
+		List<ISickCertificate> selectedCertificates = view.getSelectedCertificates();
+		List<ISickCertificate> certificatesToPrint = new ArrayList<>();
+		if (!selectedCertificates.isEmpty()) {
+			certificatesToPrint.addAll(selectedCertificates);
+		} else if (pat != null) {
 			Object[] elements = ((AUFContentProvider) view.getViewer().getContentProvider())
 					.getElements(view.getViewer().getInput());
-			List<Object> filteredElements = new ArrayList<>();
 			for (Object element : elements) {
 				if (!view.isFilterActive() || view.getFilter().select(view.getViewer(), null, element)) {
-					filteredElements.add(element);
-				}
-			}
-			if (!filteredElements.isEmpty()) {
-				String[][] aufData = new String[filteredElements.size() + 2][];
-				aufData[0] = new String[] { Messages.PATIENT_AUF + EMPTY_STRING + pat.getLabel() };
-				aufData[1] = new String[] { EMPTY_STRING };
-				for (int i = 0; i < filteredElements.size(); i++) {
-					if (filteredElements.get(i) instanceof ISickCertificate) {
-						ISickCertificate auf = (ISickCertificate) filteredElements.get(i);
-						aufData[i + 2] = new String[] { auf.getLabel().toString() };
+					if (element instanceof ISickCertificate) {
+						certificatesToPrint.add((ISickCertificate) element);
 					}
 				}
-				GenericPrintDialog gpl = new GenericPrintDialog(activeShell, Messages.AUF_LISTE, Messages.AUF_LISTE);
-				gpl.create();
-				gpl.insertTable(PLACEHOLDER, aufData, null);
-				gpl.open();
-			} else {
-				MessageDialog.openInformation(activeShell, Messages.INFORMATION,
-						Messages.AUF_No_List);
 			}
+		}
+		if (!certificatesToPrint.isEmpty()) {
+			String[][] aufData = new String[certificatesToPrint.size() + 2][];
+			aufData[0] = new String[] { Messages.PATIENT_AUF + EMPTY_STRING + (pat != null ? pat.getLabel() : "") };
+			aufData[1] = new String[] { EMPTY_STRING };
+			for (int i = 0; i < certificatesToPrint.size(); i++) {
+				ISickCertificate auf = certificatesToPrint.get(i);
+				aufData[i + 2] = new String[] { auf.getLabel().toString() };
+			}
+			GenericPrintDialog gpl = new GenericPrintDialog(activeShell, Messages.AUF_LISTE, Messages.AUF_LISTE);
+			gpl.create();
+			gpl.insertTable(PLACEHOLDER, aufData, null);
+			gpl.open();
 		} else {
-			MessageDialog.openInformation(activeShell, Messages.INFORMATION,
-					Messages.ChecklistView_KeinPatient);
+			MessageDialog.openInformation(activeShell, Messages.INFORMATION, Messages.AUF_No_List);
 		}
 		return null;
 	}
