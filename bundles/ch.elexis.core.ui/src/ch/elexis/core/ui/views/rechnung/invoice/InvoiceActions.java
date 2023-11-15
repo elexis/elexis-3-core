@@ -46,7 +46,6 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
@@ -108,19 +107,12 @@ public class InvoiceActions {
 				List<Rechnung> list = getInvoiceSelections(viewer);
 				if (list.size() > 0) {
 					for (Rechnung actRn : list) {
-						switch (actRn.getStatus()) {
-						case RnStatus.OFFEN_UND_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_1);
-							break;
-						case RnStatus.MAHNUNG_1_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_2);
-							break;
-						case RnStatus.MAHNUNG_2_GEDRUCKT:
-							actRn.setStatus(RnStatus.MAHNUNG_3);
-							break;
-						default:
-							SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption,
-									Messages.RnActions_changeStateErrorMessage);
+						switch (actRn.getInvoiceState()) {
+						case OPEN_AND_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_1);
+						case DEMAND_NOTE_1_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_2);
+						case DEMAND_NOTE_2_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_3);
+						default -> SWTHelper.showInfo(Messages.RnActions_changeStateErrorCaption,
+								Messages.RnActions_changeStateErrorMessage);
 						}
 					}
 				}
@@ -377,7 +369,7 @@ public class InvoiceActions {
 			@Override
 			public void doRun(List<Rechnung> lockedElements) {
 				for (Rechnung rn : lockedElements) {
-					rn.setStatus(RnStatus.OFFEN);
+					rn.setStatus(InvoiceState.OPEN);
 				}
 			}
 		};

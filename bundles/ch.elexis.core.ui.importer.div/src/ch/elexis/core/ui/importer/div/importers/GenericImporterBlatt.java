@@ -310,7 +310,7 @@ public class GenericImporterBlatt extends Composite {
 									excelFieldsStrings.append(","); //$NON-NLS-1$
 								excelFieldsStrings.append(name);
 								inputAvailableFields.add(new Field(name));
-								inputFieldIndices.put(name, new Integer(i));
+								inputFieldIndices.put(name, Integer.valueOf(i));
 							}
 						}
 

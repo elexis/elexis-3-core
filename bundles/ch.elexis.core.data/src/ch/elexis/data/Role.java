@@ -28,19 +28,9 @@ public class Role extends PersistentObject {
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_SYSTEM_ROLE, FLD_EXTINFO,
 				FLD_JOINT_RIGHTS + "=LIST:ROLE_ID:ROLE_RIGHT_JOINT");
-
-		initTables();
 	}
 
 	public Role() {
-	}
-
-	// TODO move to NoPo initialisation
-	@Deprecated(forRemoval = true)
-	protected static void initTables() {
-		if (!tableExists(TABLENAME)) {
-			executeDBInitScriptForClass(Role.class, null);
-		}
 	}
 
 	public Role(boolean isSystemRole) {

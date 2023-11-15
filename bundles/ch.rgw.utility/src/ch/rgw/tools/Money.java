@@ -91,7 +91,7 @@ public class Money extends Number implements Comparable<Money> {
 	public static Number checkInput(String rawValue) throws ParseException {
 		Number num;
 		if (StringTool.isNothing(rawValue)) {
-			num = new Double(0.0);
+			num = Double.valueOf(0.0);
 		} else {
 			String val = rawValue.trim();
 			num = parse(val);
@@ -300,6 +300,7 @@ public class Money extends Number implements Comparable<Money> {
 		return cents;
 	}
 
+	@Override
 	public int compareTo(Money other) {
 		return this.cents - other.getCents();
 	}
@@ -311,7 +312,7 @@ public class Money extends Number implements Comparable<Money> {
 
 	@Override
 	public float floatValue() {
-		return new Float(this.getAmount());
+		return Double.valueOf(this.getAmount()).floatValue();
 	}
 
 	@Override
@@ -321,7 +322,7 @@ public class Money extends Number implements Comparable<Money> {
 
 	@Override
 	public long longValue() {
-		return (long) this.getCents();
+		return this.getCents();
 	}
 
 	public static char getSeparator() {

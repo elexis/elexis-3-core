@@ -21,11 +21,11 @@ import org.eclipse.core.commands.ExecutionException;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Rechnungssteller;
-import ch.elexis.data.RnStatus;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
@@ -39,6 +39,7 @@ public class MahnlaufCommand extends AbstractHandler {
 
 	private Settings rnsSettings;
 
+	@Override
 	public Object execute(ExecutionEvent arg0) throws ExecutionException {
 		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
 		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();
@@ -56,7 +57,7 @@ public class MahnlaufCommand extends AbstractHandler {
 
 	private void performMahnlaufForMandant(String mandantId) {
 		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.OPEN_AND_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 
 		TimeTool tt = new TimeTool();
@@ -73,14 +74,14 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_STATUS_DATUM, "<", tt.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$
 		List<Rechnung> list = qbe.execute();
 		for (Rechnung rn : list) {
-			rn.setStatus(RnStatus.MAHNUNG_1);
+			rn.setStatus(InvoiceState.DEMAND_NOTE_1);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr1, null);
 			}
 		}
 		// 1. Mahnung zu 2. Mahnung
 		qbe.clear();
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.DEMAND_NOTE_1_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
@@ -94,14 +95,14 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_STATUS_DATUM, "<", tt.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$
 		list = qbe.execute();
 		for (Rechnung rn : list) {
-			rn.setStatus(RnStatus.MAHNUNG_2);
+			rn.setStatus(InvoiceState.DEMAND_NOTE_2);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr2, null);
 			}
 		}
 		// 2. Mahnung zu 3. Mahnung
 		qbe.clear();
-		qbe.add(STR_RN_STATUS, "=", Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT)); //$NON-NLS-1$
+		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.DEMAND_NOTE_2_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
 		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
@@ -115,7 +116,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_STATUS_DATUM, "<", tt.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$
 		list = qbe.execute();
 		for (Rechnung rn : list) {
-			rn.setStatus(RnStatus.MAHNUNG_3);
+			rn.setStatus(InvoiceState.DEMAND_NOTE_3);
 			if (!betrag.isZero()) {
 				rn.addZahlung(new Money(betrag).multiply(-1.0), ch.elexis.data.Messages.Rechnung_Mahngebuehr3, null);
 			}

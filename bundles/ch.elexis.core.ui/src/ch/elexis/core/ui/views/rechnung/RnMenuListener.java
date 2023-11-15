@@ -20,11 +20,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.rgw.tools.Tree;
 
 public class RnMenuListener implements IMenuListener {
@@ -36,6 +36,7 @@ public class RnMenuListener implements IMenuListener {
 		this.view = view;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void menuAboutToShow(IMenuManager manager) {
 		Object[] o = view.cv.getSelection();
@@ -44,7 +45,7 @@ public class RnMenuListener implements IMenuListener {
 				Tree t = (Tree) o[0];
 				if (t.contents instanceof Rechnung) {
 					Rechnung rn = (Rechnung) t.contents;
-					if (rn.getStatus() == RnStatus.FEHLERHAFT) {
+					if (rn.getInvoiceState() == InvoiceState.CANCELLED) {
 						manager.add(view.actions.delRnAction);
 						manager.add(view.actions.reactivateRnAction);
 					} else {
@@ -56,7 +57,7 @@ public class RnMenuListener implements IMenuListener {
 						manager.add(new Separator());
 						manager.add(view.actions.changeStatusAction);
 						manager.add(view.actions.stornoAction);
-						enableStornoDependentFields(rn.getStatus() != RnStatus.STORNIERT);
+						enableStornoDependentFields(rn.getInvoiceState() != InvoiceState.CANCELLED);
 					}
 				} else if (t.contents instanceof Fall) {
 					// Fall fall=(Fall)t.contents;
@@ -74,13 +75,13 @@ public class RnMenuListener implements IMenuListener {
 
 					if (treeElement.contents instanceof Rechnung) {
 						Rechnung rn = (Rechnung) treeElement.contents;
-						compatibleStatus = isCompatible(rn.getStatus());
+						compatibleStatus = isCompatible(rn.getInvoiceState().getState());
 
 					} else if (treeElement.contents instanceof Fall) {
 						Collection<Tree> fallRechnungen = treeElement.getChildren();
 						for (Tree tRn : fallRechnungen) {
 							Rechnung rn = (Rechnung) tRn.contents;
-							compatibleStatus = isCompatible(rn.getStatus());
+							compatibleStatus = isCompatible(rn.getInvoiceState().getState());
 						}
 					} else if (treeElement.contents instanceof Patient) {
 						Collection<Tree> fallChilds = treeElement.getChildren();
@@ -88,7 +89,7 @@ public class RnMenuListener implements IMenuListener {
 							Collection<Tree> fallRechnungen = fallTree.getChildren();
 							for (Tree tRn : fallRechnungen) {
 								Rechnung rn = (Rechnung) tRn.contents;
-								compatibleStatus = isCompatible(rn.getStatus());
+								compatibleStatus = isCompatible(rn.getInvoiceState().getState());
 							}
 						}
 					}
@@ -97,7 +98,7 @@ public class RnMenuListener implements IMenuListener {
 				// only show menu if status did match otherwise this could lead to
 				// irregularities of invoices
 				if (compatibleStatus) {
-					if (generalStatus == RnStatus.FEHLERHAFT) {
+					if (generalStatus == InvoiceState.DEFECTIVE.getState()) {
 						manager.add(view.actions.delRnAction);
 						manager.add(view.actions.reactivateRnAction);
 					} else {
@@ -106,7 +107,7 @@ public class RnMenuListener implements IMenuListener {
 						manager.add(view.actions.increaseLevelAction);
 						manager.add(new Separator());
 						manager.add(view.actions.changeStatusAction);
-						enableStornoDependentFields(generalStatus != RnStatus.STORNIERT);
+						enableStornoDependentFields(generalStatus != InvoiceState.CANCELLED.getState());
 					}
 				}
 			}
@@ -121,7 +122,7 @@ public class RnMenuListener implements IMenuListener {
 	 */
 	private boolean isCompatible(int status) {
 		// use for all non fehlerhaft or storno status 0
-		if (status != RnStatus.FEHLERHAFT && status != RnStatus.STORNIERT) {
+		if (status != InvoiceState.CANCELLED.getState() && status != InvoiceState.CANCELLED.getState()) {
 			status = 0;
 		}
 

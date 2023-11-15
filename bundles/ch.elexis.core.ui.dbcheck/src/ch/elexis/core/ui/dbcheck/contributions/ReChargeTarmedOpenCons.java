@@ -15,7 +15,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
@@ -28,6 +27,7 @@ import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Query;
@@ -206,7 +206,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, to.toString(TimeTool.DATE_COMPACT));
 		}
 		if (currentMandantOnly) {
-			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, ContextServiceHolder.getActiveMandatorOrNull().getId());
 		}
 		return qbe.execute();
 	}

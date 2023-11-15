@@ -39,11 +39,11 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IUserService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
@@ -168,15 +168,15 @@ public class MandantSelectionContributionItem {
 					Hub.setMandant(m);
 				}
 			});
-			if (CoreHub.actMandant != null) {
+			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {
 				menuItems[i].setSelection(CoreHub.actMandant.equals(m));
 			}
 		}
 
 		item.addListener(SWT.Selection, selectionListener);
 
-		if (CoreHub.actMandant != null && item != null) {
-			item.setText(CoreHub.actMandant.getMandantLabel());
+		if (ContextServiceHolder.getActiveMandatorOrNull() != null && item != null) {
+			item.setText(ContextServiceHolder.getActiveMandatorOrNull().getLabel());
 			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
 		}
 

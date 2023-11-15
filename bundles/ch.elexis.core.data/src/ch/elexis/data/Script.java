@@ -30,6 +30,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -240,7 +241,7 @@ public class Script extends NamedBlob2 {
 			scripter.setValue("actPatient", ElexisEventDispatcher.getSelectedPatient());
 			scripter.setValue("actFall", ElexisEventDispatcher.getSelected(Fall.class));
 			scripter.setValue("actKons", ElexisEventDispatcher.getSelected(Konsultation.class));
-			scripter.setValue("actMandant", CoreHub.actMandant);
+			scripter.setValue("actMandant", Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId()));
 			scripter.setValue("actUser", CoreHub.getLoggedInContact());
 
 			scripter.setValue("Elexis", CoreHub.plugin);

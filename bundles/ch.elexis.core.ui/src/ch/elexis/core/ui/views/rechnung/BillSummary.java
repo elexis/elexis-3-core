@@ -48,6 +48,7 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -59,7 +60,6 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
 
@@ -125,6 +125,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		List<Rechnung> rechnungen = patient.getRechnungen();
 		Collections.sort(rechnungen, new Comparator<Rechnung>() {
 			// compare on bill number
+			@Override
 			public int compare(Rechnung r1, Rechnung r2) {
 				// both null, consider as equal
 				if (r1 == null && r2 == null) {
@@ -142,8 +143,8 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				}
 
 				try {
-					Integer number1 = new Integer(r1.getNr());
-					Integer number2 = new Integer(r2.getNr());
+					Integer number1 = Integer.valueOf(r1.getNr());
+					Integer number2 = Integer.valueOf(r2.getNr());
 					return bReverse ? number2.compareTo(number1) : number1.compareTo(number2);
 				} catch (NumberFormatException ex) {
 					// error, consider equal
@@ -152,6 +153,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 			}
 
 			// compare on id
+			@Override
 			public boolean equals(Object obj) {
 				return (this == obj);
 			}
@@ -160,6 +162,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		return rechnungen;
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		tk = UiDesk.getToolkit();
@@ -205,6 +208,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 		tc[1].addSelectionListener(sortListener);
 
 		billsViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object inputElement) {
 				if (actPatient == null) {
 					return new Object[] { Messages.Core_No_patient_selected_point };
@@ -213,27 +217,33 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				return getRechnungen(actPatient).toArray();
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				// nothing to do
 			}
 		});
 		billsViewer.setLabelProvider(new ITableLabelProvider() {
+			@Override
 			public void addListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void removeListener(ILabelProviderListener listener) {
 				// nothing to do
 			}
 
+			@Override
 			public void dispose() {
 				// nothing to do
 			}
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				if (!(element instanceof Rechnung)) {
 					return StringUtils.EMPTY;
@@ -256,7 +266,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 					text = rechnung.getOffenerBetrag().toString();
 					break;
 				case STATUS:
-					text = RnStatus.getStatusText(rechnung.getStatus());
+					text = rechnung.getInvoiceState().getLocaleText();
 					break;
 				case GARANT:
 					text = rechnung.getFall().getGarant().getLabel();
@@ -266,10 +276,12 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				return text;
 			}
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
 
+			@Override
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
@@ -287,6 +299,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		billsViewer.getControl().setFocus();
 	}
@@ -334,7 +347,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 			List<Rechnung> rechnungen = actPatient.getRechnungen();
 			for (Rechnung rechnung : rechnungen) {
 				// don't consider canceled bills
-				if (rechnung.getStatus() != RnStatus.STORNIERT) {
+				if (rechnung.getInvoiceState() != InvoiceState.CANCELLED) {
 					total.addMoney(rechnung.getBetrag());
 					for (Zahlung zahlung : rechnung.getZahlungen()) {
 						paid.addMoney(zahlung.getBetrag());
@@ -376,6 +389,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				setToolTipText(Messages.BillSummary_SummaryToClipboard); // $NON-NLS-1$
 			}
 
+			@Override
 			public void run() {
 				exportToClipboard();
 			}
@@ -417,7 +431,7 @@ public class BillSummary extends ViewPart implements IRefreshable {
 				sbLine.append("\t"); //$NON-NLS-1$
 				sbLine.append(rechnung.getOffenerBetrag().toString());
 				sbLine.append("\t"); //$NON-NLS-1$
-				sbLine.append(RnStatus.getStatusText(rechnung.getStatus()));
+				sbLine.append(rechnung.getInvoiceState().getLocaleText());
 				sbLine.append("\t"); //$NON-NLS-1$
 				sbLine.append(rechnung.getFall().getGarant().getLabel());
 				sbLine.append(lineSeparator);

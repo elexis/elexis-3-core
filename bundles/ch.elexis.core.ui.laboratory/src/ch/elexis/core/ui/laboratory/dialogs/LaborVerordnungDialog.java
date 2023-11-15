@@ -227,8 +227,9 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		TimeTool now = new TimeTool();
 		if (items != null) {
 			for (GroupItem groupItem : items) {
-				LabOrder order = new LabOrder(CoreHub.getLoggedInContact(), CoreHub.actMandant, patient,
-						groupItem.getLabItem(), null, orderId.getText(), groupItem.getGroupname(), now);
+				LabOrder order = new LabOrder(CoreHub.getLoggedInContact().getId(),
+						ContextServiceHolder.getActiveMandatorOrNull().getId(), patient.getId(), groupItem.getLabItem(),
+						null, orderId.getText(), groupItem.getGroupname(), now);
 				order.setObservationTimeWithResults(date);
 				ret.add(order);
 			}
@@ -252,8 +253,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		StringBuilder message = new StringBuilder("Labor"); //$NON-NLS-1$
 		StringBuilder params = new StringBuilder();
 		if (orders != null && !orders.isEmpty()) {
-			message.append(StringUtils.SPACE)
-					.append(ch.elexis.core.ui.laboratory.controls.Messages.Order_ID)
+			message.append(StringUtils.SPACE).append(ch.elexis.core.ui.laboratory.controls.Messages.Order_ID)
 					.append(": ").append(orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 			params.append(LabOrder.FLD_ORDERID + "=" + orders.get(0).get(LabOrder.FLD_ORDERID)); //$NON-NLS-1$
 		}

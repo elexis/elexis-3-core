@@ -209,7 +209,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 			boolean bFlag = false;
 			while (it.hasNext()) {
 				Rechnung r = it.next();
-				if (r.getStatus() == InvoiceState.CANCELLED.numericValue()) {
+				if (r.getInvoiceState() == InvoiceState.CANCELLED) {
 					it.remove();
 					bFlag = true;
 				}

@@ -70,7 +70,6 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
 import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
@@ -89,7 +88,7 @@ public class RnDialogs {
 
 		public GebuehrHinzuDialog(Shell shell, Rechnung r) throws ElexisException {
 			super(shell);
-			if (r.getStatus() == RnStatus.STORNIERT) {
+			if (r.getInvoiceState() == InvoiceState.CANCELLED) {
 				throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
 			}
 			rn = r;
@@ -161,7 +160,7 @@ public class RnDialogs {
 
 			rnNumbers = new ArrayList<String>();
 			for (Rechnung rn : rechnungen) {
-				if (rn.getStatus() == RnStatus.STORNIERT) {
+				if (rn.getInvoiceState() == InvoiceState.CANCELLED) {
 					throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
 				}
 				rnNumbers.add(rn.getNr());
@@ -264,7 +263,7 @@ public class RnDialogs {
 		public BuchungHinzuDialog(Shell shell, Rechnung invoice, boolean allowCancelledInvoices)
 				throws ElexisException {
 			super(shell);
-			if (invoice.getStatus() == InvoiceState.CANCELLED.numericValue()) {
+			if (invoice.getInvoiceState() == InvoiceState.CANCELLED) {
 				if (!allowCancelledInvoices) {
 					throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
 				}
@@ -307,7 +306,7 @@ public class RnDialogs {
 			accounts.sort(new Comparator<Account>() {
 				@Override
 				public int compare(Account left, Account right) {
-					return Integer.valueOf(left.getNumeric()).compareTo(Integer.valueOf(right.getNumeric()));
+					return Integer.valueOf(left.getNumeric()).compareTo(right.getNumeric());
 				}
 			});
 			viewer.setInput(accounts);
@@ -378,9 +377,9 @@ public class RnDialogs {
 			ret.setLayout(new GridLayout());
 			ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			cbStates = new Combo(ret, SWT.READ_ONLY);
-			cbStates.setItems(RnStatus.getStatusTexts());
-			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
-			cbStates.select(rn.getStatus());
+			cbStates.setItems(InvoiceState.getInvoiceStatesAsTextInOrder());
+			cbStates.setVisibleItemCount(InvoiceState.getInOrder().length);
+			cbStates.select(rn.getInvoiceState().getState());
 			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			new Label(ret, SWT.WRAP).setText(Messages.RnDialogs_warningDontChangeManually); // $NON-NLS-1$
 			return ret;
@@ -399,7 +398,7 @@ public class RnDialogs {
 		protected void okPressed() {
 			int idx = cbStates.getSelectionIndex();
 			if (idx != -1) {
-				rn.setStatus(idx);
+				rn.setStatus(InvoiceState.fromState(idx));
 			}
 			super.okPressed();
 		}
@@ -435,9 +434,9 @@ public class RnDialogs {
 			lblSelectState.setText(Messages.RnDialogs_pleaseNewStateForMulti);
 
 			cbStates = new Combo(ret, SWT.READ_ONLY);
-			cbStates.setItems(RnStatus.getStatusTexts());
-			cbStates.setVisibleItemCount(RnStatus.getStatusTexts().length);
-			cbStates.select(rechnungen.get(0).getStatus());
+			cbStates.setItems(InvoiceState.getInvoiceStatesAsTextInOrder());
+			cbStates.setVisibleItemCount(InvoiceState.getInOrder().length);
+			cbStates.select(rechnungen.get(0).getInvoiceState().getState());
 			cbStates.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 			tableViewer = new TableViewer(ret, SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -474,7 +473,7 @@ public class RnDialogs {
 			int idx = cbStates.getSelectionIndex();
 			if (idx != -1) {
 				for (Rechnung rn : rechnungen) {
-					rn.setStatus(idx);
+					rn.setStatus(InvoiceState.fromState(idx));
 				}
 			}
 			super.okPressed();
@@ -785,14 +784,14 @@ public class RnDialogs {
 					SimpleDateFormat df2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 					String dateText = df2.format(date);
 					line[8] = dateText.toString();
-					int st = rn.getStatus();
-					line[9] = Integer.toString(st);
-					if (RnStatus.isActive(st)) {
+					InvoiceState st = rn.getInvoiceState();
+					line[9] = Integer.toString(st.getState());
+					if (st.isActive()) {
 						line[10] = "True"; //$NON-NLS-1$
 					} else {
 						line[10] = "False"; //$NON-NLS-1$
 					}
-					line[11] = RnStatus.getStatusText(st);
+					line[11] = st.getLocaleText();
 					// 201512210310js: New: produce 4 fields, each with multiline content.
 					List<String> statuschgs = rn.getTrace(Rechnung.STATUS_CHANGED);
 					String a = statuschgs.toString();
@@ -806,7 +805,7 @@ public class RnDialogs {
 						// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 						line[12] = a.substring(1, a.length() - 1);
 					}
-					if (rn.getStatus() == RnStatus.FEHLERHAFT) {
+					if (rn.getInvoiceState() == InvoiceState.DEFECTIVE) {
 						List<String> rejects = rn.getTrace(Rechnung.REJECTED);
 						String rnStatus = rejects.toString();
 						if (rnStatus != null && rnStatus.length() > 1) {
@@ -886,7 +885,7 @@ public class RnDialogs {
 						List<Rechnung> rechnungen = p.getRechnungen();
 						for (Rechnung rechnung : rechnungen) {
 							// don't consider canceled bills
-							if (rechnung.getStatus() != RnStatus.STORNIERT) {
+							if (rechnung.getInvoiceState() != InvoiceState.CANCELLED) {
 								total.addMoney(rechnung.getBetrag());
 								for (Zahlung zahlung : rechnung.getZahlungen()) {
 									paid.addMoney(zahlung.getBetrag());

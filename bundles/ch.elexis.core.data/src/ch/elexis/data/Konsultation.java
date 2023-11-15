@@ -56,6 +56,7 @@ import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.prescription.EntryType;
@@ -63,6 +64,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.text.model.Samdas;
@@ -105,6 +107,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	// keep a list of all ch.elexis.VerrechenbarAdjuster extensions
 	private static ArrayList<IVerrechenbarAdjuster> adjusters = new ArrayList<IVerrechenbarAdjuster>();
 
+	@Override
 	protected String getTableName() {
 		return TABLENAME;
 	}
@@ -139,6 +142,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * der Datenbank existiert und wenn sie einen zugeordneten Mandanten und einen
 	 * zugeordeten Fall hat.
 	 */
+	@Override
 	public boolean isValid() {
 		if (!super.isValid()) {
 			return false;
@@ -247,7 +251,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			create(null);
 			TimeTool now = new TimeTool();
 			set(new String[] { DATE, FLD_TIME, FLD_CASE_ID, FLD_MANDATOR_ID }, now.toString(TimeTool.DATE_GER),
-					now.toString(TimeTool.TIME_COMPACT_FULL), fall.getId(), CoreHub.actMandant.getId());
+					now.toString(TimeTool.TIME_COMPACT_FULL), fall.getId(),
+					ContextServiceHolder.get().getActiveMandator().get().getId());
 			fall.getPatient().setInfoElement("LetzteBehandlung", getId());
 		}
 		if (getDefaultDiagnose() != null)
@@ -426,6 +431,12 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	/** Die Konsultation einem Mandanten zuordnen */
 	public void setMandant(Mandant m) {
+		if (m != null) {
+			set(FLD_MANDATOR_ID, m.getId());
+		}
+	}
+
+	public void setMandant(IMandator m) {
 		if (m != null) {
 			set(FLD_MANDATOR_ID, m.getId());
 		}
@@ -621,17 +632,17 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	private int getStatus(Rechnung invoice) {
 		if (invoice != null) {
-			return invoice.getStatus();
+			return invoice.getInvoiceState().getState();
 		}
 		Mandant rm = getMandant();
 		if ((rm != null) && (rm.equals(ElexisEventDispatcher.getSelected(Mandant.class)))) {
 			if (getDatum().equals(new TimeTool().toString(TimeTool.DATE_GER))) {
-				return RnStatus.VON_HEUTE;
+				return InvoiceState.FROM_TODAY.getState();
 			} else {
-				return RnStatus.NICHT_VON_HEUTE;
+				return InvoiceState.NOT_FROM_TODAY.getState();
 			}
 		} else {
-			return RnStatus.NICHT_VON_IHNEN;
+			return InvoiceState.NOT_FROM_YOU.getState();
 		}
 	}
 
@@ -643,12 +654,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			statusText += "RG " + rechnung.getNr() + ": ";
 		}
 
-		statusText += RnStatus.getStatusText(getStatus(rechnung));
+		int status = getStatus(rechnung);
+		InvoiceState invoiceState = InvoiceState.fromState(status);
+		statusText += invoiceState.getLocaleText();
 
 		return statusText;
 	}
 
 	/** Eine einzeilige Beschreibung dieser Konsultation holen */
+	@Override
 	public String getLabel() {
 		StringBuffer ret = new StringBuffer();
 		Mandant m = getMandant();
@@ -844,6 +858,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 *             {@link IBillingService#removeBilled(ch.elexis.core.model.IBilled, ch.elexis.core.model.IEncounter)}
 	 */
 
+	@Deprecated
 	public Result<Verrechnet> removeLeistung(Verrechnet ls) {
 		if (isEditable(true)) {
 			IVerrechenbar v = ls.getVerrechenbar();
@@ -880,6 +895,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @deprecated use
 	 *             {@link IBillingService#bill(ch.elexis.core.model.IBillable, ch.elexis.core.model.IEncounter, double)}
 	 */
+	@Deprecated
 	public Result<IVerrechenbar> addLeistung(IVerrechenbar l) {
 		if (isEditable(true)) {
 			IVerrechenbar beforeAdjust = l;
@@ -1064,9 +1080,9 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (forced || isEditable(true)) {
 			List<Verrechnet> vv = getLeistungen();
 			// VersionedResource vr=getEintrag();
-			if ((vv.size() == 0) || (forced == true) && (AccessControlServiceHolder.get()
-					.evaluate(new ObjectEvaluatableACE(IEncounter.class, Right.REMOVE,
-							StoreToStringServiceHolder.getStoreToString(this))))) {
+			if ((vv.size() == 0) || (forced == true)
+					&& (AccessControlServiceHolder.get().evaluate(new ObjectEvaluatableACE(IEncounter.class,
+							Right.REMOVE, StoreToStringServiceHolder.getStoreToString(this))))) {
 				delete_dependent();
 				return super.delete();
 			}
@@ -1086,6 +1102,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * Interface Comparable, um die Behandlungen nach Datum und Zeit sortieren zu
 	 * können
 	 */
+	@Override
 	public int compareTo(Konsultation b) {
 		LocalDateTime me = getDateTime();
 		LocalDateTime other = b.getDateTime();
@@ -1124,6 +1141,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			rev = reverse;
 		}
 
+		@Override
 		public int compare(Konsultation b1, Konsultation b2) {
 			TimeTool t1 = new TimeTool(b1.getDatum());
 			TimeTool t2 = new TimeTool(b2.getDatum());
@@ -1153,6 +1171,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 * @deprecated handled in command ch.elexis.core.ui.command.encounter.create
 	 * @since 3.8
 	 */
+	@Deprecated
 	public static void neueKons(final String initialText) {
 		Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 		Fall actFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);

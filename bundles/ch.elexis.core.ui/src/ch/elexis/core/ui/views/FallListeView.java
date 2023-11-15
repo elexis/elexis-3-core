@@ -59,11 +59,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -175,7 +175,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 						String bez = fallCf.getControlFieldProvider().getValues()[0];
 						Fall fall = actPatient.neuerFall(bez, Messages.Core_Illness, "KVG"); //$NON-NLS-1$ //$NON-NLS-2$
 						Konsultation b = fall.neueKonsultation();
-						b.setMandant(CoreHub.actMandant);
+						b.setMandant(ContextServiceHolder.getActiveMandatorOrNull());
 						fallCf.getControlFieldProvider().clearValues();
 						fallViewer.getViewerWidget().refresh();
 						fallViewer.setSelection(fall, true);
@@ -250,7 +250,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 					public void widgetSelected(SelectionEvent e) {
 						Konsultation b = actFall.neueKonsultation();
 						if (b != null) {
-							b.setMandant(CoreHub.actMandant);
+							b.setMandant(ContextServiceHolder.getActiveMandatorOrNull());
 							behandlCf.getControlFieldProvider().clearValues();
 							behandlViewer.getViewerWidget().refresh();
 							// behandlViewer.setSelection(b);

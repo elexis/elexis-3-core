@@ -48,6 +48,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -66,6 +67,7 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.rgw.io.FileTool;
@@ -286,8 +288,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		briefLadenAction = new Action(Messages.TextView_openLetter) { // $NON-NLS-1$
 			@Override
 			public void run() {
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), actPatient,
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(),
 						DocumentSelectDialog.TYPE_LOAD_DOCUMENT);
 				if (bs.open() == Dialog.OK) {
 					openDocument(bs.getSelectedDocument());
@@ -299,7 +300,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		loadSysTemplateAction = new Action(Messages.TextView_openSysTemplate) { // $NON-NLS-1$
 			@Override
 			public void run() {
-				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(),
 						DocumentSelectDialog.TYPE_LOAD_SYSTEMPLATE);
 				if (bs.open() == Dialog.OK) {
 					openDocument(bs.getSelectedDocument());
@@ -309,7 +310,7 @@ public class TextView extends ViewPart implements IActivationListener {
 		loadTemplateAction = new Action(Messages.Core_Open_Template) { // $NON-NLS-1$
 			@Override
 			public void run() {
-				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(), CoreHub.actMandant,
+				DocumentSelectDialog bs = new DocumentSelectDialog(getViewSite().getShell(),
 						DocumentSelectDialog.TYPE_LOAD_TEMPLATE);
 				if (bs.open() == Dialog.OK) {
 					openDocument(bs.getSelectedDocument());
@@ -424,7 +425,7 @@ public class TextView extends ViewPart implements IActivationListener {
 						Konsultation k = pat.getLetzteKons(false);
 						if (k == null) {
 							k = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
-							k.setMandant(CoreHub.actMandant);
+							k.setMandant(Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId()));
 						}
 						ElexisEventDispatcher.fireSelectionEvent(k);
 					}
