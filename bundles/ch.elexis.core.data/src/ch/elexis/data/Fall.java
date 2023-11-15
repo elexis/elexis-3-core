@@ -634,7 +634,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			return null;
 		}
 		Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
-		if (!activeMandator.isPresent() || activeMandator.get().isActive()) {
+		if (!activeMandator.isPresent()) {
 			MessageEvent.fireError(Messages.Fall_NoMandatorCaption, Messages.Fall_NoMandatorText);
 			return null;
 		}
@@ -690,8 +690,8 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 * @return true if this Fall could be (and has been) deleted.
 	 */
 	public boolean delete(final boolean force) {
-		if (!hasDependent() || ((force == true) && (AccessControlServiceHolder.get()
-				.evaluate(new ObjectEvaluatableACE(ICoverage.class, Right.REMOVE,
+		if (!hasDependent() || ((force == true)
+				&& (AccessControlServiceHolder.get().evaluate(new ObjectEvaluatableACE(ICoverage.class, Right.REMOVE,
 						StoreToStringServiceHolder.getStoreToString(this)))))) {
 			for (Konsultation b : getBehandlungen(false)) {
 				b.delete(true);
