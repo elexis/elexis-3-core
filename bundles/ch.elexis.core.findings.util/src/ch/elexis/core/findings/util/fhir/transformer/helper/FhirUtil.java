@@ -4,9 +4,12 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Money;
 import org.hl7.fhir.r4.model.Reference;
@@ -115,4 +118,42 @@ public class FhirUtil {
 		return false;
 	}
 
+	/**
+	 * Get the code String of the first {@link Coding} in the
+	 * {@link CodeableConcept} list with matching system.
+	 * 
+	 * @param system
+	 * @param list
+	 * @return
+	 */
+	public static Optional<String> getCodeFromConceptList(String system, List<CodeableConcept> list) {
+		if (list != null && !list.isEmpty()) {
+			for (CodeableConcept concept : list) {
+				Optional<String> found = getCodeFromCodingList(system, concept.getCoding());
+				if (found.isPresent()) {
+					return found;
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Get the code String of the first {@link Coding} in the list with matching
+	 * system.
+	 * 
+	 * @param system
+	 * @param list
+	 * @return
+	 */
+	public static Optional<String> getCodeFromCodingList(String system, List<Coding> list) {
+		if (list != null && !list.isEmpty()) {
+			for (Coding coding : list) {
+				if (coding.getSystem().equals(system) && coding.getCode() != null) {
+					return Optional.of(coding.getCode());
+				}
+			}
+		}
+		return Optional.empty();
+	}
 }

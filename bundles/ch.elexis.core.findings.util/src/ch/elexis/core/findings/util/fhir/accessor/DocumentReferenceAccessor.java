@@ -105,10 +105,11 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 		Optional<CodeableConcept> categoryConcept = ModelUtil.getCodeableConceptBySystem(fhirResource.getCategory(),
 				CodingSystem.ELEXIS_DOCUMENT_CATEGORY);
 		if (categoryConcept.isPresent()) {
+			categoryConcept.get().getCodingFirstRep().setCode(value);
 			categoryConcept.get().getCodingFirstRep().setDisplay(value);
 		} else {
 			CodeableConcept newConcept = new CodeableConcept(
-					new Coding(CodingSystem.ELEXIS_DOCUMENT_CATEGORY.getSystem(), "category", value));
+					new Coding(CodingSystem.ELEXIS_DOCUMENT_CATEGORY.getSystem(), value, value));
 			fhirResource.addCategory(newConcept);
 		}
 	}

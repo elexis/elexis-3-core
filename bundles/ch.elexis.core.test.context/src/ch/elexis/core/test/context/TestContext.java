@@ -1,6 +1,7 @@
 package ch.elexis.core.test.context;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ch.elexis.core.model.IContact;
@@ -109,7 +110,6 @@ public class TestContext implements IContext {
 
 	@Override
 	public String getStationIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return UUID.randomUUID().toString();
 	}
 }

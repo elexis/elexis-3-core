@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,8 +45,8 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
 
-	@Reference(target = "(storeid=ch.elexis.data.store.omnivore)")
-	private IDocumentStore omnivoreStore;
+	@Reference
+	private List<IDocumentStore> documentStores;
 
 	@Reference
 	private IFindingsService findingsService;
@@ -68,6 +69,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 				if (document != null) {
 					ret.addCategory(new CodeableConcept(
 							new Coding("http://elexis.info/document/storeid", document.getStoreId(), "")));
+
 					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 					Attachment attachment = new Attachment();
 					String title = document.getTitle();
@@ -117,44 +119,65 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
+			IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
+
 			Optional<String> patientId = FhirUtil.getId(fhirObject.getSubject());
 			if (patientId.isPresent()) {
-				Optional<IPatient> patientKontakt = codeModelService.load(patientId.get(), IPatient.class);
-				if (patientKontakt.isPresent()) {
-					IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
-					contentHelper.setResource(fhirObject, iDocumentReference);
-					iDocumentReference.setPatientId(patientKontakt.get().getId());
-					IDocument document = createDocument(patientKontakt.get(), attachment,
-							iDocumentReference.getCategory());
-					if (document != null) {
-						fhirObject.getContent().clear();
-						contentHelper.setResource(fhirObject, iDocumentReference);
-						iDocumentReference.setDocument(document);
-					}
-					findingsService.saveFinding(iDocumentReference);
-					return Optional.of(iDocumentReference);
-				} else {
-					LoggerFactory.getLogger(getClass())
-							.error("Patient [" + fhirObject.getSubject().getId() + "] not found");
+				Optional<IPatient> patient = codeModelService.load(patientId.get(), IPatient.class);
+				if (patient.isPresent()) {
+					iDocumentReference.setPatientId(patient.get().getId());
 				}
-			} else {
-				LoggerFactory.getLogger(getClass()).error("No patient for document");
 			}
+			contentHelper.setResource(fhirObject, iDocumentReference);
+			IDocumentStore documentStore = getDocumentStoreId(fhirObject);
+			IDocument document = createDocument(patientId.orElse(null), attachment, iDocumentReference.getCategory(),
+					documentStore);
+			if (document != null) {
+				fhirObject.getContent().clear();
+				contentHelper.setResource(fhirObject, iDocumentReference);
+				iDocumentReference.setDocument(document);
+			}
+			findingsService.saveFinding(iDocumentReference);
+			return Optional.of(iDocumentReference);
 		}
 		return Optional.empty();
 	}
 
-	private IDocument createDocument(IPatient patient, Attachment attachment, String category) {
-		IDocument ret = omnivoreStore.createDocument(patient.getId(), attachment.getTitle(), category);
+	private IDocumentStore getDocumentStoreId(DocumentReference fhirObject) {
+		if(fhirObject.hasCategory()) {
+			Optional<String> storeIdCode = FhirUtil.getCodeFromConceptList("http://elexis.info/document/storeid",
+					fhirObject.getCategory());
+			if (storeIdCode.isPresent()) {
+				return getDocumentStoreWithId(storeIdCode.get()).orElse(getDefaultDocumentStore());
+			}
+		}
+		return getDefaultDocumentStore();
+	}
+
+	private IDocumentStore getDefaultDocumentStore() {
+		if (documentStores.size() > 0) {
+			return documentStores.stream().filter(ds -> ds.getId().toLowerCase().contains("omnivore")).findFirst()
+					.orElse(documentStores.get(0));
+		}
+		throw new IllegalStateException("No document stores available");
+	}
+
+	private Optional<IDocumentStore> getDocumentStoreWithId(String id) {
+		return documentStores.stream().filter(ds -> ds.getId().equals(id)).findFirst();
+	}
+
+	private IDocument createDocument(String patientId, Attachment attachment, String category,
+			IDocumentStore documentStore) {
+		IDocument ret = documentStore.createDocument(patientId, attachment.getTitle(), category);
 		if (StringUtils.isNotBlank(attachment.getContentType())) {
 			ret.setMimeType(attachment.getContentType());
 		}
 		try {
-			omnivoreStore.saveDocument(ret);
+			documentStore.saveDocument(ret);
 			if (attachment != null) {
 				if (attachment.getData() != null) {
 					try (InputStream in = new ByteArrayInputStream(attachment.getData())) {
-						omnivoreStore.saveDocument(ret, in);
+						documentStore.saveDocument(ret, in);
 					} catch (IOException | ElexisException e) {
 						LoggerFactory.getLogger(getClass())
 								.error("Error reading content from attachment data [" + attachment.getUrl() + "]", e);
@@ -163,7 +186,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 					try {
 						URL url = new URL(attachment.getUrl());
 						try (InputStream in = url.openStream()) {
-							omnivoreStore.saveDocument(ret, in);
+							documentStore.saveDocument(ret, in);
 						} catch (IOException | ElexisException e) {
 							LoggerFactory.getLogger(getClass())
 									.error("Error reading content from url [" + attachment.getUrl() + "]", e);
