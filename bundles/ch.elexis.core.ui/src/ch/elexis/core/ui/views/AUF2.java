@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,9 @@ import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -78,6 +82,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 	private AufByFallFilter aufFilter = new AufByFallFilter();
 	private boolean isFilterActive = false;
 	private String currentFallID = null;
+	private List<ISickCertificate> selectedCertificates = new ArrayList<>();
 
 	@Inject
 	void activeCertificate(@Optional ISickCertificate certificate) {
@@ -173,7 +178,27 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				event.data = sb.toString().replace(",$", StringUtils.EMPTY); //$NON-NLS-1$
 			}
 		});
-
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				selectedCertificates.clear();
+				IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
+				for (Object obj : selection.toArray()) {
+					if (obj instanceof ISickCertificate) {
+						selectedCertificates.add((ISickCertificate) obj);
+					}
+				}
+			}
+		});
+		tv.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if (tv.getTable().getItem(new Point(e.x, e.y)) == null) {
+					tv.setSelection(StructuredSelection.EMPTY);
+					selectedCertificates.clear();
+				}
+			}
+		});
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
@@ -359,5 +384,9 @@ public class AUF2 extends ViewPart implements IRefreshable {
 
 	public AufByFallFilter getFilter() {
 		return aufFilter;
+	}
+
+	public List<ISickCertificate> getSelectedCertificates() {
+		return selectedCertificates;
 	}
 }
