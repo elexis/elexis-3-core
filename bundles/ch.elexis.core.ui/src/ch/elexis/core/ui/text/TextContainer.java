@@ -68,12 +68,12 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
-import ch.elexis.core.data.interfaces.text.ReplaceCallback;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -1312,6 +1312,11 @@ public class TextContainer {
 			// TODO Auto-generated method stub
 		}
 
+		@Override
+		public Object getCurrentDocument() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	/**

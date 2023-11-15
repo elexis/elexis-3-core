@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,9 @@ import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -45,20 +49,24 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.ui.commands.AufByFallFilter;
 import ch.elexis.core.ui.commands.AufNewHandler;
 import ch.elexis.core.ui.commands.AufPrintHandler;
+import ch.elexis.core.ui.commands.AufPrintListHandler;
 import ch.elexis.core.ui.dialogs.EditAUFDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
+import ch.elexis.core.ui.views.provider.Auf2LabelProvider;
 
 /**
  * Arbeitsunfähigkeitszeugnisse erstellen und verwalten.
@@ -69,8 +77,12 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 public class AUF2 extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.auf"; //$NON-NLS-1$
 	TableViewer tv;
-	private Action newAUF, delAUF, modAUF, printAUF;
+	private Action newAUF, filterAUF, printList, delAUF, modAUF, printAUF;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
+	private AufByFallFilter aufFilter = new AufByFallFilter();
+	private boolean isFilterActive = false;
+	private String currentFallID = null;
+	private List<ISickCertificate> selectedCertificates = new ArrayList<>();
 
 	@Inject
 	void activeCertificate(@Optional ISickCertificate certificate) {
@@ -104,6 +116,17 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		}, tv);
 	}
 
+	@Optional
+	@Inject
+	void activeCoverage(ICoverage iCoverage) {
+		String fallId = iCoverage.getId().toString();
+		if (isFilterActive) {
+			aufFilter.setFallID(fallId);
+			tv.refresh();
+		}
+		currentFallID = fallId;
+	}
+
 	public AUF2() {
 		setTitleImage(Images.IMG_VIEW_WORK_INCAPABLE.getImage());
 	}
@@ -115,10 +138,11 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		tv.setLabelProvider(new DefaultLabelProvider());
 		tv.setContentProvider(new AUFContentProvider());
+		tv.setLabelProvider(new Auf2LabelProvider());
 		makeActions();
 		ViewMenus menus = new ViewMenus(getViewSite());
-		menus.createMenu(newAUF, delAUF, modAUF, printAUF);
-		menus.createToolbar(newAUF, delAUF, printAUF);
+		menus.createMenu(newAUF, filterAUF, printList, delAUF, modAUF, printAUF);
+		menus.createToolbar(newAUF, filterAUF, printList, delAUF, printAUF);
 		tv.setUseHashlookup(true);
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -154,7 +178,27 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				event.data = sb.toString().replace(",$", StringUtils.EMPTY); //$NON-NLS-1$
 			}
 		});
-
+		tv.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				selectedCertificates.clear();
+				IStructuredSelection selection = (IStructuredSelection) tv.getSelection();
+				for (Object obj : selection.toArray()) {
+					if (obj instanceof ISickCertificate) {
+						selectedCertificates.add((ISickCertificate) obj);
+					}
+				}
+			}
+		});
+		tv.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if (tv.getTable().getItem(new Point(e.x, e.y)) == null) {
+					tv.setSelection(StructuredSelection.EMPTY);
+					selectedCertificates.clear();
+				}
+			}
+		});
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
@@ -190,6 +234,44 @@ public class AUF2 extends ViewPart implements IRefreshable {
 					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
+		};
+		filterAUF = new Action(Messages.Feature_filter, Action.AS_CHECK_BOX) {
+			{
+				setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+				setToolTipText(Messages.Feature_filter);
+			}
+
+		    @Override
+		    public void run() {
+		        aufFilter.setFilterActive(!isFilterActive);
+		        if (isFilterActive) {
+		            aufFilter.resetFallID();
+		            tv.removeFilter(aufFilter);
+		        } else {
+		            if (currentFallID != null) {
+		                aufFilter.setFallID(currentFallID);
+		            }
+		            tv.addFilter(aufFilter);
+		        }
+		        isFilterActive = !isFilterActive;
+		        tv.refresh();
+		    }
+		};
+		printList = new Action(Messages.Core_Print_List) {
+		    {
+		        setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
+				setToolTipText(Messages.AUF2_LIST_TOOLBAR);
+		    }
+
+		    @Override
+		    public void run() {
+				try {
+					IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+					handlerService.executeCommand(AufPrintListHandler.CMD_ID, null);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e);
+		        }
+		    }
 		};
 		delAUF = new Action(Messages.Core_Delete_ellipsis) { // $NON-NLS-1$
 			{
@@ -251,7 +333,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		return (ISickCertificate) sel.getFirstElement();
 	}
 
-	class AUFContentProvider implements IStructuredContentProvider {
+	public class AUFContentProvider implements IStructuredContentProvider {
 
 		@Override
 		public Object[] getElements(Object inputElement) {
@@ -290,5 +372,21 @@ public class AUF2 extends ViewPart implements IRefreshable {
 		if (CoreUiUtil.isActiveControl(tv.getControl())) {
 			tv.refresh();
 		}
+	}
+
+	public TableViewer getViewer() {
+		return tv;
+	}
+
+	public boolean isFilterActive() {
+		return isFilterActive;
+	}
+
+	public AufByFallFilter getFilter() {
+		return aufFilter;
+	}
+
+	public List<ISickCertificate> getSelectedCertificates() {
+		return selectedCertificates;
 	}
 }

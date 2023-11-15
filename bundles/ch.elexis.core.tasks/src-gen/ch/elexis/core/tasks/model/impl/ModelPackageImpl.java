@@ -923,6 +923,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getTaskException());
 
+		op = addEOperation(iTaskServiceEClass, ecorePackage.getEBoolean(), "assertIncurOnThisStation", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getITaskDescriptor(), "taskDescriptor", 1, 1, IS_UNIQUE, IS_ORDERED);
+
 		// Initialize enums and add enum literals
 		initEEnum(taskTriggerTypeEEnum, TaskTriggerType.class, "TaskTriggerType");
 		addEEnumLiteral(taskTriggerTypeEEnum, TaskTriggerType.MANUAL);

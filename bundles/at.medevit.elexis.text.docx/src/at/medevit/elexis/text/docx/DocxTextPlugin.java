@@ -1,29 +1,15 @@
 package at.medevit.elexis.text.docx;
 
-import org.apache.commons.lang3.StringUtils;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.Docx4J;
-import org.docx4j.TraversalUtil;
-import org.docx4j.model.datastorage.migration.VariablePrepare;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.JaxbXmlPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.openpackaging.parts.relationships.Namespaces;
-import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
-import org.docx4j.relationships.Relationship;
-import org.docx4j.wml.R;
-import org.docx4j.wml.Tbl;
-import org.docx4j.wml.Text;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,24 +28,14 @@ import org.slf4j.LoggerFactory;
 
 import at.medevit.elexis.text.docx.print.PrintProcess;
 import at.medevit.elexis.text.docx.print.ScriptInitializer;
-import at.medevit.elexis.text.docx.stax.TextFindStAXHandler;
-import at.medevit.elexis.text.docx.util.DocxUtil;
-import at.medevit.elexis.text.docx.util.FindTextVisitor;
-import at.medevit.elexis.text.docx.util.RegexTextVisitor;
-import at.medevit.elexis.text.docx.util.StyleInfo;
-import at.medevit.elexis.text.docx.util.TableUtil;
-import at.medevit.elexis.text.docx.util.TextBoxUtil;
-import at.medevit.elexis.text.docx.util.TextUtil;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.text.ReplaceCallback;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.text.ITextPlugin;
-import ch.elexis.core.ui.text.MimeTypeUtil;
 import ch.elexis.core.ui.views.textsystem.TextTemplatePrintSettings;
 import ch.elexis.core.utils.CoreUtil;
 
-public class DocxTextPlugin implements ITextPlugin {
+public class DocxTextPlugin extends ch.elexis.core.text.docx.DocxTextPlugin implements ITextPlugin {
 
 	private static final String DOCX_PREF = "textplugins/docx/";
 
@@ -70,35 +46,10 @@ public class DocxTextPlugin implements ITextPlugin {
 
 	public static final String USE_PRINT_SCRIPT = DOCX_PREF + "printcommand";
 
-	private Parameter parameter;
 	private static TextTemplatePrintSettings printSettings;
-
-	private PageFormat format = ITextPlugin.PageFormat.USER;
-	private WordprocessingMLPackage currentDocument;
 
 	private Composite composite;
 	private Button openButton;
-
-	private StyleInfo currentStyleInfo;
-
-	public DocxTextPlugin() {
-		currentStyleInfo = new StyleInfo();
-	}
-
-	@Override
-	public PageFormat getFormat() {
-		return format;
-	}
-
-	@Override
-	public void setFormat(PageFormat f) {
-		format = f;
-	}
-
-	@Override
-	public void setParameter(Parameter parameter) {
-		this.parameter = parameter;
-	}
 
 	@Override
 	public void setFocus() {
@@ -129,32 +80,21 @@ public class DocxTextPlugin implements ITextPlugin {
 
 	@Override
 	public boolean createEmptyDocument() {
-		try {
-			currentDocument = WordprocessingMLPackage.createPackage();
-			if (openButton != null && !openButton.isDisposed()) {
-				openButton.setEnabled(true);
-			}
-		} catch (InvalidFormatException e) {
-			LoggerFactory.getLogger(getClass()).error("Erro creating document", e);
-			return false;
+		boolean ret = super.createEmptyDocument();
+		if (ret && openButton != null && !openButton.isDisposed()) {
+			openButton.setEnabled(true);
 		}
-		return true;
+		return ret;
 	}
 
 	@Override
 	public boolean loadFromByteArray(byte[] bs, boolean asTemplate) {
 		if (checkTextPreferences()) {
-			try {
-				currentDocument = WordprocessingMLPackage.load(new ByteArrayInputStream(bs));
-				if (openButton != null && !openButton.isDisposed()) {
-					openButton.setEnabled(true);
-				}
-			} catch (Docx4JException e) {
-				LoggerFactory.getLogger(getClass())
-						.error("Error loading from byte array [" + bs + "] size [" + bs.length + "]");
-				return false;
+			boolean ret = super.loadFromByteArray(bs, asTemplate);
+			if (ret && openButton != null && !openButton.isDisposed()) {
+				openButton.setEnabled(true);
 			}
-			return true;
+			return ret;
 		}
 		return false;
 	}
@@ -188,100 +128,11 @@ public class DocxTextPlugin implements ITextPlugin {
 
 	@Override
 	public boolean loadFromStream(InputStream is, boolean asTemplate) {
-		try {
-			currentDocument = WordprocessingMLPackage.load(is);
-			if (openButton != null && !openButton.isDisposed()) {
-				openButton.setEnabled(true);
-			}
-		} catch (Docx4JException e) {
-			LoggerFactory.getLogger(getClass()).error("Error loading from stream [" + is + "]");
-			return false;
+		boolean ret = super.loadFromStream(is, asTemplate);
+		if (ret && openButton != null && !openButton.isDisposed()) {
+			openButton.setEnabled(true);
 		}
-		return true;
-	}
-
-	@Override
-	public byte[] storeToByteArray() {
-		if (currentDocument != null) {
-			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-				Docx4J.save(currentDocument, out, Docx4J.FLAG_SAVE_ZIP_FILE);
-				return out.toByteArray();
-			} catch (IOException | Docx4JException e) {
-				LoggerFactory.getLogger(getClass()).error("Error writing to byte array");
-				return null;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public boolean insertTable(String text, int properties, String[][] contents, int[] columnSizes) {
-		if (currentDocument != null) {
-			FindTextVisitor visitor = new FindTextVisitor(text);
-			TraversalUtil.visit(currentDocument.getMainDocumentPart(), visitor);
-			List<Text> found = visitor.getFound();
-			if (!found.isEmpty()) {
-				for (Text foundText : found) {
-					foundText.setValue(StringUtils.EMPTY);
-					R r = (R) foundText.getParent();
-					// do not insert table with no content
-					if (contents.length > 0) {
-						Tbl table = TableUtil.insertTable(r, properties, contents, columnSizes,
-								DocxUtil.getDocumentWidth(currentDocument), true);
-						TableUtil.addBorders(table, 1);
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public Object insertTextAt(int posx, int posy, int width, int height, String text, int align) {
-		if (currentDocument != null) {
-			return TextBoxUtil.createTextBox(currentDocument, posx - 3, posy, width, height, text, align,
-					currentStyleInfo);
-		}
-		return null;
-	}
-
-	@Override
-	public boolean setFont(String name, int style, float size) {
-		currentStyleInfo.setFontName(name);
-		currentStyleInfo.setFontStyle(style);
-		currentStyleInfo.setFontSize(size);
-		return true;
-	}
-
-	@Override
-	public boolean setStyle(int style) {
-		currentStyleInfo.setFontStyle(style);
-		return true;
-	}
-
-	@Override
-	public Object insertText(String marke, String text, int align) {
-		if (currentDocument != null) {
-			FindTextVisitor visitor = new FindTextVisitor(marke);
-			TraversalUtil.visit(currentDocument.getMainDocumentPart(), visitor);
-			List<Text> found = visitor.getFound();
-			if (!found.isEmpty()) {
-				Object ret = null;
-				for (Text foundText : found) {
-					foundText.setValue(StringUtils.EMPTY);
-					R r = (R) foundText.getParent();
-					ret = TextUtil.insertText(r, text, align, currentStyleInfo);
-				}
-				return ret;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Object insertText(Object pos, String text, int align) {
-		return TextUtil.insertText(pos, text, align, currentStyleInfo);
+		return ret;
 	}
 
 	@Override
@@ -292,7 +143,7 @@ public class DocxTextPlugin implements ITextPlugin {
 
 	@Override
 	public boolean print(String toPrinter, String toTray, boolean waitUntilFinished) {
-		if (currentDocument != null) {
+		if (getCurrentDocument() != null) {
 			// check if script initialization for windows should be performed
 			if (CoreUtil.isWindows() && ConfigServiceHolder.getGlobal(USE_PRINT_SCRIPT, false)
 					&& !isScriptWinInitialized()) {
@@ -354,7 +205,7 @@ public class DocxTextPlugin implements ITextPlugin {
 	}
 
 	private void openCurrentDocument() {
-		if (currentDocument != null) {
+		if (getCurrentDocument() != null) {
 			Optional<File> tempFile = getCurrentDocumentTempFile();
 			tempFile.ifPresent(f -> {
 				LoggerFactory.getLogger(getClass()).debug("Open temporary document from [" + f.getAbsolutePath() + "]");
@@ -367,17 +218,12 @@ public class DocxTextPlugin implements ITextPlugin {
 		try {
 			File tempFile = File.createTempFile("dtp_", "_" + System.currentTimeMillis() + ".docx");
 			tempFile.deleteOnExit();
-			Docx4J.save(currentDocument, tempFile, Docx4J.FLAG_SAVE_ZIP_FILE);
+			Docx4J.save((WordprocessingMLPackage) getCurrentDocument(), tempFile, Docx4J.FLAG_SAVE_ZIP_FILE);
 			return Optional.of(tempFile);
 		} catch (IOException | Docx4JException e) {
 			LoggerFactory.getLogger(getClass()).error("Error saving docx temp file", e);
 			return Optional.empty();
 		}
-	}
-
-	@Override
-	public String getMimeType() {
-		return MimeTypeUtil.MIME_TYPE_MSWORD;
 	}
 
 	@Override
@@ -418,78 +264,12 @@ public class DocxTextPlugin implements ITextPlugin {
 		return composite;
 	}
 
-	@Override
-	public boolean findOrReplace(String pattern, ReplaceCallback callBack) {
-		if (currentDocument != null) {
-			prepare();
 
-			MainDocumentPart documentPart = currentDocument.getMainDocumentPart();
-
-			RegexTextVisitor visitor = new RegexTextVisitor(currentDocument, pattern);
-			TraversalUtil.visit(documentPart, visitor);
-			visitor.replaceMatchingTexts(callBack);
-
-			// replace header and footer
-			RelationshipsPart relationshipPart = documentPart.getRelationshipsPart();
-			List<Relationship> relationships = relationshipPart.getRelationships().getRelationship();
-			for (Relationship relationship : relationships) {
-				if (relationship.getType().equals(Namespaces.HEADER)
-						|| relationship.getType().equals(Namespaces.FOOTER)) {
-					JaxbXmlPart part = (JaxbXmlPart) relationshipPart.getPart(relationship);
-					RegexTextVisitor partVisitor = new RegexTextVisitor(currentDocument, pattern);
-					TraversalUtil.visit(part, partVisitor);
-					partVisitor.replaceMatchingTexts(callBack);
-				}
-			}
-		}
-		return false;
-	}
-
-	protected int findTextCount(String text) {
-		if (currentDocument != null) {
-			try {
-				prepare();
-
-				TextFindStAXHandler stAXHAndler = new TextFindStAXHandler(text);
-				MainDocumentPart documentPart = currentDocument.getMainDocumentPart();
-				// find header and footer
-				RelationshipsPart relationshipPart = documentPart.getRelationshipsPart();
-				List<Relationship> relationships = relationshipPart.getRelationships().getRelationship();
-				for (Relationship relationship : relationships) {
-					if (relationship.getType().equals(Namespaces.HEADER)
-							|| relationship.getType().equals(Namespaces.FOOTER)) {
-						JaxbXmlPart part = (JaxbXmlPart) relationshipPart.getPart(relationship);
-						part.pipe(stAXHAndler);
-					}
-				}
-				// find main document
-				documentPart.pipe(stAXHAndler);
-				return stAXHAndler.getCount();
-			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).error("Error finding text [" + text + "]", e);
-			}
-		}
-		return 0;
-	}
 
 	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		// ignore
-	}
-
-	public WordprocessingMLPackage getCurrentDocument() {
-		return currentDocument;
-	}
-
-	protected void prepare() {
-		if (currentDocument != null) {
-			try {
-				VariablePrepare.prepare(currentDocument);
-			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).error("Error preparing document", e);
-			}
-		}
 	}
 
 	private boolean isScriptWinInitialized() {
