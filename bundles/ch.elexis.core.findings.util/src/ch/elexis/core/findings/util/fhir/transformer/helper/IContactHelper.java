@@ -134,10 +134,8 @@ public class IContactHelper extends AbstractHelper {
 				target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
 				break;
 			case XidConstants.EAN:
-				target.addXid(XidConstants.EAN, identifier.getValue(), true);
-				break;
 			case FhirChConstants.OID_GLN_SYSTEM:
-				target.addXid(XidConstants.DOMAIN_RECIPIENT_EAN, identifier.getValue(), true);
+				target.addXid(XidConstants.EAN, identifier.getValue(), true);
 				break;
 			case FhirChConstants.BSV_NUMMER_SYSTEM:
 				target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
