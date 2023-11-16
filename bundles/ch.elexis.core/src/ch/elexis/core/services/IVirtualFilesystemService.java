@@ -299,7 +299,7 @@ public interface IVirtualFilesystemService {
 		}
 
 		if (url.getAuthority() != null && url.getAuthority().length() > 0 && url.getAuthority().charAt(1) == ':') {
-			URI uri = new URI("file", url.getAuthority(), url.getPath(), url.getQuery(), null);
+			URI uri = new URI("file", url.getAuthority(), path, url.getQuery(), null);
 			return uri;
 		}
 
