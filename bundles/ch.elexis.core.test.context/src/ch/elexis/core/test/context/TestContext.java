@@ -17,6 +17,8 @@ public class TestContext implements IContext {
 
 	private TestContext parent;
 
+	private final String STATION_IDENTIFIER = UUID.randomUUID().toString();
+
 	public TestContext() {
 		this(null, "root");
 	}
@@ -110,6 +112,6 @@ public class TestContext implements IContext {
 
 	@Override
 	public String getStationIdentifier() {
-		return UUID.randomUUID().toString();
+		return STATION_IDENTIFIER;
 	}
 }
