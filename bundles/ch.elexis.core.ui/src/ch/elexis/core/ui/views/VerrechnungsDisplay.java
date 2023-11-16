@@ -142,7 +142,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
-
+	private boolean isPriceSortedAscending = true;
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
@@ -347,6 +347,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
 
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					return b1.getTotal().compareTo(b2.getTotal());
+				}
+				return 0;
+			}
+		};
+
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
 
@@ -422,6 +434,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return price.getAmountAsString();
 				}
 				return StringUtils.EMPTY;
+			}
+		});
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == priceComparator) {
+					// Umschalten der Sortierrichtung
+					isPriceSortedAscending = !isPriceSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IBilled && e2 instanceof IBilled) {
+								IBilled b1 = (IBilled) e1;
+								IBilled b2 = (IBilled) e2;
+								int result = b1.getTotal().compareTo(b2.getTotal());
+								// Umschalten der Sortierreihenfolge, falls erforderlich
+								return isPriceSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(priceComparator);
+					isPriceSortedAscending = true; // Zurücksetzen auf aufsteigende Sortierung
+				}
+				viewer.refresh();
 			}
 		});
 
