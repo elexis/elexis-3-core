@@ -842,8 +842,8 @@ public class StockView extends ViewPart implements IRefreshable {
 			case MAX:
 				return Integer.compare(s1.getMaximumStock(), s2.getMaximumStock()) * direction;
 			case SUPPLIER: {
-				String lieferant1 = ""; //$NON-NLS-1$
-				String lieferant2 = ""; //$NON-NLS-1$
+				String lieferant1 = "";
+				String lieferant2 = "";
 				if (s1.getProvider() != null) {
 					lieferant1 = s1.getProvider().getLabel();
 				}
