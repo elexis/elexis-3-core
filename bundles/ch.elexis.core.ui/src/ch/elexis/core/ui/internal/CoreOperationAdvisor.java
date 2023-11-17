@@ -44,7 +44,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.data.Mandant;
 
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
@@ -188,7 +187,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			ContextServiceHolder.get().setActiveUser(user);
 
 			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-				CoreHub.actMandant = Mandant.load(m.getId());
+				ch.elexis.core.data.service.ContextServiceHolder.get().setActiveMandator(m);
 			});
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.heart.resume(true);

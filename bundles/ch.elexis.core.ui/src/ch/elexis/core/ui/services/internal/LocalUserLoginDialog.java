@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.util.Extensions;
@@ -155,7 +154,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 	@Override
 	protected void cancelPressed() {
 		ContextServiceHolder.get().setActiveUser(null);
-		CoreHub.actMandant = null;
+		ContextServiceHolder.get().setActiveMandator(null);
 		super.cancelPressed();
 		if (GlobalActions.exitAction != null) {
 			GlobalActions.exitAction.run();
