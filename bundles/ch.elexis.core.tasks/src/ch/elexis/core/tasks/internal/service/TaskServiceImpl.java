@@ -37,6 +37,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
 import ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher;
 import ch.elexis.core.tasks.internal.service.vfs.FilesystemChangeWatcher;
@@ -498,7 +499,7 @@ public class TaskServiceImpl implements ITaskService {
 		task.setSystem(taskDescriptor.isSystem());
 
 		// TODO test if all runContext parameters are satisfied, else reject execution
-		task.setState(TaskState.QUEUED);
+		AccessControlServiceHolder.get().doPrivileged(() -> task.setState(TaskState.QUEUED));
 
 		String identifiedRunnableId = taskDescriptor.getIdentifiedRunnableId();
 		boolean singletonRunnable = instantiateRunnableById(identifiedRunnableId).isSingleton();
@@ -524,7 +525,7 @@ public class TaskServiceImpl implements ITaskService {
 				triggeredTasks.add(task);
 			}
 		} catch (RejectedExecutionException re) {
-			task.setState(TaskState.CANCELLED);
+			AccessControlServiceHolder.get().doPrivileged(() -> task.setState(TaskState.CANCELLED));
 			// TODO triggering failed, where to show?
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);
 		}

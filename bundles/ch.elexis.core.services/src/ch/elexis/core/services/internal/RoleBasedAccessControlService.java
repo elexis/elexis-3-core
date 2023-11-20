@@ -165,6 +165,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return roleAclMap.get(_role);
 	}
 
+	@Override
 	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream) {
 		try {
 			AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true).readValue(jsonStream,
@@ -297,7 +298,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	public void doPrivileged(Runnable runnable) {
 		try {
 			privileged.set(Boolean.TRUE);
-			logger.debug("Executing priviledged [" + runnable + "]");
+			logger.trace("Executing priviledged [" + runnable + "]");
 			runnable.run();
 		} finally {
 			privileged.set(Boolean.FALSE);
