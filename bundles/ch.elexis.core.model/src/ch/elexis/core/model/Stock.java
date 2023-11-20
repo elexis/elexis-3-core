@@ -35,9 +35,9 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public IMandator getOwner() {
+	public IPerson getOwner() {
 		if (getEntity().getOwner() != null) {
-			return ModelUtil.getAdapter(getEntity().getOwner(), IMandator.class, true);
+			return ModelUtil.getAdapter(getEntity().getOwner(), IPerson.class, true);
 		}
 		return null;
 	}
@@ -63,7 +63,7 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public void setOwner(IMandator value) {
+	public void setOwner(IPerson value) {
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty().setOwner((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
