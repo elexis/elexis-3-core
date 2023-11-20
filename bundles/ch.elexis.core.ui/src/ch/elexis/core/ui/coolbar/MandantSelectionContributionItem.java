@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IUserService;
@@ -165,7 +164,7 @@ public class MandantSelectionContributionItem {
 			menuItems[i].addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					ch.elexis.core.data.service.ContextServiceHolder.get().setActiveMandator(m);
+					ContextServiceHolder.get().setActiveMandator(m);
 				}
 			});
 			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {

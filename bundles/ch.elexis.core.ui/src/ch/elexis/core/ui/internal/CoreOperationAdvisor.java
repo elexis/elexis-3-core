@@ -187,7 +187,7 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			ContextServiceHolder.get().setActiveUser(user);
 
 			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-				ch.elexis.core.data.service.ContextServiceHolder.get().setActiveMandator(m);
+				ContextServiceHolder.get().setActiveMandator(m);
 			});
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.heart.resume(true);
