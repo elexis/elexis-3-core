@@ -6548,7 +6548,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIStock_DriverUuid(), ecorePackage.getEString(), "driverUuid", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_DriverConfig(), ecorePackage.getEString(), "driverConfig", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIStock_Owner(), this.getIMandator(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_Owner(), this.getIPerson(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iStockEClass, ecorePackage.getEBoolean(), "isCommissioningSystem", 0, 1, IS_UNIQUE, IS_ORDERED);
 

@@ -16,6 +16,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
@@ -225,6 +226,7 @@ public class StockService implements IStockService {
 		return null;
 	}
 
+	@Override
 	public List<IStockEntry> getAllStockEntries() {
 		return CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
 	}
@@ -242,7 +244,7 @@ public class StockService implements IStockService {
 				ret = iStockEntry;
 			}
 			if (mandatorId != null) {
-				IMandator owner = stock.getOwner();
+				IPerson owner = stock.getOwner();
 				if (owner != null && owner.getId().equals(mandatorId)) {
 					return iStockEntry;
 				}
@@ -263,6 +265,7 @@ public class StockService implements IStockService {
 		return null;
 	}
 
+	@Override
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems) {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
 		if (!includeCommissioningSystems) {
@@ -302,6 +305,7 @@ public class StockService implements IStockService {
 		return getDefaultStock();
 	}
 
+	@Override
 	public Availability getArticleAvailabilityForStock(IStock stock, String article) {
 		IStockEntry se = findStockEntryForArticleInStock(stock, article);
 		return determineAvailability(se.getCurrentStock(), se.getMinimumStock(), isTriggerStockAvailabilityOnBelow());
@@ -352,7 +356,7 @@ public class StockService implements IStockService {
 			stockEntry.setArticle(loadArticle);
 
 		}
-		CoreModelServiceHolder.get().save((Identifiable) stockEntry);
+		CoreModelServiceHolder.get().save(stockEntry);
 		LocalLockServiceHolder.get().acquireLock(stockEntry);
 		LocalLockServiceHolder.get().releaseLock(stockEntry);
 		return stockEntry;
