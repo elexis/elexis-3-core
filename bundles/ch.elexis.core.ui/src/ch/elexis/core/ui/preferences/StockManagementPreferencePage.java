@@ -465,7 +465,10 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 			}
 		}
 
-		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
+		Query<Stock> query = new Query<Stock>(Stock.class);
+		query.add(Stock.FLD_TYPE, Query.EQUALS, "0");
+
+		tableViewer.setInput(query.execute());
 		m_bindingContext = initDataBindings();
 
 		stockDetail.addChangeListener(e -> {

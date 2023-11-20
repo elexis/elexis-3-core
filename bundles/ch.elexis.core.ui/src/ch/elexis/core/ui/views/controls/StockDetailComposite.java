@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.views.controls;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -48,6 +47,9 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 
@@ -325,12 +327,11 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 
-		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true);
-		for (IStock stock : stocks) {
-			stockEntries.put(stock, null);
-		}
+		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
+		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.NOT_LIKE, "P%");
+//		query.and(ModelPackage.Literals.ISTOCK__TYPE, COMPARATOR.NOT_EQUALS, "1");
 
-		checkboxTableViewer.setInput(stocks);
+		checkboxTableViewer.setInput(query.execute());
 
 		TableViewer ret = new TableViewer(table);
 		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret,

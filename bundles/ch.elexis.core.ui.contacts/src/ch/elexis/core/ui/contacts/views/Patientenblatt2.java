@@ -40,6 +40,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -85,6 +86,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -133,6 +135,8 @@ import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
+import ch.elexis.data.Query;
+import ch.elexis.data.Stock;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
 import ch.elexis.data.ZusatzAdresse;
@@ -146,6 +150,9 @@ import ch.rgw.tools.TimeTool;
 public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_DBFIELD = "dbfield"; //$NON-NLS-1$
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
+	private static final String STOCK_LOCATION = "PAT"; // $NON-NLS-1$
+	private static final String STOCK_TYPE = "1"; // $NON-NLS-1$
+	private static final String PATIENT_STOCK = "P"; // $NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
 	private IAction removeZAAction, showZAAction, showBKAction, copySelectedContactInfosToClipboardAction,
@@ -243,9 +250,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	Hyperlink hHA;
 	private InputData comboGeschlecht;
 	StickerComposite stickerComposite;
-	private Button deceasedBtn;
 	private CDateTime deceasedDate;
-	private Button increasedTreatmentBtn;
+	private Button deceasedBtn, increasedTreatmentBtn, activateMediOrderBtn;
 
 	void recreateUserpanel() {
 		// cUserfields.setRedraw(false);
@@ -575,6 +581,34 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		
+		activateMediOrderBtn = tk.createButton(cPersonalien, Messages.Patientenblatt2_activatePatient, SWT.CHECK);
+		activateMediOrderBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (actPatient != null) {
+					IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
+					if (activateMediOrderBtn.getSelection()) {
+						Stock stock = new Stock(PATIENT_STOCK + patient.getPatientNr(), 0); // $NON-NLS-1$
+							stock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
+						stock.setLocation(STOCK_LOCATION);
+							stock.setResponsible(actPatient);
+						stock.setType(STOCK_TYPE);
+					} else {
+						if (MessageDialog.openConfirm(getShell(), Messages.Patientenblatt2_deactivateMediOrder,
+								Messages.Patientenblatt2_deactivateMediOrderDsc)) {
+							Stock stock = getPatientStock(patient);
+							stock.removeFromDatabase();
+							activateMediOrderBtn.setSelection(false);
+						} else {
+							activateMediOrderBtn.setSelection(true);
+						}
+					}
+				}
+				refresh();
+			}
+		});
+		activateMediOrderBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
@@ -935,8 +969,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			setUnlocked(false);
 			return;
 		}
+
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
+		activateMediOrderBtn.setSelection(getPatientStock(patient) != null);
 		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
 			increasedTreatmentBtn.setSelection(
 					Boolean.parseBoolean((String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
@@ -1546,5 +1582,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 
 		}
+	}
+
+	public Stock getPatientStock(IPatient patient) {
+		Query<Stock> query = new Query<Stock>(Stock.class);
+		query.add(Stock.FLD_CODE, Query.EQUALS, PATIENT_STOCK + patient.getPatientNr());
+		List<Stock> list = query.execute();
+		return list.isEmpty() ? null : list.get(0);
 	}
 }

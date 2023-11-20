@@ -51,7 +51,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	/**
 	 * A short name or code for this stock
 	 */
-	@Column(length = 3)
+	@Column(length = 7)
 	String code;
 
 	/**
@@ -97,6 +97,9 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Lob
 	@Column(name = "driver_config")
 	String driverConfig;
+
+	@Column(length = 1)
+	boolean type;
 
 	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "STOCK", insertable = false, updatable = false)
@@ -208,5 +211,13 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public boolean getType() {
+		return type;
+	}
+
+	public void setType(boolean type) {
+		this.type = type;
 	}
 }

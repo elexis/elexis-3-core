@@ -24,6 +24,7 @@ public class Stock extends PersistentObject implements IStock {
 	public static final String FLD_DESCRIPTION = "DESCRIPTION";
 	public static final String FLD_DRIVER_UUID = "DRIVER_UUID";
 	public static final String FLD_DRIVER_CONFIG = "DRIVER_CONFIG";
+	public static final String FLD_TYPE = "TYPE";
 
 	public static final String FLD_JOINT_STOCK_ENTRIES = "STOCK_ENTRIES";
 
@@ -31,7 +32,7 @@ public class Stock extends PersistentObject implements IStock {
 
 	static {
 		addMapping(TABLENAME, FLD_ID, FLD_CODE, FLD_PRIORITY + "=S:N:" + FLD_PRIORITY, FLD_OWNER, FLD_RESPONSIBLE,
-				FLD_LOCATION, FLD_DESCRIPTION, FLD_DRIVER_UUID, FLD_DRIVER_CONFIG,
+				FLD_LOCATION, FLD_DESCRIPTION, FLD_DRIVER_UUID, FLD_DRIVER_CONFIG, FLD_TYPE,
 				FLD_JOINT_STOCK_ENTRIES + "=LIST:STOCK:" + StockEntry.TABLENAME);
 	}
 
@@ -173,6 +174,15 @@ public class Stock extends PersistentObject implements IStock {
 
 	public void setDriverConfig(String driverConfig) {
 		set(FLD_DRIVER_CONFIG, driverConfig);
+	}
+
+	@Override
+	public String getType() {
+		return get(FLD_TYPE);
+	}
+
+	public void setType(String type) {
+		set(FLD_TYPE, type);
 	}
 
 	/**
