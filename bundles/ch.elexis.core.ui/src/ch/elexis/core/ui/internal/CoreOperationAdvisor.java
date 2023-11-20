@@ -185,10 +185,6 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-
-			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-				ContextServiceHolder.get().setActiveMandator(m);
-			});
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.heart.resume(true);
 			// run access control

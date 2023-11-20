@@ -42,6 +42,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
