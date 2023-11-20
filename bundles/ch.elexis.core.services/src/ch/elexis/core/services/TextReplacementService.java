@@ -19,10 +19,6 @@ public class TextReplacementService implements ITextReplacementService {
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	private List<ITextPlaceholderResolver> placeholderResolvers;
 
-	private static final String DONT_SHOW_REPLACEMENT_ERRORS = "*";
-	public static final String MATCH_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
-			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
-
 	private Pattern matchTemplate;
 
 	@Activate

@@ -42,20 +42,21 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 	private String replace(IPatient patient, String lcAttribute) {
 
 		PatientAttribute patientAttribut = searchEnum(PatientAttribute.class, lcAttribute);
-		switch (patientAttribut) {
-		case Anrede:
-			return PersonFormatUtil.getSalutation(patient);
-		case Name:
-			return patient.getLastName();
-		case Vorname:
-			return patient.getFirstName();
-		case Anschrift:
-			return AddressFormatUtil.getPostalAddress(patient, true);
-		case Anschriftzeile:
-			return AddressFormatUtil.getPostalAddress(patient, false);
-		default:
-			return null;
+		if (patientAttribut != null) {
+			switch (patientAttribut) {
+			case Anrede:
+				return PersonFormatUtil.getSalutation(patient);
+			case Name:
+				return patient.getLastName();
+			case Vorname:
+				return patient.getFirstName();
+			case Anschrift:
+				return AddressFormatUtil.getPostalAddress(patient, true);
+			case Anschriftzeile:
+				return AddressFormatUtil.getPostalAddress(patient, false);
+			}
 		}
+		return null;
 	}
 
 	private enum PatientAttribute implements ILocalizedEnum {
