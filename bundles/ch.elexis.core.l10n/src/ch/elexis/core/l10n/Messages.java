@@ -4982,6 +4982,9 @@ public class Messages extends NLS {
 	public static String RemoveDSGWhenDeceased_description;
 	public static String Warning;
 	public static String Warning_No_Pea;
+	public static String AgendaFarben_Bereich_Description;
+	public static String AgendaFarben_Titel;
+	public static String AgendaFarben_Link;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
