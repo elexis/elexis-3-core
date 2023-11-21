@@ -31,12 +31,21 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 	public void patientReplacement() {
 		contextService.setActivePatient(AllServiceTests.getPatient());
 
-		String template = "Hallo [Patient.Name] [Patient.Vorname]";
+		String template = "Liebe[Patient:mw:r/ ] [Patient.Name] [Patient.Vorname],";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
-		assertEquals("Hallo Patient Test", replaced);
+		assertEquals("Liebe Patient Test,", replaced);
 
 	}
 
+	@Test
+	public void adressatReplacement() {
+		contextService.getRootContext().setNamed("Adressat", AllServiceTests.getMandator());
+
+		String template = "Liebe[Adressat:mw:r/ ] [Adressat.Vorname]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Lieber Test", replaced);
+	}
+	
 	@Test
 	public void terminReplacement() {
 		contextService.getRootContext().setTyped(appointment);

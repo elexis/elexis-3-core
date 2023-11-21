@@ -40,6 +40,13 @@ public class DocumentService implements IDocumentService {
 					}
 				});
 
+				textPlugin.findOrReplace(ITextReplacementService.MATCH_GENDERIZE, new ReplaceCallback() {
+					@Override
+					public Object replace(final String in) {
+						return textReplacementService.performReplacement(context, in);
+					}
+				});
+
 				IDocument document = documentStore.createDocument(getPatientId(context), getTitle(template, context),
 						getCategory(template, context));
 				documentStore.saveDocument(document, new ByteArrayInputStream(textPlugin.storeToByteArray()));
