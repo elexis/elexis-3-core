@@ -76,6 +76,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
@@ -150,6 +151,17 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 		Display.getDefault().syncExec(() -> {
 			CoreUiUtil.runIfActive(() -> {
 				selection((Konsultation) NoPoUtil.loadAsPersistentObject(encounter));
+			}, cv);
+		});
+	}
+
+	@Inject
+	void activeMandator(@Optional IMandator mandator) {
+		Display.getDefault().syncExec(() -> {
+			CoreUiUtil.runIfActive(() -> {
+				if (kload != null) {
+					kload.schedule();
+				}
 			}, cv);
 		});
 	}
@@ -552,13 +564,14 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 			qbe.clear();
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, datVon.toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, datBis.toString(TimeTool.DATE_COMPACT));
-			if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
-				if (CoreHub.actMandant == null) {
-					monitor.done();
-					return Status.OK_STATUS;
-				}
-				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			
+			if (ContextServiceHolder.get().getActiveMandator().isEmpty()) {
+				monitor.done();
+				return Status.OK_STATUS;
 			}
+			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+				qbe.add(Konsultation.FLD_MANDATOR_ID, Query.EQUALS, m.getId());
+			});
 
 			if (bOpen && !bClosed) {
 				qbe.add("RechnungsID", StringConstants.EMPTY, null); //$NON-NLS-1$
