@@ -148,7 +148,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public void addOrRemoveExecutiveDoctorWorkingFor(IUser user, IMandator mandator, boolean add) {
-		HashSet<IMandator> mandators = new HashSet<>(getExecutiveDoctorsWorkingFor(user));
+		HashSet<IMandator> mandators = new HashSet<>(getExecutiveDoctorsWorkingFor(user, true));
 		if (add) {
 			mandators.add(mandator);
 		} else {
@@ -165,7 +165,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public void addOrRemoveExecutiveDoctorWorkingFor(IUserGroup userGroup, IMandator mandator, boolean add) {
-		HashSet<IMandator> mandators = new HashSet<>(getExecutiveDoctorsWorkingFor(userGroup));
+		HashSet<IMandator> mandators = new HashSet<>(getExecutiveDoctorsWorkingFor(userGroup, true));
 		if (add) {
 			mandators.add(mandator);
 		} else {
@@ -200,7 +200,7 @@ public class UserService implements IUserService {
 			if (!groups.isEmpty()) {
 				Set<IMandator> ret = new HashSet<IMandator>();
 				groups.forEach(gr -> {
-					ret.addAll(getExecutiveDoctorsWorkingFor(gr));
+					ret.addAll(getExecutiveDoctorsWorkingFor(gr, true));
 				});
 				return ret;
 			} else if (user.getAssignedContact() != null) {
