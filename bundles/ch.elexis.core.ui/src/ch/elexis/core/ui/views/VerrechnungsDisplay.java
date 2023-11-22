@@ -48,12 +48,16 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -142,7 +146,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
-
+	private boolean isPriceSortedAscending = true;
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
@@ -150,6 +154,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	private boolean isDescriptionSortedAscending = true;
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 
 	@Optional
@@ -347,6 +352,42 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
 
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					return b1.getTotal().compareTo(b2.getTotal());
+				}
+				return 0;
+			}
+		};
+
+		ViewerComparator descriptionComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					return b1.getText().compareTo(b2.getText());
+				}
+				return 0;
+			}
+		};
+
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					return b1.getText().compareTo(b2.getText());
+				}
+				return 0;
+			}
+		};
+
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
 
@@ -391,6 +432,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == descriptionComparator) {
+					// Toggle the sorting direction
+					isDescriptionSortedAscending = !isDescriptionSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IBilled && e2 instanceof IBilled) {
+								IBilled b1 = (IBilled) e1;
+								IBilled b2 = (IBilled) e2;
+								int result = b1.getText().compareTo(b2.getText());
+								// Toggle the sort order if necessary
+								return isDescriptionSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(descriptionComparator);
+					isDescriptionSortedAscending = true; // Reset to ascending order
+				}
+				viewer.refresh();
+			}
+		});
+
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -412,6 +480,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == descriptionComparator) {
+					// Toggle the sorting direction
+					isDescriptionSortedAscending = !isDescriptionSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IBilled && e2 instanceof IBilled) {
+								IBilled b1 = (IBilled) e1;
+								IBilled b2 = (IBilled) e2;
+								int result = b1.getText().compareTo(b2.getText());
+								// Toggle the sort order if necessary
+								return isDescriptionSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(descriptionComparator);
+					isDescriptionSortedAscending = true; // Reset to ascending order
+				}
+				viewer.refresh();
+			}
+		});
+
 		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.RIGHT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -422,6 +517,33 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return price.getAmountAsString();
 				}
 				return StringUtils.EMPTY;
+			}
+		});
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == priceComparator) {
+					// Umschalten der Sortierrichtung
+					isPriceSortedAscending = !isPriceSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IBilled && e2 instanceof IBilled) {
+								IBilled b1 = (IBilled) e1;
+								IBilled b2 = (IBilled) e2;
+								int result = b1.getTotal().compareTo(b2.getTotal());
+								// Umschalten der Sortierreihenfolge, falls erforderlich
+								return isPriceSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(priceComparator);
+					isPriceSortedAscending = true; // Zurücksetzen auf aufsteigende Sortierung
+				}
+				viewer.refresh();
 			}
 		});
 

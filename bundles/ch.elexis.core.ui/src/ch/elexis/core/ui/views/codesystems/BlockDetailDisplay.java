@@ -384,8 +384,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		String[] titles = { "Anz.", "Code", "Bezeichnung" };
 		int[] bounds = { 45, 125, 600 };
 
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		// Erstellung der Anz. Spalte
+		TableViewerColumn colAnz = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		colAnz.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -395,9 +396,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return StringUtils.EMPTY;
 			}
 		});
+		addColumnSelectionListener(colAnz, 0);
 
-		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		// Erstellung der Code Spalte
+		TableViewerColumn colCode = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		colCode.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -407,9 +410,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return StringUtils.EMPTY;
 			}
 		});
+		addColumnSelectionListener(colCode, 1);
 
-		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		// Erstellung der Bezeichnung Spalte
+		TableViewerColumn colBezeichnung = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		colBezeichnung.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -433,8 +438,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return null;
 			}
 		});
-		TableColumn tableColumn = col.getColumn();
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
+		addColumnSelectionListener(colBezeichnung, 2);
+	}
+
+	private void addColumnSelectionListener(TableViewerColumn column, final int index) {
+		column.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (viewer.getComparator() == null) {
@@ -449,12 +457,15 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						viewer.setComparator(null);
 					}
 				}
+				comparator.setColumnIndex(index);
 				viewer.getTable().setSortDirection(comparator.getDirection());
-				viewer.getTable().setSortColumn(tableColumn);
+				viewer.getTable().setSortColumn(column.getColumn());
 				viewer.refresh();
 			}
 		});
 	}
+
+	// Der restliche Code bleibt unverändert
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
@@ -575,6 +586,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private class BlockComparator extends ViewerComparator {
 
 		private int direction = 0;
+		private int columnIndex = 0; // Hinzugefügte Variable für die Spaltenindizierung
+
+		public void setColumnIndex(int columnIndex) {
+			this.columnIndex = columnIndex;
+		}
 
 		public void setDirection(int value) {
 			if (value == SWT.DOWN) {
@@ -598,13 +614,25 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		@Override
 		public int compare(Viewer viewer, Object left, Object right) {
 			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
+				BlockElementViewerItem leftItem = (BlockElementViewerItem) left;
+				BlockElementViewerItem rightItem = (BlockElementViewerItem) right;
+
 				if (direction != 0) {
-					return ((BlockElementViewerItem) left).getText()
-							.compareTo(((BlockElementViewerItem) right).getText()) * direction;
+					switch (columnIndex) {
+					case 0: // Sortierung nach Anz.
+						return Integer.compare(leftItem.getCount(), rightItem.getCount()) * direction;
+					case 1: // Sortierung nach Code
+						return leftItem.getCode().compareTo(rightItem.getCode()) * direction;
+					case 2: // Sortierung nach Bezeichnung
+						return leftItem.getText().compareTo(rightItem.getText()) * direction;
+					default:
+						break;
+					}
 				}
-				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
+				return 0; // Keine Sortierung, wenn direction == 0
 			}
 			return super.compare(viewer, left, right);
 		}
 	}
+
 }
