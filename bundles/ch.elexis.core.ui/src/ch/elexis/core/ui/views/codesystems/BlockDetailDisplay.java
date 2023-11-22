@@ -626,7 +626,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						break;
 					}
 				}
-				return 0; // Keine Sortierung, wenn direction == 0
+				return 0;
 			}
 			return super.compare(viewer, left, right);
 		}
