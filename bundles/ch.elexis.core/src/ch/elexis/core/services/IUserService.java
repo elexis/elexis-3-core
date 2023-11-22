@@ -31,20 +31,43 @@ public interface IUserService {
 	public void setPasswordForUser(IUser user, String password);
 
 	/**
-	 * Retrieve the set of mandators this user is working for.
+	 * Retrieve the set of {@link IMandator}s this user is working for.
 	 *
 	 * @param user
 	 * @return
 	 */
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user);
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user, boolean includeNonActive);
 
 	/**
-	 * Retrieve the set of mandators this group is working for.
+	 * Retrieve the set of {@link IMandator}s this user is working for. Non active
+	 * {@link IMandator}s are not included.
+	 * 
+	 * @param user
+	 * @return
+	 */
+	default public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user) {
+		return getExecutiveDoctorsWorkingFor(user, false);
+	}
+
+	/**
+	 * Retrieve the set of {@link IMandator}s this group is working for.
 	 *
 	 * @param group
 	 * @return
 	 */
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group);
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group, boolean includeNonActive);
+
+	/**
+	 * Retrieve the set of {@link IMandator}s this group is working for. Non active
+	 * {@link IMandator}s are not included.
+	 * 
+	 * @param group
+	 * @param includeNonActive
+	 * @return
+	 */
+	default public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group) {
+		return getExecutiveDoctorsWorkingFor(group, false);
+	}
 
 	/**
 	 * Add or remove the {@link IMandator} to the list of mandators the user

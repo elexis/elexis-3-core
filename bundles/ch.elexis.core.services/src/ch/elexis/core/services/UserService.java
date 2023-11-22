@@ -91,9 +91,14 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user) {
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUser user, boolean includeNonActive) {
 		try {
-			return userExecutiveDoctorsWorkingForCache.get(user);
+			if (includeNonActive) {
+				return userExecutiveDoctorsWorkingForCache.get(user);
+			} else {
+				return userExecutiveDoctorsWorkingForCache.get(user).stream().filter(IMandator::isActive)
+						.collect(Collectors.toSet());
+			}
 		} catch (ExecutionException e) {
 			LoggerFactory.getLogger(getClass()).error("Error getting executive doctors", e);
 		}
@@ -101,9 +106,14 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group) {
+	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group, boolean includeNonActive) {
 		try {
-			return groupExecutiveDoctorsWorkingForCache.get(group);
+			if (includeNonActive) {
+				return groupExecutiveDoctorsWorkingForCache.get(group);
+			} else {
+				return groupExecutiveDoctorsWorkingForCache.get(group).stream().filter(IMandator::isActive)
+						.collect(Collectors.toSet());
+			}
 		} catch (ExecutionException e) {
 			LoggerFactory.getLogger(getClass()).error("Error getting executive doctors", e);
 		}
@@ -198,11 +208,11 @@ public class UserService implements IUserService {
 				if (mandators == null) {
 					return Collections.emptySet();
 				}
-				List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
-						.filter(IMandator::isActive).collect(Collectors.toList());
+				List<IMandator> allMandators = modelService.getQuery(IMandator.class).execute().stream()
+						.collect(Collectors.toList());
 
 				List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
-				return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
+				return allMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
 						.collect(Collectors.toSet());
 			}
 			return Collections.emptySet();
@@ -218,11 +228,11 @@ public class UserService implements IUserService {
 				return Collections.emptySet();
 			}
 
-			List<IMandator> allActivateMandators = modelService.getQuery(IMandator.class).execute().parallelStream()
-					.filter(IMandator::isActive).collect(Collectors.toList());
+			List<IMandator> allMandators = modelService.getQuery(IMandator.class).execute().stream()
+					.collect(Collectors.toList());
 
 			List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
-			return allActivateMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
+			return allMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
 					.collect(Collectors.toSet());
 		}
 	}
