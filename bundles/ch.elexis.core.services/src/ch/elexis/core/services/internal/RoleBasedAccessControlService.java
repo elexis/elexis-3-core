@@ -260,7 +260,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		List<String> ret = new ArrayList<>();
 		if (user.getAssignedContact() != null) {
 			ret.add(user.getAssignedContact().getId());
-			userService.getExecutiveDoctorsWorkingFor(user).stream().forEach(m -> ret.add(m.getId()));
+			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
 	}
