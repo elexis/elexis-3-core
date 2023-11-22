@@ -955,7 +955,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			if (anw != null) {
 				checkboxTableViewerAssociation
-						.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).toArray());
+						.setCheckedElements(
+								UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user, true).toArray());
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					Color color = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));
