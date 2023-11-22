@@ -384,7 +384,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		String[] titles = { "Anz.", "Code", "Bezeichnung" };
 		int[] bounds = { 45, 125, 600 };
 
-		// Erstellung der Anz. Spalte
 		TableViewerColumn colAnz = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
 		colAnz.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -398,7 +397,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		});
 		addColumnSelectionListener(colAnz, 0);
 
-		// Erstellung der Code Spalte
+
 		TableViewerColumn colCode = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
 		colCode.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -410,9 +409,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return StringUtils.EMPTY;
 			}
 		});
+
 		addColumnSelectionListener(colCode, 1);
 
-		// Erstellung der Bezeichnung Spalte
 		TableViewerColumn colBezeichnung = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
 		colBezeichnung.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -464,8 +463,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 	}
-
-	// Der restliche Code bleibt unverändert
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
@@ -586,7 +583,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private class BlockComparator extends ViewerComparator {
 
 		private int direction = 0;
-		private int columnIndex = 0; // Hinzugefügte Variable für die Spaltenindizierung
+		private int columnIndex = 0;
 
 		public void setColumnIndex(int columnIndex) {
 			this.columnIndex = columnIndex;
@@ -619,11 +616,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 				if (direction != 0) {
 					switch (columnIndex) {
-					case 0: // Sortierung nach Anz.
+					case 0: // Sortierung Anz.
 						return Integer.compare(leftItem.getCount(), rightItem.getCount()) * direction;
-					case 1: // Sortierung nach Code
+					case 1: // Sortierung Code
 						return leftItem.getCode().compareTo(rightItem.getCode()) * direction;
-					case 2: // Sortierung nach Bezeichnung
+					case 2: // Sortierung Bezeichnung
 						return leftItem.getText().compareTo(rightItem.getText()) * direction;
 					default:
 						break;
@@ -634,5 +631,4 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			return super.compare(viewer, left, right);
 		}
 	}
-
 }
