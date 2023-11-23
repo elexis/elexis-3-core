@@ -72,24 +72,24 @@ public class MandantSelectionContributionItem {
 					if (item != null) {
 						item.setText(m.getLabel());
 						fParent.setBackground(UiMandant.getColorForIMandator(m));
-					if (menuItems == null) {
-						// We have a read-only coolbar item entry
-						fParent.pack();
-						return;
-					}
-					for (int i = 0; i < menuItems.length; i++) {
-						String id = (String) menuItems[i].getData();
-							if (m.getId().equalsIgnoreCase(id)) {
+						if (menuItems == null) {
+							// We have a read-only coolbar item entry
 							fParent.pack();
-							// TODO: Anordnung Elemente in Coolbar speicherbar?
-							// TODO: Programmatische Anordnung Elemente coolbar
-							menuItems[i].setSelection(true);
-						} else {
-							menuItems[i].setSelection(false);
+							return;
+						}
+						for (int i = 0; i < menuItems.length; i++) {
+							String id = (String) menuItems[i].getData();
+							if (m.getId().equalsIgnoreCase(id)) {
+								fParent.pack();
+								// TODO: Anordnung Elemente in Coolbar speicherbar?
+								// TODO: Programmatische Anordnung Elemente coolbar
+								menuItems[i].setSelection(true);
+							} else {
+								menuItems[i].setSelection(false);
+							}
 						}
 					}
-				}
-				fParent.getParent().layout();
+					fParent.getParent().layout();
 				});
 			}, fParent);
 		}
@@ -169,7 +169,8 @@ public class MandantSelectionContributionItem {
 				}
 			});
 			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {
-				menuItems[i].setSelection(ContextServiceHolder.getActiveMandatorOrNull().equals(m));
+				IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+				menuItems[i].setSelection(activeMandator != null && activeMandator.equals(m));
 			}
 		}
 
