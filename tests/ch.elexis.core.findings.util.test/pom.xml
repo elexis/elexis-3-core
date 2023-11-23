@@ -26,12 +26,27 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>ch.elexis.core.jpa.entities.test</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>ch.elexis.core.logback.rocketchat</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>ch.elexis.core.test.context</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>ch.elexis.core.logging.default_configuration</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.elexis.core.services.test.ws-bind</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -47,11 +62,6 @@
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>org.eclipse.persistence.oracle</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>jakarta.xml.bind-api</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -261,6 +271,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>com.google.protobuf</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.xml.bind-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
