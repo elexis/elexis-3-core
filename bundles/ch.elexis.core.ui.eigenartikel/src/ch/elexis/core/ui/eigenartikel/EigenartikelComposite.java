@@ -3,7 +3,7 @@ package ch.elexis.core.ui.eigenartikel;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -12,7 +12,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -248,7 +248,7 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 		// //
 		ISWTObservableValue observeTextTxtExfPriceObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtExfPrice);
-		IObservableValue<String> drugPackageEigenartikelEKPreisObserveDetailValue = PojoProperties
+		IObservableValue<Money> drugPackageEigenartikelEKPreisObserveDetailValue = PojoProperties
 				.value(IArticle.class, "purchasePrice", Money.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
 		SavingUpdateValueStrategy target2ModelStrategy = new SavingUpdateValueStrategy(CoreModelServiceHolder.get(),
 				drugPackageEigenartikel);
@@ -338,7 +338,8 @@ public class EigenartikelComposite extends Composite implements IUnlockable {
 				drugPackageEigenartikelPackageSizeStringObserveDetailValue,
 				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), drugPackageEigenartikel), null);
 		//
-		ISWTObservableValue observeSelectionBtnHiCostAbsorptionObserveWidget = WidgetProperties.selection()
+		ISWTObservableValue<Boolean> observeSelectionBtnHiCostAbsorptionObserveWidget = WidgetProperties
+				.buttonSelection()
 				.observe(btnHiCostAbsorption);
 		IObservableValue<Boolean> drugPackageEigenartikelHealthInsuranceCostAbsorptionObserveDetailValue = PojoProperties
 				.value(IArticle.class, "obligation", Boolean.class).observeDetail(drugPackageEigenartikel); //$NON-NLS-1$
