@@ -1,10 +1,12 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 
@@ -83,6 +85,14 @@ public interface IStockService {
 	 * @return
 	 */
 	public List<IStockEntry> findAllStockEntriesForStock(IStock stock);
+
+	/**
+	 * Find all stock entries of the provided stock including the deleted ones.
+	 * 
+	 * @param stock
+	 * @return
+	 */
+	public List<IStockEntry> findAllStockEntriesForStockIncDeleted(IStock stock);
 
 	/**
 	 *
@@ -219,4 +229,22 @@ public interface IStockService {
 	 * @since 3.10
 	 */
 	public IStock getMandatorDefaultStock(String mandatorId);
+
+	/**
+	 * 
+	 * activates or deactivates the medication order by creating or deleting a
+	 * patient stock including the stock entries.
+	 * 
+	 * @param patient
+	 * @param StockState
+	 */
+	public void setEnablePatientStock(IPatient patient, boolean StockState);
+
+	/**
+	 * get PatientStock of selected patient
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	public Optional<IStock> getPatientStock(IPatient patient);
 }

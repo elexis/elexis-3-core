@@ -16,6 +16,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -31,6 +32,8 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
 public class StockService implements IStockService {
+
+	private static final String PAT_STOCK_PREFIX = "P";
 
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
 
@@ -393,6 +396,13 @@ public class StockService implements IStockService {
 	}
 
 	@Override
+	public List<IStockEntry> findAllStockEntriesForStockIncDeleted(IStock stock) {
+		IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class, true);
+		query.and("stock", COMPARATOR.EQUALS, stock);
+		return query.execute();
+	}
+
+	@Override
 	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId) {
 		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
@@ -409,4 +419,40 @@ public class StockService implements IStockService {
 		}
 		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}
+
+	@Override
+	public Optional<IStock> getPatientStock(IPatient patient) {
+		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true);
+		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, PAT_STOCK_PREFIX + patient.getPatientNr());
+		return query.execute().stream().findFirst();
+	}
+
+	@Override
+	public void setEnablePatientStock(IPatient patient, boolean stockState) {
+		IStock patientStock = getPatientStock(patient).orElse(null);
+
+		if (patientStock == null) {
+			if (stockState) {
+				IStock stock = coreModelService.create(IStock.class);
+				stock.setPriority(0);
+				stock.setCode(PAT_STOCK_PREFIX + patient.getPatientNr());
+				stock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
+				stock.setOwner(patient);
+				coreModelService.save(stock);
+			}
+			return;
+		}
+
+		if (!stockState) {
+			patientStock.setDeleted(true);
+			List<IStockEntry> entries = findAllStockEntriesForStock(patientStock);
+			entries.forEach(entry -> unstoreArticleFromStock(patientStock,
+					StoreToStringServiceHolder.getStoreToString(entry.getArticle())));
+			coreModelService.save(entries);
+		} else {
+			patientStock.setDeleted(false);
+		}
+		coreModelService.save(patientStock);
+	}
+
 }
