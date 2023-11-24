@@ -6,29 +6,36 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import ch.elexis.core.ac.ACEAccessBitMap;
 import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.AccessControlListUtil;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class AccessControlListFileTest {
 
-	@Test
-	public void deserializeJsonFile() throws StreamReadException, DatabindException, IOException {
+	private static Gson gson;
 
-		InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
-				.getResourceAsStream("/rsc/acl/user.json");
-		AccessControlList aclUser = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-				.readValue(roleAccessDefaultUserFile, AccessControlList.class);
+	@BeforeClass
+	public static void beforeClass() {
+		gson = OsgiServiceUtil.getService(Gson.class).get();
+	}
+
+	@Test
+	public void deserializeJsonFile() throws IOException {
+		AccessControlList aclUser;
+		try (InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
+				.getResourceAsStream("/rsc/acl/user.json")) {
+			aclUser = gson.fromJson(new InputStreamReader(roleAccessDefaultUserFile), AccessControlList.class);
+		}
 
 		assertEquals("user", aclUser.getRolesRepresented().iterator().next());
 		byte[] bs = aclUser.getObject().get(IOrganization.class.getName()).getAccessRightMap();
@@ -43,18 +50,21 @@ public class AccessControlListFileTest {
 	}
 
 	@Test
-	public void deserializeCombineUserAssistant() throws StreamReadException, DatabindException, IOException {
-		InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
-				.getResourceAsStream("/rsc/acl/user.json");
-		AccessControlList aclUser = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-				.readValue(roleAccessDefaultUserFile, AccessControlList.class);
+	public void deserializeCombineUserAssistant() throws IOException {
+		AccessControlList aclUser;
+		try (InputStream roleAccessDefaultUserFile = AccessControlList.class.getClassLoader()
+				.getResourceAsStream("/rsc/acl/user.json")) {
+			aclUser = gson.fromJson(new InputStreamReader(roleAccessDefaultUserFile), AccessControlList.class);
+		}
 		byte[] bs = aclUser.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 0, 4, 0, 0, 0, 4, 0, 0, 0 }, bs);
 
-		InputStream roleAccessDefaultAssistantFile = AccessControlList.class.getClassLoader()
-				.getResourceAsStream("/rsc/acl/assistant.json");
-		AccessControlList aclAssistant = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true)
-				.readValue(roleAccessDefaultAssistantFile, AccessControlList.class);
+		AccessControlList aclAssistant;
+		try (InputStream roleAccessDefaultAssistantFile = AccessControlList.class.getClassLoader()
+				.getResourceAsStream("/rsc/acl/assistant.json")) {
+			aclAssistant = gson.fromJson(new InputStreamReader(roleAccessDefaultAssistantFile),
+					AccessControlList.class);
+		}
 		bs = aclAssistant.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
 
@@ -67,13 +77,11 @@ public class AccessControlListFileTest {
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
 		bs = revMerge.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
-		
+
 		bs = merge.getObject().get("ch.elexis.core.model.IInvoice").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 2, 2, 0, 2, 0, 2, 0, 0, 0 }, bs);
 		bs = revMerge.getObject().get("ch.elexis.core.model.IInvoice").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 2, 2, 0, 2, 0, 2, 0, 0, 0 }, bs);
-
-//		new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true).writeValue(System.out, merge);
 	}
 
 }

@@ -8,19 +8,21 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.UUID;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.eclipsesource.jaxrs.consumer.ConsumerFactory;
 
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
@@ -238,14 +240,22 @@ public class ElexisServerService implements IElexisServerService {
 		}
 
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget target = client.target(restUrl);
+
+			eventService = WebResourceFactory.newResource(IEventService.class, target);
+
 			// connected to elexis-server, connection is up
 			connectionStatus = ConnectionStatus.REMOTE;
-			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), IEventService.class);
+//			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), IEventService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
-			instanceService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-					IInstanceService.class);
+			instanceService = WebResourceFactory.newResource(IInstanceService.class, target);
+//			instanceService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
+//					IInstanceService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
-			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), ILockService.class);
+//			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), ILockService.class);
+			lockService = WebResourceFactory.newResource(ILockService.class, target);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
 		}
 

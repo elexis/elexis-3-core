@@ -1,37 +1,74 @@
 package ch.elexis.core.ac.internal;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import ch.elexis.core.ac.ACEAccessBitMap;
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.Right;
 
-public class ACEAccessBitMapDeserializer extends JsonDeserializer<ACEAccessBitMap> {
+public class ACEAccessBitMapJsonAdapter implements JsonSerializer<ACEAccessBitMap>, JsonDeserializer<ACEAccessBitMap> {
 
 	@Override
-	public ACEAccessBitMap deserialize(JsonParser jsonParser, DeserializationContext ctxt)
-			throws IOException, JacksonException {
+	public JsonElement serialize(ACEAccessBitMap value, Type typeOfSrc, JsonSerializationContext context) {
 
-		JsonNode jsonNode = jsonParser.readValueAsTree();
-		String[] rights;
-		if (jsonNode.isArray()) {
-			ArrayList<String> a = new ArrayList<>(1);
-			Iterator<JsonNode> itr = jsonNode.iterator();
-			while (itr.hasNext()) {
-				a.add(itr.next().textValue());
+		boolean[] has = new boolean[3];
+		String[] constraint = new String[3];
+		Arrays.fill(constraint, "");
+
+		byte[] accessRightMap = value.getAccessRightMap();
+
+		for (int i = 0; i < accessRightMap.length; i++) {
+			byte b = accessRightMap[i];
+			if ((b & ACEAccessBitMapConstraint.NONE.bitMapping) != 0) {
+				constraint[0] += Right.values()[i].token;
+				has[0] = true;
 			}
+			if ((b & ACEAccessBitMapConstraint.AOBO.bitMapping) != 0) {
+				constraint[1] += Right.values()[i].token;
+				has[1] = true;
+			}
+			if ((b & ACEAccessBitMapConstraint.SELF.bitMapping) != 0) {
+				constraint[2] += Right.values()[i].token;
+				has[2] = true;
+			}
+		}
+
+		int count = 0;
+		count += has[0] ? 1 : 0;
+		count += has[1] ? 1 : 0;
+		count += has[2] ? 1 : 0;
+
+		JsonArray array = new JsonArray();
+		if (count > 1) {
+			performWrite(constraint, has, array);
+		} else {
+			performWrite(constraint, has, array);
+		}
+		return array.size() == 1 ? array.get(0) : array;
+	}
+
+	@Override
+	public ACEAccessBitMap deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
+			throws JsonParseException {
+
+		String[] rights;
+		if (jsonElement.isJsonArray()) {
+			JsonArray array = jsonElement.getAsJsonArray();
+			ArrayList<String> a = new ArrayList<>(1);
+			array.forEach(entry -> a.add(entry.getAsString()));
 			rights = a.toArray(new String[a.size()]);
 		} else {
-			rights = new String[] { jsonNode.textValue() };
+			rights = new String[] { jsonElement.getAsString() };
 		}
 
 		return new ACEAccessBitMap(buildAccessRightMap(rights));
@@ -46,7 +83,7 @@ public class ACEAccessBitMapDeserializer extends JsonDeserializer<ACEAccessBitMa
 			if (indexOf > 1) {
 				// has constraint
 				denominator = entry.substring(0, indexOf);
-				String _constraint = entry.substring(indexOf+1);
+				String _constraint = entry.substring(indexOf + 1);
 				constraint = ACEAccessBitMapConstraint.valueOf(_constraint.toUpperCase());
 			} else {
 				denominator = entry;
@@ -79,4 +116,15 @@ public class ACEAccessBitMapDeserializer extends JsonDeserializer<ACEAccessBitMa
 		return ACEAccessBitMapConstraint.NONE.bitMapping; // '*'
 	}
 
+	private void performWrite(String[] constraint, boolean[] has, JsonArray array) {
+		if (has[2]) {
+			array.add(constraint[2] + ":self");
+		}
+		if (has[1]) {
+			array.add(constraint[1] + ":aobo");
+		}
+		if (has[0]) {
+			array.add(constraint[0]);
+		}
+	}
 }
