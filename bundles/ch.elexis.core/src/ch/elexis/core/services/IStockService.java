@@ -87,14 +87,6 @@ public interface IStockService {
 	public List<IStockEntry> findAllStockEntriesForStock(IStock stock);
 
 	/**
-	 * Find all stock entries of the provided stock including the deleted ones.
-	 * 
-	 * @param stock
-	 * @return
-	 */
-	public List<IStockEntry> findAllStockEntriesForStockIncDeleted(IStock stock);
-
-	/**
 	 *
 	 * @param article
 	 * @return all {@link IStockEntry} existing for a given article
@@ -231,20 +223,20 @@ public interface IStockService {
 	public IStock getMandatorDefaultStock(String mandatorId);
 
 	/**
-	 * 
-	 * activates or deactivates the medication order by creating or deleting a
-	 * patient stock including the stock entries.
+	 * Creates or deletes a patient stock.
 	 * 
 	 * @param patient
-	 * @param StockState
+	 * @param stockState
+	 * @since 3.12
 	 */
-	public void setEnablePatientStock(IPatient patient, boolean StockState);
+	public void setEnablePatientStock(IPatient patient, boolean stockState);
 
 	/**
-	 * get PatientStock of selected patient
+	 * Get the patient stock, if available
 	 * 
 	 * @param patient
 	 * @return
+	 * @since 3.12
 	 */
 	public Optional<IStock> getPatientStock(IPatient patient);
 }

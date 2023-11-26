@@ -396,13 +396,6 @@ public class StockService implements IStockService {
 	}
 
 	@Override
-	public List<IStockEntry> findAllStockEntriesForStockIncDeleted(IStock stock) {
-		IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class, true);
-		query.and("stock", COMPARATOR.EQUALS, stock);
-		return query.execute();
-	}
-
-	@Override
 	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId) {
 		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
@@ -422,37 +415,44 @@ public class StockService implements IStockService {
 
 	@Override
 	public Optional<IStock> getPatientStock(IPatient patient) {
-		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true);
+		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, PAT_STOCK_PREFIX + patient.getPatientNr());
 		return query.execute().stream().findFirst();
 	}
 
 	@Override
 	public void setEnablePatientStock(IPatient patient, boolean stockState) {
-		IStock patientStock = getPatientStock(patient).orElse(null);
+		IQuery<IStock> query = coreModelService.getQuery(IStock.class, true);
+		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, PAT_STOCK_PREFIX + patient.getPatientNr());
+		IStock patientStock = query.execute().stream().findFirst().orElse(null);
 
-		if (patientStock == null) {
-			if (stockState) {
-				IStock stock = coreModelService.create(IStock.class);
-				stock.setPriority(0);
-				stock.setCode(PAT_STOCK_PREFIX + patient.getPatientNr());
-				stock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
-				stock.setOwner(patient);
-				coreModelService.save(stock);
+		if (stockState) {
+			if (patientStock == null) {
+				patientStock = coreModelService.create(IStock.class);
+				patientStock.setPriority(0);
+				patientStock.setCode(PAT_STOCK_PREFIX + patient.getPatientNr());
+				patientStock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
+				patientStock.setOwner(patient);
+			} else {
+				patientStock.setDeleted(false);
+				IQuery<IStockEntry> seQuery = coreModelService.getQuery(IStockEntry.class, true);
+				seQuery.and(ModelPackage.Literals.ISTOCK_ENTRY__STOCK, COMPARATOR.EQUALS, patientStock);
+				seQuery.execute().forEach(entry -> {
+					entry.setDeleted(false);
+					coreModelService.save(entry);
+				});
 			}
+			coreModelService.save(patientStock);
 			return;
-		}
-
-		if (!stockState) {
+		} else {
+			if (patientStock == null) {
+				return;
+			}
 			patientStock.setDeleted(true);
 			List<IStockEntry> entries = findAllStockEntriesForStock(patientStock);
-			entries.forEach(entry -> unstoreArticleFromStock(patientStock,
-					StoreToStringServiceHolder.getStoreToString(entry.getArticle())));
-			coreModelService.save(entries);
-		} else {
-			patientStock.setDeleted(false);
+			entries.forEach(coreModelService::delete);
+			coreModelService.save(patientStock);
 		}
-		coreModelService.save(patientStock);
 	}
 
 }
