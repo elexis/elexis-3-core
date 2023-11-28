@@ -4985,6 +4985,7 @@ public class Messages extends NLS {
 	public static String AgendaFarben_Bereich_Description;
 	public static String AgendaFarben_Titel;
 	public static String AgendaFarben_Link;
+	public static String Agenda_Mandator;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
