@@ -626,7 +626,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						break;
 					}
 				}
-				return 0;
+				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
 			}
 			return super.compare(viewer, left, right);
 		}

@@ -35,6 +35,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -42,6 +44,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -82,6 +86,7 @@ import ch.rgw.tools.StringTool;
 public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private Table table;
 	private TableViewer viewer;
+	private boolean isPriceSortedAscending = true;
 
 	private final GenericObjectDropTarget dropTarget;
 
@@ -97,7 +102,8 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private IEncounter actEncounter;
 	private ToolBar toolBar;
 	private TableColumnLayout tableLayout;
-
+	protected boolean isDescriptionSortedAscending;
+	protected boolean isCodeSortedAscending;
 	@Override
 	public void setEnabled(boolean enabled) {
 		toolBar.setEnabled(enabled);
@@ -330,6 +336,43 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 				return StringTool.leer;
 			}
 		});
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+					IDiagnosis b1 = (IDiagnosis) e1;
+					IDiagnosis b2 = (IDiagnosis) e2;
+					return b1.getCode().compareTo(b2.getCode());
+				}
+				return 0;
+			}
+		};
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == codeComparator) {
+					isCodeSortedAscending = !isCodeSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						private boolean isCodeSortedAscending;
+
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+								IDiagnosis b1 = (IDiagnosis) e1;
+								IDiagnosis b2 = (IDiagnosis) e2;
+								int result = b1.getCode().compareTo(b2.getCode());
+								return isCodeSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(codeComparator);
+					isCodeSortedAscending = true; // Zurücksetzen auf aufsteigende Sortierung
+				}
+				viewer.refresh();
+			}
+		});
 
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -343,6 +386,44 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					return diagnosis.getText();
 				}
 				return StringTool.leer;
+			}
+		});
+
+		ViewerComparator descriptionComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+					IDiagnosisReference b1 = (IDiagnosisReference) e1;
+					IDiagnosisReference b2 = (IDiagnosisReference) e2;
+					return b1.getText().compareTo(b2.getText());
+				}
+				return 0;
+			}
+		};
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (viewer.getComparator() == descriptionComparator) {
+					isDescriptionSortedAscending = !isDescriptionSortedAscending;
+					viewer.setComparator(new ViewerComparator() {
+						private boolean isDescriptionSortedAscending;
+
+						@Override
+						public int compare(Viewer viewer, Object e1, Object e2) {
+							if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+								IDiagnosisReference b1 = (IDiagnosisReference) e1;
+								IDiagnosisReference b2 = (IDiagnosisReference) e2;
+								int result = b1.getText().compareTo(b2.getText());
+								return isDescriptionSortedAscending ? result : -result;
+							}
+							return 0;
+						}
+					});
+				} else {
+					viewer.setComparator(descriptionComparator);
+					isDescriptionSortedAscending = true; // Zurücksetzen auf aufsteigende Sortierung
+				}
+				viewer.refresh();
 			}
 		});
 
