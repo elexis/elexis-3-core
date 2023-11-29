@@ -4940,6 +4940,10 @@ public class Messages extends NLS {
 	public static String ZuweiserUebersicht_Name;
 	public static String iMedAction_nameAction;
 	public static String xChangeContributor_thisIsAnOmnivoreDoc;
+	public static String AgendaFarben_Bereich_Description;
+	public static String AgendaFarben_Titel;
+	public static String AgendaFarben_Link;
+	public static String Agenda_Mandator;	
 	public static String Prefs_DefaultMessageRecipient;	
 	public static String Inputfield_empty;
 	static { // load message values from bundle file
