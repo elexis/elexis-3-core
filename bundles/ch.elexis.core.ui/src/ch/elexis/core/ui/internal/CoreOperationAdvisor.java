@@ -44,7 +44,6 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.data.Mandant;
 
 @Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
@@ -186,10 +185,6 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 		if (user != null && user.isActive()) {
 			// set user in system
 			ContextServiceHolder.get().setActiveUser(user);
-
-			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-				CoreHub.actMandant = Mandant.load(m.getId());
-			});
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.heart.resume(true);
 			// run access control

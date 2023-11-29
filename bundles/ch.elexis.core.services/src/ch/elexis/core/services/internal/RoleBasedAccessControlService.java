@@ -165,6 +165,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return roleAclMap.get(_role);
 	}
 
+	@Override
 	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream) {
 		try {
 			AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true).readValue(jsonStream,
@@ -259,7 +260,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		List<String> ret = new ArrayList<>();
 		if (user.getAssignedContact() != null) {
 			ret.add(user.getAssignedContact().getId());
-			userService.getExecutiveDoctorsWorkingFor(user).stream().forEach(m -> ret.add(m.getId()));
+			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
 	}
@@ -297,7 +298,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	public void doPrivileged(Runnable runnable) {
 		try {
 			privileged.set(Boolean.TRUE);
-			logger.debug("Executing priviledged [" + runnable + "]");
+			logger.trace("Executing priviledged [" + runnable + "]");
 			runnable.run();
 		} finally {
 			privileged.set(Boolean.FALSE);

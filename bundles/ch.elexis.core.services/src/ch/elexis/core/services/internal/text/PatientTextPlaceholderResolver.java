@@ -9,6 +9,7 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
@@ -32,35 +33,44 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 
 	@Override
 	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
-		IPatient patient = context.getTyped(IPatient.class).orElse(null);
+		IPatient patient = (IPatient) getIdentifiable(context).orElse(null);
 		if (patient != null) {
 			return Optional.ofNullable(replace(patient, attribute.toLowerCase()));
 		}
 		return Optional.empty();
 	}
 
+	@Override
+	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
+		return context.getTyped(IPatient.class);
+	}
+
 	private String replace(IPatient patient, String lcAttribute) {
 
 		PatientAttribute patientAttribut = searchEnum(PatientAttribute.class, lcAttribute);
-		switch (patientAttribut) {
-		case Anrede:
-			return PersonFormatUtil.getSalutation(patient);
-		case Name:
-			return patient.getLastName();
-		case Vorname:
-			return patient.getFirstName();
-		case Anschrift:
-			return AddressFormatUtil.getPostalAddress(patient, true);
-		case Anschriftzeile:
-			return AddressFormatUtil.getPostalAddress(patient, false);
-		default:
-			return null;
+		if (patientAttribut != null) {
+			switch (patientAttribut) {
+			case Anrede:
+				return PersonFormatUtil.getSalutation(patient);
+			case Name:
+				return patient.getLastName();
+			case Vorname:
+				return patient.getFirstName();
+			case Anschrift:
+				return AddressFormatUtil.getPostalAddress(patient, true);
+			case Anschriftzeile:
+				return AddressFormatUtil.getPostalAddress(patient, false);
+			case Geburtsdatum:
+				return PersonFormatUtil.getDateOfBirth(patient);
+			}
 		}
+		return null;
 	}
 
 	private enum PatientAttribute implements ILocalizedEnum {
 		Name("Nachname des Patienten"), Vorname("Vorname des Patienten"), Anrede("Anrede des Patienten"),
-		Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift");
+		Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift"),
+		Geburtsdatum("Geburtsdatum des Patienten");
 
 		final String description;
 

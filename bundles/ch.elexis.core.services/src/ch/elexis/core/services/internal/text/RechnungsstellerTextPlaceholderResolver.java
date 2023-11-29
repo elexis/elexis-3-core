@@ -1,17 +1,18 @@
 package ch.elexis.core.services.internal.text;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
@@ -36,9 +37,18 @@ public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholder
 
 	@Override
 	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
+		IContact biller = (IContact) getIdentifiable(context).orElse(null);
+		if (biller != null) {
+			return Optional.ofNullable(replace(biller, attribute.toLowerCase()));
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
 		IMandator mandantor = context.getTyped(IMandator.class).orElse(null);
 		if (mandantor != null) {
-			return Optional.ofNullable(replace(mandantor.getBiller(), attribute.toLowerCase()));
+			return Optional.of(mandantor.getBiller());
 		}
 		return Optional.empty();
 	}

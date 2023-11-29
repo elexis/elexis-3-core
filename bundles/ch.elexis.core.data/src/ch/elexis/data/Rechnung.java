@@ -256,7 +256,6 @@ public class Rechnung extends PersistentObject {
 		if (f == null) {
 			result = result.add(Result.SEVERITY.ERROR, 8,
 					"Die Rechnung hat keinen zugehörigen Fall (" + getRnDesc(ret) + ")", ret, true);
-			// garant=CoreHub.actMandant;
 		} else {
 			if (ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true) && !f.isValid()) {
 				result = result.add(Result.SEVERITY.ERROR, 8,

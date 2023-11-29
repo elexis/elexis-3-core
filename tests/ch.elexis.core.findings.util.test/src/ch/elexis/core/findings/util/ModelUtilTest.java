@@ -24,7 +24,7 @@ public class ModelUtilTest {
 	@Before
 	public void before() {
 		if (findingsService == null) {
-			findingsService = OsgiServiceUtil.getService(IFindingsService.class).get();
+			findingsService = OsgiServiceUtil.getServiceWait(IFindingsService.class, 2000).get();
 		}
 	}
 
