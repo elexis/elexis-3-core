@@ -4969,6 +4969,10 @@ public class Messages extends NLS {
 	public static String ConditionCategory_UNKNOWN;
 	public static String ConditionCategory_PROBLEMLISTITEM;
 	public static String ConditionCategory_ENCOUNTERDIAGNOSIS;
+	public static String AgendaFarben_Bereich_Description;
+	public static String AgendaFarben_Titel;
+	public static String AgendaFarben_Link;
+	public static String Agenda_Mandator;
 	public static String Prefs_DefaultMessageRecipient;
 	public static String Inputfield_empty;
 	static { // load message values from bundle file
