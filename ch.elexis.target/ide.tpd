@@ -66,6 +66,7 @@ location "https://download.elexis.info/elexis/target/2023-09-java17/" {
 	//org.osgi.framework.system.packages.extra
 	
 	bcprov
+	bcpg
 	
 	// hapi
 	info.elexis.target.hapi.fhir lazy
@@ -90,7 +91,10 @@ location "https://download.elexis.info/elexis/target/2023-09-java17/" {
 	org.objectweb.asm.util
 	org.jboss.logging.jboss-logging
 
+	org.apache.commons.jxpath
 	com.ibm.icu
+	com.sun.jna
+	com.sun.jna.platform
 
 	// overridden
 	org.apache.commons.commons-dbcp2
