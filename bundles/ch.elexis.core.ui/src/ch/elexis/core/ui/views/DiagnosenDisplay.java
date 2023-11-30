@@ -359,7 +359,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				viewer.setComparator(codeComparator);
-				if (viewer.getComparator() == codeComparator) {
 					if (viewer.getData("codeSortAscending") != null) {
 						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
 					} else {
@@ -367,7 +366,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					}
 					viewer.refresh();
 				}
-			}
+
 		});
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {

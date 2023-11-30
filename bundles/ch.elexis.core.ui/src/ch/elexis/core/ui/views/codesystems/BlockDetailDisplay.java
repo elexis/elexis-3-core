@@ -410,7 +410,40 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 
-		addColumnSelectionListener(colCode, 1);
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof BlockElementViewerItem && e2 instanceof BlockElementViewerItem) {
+					BlockElementViewerItem b1 = (BlockElementViewerItem) e1;
+					BlockElementViewerItem b2 = (BlockElementViewerItem) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		colCode.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(codeComparator);
+				if (viewer.getComparator() == codeComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+			}
+		});
 
 		TableViewerColumn colBezeichnung = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
 		colBezeichnung.setLabelProvider(new ColumnLabelProvider() {
@@ -606,29 +639,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return SWT.UP;
 			}
 			return SWT.NONE;
-		}
-
-		@Override
-		public int compare(Viewer viewer, Object left, Object right) {
-			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
-				BlockElementViewerItem leftItem = (BlockElementViewerItem) left;
-				BlockElementViewerItem rightItem = (BlockElementViewerItem) right;
-
-				if (direction != 0) {
-					switch (columnIndex) {
-					case 0: // Sortierung Anz.
-						return Integer.compare(leftItem.getCount(), rightItem.getCount()) * direction;
-					case 1: // Sortierung Code
-						return leftItem.getCode().compareTo(rightItem.getCode()) * direction;
-					case 2: // Sortierung Bezeichnung
-						return leftItem.getText().compareTo(rightItem.getText()) * direction;
-					default:
-						break;
-					}
-				}
-				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
-			}
-			return super.compare(viewer, left, right);
 		}
 	}
 }

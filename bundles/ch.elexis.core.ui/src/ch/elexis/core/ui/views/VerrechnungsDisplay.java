@@ -355,41 +355,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
 
-		ViewerComparator codeComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled b1 = (IBilled) e1;
-					IBilled b2 = (IBilled) e2;
-					return b1.getCode().compareTo(b2.getCode());
-					}
-				return 0;
-				}
-		};
-
-		ViewerComparator descriptionComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled b1 = (IBilled) e1;
-					IBilled b2 = (IBilled) e2;
-					return b1.getText().compareTo(b2.getText());
-					}
-				return 0;
-				}
-		};
-
-		ViewerComparator priceComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled b1 = (IBilled) e1;
-					IBilled b2 = (IBilled) e2;
-					return b1.getTotal().compareTo(b2.getTotal());
-				}
-				return 0;
-			}
-		};
 		
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -435,12 +400,39 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
 		col.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setupComparatorToggle(viewer, codeComparator, new AtomicBoolean(isCodeSortedAscending),
-						(b1, b2) -> b1.getCode().compareTo(b2.getCode()));
+				viewer.setComparator(codeComparator);
+				if (viewer.getComparator() == codeComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
 				}
+			}
 		});
 
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
@@ -464,13 +456,40 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setupComparatorToggle(viewer, descriptionComparator, new AtomicBoolean(isDescriptionSortedAscending),
-						(b1, b2) -> b1.getText().compareTo(b2.getText()));
+			ViewerComparator descriptionComparator = new ViewerComparator() {
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2) {
+					if (e1 instanceof IBilled && e2 instanceof IBilled) {
+						IBilled b1 = (IBilled) e1;
+						IBilled b2 = (IBilled) e2;
+						int result = b1.getText().compareTo(b2.getText());
+						return getSortedAscending(viewer) ? result : -result;
+					}
+					return 0;
 				}
-		});
+
+				private boolean getSortedAscending(Viewer viewer) {
+					if (viewer.getData("descriptionSortAscending") != null) {
+						return (Boolean) viewer.getData("descriptionSortAscending");
+					}
+					return true;
+				}
+			};
+
+			col.getColumn().addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					viewer.setComparator(descriptionComparator);
+					if (viewer.getComparator() == descriptionComparator) {
+						if (viewer.getData("descriptionSortAscending") != null) {
+							viewer.setData("descriptionSortAscending", !(Boolean) viewer.getData("descriptionSortAscending"));
+						} else {
+							viewer.setData("descriptionSortAscending", Boolean.FALSE);
+						}
+						viewer.refresh();
+					}
+				}
+			});
 
 		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.RIGHT);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -485,12 +504,39 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getTotal().compareTo(b2.getTotal());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
 		col.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setupComparatorToggle(viewer, priceComparator, new AtomicBoolean(isPriceSortedAscending),
-						(b1, b2) -> b1.getTotal().compareTo(b2.getTotal()));
+				viewer.setComparator(priceComparator);
+				if (viewer.getComparator() == priceComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
 				}
+			}
 		});
 
 		col = createTableViewerColumn(titles[5], weights[5], 5, SWT.NONE);
