@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -66,23 +65,8 @@ public class IStockServiceTest extends AbstractServiceTest {
 
 		service.setEnablePatientStock(patient, false);
 
-		assertEquals(true, stock.isDeleted());
+		assertFalse(service.getPatientStock(patient).isPresent());
 		List<IStockEntry> entries = service.findAllStockEntriesForStock(stock);
 		assertTrue(entries.isEmpty());
-	}
-
-	@Test
-	public void c_reactivateDeletedStock() {
-		assertFalse(service.getPatientStock(patient).isPresent());
-
-		service.setEnablePatientStock(patient, true);
-
-		Optional<IStock> patientStock = service.getPatientStock(patient);
-		assertTrue(patientStock.isPresent());
-		List<IStockEntry> entries = service.findAllStockEntriesForStock(patientStock.get());
-		assertTrue(entries.size() == 1);
-		for (IStockEntry entry : entries) {
-			assertEquals(false, entry.isDeleted());
-		}
 	}
 }

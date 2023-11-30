@@ -433,25 +433,12 @@ public class StockService implements IStockService {
 				patientStock.setCode(PAT_STOCK_PREFIX + patient.getPatientNr());
 				patientStock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
 				patientStock.setOwner(patient);
-			} else {
-				patientStock.setDeleted(false);
-				IQuery<IStockEntry> seQuery = coreModelService.getQuery(IStockEntry.class, true);
-				seQuery.and(ModelPackage.Literals.ISTOCK_ENTRY__STOCK, COMPARATOR.EQUALS, patientStock);
-				seQuery.execute().forEach(entry -> {
-					entry.setDeleted(false);
-					coreModelService.save(entry);
-				});
+				coreModelService.save(patientStock);
 			}
-			coreModelService.save(patientStock);
-			return;
-		} else {
-			if (patientStock == null) {
-				return;
-			}
-			patientStock.setDeleted(true);
+		} else if (patientStock != null) {
+			coreModelService.remove(patientStock);
 			List<IStockEntry> entries = findAllStockEntriesForStock(patientStock);
-			entries.forEach(coreModelService::delete);
-			coreModelService.save(patientStock);
+			entries.forEach(coreModelService::remove);
 		}
 	}
 
