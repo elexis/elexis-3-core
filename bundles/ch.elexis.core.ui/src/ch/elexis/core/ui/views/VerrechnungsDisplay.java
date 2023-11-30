@@ -395,6 +395,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return super.getImage(element);
 			}
 		});
+
 		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
