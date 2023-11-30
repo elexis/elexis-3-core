@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2023-09-java17" sequenceNumber="1701280467">
+<target name="Elexis IDE 2023-09-java17" sequenceNumber="1701335410">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
@@ -51,6 +51,7 @@
       <unit id="jakarta.persistence" version="2.2.3"/>
       <unit id="bcprov" version="1.77.0"/>
       <unit id="bcpg" version="1.77.0"/>
+      <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202311271824"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
       <unit id="info.elexis.target.ehealth.connector.ch" version="0.0.0"/>

@@ -68,6 +68,7 @@ location "https://download.elexis.info/elexis/target/2023-09-java17/" {
 	bcprov
 	bcpg
 	
+	ch.elexis.core.logback.rocketchat
 	// hapi
 	info.elexis.target.hapi.fhir lazy
 	// jaxws
