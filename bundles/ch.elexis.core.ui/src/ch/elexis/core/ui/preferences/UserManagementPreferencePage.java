@@ -93,6 +93,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.dialogs.ChangePasswordDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
@@ -1003,20 +1004,22 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
 		IObservableValue observeSelectionBtnIsAdminObserveWidget = WidgetProperties.selection().observe(btnUserIsAdmin);
 		IObservableValue wvAdminObserveDetailValue = PojoProperties.value(IUser.class, "administrator", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
-		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue, null, null);
+		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue,
+				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), wvUser), null);
 
 		IObservableValue observeSelectionBtnIsActiveObserveWidget = WidgetProperties.selection()
 				.observe(btnUserIsLocked);
 		IObservableValue wvActiveObserveDetailValue = PojoProperties.value(IUser.class, "active", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsActiveObserveWidget, wvActiveObserveDetailValue,
-				new UpdateValueStrategy().setConverter(new BooleanNotConverter()),
+				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), wvUser).setConverter(new BooleanNotConverter()),
 				new UpdateValueStrategy().setConverter(new BooleanNotConverter()));
 		//
 		return bindingContext;
