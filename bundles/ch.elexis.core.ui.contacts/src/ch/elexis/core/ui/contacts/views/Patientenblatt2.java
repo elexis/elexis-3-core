@@ -1516,7 +1516,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (ec != null && form != null && !form.isDisposed()) {
 			for (ExpandableComposite expandable : ec) {
 				if (expandable.getLayoutData() instanceof GridData) {
-					((GridData) expandable.getLayoutData()).widthHint = Patientenblatt2.this.getClientArea().width;
+					if (Patientenblatt2.this.getClientArea().width > 50) {
+						((GridData) expandable.getLayoutData()).widthHint = Patientenblatt2.this.getClientArea().width;
+					} else {
+						((GridData) expandable.getLayoutData()).widthHint = SWT.DEFAULT;
+					}
 				}
 			}
 			form.getBody().layout(true);
