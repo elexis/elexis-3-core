@@ -1,5 +1,6 @@
 package ch.elexis.core.services.internal.text;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -7,12 +8,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -22,6 +24,9 @@ import ch.elexis.core.text.PlaceholderAttribute;
 @Component
 public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver {
 
+	@Reference(target = "(type=Kontakt)")
+	private ITextPlaceholderResolver contactTextPlaceholderResolver;
+
 	@Override
 	public String getSupportedType() {
 		return "Mandant";
@@ -29,9 +34,14 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 
 	@Override
 	public List<PlaceholderAttribute> getSupportedAttributes() {
-		return Arrays.asList(MandantAttribute.values()).stream()
+		List<PlaceholderAttribute> ret = new ArrayList<>();
+		ret.addAll(Arrays.asList(MandantAttribute.values()).stream()
 				.map(m -> new PlaceholderAttribute(getSupportedType(), m.name(), m.getLocaleText()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
+		if (contactTextPlaceholderResolver != null) {
+			ret.addAll(contactTextPlaceholderResolver.getSupportedAttributes());
+		}
+		return ret;
 	}
 
 	@Override
@@ -67,18 +77,25 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 			if (mandator.isPerson()) {
 				return CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get().getTitel();
 			}
-		case Anschrift:
-			return AddressFormatUtil.getPostalAddress(mandator, true);
-		case Anschriftzeile:
-			return AddressFormatUtil.getPostalAddress(mandator, false);
 		default:
-			return null;
+			break;
 		}
+		// fallback to contact properties
+		if (contactTextPlaceholderResolver != null) {
+			IContact contact = CoreModelServiceHolder.get().load(mandator.getId(), IContact.class).get();
+			TextPlaceholderContext context = new TextPlaceholderContext(contact);
+			Optional<String> contactReplacement = contactTextPlaceholderResolver.replaceByTypeAndAttribute(context,
+					lcAttribute);
+			if (contactReplacement.isPresent()) {
+				return contactReplacement.get();
+			}
+		}
+		return null;
 	}
 
 	private enum MandantAttribute implements ILocalizedEnum {
 		Name("Nachname des Mandanten"), Vorname("Vorname des Mandanten"), Titel("Titel des Mandanten"),
-		Anrede("Anrede des Mandanten"), Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift");
+		Anrede("Anrede des Mandanten");
 
 		final String description;
 

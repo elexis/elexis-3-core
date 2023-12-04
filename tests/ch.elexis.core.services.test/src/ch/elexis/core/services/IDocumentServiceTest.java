@@ -100,6 +100,19 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		saveToTempFileAndDelete(createdDocument);
 	}
 
+	@Test
+	public void mandantReplacement() throws Exception {
+		context.setTyped(testMandators.get(0));
+
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		assertNotNull(createdDocument);
+
+		int foundCount = getFindTextCount("mandator1");
+		assertTrue(foundCount > 0);
+
+		saveToTempFileAndDelete(createdDocument);
+	}
+
 	private int getFindTextCount(String text) throws Exception {
 		Method method = textPlugin.getClass().getMethod("findTextCount", new Class[] { String.class });
 		return (int) method.invoke(textPlugin, text);
