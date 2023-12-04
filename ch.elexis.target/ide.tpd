@@ -1,30 +1,32 @@
-target "Elexis IDE 2022-09-java17" with source allEnvironments
+target "Elexis IDE 2023-09-java17" with source allEnvironments
 
-location "https://www.opcoach.com/repository/2022-09" {
-	com.opcoach.e4.preferences.feature.feature.group
-}
 
-location "https://download.elexis.info/elexis/target/2022-09-java17/" {
+
+location "https://download.elexis.info/elexis/target/2023-09-java17/" {
 	
 	// justj.17
 	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
 
 	// eclipse base
 	org.eclipse.platform.feature.group
+	org.eclipse.equinox.executable.feature.group
+	org.eclipse.rcp.feature.group
 	org.eclipse.e4.rcp.feature.group
 	org.eclipse.emf.common.feature.group
-	org.eclipse.emf.common.ui.feature.group
 	org.eclipse.emf.ecore.feature.group
 	org.eclipse.emf.databinding.feature.group
 	org.eclipse.emf.edit.feature.group
+	org.eclipse.emf.common.ui.feature.group
 	org.eclipse.emf.edit.ui.feature.group
 	org.eclipse.ecf.core.feature.feature.group
 	org.eclipse.ecf.core.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.feature.feature.group
 	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group
+	org.eclipse.ecf.remoteservice.feature.feature.group
 	org.eclipse.mylyn.wikitext_feature.feature.group
-	
+	javax.annotation
+	org.apache.felix.scr
 	org.eclipse.e4.ui.progress
 	
 	org.sat4j.core
@@ -33,6 +35,8 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
 	org.apache.httpcomponents.httpclient.win
+	
+	javax.inject 
 	
 	// logging
 	org.slf4j.api
@@ -46,14 +50,8 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	
 	// JAXB
 	javax.activation
-//	com.sun.xml.bind
-//	jakarta.xml.bind
 	jaxb-api // javax.xml.bind:jaxb-api:2.3.1
-//	com.sun.xml.bind.jaxb-impl
-//	org.glassfish.jaxb.runtime
 	com.sun.xml.bind.jaxb-osgi
-	// javax.xml // -> bites with JDK java.xml
-	jakarta.xml.bind-api
 	
 	// persistence
 	com.h2database
@@ -65,19 +63,12 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	org.osgi.service.jndi
 	jakarta.persistence
 	
-	org.osgi.framework.system.packages.extra
-	
-	com.eclipsesource.jaxrs.consumer lazy
-	com.eclipsesource.jaxrs.publisher lazy
-	com.eclipsesource.jaxrs.provider.gson lazy
-	com.eclipsesource.jaxrs.provider.multipart lazy
-	com.eclipsesource.jaxrs.provider.security lazy
-	com.eclipsesource.jaxrs.provider.swagger lazy
+	//org.osgi.framework.system.packages.extra
 	
 	bcprov
+	bcpg
 	
-	// jackson
-	info.elexis.target.jackson.feature.group lazy
+	ch.elexis.core.logback.rocketchat
 	// hapi
 	info.elexis.target.hapi.fhir lazy
 	// jaxws
@@ -85,7 +76,7 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	// ehealth connector
 	info.elexis.target.ehealth.connector.ch lazy
 	// swagger
-	info.elexis.target.swagger.all lazy
+	io.swagger.core.v3.swagger-annotations
 	// apache commons
 	info.elexis.target.commons.feature.group lazy
 	// jax ws-rs
@@ -101,7 +92,10 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	org.objectweb.asm.util
 	org.jboss.logging.jboss-logging
 
+	org.apache.commons.jxpath
 	com.ibm.icu
+	com.sun.jna
+	com.sun.jna.platform
 
 	// overridden
 	org.apache.commons.commons-dbcp2
@@ -110,8 +104,9 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 
 	org.jdom2
 	org.jaxen
-	com.google.gson
+	com.google.gson [2.10.1,2.10.1]
 	com.google.guava
+	com.google.guava.failureaccess
 	org.jsoup
 	org.apache.poi
 	org.apache.poi.ooxml
@@ -158,6 +153,7 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 
 	// Testing and IDE integration
 	org.junit
+	org.hamcrest
 	org.hamcrest.core
 	org.hamcrest.library
 	org.eclipse.jdt.junit.runtime
@@ -195,9 +191,6 @@ location "https://download.elexis.info/elexis/target/2022-09-java17/" {
 	org.eclipse.platform.nl_de
 	org.eclipse.platform.nl_fr
 	org.eclipse.platform.nl_it
-	org.eclipse.jdt.ui.nl_de
-	org.eclipse.jdt.ui.nl_fr
-	org.eclipse.jdt.ui.nl_it
 	org.eclipse.e4.ui.workbench.swt.nl_de
 	org.eclipse.e4.ui.workbench.swt.nl_fr
 	org.eclipse.e4.ui.workbench.swt.nl_it

@@ -5,17 +5,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class AccessControlList {
 
-	@JsonProperty("roles-represented")
+	@SerializedName("roles-represented")
 	private Set<String> rolesRepresented;
-	@JsonProperty("system-configuration")
+	@SerializedName("system-configuration")
 	private Map<String, Object> systemConfiguration;
-	@JsonProperty("system-command")
+	@SerializedName("system-command")
 	private Map<String, ACEAccessBitMap> systemCommand;
-	@JsonProperty("object")
+	@SerializedName("object")
 	private Map<String, ACEAccessBitMap> object;
 
 	public AccessControlList() {

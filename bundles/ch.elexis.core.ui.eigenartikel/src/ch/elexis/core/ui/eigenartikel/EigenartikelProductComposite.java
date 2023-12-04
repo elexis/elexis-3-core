@@ -3,16 +3,16 @@ package ch.elexis.core.ui.eigenartikel;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -187,7 +187,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 	}
 
 	public IArticle getProductArtikel() {
-		return (IArticle) productEigenartikel.getValue();
+		return productEigenartikel.getValue();
 	}
 
 	public void setProductEigenartikel(IArticle productEigenartikel) {
@@ -217,7 +217,7 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		DataBindingContext bindingContext = new DataBindingContext();
 
 		//
-		ISWTObservableValue observeTextTxtProductNameObserveWidget = WidgetProperties.text(SWT.Modify)
+		ISWTObservableValue<String> observeTextTxtProductNameObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observeDelayed(300, txtProductName);
 		IObservableValue<String> productEigenartikelNameObserveDetailValue = PojoProperties
 				.value(IArticle.class, "name", String.class).observeDetail(productEigenartikel); //$NON-NLS-1$
@@ -238,13 +238,14 @@ public class EigenartikelProductComposite extends Composite implements IUnlockab
 		//
 		IViewerObservableValue observeSingleSelectionComboViewerProductType = ViewerProperties.singleSelection()
 				.observe(comboViewerProductType);
-		IObservableValue<IArticle> productEigenartikelTypObserveDetailValue = PojoProperties
+		IObservableValue<ArticleSubTyp> productEigenartikelTypObserveDetailValue = PojoProperties
 				.value(IArticle.class, "subTyp", ArticleSubTyp.class).observeDetail(productEigenartikel); //$NON-NLS-1$
 		bindingContext.bindValue(observeSingleSelectionComboViewerProductType, productEigenartikelTypObserveDetailValue,
 				new SavingUpdateProductChilds(CoreModelServiceHolder.get(), productEigenartikel), null);
 
 		//
-		ISWTObservableValue observeTextTxtAtcCodeObserveWidget = WidgetProperties.text(SWT.Modify).observeDelayed(300,
+		ISWTObservableValue<String> observeTextTxtAtcCodeObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observeDelayed(300,
 				txtAtcCode);
 		IObservableValue<String> productEigenartikelATC_codeObserveDetailValue = PojoProperties
 				.value(IArticle.class, "atcCode", String.class).observeDetail(productEigenartikel); //$NON-NLS-1$
