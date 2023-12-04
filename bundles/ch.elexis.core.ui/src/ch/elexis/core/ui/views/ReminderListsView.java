@@ -85,6 +85,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
+import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.ISubQuery;
@@ -116,9 +117,14 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	private boolean autoSelectPatient = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT,
 			false);
 	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
+	private boolean showNotYetDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false);
 	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
 			&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS));
 	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
+	private boolean popupOnLogin = ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN, false);
+	private boolean popupOnPatientSelection = ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION,
+			false);
+	private boolean assignedToMe = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false);
 
 	private Composite viewParent;
 
@@ -234,8 +240,18 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 
 		@Override
 		public void doRun() {
-			showAllReminders = showOthersRemindersAction.isChecked();
+			boolean currentlyChecked = showOthersRemindersAction.isChecked();
+			if (currentlyChecked) {
+				boolean continueOperation = SWTHelper.askYesNo(Messages.Core_Warning,
+						Messages.ReminderView_WarningAllFilter);
+				if (!continueOperation) {
+					showOthersRemindersAction.setChecked(false);
+					return;
+				}
+			}
+			showAllReminders = currentlyChecked;
 			ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS, showAllReminders);
+			resetOtherFilters();
 			refresh();
 		}
 	};
@@ -267,6 +283,84 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			refresh();
 		}
 	};
+
+	private Action showNotYetDueReminderToggleAction = new Action(Messages.ShowNotYetDueReminders,
+			Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		{
+			setToolTipText(Messages.ShowNotYetDueReminders_Tooltip); // $NON-NLS-1$
+		}
+
+		@Override
+		public void run() {
+			showNotYetDueReminders = showNotYetDueReminderToggleAction.isChecked();
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE, showNotYetDueReminders);
+			refresh();
+		}
+	};
+
+	private Action popupOnLoginReminderToggleAction = new Action(Messages.Reminders_PopupOnLogin, Action.AS_CHECK_BOX) {
+		{
+			setToolTipText(Messages.Reminders_PopupOnLogin_ToolTip); // $NON-NLS-1$
+		}
+
+		@Override
+		public void run() {
+			popupOnLogin = popupOnLoginReminderToggleAction.isChecked();
+			ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN, popupOnLogin);
+			refresh();
+		}
+	};
+
+	private Action popupOnPatientSelectionReminderToggleAction = new Action(Messages.Reminders_PopupOnPatientSelection,
+			Action.AS_CHECK_BOX) {
+		{
+			setToolTipText(Messages.Reminders_PopupOnPatientSelection_ToolTip); // $NON-NLS-1$
+		}
+
+		@Override
+		public void run() {
+			popupOnPatientSelection = popupOnPatientSelectionReminderToggleAction.isChecked();
+			ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION, popupOnPatientSelection);
+			refresh();
+		}
+	};
+
+	private Action showAssignedToMeAction = new Action(Messages.Reminders_AssignedToMe, Action.AS_CHECK_BOX) {
+		{
+			setToolTipText(Messages.Reminders_AssignedToMe_ToolTip);
+		}
+
+		@Override
+		public void run() {
+			assignedToMe = showAssignedToMeAction.isChecked();
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, assignedToMe);
+			refresh();
+		}
+	};
+
+	private void resetOtherFilters() {
+		autoSelectPatient = false;
+		toggleAutoSelectPatientAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
+		showSelfCreatedReminders = false;
+		showSelfCreatedReminderAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN, false);
+		showOnlyDueReminders = false;
+		showOnlyOwnDueReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, false);
+		popupOnLogin = false;
+		popupOnLoginReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN, false);
+		popupOnPatientSelection = false;
+		popupOnPatientSelectionReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION, false);
+		assignedToMe = false;
+		showAssignedToMeAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false);
+		showNotYetDueReminders = false;
+		showNotYetDueReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false);
+	}
 
 	private RestrictedAction selectPatientAction = new RestrictedAction(AccessControlDefaults.PATIENT_DISPLAY,
 			Messages.ReminderView_activatePatientAction, Action.AS_UNSPECIFIED) {
@@ -483,7 +577,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		menuManager.add(deleteReminderAction);
 		menuManager.add(timeFilterSubMenu);
 		menuManager.add(showOnlyOwnDueReminderToggleAction);
+		menuManager.add(showNotYetDueReminderToggleAction);
 		menuManager.add(showSelfCreatedReminderAction);
+		menuManager.add(showAssignedToMeAction);
+		menuManager.add(popupOnLoginReminderToggleAction);
+		menuManager.add(popupOnPatientSelectionReminderToggleAction);
 		menuManager.add(showOthersRemindersAction);
 
 		currentPatientViewer.getTable().setMenu(menuManager.createContextMenu(currentPatientViewer.getTable()));
@@ -595,7 +693,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 							.showAll(showAllReminders
 									&& CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
 							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-							.showSelfCreated(showSelfCreatedReminders));
+							.showNotYetDueReminders(showNotYetDueReminders).showSelfCreated(showSelfCreatedReminders)
+							.popupOnLogin(popupOnLogin).popupOnPatientSelectionToggleAction(popupOnPatientSelection)
+							.showAssignedToMeAction(assignedToMe));
 			currentLoader.thenRunAsync(() -> {
 				Display.getDefault().asyncExec(() -> {
 					if (currentPatientViewer != null && !currentPatientViewer.getTable().isDisposed()) {
@@ -632,7 +732,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 						.showAll(
 								showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
 						.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-						.showSelfCreated(showSelfCreatedReminders));
+						.showNotYetDueReminders(showNotYetDueReminders).showSelfCreated(showSelfCreatedReminders)
+						.popupOnLoginReminderToggleAction(popupOnLogin)
+						.popupOnPatientSelectionToggleAction(popupOnPatientSelection)
+						.showAssignedToMeAction(assignedToMe));
 		currentLoader.thenRunAsync(() -> {
 			Display.getDefault().asyncExec(() -> {
 				if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
@@ -666,7 +769,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralSupplier()
 				.showAll(showAllReminders && CoreHub.acl.request(AccessControlDefaults.ADMIN_VIEW_ALL_REMINDERS))
 				.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-				.showSelfCreated(showSelfCreatedReminders));
+				.showNotYetDueReminders(showNotYetDueReminders).showSelfCreated(showSelfCreatedReminders)
+				.popupOnLogin(popupOnLogin).popupOnPatientSelectionToggleAction(popupOnPatientSelection)
+				.showAssignedToMeAction(assignedToMe));
 		currentLoader.thenRunAsync(() -> {
 			Display.getDefault().asyncExec(() -> {
 				if (generalViewer != null && !generalViewer.getTable().isDisposed()) {
@@ -697,9 +802,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 	}
 
 	private void applyDueDateFilter(IQuery<IReminder> query, boolean includeNoDue) {
-		LocalDate dueDateDays = LocalDate.now();
-		dueDateDays.plusDays(filterDueDateDays);
-
+		LocalDate now = LocalDate.now();
+		LocalDate dueDateDays = now.plusDays(filterDueDateDays);
 		if (!includeNoDue) {
 			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.NOT_EQUALS, null);
 		}
@@ -711,6 +815,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		showSelfCreatedReminderAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false));
 		toggleAutoSelectPatientAction
 				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
+		showNotYetDueReminderToggleAction
+				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false));
+		popupOnLoginReminderToggleAction.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN, false));
+		popupOnPatientSelectionReminderToggleAction
+				.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION, false));
+		showAssignedToMeAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false));
 //
 //		// get state from user's configuration
 //		showOthersRemindersAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
@@ -887,7 +997,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					StringJoiner sj = new StringJoiner("| "); //$NON-NLS-1$
 					responsibles.forEach(r -> {
 						if (r.isMandator()) {
-							sj.add(r.getDescription3());
+							sj.add(r.getDescription1() + " " + r.getDescription2());
 						} else {
 							sj.add(r.getLabel());
 						}
@@ -1308,6 +1418,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		private boolean filterDue;
 		private boolean showSelfCreated;
 		private boolean showOnlyDue;
+		private boolean popupOnLogin;
+		private boolean popupOnPatientSelection;
+		private boolean assignedToMe;
+		private boolean showNotYetDueReminders;
 
 		public CurrentPatientSupplier(Patient actPatient) {
 			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
@@ -1324,29 +1438,44 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 					query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
 				}
 
+				if (showNotYetDueReminders) {
+					query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
+				}
+
+				if (popupOnLogin || popupOnPatientSelection) {
+					query.startGroup();
+
+					if (popupOnLogin) {
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_LOGIN);
+					}
+
+					if (popupOnPatientSelection) {
+						if (popupOnLogin) {
+							query.or(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+									Visibility.POPUP_ON_PATIENT_SELECTION);
+						} else {
+							query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+									Visibility.POPUP_ON_PATIENT_SELECTION);
+						}
+					}
+
+					query.andJoinGroups();
+				}
+
 				if (!showAll) {
 					if (showSelfCreated) {
 						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-							query.startGroup();
-							ISubQuery<IReminderResponsibleLink> subQuery = query
-									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
-							subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-							subQuery.and("responsible", COMPARATOR.EQUALS, m);
-							query.exists(subQuery);
-							query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-							query.or(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-							query.andJoinGroups();
+							query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
 						});
-					} else {
+					}
+					if (assignedToMe) {
 						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-							query.startGroup();
 							ISubQuery<IReminderResponsibleLink> subQuery = query
 									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
 							subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
 							subQuery.and("responsible", COMPARATOR.EQUALS, m);
 							query.exists(subQuery);
-							query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-							query.andJoinGroups();
 						});
 					}
 				}
@@ -1379,6 +1508,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			this.showOnlyDue = showOnlyDueReminders;
 			return this;
 		}
+
+		public CurrentPatientSupplier popupOnLogin(boolean value) {
+			this.popupOnLogin = value;
+			return this;
+		}
+
+		public CurrentPatientSupplier popupOnPatientSelectionToggleAction(boolean value) {
+			this.popupOnPatientSelection = value;
+			return this;
+		}
+
+		public CurrentPatientSupplier showAssignedToMeAction(boolean value) {
+			this.assignedToMe = value;
+			return this;
+		}
+
+		public CurrentPatientSupplier showNotYetDueReminders(boolean value) {
+			this.showNotYetDueReminders = value;
+			return this;
+		}
 	}
 
 	private class GeneralPatientSupplier implements Supplier<List<IReminder>> {
@@ -1388,6 +1537,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		private boolean filterDue;
 		private boolean showSelfCreated;
 		private boolean showOnlyDue;
+		private boolean popupOnLogin;
+		private boolean popupOnPatientSelection;
+		private boolean assignedToMe;
+		private boolean showNotYetDueReminders;
 
 		public GeneralPatientSupplier(Patient actPatient) {
 			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
@@ -1404,29 +1557,44 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
 			}
 
+			if (showNotYetDueReminders) {
+				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
+			}
+
+			if (popupOnLogin || popupOnPatientSelection) {
+				query.startGroup();
+
+				if (popupOnLogin) {
+					query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+							Visibility.POPUP_ON_LOGIN);
+				}
+
+				if (popupOnPatientSelection) {
+					if (popupOnLogin) {
+						query.or(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					} else {
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					}
+				}
+
+				query.andJoinGroups();
+			}
+
 			if (!showAll) {
 				if (showSelfCreated) {
 					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.startGroup();
-						ISubQuery<IReminderResponsibleLink> subQuery = query
-								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
-						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-						subQuery.and("responsible", COMPARATOR.EQUALS, m);
-						query.exists(subQuery);
-						query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-						query.or(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-						query.andJoinGroups();
+						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
 					});
-				} else {
+				}
+				if (assignedToMe) {
 					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.startGroup();
 						ISubQuery<IReminderResponsibleLink> subQuery = query
 								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
 						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
 						subQuery.and("responsible", COMPARATOR.EQUALS, m);
 						query.exists(subQuery);
-						query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-						query.andJoinGroups();
 					});
 				}
 			}
@@ -1457,6 +1625,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 			this.showOnlyDue = showOnlyDueReminders;
 			return this;
 		}
+
+		public GeneralPatientSupplier popupOnLoginReminderToggleAction(boolean value) {
+			this.popupOnLogin = value;
+			return this;
+		}
+
+		public GeneralPatientSupplier popupOnPatientSelectionToggleAction(boolean value) {
+			this.popupOnPatientSelection = value;
+			return this;
+		}
+
+		public GeneralPatientSupplier showAssignedToMeAction(boolean value) {
+			this.assignedToMe = value;
+			return this;
+		}
+
+		public GeneralPatientSupplier showNotYetDueReminders(boolean value) {
+			this.showNotYetDueReminders = value;
+			return this;
+		}
 	}
 
 	private class GeneralSupplier implements Supplier<List<IReminder>> {
@@ -1465,6 +1653,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 		private boolean filterDue;
 		private boolean showSelfCreated;
 		private boolean showOnlyDue;
+		private boolean popupOnLogin;
+		private boolean popupOnPatientSelection;
+		private boolean assignedToMe;
+		private boolean showNotYetDueReminders;
 
 		@Override
 		public List<IReminder> get() {
@@ -1477,29 +1669,44 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
 			}
 
+			if (showNotYetDueReminders) {
+				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
+			}
+
+			if (popupOnLogin || popupOnPatientSelection) {
+				query.startGroup();
+
+				if (popupOnLogin) {
+					query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+							Visibility.POPUP_ON_LOGIN);
+				}
+
+				if (popupOnPatientSelection) {
+					if (popupOnLogin) {
+						query.or(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					} else {
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					}
+				}
+
+				query.andJoinGroups();
+			}
+
 			if (!showAll) {
 				if (showSelfCreated) {
 					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.startGroup();
-						ISubQuery<IReminderResponsibleLink> subQuery = query
-								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
-						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-						subQuery.and("responsible", COMPARATOR.EQUALS, m);
-						query.exists(subQuery);
-						query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-						query.or(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-						query.andJoinGroups();
+						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
 					});
-				} else {
+				}
+				if (assignedToMe) {
 					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.startGroup();
 						ISubQuery<IReminderResponsibleLink> subQuery = query
 								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
 						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
 						subQuery.and("responsible", COMPARATOR.EQUALS, m);
 						query.exists(subQuery);
-						query.or("responsibleValue", COMPARATOR.EQUALS, "ALL");
-						query.andJoinGroups();
 					});
 				}
 			}
@@ -1528,6 +1735,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, ISelec
 
 		public GeneralSupplier showOnlyDue(boolean showOnlyDueReminders) {
 			this.showOnlyDue = showOnlyDueReminders;
+			return this;
+		}
+
+		public GeneralSupplier popupOnLogin(boolean value) {
+			this.popupOnLogin = value;
+			return this;
+		}
+
+		public GeneralSupplier popupOnPatientSelectionToggleAction(boolean value) {
+			this.popupOnPatientSelection = value;
+			return this;
+		}
+
+		public GeneralSupplier showAssignedToMeAction(boolean value) {
+			this.assignedToMe = value;
+			return this;
+		}
+
+		public GeneralSupplier showNotYetDueReminders(boolean value) {
+			this.showNotYetDueReminders = value;
 			return this;
 		}
 	}
