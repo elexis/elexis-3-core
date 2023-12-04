@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2023-09-java17" sequenceNumber="1701335410">
+<target name="Elexis IDE 2023-09-java17" sequenceNumber="1701350774">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
@@ -42,7 +42,7 @@
       <unit id="jaxb-api" version="2.3.1"/>
       <unit id="com.sun.xml.bind.jaxb-osgi" version="2.3.6"/>
       <unit id="com.h2database" version="1.4.200"/>
-      <unit id="com.mysql.cj" version="8.2.0"/>
+      <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.7.0"/>
       <unit id="org.eclipse.persistence.jpa.feature.group" version="2.7.11.v20220804-52dea2a3c0"/>
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.202105280757"/>
@@ -84,7 +84,7 @@
       <unit id="org.apache.xmlbeans" version="3.1.0.v20221112-0806"/>
       <unit id="org.apache-extras.beanshell.bsh" version="2.0.0.0b6"/>
       <unit id="com.opencsv" version="3.10.0"/>
-      <unit id="com.google.protobuf" version="3.21.9"/>
+      <unit id="com.google.protobuf" version="3.11.4"/>
       <unit id="jakarta.mail-api" version="1.6.7"/>
       <unit id="com.healthmarketscience.jackcess" version="4.0.5"/>
       <unit id="com.google.zxing.core" version="3.5.2"/>
