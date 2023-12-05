@@ -32,7 +32,7 @@ public class ICoverageHelper extends AbstractHelper {
 		if (BillingLaw.IV == law) {
 			return (String) coverage.getExtInfo(FallConstants.IV_FALLNUMMER);
 		}
-		return null;
+		return coverage.getInsuranceNumber();
 	}
 
 	public void setDependent(ICoverage coverage, String bin) {

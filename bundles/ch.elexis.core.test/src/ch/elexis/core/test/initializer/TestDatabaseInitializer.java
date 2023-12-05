@@ -107,8 +107,16 @@ public class TestDatabaseInitializer {
 		this.entityManager = entityManager;
 	}
 
-	public synchronized void initializeDb() throws IOException, SQLException {
+	public TestDatabaseInitializer() {
+		modelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+		entityManager = OsgiServiceUtil.getService(IElexisEntityManager.class).get();
+	}
+
+	public synchronized TestDatabaseInitializer initializeDb() throws IOException, SQLException {
 		initializeDb(configService);
+		user = modelService.load("user", IUser.class).get();
+		return this;
 	}
 
 	public void setConfigService(IConfigService configService) {
@@ -122,7 +130,7 @@ public class TestDatabaseInitializer {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void initializeDb(IConfigService configService) throws IOException, SQLException {
+	public TestDatabaseInitializer initializeDb(IConfigService configService) throws IOException, SQLException {
 		if (!isDbInitialized) {
 			entityManager.getEntityManager(); // lazy initialize the database
 			// initialize
@@ -138,6 +146,7 @@ public class TestDatabaseInitializer {
 		} else {
 			logger.error("No connection available!");
 		}
+		return this;
 	}
 
 	public synchronized void initializeArtikelstammTable() throws IOException {
@@ -262,7 +271,7 @@ public class TestDatabaseInitializer {
 	 *
 	 * @return
 	 */
-	public IPatient getPatient() {
+	public static IPatient getPatient() {
 		return patient;
 	}
 
@@ -355,6 +364,7 @@ public class TestDatabaseInitializer {
 		if (!isMandantInitialized) {
 			IPerson mandantPerson = new IContactBuilder.PersonBuilder(modelService, "Test", "Mandant",
 					LocalDate.of(1970, 1, 1), Gender.MALE).mandator().buildAndSave();
+			mandantPerson.setMandator(true);
 			mandant = modelService.load(mandantPerson.getId(), IMandator.class).get();
 			mandant.setPhone1("+01555234");
 			mandant.setMobile("+01444234");
@@ -366,10 +376,6 @@ public class TestDatabaseInitializer {
 			modelService.save(mandant);
 
 			user = new IUserBuilder(modelService, "tst", mandantPerson).buildAndSave();
-//			Optional<IRole> doctorRole = modelService.load("doctor", IRole.class);
-//			if (doctorRole.isPresent()) {
-//				user.addRole(doctorRole.get());
-//			}
 			modelService.save(user);
 
 			mandant.addXid(XidConstants.DOMAIN_EAN, "2000000000002", true);
@@ -495,7 +501,7 @@ public class TestDatabaseInitializer {
 			isBehandlungInitialized = true;
 		}
 	}
-	
+
 	public void initializeAUF() throws IOException, SQLException {
 		if (!isFallInitialized) {
 			initializeFall();
@@ -513,7 +519,7 @@ public class TestDatabaseInitializer {
 			modelService.save(sickCertificate);
 		}
 	}
-	
+
 	public ISickCertificate getAUFs() {
 		return sickCertificate;
 	}
