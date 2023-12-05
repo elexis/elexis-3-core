@@ -127,7 +127,10 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 							user = _user;
 
 							if (elexisEnvironmentService != null) {
-								elexisEnvironmentService.loadAccessToken(username, pwd.getTextChars());
+//	FIXME temporarily disabled 
+// java.lang.NoClassDefFoundError: com/fasterxml/jackson/core/JsonFactory
+// at ch.elexis.core.services.eenv.ElexisEnvironmentService.loadAccessToken(ElexisEnvironmentService.java:82)
+//								elexisEnvironmentService.loadAccessToken(username, pwd.getTextChars());
 							}
 
 							super.okPressed();
