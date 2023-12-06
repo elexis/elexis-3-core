@@ -4223,6 +4223,7 @@ public class Messages extends NLS {
 	public static String ServiceDiagnosis_UpTooltip;
 	public static String ServiceDiagnosis_View;
 	public static String Services_ExplanationLine1;
+	public static String Service_Tarif;
 	public static String SetNonPathologic;
 	public static String SetPathologic;
 	public static String Settings_AutoCreateLabItem;
