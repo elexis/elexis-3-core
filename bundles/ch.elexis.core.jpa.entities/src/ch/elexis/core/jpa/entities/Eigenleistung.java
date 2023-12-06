@@ -38,6 +38,9 @@ public class Eigenleistung extends AbstractEntityWithId implements EntityWithId,
 	@Column(length = 20)
 	private String code;
 
+	@Column(length = 20)
+	private String codeclass;
+
 	@Column(length = 80, name = "BEZEICHNUNG")
 	private String description;
 
@@ -89,6 +92,14 @@ public class Eigenleistung extends AbstractEntityWithId implements EntityWithId,
 
 	public void setTime(int time) {
 		this.time = time;
+	}
+
+	public String getCodeclass() {
+		return codeclass;
+	}
+
+	public void setCodeclass(String codeclass) {
+		this.codeclass = codeclass;
 	}
 
 	@Override
