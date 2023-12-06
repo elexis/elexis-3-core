@@ -86,7 +86,6 @@ import ch.rgw.tools.StringTool;
 public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private Table table;
 	private TableViewer viewer;
-	private boolean isPriceSortedAscending = true;
 
 	private final GenericObjectDropTarget dropTarget;
 
@@ -102,8 +101,7 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private IEncounter actEncounter;
 	private ToolBar toolBar;
 	private TableColumnLayout tableLayout;
-	protected boolean isDescriptionSortedAscending;
-	protected boolean isCodeSortedAscending;
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		toolBar.setEnabled(enabled);
@@ -352,7 +350,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-		
 		ViewerComparator descriptionComparator = new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
@@ -388,7 +385,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 				}
 			}
 		});
-
 
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
