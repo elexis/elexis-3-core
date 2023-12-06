@@ -382,8 +382,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-
-
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override

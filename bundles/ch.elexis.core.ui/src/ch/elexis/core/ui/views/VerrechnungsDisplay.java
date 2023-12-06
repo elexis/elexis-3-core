@@ -155,7 +155,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
-
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 
 	@Optional
@@ -353,7 +352,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
 
-		
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
 
