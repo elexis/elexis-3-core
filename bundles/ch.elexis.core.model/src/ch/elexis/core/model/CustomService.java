@@ -90,6 +90,19 @@ public class CustomService extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	}
 
 	@Override
+	public String getCodeSystemCode() {
+		if (StringUtils.isNotBlank(getEntity().getCodeclass())) {
+			return getEntity().getCodeclass();
+		}
+		return ICustomService.super.getCodeSystemCode();
+	}
+
+	@Override
+	public void setCodeSystemCode(String value) {
+		getEntityMarkDirty().setCodeclass(value);
+	}
+
+	@Override
 	public String getCodeSystemName() {
 		return Constants.TYPE_NAME;
 	}

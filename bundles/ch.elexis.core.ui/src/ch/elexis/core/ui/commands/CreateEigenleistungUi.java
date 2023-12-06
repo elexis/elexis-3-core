@@ -20,14 +20,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
-import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.dialogs.EigenLeistungDialog;
-import ch.elexis.data.PersistentObject;
 
 public class CreateEigenleistungUi extends AbstractHandler {
 	public static final String COMMANDID = "ch.elexis.eigenleistung.create"; //$NON-NLS-1$
@@ -42,13 +38,11 @@ public class CreateEigenleistungUi extends AbstractHandler {
 			if (dialog.open() == Dialog.OK) {
 				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				if (block.isPresent()) {
-					IVerrechenbar created = dialog.getResult();
-					Optional<Identifiable> createdIdentifiable = StoreToStringServiceHolder.get()
-							.loadFromString(((PersistentObject) created).storeToString());
-					createdIdentifiable.ifPresent(ci -> {
-						block.get().addElement((ICodeElement) ci);
+					ICustomService created = dialog.getResult();
+					if (created != null) {
+						block.get().addElement(created);
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, block.get());
-					});
+					}
 				}
 			}
 		} catch (Exception ex) {
