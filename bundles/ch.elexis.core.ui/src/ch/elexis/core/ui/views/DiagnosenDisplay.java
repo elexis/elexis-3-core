@@ -382,6 +382,42 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 			}
 		});
 
+		ViewerComparator descriptionComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+					IDiagnosisReference b1 = (IDiagnosisReference) e1;
+					IDiagnosisReference b2 = (IDiagnosisReference) e2;
+					int result = b1.getText().compareTo(b2.getText());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("descriptionSortAscending") != null) {
+					return (Boolean) viewer.getData("descriptionSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(descriptionComparator);
+				if (viewer.getComparator() == descriptionComparator) {
+					if (viewer.getData("descriptionSortAscending") != null) {
+						viewer.setData("descriptionSortAscending",
+								!(Boolean) viewer.getData("descriptionSortAscending"));
+					} else {
+						viewer.setData("descriptionSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+			}
+		});
+
 		col = createTableViewerColumn(titles[3], weights[3], 3, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override

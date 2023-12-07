@@ -1189,6 +1189,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public MenuManager getMenuManager() {
+
 		return contextMenuManager;
 	}
 
