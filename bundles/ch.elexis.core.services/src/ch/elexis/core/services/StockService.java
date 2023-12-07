@@ -436,9 +436,9 @@ public class StockService implements IStockService {
 				coreModelService.save(patientStock);
 			}
 		} else if (patientStock != null) {
-			coreModelService.remove(patientStock);
 			List<IStockEntry> entries = findAllStockEntriesForStock(patientStock);
 			entries.forEach(coreModelService::remove);
+			coreModelService.remove(patientStock);
 		}
 	}
 
