@@ -395,8 +395,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		String[] titles = { "Anz.", "Code", "Bezeichnung" };
 		int[] bounds = { 45, 125, 600 };
 
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn colAnz = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		colAnz.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -406,9 +406,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return StringUtils.EMPTY;
 			}
 		});
+		addColumnSelectionListener(colAnz, 0);
 
-		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+
+		TableViewerColumn colCode = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		colCode.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -419,8 +421,43 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 
-		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof BlockElementViewerItem && e2 instanceof BlockElementViewerItem) {
+					BlockElementViewerItem b1 = (BlockElementViewerItem) e1;
+					BlockElementViewerItem b2 = (BlockElementViewerItem) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		colCode.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(codeComparator);
+				if (viewer.getComparator() == codeComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+			}
+		});
+
+		TableViewerColumn colBezeichnung = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		colBezeichnung.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -444,8 +481,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return null;
 			}
 		});
-		TableColumn tableColumn = col.getColumn();
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
+		addColumnSelectionListener(colBezeichnung, 2);
+	}
+
+	private void addColumnSelectionListener(TableViewerColumn column, final int index) {
+		column.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (viewer.getComparator() == null) {
@@ -460,8 +500,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						viewer.setComparator(null);
 					}
 				}
+				comparator.setColumnIndex(index);
 				viewer.getTable().setSortDirection(comparator.getDirection());
-				viewer.getTable().setSortColumn(tableColumn);
+				viewer.getTable().setSortColumn(column.getColumn());
 				viewer.refresh();
 			}
 		});
@@ -586,6 +627,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private class BlockComparator extends ViewerComparator {
 
 		private int direction = 0;
+		private int columnIndex = 0;
+
+		public void setColumnIndex(int columnIndex) {
+			this.columnIndex = columnIndex;
+		}
 
 		public void setDirection(int value) {
 			if (value == SWT.DOWN) {
@@ -604,18 +650,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return SWT.UP;
 			}
 			return SWT.NONE;
-		}
-
-		@Override
-		public int compare(Viewer viewer, Object left, Object right) {
-			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
-				if (direction != 0) {
-					return ((BlockElementViewerItem) left).getText()
-							.compareTo(((BlockElementViewerItem) right).getText()) * direction;
-				}
-				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
-			}
-			return super.compare(viewer, left, right);
 		}
 	}
 }
