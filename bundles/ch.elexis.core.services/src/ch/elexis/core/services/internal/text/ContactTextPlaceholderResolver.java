@@ -62,15 +62,17 @@ public class ContactTextPlaceholderResolver implements ITextPlaceholderResolver 
 			case Anschriftzeile:
 				return AddressFormatUtil.getPostalAddress(contact, false);
 			case Strasse:
-				return contact.getStreet();
+				return StringUtils.defaultString(contact.getStreet());
 			case Plz:
-				return contact.getZip();
+				return StringUtils.defaultString(contact.getZip());
 			case Ort:
-				return contact.getCity();
+				return StringUtils.defaultString(contact.getCity());
 			case Telefon1:
-				return contact.getPhone1();
+				return StringUtils.defaultString(contact.getPhone1());
+			case Telefon2:
+				return StringUtils.defaultString(contact.getPhone2());
 			case Natel:
-				return contact.getMobile();
+				return StringUtils.defaultString(contact.getMobile());
 			default:
 				break;
 			}
@@ -80,8 +82,8 @@ public class ContactTextPlaceholderResolver implements ITextPlaceholderResolver 
 
 	private enum ContactAttribute implements ILocalizedEnum {
 		Name("Name des Kontakt"), Anschrift("Mehrzeilige Anschrift"), Anschriftzeile("Einzeilige Anschrift"),
-		Strasse("Strasse des Kontakt"), Plz("Postleitzahl des Kontkat"), Ort("Ort des Kontakt"),
-		Telefon1("Telefon des Kontakt"), Natel("Natel des Kontakt");
+		Strasse("Strasse des Kontakt"), Plz("Postleitzahl des Kontakt"), Ort("Ort des Kontakt"),
+		Telefon1("Telefon des Kontakt"), Natel("Natel des Kontakt"), Telefon2("2tes Telefon des Kontakt");
 
 		final String description;
 

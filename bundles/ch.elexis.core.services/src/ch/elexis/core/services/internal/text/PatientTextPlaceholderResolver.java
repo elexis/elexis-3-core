@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -72,9 +73,9 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 			case Geburtsdatum:
 				return PersonFormatUtil.getDateOfBirth(patient);
 			case Diagnosen:
-				return patient.getDiagnosen();
+				return StringUtils.defaultString(patient.getDiagnosen());
 			case Allergien:
-				return patient.getAllergies();
+				return StringUtils.defaultString(patient.getAllergies());
 			case Medikation:
 				return PatientFormatUtil.getMedicationText(patient, EntryType.FIXED_MEDICATION);
 			case SymptomatischeMedikation:
