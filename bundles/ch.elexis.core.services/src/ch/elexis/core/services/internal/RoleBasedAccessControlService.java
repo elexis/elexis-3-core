@@ -2,6 +2,7 @@ package ch.elexis.core.services.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import ch.elexis.core.ac.ACEAccessBitMap;
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
@@ -53,6 +53,9 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Reference
 	private IStoreToStringService storeToStringService;
+
+	@Reference
+	private Gson gson;
 
 	private Map<String, AccessControlList> roleAclMap;
 	private Map<IUser, AccessControlList> userAclMap;
@@ -138,9 +141,9 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		String _role = iRole.getId().toLowerCase();
 		if (!roleAclMap.containsKey(_role)) {
 			InputStream jsonStream = null;
-			if(iRole.isSystemRole()) {
+			if (iRole.isSystemRole()) {
 				jsonStream = AccessControlList.class.getClassLoader()
-					.getResourceAsStream("/rsc/acl/" + _role + ".json");
+						.getResourceAsStream("/rsc/acl/" + _role + ".json");
 			} else {
 				String jsonValue = (String) iRole.getExtInfo("json");
 				if (StringUtils.isNotBlank(jsonValue)) {
@@ -167,9 +170,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public Optional<AccessControlList> readAccessControlList(InputStream jsonStream) {
-		try {
-			AccessControlList acl = new ObjectMapper().configure(Feature.ALLOW_COMMENTS, true).readValue(jsonStream,
-					AccessControlList.class);
+		try (InputStreamReader inputStreamReader = new InputStreamReader(jsonStream)) {
+			AccessControlList acl = gson.fromJson(inputStreamReader, AccessControlList.class);
 			return Optional.of(acl);
 		} catch (Exception e) {
 			logger.error("Error reading acl json", e);
@@ -260,7 +262,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		List<String> ret = new ArrayList<>();
 		if (user.getAssignedContact() != null) {
 			ret.add(user.getAssignedContact().getId());
-			userService.getExecutiveDoctorsWorkingFor(user).stream().forEach(m -> ret.add(m.getId()));
+			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
 		}
 		return ret;
 	}

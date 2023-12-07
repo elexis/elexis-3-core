@@ -442,7 +442,8 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 			updateAssociations();
 
 			checkboxTableViewerAssociation
-					.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(userGroup).toArray());
+					.setCheckedElements(
+							UserServiceHolder.get().getExecutiveDoctorsWorkingFor(userGroup, true).toArray());
 		}
 	}
 

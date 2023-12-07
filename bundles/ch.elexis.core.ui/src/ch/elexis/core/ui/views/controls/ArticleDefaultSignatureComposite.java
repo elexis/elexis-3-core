@@ -8,14 +8,14 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -172,6 +172,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnDoseSwitch.setImage(Images.IMG_SYNC.getImage());
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
@@ -335,9 +336,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 
 		targetToModelStrategies = new ArrayList<>();
 
-		IObservableValue observeTextTextSignatureMorningObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextTextSignatureMorningObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtSignatureMorning);
-		IObservableValue itemSignatureMorningObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureMorningObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "morning", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		SavingTargetToModelStrategy targetToModelStrategy = new SavingTargetToModelStrategy(this);
@@ -345,9 +346,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextTextSignatureMorningObserveWidget,
 				itemSignatureMorningObserveDetailValue, targetToModelStrategy, null);
 
-		IObservableValue observeTextTextSignatureNoonObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextTextSignatureNoonObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtSignatureNoon);
-		IObservableValue itemSignatureNoonObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureNoonObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "noon", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
@@ -355,9 +356,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextTextSignatureNoonObserveWidget, itemSignatureNoonObserveDetailValue,
 				targetToModelStrategy, null);
 
-		IObservableValue observeTextTextSignatureEveningObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextTextSignatureEveningObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtSignatureEvening);
-		IObservableValue itemSignatureEveningObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureEveningObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "evening", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
@@ -365,9 +366,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextTextSignatureEveningObserveWidget,
 				itemSignatureEveningObserveDetailValue, targetToModelStrategy, null);
 
-		IObservableValue observeTextTextSignatureNightObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextTextSignatureNightObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtSignatureNight);
-		IObservableValue itemSignatureNightObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureNightObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "night", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
@@ -375,9 +376,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextTextSignatureNightObserveWidget, itemSignatureNightObserveDetailValue,
 				targetToModelStrategy, null);
 
-		IObservableValue observeTextFreeTextDosageObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextFreeTextDosageObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtFreeTextDosage);
-		IObservableValue itemSignatureFreeTextDosageObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureFreeTextDosageObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "freeText", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);
@@ -385,9 +386,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		databindingContext.bindValue(observeTextFreeTextDosageObserveWidget,
 				itemSignatureFreeTextDosageObserveDetailValue, targetToModelStrategy, null);
 
-		IObservableValue observeTextTextSignatureCommentObserveWidget = WidgetProperties
+		IObservableValue<String> observeTextTextSignatureCommentObserveWidget = WidgetProperties
 				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtSignatureComment);
-		IObservableValue itemSignatureCommentObserveDetailValue = PojoProperties
+		IObservableValue<String> itemSignatureCommentObserveDetailValue = PojoProperties
 				.value(IArticleDefaultSignature.class, "comment", String.class) //$NON-NLS-1$
 				.observeDetail(signatureItem);
 		targetToModelStrategy = new SavingTargetToModelStrategy(this);

@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +19,7 @@ import ch.elexis.core.findings.util.model.TransientCoding;
 
 public class CodingComposite extends Composite {
 
-	private WritableValue transientCodingValue;
+	private WritableValue<ICoding> transientCodingValue;
 
 	private Text codeTxt;
 	private Text displayTxt;
@@ -42,16 +42,17 @@ public class CodingComposite extends Composite {
 	}
 
 	private void initDataBinding() {
-		transientCodingValue = new WritableValue();
+		transientCodingValue = new WritableValue<>();
 		DataBindingContext bindingContext = new DataBindingContext();
 
-		IObservableValue targetObservable = SWTObservables.observeText(codeTxt, SWT.Modify);
-		IObservableValue modelObservable = PojoObservables.observeDetailValue(transientCodingValue, "code",
-				TransientCoding.class);
+		IObservableValue<String> targetObservable = WidgetProperties.text(SWT.Modify).observe(codeTxt);
+		IObservableValue<String> modelObservable = PojoProperties.value(ICoding.class, "code", String.class)
+				.observeDetail(transientCodingValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = SWTObservables.observeText(displayTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(transientCodingValue, "display", TransientCoding.class);
+		targetObservable = WidgetProperties.text(SWT.Modify).observe(displayTxt);
+		modelObservable = PojoProperties.value(ICoding.class, "display", String.class)
+				.observeDetail(transientCodingValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
 		setCoding(null);

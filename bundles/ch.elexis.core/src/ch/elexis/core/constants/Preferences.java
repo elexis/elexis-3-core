@@ -137,7 +137,7 @@ public class Preferences {
 	public static final String USR_DEFLOADCONSALL = "fall/load_consall"; //$NON-NLS-1$
 	public static final String USR_TOPITEMSSORTING = "fall/topitemssorting"; //$NON-NLS-1$
 	public static final String USR_REMINDERCOLORS = "reminder/colors"; //$NON-NLS-1$
-	public static final String USR_REMINDERSOPEN = "reminder/onlyopen"; //$NON-NLS-1$
+	public static final String USR_REMINDERSOPEN = "reminder/onlyclosed"; //$NON-NLS-1$
 	public static final String USR_REMINDEROWN = "reminder/originator"; //$NON-NLS-1$
 	public static final String USR_REMINDEROTHERS = "reminder/others"; //$NON-NLS-1$
 	public static final String USR_SHOWPATCHGREMINDER = "reminder/showPatientChangeReminder"; //$NON-NLS-1$
@@ -160,6 +160,7 @@ public class Preferences {
 	public static final String USR_PATLIST_FOCUSFIELD = "anwender/patlist/focusfield"; //$NON-NLS-1$
 	public static final String USR_SUPPRESS_INTERACTION_CHECK = "anwender/suppressintractioncheck"; //$NON-NLS-1$
 	public static final String USR_MANDATOR_COLORS_PREFIX = "mandanten/farben/";
+	public static final String USR_DEFAULT_MESSAGE_RECIPIENT = "messages/default_recipient";
 	public static final String USR_MESSAGES_SOUND_ON = "messages/playsound";
 	public static final String USR_MESSAGES_SOUND_PATH = "messages/soundpath";
 	public static final String USR_MESSAGES_ANSWER_AUTOCLEAR = "messages/answer/autoclear";
@@ -241,5 +242,10 @@ public class Preferences {
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
 	public static final String AG_DAYPREFERENCES = "agenda/tagesvorgaben"; //$NON-NLS-1$
 	public static final String AG_DAYPREFERENCES_DAYLIMIT_DEFAULT = "0000-0800\n1800-2359"; //$NON-NLS-1$
+	// Erinnerungen
+	public static final String POPUP_ON_LOGIN = "reminder/popupOnLogin"; //$NON-NLS-1$
+	public static final String POPUP_ON_PATIENT_SELECTION = "reminder/popupOnPatientSelection"; //$NON-NLS-1$
+	public static final String USR_REMINDER_ASSIGNED_TO_ME = "reminder/assignedToMe"; //$NON-NLS-1$
+	public static final String USR_REMINDERS_NOT_YET_DUE = "reminder/onlyopen"; //$NON-NLS-1$
 
 }

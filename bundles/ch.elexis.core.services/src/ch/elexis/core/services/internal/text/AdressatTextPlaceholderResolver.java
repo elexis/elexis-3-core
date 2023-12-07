@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
@@ -33,12 +34,17 @@ public class AdressatTextPlaceholderResolver implements ITextPlaceholderResolver
 
 	@Override
 	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
-		@SuppressWarnings("unchecked")
-		IContact adressat = ((Optional<IContact>) context.getNamed(getSupportedType())).orElse(null);
+		IContact adressat = (IContact) getIdentifiable(context).orElse(null);
 		if (adressat != null) {
 			return Optional.ofNullable(replace(adressat, attribute.toLowerCase()));
 		}
 		return Optional.empty();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
+		return ((Optional<IContact>) context.getNamed(getSupportedType()));
 	}
 
 	private String replace(IContact addressat, String lcAttribute) {

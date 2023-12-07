@@ -11,6 +11,7 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
@@ -33,11 +34,16 @@ public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 
 	@Override
 	public Optional<String> replaceByTypeAndAttribute(IContext context, String attribute) {
-		IAppointment appointment = context.getTyped(IAppointment.class).orElse(null);
+		IAppointment appointment = (IAppointment) getIdentifiable(context).orElse(null);
 		if (appointment != null) {
 			return Optional.ofNullable(replace(appointment, attribute.toLowerCase()));
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
+		return context.getTyped(IAppointment.class);
 	}
 
 	private String replace(IAppointment appointment, String lcAttribute) {

@@ -45,10 +45,12 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 	 * @param fileExtensionFilter
 	 */
 	void incur(String taskDescriptorId, String url, String fileExtensionFilter) {
+		logger.debug("Incurring [{}]", taskDescriptorId);
 		pollMap.put(taskDescriptorId, new String[] { url, fileExtensionFilter });
 	}
 
 	void release(String taskDescriptorId) {
+		logger.debug("Releasing [{}]", taskDescriptorId);
 		pollMap.remove(taskDescriptorId);
 	}
 

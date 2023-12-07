@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="mdescher"
+		id="manual_table_CH_MEDELEXIS_PEA">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_MEDELEXIS_PEA" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_MEDELEXIS_PEA">
+			<column name="ID" type="CHAR(36)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_CH_MEDELEXIS_PEA" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column name="DELETED" defaultValue="0" type="CHAR(1)" />
+			<column name="TYPE" defaultValue="0" type="CHAR(1)" />
+			<column name="CREATIONDATE" type="CHAR(14)" />
+			<column name="REFERENCEID" type="CHAR(36)" />
+			<column name="HANDLER" type="VARCHAR(64)" />
+			<column name="SUBJECTID" type="VARCHAR(25)" />
+			<column name="DATA" type="LONGTEXT" />
+			<column name="LOCALSTATE" defaultValue="0" type="CHAR(1)" />
+		</createTable>
+		<createIndex indexName="CH_MEDELEXIS_PEA_TYPEIDX"
+			tableName="CH_MEDELEXIS_PEA">
+			<column name="TYPE" />
+		</createIndex>
+		<createIndex indexName="CH_MEDELEXIS_PEA_LOCALSTATEIDX"
+			tableName="CH_MEDELEXIS_PEA">
+			<column name="LOCALSTATE" />
+		</createIndex>
+		<createIndex indexName="CH_MEDELEXIS_PEA_HANDLERIDX"
+			tableName="CH_MEDELEXIS_PEA">
+			<column name="HANDLER" />
+		</createIndex>
+		<createIndex indexName="CH_MEDELEXIS_PEA_SUBJECTIDIDX"
+			tableName="CH_MEDELEXIS_PEA">
+			<column name="SUBJECTID" />
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

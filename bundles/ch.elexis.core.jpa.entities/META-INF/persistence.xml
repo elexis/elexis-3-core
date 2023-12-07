@@ -87,6 +87,7 @@
 		<class>ch.elexis.core.jpa.entities.PsychoLeistung</class>
 		<class>ch.elexis.core.jpa.entities.ComplementaryLeistung</class>
 		<class>ch.elexis.core.jpa.entities.NutritionLeistung</class>
+		<class>ch.elexis.core.jpa.entities.PeaElement</class>
 		<class>ch.elexis.core.jpa.entities.Reminder</class>
 		<class>ch.elexis.core.jpa.entities.ReminderResponsibleLink</class>
 		<class>ch.elexis.core.jpa.entities.Rezept</class>

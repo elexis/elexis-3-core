@@ -14,6 +14,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IPatientPatientAttributeMapper;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
 
@@ -49,6 +50,17 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Optional<? extends Identifiable> getLocalObjectForReference(String fhirReference) {
+		if (fhirReference.startsWith(Patient.class.getSimpleName())) {
+			Optional<String> localId = FhirUtil.getLocalId(fhirReference);
+			if (localId.isPresent()) {
+				return modelService.load(localId.get(), IPatient.class);
+			}
+		}
+		return IFhirTransformer.super.getLocalObjectForReference(fhirReference);
 	}
 
 	@Override

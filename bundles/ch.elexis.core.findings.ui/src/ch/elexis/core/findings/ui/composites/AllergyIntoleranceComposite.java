@@ -3,12 +3,13 @@ package ch.elexis.core.findings.ui.composites;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -75,15 +76,13 @@ public class AllergyIntoleranceComposite extends Composite {
 	protected void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 
-		IObservableValue targetObservable = ViewersObservables.observeSingleSelection(categoryViewer);
-		IObservableValue modelObservable = PojoObservables.observeDetailValue(item, "category",
-				AllergyIntoleranceCategory.class);
+		IViewerObservableValue<Object> targetObservable = ViewerProperties.singleSelection().observe(categoryViewer);
+		IObservableValue<Object> modelObservable = PojoProperties.value(AbstractBeanAdapter.class, "category")
+				.observeDetail(item);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		IObservableValue target = WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
-		IObservableValue model = PojoProperties.value(AllergyIntoleranceBeanAdapter.class, "text", String.class)
-				.observeDetail(item);
-
+		ISWTObservableValue<String> target = WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
+		IObservableValue<Object> model = PojoProperties.value(AbstractBeanAdapter.class, "text").observeDetail(item);
 		bindingContext.bindValue(target, model, null, null);
 	}
 }

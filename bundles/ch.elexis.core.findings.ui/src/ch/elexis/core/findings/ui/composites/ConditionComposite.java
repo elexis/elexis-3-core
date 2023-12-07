@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -108,21 +108,24 @@ public class ConditionComposite extends Composite {
 		conditionValue = new WritableValue<>();
 		DataBindingContext bindingContext = new DataBindingContext();
 
-		IObservableValue targetObservable = ViewersObservables.observeSingleSelection(statusViewer);
-		IObservableValue modelObservable = PojoObservables.observeDetailValue(conditionValue, "status",
-				ConditionStatus.class);
+		IObservableValue<?> targetObservable = ViewerProperties.singleSelection().observe(statusViewer);
+		IObservableValue<?> modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "status")
+				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = SWTObservables.observeText(startTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(conditionValue, "start", String.class);
+		targetObservable = WidgetProperties.text().observe(startTxt);
+		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "start", String.class)
+				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = SWTObservables.observeText(endTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(conditionValue, "end", String.class);
+		targetObservable = WidgetProperties.text().observe(endTxt);
+		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "end", String.class)
+				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = SWTObservables.observeText(textTxt, SWT.Modify);
-		modelObservable = PojoObservables.observeDetailValue(conditionValue, "text", String.class);
+		targetObservable = WidgetProperties.text().observe(textTxt);
+		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "text", String.class)
+				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
 		setCondition(null);
