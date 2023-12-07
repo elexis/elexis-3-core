@@ -3,9 +3,9 @@ package ch.elexis.core.ui.views;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
@@ -40,7 +40,6 @@ public class MakroDetailComposite extends Composite {
 		createContent();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void createContent() {
 		value = new WritableValue<>();
 		bindingContext = new DataBindingContext();

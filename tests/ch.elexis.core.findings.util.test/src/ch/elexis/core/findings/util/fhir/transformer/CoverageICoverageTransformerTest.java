@@ -13,11 +13,10 @@ import org.hl7.fhir.r4.model.Coverage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.l10n.Messages;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
@@ -38,14 +37,14 @@ public class CoverageICoverageTransformerTest {
 	@BeforeClass
 	public static void beforeClass() {
 
-		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class)
+		IBillingSystemService billingSystemService = OsgiServiceUtil.getServiceWait(IBillingSystemService.class, 2000)
 				.orElseThrow();
 		billingSystemService.addOrModifyBillingSystem(Messages.Case_UVG_Short, Messages.Fall_TarmedLeistung,
 				Messages.Fall_TarmedPrinter, Messages.Fall_UVGRequirements, BillingLaw.UVG);
 		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name, Messages.Fall_TarmedLeistung,
 				Messages.Fall_TarmedPrinter, null, BillingLaw.IV);
 
-		transformer = (IFhirTransformer<Coverage, ICoverage>) AllTransformerTests.getTransformerRegistry()
+		transformer = AllTransformerTests.getTransformerRegistry()
 				.getTransformerFor(Coverage.class, ICoverage.class);
 		assertNotNull(transformer);
 

@@ -17,10 +17,11 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.map.ObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.typed.ViewerProperties;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
@@ -468,9 +469,11 @@ public class StammDatenComposite extends AbstractComposite {
 		// ContactGender.class),
 		// null, null);
 
-		IObservableValue countryObserver = ViewersObservables.observeSingleSelection(comboViewerCountry);
-		bindingContext.bindValue(countryObserver,
-				PojoObservables.observeDetailValue(contactObservable, "country", Country.class), null, null); //$NON-NLS-1$
+		IViewerObservableValue<Country> countryObserver = ViewerProperties.singleSelection(Country.class)
+				.observe(comboViewerCountry);
+		IObservableValue<Object> observeDetail = PojoProperties.value(IContact.class, "country")
+				.observeDetail(contactObservable);
+		bindingContext.bindValue(countryObserver, observeDetail, null, null); // $NON-NLS-1$
 	}
 
 	/**

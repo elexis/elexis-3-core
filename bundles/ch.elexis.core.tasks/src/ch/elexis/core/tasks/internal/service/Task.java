@@ -87,7 +87,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		getEntity().setRunner(StringUtils.abbreviate(stationIdentifier, 64));
 		getEntity().setCreatedAt(System.currentTimeMillis());
 
-		logger = LoggerFactory.getLogger("Task [" + taskDescriptor.getReferenceId() + "/" + getId() + "] ");
+		logger = LoggerFactory.getLogger("Task [" + taskDescriptor.getReferenceId() + "]");
 		logger.debug("state = {}, origin = {}, originReferenceId = {}", getState(), taskDescriptor.getId(),
 				taskDescriptor.getReferenceId());
 

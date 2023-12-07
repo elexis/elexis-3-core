@@ -1,11 +1,14 @@
 package ch.elexis.core.tasks.internal.service.vfs;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 
+import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.tasks.internal.service.TaskServiceImpl;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
@@ -40,9 +43,25 @@ public class FilesystemChangeWatcher {
 	}
 
 	public synchronized void stopPolling() {
-		timer.cancel();
-		timerTask = null;
-		timer = null;
+		if (timer != null) {
+			timer.cancel();
+			timerTask = null;
+			timer = null;
+		}
+	}
+
+	public void validate(ITaskDescriptor taskDescriptor) throws TaskException {
+		Map<String, String> triggerParameters = taskDescriptor.getTriggerParameters();
+		String url = triggerParameters.get(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.URL);
+		try {
+			IVirtualFilesystemHandle vfh = virtualFileSystemService.of(url);
+			if (!vfh.isDirectory()) {
+				throw new TaskException(TaskException.EXECUTION_REJECTED, "[{}] is not a directory");
+			}
+		} catch (IOException e) {
+			throw new TaskException(TaskException.EXECUTION_REJECTED, e);
+		}
+
 	}
 
 	public void incur(ITaskDescriptor taskDescriptor) {

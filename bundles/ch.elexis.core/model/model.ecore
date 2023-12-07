@@ -522,7 +522,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="minutes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ICustomService" abstract="true" interface="true"
-      eSuperTypes="#//IService"/>
+      eSuperTypes="#//IService">
+    <eOperations name="setCodeSystemCode">
+      <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IArticle" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//IBillable #//Deleteable #//WithExtInfo">
     <eOperations name="isProduct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -876,11 +880,19 @@
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
     <eOperations name="isCommissioningSystem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="A unique code to define a specific stock. Stocks starting with 'P', followed by a number refer to patient located stocks."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="driverUuid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="driverConfig" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IMandator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IPerson">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStockEntry" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">

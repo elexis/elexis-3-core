@@ -38,7 +38,7 @@
 		<url>http://www.elexis.info</url>
 	</organization>
 	<properties>
-		<elexis.target>2022-09-java17</elexis.target>
+		<elexis.target>2023-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
 		<tycho.version>3.0.5</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

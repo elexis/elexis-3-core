@@ -104,7 +104,7 @@ public interface ITextPlugin {
 	/**
 	 * Position text into a rectangular area.
 	 *
-	 * @param adjust SWT.LEFT, SWT.RIGHT, SWT.CENTER
+	 * @param adjust ITextPlugin.LEFT, ITextPlugin.RIGHT, ITextPlugin.CENTER
 	 * @param x      ,y,w,h position and size of the rectangle relative to the page
 	 *               bounds. Measured as millimeters. The effective position and
 	 *               size must match the given values at +- 2mm.
@@ -119,7 +119,8 @@ public interface ITextPlugin {
 	 * Set font for all following operations (until the next call to setFont)
 	 *
 	 * @param name  name of the font
-	 * @param style SWT.MIN, SWT.NORMAL, SWT.BOLD (thin, normal or bold)
+	 * @param style ITextPlugin.MIN, ITextPlugin.NORMAL, ITextPlugin.BOLD (thin,
+	 *              normal or bold)
 	 * @param size  font height in Pt
 	 * @return false on error. True on success, what might mean however, that not
 	 *         the specified font but a similar font was set.
@@ -130,7 +131,8 @@ public interface ITextPlugin {
 	 * Set style for all following operations (until the next call to setFont or
 	 * setStyle)
 	 *
-	 * @param style SWT.MIN, SWT.NORMAL, SWT.BOLD (thin, normal or bold)
+	 * @param style ITextPlugin.MIN, ITextPlugin.NORMAL, ITextPlugin.BOLD (thin,
+	 *              normal or bold)
 	 * @return false on error. True on success
 	 */
 	public boolean setStyle(int style);
@@ -141,7 +143,7 @@ public interface ITextPlugin {
 	 * @param marke  regular expression, that describes the insertion point. Only
 	 *               the first match will be used, and the inserted Text will
 	 *               replace the found string.
-	 * @param adjust SWT.LEFT oder SWT.RIGHT
+	 * @param adjust ITextPlugin.LEFT oder ITextPlugin.RIGHT
 	 * @return An implementation specific cursor that allows a later insert after
 	 *         that position
 	 */
@@ -151,7 +153,7 @@ public interface ITextPlugin {
 	 * Insert text at the position described by the implementation specific cursor
 	 *
 	 * @param pos    an implementation specific cursor
-	 * @param adjust SWT.LEFT, SWT.CENTER, SWT.RIGHT
+	 * @param adjust ITextPlugin.LEFT, ITextPlugin.CENTER, ITextPlugin.RIGHT
 	 * @return a cursor that can be used for a subsequent insert.
 	 */
 	public Object insertText(Object pos, String text, int adjust);

@@ -153,6 +153,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	private boolean isDescriptionSortedAscending = true;
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 
 	@Optional
@@ -369,7 +370,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return super.getImage(element);
 			}
 		});
-
 		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -480,10 +480,10 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 								!(Boolean) viewer.getData("descriptionSortAscending"));
 					} else {
 						viewer.setData("descriptionSortAscending", Boolean.FALSE);
-						}
+					}
 					viewer.refresh();
 				}
-				}
+			}
 		});
 
 		col = createTableViewerColumn(titles[4], weights[4], 4, SWT.RIGHT);
