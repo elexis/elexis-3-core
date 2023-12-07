@@ -43,6 +43,11 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
+	public String getDescription() {
+		return getEntity().getDescription();
+	}
+
+	@Override
 	public void setCode(String value) {
 		getEntityMarkDirty().setCode(value);
 	}
@@ -71,6 +76,11 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		} else {
 			getEntityMarkDirty().setOwner(null);
 		}
+	}
+
+	@Override
+	public void setDescription(String value) {
+		getEntityMarkDirty().setDescription(value);
 	}
 
 	@Override
