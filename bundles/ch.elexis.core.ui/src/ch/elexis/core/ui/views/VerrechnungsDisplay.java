@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
@@ -1202,28 +1200,4 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			table.getMenu().setEnabled(AccessControlServiceHolder.get().evaluate(EvACEs.LSTG_VERRECHNEN));
 		}
 	}
-
-	private void setupComparatorToggle(TableViewer viewer, ViewerComparator comparator, AtomicBoolean isSortedAscending,
-			BiFunction<IBilled, IBilled, Integer> comparisonFunction) {
-		if (viewer.getComparator() == comparator) {
-			isSortedAscending.set(!isSortedAscending.get());
-			viewer.setComparator(new ViewerComparator() {
-				@Override
-				public int compare(Viewer viewer, Object e1, Object e2) {
-					if (e1 instanceof IBilled && e2 instanceof IBilled) {
-						IBilled b1 = (IBilled) e1;
-						IBilled b2 = (IBilled) e2;
-						int result = comparisonFunction.apply(b1, b2);
-						return isSortedAscending.get() ? result : -result;
-						}
-					return 0;
-					}
-			});
-		} else {
-			viewer.setComparator(comparator);
-			isSortedAscending.set(true); // Zurücksetzen auf aufsteigende Sortierung
-			}
-		viewer.refresh();
-		}
-
 }
