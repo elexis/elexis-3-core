@@ -48,12 +48,16 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -170,6 +174,8 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 
 	private ToolBarManager toolBarManager;
 	private TableViewerColumn partDisposalColumn;
+	protected IBilled b1;
+	protected IBilled b2;
 
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style) {
 		super(parent, style);
@@ -346,18 +352,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		String[] titles = { StringTool.leer, Messages.Display_Column_Number, Messages.Core_Code,
 				Messages.Core_Description, Messages.Core_Price, StringTool.leer };
 		int[] weights = { 0, 8, 20, 50, 15, 7 };
-
-		ViewerComparator priceComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled b1 = (IBilled) e1;
-					IBilled b2 = (IBilled) e2;
-					return b1.getTotal().compareTo(b2.getTotal());
-				}
-				return 0;
-			}
-		};
+//
+//		ViewerComparator priceComparator = new ViewerComparator() {
+//			@Override
+//			public int compare(Viewer viewer, Object e1, Object e2) {
+//				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+//					IBilled b1 = (IBilled) e1;
+//					IBilled b2 = (IBilled) e2;
+//					return b1.getTotal().compareTo(b2.getTotal());
+//				}
+//				return 0;
+//			}
+//		};
 
 		partDisposalColumn = createTableViewerColumn(titles[0], weights[0], 0, SWT.LEFT);
 		partDisposalColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -388,6 +394,36 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return Double.toString(billed.getAmount());
 				}
 				return StringUtils.EMPTY;
+			}
+		});
+
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled t1 = (IBilled) e1;
+					IBilled t2 = (IBilled) e2;
+					int result = t1.getTotal().compareTo(t2.getTotal());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("priceSortAscending") != null) {
+					return (Boolean) viewer.getData("priceSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean ascending = getSortedAscending(viewer);
+				viewer.setData("priceSortAscending", !ascending);
+				viewer.setComparator(priceComparator);
+				viewer.refresh();
 			}
 		});
 
@@ -476,6 +512,11 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return Images.IMG_DELETE.getImage();
 			}
 		});
+	}
+
+	protected boolean getSortedAscending(TableViewer viewer2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber, int style) {
