@@ -11,12 +11,12 @@
 	},
 	"system-command": {
 		"ch.elexis.core.ui.login": "x",
+		"ch.medelexis.application.imp.abo.change": "x",
 		"PERSPECTIVE_ADMIN": "x",
 		"ACL_AUTO_INSTALL_FEATURES": "x",
 		"LSTG_CHARGE_FOR_ALL": "x",
 		"EXEC_DBSHAKER": "x",
 		"GALEXIS_SETTINGS": "x",
-		"ACL_CHANGE_IMPABO": "x",
 		"ACL_VIEW_SELECTION": "x"
 	},
 	"object": {
