@@ -369,7 +369,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 				return true;
 			}
 		};
-
 		col.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
