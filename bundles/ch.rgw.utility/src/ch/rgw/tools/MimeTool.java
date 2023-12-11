@@ -16,7 +16,8 @@ public class MimeTool {
 			{ "odt", "application/vnd.oasis.opendocument.text" }, { "jpg", "image/jpeg" },
 			{ "pps", "application/mspowerpoint" }, { "png", "image/png" },
 			{ "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
-			{ "doc", "application/msword" } };
+			{ "doc", "application/msword" }, { "eml", "message/rfc822" }, { "tar.gz", "application/gzip" },
+			{ "zip", "application/zip" } };
 
 	/**
 	 * find the mimetype for a given extension
