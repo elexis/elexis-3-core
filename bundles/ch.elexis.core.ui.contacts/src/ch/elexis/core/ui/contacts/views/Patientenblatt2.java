@@ -851,9 +851,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			if (ipp != null) {
 				ipp.save();
 			}
-			for (int i = 0; i < txExpandable.size(); i++) {
-				saveExpandable(i);
-			}
 		}
 	}
 
@@ -901,7 +898,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	class Hyperlinkreact extends HyperlinkAdapter {
 
 		@Override
-		@SuppressWarnings("synthetic-access")
 		public void linkActivated(final HyperlinkEvent e) {
 			if (actPatient != null) {
 				AnschriftEingabeDialog aed = new AnschriftEingabeDialog(form.getShell(), actPatient);
