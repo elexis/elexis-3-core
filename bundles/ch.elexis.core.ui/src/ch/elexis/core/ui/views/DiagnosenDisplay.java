@@ -361,7 +361,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 				}
 				return 0;
 			}
-
 			private boolean getSortedAscending(Viewer viewer) {
 				if (viewer.getData("descriptionSortAscending") != null) {
 					return (Boolean) viewer.getData("descriptionSortAscending");
