@@ -10,7 +10,6 @@
  */
 package ch.elexis.core.model;
 
-import java.io.File;
 
 /**
  * <!-- begin-user-doc -->
@@ -55,5 +54,4 @@ public interface IDiagnosisReference extends IDiagnosis {
 	 */
 	void setReferredClass(String value);
 
-	
 } // IDiagnosisReference
