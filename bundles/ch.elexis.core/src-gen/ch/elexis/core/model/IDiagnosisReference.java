@@ -55,6 +55,5 @@ public interface IDiagnosisReference extends IDiagnosis {
 	 */
 	void setReferredClass(String value);
 
-	File getImage();
-
+	
 } // IDiagnosisReference
