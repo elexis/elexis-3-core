@@ -489,6 +489,8 @@ public class TaskServiceImpl implements ITaskService {
 		}
 		
 		if(sync) {
+			// create modifiable copy
+			runContext = new HashMap<String, String>(runContext);
 			runContext.put("isTriggerSync", Boolean.TRUE.toString());
 		}
 
