@@ -444,7 +444,6 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 		});
 		return contextMenuManager.createContextMenu(table);
 	}
-
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		setEnabled(unlocked);
