@@ -56,11 +56,11 @@ public class TestContext implements IContext {
 				}
 			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
-			if (object.equals(context.get(modelInterface.get().getName()))) {
-				// object is already in the context do nothing otherwise loop happens
-				return;
-			}
 			if (modelInterface.isPresent()) {
+				if (object.equals(context.get(modelInterface.get().getName()))) {
+					// object is already in the context do nothing otherwise loop happens
+					return;
+				}
 				context.put(modelInterface.get().getName(), object);
 			} else {
 				context.put(object.getClass().getName(), object);
