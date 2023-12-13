@@ -598,5 +598,12 @@ public class Messages {
 	public static String BestellView_WizardAskNewOrder = ch.elexis.core.l10n.Messages.BestellView_WizardAskNewOrder;
 	public static String BestellView_OrderIsClosed = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
 	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
+	public static String Web_Favorit_Limit = ch.elexis.core.l10n.Messages.Web_Favorit_Limit;
+	public static String Web_Favorit_Limit_Text = ch.elexis.core.l10n.Messages.Web_Favorit_Limit_Text;
+	public static String Web_History_Delete = ch.elexis.core.l10n.Messages.Web_History_Delete;
+	public static String Web_Button_Back = ch.elexis.core.l10n.Messages.TimeMachineDisplay_back;
+	public static String Web_Button_Reload = ch.elexis.core.l10n.Messages.LaborViewPart_actionReload;
+	public static String Web_Button_Favoriten = ch.elexis.core.l10n.Messages.Web_Button_Favoriten;
+	public static String Web_Button_Forward = ch.elexis.core.l10n.Messages.Web_Button_Forward;
 
 }
