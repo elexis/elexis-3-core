@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -16,6 +17,7 @@ import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.model.ModelPackage;
@@ -164,4 +166,18 @@ public class BriefDocumentStore implements IDocumentStore {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public List<IDocumentTemplate> getDocumentTemplates(boolean includeSystem) {
+		IQuery<IDocumentTemplate> query = coreModelService.getQuery(IDocumentTemplate.class);
+		query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.EQUALS, BriefConstants.TEMPLATE);
+
+		@SuppressWarnings("unchecked")
+		List<IDocumentTemplate> results = (List<IDocumentTemplate>) ((List<?>) query.execute());
+		if (!includeSystem) {
+			results = results.stream().filter(dt -> !BriefConstants.SYS_TEMPLATE.equalsIgnoreCase(dt.getTemplateTyp()))
+					.collect(Collectors.toList());
+		}
+		results.parallelStream().forEach(d -> d.setStoreId(STORE_ID));
+		return results;
+	}
 }

@@ -29,6 +29,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.ITag;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentStore;
@@ -450,5 +451,9 @@ public class DocumentStore {
 			return Optional.empty();
 		}
 
+		@Override
+		public List<IDocumentTemplate> getDocumentTemplates(boolean includeSystem) {
+			return Collections.emptyList();
+		}
 	}
 }

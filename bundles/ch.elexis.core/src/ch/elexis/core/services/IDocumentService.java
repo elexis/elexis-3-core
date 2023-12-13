@@ -29,4 +29,5 @@ public interface IDocumentService {
 	 * @return
 	 */
 	public Map<String, Boolean> validateTemplate(IDocumentTemplate template, IContext context);
+
 }
