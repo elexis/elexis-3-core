@@ -15,6 +15,8 @@ public enum CodingSystem {
 	ELEXIS_LOCAL_LABORATORY_GROUP("www.elexis.info/laboratory/local/group"),
 	ELEXIS_LOCAL_LABORATORY_VITOLABKEY("www.elexis.info/laboratory/local/vitolabkey"),
 	ELEXIS_DOCUMENT_CATEGORY("www.elexis.info/document/category"),
+	ELEXIS_DOCUMENT_STOREID("www.elexis.info/document/storeid"),
+	ELEXIS_DOCUMENT_TEMPLATE_TYP("www.elexis.info/document/template/typ"),
 	/**
 	 * The degree in percent of the work incapacity, see {@link FhirConstants#DE_EAU_SYSTEM}
 	 */
