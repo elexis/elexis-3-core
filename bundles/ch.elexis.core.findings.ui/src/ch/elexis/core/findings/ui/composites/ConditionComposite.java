@@ -109,21 +109,22 @@ public class ConditionComposite extends Composite {
 		DataBindingContext bindingContext = new DataBindingContext();
 
 		IObservableValue<?> targetObservable = ViewerProperties.singleSelection().observe(statusViewer);
-		IObservableValue<?> modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "status")
+		IObservableValue<?> modelObservable = PojoProperties
+				.value(ConditionBeanAdapter.class, "status", ConditionStatus.class)
 				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = WidgetProperties.text().observe(startTxt);
+		targetObservable = WidgetProperties.text(SWT.Modify).observe(startTxt);
 		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "start", String.class)
 				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = WidgetProperties.text().observe(endTxt);
+		targetObservable = WidgetProperties.text(SWT.Modify).observe(endTxt);
 		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "end", String.class)
 				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = WidgetProperties.text().observe(textTxt);
+		targetObservable = WidgetProperties.text(SWT.Modify).observe(textTxt);
 		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "text", String.class)
 				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
