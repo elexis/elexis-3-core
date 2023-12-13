@@ -1476,7 +1476,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 					query.andJoinGroups();
 				}
-				if (!showAll) {
 					if (showSelfCreated) {
 						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
 							query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
@@ -1492,8 +1491,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 							query.exists(subQuery);
 						});
 					}
-				}
-
+					
 				if (filterDue) {
 					applyDueDateFilter(query, false);
 				}
@@ -1562,9 +1560,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		@Override
 		public List<IReminder> get() {
 			IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-			query.andFeatureCompare(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.NOT_EQUALS,
-					ModelPackage.Literals.IREMINDER__CONTACT);
-			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+			if (!showAll) {
+				query.andFeatureCompare(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.NOT_EQUALS,
+						ModelPackage.Literals.IREMINDER__CONTACT);
+				query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+			}
 
 			if (showOnlyDue) {
 				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
@@ -1594,22 +1594,19 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				query.andJoinGroups();
 			}
 
-			if (!showAll) {
-				if (showSelfCreated) {
-					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-
-					});
-				}
-				if (assignedToMe) {
-					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+			if (showSelfCreated) {
+				ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+					query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
+				});
+			}
+			if (assignedToMe) {
+				ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
 					ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
 							CoreModelServiceHolder.get());
 					subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
 					subQuery.and("responsible", COMPARATOR.EQUALS, m);
 					query.exists(subQuery);
-					});
-				}
+				});
 			}
 			if (filterDue) {
 				applyDueDateFilter(query, false);
