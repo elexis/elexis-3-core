@@ -360,6 +360,7 @@
       <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
         <details key="Brief#attributeName" value="typ"/>
         <details key="DocHandle#attributeName" value="category"/>
+        <details key="BriefVorlage#attributeName" value="typ"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="history" upperBound="-1"

@@ -9,6 +9,7 @@ import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.ITag;
 
 /**
@@ -48,6 +49,13 @@ public interface IDocumentStore {
 	 */
 	public List<IDocument> getDocuments(@NonNull String patientId, @Nullable String authorId,
 			@Nullable ICategory category, @Nullable List<ITag> tag);
+
+	/**
+	 * Get the {@link IDocumentTemplate}s.
+	 * 
+	 * @return
+	 */
+	public List<IDocumentTemplate> getDocumentTemplates(boolean includeSystem);
 
 	/**
 	 * Load a {@link IDocument} with the id from the store.

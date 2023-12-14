@@ -50,12 +50,17 @@ public class WebdavFile extends URLConnection {
 
 	public WebdavFile(URL url) throws MalformedURLException {
 		super(url);
+		webdav = new SardineImpl();
 		if (url.getUserInfo() != null) {
-			String[] userInfo = url.getUserInfo().split(":");
-			webdav = new SardineImpl(userInfo[0], userInfo[1]);
+			if (url.getUserInfo().contains(":")) {
+				// username:password
+				String[] userInfo = url.getUserInfo().split(":");
+				webdav.setCredentials(userInfo[0], userInfo[1]);
+			} else {
+				// bearer token
+				webdav = new SardineImpl(url.getUserInfo());
+			}
 			webdav.enablePreemptiveAuthentication(url);
-		} else {
-			webdav = new SardineImpl();
 		}
 		webdav.enableCompression();
 	}

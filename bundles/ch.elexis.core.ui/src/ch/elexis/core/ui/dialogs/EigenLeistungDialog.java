@@ -107,7 +107,7 @@ public class EigenLeistungDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		if (StringUtils.isBlank(tName.getText()) && StringUtils.isBlank(tKurz.getText())) {
-			setMessage(Messages.Template_not_editable_empty, IMessageProvider.ERROR);
+			setMessage(Messages.Inputfield_empty, IMessageProvider.ERROR);
 			return;
 		}
 		Money moneyNet = new Money();

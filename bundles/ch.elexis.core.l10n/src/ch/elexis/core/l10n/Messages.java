@@ -5002,6 +5002,7 @@ public class Messages extends NLS {
 	public static String Web_History_Delete;
 	public static String Web_Button_Favoriten;
 	public static String Web_Button_Forward;
+	public static String Inputfield_empty;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

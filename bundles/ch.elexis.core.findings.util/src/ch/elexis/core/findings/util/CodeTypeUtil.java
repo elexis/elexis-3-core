@@ -66,7 +66,17 @@ public class CodeTypeUtil {
 	public static boolean isCodeInConcept(CodeableConcept concept, String system, String code) {
 		List<Coding> codings = concept.getCoding();
 		for (Coding coding : codings) {
-			if (coding.getSystem().equals(system) && coding.getCode().equals(code)) {
+			if (coding.getSystem() != null && coding.getCode() != null && coding.getSystem().equals(system)
+					&& coding.getCode().equals(code)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCodeInConceptList(List<CodeableConcept> conceptList, String system, String code) {
+		for (CodeableConcept codeableConcept : conceptList) {
+			if (isCodeInConcept(codeableConcept, system, code)) {
 				return true;
 			}
 		}

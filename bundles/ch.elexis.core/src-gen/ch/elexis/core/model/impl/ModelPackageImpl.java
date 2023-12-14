@@ -6847,7 +6847,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "Brief#attributeName", "typ",
-			   "DocHandle#attributeName", "category"
+			   "DocHandle#attributeName", "category",
+			   "BriefVorlage#attributeName", "typ"
 		   });
 		addAnnotation
 		  (getIDocument_Patient(),

@@ -39,9 +39,9 @@ public interface IVirtualFilesystemService {
 	 * @return
 	 * @throws IOException
 	 */
-	public IVirtualFilesystemHandle of(String urlString) throws IOException;
+	IVirtualFilesystemHandle of(String urlString) throws IOException;
 
-	public IVirtualFilesystemHandle of(File file) throws IOException;
+	IVirtualFilesystemHandle of(File file) throws IOException;
 
 	/**
 	 * Hide the password that may be part of the URL, accepts UNCs or unix paths
@@ -82,7 +82,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @throws IOException
 		 */
-		public InputStream openInputStream() throws IOException;
+		InputStream openInputStream() throws IOException;
 
 		/**
 		 * A stream to write the content. Will create or overwrite.
@@ -90,7 +90,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @throws IOException
 		 */
-		public OutputStream openOutputStream() throws IOException;
+		OutputStream openOutputStream() throws IOException;
 
 		/**
 		 * Read the content and return it as byte array
@@ -98,7 +98,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @throws IOException
 		 */
-		public byte[] readAllBytes() throws IOException;
+		byte[] readAllBytes() throws IOException;
 
 		/**
 		 * Write the given content into the file, fails if directory
@@ -106,7 +106,7 @@ public interface IVirtualFilesystemService {
 		 * @throws IOException
 		 * @since 3.10
 		 */
-		public void writeAllBytes(byte[] content) throws IOException;
+		void writeAllBytes(byte[] content) throws IOException;
 
 		/**
 		 * Return the length of the of the content
@@ -114,7 +114,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @throws IOException
 		 */
-		public long getContentLenght() throws IOException;
+		long getContentLenght() throws IOException;
 
 		/**
 		 * Copy the contents of this handle to a new handle, where the underlying
@@ -124,13 +124,13 @@ public interface IVirtualFilesystemService {
 		 * @throws IOException
 		 * @return handle reflecting the location of the copied file
 		 */
-		public IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle destination) throws IOException;
+		IVirtualFilesystemHandle copyTo(IVirtualFilesystemHandle destination) throws IOException;
 
 		/**
 		 *
 		 * @return the parent url of the given parent
 		 */
-		public IVirtualFilesystemHandle getParent() throws IOException;
+		IVirtualFilesystemHandle getParent() throws IOException;
 
 		/**
 		 * Only if {@link #isDirectory()}:
@@ -139,7 +139,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @see File#listFiles(java.io.FileFilter) equivalent behavior
 		 */
-		public IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException;
+		IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException;
 
 		/**
 		 * Only if {@link #isDirectory()}:
@@ -147,7 +147,7 @@ public interface IVirtualFilesystemService {
 		 * @return
 		 * @throws IOException
 		 */
-		public IVirtualFilesystemHandle[] listHandles() throws IOException;
+		IVirtualFilesystemHandle[] listHandles() throws IOException;
 
 		/**
 		 * Delete the corresponding file entry. If it is a directory, perform a
@@ -156,13 +156,13 @@ public interface IVirtualFilesystemService {
 		 * @param urlString
 		 * @throws IOException
 		 */
-		public void delete() throws IOException;
+		void delete() throws IOException;
 
 		/**
 		 * if the URL ends with "/" - does not check the underlying resource for its
 		 * actual type
 		 */
-		public boolean isDirectoryUrl() throws IOException;
+		boolean isDirectoryUrl() throws IOException;
 
 		/**
 		 * Checks a possibly existing file entry if it is a directory
@@ -171,60 +171,60 @@ public interface IVirtualFilesystemService {
 		 * @throws IOException
 		 * @since 3.10
 		 */
-		public boolean isDirectory() throws IOException;
+		boolean isDirectory() throws IOException;
 
 		/**
 		 *
 		 * @return
 		 */
-		public URL toURL();
+		URL toURL();
 
 		/**
 		 *
 		 * @return
 		 */
-		public URI getURI();
+		URI getURI();
 
 		/**
 		 *
 		 * @return a File representation of this object, or empty if it is not a file
 		 */
-		public Optional<File> toFile();
+		Optional<File> toFile();
 
 		/**
 		 *
 		 * @return the file ending (after the dot) or an empty string
 		 */
-		public String getExtension();
+		String getExtension();
 
 		/**
 		 * @return does the underlying resource really exist
 		 * @throws IOException
 		 */
-		public boolean exists() throws IOException;
+		boolean exists() throws IOException;
 
 		/**
 		 * @return the name including the extension
 		 */
-		public String getName();
+		String getName();
 
 		/**
 		 *
 		 * @return
 		 */
-		public boolean canRead();
+		boolean canRead();
 
 		/**
 		 *
 		 * @return
 		 */
-		public boolean canWrite();
+		boolean canWrite();
 
 		/**
 		 *
 		 * @return
 		 */
-		public String getAbsolutePath();
+		String getAbsolutePath();
 
 		/**
 		 * Move this to the handle. If this is a file and handle is a directory, the
@@ -240,7 +240,7 @@ public interface IVirtualFilesystemService {
 		 * @throws IOException
 		 * @return the updated handle reflecting the new location
 		 */
-		public IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException;
+		IVirtualFilesystemHandle moveTo(IVirtualFilesystemHandle target) throws IOException;
 
 		/**
 		 * Create a possibly not yet existing sub-directory handle. The actual directory
@@ -249,7 +249,7 @@ public interface IVirtualFilesystemService {
 		 * @param string
 		 * @return
 		 */
-		public IVirtualFilesystemHandle subDir(String string) throws IOException;
+		IVirtualFilesystemHandle subDir(String string) throws IOException;
 
 		/**
 		 * Only if {@link #isDirectory()}: create a sub file handle
@@ -257,7 +257,7 @@ public interface IVirtualFilesystemService {
 		 * @param name
 		 * @return
 		 */
-		public IVirtualFilesystemHandle subFile(String name) throws IOException;
+		IVirtualFilesystemHandle subFile(String name) throws IOException;
 
 		/**
 		 * Create a directory. Does not fail if directory already exists. This operation
@@ -266,7 +266,7 @@ public interface IVirtualFilesystemService {
 		 * @return its own handle
 		 * @throws IOException
 		 */
-		public IVirtualFilesystemHandle mkdir() throws IOException;
+		IVirtualFilesystemHandle mkdir() throws IOException;
 
 	}
 
