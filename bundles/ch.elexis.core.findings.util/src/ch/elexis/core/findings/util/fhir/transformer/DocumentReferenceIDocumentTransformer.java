@@ -59,7 +59,8 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 			ret.addCategory(newConcept);
 		}
 
-		if (localObject instanceof IDocumentTemplate && ((IDocumentTemplate) localObject).getTemplateTyp() != null) {
+		if (localObject instanceof IDocumentTemplate
+				&& StringUtils.isNotBlank(((IDocumentTemplate) localObject).getTemplateTyp())) {
 			ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_TEMPLATE_TYP.getSystem(),
 					((IDocumentTemplate) localObject).getTemplateTyp(), StringUtils.EMPTY)));
 		}
