@@ -4997,6 +4997,11 @@ public class Messages extends NLS {
 	public static String AgendaFarben_Link;
 	public static String Agenda_Mandator;
 	public static String Prefs_DefaultMessageRecipient;
+	public static String Web_Favorit_Limit;
+	public static String Web_Favorit_Limit_Text;
+	public static String Web_History_Delete;
+	public static String Web_Button_Favoriten;
+	public static String Web_Button_Forward;
 	public static String Inputfield_empty;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
