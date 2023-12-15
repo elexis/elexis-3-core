@@ -49,9 +49,10 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	int priority;
 
 	/**
-	 * A short name or code for this stock
+	 * A short name or code for this stock. If the code matches <code>P[0-9]+</code>
+	 * it is a patient located stock.
 	 */
-	@Column(length = 3)
+	@Column(length = 7, unique = true)
 	String code;
 
 	/**
@@ -73,7 +74,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	 * articles.
 	 */
 	@OneToOne
-	@JoinColumn(name = "OWNER", insertable = false)
+	@JoinColumn(name = "OWNER")
 	Kontakt owner;
 
 	/**

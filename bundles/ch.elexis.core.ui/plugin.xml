@@ -380,16 +380,6 @@
                tooltip="Konsultation verrechnen und ausgeben">
          </command>
       </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.ui.chromium.views.BrowserView">
-              <command
-               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler"
-               icon="icon://IMG_WEB"
-               label="Adresse eingeben"
-               style="push">
-         </command>
-      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -1018,10 +1008,6 @@
                   </test>
                </and>
             </enabledWhen>
-         </handler>
-         <handler
-               class="ch.elexis.core.ui.commands.OpenUrlHandler"
-               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler">
          </handler>
       </extension>
       <extension

@@ -14,7 +14,7 @@
 		"ch.elexis.core.model.IArticleDefaultSignature": "crudv",
 		"ch.elexis.core.model.IBillable": "cruvd",
 		"ch.elexis.core.model.IBilled": "cruvd:aobo",
-		"ch.elexis.core.model.IConfig": "cruvdz",
+		"ch.elexis.core.model.IConfig": "cruvxz",
 		"ch.elexis.core.model.IContact": "cruvd",
 		"ch.elexis.core.model.ICoverage": "cruvd",
 		"ch.elexis.core.model.IDayMessage": "crudv",

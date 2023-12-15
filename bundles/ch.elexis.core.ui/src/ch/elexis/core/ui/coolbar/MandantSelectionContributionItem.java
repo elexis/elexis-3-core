@@ -38,14 +38,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
-import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Mandant;
@@ -62,7 +60,7 @@ public class MandantSelectionContributionItem {
 
 	private ToolItem item;
 	private Menu menu;
-	private Mandant[] mandants;
+	private IMandator[] mandants;
 	private MenuItem[] menuItems;
 	private ToolBar fParent;
 
@@ -70,28 +68,29 @@ public class MandantSelectionContributionItem {
 	public void activeMandator(@Optional IMandator mandator) {
 		if (fParent != null && !fParent.isDisposed()) {
 			CoreUiUtil.runAsyncIfActive(() -> {
-				Mandant m = (Mandant) NoPoUtil.loadAsPersistentObject(mandator, Mandant.class);
-				if (m != null && item != null) {
-					item.setText(m.getMandantLabel());
-					fParent.setBackground(UiMandant.getColorForMandator(m));
-					if (menuItems == null) {
-						// We have a read-only coolbar item entry
-						fParent.pack();
-						return;
-					}
-					for (int i = 0; i < menuItems.length; i++) {
-						String id = (String) menuItems[i].getData();
-						if (m.getId().equalsIgnoreCase(id)) {
+				CoreModelServiceHolder.get().load(mandator.getId(), IMandator.class).ifPresent(m -> {
+					if (item != null) {
+						item.setText(m.getLabel());
+						fParent.setBackground(UiMandant.getColorForIMandator(m));
+						if (menuItems == null) {
+							// We have a read-only coolbar item entry
 							fParent.pack();
-							// TODO: Anordnung Elemente in Coolbar speicherbar?
-							// TODO: Programmatische Anordnung Elemente coolbar
-							menuItems[i].setSelection(true);
-						} else {
-							menuItems[i].setSelection(false);
+							return;
+						}
+						for (int i = 0; i < menuItems.length; i++) {
+							String id = (String) menuItems[i].getData();
+							if (m.getId().equalsIgnoreCase(id)) {
+								fParent.pack();
+								// TODO: Anordnung Elemente in Coolbar speicherbar?
+								// TODO: Programmatische Anordnung Elemente coolbar
+								menuItems[i].setSelection(true);
+							} else {
+								menuItems[i].setSelection(false);
+							}
 						}
 					}
-				}
-				fParent.getParent().layout();
+					fParent.getParent().layout();
+				});
 			}, fParent);
 		}
 	}
@@ -140,14 +139,15 @@ public class MandantSelectionContributionItem {
 		fParent = toolbar;
 		menu = new Menu(fParent);
 
-		List<Mandant> qre = Hub.getMandantenList();
-		qre.sort(new Comparator<Mandant>() {
+		List<IMandator> lMandator = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
+		lMandator.sort(new Comparator<IMandator>() {
+
 			@Override
-			public int compare(Mandant m1, Mandant m2) {
-				return m1.getMandantLabel().compareTo(m2.getMandantLabel());
+			public int compare(IMandator m1, IMandator m2) {
+				return m1.getLabel().compareTo(m2.getLabel());
 			}
 		});
-		mandants = qre.toArray(new Mandant[] {});
+		mandants = lMandator.toArray(new IMandator[] {});
 		if (mandants.length < 2)
 			return null;
 
@@ -157,19 +157,20 @@ public class MandantSelectionContributionItem {
 		menuItems = new MenuItem[mandants.length];
 
 		for (int i = 0; i < mandants.length; i++) {
-			final Mandant m = mandants[i];
+			final IMandator m = mandants[i];
 			menuItems[i] = new MenuItem(menu, SWT.RADIO);
-			menuItems[i].setText(m.getMandantLabel());
-			menuItems[i].setImage(getBoxSWTColorImage(UiMandant.getColorForMandator(m)));
+			menuItems[i].setText(m.getLabel());
+			menuItems[i].setImage(getBoxSWTColorImage(UiMandant.getColorForIMandator(m)));
 			menuItems[i].setData(m.getId());
 			menuItems[i].addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					Hub.setMandant(m);
+					ContextServiceHolder.get().setActiveMandator(m);
 				}
 			});
 			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {
-				menuItems[i].setSelection(CoreHub.actMandant.equals(m));
+				IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+				menuItems[i].setSelection(activeMandator != null && activeMandator.equals(m));
 			}
 		}
 
@@ -177,7 +178,8 @@ public class MandantSelectionContributionItem {
 
 		if (ContextServiceHolder.getActiveMandatorOrNull() != null && item != null) {
 			item.setText(ContextServiceHolder.getActiveMandatorOrNull().getLabel());
-			fParent.setBackground(UiMandant.getColorForMandator(CoreHub.actMandant));
+			fParent.setBackground(
+					UiMandant.getColorForIMandator(ContextServiceHolder.getActiveMandatorOrNull()));
 		}
 
 		adaptForUser(null);

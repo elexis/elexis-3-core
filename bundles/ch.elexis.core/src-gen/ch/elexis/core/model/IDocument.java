@@ -208,7 +208,7 @@ public interface IDocument extends Identifiable, Deleteable {
 	 * @see #setCategory(ICategory)
 	 * @see ch.elexis.core.model.ModelPackage#getIDocument_Category()
 	 * @model required="true"
-	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping Brief#attributeName='typ' DocHandle#attributeName='category'"
+	 *        annotation="http://elexis.info/jpa/entity/attribute/mapping Brief#attributeName='typ' DocHandle#attributeName='category' BriefVorlage#attributeName='typ'"
 	 * @generated
 	 */
 	ICategory getCategory();

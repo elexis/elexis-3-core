@@ -83,7 +83,6 @@ public class RecordElement extends XChangeElement {
 	private boolean shouldAddXRef(XRef xref) {
 		// only add privatnotizen of current mandant
 		if (xref.getProvider().toLowerCase().contains("privatnotizen")) { //$NON-NLS-1$
-			// return xref.getID().startsWith(CoreHub.actMandant.getId());
 			return false;
 		}
 		return true;

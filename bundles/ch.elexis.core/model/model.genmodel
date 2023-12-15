@@ -340,7 +340,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/netPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/minutes"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ICustomService"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ICustomService">
+      <genOperations ecoreOperation="model.ecore#//ICustomService/setCodeSystemCode">
+        <genParameters ecoreParameter="model.ecore#//ICustomService/setCodeSystemCode/value"/>
+      </genOperations>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IArticle">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/gtin"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/atcCode"/>

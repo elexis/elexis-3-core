@@ -5,11 +5,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 
 import org.junit.Test;
 
+import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemServiceTest {
@@ -38,6 +41,22 @@ public class VirtualFilesystemServiceTest {
 		assertEquals("file://C:/Windows/Test/", handle.toURL().toString());
 		IVirtualFilesystemHandle subDir = handle.subDir("subdir");
 		assertEquals("file://C:/Windows/Test/subdir/", subDir.toURL().toString());
+	}
+
+	@Test
+	public void of_dav_Notation() {
+		// must not allow authorization
+	}
+
+	@Test
+	public void of_davs_Notation() throws IOException {
+		AccessToken accessToken = new AccessToken("token", new Date(), "username");
+		ContextServiceHolder.get().setTyped(accessToken);
+
+		IVirtualFilesystemHandle handle = service
+				.of("davs://{ctx.access-token}@my.nextcloud.ch/cloud/remote.php/dav/");
+		String string = handle.toURL().toString();
+		assertEquals("davs://token@my.nextcloud.ch/cloud/remote.php/dav/", string);
 	}
 
 	@Test

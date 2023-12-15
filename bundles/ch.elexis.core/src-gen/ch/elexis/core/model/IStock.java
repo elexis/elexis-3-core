@@ -40,6 +40,9 @@ public interface IStock extends Identifiable, Deleteable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A unique code to define a specific stock. Stocks starting with 'P', followed by a number refer to patient located stocks.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Code</em>' attribute.
 	 * @see #setCode(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Code()
@@ -145,12 +148,12 @@ public interface IStock extends Identifiable, Deleteable {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Owner</em>' reference.
-	 * @see #setOwner(IMandator)
+	 * @see #setOwner(IPerson)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Owner()
 	 * @model
 	 * @generated
 	 */
-	IMandator getOwner();
+	IPerson getOwner();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}' reference.
@@ -160,7 +163,7 @@ public interface IStock extends Identifiable, Deleteable {
 	 * @see #getOwner()
 	 * @generated
 	 */
-	void setOwner(IMandator value);
+	void setOwner(IPerson value);
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -172,5 +175,17 @@ public interface IStock extends Identifiable, Deleteable {
 		String driverUuid = getDriverUuid();
 		return (driverUuid != null && driverUuid.length() > 0);
 	}
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setDescription(String value);
+
+	/**
+	 * 
+	 * @return
+	 */
+	String getDescription();
 
 } // IStock

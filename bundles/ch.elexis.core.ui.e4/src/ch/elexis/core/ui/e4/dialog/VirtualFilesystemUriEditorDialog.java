@@ -23,6 +23,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -31,15 +32,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
-	private DataBindingContext m_bindingContext;
-
 	private IVirtualFilesystemService virtualFilesystemService;
 	private MyURI uri;
+
+	private Button browseButton;
 
 	private Text txtHost;
 	private Text txtPort;
@@ -85,7 +88,20 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 		comboScheme = new Combo(container, SWT.NONE);
 		comboScheme.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboScheme.setItems("smb", "file");
+		comboScheme.setItems("smb", "file", "davs", "dav");
+		comboScheme.addListener(SWT.Selection, l -> {
+			if ("davs".equals(comboScheme.getText())) {
+				IElexisEnvironmentService eeService = OsgiServiceUtil.getService(IElexisEnvironmentService.class)
+						.orElse(null);
+				if (eeService != null) {
+					txtHost.setText(eeService.getHostname());
+					txtPath.setText("/cloud/remote.php/dav/files/");
+					txtUser.setText("{ctx.access-token}");
+					OsgiServiceUtil.ungetService(eeService);
+				}
+			}
+			updateButtonState();
+		});
 
 		Label lblHost = new Label(container, SWT.NONE);
 		lblHost.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -135,6 +151,10 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		return area;
 	}
 
+	private void updateButtonState() {
+		browseButton.setEnabled("file".equals(comboScheme.getText()));
+	}
+
 	/**
 	 * Create contents of the button bar.
 	 *
@@ -143,10 +163,12 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.CLIENT_ID, "Test", false);
-		createButton(parent, 1025, JFaceResources.getString("openBrowse"), false); //$NON-NLS-1$
+		browseButton = createButton(parent, 1025, JFaceResources.getString("openBrowse"), false); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-		m_bindingContext = initDataBindings();
+		initDataBindings();
+
+		updateButtonState();
 	}
 
 	@Override
@@ -307,6 +329,11 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 				if (StringUtils.isNotBlank(user)) {
 					uriBuilder.setUserInfo(user, pass);
 				}
+				if (StringUtils.isNotBlank(user)) {
+					if (StringUtils.isBlank(pass)) {
+						uriBuilder.setUserInfo(user);
+					}
+				}
 				if (port != null && port > 0) {
 					uriBuilder.setPort(port);
 				}
@@ -338,12 +365,10 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 		private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-		@SuppressWarnings("unused")
 		public void addPropertyChangeListener(PropertyChangeListener listener) {
 			changeSupport.addPropertyChangeListener(listener);
 		}
 
-		@SuppressWarnings("unused")
 		public void removePropertyChangeListener(PropertyChangeListener listener) {
 			changeSupport.removePropertyChangeListener(listener);
 		}

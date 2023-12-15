@@ -14,8 +14,6 @@ package ch.elexis.core.application.advisors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -38,6 +36,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		super(configurer);
 	}
 
+	@Override
 	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
 		return new ApplicationActionBarAdvisor(configurer);
 	}
@@ -46,6 +45,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 * Diese Methode wird jeweils unmittelbar vor dem öffnen des Anwendungsfensters
 	 * ausgeführt.
 	 */
+	@Override
 	public void preWindowOpen() {
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		// configurer.setInitialSize(new Point(900, 700));
@@ -53,18 +53,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowStatusLine(true);
 		configurer.setShowProgressIndicator(true);
 		configurer.setTitle(Hub.APPLICATION_NAME + StringUtils.SPACE + Elexis.VERSION);
-		configurer.setShowFastViewBars(true);
 		if (CoreHub.localCfg.get(Preferences.SHOWPERSPECTIVESELECTOR, Boolean.toString(false))
 				.equals(Boolean.toString(true))) {
 			configurer.setShowPerspectiveBar(true);
 		} else {
 			configurer.setShowPerspectiveBar(false);
 		}
-		// Wir wollen die schicken runden Tabs von Eclipse 3.x
-		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
-		// Aber die Animationen sind eher nervend, nicht?
-		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS, false);
-
 	}
 
 	@Override

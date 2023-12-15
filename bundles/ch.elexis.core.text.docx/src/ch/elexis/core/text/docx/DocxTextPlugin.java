@@ -134,7 +134,7 @@ public class DocxTextPlugin implements ITextPlugin {
 		return false;
 	}
 
-	protected int findTextCount(String text) {
+	public int findTextCount(String text) {
 		if (currentDocument != null) {
 			try {
 				prepare();

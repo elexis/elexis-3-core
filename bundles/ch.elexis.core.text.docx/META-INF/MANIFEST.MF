@@ -13,6 +13,7 @@ Import-Package: ch.elexis.core.text,
  org.apache.commons.logging,
  org.slf4j
 Require-Bundle: ch.elexis.core
+Service-Component: OSGI-INF/ch.elexis.core.text.docx.service.DocxTextPluginService.xml
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.text.docx
 Bundle-ClassPath: lib/commons-compress-1.24.0.jar,
@@ -35,3 +36,4 @@ Bundle-ClassPath: lib/commons-compress-1.24.0.jar,
  lib/jakarta.activation-2.0.1.jar,
  .
 Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-ActivationPolicy: lazy

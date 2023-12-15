@@ -469,6 +469,15 @@ public class Messages {
 	public static String ReminderView_sortByDueDate = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDate;
 	public static String ReminderView_sortByDueDateAscending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateAscending;
 	public static String ReminderView_sortByDueDateDescending = ch.elexis.core.l10n.Messages.ReminderView_sortByDueDateDescending;
+	public static String ReminderView_WarningAllFilter = ch.elexis.core.l10n.Messages.ReminderView_WarningAllFilter;
+	public static String ShowNotYetDueReminders = ch.elexis.core.l10n.Messages.Reminders_ShowNotYetDueReminders;
+	public static String ShowNotYetDueReminders_Tooltip = ch.elexis.core.l10n.Messages.Reminders_ShowNotYetDueReminders_Tooltip;
+	public static String Reminders_PopupOnLogin = ch.elexis.core.l10n.Messages.Reminders_PopupOnLogin;
+	public static String Reminders_PopupOnLogin_ToolTip = ch.elexis.core.l10n.Messages.Reminders_PopupOnLogin_ToolTip;
+	public static String Reminders_PopupOnPatientSelection = ch.elexis.core.l10n.Messages.Reminders_PopupOnPatientSelection;
+	public static String Reminders_PopupOnPatientSelection_ToolTip = ch.elexis.core.l10n.Messages.Reminders_PopupOnPatientSelection_ToolTip;
+	public static String Reminders_AssignedToMe = ch.elexis.core.l10n.Messages.Reminders_AssignedToMe;
+	public static String Reminders_AssignedToMe_ToolTip = ch.elexis.core.l10n.Messages.Reminders_AssignedToMe_ToolTip;
 	public static String RezeptBlatt_4 = ch.elexis.core.l10n.Messages.RezeptBlatt_4;
 	public static String RezeptBlatt_6 = ch.elexis.core.l10n.Messages.RezeptBlatt_6;
 	public static String RezeptBlatt_4_Extended = ch.elexis.core.l10n.Messages.RezeptBlatt_4_Extended;
@@ -588,4 +597,13 @@ public class Messages {
 
 	public static String BestellView_WizardAskNewOrder = ch.elexis.core.l10n.Messages.BestellView_WizardAskNewOrder;
 	public static String BestellView_OrderIsClosed = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
+	public static String Core_Warning = ch.elexis.core.l10n.Messages.Core_Warning;
+	public static String Web_Favorit_Limit = ch.elexis.core.l10n.Messages.Web_Favorit_Limit;
+	public static String Web_Favorit_Limit_Text = ch.elexis.core.l10n.Messages.Web_Favorit_Limit_Text;
+	public static String Web_History_Delete = ch.elexis.core.l10n.Messages.Web_History_Delete;
+	public static String Web_Button_Back = ch.elexis.core.l10n.Messages.TimeMachineDisplay_back;
+	public static String Web_Button_Reload = ch.elexis.core.l10n.Messages.LaborViewPart_actionReload;
+	public static String Web_Button_Favoriten = ch.elexis.core.l10n.Messages.Web_Button_Favoriten;
+	public static String Web_Button_Forward = ch.elexis.core.l10n.Messages.Web_Button_Forward;
+
 }

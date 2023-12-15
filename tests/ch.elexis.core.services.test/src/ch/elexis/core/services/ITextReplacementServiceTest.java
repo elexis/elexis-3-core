@@ -31,12 +31,21 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 	public void patientReplacement() {
 		contextService.setActivePatient(AllServiceTests.getPatient());
 
-		String template = "Hallo [Patient.Name] [Patient.Vorname]";
+		String template = "Liebe[Patient:mw:r/ ] [Patient.Name] [Patient.Vorname],";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
-		assertEquals("Hallo Patient Test", replaced);
+		assertEquals("Liebe Patient Test,", replaced);
 
 	}
 
+	@Test
+	public void adressatReplacement() {
+		contextService.getRootContext().setNamed("Adressat", AllServiceTests.getMandator());
+
+		String template = "Liebe[Adressat:mw:r/ ] [Adressat.Vorname]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Lieber Test", replaced);
+	}
+	
 	@Test
 	public void terminReplacement() {
 		contextService.getRootContext().setTyped(appointment);
@@ -46,4 +55,12 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		assertEquals("12.12.2019 12:12 testSchedule", replaced);
 	}
 
+	@Test
+	public void mandantReplacement() {
+		contextService.setActiveMandator(AllServiceTests.getMandator());
+
+		String template = "[Mandant.Anschrift]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Herr\n" + "Test Mandant\n" + "Street 100\n" + "123 City\n", replaced);
+	}
 }

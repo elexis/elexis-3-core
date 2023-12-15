@@ -33,4 +33,12 @@ public class ContextServiceHolder {
 		}
 		return null;
 	}
+
+	public static IMandator getActiveMandatorOrThrow() {
+		if (contextService != null) {
+			return contextService.getActiveMandator()
+					.orElseThrow(() -> new IllegalStateException("No active IMandator found")); //$NON-NLS-1$
+		}
+		throw new IllegalStateException("No IContextService available"); //$NON-NLS-1$
+	}
 }
