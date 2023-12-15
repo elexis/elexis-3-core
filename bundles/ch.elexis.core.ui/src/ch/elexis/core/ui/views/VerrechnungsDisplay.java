@@ -372,13 +372,52 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		});
 		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				if (element instanceof IBilled) {
-					IBilled billed = (IBilled) element;
-					return Double.toString(billed.getAmount());
+		    @Override
+		    public String getText(Object element) {
+		        if (element instanceof IBilled) {
+		            IBilled billed = (IBilled) element;
+		            return Double.toString(billed.getAmount());
+		        }
+		        return StringUtils.EMPTY;
+		    }
+		});
+		ViewerComparator numberComparator = new ViewerComparator() {
+		    @Override
+		    public int compare(Viewer viewer, Object e1, Object e2) {
+		        if (e1 instanceof IBilled && e2 instanceof IBilled) {
+		            IBilled b1 = (IBilled) e1;
+		            IBilled b2 = (IBilled) e2;
+
+		            double amount1 = b1.getAmount();
+		            double amount2 = b2.getAmount();
+
+		            int result = Double.compare(amount1, amount2);
+
+		            return getSortedAscending(viewer) ? result : -result;
+		        }
+		        return 0;
+		    }
+
+		    private boolean getSortedAscending(Viewer viewer) {
+		        if (viewer.getData("numberSortAscending") != null) {
+		            return (Boolean) viewer.getData("numberSortAscending");
+		        }
+		        return true;
+		    }
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        viewer.setComparator(numberComparator);
+		        if (viewer.getComparator() == numberComparator) {
+					if (viewer.getData("numberSortAscending") != null) {
+						viewer.setData("numberSortAscending", !(Boolean) viewer.getData("numberSortAscending"));
+					} else {
+						viewer.setData("numberSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
 				}
-				return StringUtils.EMPTY;
 			}
 		});
 
