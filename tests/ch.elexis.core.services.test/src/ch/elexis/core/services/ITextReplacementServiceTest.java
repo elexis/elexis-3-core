@@ -55,4 +55,12 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		assertEquals("12.12.2019 12:12 testSchedule", replaced);
 	}
 
+	@Test
+	public void mandantReplacement() {
+		contextService.setActiveMandator(AllServiceTests.getMandator());
+
+		String template = "[Mandant.Anschrift]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Herr\n" + "Test Mandant\n" + "Street 100\n" + "123 City\n", replaced);
+	}
 }

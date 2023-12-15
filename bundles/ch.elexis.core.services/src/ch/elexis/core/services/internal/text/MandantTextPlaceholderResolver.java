@@ -61,24 +61,26 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 	private String replace(IMandator mandator, String lcAttribute) {
 
 		MandantAttribute mandantAttribut = searchEnum(MandantAttribute.class, lcAttribute);
-		switch (mandantAttribut) {
-		case Anrede:
-			if (mandator.isPerson()) {
-				return PersonFormatUtil
-						.getSalutation(CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get());
-			} else {
-				return StringUtils.EMPTY;
+		if (mandantAttribut != null) {
+			switch (mandantAttribut) {
+			case Anrede:
+				if (mandator.isPerson()) {
+					return PersonFormatUtil
+							.getSalutation(CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get());
+				} else {
+					return StringUtils.EMPTY;
+				}
+			case Name:
+				return mandator.getDescription1();
+			case Vorname:
+				return mandator.getDescription2();
+			case Titel:
+				if (mandator.isPerson()) {
+					return CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get().getTitel();
+				}
+			default:
+				break;
 			}
-		case Name:
-			return mandator.getDescription1();
-		case Vorname:
-			return mandator.getDescription2();
-		case Titel:
-			if (mandator.isPerson()) {
-				return CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get().getTitel();
-			}
-		default:
-			break;
 		}
 		// fallback to contact properties
 		if (contactTextPlaceholderResolver != null) {
