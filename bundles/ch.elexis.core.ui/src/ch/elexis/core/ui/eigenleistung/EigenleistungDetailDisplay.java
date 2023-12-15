@@ -31,6 +31,7 @@ import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
 
 public class EigenleistungDetailDisplay implements IDetailDisplay {
+	private Text textTarif;
 	private Text textCode;
 	private Text textBezeichnung;
 	private Text textEKP;
@@ -51,6 +52,16 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 	public Composite createDisplay(Composite parent, IViewSite site) {
 		Composite ret = new Composite(parent, SWT.None);
 		ret.setLayout(new GridLayout(2, false));
+
+		Label lblTarif = new Label(ret, SWT.NONE);
+		lblTarif.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblTarif.setText("Tarif");
+
+		textTarif = new Text(ret, SWT.BORDER);
+		textTarif.setData("TEST_COMP_NAME", "EigenleistungDetailTarif_txt"); //$NON-NLS-1$
+		textTarif.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTarif.setTextLimit(20);
+		textTarif.setEditable(false);
 
 		Label lblCode = new Label(ret, SWT.NONE);
 		lblCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -113,12 +124,14 @@ public class EigenleistungDetailDisplay implements IDetailDisplay {
 	public void display(Object obj) {
 		if (obj instanceof ICustomService) {
 			ICustomService customService = (ICustomService) obj;
+			textTarif.setText(customService.getCodeSystemCode());
 			textCode.setText((String) CoreModelServiceHolder.get().getEntityProperty("code", customService)); //$NON-NLS-1$
 			textBezeichnung.setText(customService.getText());
 			textEKP.setText(customService.getNetPrice().getCentsAsString());
 			textVKP.setText(customService.getPrice().getCentsAsString());
 			textZeit.setText(Integer.toString(customService.getMinutes()));
 		} else {
+			textTarif.setText(StringUtils.EMPTY);
 			textCode.setText(StringUtils.EMPTY);
 			textBezeichnung.setText(StringUtils.EMPTY);
 			textEKP.setText(StringUtils.EMPTY);

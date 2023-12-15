@@ -176,4 +176,16 @@ public interface IStock extends Identifiable, Deleteable {
 		return (driverUuid != null && driverUuid.length() > 0);
 	}
 
+	/**
+	 * 
+	 * @param value
+	 */
+	void setDescription(String value);
+
+	/**
+	 * 
+	 * @return
+	 */
+	String getDescription();
+
 } // IStock

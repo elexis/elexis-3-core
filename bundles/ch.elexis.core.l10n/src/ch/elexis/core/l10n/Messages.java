@@ -3927,10 +3927,19 @@ public class Messages extends NLS {
 	public static String ReminderView_sortByDueDateDescending;
 	public static String ReminderView_toggleSelectPatientActionTooltip;
 	public static String ReminderView_txtSearch_message;
+	public static String ReminderView_WarningAllFilter;
 	public static String RemindersComposite_btnNewButton_text_1;
 	public static String RemindersComposite_lblCheckingForActions_text;
 	public static String RemindersComposite_lblHeart_text;
 	public static String RemindersComposite_title_reminder;
+	public static String Reminders_ShowNotYetDueReminders;
+	public static String Reminders_ShowNotYetDueReminders_Tooltip;
+	public static String Reminders_PopupOnLogin;
+	public static String Reminders_PopupOnLogin_ToolTip;
+	public static String Reminders_PopupOnPatientSelection;
+	public static String Reminders_PopupOnPatientSelection_ToolTip;
+	public static String Reminders_AssignedToMe;
+	public static String Reminders_AssignedToMe_ToolTip;
 	public static String RemoveLicenseDialog_Query;
 	public static String RemoveLicenseDialog_QueryBody;
 	public static String RemoveLicenseJob_Removing;
@@ -4214,6 +4223,7 @@ public class Messages extends NLS {
 	public static String ServiceDiagnosis_UpTooltip;
 	public static String ServiceDiagnosis_View;
 	public static String Services_ExplanationLine1;
+	public static String Service_Tarif;
 	public static String SetNonPathologic;
 	public static String SetPathologic;
 	public static String Settings_AutoCreateLabItem;
@@ -4987,6 +4997,12 @@ public class Messages extends NLS {
 	public static String AgendaFarben_Link;
 	public static String Agenda_Mandator;
 	public static String Prefs_DefaultMessageRecipient;
+	public static String Web_Favorit_Limit;
+	public static String Web_Favorit_Limit_Text;
+	public static String Web_History_Delete;
+	public static String Web_Button_Favoriten;
+	public static String Web_Button_Forward;
+	public static String Inputfield_empty;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

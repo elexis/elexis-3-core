@@ -161,6 +161,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, value, true);
 				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION3, COMPARATOR.LIKE, value, true);
+				query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, value, true);
 				query.andJoinGroups();
 				result = query.execute();
 			} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[0])) {

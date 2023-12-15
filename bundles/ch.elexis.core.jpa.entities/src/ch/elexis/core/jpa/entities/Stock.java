@@ -74,7 +74,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	 * articles.
 	 */
 	@OneToOne
-	@JoinColumn(name = "OWNER", insertable = false)
+	@JoinColumn(name = "OWNER")
 	Kontakt owner;
 
 	/**

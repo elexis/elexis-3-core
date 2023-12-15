@@ -1,11 +1,13 @@
 package ch.elexis.core.services;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -20,6 +22,7 @@ import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
+import ch.elexis.core.test.context.TestContext;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -53,6 +56,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 
 		createTestMandantPatientFallBehandlung();
 		context = ContextServiceHolder.get().createNamedContext("create_document_context");
+		((TestContext) context).setParent(null);
 	}
 
 	@After
@@ -68,6 +72,17 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		OsgiServiceUtil.ungetService(documentService);
 		OsgiServiceUtil.ungetService(documentStore);
 		OsgiServiceUtil.ungetService(textPlugin);
+	}
+
+	@Test
+	public void adressatValidation() throws Exception {
+		Map<String, Boolean> validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		assertFalse(validationResult.get("[Adressat.Vorname]"));
+		context.setNamed("Adressat", testMandators.get(0));
+		validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		assertTrue(validationResult.get("[Adressat.Vorname]"));
 	}
 
 	@Test
@@ -95,6 +110,38 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		int foundCount = getFindTextCount("Armer");
 		assertTrue(foundCount > 0);
 		foundCount = getFindTextCount(PersonFormatUtil.getDateOfBirth(testPatients.get(0)));
+		assertTrue(foundCount > 0);
+
+		saveToTempFileAndDelete(createdDocument);
+	}
+
+	@Test
+	public void patientValidation() throws Exception {
+		Map<String, Boolean> validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		for (String key : validationResult.keySet()) {
+			if (key.startsWith("[Patient.")) {
+				assertFalse(validationResult.get(key));
+			}
+		}
+		context.setTyped(testPatients.get(0));
+		validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		for (String key : validationResult.keySet()) {
+			if (key.startsWith("[Patient.")) {
+				assertTrue(validationResult.get(key));
+			}
+		}
+	}
+
+	@Test
+	public void mandantReplacement() throws Exception {
+		context.setTyped(testMandators.get(0));
+
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		assertNotNull(createdDocument);
+
+		int foundCount = getFindTextCount("mandator1");
 		assertTrue(foundCount > 0);
 
 		saveToTempFileAndDelete(createdDocument);

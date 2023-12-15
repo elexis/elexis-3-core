@@ -1,7 +1,7 @@
 # Build script used by gitlab.medelexis.ch
 variables:
    ORIGIN_BRANCH: "master" 
-   TARGET: "2023-03-java17"
+   TARGET: "2023-09-java17"
    DOCKER_BUILD_IMAGE: "gitlab.medelexis.ch:4567/elexis/docker-build:${TARGET}"
 
 stages:

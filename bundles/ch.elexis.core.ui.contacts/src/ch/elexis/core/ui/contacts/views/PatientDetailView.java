@@ -18,7 +18,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -26,7 +26,8 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -131,7 +132,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	@Inject
 	void activePatient(IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
-			IPersistentObject deselected = (IPersistentObject) patientObservable.getValue();
+			IPersistentObject deselected = patientObservable.getValue();
 			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
 			releaseAndRefreshLock(deselected, ToggleCurrentPatientLockHandler.COMMAND_ID);
 		}, scrldfrm);
@@ -141,7 +142,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
 
@@ -229,6 +230,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
 
+				@Override
 				public void hyperlinkActivated(final String l) {
 					Patient sp = ElexisEventDispatcher.getSelectedPatient();
 					if (sp == null) {
@@ -254,6 +256,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					}
 				}
 
+				@Override
 				public String getLabel(Object o) {
 					BezugsKontakt bezugsKontakt = (BezugsKontakt) o;
 
@@ -309,6 +312,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
 					new ListDisplay.LDListener() {
+						@Override
 						public void hyperlinkActivated(final String l) {
 							Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 							if (actPatient != null) {
@@ -321,6 +325,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 							}
 						}
 
+						@Override
 						public String getLabel(Object o) {
 							ZusatzAdresse address = (ZusatzAdresse) o;
 							if (address != null) {
@@ -460,6 +465,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		GlobalEventDispatcher.addActivationListener(this, this);
 	}
 
+	@Override
 	public void dispose() {
 		toolkit.dispose();
 		super.dispose();
@@ -536,9 +542,9 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	}
 
 	private void bindValue(Text text, String property, DataBindingContext bindingContext) {
-		IObservableValue textObserveWidget = SWTObservables.observeDelayedValue(5,
-				SWTObservables.observeText(text, SWT.Modify));
-		IObservableValue observeValue = PojoObservables.observeDetailValue(patientObservable, property, String.class);
+		ISWTObservableValue<String> textObserveWidget = WidgetProperties.text(SWT.Modify).observe(text);
+		IObservableValue<Object> observeValue = PojoProperties.value(Patient.class, property)
+				.observeDetail(patientObservable);
 		bindingContext.bindValue(textObserveWidget, observeValue, null, null);
 	}
 
@@ -546,7 +552,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		removeZAAction = new Action(Messages.Patientenblatt2_removeAddress) {
 			@Override
 			public void run() {
-				BezugsKontakt a = (BezugsKontakt) inpZusatzAdresse.getSelection();
+				BezugsKontakt a = inpZusatzAdresse.getSelection();
 				a.delete();
 				setPatient(ElexisEventDispatcher.getSelectedPatient());
 			}
@@ -556,7 +562,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 				Messages.Patientenblatt2_showAddress) {
 			@Override
 			public void doRun() {
-				Kontakt a = Kontakt.load(((BezugsKontakt) inpZusatzAdresse.getSelection()).get(BezugsKontakt.OTHER_ID));
+				Kontakt a = Kontakt.load(inpZusatzAdresse.getSelection().get(BezugsKontakt.OTHER_ID));
 				KontaktDetailDialog kdd = new KontaktDetailDialog(scrldfrm.getShell(), a, bLocked);
 				if (kdd.open() == Dialog.OK) {
 					setPatient(ElexisEventDispatcher.getSelectedPatient());
@@ -570,7 +576,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			public void doRun() {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
 				if (actPatient != null && actPatient.exists()) {
-					BezugsKontakt bezugsKontakt = (BezugsKontakt) inpZusatzAdresse.getSelection();
+					BezugsKontakt bezugsKontakt = inpZusatzAdresse.getSelection();
 					if (bezugsKontakt != null) {
 						Kontakt k = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 						BezugsKontaktAuswahl bza = new BezugsKontaktAuswahl(actPatient.getLabel(true),
@@ -590,7 +596,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 		removeAdditionalAddressAction = new Action(Messages.Patientenblatt2_removeAddress) {
 			@Override
 			public void run() {
-				ZusatzAdresse a = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresse a = additionalAddresses.getSelection();
 				a.delete();
 				setPatient(ElexisEventDispatcher.getSelectedPatient());
 
@@ -601,7 +607,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			@Override
 			public void run() {
 				Patient actPatient = ElexisEventDispatcher.getSelectedPatient();
-				ZusatzAdresse zusatzAdresse = (ZusatzAdresse) additionalAddresses.getSelection();
+				ZusatzAdresse zusatzAdresse = additionalAddresses.getSelection();
 				ZusatzAdresseEingabeDialog aed = new ZusatzAdresseEingabeDialog(scrldfrm.getShell(), actPatient,
 						zusatzAdresse, bLocked);
 				if (aed.open() == Dialog.OK) {

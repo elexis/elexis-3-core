@@ -82,6 +82,16 @@ public interface IFhirTransformer<F, L> {
 	 */
 	public boolean matchesTypes(Class<?> fhirClazz, Class<?> localClazz);
 
+	/**
+	 * Load the local Object for the provided FHIR reference String.
+	 * 
+	 * @param fhirReference
+	 * @return
+	 */
+	public default Optional<? extends Identifiable> getLocalObjectForReference(String fhirReference) {
+		return Optional.empty();
+	}
+
 	default Identifier getElexisObjectIdentifier(Identifiable dbObject) {
 		Identifier identifier = new Identifier();
 		identifier.setSystem(IdentifierSystem.ELEXIS_OBJID.getSystem());

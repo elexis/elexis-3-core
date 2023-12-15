@@ -22,4 +22,12 @@ package ch.elexis.core.model;
  * @generated
  */
 public interface ICustomService extends IService {
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setCodeSystemCode(String value);
 } // ICustomService
