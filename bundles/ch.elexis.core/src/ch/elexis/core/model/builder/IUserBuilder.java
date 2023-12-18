@@ -1,6 +1,6 @@
 package ch.elexis.core.model.builder;
 
-import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
@@ -8,7 +8,7 @@ import ch.elexis.core.services.IModelService;
 
 public class IUserBuilder extends AbstractBuilder<IUser> {
 
-	public IUserBuilder(IModelService modelService, String userId, IPerson contact) {
+	public IUserBuilder(IModelService modelService, String userId, IContact contact) {
 		super(modelService);
 
 		object = modelService.create(IUser.class);
