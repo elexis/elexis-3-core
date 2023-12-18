@@ -124,8 +124,9 @@ public class BrowserView extends ViewPart {
 	}
 
 	public void goBack() {
-		if (currentHistoryIndex > 0) {
-			currentHistoryIndex--;
+
+		if (currentHistoryIndex < history.size() - 1) {
+			currentHistoryIndex++;
 			String url = history.get(currentHistoryIndex);
 			browser.setUrl(url);
 			addressBarCombo.setText(url);
@@ -133,8 +134,8 @@ public class BrowserView extends ViewPart {
 	}
 
 	public void goForward() {
-		if (currentHistoryIndex < history.size() - 1) {
-			currentHistoryIndex++;
+		if (currentHistoryIndex > 0) {
+			currentHistoryIndex--;
 			String url = history.get(currentHistoryIndex);
 			browser.setUrl(url);
 			addressBarCombo.setText(url);
