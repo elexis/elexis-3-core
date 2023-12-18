@@ -111,16 +111,14 @@ public class BrowserView extends ViewPart {
 
 	private void updateHistory(String url) {
 		if (currentHistoryIndex < 0 || !history.get(currentHistoryIndex).equals(url)) {
-			while (history.size() >= MAX_HISTORY_SIZE) {
-				history.removeFirst();
-			}
-			while (history.size() > currentHistoryIndex + 1) {
+			if (history.size() >= MAX_HISTORY_SIZE) {
 				history.removeLast();
+				addressBarCombo.remove(addressBarCombo.getItemCount() - 1);
 			}
-			history.add(url);
-			currentHistoryIndex = history.size() - 1;
+			history.addFirst(url);
+			currentHistoryIndex = 0;
 			if (addressBarCombo.indexOf(url) < 0) {
-				addressBarCombo.add(url);
+				addressBarCombo.add(url, 0);
 			}
 		}
 	}
@@ -158,11 +156,12 @@ public class BrowserView extends ViewPart {
 		String historyString = ConfigServiceHolder.getUser(BROWSER_HISTORY_KEY, "");
 		if (!historyString.isEmpty()) {
 			String[] urls = historyString.split(";");
-			for (String url : urls) {
-				history.add(url);
-				addressBarCombo.add(url);
+			for (int i = urls.length - 1; i >= 0; i--) {
+				String url = urls[i];
+				history.addFirst(url);
+				addressBarCombo.add(url, 0);
 			}
-			currentHistoryIndex = history.size() - 1;
+			currentHistoryIndex = 0;
 		}
 	}
 
