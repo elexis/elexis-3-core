@@ -1,5 +1,8 @@
 package ch.elexis.core.ui.views;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -9,7 +12,6 @@ import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -37,7 +39,7 @@ public class BrowserView extends ViewPart {
 	private static final String SEARCH_ENGINE_URL = "https://www.google.com/search?q=";
 	private LinkedList<String> favorites = new LinkedList<>();
 	private Composite favoritesBar;
-	private static final int MAX_FAVORITES = 12;
+	private static final int MAX_FAVORITES = 10;
 	private static final int MAX_HISTORY_SIZE = 20;
 
 	@Override
@@ -73,6 +75,12 @@ public class BrowserView extends ViewPart {
 				}
 			}
 		});
+		addressBarCombo.addListener(SWT.Traverse, event -> {
+			if (event.detail == SWT.TRAVERSE_RETURN) {
+				String enteredText = addressBarCombo.getText();
+				loadUrlOrSearch(enteredText);
+			}
+		});
 		addressBarCombo.addListener(SWT.MenuDetect, event -> createAddressBarContextMenu());
 		Button favoritesButton = createButton(parent, Images.IMG_STAR.getImage(), Messages.Web_Button_Favoriten,
 				b -> addFavorite(browser.getUrl()));
@@ -90,9 +98,14 @@ public class BrowserView extends ViewPart {
 			@Override
 			public void changed(LocationEvent event) {
 				Display.getCurrent().asyncExec(() -> {
-					addressBarCombo.setText(event.location);
-					updateHistory(event.location);
-					ConfigServiceHolder.setUser(LAST_URL_KEY, event.location);
+					String newUrl = event.location;
+					addressBarCombo.setText(newUrl);
+					if (currentHistoryIndex >= 0 && !newUrl.equals(history.get(currentHistoryIndex))) {
+						history.set(currentHistoryIndex, newUrl);
+					} else {
+						updateHistory(newUrl);
+					}
+					ConfigServiceHolder.setUser(LAST_URL_KEY, newUrl);
 				});
 			}
 
@@ -184,7 +197,7 @@ public class BrowserView extends ViewPart {
 			Button favoriteButton = createButton(favoritesBar, Images.IMG_STAR.getImage(), url, b -> {
 				browser.setUrl(url);
 				updateHistory(url);
-			}, new RowData(100, SWT.DEFAULT));
+			});
 			favoriteButton.setText(getShortenedUrl(url));
 			favoriteButton.setMenu(createFavoriteContextMenu(favoriteButton, url));
 			favoritesBar.layout();
@@ -196,9 +209,18 @@ public class BrowserView extends ViewPart {
 		try {
 			java.net.URI uri = new java.net.URI(url);
 			String domain = uri.getHost();
-			return domain.startsWith("www.") ? domain.substring(4) : domain;
+			domain = domain.startsWith("www.") ? domain.substring(4) : domain;
+			if (domain.length() > 20) {
+				return domain.substring(0, 13) + "...";
+			} else {
+				return domain;
+			}
 		} catch (Exception e) {
-			return url;
+			if (url.length() > 15) {
+				return url.substring(0, 13) + "...";
+			} else {
+				return url;
+			}
 		}
 	}
 
@@ -293,5 +315,29 @@ public class BrowserView extends ViewPart {
 		}
 		button.addListener(SWT.Selection, e -> onClick.accept(button));
 		return button;
+	}
+
+	private void loadUrlOrSearch(String enteredText) {
+		String urlToLoad = isValidUrl(enteredText) ? normalizeUrl(enteredText)
+				: SEARCH_ENGINE_URL + encodeURIComponent(enteredText);
+		if (isUrlReachable(urlToLoad)) {
+			browser.setUrl(urlToLoad);
+			updateHistory(urlToLoad);
+		} else {
+			browser.setUrl(SEARCH_ENGINE_URL + encodeURIComponent(enteredText));
+		}
+	}
+
+	private boolean isUrlReachable(String urlString) {
+		try {
+			URL url = new URL(urlString);
+			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			urlConn.setConnectTimeout(1000);
+			urlConn.setReadTimeout(1500);
+			urlConn.connect();
+			return (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }
