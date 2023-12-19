@@ -190,4 +190,10 @@ public class CsvUser implements IUser {
 	public boolean isInternal() {
 		return false;
 	}
+
+	@Override
+	public void setRoles(List<IRole> roles) {
+		// TODO Auto-generated method stub
+		
+	}
 }

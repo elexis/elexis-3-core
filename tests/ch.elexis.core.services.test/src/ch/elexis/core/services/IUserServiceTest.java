@@ -6,8 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
@@ -67,6 +71,24 @@ public class IUserServiceTest extends AbstractServiceTest {
 		Optional<IMandator> defaultExecutiveDoctorWorkingFor = service
 				.getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
 		assertEquals(testMandators.get(0), defaultExecutiveDoctorWorkingFor.get());
+	}
+
+	@Test
+	public void setRoles() {
+		List<IRole> roles = user.getRoles();
+		assertEquals(2, roles.size());
+		List<String> _roles = user.getRoles().stream().map(r -> r.getId()).collect(Collectors.toList());
+		assertTrue(_roles.contains("user"));
+		assertTrue(_roles.contains("doctor"));
+
+		service.setUserRoles(user, Collections.singleton("user"));
+
+		assertEquals("user", user.getRoles().get(0).getId());
+
+		Set<String> totalUserRoles = new HashSet<String>();
+		totalUserRoles.add("user");
+		totalUserRoles.add("doctor");
+		service.setUserRoles(user, totalUserRoles);
 	}
 
 }

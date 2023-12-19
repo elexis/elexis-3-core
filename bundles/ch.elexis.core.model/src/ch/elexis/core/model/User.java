@@ -148,4 +148,12 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public boolean isInternal() {
 		return true;
 	}
+
+	@Override
+	public void setRoles(List<IRole> roles) {
+		Set<Role> _roles = roles.stream().map(role -> (Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity())
+				.collect(Collectors.toSet());
+		getEntityMarkDirty().setRoles(_roles);
+	}
+
 }

@@ -140,6 +140,9 @@
         <genParameters ecoreParameter="model.ecore#//IUser/login/password"/>
       </genOperations>
       <genOperations ecoreOperation="model.ecore#//IUser/isInternal"/>
+      <genOperations ecoreOperation="model.ecore#//IUser/setRoles">
+        <genParameters ecoreParameter="model.ecore#//IUser/setRoles/roles"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/typ"/>

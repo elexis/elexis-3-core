@@ -5,6 +5,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -125,4 +127,18 @@ public class UserService implements IUserService {
 		return qre.execute();
 	}
 
+	@Override
+	public Set<String> setUserRoles(IUser user, Set<String> userRoles) {
+		List<IRole> targetUserRoleSet = new LinkedList<IRole>();
+		for (String roleId : userRoles) {
+			Optional<IRole> _role = modelService.load(roleId, IRole.class);
+			if (_role.isPresent()) {
+				targetUserRoleSet.add(_role.get());
+			}
+		}
+		user.setRoles(targetUserRoleSet);
+		modelService.save(user);
+		return targetUserRoleSet.stream().map(r -> r.getId()).collect(Collectors.toSet());
+	}
+	
 }

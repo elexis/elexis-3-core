@@ -6,6 +6,7 @@ import java.util.Set;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 
 public interface IUserService {
@@ -72,4 +73,16 @@ public interface IUserService {
 	 */
 	public List<IUser> getUsersByAssociatedContact(IContact contact);
 
+	/**
+	 * Applies the given set of {@link IRole} id entries to the user. Only roles
+	 * known to the local system are applied. Effectively overwrites all existing
+	 * role assignments.
+	 * 
+	 * @param user      to apply roleSet to
+	 * @param userRoles will be the new total set of roles assigned to user
+	 * @return the set effectively applied, differs from userRoles if certain roles
+	 *         could not be applied
+	 */
+	public Set<String> setUserRoles(IUser user, Set<String> userRoles);
+	
 }
