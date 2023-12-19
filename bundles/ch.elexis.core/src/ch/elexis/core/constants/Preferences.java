@@ -189,6 +189,10 @@ public class Preferences {
 	public static final String INVENTORY_DEFAULT_ARTICLE_PROVIDER = "inventory/defaultArticleProvider"; //$NON-NLS-1$
 	public static final String INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES = "inventory/machineOutlayPartialPackages"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT = false;
+	// only accept articles for stocking that are known to the stock (i.e. there
+	// exist a stock entry in the machine stock)
+	public static final String INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES = "inventory/machineStoreOnlyStockedArticles"; //$NON-NLS-1$
+	public static final boolean INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES_DEFAULT = false;
 	// Should the stock commissioning system suspend its outlay
 	public static final String INVENTORY_MACHINE_SUSPEND_OUTLAY = "inventory/machineOutlaySuspended"; //$NON-NLS-1$
 	public static final boolean INVENTORY_MACHINE_SUSPEND_OUTLAY_DEFAULT = false;

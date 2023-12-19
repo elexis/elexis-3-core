@@ -4269,6 +4269,7 @@ public class Messages extends NLS {
 	public static String StickyNotesView_StickyNotesNameDash;
 	public static String StockDetailComposite_availableInStock;
 	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
+	public static String StockManagementPreferencePage_btnStoreOnlyStockeArticles_text;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
 	public static String StockManagementPreferencePage_group_text;
 	public static String StockManagementPreferencePage_lblCode_toolTipText;
