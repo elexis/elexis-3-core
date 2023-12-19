@@ -47,6 +47,9 @@ public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholder
 	@Override
 	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
 		IMandator mandantor = context.getTyped(IMandator.class).orElse(null);
+		if (mandantor == null) {
+			mandantor = (IMandator) context.getNamed(getSupportedType()).orElse(null);
+		}
 		if (mandantor != null) {
 			return Optional.of(mandantor.getBiller());
 		}

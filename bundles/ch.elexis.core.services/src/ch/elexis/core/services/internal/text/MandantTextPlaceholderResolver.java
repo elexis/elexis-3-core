@@ -53,9 +53,14 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 		return Optional.empty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
-		return context.getTyped(IMandator.class);
+		Optional<IMandator> ret = context.getTyped(IMandator.class);
+		if (ret.isEmpty()) {
+			ret = (Optional<IMandator>) context.getNamed(getSupportedType());
+		}
+		return ret;
 	}
 
 	private String replace(IMandator mandator, String lcAttribute) {

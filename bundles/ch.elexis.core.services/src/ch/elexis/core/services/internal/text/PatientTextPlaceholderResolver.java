@@ -54,9 +54,14 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 		return Optional.empty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
-		return context.getTyped(IPatient.class);
+		Optional<IPatient> ret = context.getTyped(IPatient.class);
+		if (ret.isEmpty()) {
+			ret = (Optional<IPatient>) context.getNamed(getSupportedType());
+		}
+		return ret;
 	}
 
 	private String replace(IPatient patient, String lcAttribute) {

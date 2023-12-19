@@ -41,9 +41,14 @@ public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 		return Optional.empty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<? extends Identifiable> getIdentifiable(IContext context) {
-		return context.getTyped(IAppointment.class);
+		Optional<IAppointment> ret = context.getTyped(IAppointment.class);
+		if (ret.isEmpty()) {
+			ret = (Optional<IAppointment>) context.getNamed(getSupportedType());
+		}
+		return ret;
 	}
 
 	private String replace(IAppointment appointment, String lcAttribute) {
