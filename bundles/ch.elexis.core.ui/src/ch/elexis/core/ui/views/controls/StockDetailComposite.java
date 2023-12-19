@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
@@ -48,6 +49,7 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 
@@ -86,10 +88,12 @@ public class StockDetailComposite extends Composite {
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(checkboxTableViewer, SWT.NONE);
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
 				if (stock == null) {
@@ -108,14 +112,16 @@ public class StockDetailComposite extends Composite {
 		StockEntryEditingSupport sees = new StockEntryEditingSupport(checkboxTableViewer, StockEntryEditingSupport.MIN);
 		tvcMin.setEditingSupport(sees);
 		tvcMin.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -137,13 +143,15 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.CURR);
 		tvcIst.setEditingSupport(seesIst);
 		tvcIst.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -164,13 +172,15 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.MAX);
 		tvcMax.setEditingSupport(seesMax);
 		tvcMax.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -191,13 +201,15 @@ public class StockDetailComposite extends Composite {
 				StockEntryEditingSupport.FRAC);
 		tvcFraction.setEditingSupport(seesFrac);
 		tvcFraction.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -218,7 +230,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected void setValue(Object element, Object value) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return;
 				}
@@ -234,7 +246,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected Object getValue(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -254,7 +266,7 @@ public class StockDetailComposite extends Composite {
 			@Override
 			protected boolean canEdit(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return false;
 				}
@@ -262,13 +274,15 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 		tvcProvider.setLabelProvider(new ColumnLabelProvider() {
+			@Override
 			public Image getImage(Object element) {
 				return null;
 			}
 
+			@Override
 			public String getText(Object element) {
 				IStock stock = (IStock) element;
-				IArticle art = (IArticle) wvArtikel.getValue();
+				IArticle art = wvArtikel.getValue();
 				if (stock == null || art == null) {
 					return null;
 				}
@@ -293,14 +307,19 @@ public class StockDetailComposite extends Composite {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				if (wvArtikel.getValue() instanceof IArticle) {
 					IStock stock = (IStock) event.getElement();
-					IArticle art = (IArticle) wvArtikel.getValue();
-					if (stock != null && art != null && !stock.isCommissioningSystem()) {
-						if (event.getChecked()) {
-							StockServiceHolder.get().storeArticleInStock(stock,
-									StoreToStringServiceHolder.getStoreToString(art));
-						} else {
-							StockServiceHolder.get().unstoreArticleFromStock(stock,
-									StoreToStringServiceHolder.getStoreToString(art));
+					IArticle art = wvArtikel.getValue();
+					if (stock != null && art != null) {
+						boolean blockModification = stock.isCommissioningSystem() && !ConfigServiceHolder.getGlobal(
+								Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+								Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES_DEFAULT);
+						if (!blockModification) {
+							if (event.getChecked()) {
+								StockServiceHolder.get().storeArticleInStock(stock,
+										StoreToStringServiceHolder.getStoreToString(art));
+							} else {
+								StockServiceHolder.get().unstoreArticleFromStock(stock,
+										StoreToStringServiceHolder.getStoreToString(art));
+							}
 						}
 					}
 				}
@@ -368,7 +387,7 @@ public class StockDetailComposite extends Composite {
 				? StoreToStringServiceHolder.getStoreToString(wvArtikel.getValue())
 				: null;
 		if (wvArtikel.getValue() instanceof IArticle) {
-			enabled = (!((IArticle) wvArtikel.getValue()).isProduct());
+			enabled = (!wvArtikel.getValue().isProduct());
 		}
 
 		table.setEnabled(enabled);
@@ -464,7 +483,7 @@ public class StockDetailComposite extends Composite {
 			if (stock == null || wvArtikel.getValue() == null) {
 				return;
 			}
-			IStockEntry stockEntry = (IStockEntry) stockEntries.get(stock);
+			IStockEntry stockEntry = stockEntries.get(stock);
 			if (stockEntry == null) {
 				return;
 			}

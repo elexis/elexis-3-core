@@ -42,7 +42,6 @@ public class StockSelectorDialog extends ListDialog {
 
 		@Override
 		public Color getForeground(Object element) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
