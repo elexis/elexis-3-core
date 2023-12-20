@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -81,9 +82,10 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			sendMailDialog.setText(text);
 		}
 
+		Boolean doSend = Boolean.TRUE;
 		String doSendString = event.getParameter("ch.elexis.core.mail.ui.sendMail.doSend");
-		if (doSendString != null) {
-			Boolean doSend = Boolean.valueOf(doSendString);
+		if (StringUtils.isNotBlank(doSendString)) {
+			doSend = Boolean.valueOf(doSendString);
 			sendMailDialog.doSend(doSend);
 		}
 		if (sendMailDialog.open() == Dialog.OK) {
@@ -93,11 +95,14 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			message.setDocuments(sendMailDialog.getDocumentsString());
 			taskDescriptor = TaskUtil
 					.createSendMailTaskDescriptor(sendMailDialog.getAccount().getId(), message);
-			ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor", taskDescriptor.get());
-			if (!Boolean.valueOf(doSendString) && taskDescriptor.isPresent()) {
+			if (doSend && taskDescriptor.isPresent()) {
+				ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor", null);
 				ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event),
 						taskDescriptor.get());
 				return task.getState() == TaskState.COMPLETED;
+			} else if (!doSend) {
+				ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor",
+						taskDescriptor.get());
 			}
 		}
 		return false;
