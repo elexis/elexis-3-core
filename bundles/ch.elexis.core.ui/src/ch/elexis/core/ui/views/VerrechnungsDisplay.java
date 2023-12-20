@@ -405,16 +405,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		};
 
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				boolean ascending = getSortedAscending(viewer);
-				viewer.setData("priceSortAscending", !ascending);
-				viewer.setComparator(priceComparator);
-				viewer.refresh();
-			}
-		});
-
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
