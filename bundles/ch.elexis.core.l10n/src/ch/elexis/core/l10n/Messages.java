@@ -2937,6 +2937,13 @@ public class Messages extends NLS {
 	public static String MediDetailDialog_morning;
 	public static String MediDetailDialog_night;
 	public static String MediDetailDialog_pleaseEnterPrescription;
+	public static String Mediorder_medication;
+	public static String MediOrder_medication_dsc;
+	public static String MediOrder_medication_select;
+	public static String MediOrder_medication_amount;
+	public static String MediOrder_medication_dosage;
+	public static String MediOrder_medication_reason;
+	public static String MediOrder_medication_instruction;
 	public static String MediPortAbstractPrefPage_error_title_LoadConfiguration;
 	public static String MediPortAbstractPrefPage_lbl_APost;
 	public static String MediPortAbstractPrefPage_lbl_BPost;
