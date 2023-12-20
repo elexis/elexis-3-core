@@ -405,8 +405,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		btnMachineStoreOnlyStockArticles
 				.setText(Messages.StockManagementPreferencePage_btnStoreOnlyStockeArticles_text);
 		boolean storeOnlyStockedArticles = ConfigServiceHolder.getGlobal(
-				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
-				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES_DEFAULT);
 		btnMachineStoreOnlyStockArticles.setSelection(storeOnlyStockedArticles);
 
 		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
