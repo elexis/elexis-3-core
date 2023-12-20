@@ -372,7 +372,7 @@ public class StockService implements IStockService {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(stockEntry, 1,
 					new NullProgressMonitor());
 			if (lr.isOk()) {
-				CoreModelServiceHolder.get().delete(stockEntry);
+				CoreModelServiceHolder.get().remove(stockEntry);
 				LocalLockServiceHolder.get().releaseLock((stockEntry));
 			} else {
 				log.warn("Could not unstore article [{}]", article);
