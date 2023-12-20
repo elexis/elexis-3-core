@@ -33,7 +33,7 @@
 		"ch.elexis.core.model.IPrescription": "cruvd:aobo",
 		"ch.elexis.core.model.ISickCertificate": "cruvd",
 		"ch.elexis.core.model.ISticker": "cruvd",
-		"ch.elexis.core.model.IStockEntry": "cruvd",
+		"ch.elexis.core.model.IStockEntry": "cruvdz",
 		"ch.elexis.core.model.IUser": "cruvdz",
 		"ch.elexis.omnivore.model.IDocumentTemplate": "rv"
 	}
