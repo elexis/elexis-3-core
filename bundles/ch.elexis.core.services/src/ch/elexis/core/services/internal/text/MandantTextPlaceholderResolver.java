@@ -10,10 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
@@ -83,6 +85,18 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 				if (mandator.isPerson()) {
 					return CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get().getTitel();
 				}
+			case TarmedSpezialität:
+				return (String) mandator.getExtInfo("TarmedSpezialität");
+			case EAN:
+				IXid xid = mandator.getXid(XidConstants.EAN);
+				if (xid != null) {
+					return xid.getDomainId();
+				}
+			case KSK:
+				xid = mandator.getXid(XidConstants.DOMAIN_KSK);
+				if (xid != null) {
+					return xid.getDomainId();
+				}
 			default:
 				break;
 			}
@@ -102,7 +116,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 
 	private enum MandantAttribute implements ILocalizedEnum {
 		Name("Nachname des Mandanten"), Vorname("Vorname des Mandanten"), Titel("Titel des Mandanten"),
-		Anrede("Anrede des Mandanten");
+		Anrede("Anrede des Mandanten"), TarmedSpezialität("Tarmed Spezialität des Mandanten"), EAN("EAN des Mandanten"),
+		KSK("KSK des Mandanten");
 
 		final String description;
 

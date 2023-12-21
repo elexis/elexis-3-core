@@ -43,7 +43,8 @@ public interface ITextPlaceholderResolver {
 	Optional<String> replaceByTypeAndAttribute(IContext context, String attribute);
 
 	/**
-	 * Case-Insensitive load of an enumeration value
+	 * Case-Insensitive load of an enumeration value. Characters not allowed for
+	 * {@link Enum} names are replaced with '_'.
 	 *
 	 * @param <T>
 	 * @param enumeration
@@ -51,6 +52,7 @@ public interface ITextPlaceholderResolver {
 	 * @return
 	 */
 	default <T extends Enum<?>> T searchEnum(Class<T> enumeration, String search) {
+		search = search.replace('-', '_');
 		for (T each : enumeration.getEnumConstants()) {
 			if (each.name().compareToIgnoreCase(search) == 0) {
 				return each;

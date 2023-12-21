@@ -77,10 +77,14 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 				return patient.getFirstName();
 			case Geburtsdatum:
 				return PersonFormatUtil.getDateOfBirth(patient);
+			case Geschlecht:
+				return Character.toString(PersonFormatUtil.getGenderCharLocalized(patient));
 			case Diagnosen:
 				return StringUtils.defaultString(patient.getDiagnosen());
 			case Allergien:
 				return StringUtils.defaultString(patient.getAllergies());
+			case PersAnamnese:
+				return StringUtils.defaultString(patient.getPersonalAnamnese());
 			case Medikation:
 				return PatientFormatUtil.getMedicationText(patient, EntryType.FIXED_MEDICATION);
 			case SymptomatischeMedikation:
@@ -106,10 +110,10 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 
 	private enum PatientAttribute implements ILocalizedEnum {
 		Name("Nachname des Patienten"), Vorname("Vorname des Patienten"), Anrede("Anrede des Patienten"),
-		Geburtsdatum("Geburtsdatum des Patienten"), Diagnosen("Diagnosen des Patienten"),
-		Allergien("Allergien des Patienten"), Medikation("Medikation des Patienten"),
-		SymptomatischeMedikation("Symptomatische Medikation des Patienten"),
-		ReserveMedikation("Reserve Medikation des Patienten");
+		Geburtsdatum("Geburtsdatum des Patienten"), Geschlecht("Geschlecht des Patienten"),
+		Diagnosen("Diagnosen des Patienten"), Allergien("Allergien des Patienten"),
+		Medikation("Medikation des Patienten"), SymptomatischeMedikation("Symptomatische Medikation des Patienten"),
+		ReserveMedikation("Reserve Medikation des Patienten"), PersAnamnese("Persönliche Anamnese des Patienten");
 
 		final String description;
 
