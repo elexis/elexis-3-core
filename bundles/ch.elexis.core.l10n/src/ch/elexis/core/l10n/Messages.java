@@ -1080,6 +1080,8 @@ public class Messages extends NLS {
 	public static String Core_Stock;
 	public static String Core_Stock_Max_Articles_per_item;
 	public static String Core_Stock_Min_Articles_per_item;
+	public static String Core_Stock_delete_stock;
+	public static String CoreCore_Stock_delete_stock_dsc;
 	public static String Core_Street;
 	public static String Core_Subject;
 	public static String Core_Sum;
@@ -4286,6 +4288,17 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_tblclmnNewColumn_text_2;
 	public static String StockManagementPreferencePage_txtOwner_text;
+	public static String StockManagementPreferencePage_delete_stock_dsc;
+	public static String StockManagementPreference_no_drivers;
+	public static String StockManagementPreferencePage_delete_stock;
+	public static String StockManagementPreference_select_owner;
+	public static String StockManagementPreference_select_stock_owner;
+	public static String StockManagementPreference_select_stock_owner_dsc;
+	public static String StockManagementPreference_select_stock_select_default_supplier;
+	public static String StockManagementPreference_select_stock_select_default_supplier_dsc;
+	public static String StockManagementPreference_no_drivers_dsc;
+	public static String StockManagementPreference_select_driver;
+	public static String StockManagementPreference_select_driver_dsc;
 	public static String StockView_OutlayArticle;
 	public static String StockView_PerformFullInventoryOnCommSystem;
 	public static String StockView_reload;

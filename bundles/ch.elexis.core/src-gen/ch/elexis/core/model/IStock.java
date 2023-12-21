@@ -188,4 +188,28 @@ public interface IStock extends Identifiable, Deleteable {
 	 */
 	String getDescription();
 
+	/**
+	 * 
+	 * @return
+	 */
+	String getLocation();
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setLocation(String value);
+
+	/**
+	 * 
+	 * @return
+	 */
+	IContact getResponsible();
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setResponsible(IContact value);
+
 } // IStock
