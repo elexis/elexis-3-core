@@ -385,26 +385,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-		ViewerComparator priceComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled t1 = (IBilled) e1;
-					IBilled t2 = (IBilled) e2;
-					int result = t1.getTotal().compareTo(t2.getTotal());
-					return getSortedAscending(viewer) ? result : -result;
-				}
-				return 0;
-			}
-
-			private boolean getSortedAscending(Viewer viewer) {
-				if (viewer.getData("priceSortAscending") != null) {
-					return (Boolean) viewer.getData("priceSortAscending");
-				}
-				return true;
-			}
-		};
-
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -450,29 +430,37 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return StringUtils.EMPTY;
 			}
 		});
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getTotal().compareTo(b2.getTotal());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
 
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("priceSortAscending") != null) {
+					return (Boolean) viewer.getData("priceSortAscending");
+				}
+				return true;
+			}
+		};
 		col.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(priceComparator);
 				if (viewer.getComparator() == priceComparator) {
-					isPriceSortedAscending = !isPriceSortedAscending;
-					viewer.setComparator(new ViewerComparator() {
-						@Override
-						public int compare(Viewer viewer, Object e1, Object e2) {
-							if (e1 instanceof IBilled && e2 instanceof IBilled) {
-								IBilled b1 = (IBilled) e1;
-								IBilled b2 = (IBilled) e2;
-								int result = b1.getTotal().compareTo(b2.getTotal());
-								return isPriceSortedAscending ? result : -result;
-							}
-							return 0;
-						}
-					});
-				} else {
-					viewer.setComparator(priceComparator);
-					isPriceSortedAscending = true;
+					if (viewer.getData("priceSortAscending") != null) {
+						viewer.setData("priceSortAscending", !(Boolean) viewer.getData("priceSortAscending"));
+					} else {
+						viewer.setData("priceSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
 				}
-				viewer.refresh();
 			}
 		});
 
