@@ -3,7 +3,10 @@ package ch.elexis.core.jpa.ui;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressIndicator;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,6 +20,8 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
+import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.ui.wizards.DBConnectWizard;
 
 @Component
 public class DatabaseUpdateUi implements IDatabaseUpdateUi {
@@ -125,6 +130,21 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 						(displayBounds.height / 2) + (shell.getBounds().height / 2) + 150);
 				this.messageLabel.setText(message);
 				this.messageLabel.getParent().layout();
+			}
+		});
+	}
+
+	@Override
+	public void requestDatabaseConnectionConfiguration(String message) {
+		closeProgress();
+		Display display = Display.getDefault();
+		display.syncExec(() -> {
+			MessageDialog.openError(null, StringUtils.EMPTY, message);
+			WizardDialog wd = new WizardDialog(display.getActiveShell(), new DBConnectWizard());
+			wd.create();
+			SWTHelper.center(wd.getShell());
+			if (wd.open() != WizardDialog.OK) {
+				System.exit(1);
 			}
 		});
 	}
