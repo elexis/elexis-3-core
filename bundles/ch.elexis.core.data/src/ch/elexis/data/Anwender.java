@@ -246,7 +246,6 @@ public class Anwender extends Person {
 	 * @deprecated initial {@link IMandator} is set by the {@link IContextService}
 	 *             impl.
 	 */
-	@Deprecated
 	public void setInitialMandator() {
 		Mandant initialMandator = null;
 		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();
