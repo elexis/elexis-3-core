@@ -208,7 +208,7 @@ public class Anwender extends Person {
 	protected Anwender() {/* leer */
 	}
 
-	protected Anwender(final String id) {
+	public Anwender(final String id) {
 		super(id);
 	}
 
@@ -246,6 +246,7 @@ public class Anwender extends Person {
 	 * @deprecated initial {@link IMandator} is set by the {@link IContextService}
 	 *             impl.
 	 */
+	@Deprecated
 	public void setInitialMandator() {
 		Mandant initialMandator = null;
 		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();

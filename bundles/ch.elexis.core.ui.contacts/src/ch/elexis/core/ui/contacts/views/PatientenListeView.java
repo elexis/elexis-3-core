@@ -61,6 +61,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.format.AddressFormatUtil;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -84,8 +85,10 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
+import ch.elexis.data.Reminder;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -106,6 +109,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	PatListeContentProvider plcp;
 	DefaultControlFieldProvider dcfp;
 	Composite parent;
+	@Inject
+	private IContextService contextService;
 
 	private boolean created = false;
 
@@ -300,21 +305,21 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
-			if (element instanceof IPatient) {
-				IPatient pat = (IPatient) element;
-				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
-				if (sticker != null && sticker.getImage() != null) {
-					return CoreUiUtil.getImageAsIcon(sticker.getImage());
-				} else {
-					if (pat.getGender().equals(Gender.MALE)) {
-						return Images.IMG_MANN.getImage();
-					} else {
-						return Images.IMG_FRAU.getImage();
-					}
-				}
-			} else {
+			if (!(element instanceof IPatient))
 				return super.getColumnImage(element, columnIndex);
-			}
+
+			IPatient pat = (IPatient) element;
+			ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
+
+			return (contextService != null && contextService.getActiveMandator()
+					.filter(a -> Reminder.findRemindersDueFor(Patient.loadByPatientID(pat.getPatientNr()),
+							new Anwender(a.getId()), false).size() > 0)
+					.isPresent())
+							? Images.IMG_AUSRUFEZ.getImage()
+							: (sticker != null && sticker.getImage() != null)
+									? CoreUiUtil.getImageAsIcon(sticker.getImage())
+									: (pat.getGender().equals(Gender.MALE)) ? Images.IMG_MANN.getImage()
+											: Images.IMG_FRAU.getImage();
 		}
 
 		@Override
