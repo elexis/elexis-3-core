@@ -61,6 +61,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.format.AddressFormatUtil;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -84,8 +85,10 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
+import ch.elexis.data.Reminder;
 import ch.rgw.tools.StringTool;
 
 /**
@@ -110,6 +113,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private boolean created = false;
 
 	private IUser actUser;
+
+	@Inject
+	private IContextService contextService;
 
 	@Inject
 	void activeUser(@Optional IUser user) {
@@ -302,6 +308,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			if (element instanceof IPatient) {
 				IPatient pat = (IPatient) element;
+
+				if (contextService.getActiveMandator().isPresent()) {
+					if (Reminder
+							.findRemindersDueFor(Patient.load(pat.getId()),
+									Anwender.load(contextService.getActiveMandator().get().getId()), false)
+							.size() > 0) {
+						return Images.IMG_AUSRUFEZ.getImage();
+					}
+				}
+
 				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
 				if (sticker != null && sticker.getImage() != null) {
 					return CoreUiUtil.getImageAsIcon(sticker.getImage());
