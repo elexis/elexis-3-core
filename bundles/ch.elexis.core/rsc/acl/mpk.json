@@ -1,5 +1,8 @@
 {
   "roles-represented" : [ "mpk" ],
+  "system-command": {
+		"USE_ARCHIE": "x"
+	},
   "object" : {
     "ch.elexis.core.model.IAppointment" : "crudv",
     "ch.elexis.core.model.IArticle" : "crudv",
