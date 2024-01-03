@@ -66,8 +66,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	PersistentObjectLoader loader;
 
 	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.Core_Kuerzel, // $NON-NLS-1$
-			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.Core_Description_1, // $NON-NLS-1$
-			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.Core_Description_2, // $NON-NLS-1$
+			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.Core_Name, // $NON-NLS-1$
+			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.Core_Firstname, // $NON-NLS-1$
 			Kontakt.FLD_STREET + Query.EQUALS + Messages.Core_Street, // $NON-NLS-1$
 			Kontakt.FLD_ZIP + Query.EQUALS + Messages.Core_Postal_code, // $NON-NLS-1$
 			Kontakt.FLD_PLACE + Query.EQUALS + Messages.Core_City }; // $NON-NLS-1$
