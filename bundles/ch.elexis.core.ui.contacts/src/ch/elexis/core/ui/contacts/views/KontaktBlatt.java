@@ -97,8 +97,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	Listener mandantListener, checkIfContactExistsListener;
 
 	static final InputData[] def = new InputData[] {
-			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null),
-			new InputData(Messages.Core_Description_2, Kontakt.FLD_NAME2, Typ.STRING, null),
+			new InputData(Messages.Core_Name, Kontakt.FLD_NAME1, Typ.STRING, null),
+			new InputData(Messages.Core_Firstname, Kontakt.FLD_NAME2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
 			new InputData(Messages.Sex, Person.SEX, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_LawCode, Person.FLD_TITLE_SUFFIX, Typ.STRING, null),
