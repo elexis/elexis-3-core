@@ -131,7 +131,7 @@ public class AttachmentsComposite extends Composite {
 			for (String string : documentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
-				if (!tmpFile.endsWith(".pdf")) {
+				if (!tmpFile.toLowerCase().endsWith(".pdf")) {
 					MessageDialog.openWarning(getShell(), "Warnung", "Dokument " + FilenameUtils.getName(tmpFile)
 							+ " konnte nicht konvertiert werden, bzw. ist kein pdf.\nBitte prüfen ob ein editierbares Dokument versendet werden soll.");
 				}
