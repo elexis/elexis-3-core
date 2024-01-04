@@ -2825,13 +2825,22 @@ public interface ModelPackage extends EPackage {
 	int ILAB_ORDER__GROUP_NAME = IDENTIFIABLE_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>User Resolved</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ILAB_ORDER__USER_RESOLVED = IDENTIFIABLE_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>ILab Order</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
+	int ILAB_ORDER_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}' class.
@@ -9305,6 +9314,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getILabOrder_GroupName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.ILabOrder#isUserResolved <em>User Resolved</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>User Resolved</em>'.
+	 * @see ch.elexis.core.model.ILabOrder#isUserResolved()
+	 * @see #getILabOrder()
+	 * @generated
+	 */
+	EAttribute getILabOrder_UserResolved();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13906,6 +13926,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ILAB_ORDER__GROUP_NAME = eINSTANCE.getILabOrder_GroupName();
+
+		/**
+		 * The meta object literal for the '<em><b>User Resolved</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ILAB_ORDER__USER_RESOLVED = eINSTANCE.getILabOrder_UserResolved();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.ILabMapping <em>ILab Mapping</em>}' class.

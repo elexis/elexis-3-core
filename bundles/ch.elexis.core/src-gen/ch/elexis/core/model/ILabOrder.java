@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.ILabOrder#getOrderId <em>Order Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabOrder#getState <em>State</em>}</li>
  *   <li>{@link ch.elexis.core.model.ILabOrder#getGroupName <em>Group Name</em>}</li>
+ *   <li>{@link ch.elexis.core.model.ILabOrder#isUserResolved <em>User Resolved</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getILabOrder()
@@ -294,5 +295,27 @@ public interface ILabOrder extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setGroupName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>User Resolved</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>User Resolved</em>' attribute.
+	 * @see #setUserResolved(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getILabOrder_UserResolved()
+	 * @model
+	 * @generated
+	 */
+	boolean isUserResolved();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.ILabOrder#isUserResolved <em>User Resolved</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>User Resolved</em>' attribute.
+	 * @see #isUserResolved()
+	 * @generated
+	 */
+	void setUserResolved(boolean value);
 
 } // ILabOrder

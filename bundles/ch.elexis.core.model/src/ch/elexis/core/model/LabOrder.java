@@ -147,4 +147,14 @@ public class LabOrder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 	public void setGroupName(String value) {
 		getEntityMarkDirty().setGroupname(value);
 	}
+
+	@Override
+	public boolean isUserResolved() {
+		return getEntity().isUserResolved();
+	}
+
+	@Override
+	public void setUserResolved(boolean value) {
+		getEntityMarkDirty().setUserResolved(value);
+	}
 }

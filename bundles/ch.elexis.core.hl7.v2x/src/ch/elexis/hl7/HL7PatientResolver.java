@@ -6,6 +6,8 @@ import ch.elexis.core.model.IPatient;
 
 public abstract class HL7PatientResolver {
 
+	protected boolean userResolved = false;
+
 	/**
 	 * Search for an existing {@link IPatient} with the provided properties. If no
 	 * {@link IPatient} is found, the User is presented with a UI to select the
@@ -73,4 +75,8 @@ public abstract class HL7PatientResolver {
 	 */
 	public abstract List<? extends IPatient> findPatientByNameAndBirthdate(String lastName, String firstName,
 			String birthDate);
+
+	public boolean userResolved() {
+		return userResolved;
+	}
 }

@@ -78,6 +78,10 @@ public class LabOrder extends AbstractEntityWithId implements EntityWithId, Enti
 	@Convert(converter = LabOrderStateConverter.class)
 	private LabOrderState state;
 
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	private boolean userResolved;
+
 	public Kontakt getUser() {
 		return user;
 	}
@@ -156,6 +160,14 @@ public class LabOrder extends AbstractEntityWithId implements EntityWithId, Enti
 
 	public void setState(LabOrderState state) {
 		this.state = state;
+	}
+
+	public boolean isUserResolved() {
+		return userResolved;
+	}
+
+	public void setUserResolved(boolean userResolved) {
+		this.userResolved = userResolved;
 	}
 
 	@Override
