@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.jpa.model.adapter.AbstractModelAdapterFactory;
 import ch.elexis.core.model.util.internal.ModelUtil;
 
 public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Stock>
@@ -103,10 +104,8 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 
 	@Override
 	public void setResponsible(IContact value) {
-		if (value != null) {
-			if (value instanceof AbstractIdModelAdapter) {
-				getEntityMarkDirty().setResponsible((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
-			}
+		if (value instanceof AbstractIdModelAdapter aida) {
+			getEntityMarkDirty().setResponsible((Kontakt) ((AbstractIdModelAdapter<?>) aida).getEntity());
 		} else {
 			getEntityMarkDirty().setResponsible(null);
 		}

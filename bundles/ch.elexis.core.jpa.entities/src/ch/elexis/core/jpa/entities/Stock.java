@@ -81,7 +81,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	 * The contact responsible for managing this stock
 	 */
 	@OneToOne
-	@JoinColumn(name = "RESPONSIBLE")
+	@JoinColumn(name = "RESPONSIBLE", insertable = false)
 	Kontakt responsible;
 
 	/**
