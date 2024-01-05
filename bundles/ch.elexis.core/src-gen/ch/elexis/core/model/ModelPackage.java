@@ -5802,13 +5802,31 @@ public interface ModelPackage extends EPackage {
 	int ISTOCK__OWNER = IDENTIFIABLE_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__LOCATION = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Responsible</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__RESPONSIBLE = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>IStock</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+	int ISTOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.
@@ -11207,6 +11225,28 @@ public interface ModelPackage extends EPackage {
 	EReference getIStock_Owner();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IStock#getLocation <em>Location</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Location</em>'.
+	 * @see ch.elexis.core.model.IStock#getLocation()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EAttribute getIStock_Location();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IStock#getResponsible <em>Responsible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Responsible</em>'.
+	 * @see ch.elexis.core.model.IStock#getResponsible()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EReference getIStock_Responsible();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15382,6 +15422,22 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ISTOCK__OWNER = eINSTANCE.getIStock_Owner();
+
+		/**
+		 * The meta object literal for the '<em><b>Location</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISTOCK__LOCATION = eINSTANCE.getIStock_Location();
+
+		/**
+		 * The meta object literal for the '<em><b>Responsible</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK__RESPONSIBLE = eINSTANCE.getIStock_Responsible();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.

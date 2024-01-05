@@ -41,13 +41,15 @@ public class IStockServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
-	public void a_createStock() {
+	public void a_createPatientStock() {
 		service.setEnablePatientStock(patient, true);
 
 		IStock stock = service.getPatientStock(patient).get();
 		assertEquals(0, stock.getPriority());
+		assertEquals("PatientStock-" + patient.getPatientNr(), stock.getId());
 		assertEquals("P" + patient.getPatientNr(), stock.getCode());
 		assertEquals("patient test", stock.getDescription());
+		assertEquals("Patient", stock.getLocation());
 		assertFalse(stock.isDeleted());
 
 		IStockEntry stockEntry = service.storeArticleInStock(stock,
@@ -57,16 +59,17 @@ public class IStockServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
-	public void b_deleteStock() {
-		IStock stock = service.getPatientStock(patient).get();
-		List<IStockEntry> stockEntries = service.findAllStockEntriesForStock(stock);
+	public void b_deletePatientStock() {
+		IStock patientStock = service.getPatientStock(patient).get();
+		List<IStockEntry> stockEntries = service.findAllStockEntriesForStock(patientStock);
 		assertEquals(article, stockEntries.get(0).getArticle());
 		assertEquals(1, stockEntries.get(0).getCurrentStock());
+		assertEquals(patientStock, stockEntries.get(0).getStock());
 
 		service.setEnablePatientStock(patient, false);
 
 		assertFalse(service.getPatientStock(patient).isPresent());
-		List<IStockEntry> entries = service.findAllStockEntriesForStock(stock);
+		List<IStockEntry> entries = service.findAllStockEntriesForStock(patientStock);
 		assertTrue(entries.isEmpty());
 	}
 }

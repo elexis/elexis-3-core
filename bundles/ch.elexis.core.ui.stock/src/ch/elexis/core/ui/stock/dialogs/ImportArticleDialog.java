@@ -86,7 +86,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 
 		comboStockType = new ComboViewer(ret, SWT.BORDER | SWT.READ_ONLY);
 		comboStockType.setContentProvider(ArrayContentProvider.getInstance());
-		comboStockType.setInput(StockServiceHolder.get().getAllStocks(false));
+		comboStockType.setInput(StockServiceHolder.get().getAllStocks(false, false));
 		comboStockType.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -101,8 +101,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		comboStockType.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof IStock) {
-					IStock stock = (IStock) element;
+				if (element instanceof IStock stock) {
 					return stock.getLabel();
 				}
 				return super.getText(element);
@@ -232,6 +231,7 @@ public class ImportArticleDialog extends TitleAreaDialog {
 		ProgressMonitorDialog progress = new ProgressMonitorDialog(getShell());
 		try {
 			progress.run(true, true, new IRunnableWithProgress() {
+				@Override
 				public void run(IProgressMonitor monitor) {
 
 					int importCount = 0;

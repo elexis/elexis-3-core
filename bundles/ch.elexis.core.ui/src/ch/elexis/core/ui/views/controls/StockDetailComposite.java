@@ -47,12 +47,8 @@ import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
@@ -348,12 +344,12 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 
-		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true);
+		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true, false);
 		for (IStock stock : stocks) {
 			stockEntries.put(stock, null);
 		}
 
-		checkboxTableViewer.setInput(StockServiceHolder.get().getNonPatientStocks());
+		checkboxTableViewer.setInput(StockServiceHolder.get().getAllStocks(true, false));
 
 		TableViewer ret = new TableViewer(table);
 		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret,

@@ -566,8 +566,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	}
 
 	private List<IStock> refresh() {
-
-		return StockServiceHolder.get().getNonPatientStocks();
+		return StockServiceHolder.get().getAllStocks(true, false);
 	}
 
 	protected DataBindingContext initDataBindings() {
