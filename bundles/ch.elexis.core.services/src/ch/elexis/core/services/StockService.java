@@ -279,6 +279,13 @@ public class StockService implements IStockService {
 	}
 
 	@Override
+	public List<IStock> getNonPatientStocks() {
+		List<IStock> lStocks = getAllStocks(false);
+		lStocks.removeIf(stock -> stock.getCode().matches("^P[0-9]+$"));
+		return lStocks;
+	}
+
+	@Override
 	public IStock getDefaultStock() {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class, true, false);
 		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, "STD");

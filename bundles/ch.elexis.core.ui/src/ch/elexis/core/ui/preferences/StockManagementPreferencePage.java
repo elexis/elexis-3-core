@@ -53,13 +53,9 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -570,15 +566,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	}
 
 	private List<IStock> refresh() {
-		List<IPatient> lPatients = CoreModelServiceHolder.get().getQuery(IPatient.class).execute();
 
-		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
-		query.startGroup();
-		for (IPatient patient : lPatients) {
-			query.and(ModelPackage.Literals.ISTOCK__OWNER, COMPARATOR.NOT_EQUALS, patient);
-		}
-		query.or(ModelPackage.Literals.ISTOCK__OWNER, COMPARATOR.EQUALS, null);
-		return query.execute();
+		return StockServiceHolder.get().getNonPatientStocks();
 	}
 
 	protected DataBindingContext initDataBindings() {

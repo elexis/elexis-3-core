@@ -210,6 +210,8 @@ public interface IStockService {
 
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
 
+	public List<IStock> getNonPatientStocks();
+
 	public List<IStockEntry> getAllStockEntries();
 
 	public IStock getDefaultStock();

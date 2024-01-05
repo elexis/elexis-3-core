@@ -353,16 +353,7 @@ public class StockDetailComposite extends Composite {
 			stockEntries.put(stock, null);
 		}
 
-		List<IPatient> lPatients = CoreModelServiceHolder.get().getQuery(IPatient.class).execute();
-
-		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
-		query.startGroup();
-		for (IPatient patient : lPatients) {
-			query.and(ModelPackage.Literals.ISTOCK__OWNER, COMPARATOR.NOT_EQUALS, patient);
-		}
-		query.or(ModelPackage.Literals.ISTOCK__OWNER, COMPARATOR.EQUALS, null);
-
-		checkboxTableViewer.setInput(query.execute());
+		checkboxTableViewer.setInput(StockServiceHolder.get().getNonPatientStocks());
 
 		TableViewer ret = new TableViewer(table);
 		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret,
