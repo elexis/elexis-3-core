@@ -2,17 +2,17 @@ package ch.elexis.core.model.builder;
 
 import java.time.LocalDateTime;
 
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMessage;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IModelService;
 
 public class IMessageBuilder extends AbstractBuilder<IMessage> {
 
-	public IMessageBuilder(IModelService modelService, IUser sender, IUser receiver) {
+	public IMessageBuilder(IModelService modelService, IContact sender, IContact receiver) {
 		this(modelService, sender.getId(), receiver.getId());
 	}
 
-	public IMessageBuilder(IModelService modelService, String sender, IUser receiver) {
+	public IMessageBuilder(IModelService modelService, String sender, IContact receiver) {
 		this(modelService, sender, receiver.getId());
 	}
 
