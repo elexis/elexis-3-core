@@ -23,7 +23,7 @@ public class StockSelectorDialog extends ListDialog {
 
 	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems) {
 		super(parent);
-		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems);
+		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems, false);
 		if (allStocks.size() == 1) {
 			onlyOneStock = allStocks.get(0);
 		}

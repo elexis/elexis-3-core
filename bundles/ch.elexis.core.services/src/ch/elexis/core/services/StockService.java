@@ -269,10 +269,13 @@ public class StockService implements IStockService {
 	}
 
 	@Override
-	public List<IStock> getAllStocks(boolean includeCommissioningSystems) {
+	public List<IStock> getAllStocks(boolean includeCommissioningSystems, boolean includePatientStocks) {
 		IQuery<IStock> query = CoreModelServiceHolder.get().getQuery(IStock.class);
 		if (!includeCommissioningSystems) {
 			query.and("driverConfig", COMPARATOR.EQUALS, null);
+		}
+		if (!includePatientStocks) {
+			query.and("id", COMPARATOR.NOT_EQUALS, "PatientStock-%");
 		}
 		query.orderBy("PRIORITY", ORDER.ASC);
 		return query.execute();
@@ -415,24 +418,21 @@ public class StockService implements IStockService {
 
 	@Override
 	public Optional<IStock> getPatientStock(IPatient patient) {
-		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
-		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, PAT_STOCK_PREFIX + patient.getPatientNr());
-		return query.execute().stream().findFirst();
+		return coreModelService.load("PatientStock-" + patient.getPatientNr(), IStock.class);
 	}
 
 	@Override
 	public void setEnablePatientStock(IPatient patient, boolean stockState) {
-		IQuery<IStock> query = coreModelService.getQuery(IStock.class, true);
-		query.and(ModelPackage.Literals.ISTOCK__CODE, COMPARATOR.EQUALS, PAT_STOCK_PREFIX + patient.getPatientNr());
-		IStock patientStock = query.execute().stream().findFirst().orElse(null);
-
+		IStock patientStock = getPatientStock(patient).orElse(null);
 		if (stockState) {
 			if (patientStock == null) {
 				patientStock = coreModelService.create(IStock.class);
+				patientStock.setId("PatientStock-" + patient.getPatientNr());
 				patientStock.setPriority(0);
 				patientStock.setCode(PAT_STOCK_PREFIX + patient.getPatientNr());
 				patientStock.setDescription(patient.getDescription1() + " " + patient.getDescription2());
 				patientStock.setOwner(patient);
+				patientStock.setLocation("Patient");
 				coreModelService.save(patientStock);
 			}
 		} else if (patientStock != null) {

@@ -344,12 +344,12 @@ public class StockDetailComposite extends Composite {
 			}
 		});
 
-		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true);
+		List<IStock> stocks = StockServiceHolder.get().getAllStocks(true, false);
 		for (IStock stock : stocks) {
 			stockEntries.put(stock, null);
 		}
 
-		checkboxTableViewer.setInput(stocks);
+		checkboxTableViewer.setInput(StockServiceHolder.get().getAllStocks(true, false));
 
 		TableViewer ret = new TableViewer(table);
 		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(ret,

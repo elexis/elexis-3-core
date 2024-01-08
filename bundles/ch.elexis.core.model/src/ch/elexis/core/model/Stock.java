@@ -15,6 +15,11 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
+	public void setId(String id) {
+		getEntity().setId(id);
+	}
+
+	@Override
 	public String getCode() {
 		return getEntity().getCode();
 	}
@@ -45,6 +50,19 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	@Override
 	public String getDescription() {
 		return getEntity().getDescription();
+	}
+
+	@Override
+	public String getLocation() {
+		return getEntity().getLocation();
+	}
+
+	@Override
+	public IContact getResponsible() {
+		if (getEntity().getResponsible() != null) {
+			return ModelUtil.getAdapter(getEntity().getResponsible(), IContact.class, true);
+		}
+		return null;
 	}
 
 	@Override
@@ -81,6 +99,21 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	@Override
 	public void setDescription(String value) {
 		getEntityMarkDirty().setDescription(value);
+	}
+
+	@Override
+	public void setLocation(String value) {
+		getEntityMarkDirty().setLocation(value);
+	}
+
+	@Override
+	public void setResponsible(IContact value) {
+		if (value instanceof AbstractIdModelAdapter aida) {
+			getEntityMarkDirty().setResponsible((Kontakt) ((AbstractIdModelAdapter<?>) aida).getEntity());
+		} else {
+			getEntityMarkDirty().setResponsible(null);
+		}
+
 	}
 
 	@Override

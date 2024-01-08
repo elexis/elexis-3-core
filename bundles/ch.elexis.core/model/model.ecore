@@ -880,11 +880,11 @@
         eType="#//IDocument"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable">
+      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
     <eOperations name="isCommissioningSystem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="A unique code to define a specific stock. Stocks starting with 'P', followed by a number refer to patient located stocks."/>
+        <details key="documentation" value="A unique code to define a specific stock"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="driverUuid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -892,7 +892,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//IPerson">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation"/>
+        <details key="documentation" value="The person the contents of this stock (ultimately) belong to."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The location of this stock. A room name or other address. If the value is &quot;Patient&quot; then it is a &quot;virtual stock&quot; that manages patient orders."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="responsible" eType="#//IContact">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The person or contact responsible for managing this stock"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

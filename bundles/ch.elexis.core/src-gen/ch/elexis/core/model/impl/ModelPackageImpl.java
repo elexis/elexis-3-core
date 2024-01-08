@@ -3608,6 +3608,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIStock_Location() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIStock_Responsible() {
+		return (EReference)iStockEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIStockEntry() {
 		return iStockEntryEClass;
 	}
@@ -5552,6 +5572,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iStockEClass, ISTOCK__DRIVER_CONFIG);
 		createEAttribute(iStockEClass, ISTOCK__PRIORITY);
 		createEReference(iStockEClass, ISTOCK__OWNER);
+		createEAttribute(iStockEClass, ISTOCK__LOCATION);
+		createEReference(iStockEClass, ISTOCK__RESPONSIBLE);
 
 		iStockEntryEClass = createEClass(ISTOCK_ENTRY);
 		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__MINIMUM_STOCK);
@@ -5853,6 +5875,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
 		iStockEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getDeleteable());
+		iStockEClass.getESuperTypes().add(this.getWithAssignableId());
 		iStockEntryEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEntryEClass.getESuperTypes().add(this.getDeleteable());
 		iOrderEntryEClass.getESuperTypes().add(this.getIdentifiable());
@@ -6561,6 +6584,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIStock_DriverConfig(), ecorePackage.getEString(), "driverConfig", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIStock_Owner(), this.getIPerson(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStock_Location(), ecorePackage.getEString(), "location", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_Responsible(), this.getIContact(), null, "responsible", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iStockEClass, ecorePackage.getEBoolean(), "isCommissioningSystem", 0, 1, IS_UNIQUE, IS_ORDERED);
 

@@ -208,7 +208,15 @@ public interface IStockService {
 		return determineAvailability(stockEntry.getCurrentStock(), stockEntry.getMinimumStock(), true);
 	}
 
-	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
+	/**
+	 * Get all defined {@link IStock} entries, including stock commissioning systems
+	 * and patient stocks.
+	 * 
+	 * @param includeCommissioningSystems
+	 * @param includePatientStocks
+	 * @return
+	 */
+	public List<IStock> getAllStocks(boolean includeCommissioningSystems, boolean includePatientStocks);
 
 	public List<IStockEntry> getAllStockEntries();
 

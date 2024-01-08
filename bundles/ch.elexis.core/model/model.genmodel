@@ -550,6 +550,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/driverConfig"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/priority"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStock/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/location"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStock/responsible"/>
       <genOperations ecoreOperation="model.ecore#//IStock/isCommissioningSystem"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStockEntry">
