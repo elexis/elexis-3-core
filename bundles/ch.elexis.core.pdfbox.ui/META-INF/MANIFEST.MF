@@ -2,6 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pdf Preview using Apache PdfBox
 Bundle-SymbolicName: ch.elexis.core.pdfbox.ui;singleton:=true
+Bundle-Vendor: Unspecified
 Bundle-Version: 3.12.0.qualifier
 Require-Bundle: org.eclipse.swt,
  ch.elexis.core.pdfbox;bundle-version="2.0.24",
