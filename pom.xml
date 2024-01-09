@@ -271,4 +271,11 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+        <distributionManagement>
+                <repository>
+                       <id>internal.repo</id>
+                       <name>Internal repo</name>
+                       <url>file:////home/lzadmin/Entwicklung/p2-repo</url>
+                </repository>
+        </distributionManagement>
 </project>
