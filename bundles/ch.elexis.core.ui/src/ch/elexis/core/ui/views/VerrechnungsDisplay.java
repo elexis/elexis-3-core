@@ -572,41 +572,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 		});
 
-		ViewerComparator priceComparator = new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IBilled && e2 instanceof IBilled) {
-					IBilled b1 = (IBilled) e1;
-					IBilled b2 = (IBilled) e2;
-					int result = b1.getTotal().compareTo(b2.getTotal());
-					return getSortedAscending(viewer) ? result : -result;
-				}
-				return 0;
-			}
-
-			private boolean getSortedAscending(Viewer viewer) {
-				if (viewer.getData("codeSortAscending") != null) {
-					return (Boolean) viewer.getData("codeSortAscending");
-				}
-				return true;
-			}
-		};
-
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				viewer.setComparator(priceComparator);
-				if (viewer.getComparator() == priceComparator) {
-					if (viewer.getData("codeSortAscending") != null) {
-						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
-					} else {
-						viewer.setData("codeSortAscending", Boolean.FALSE);
-					}
-					viewer.refresh();
-				}
-			}
-		});
-
 		col = createTableViewerColumn(titles[5], weights[5], 5, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
