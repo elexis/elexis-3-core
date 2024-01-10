@@ -174,8 +174,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 
 	private ToolBarManager toolBarManager;
 	private TableViewerColumn partDisposalColumn;
-	protected IBilled b1;
-	protected IBilled b2;
 
 	public VerrechnungsDisplay(final IWorkbenchPage p, Composite parent, int style) {
 		super(parent, style);
