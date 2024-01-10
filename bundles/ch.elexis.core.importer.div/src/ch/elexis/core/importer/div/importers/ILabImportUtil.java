@@ -64,11 +64,12 @@ public interface ILabImportUtil {
 	 * @param mandantId
 	 * @param observationTime
 	 * @param groupName
+	 * @param userResolved
 	 * @return
 	 */
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result, String comment,
 			String refVal, ILaboratory laboratory, String subId, ILabOrder labOrder, String orderId, IMandator mandator,
-			TimeTool observationTime, String groupName);
+			TimeTool observationTime, String groupName, boolean userResolved);
 
 	/**
 	 * Get a {@link ILabItem} with matching properties, and typ

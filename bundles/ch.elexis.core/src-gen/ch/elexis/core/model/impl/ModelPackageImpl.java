@@ -1838,6 +1838,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getILabOrder_UserResolved() {
+		return (EAttribute)iLabOrderEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getILabMapping() {
 		return iLabMappingEClass;
 	}
@@ -3598,6 +3608,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIStock_Location() {
+		return (EAttribute)iStockEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIStock_Responsible() {
+		return (EReference)iStockEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIStockEntry() {
 		return iStockEntryEClass;
 	}
@@ -5331,6 +5361,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iLabOrderEClass, ILAB_ORDER__ORDER_ID);
 		createEAttribute(iLabOrderEClass, ILAB_ORDER__STATE);
 		createEAttribute(iLabOrderEClass, ILAB_ORDER__GROUP_NAME);
+		createEAttribute(iLabOrderEClass, ILAB_ORDER__USER_RESOLVED);
 
 		iLabMappingEClass = createEClass(ILAB_MAPPING);
 		createEAttribute(iLabMappingEClass, ILAB_MAPPING__ITEM_NAME);
@@ -5541,6 +5572,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iStockEClass, ISTOCK__DRIVER_CONFIG);
 		createEAttribute(iStockEClass, ISTOCK__PRIORITY);
 		createEReference(iStockEClass, ISTOCK__OWNER);
+		createEAttribute(iStockEClass, ISTOCK__LOCATION);
+		createEReference(iStockEClass, ISTOCK__RESPONSIBLE);
 
 		iStockEntryEClass = createEClass(ISTOCK_ENTRY);
 		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__MINIMUM_STOCK);
@@ -5842,6 +5875,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
 		iStockEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getDeleteable());
+		iStockEClass.getESuperTypes().add(this.getWithAssignableId());
 		iStockEntryEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEntryEClass.getESuperTypes().add(this.getDeleteable());
 		iOrderEntryEClass.getESuperTypes().add(this.getIdentifiable());
@@ -6135,6 +6169,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getILabOrder_OrderId(), ecorePackage.getEString(), "orderId", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabOrder_State(), theTypesPackage.getLabOrderState(), "state", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabOrder_GroupName(), ecorePackage.getEString(), "groupName", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getILabOrder_UserResolved(), ecorePackage.getEBoolean(), "userResolved", null, 0, 1, ILabOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iLabMappingEClass, ILabMapping.class, "ILabMapping", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabMapping_ItemName(), ecorePackage.getEString(), "itemName", null, 0, 1, ILabMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -6298,6 +6333,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIService_Minutes(), ecorePackage.getEInt(), "minutes", null, 0, 1, IService.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iCustomServiceEClass, ICustomService.class, "ICustomService", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		op = addEOperation(iCustomServiceEClass, null, "setCodeSystemCode", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iArticleEClass, IArticle.class, "IArticle", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIArticle_Gtin(), ecorePackage.getEString(), "gtin", null, 0, 1, IArticle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -6545,7 +6583,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIStock_DriverUuid(), ecorePackage.getEString(), "driverUuid", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_DriverConfig(), ecorePackage.getEString(), "driverConfig", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_Priority(), ecorePackage.getEInt(), "priority", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIStock_Owner(), this.getIMandator(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_Owner(), this.getIPerson(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIStock_Location(), ecorePackage.getEString(), "location", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_Responsible(), this.getIContact(), null, "responsible", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iStockEClass, ecorePackage.getEBoolean(), "isCommissioningSystem", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -6844,7 +6884,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		   source,
 		   new String[] {
 			   "Brief#attributeName", "typ",
-			   "DocHandle#attributeName", "category"
+			   "DocHandle#attributeName", "category",
+			   "BriefVorlage#attributeName", "typ"
 		   });
 		addAnnotation
 		  (getIDocument_Patient(),

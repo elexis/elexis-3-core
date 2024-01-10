@@ -32,8 +32,11 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -67,6 +70,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.LoadTemplateCommand;
@@ -97,6 +101,8 @@ public class TextTemplateView extends ViewPart {
 	private TextTemplateViewerComparator comparator;
 	private List<TextTemplate> templates;
 	private List<TextTemplate> requiredTemplates;
+
+	protected StructuredViewer viewer;
 
 	static Logger log = LoggerFactory.getLogger(TextTemplateView.class);
 
@@ -285,7 +291,7 @@ public class TextTemplateView extends ViewPart {
 		String[] titles = { StringUtils.EMPTY, "Name der Vorlage", "Typ", "Mandant", "Adressabfrage", "Drucker/Schacht",
 				"Beschreibung" };
 		int[] bounds = { 30, 200, 170, 80, 90, 300, 600 };
-
+		
 		// template exists or missing
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -322,6 +328,43 @@ public class TextTemplateView extends ViewPart {
 					}
 				}
 				return null;
+			}
+		});
+
+		ViewerComparator systemTemplateComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof TextTemplate && e2 instanceof TextTemplate) {
+					TextTemplate t1 = (TextTemplate) e1;
+					TextTemplate t2 = (TextTemplate) e2;
+					int result = Boolean.compare(t1.isSystemTemplate(), t2.isSystemTemplate());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("systemTemplateSortAscending") != null) {
+					
+					return (Boolean) viewer.getData("systemTemplateSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableViewer.setComparator(systemTemplateComparator);
+				if (tableViewer.getComparator() == systemTemplateComparator) {
+					if (tableViewer.getData("systemTemplateSortAscending") != null) {
+						tableViewer.setData("systemTemplateSortAscending",
+								!(Boolean) tableViewer.getData("systemTemplateSortAscending"));
+					} else {
+						tableViewer.setData("systemTemplateSortAscending", Boolean.FALSE);
+					}
+					tableViewer.refresh();
+				}
 			}
 		});
 

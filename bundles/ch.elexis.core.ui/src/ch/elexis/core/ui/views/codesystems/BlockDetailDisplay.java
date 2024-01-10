@@ -19,14 +19,14 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -108,7 +108,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private Button bNew, bEigen, bDiag;
 	private List<IMandator> lMandanten;
 	private DataBindingContext dbc = new DataBindingContext();
-	private WritableValue<ICodeElementBlock> master = new WritableValue(null, ICodeElementBlock.class);
+	private WritableValue<ICodeElementBlock> master = new WritableValue<>(null, ICodeElementBlock.class);
 
 	private BlockComparator comparator;
 
@@ -139,6 +139,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public Composite createDisplay(final Composite parent, final IViewSite site) {
 		tk = UiDesk.getToolkit();
 		form = tk.createScrolledForm(parent);
@@ -153,8 +154,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tName = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tName.setData("TEST_COMP_NAME", "blkd_Name_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tName.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtNameObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
-		IObservableValue txtNameObservable = PojoProperties.value("code", String.class).observeDetail(master); //$NON-NLS-1$
+		IObservableValue<String> txtNameObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tName);
+		IObservableValue<String> txtNameObservable = PojoProperties.value("code", String.class).observeDetail(master); //$NON-NLS-1$
 		txtNameObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtNameObservableUi, txtNameObservable);
 
@@ -162,8 +163,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		tMacro = tk.createText(body, StringConstants.EMPTY, SWT.BORDER);
 		tMacro.setData("TEST_COMP_NAME", "blkd_Makro_lst"); //$NON-NLS-1$ //$NON-NLS-2$
 		tMacro.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-		IObservableValue txtMacroObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
-		IObservableValue txtMacroObservable = PojoProperties.value("macro", String.class).observeDetail(master); //$NON-NLS-1$
+		IObservableValue<String> txtMacroObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100, tMacro);
+		IObservableValue<String> txtMacroObservable = PojoProperties.value("macro", String.class).observeDetail(master); //$NON-NLS-1$
 		txtMacroObservable.addChangeListener(changeListener);
 		dbc.bindValue(txtMacroObservableUi, txtMacroObservable);
 
@@ -214,6 +215,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] { textTransfer };
 		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
+			@Override
 			public void dragEnter(final DropTargetEvent event) {
 				if (event.data instanceof IArticle) {
 					if (((IArticle) event.data).isProduct()) {
@@ -224,15 +226,19 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				event.detail = DND.DROP_COPY;
 			}
 
+			@Override
 			public void dragLeave(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void dragOperationChanged(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void dragOver(final DropTargetEvent event) {
 			}
 
+			@Override
 			public void drop(final DropTargetEvent event) {
 				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
 				String drp = (String) event.data;
@@ -254,6 +260,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				});
 			}
 
+			@Override
 			public void dropAccept(final DropTargetEvent event) {
 
 			}
@@ -297,8 +304,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			public void widgetSelected(final SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getService(IHandlerService.class);
+					IHandlerService handlerService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getService(IHandlerService.class);
 
 					handlerService.executeCommand(CreateEigenleistungUi.COMMANDID, null);
 				} catch (Exception ex) {
@@ -328,6 +335,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		makeActions();
 		ViewMenus menus = new ViewMenus(site);
 		menus.createControlContextMenu(viewer.getControl(), new ViewMenus.IMenuPopulator() {
+			@Override
 			public IAction[] fillMenu() {
 				BlockElementViewerItem element = (BlockElementViewerItem) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
@@ -346,10 +354,12 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		return body;
 	}
 
+	@Override
 	public Class<?> getElementClass() {
 		return ICodeElementBlock.class;
 	}
 
+	@Override
 	public void display(final Object obj) {
 		ICodeElementBlock block = (ICodeElementBlock) obj;
 		master.setValue(block);
@@ -376,6 +386,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		}
 	}
 
+	@Override
 	public String getTitle() {
 		return Messages.BlockDetailDisplay_blocks; // $NON-NLS-1$
 	}
@@ -384,8 +395,8 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		String[] titles = { "Anz.", "Code", "Bezeichnung" };
 		int[] bounds = { 45, 125, 600 };
 
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn colAnz = createTableViewerColumn(titles[0], bounds[0], 0, SWT.NONE);
+		colAnz.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -395,9 +406,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return StringUtils.EMPTY;
 			}
 		});
+		addColumnSelectionListener(colAnz, 0);
 
-		col = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+
+		TableViewerColumn colCode = createTableViewerColumn(titles[1], bounds[1], 1, SWT.NONE);
+		colCode.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -408,8 +421,43 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			}
 		});
 
-		col = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
-		col.setLabelProvider(new ColumnLabelProvider() {
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof BlockElementViewerItem && e2 instanceof BlockElementViewerItem) {
+					BlockElementViewerItem b1 = (BlockElementViewerItem) e1;
+					BlockElementViewerItem b2 = (BlockElementViewerItem) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		colCode.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(codeComparator);
+				if (viewer.getComparator() == codeComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+			}
+		});
+
+		TableViewerColumn colBezeichnung = createTableViewerColumn(titles[2], bounds[2], 2, SWT.NONE);
+		colBezeichnung.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof BlockElementViewerItem) {
@@ -433,8 +481,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return null;
 			}
 		});
-		TableColumn tableColumn = col.getColumn();
-		col.getColumn().addSelectionListener(new SelectionAdapter() {
+		addColumnSelectionListener(colBezeichnung, 2);
+	}
+
+	private void addColumnSelectionListener(TableViewerColumn column, final int index) {
+		column.getColumn().addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (viewer.getComparator() == null) {
@@ -449,8 +500,9 @@ public class BlockDetailDisplay implements IDetailDisplay {
 						viewer.setComparator(null);
 					}
 				}
+				comparator.setColumnIndex(index);
 				viewer.getTable().setSortDirection(comparator.getDirection());
-				viewer.getTable().setSortColumn(tableColumn);
+				viewer.getTable().setSortColumn(column.getColumn());
 				viewer.refresh();
 			}
 		});
@@ -575,6 +627,11 @@ public class BlockDetailDisplay implements IDetailDisplay {
 	private class BlockComparator extends ViewerComparator {
 
 		private int direction = 0;
+		private int columnIndex = 0;
+
+		public void setColumnIndex(int columnIndex) {
+			this.columnIndex = columnIndex;
+		}
 
 		public void setDirection(int value) {
 			if (value == SWT.DOWN) {
@@ -593,18 +650,6 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				return SWT.UP;
 			}
 			return SWT.NONE;
-		}
-
-		@Override
-		public int compare(Viewer viewer, Object left, Object right) {
-			if (left instanceof BlockElementViewerItem && right instanceof BlockElementViewerItem) {
-				if (direction != 0) {
-					return ((BlockElementViewerItem) left).getText()
-							.compareTo(((BlockElementViewerItem) right).getText()) * direction;
-				}
-				return ((BlockElementViewerItem) left).getText().compareTo(((BlockElementViewerItem) right).getText());
-			}
-			return super.compare(viewer, left, right);
 		}
 	}
 }

@@ -16,6 +16,7 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 import ch.elexis.core.types.DocumentStatus;
@@ -96,5 +97,38 @@ public class BriefDocumentStoreTest extends AbstractServiceTest {
 		Assert.assertEquals(1, iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
 		iDocumentStore.removeDocument(persistedDocument);
 		Assert.assertEquals(0, iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
+	}
+
+	@Test
+	public void testCrudAndSearchDocumentTemplates() throws IOException, ElexisException {
+		IPatient iPatient = testPatients.get(0);
+
+		// persist metadata of documents
+		IDocumentTemplate template = coreModelService.create(IDocumentTemplate.class);
+		template.setDescription("Test desc");
+		template.setMimeType("docx");
+		template.setTitle("Test Vorlage");
+		template.setCategory(new CategoryDocumentDTO(BriefConstants.TEMPLATE));
+		template.setContent(getClass().getResourceAsStream("/rsc/TestPlaceholders.docx"));
+		iDocumentStore.saveDocument(template);
+		IDocumentTemplate systemplate = coreModelService.create(IDocumentTemplate.class);
+		systemplate.setDescription("Test desc");
+		systemplate.setMimeType("docx");
+		systemplate.setTitle("Test Sys Vorlage");
+		systemplate.setCategory(new CategoryDocumentDTO(BriefConstants.TEMPLATE));
+		systemplate.setTemplateTyp(BriefConstants.SYS_TEMPLATE);
+		template.setContent(getClass().getResourceAsStream("/rsc/TestPlaceholders.docx"));
+		iDocumentStore.saveDocument(systemplate);
+
+		// search templates
+		Assert.assertEquals(0, iDocumentStore.getDocuments(iPatient.getId(), null, null, null).size());
+		Assert.assertEquals(2, iDocumentStore.getDocumentTemplates(true).size());
+		Assert.assertEquals(1, iDocumentStore.getDocumentTemplates(false).size());
+
+		// remove template
+		iDocumentStore.removeDocument(template);
+		iDocumentStore.removeDocument(systemplate);
+		Assert.assertEquals(0, iDocumentStore.getDocumentTemplates(false).size());
+		Assert.assertEquals(0, iDocumentStore.getDocumentTemplates(true).size());
 	}
 }

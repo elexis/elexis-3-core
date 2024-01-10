@@ -5,6 +5,7 @@ import static ch.elexis.core.constants.XidConstants.CH_AHV;
 import static ch.elexis.core.constants.XidConstants.CH_AHV_QUALITY;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_BSVNUM;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
+import static ch.elexis.core.constants.XidConstants.DOMAIN_KSK;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_OID;
 import static ch.elexis.core.constants.XidConstants.DOMAIN_RECIPIENT_EAN;
 import static ch.elexis.core.constants.XidConstants.ELEXIS;
@@ -89,6 +90,8 @@ public class XidService implements IXidService {
 		localRegisterXIDDomainIfNotExists(DOMAIN_BSVNUM, "BSV-Nummer", ASSIGNMENT_REGIONAL,
 				"ch.elexis.data.Organisation");
 		localRegisterXIDDomainIfNotExists(DOMAIN_RECIPIENT_EAN, "rEAN", ASSIGNMENT_REGIONAL,
+				"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation");
+		localRegisterXIDDomainIfNotExists(DOMAIN_KSK, "KSK/ZSR-Nr", ASSIGNMENT_REGIONAL,
 				"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation");
 	}
 

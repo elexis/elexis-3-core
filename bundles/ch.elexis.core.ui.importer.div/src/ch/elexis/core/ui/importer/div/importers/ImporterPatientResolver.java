@@ -42,9 +42,11 @@ public class ImporterPatientResolver extends AbstractHL7PatientResolver {
 				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.Core_Select_Patient,
 						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "\t\t PID: " //$NON-NLS-1$ //$NON-NLS-2$
 								+ patid + " ?\n" + Messages.HL7_Lab + StringUtils.SPACE + sender);
+				userResolved = true;
 			} else {
 				pat = (Patient) KontaktSelektor.showInSync(Patient.class, Messages.Core_Select_Patient,
 						Messages.HL7_WhoIs + lastname + StringUtils.SPACE + firstname + " ," + birthStr + "?"); //$NON-NLS-1$ //$NON-NLS-2$
+				userResolved = true;
 			}
 		}
 		if (pat != null) {

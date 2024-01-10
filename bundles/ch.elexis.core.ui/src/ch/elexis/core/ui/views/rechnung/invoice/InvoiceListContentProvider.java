@@ -90,8 +90,9 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_UNTIL = "CAST(r.betrag AS SIGNED) >= ? AND CAST(r.betrag AS SIGNED) <= ?"; //$NON-NLS-1$
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_GREATER = "CAST(r.betrag AS SIGNED) >= ?"; //$NON-NLS-1$
 	private static final String SQL_CONDITION_INVOICE_AMOUNT_LESSER = "CAST(r.betrag AS SIGNED) <= ?"; //$NON-NLS-1$
-	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId = FallKostentrID"; //$NON-NLS-1$
-	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(FallGarantId = FallKostentrID)"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_TYPE_TP = "FallGarantId = FallKostentrID AND (SELECT istOrganisation FROM kontakt WHERE id = FallKostentrID) = '1'"; //$NON-NLS-1$
+	private static final String SQL_CONDITION_INVOICE_TYPE_TG = "NOT(" + SQL_CONDITION_INVOICE_TYPE_TP //$NON-NLS-1$
+			+ ") OR FallKostentrID is null"; //$NON-NLS-1$
 	private static final String SQL_CONDITION_BILLING_SYSTEM = "FallGesetz = ?"; //$NON-NLS-1$
 	//@formatter:on
 
@@ -381,8 +382,10 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 		if (type != null) {
 			QueryBuilder qb;
 			if ("TP".equals(type)) { //$NON-NLS-1$
+				// equals and costbearer is organization
 				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TP, (String) null);
 			} else {
+				// not equals or costbearer is not organization
 				qb = queryBuilder.build(SQL_CONDITION_INVOICE_TYPE_TG, (String) null);
 			}
 			qb.setInnerCondition(false);

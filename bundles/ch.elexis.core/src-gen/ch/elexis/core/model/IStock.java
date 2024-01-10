@@ -25,13 +25,15 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IStock#getDriverConfig <em>Driver Config</em>}</li>
  *   <li>{@link ch.elexis.core.model.IStock#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IStock#getLocation <em>Location</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IStock#getResponsible <em>Responsible</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIStock()
  * @model interface="true" abstract="true"
  * @generated
  */
-public interface IStock extends Identifiable, Deleteable {
+public interface IStock extends Identifiable, Deleteable, WithAssignableId {
 	/**
 	 * Returns the value of the '<em><b>Code</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -40,6 +42,9 @@ public interface IStock extends Identifiable, Deleteable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A unique code to define a specific stock. Stocks starting with 'P', followed by a number refer to patient located stocks (location will then be "Patient" too).
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Code</em>' attribute.
 	 * @see #setCode(String)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Code()
@@ -144,13 +149,16 @@ public interface IStock extends Identifiable, Deleteable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The person the contents of this stock (ultimately) belong to.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Owner</em>' reference.
-	 * @see #setOwner(IMandator)
+	 * @see #setOwner(IPerson)
 	 * @see ch.elexis.core.model.ModelPackage#getIStock_Owner()
 	 * @model
 	 * @generated
 	 */
-	IMandator getOwner();
+	IPerson getOwner();
 
 	/**
 	 * Sets the value of the '{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}' reference.
@@ -160,7 +168,7 @@ public interface IStock extends Identifiable, Deleteable {
 	 * @see #getOwner()
 	 * @generated
 	 */
-	void setOwner(IMandator value);
+	void setOwner(IPerson value);
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -172,5 +180,41 @@ public interface IStock extends Identifiable, Deleteable {
 		String driverUuid = getDriverUuid();
 		return (driverUuid != null && driverUuid.length() > 0);
 	}
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setDescription(String value);
+
+	/**
+	 * 
+	 * @return
+	 */
+	String getDescription();
+
+	/**
+	 * 
+	 * @return
+	 */
+	String getLocation();
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setLocation(String value);
+
+	/**
+	 * 
+	 * @return
+	 */
+	IContact getResponsible();
+
+	/**
+	 * 
+	 * @param value
+	 */
+	void setResponsible(IContact value);
 
 } // IStock

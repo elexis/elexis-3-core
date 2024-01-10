@@ -35,6 +35,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -42,6 +44,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -330,7 +334,39 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 				return StringTool.leer;
 			}
 		});
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+					IDiagnosis b1 = (IDiagnosis) e1;
+					IDiagnosis b2 = (IDiagnosis) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
 
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(codeComparator);
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+
+		});
 		col = createTableViewerColumn(titles[2], weights[2], 2, SWT.NONE);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -343,6 +379,42 @@ public class DiagnosenDisplay extends Composite implements IUnlockable {
 					return diagnosis.getText();
 				}
 				return StringTool.leer;
+			}
+		});
+
+		ViewerComparator descriptionComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IDiagnosisReference && e2 instanceof IDiagnosisReference) {
+					IDiagnosisReference b1 = (IDiagnosisReference) e1;
+					IDiagnosisReference b2 = (IDiagnosisReference) e2;
+					int result = b1.getText().compareTo(b2.getText());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("descriptionSortAscending") != null) {
+					return (Boolean) viewer.getData("descriptionSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(descriptionComparator);
+				if (viewer.getComparator() == descriptionComparator) {
+					if (viewer.getData("descriptionSortAscending") != null) {
+						viewer.setData("descriptionSortAscending",
+								!(Boolean) viewer.getData("descriptionSortAscending"));
+					} else {
+						viewer.setData("descriptionSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
 			}
 		});
 

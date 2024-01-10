@@ -146,7 +146,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
-	
+
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
@@ -154,6 +154,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
+	private boolean isDescriptionSortedAscending = true;
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
 
 	@Optional
@@ -370,16 +371,54 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				return super.getImage(element);
 			}
 		});
-
 		TableViewerColumn col = createTableViewerColumn(titles[1], weights[1], 1, SWT.LEFT);
 		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				if (element instanceof IBilled) {
-					IBilled billed = (IBilled) element;
-					return Double.toString(billed.getAmount());
+		    @Override
+		    public String getText(Object element) {
+		        if (element instanceof IBilled) {
+		            IBilled billed = (IBilled) element;
+		            return Double.toString(billed.getAmount());
+		        }
+		        return StringUtils.EMPTY;
+		    }
+		});
+		ViewerComparator numberComparator = new ViewerComparator() {
+		    @Override
+		    public int compare(Viewer viewer, Object e1, Object e2) {
+		        if (e1 instanceof IBilled && e2 instanceof IBilled) {
+		            IBilled b1 = (IBilled) e1;
+		            IBilled b2 = (IBilled) e2;
+
+		            double amount1 = b1.getAmount();
+		            double amount2 = b2.getAmount();
+
+		            int result = Double.compare(amount1, amount2);
+
+		            return getSortedAscending(viewer) ? result : -result;
+		        }
+		        return 0;
+		    }
+
+		    private boolean getSortedAscending(Viewer viewer) {
+		        if (viewer.getData("numberSortAscending") != null) {
+		            return (Boolean) viewer.getData("numberSortAscending");
+		        }
+		        return true;
+		    }
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        viewer.setComparator(numberComparator);
+		        if (viewer.getComparator() == numberComparator) {
+					if (viewer.getData("numberSortAscending") != null) {
+						viewer.setData("numberSortAscending", !(Boolean) viewer.getData("numberSortAscending"));
+					} else {
+						viewer.setData("numberSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
 				}
-				return StringUtils.EMPTY;
 			}
 		});
 
@@ -392,6 +431,41 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return getServiceCode(billed);
 				}
 				return StringUtils.EMPTY;
+			}
+		});
+
+		ViewerComparator codeComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getCode().compareTo(b2.getCode());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(codeComparator);
+				if (viewer.getComparator() == codeComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
 			}
 		});
 
@@ -413,6 +487,42 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return getBackgroundColor(billed);
 				}
 				return null;
+			}
+		});
+
+		ViewerComparator descriptionComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getText().compareTo(b2.getText());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("descriptionSortAscending") != null) {
+					return (Boolean) viewer.getData("descriptionSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(descriptionComparator);
+				if (viewer.getComparator() == descriptionComparator) {
+					if (viewer.getData("descriptionSortAscending") != null) {
+						viewer.setData("descriptionSortAscending",
+								!(Boolean) viewer.getData("descriptionSortAscending"));
+					} else {
+						viewer.setData("descriptionSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
 			}
 		});
 
@@ -456,6 +566,41 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 						viewer.setData("priceSortAscending", !(Boolean) viewer.getData("priceSortAscending"));
 					} else {
 						viewer.setData("priceSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
+			}
+		});
+
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getTotal().compareTo(b2.getTotal());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("codeSortAscending") != null) {
+					return (Boolean) viewer.getData("codeSortAscending");
+				}
+				return true;
+			}
+		};
+
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(priceComparator);
+				if (viewer.getComparator() == priceComparator) {
+					if (viewer.getData("codeSortAscending") != null) {
+						viewer.setData("codeSortAscending", !(Boolean) viewer.getData("codeSortAscending"));
+					} else {
+						viewer.setData("codeSortAscending", Boolean.FALSE);
 					}
 					viewer.refresh();
 				}
@@ -1117,6 +1262,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	public MenuManager getMenuManager() {
+
 		return contextMenuManager;
 	}
 

@@ -367,6 +367,18 @@ public class Messages {
 	public static String StockManagementPreferencePage_lblMachine_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_toolTipText;
 	public static String StockManagementPreferencePage_lblLocation_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblLocation_toolTipText;
 	public static String StockManagementPreferencePage_lblCode_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblCode_toolTipText;
+	public static String StockManagementPreferencePage_delete_stock = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_delete_stock;
+	public static String StockManagementPreferencePage_delete_stock_dsc = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_delete_stock_dsc;
+	public static String StockManagementPreferencePag_select_owner = ch.elexis.core.l10n.Messages.StockManagementPreference_select_owner;
+	public static String StockManagementPreferencePag_select_stock_owner = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_owner;
+	public static String StockManagementPreferencePag_select_stock_owner_dsc = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_owner_dsc;
+	public static String StockManagementPreference_select_stock_select_default_supplier = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_select_default_supplier;
+	public static String StockManagementPreference_select_stock_select_default_supplier_dsc = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_select_default_supplier_dsc;
+	public static String StockManagementPreference_no_drivers = ch.elexis.core.l10n.Messages.StockManagementPreference_no_drivers;
+	public static String StockManagementPreference_no_drivers_dsc = ch.elexis.core.l10n.Messages.StockManagementPreference_no_drivers_dsc;
+	public static String StockManagementPreference_select_driver = ch.elexis.core.l10n.Messages.StockManagementPreference_select_driver;
+	public static String StockManagementPreference_select_driver_dsc = ch.elexis.core.l10n.Messages.StockManagementPreference_select_driver_dsc;
+
 	public static String Core_Priority = ch.elexis.core.l10n.Messages.Core_Priority;
 	public static String Core_Add = ch.elexis.core.l10n.Messages.Core_Add;
 	public static String Core_Remove = ch.elexis.core.l10n.Messages.Core_Remove;

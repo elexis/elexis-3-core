@@ -1080,6 +1080,8 @@ public class Messages extends NLS {
 	public static String Core_Stock;
 	public static String Core_Stock_Max_Articles_per_item;
 	public static String Core_Stock_Min_Articles_per_item;
+	public static String Core_Stock_delete_stock;
+	public static String CoreCore_Stock_delete_stock_dsc;
 	public static String Core_Street;
 	public static String Core_Subject;
 	public static String Core_Sum;
@@ -3927,10 +3929,19 @@ public class Messages extends NLS {
 	public static String ReminderView_sortByDueDateDescending;
 	public static String ReminderView_toggleSelectPatientActionTooltip;
 	public static String ReminderView_txtSearch_message;
+	public static String ReminderView_WarningAllFilter;
 	public static String RemindersComposite_btnNewButton_text_1;
 	public static String RemindersComposite_lblCheckingForActions_text;
 	public static String RemindersComposite_lblHeart_text;
 	public static String RemindersComposite_title_reminder;
+	public static String Reminders_ShowNotYetDueReminders;
+	public static String Reminders_ShowNotYetDueReminders_Tooltip;
+	public static String Reminders_PopupOnLogin;
+	public static String Reminders_PopupOnLogin_ToolTip;
+	public static String Reminders_PopupOnPatientSelection;
+	public static String Reminders_PopupOnPatientSelection_ToolTip;
+	public static String Reminders_AssignedToMe;
+	public static String Reminders_AssignedToMe_ToolTip;
 	public static String RemoveLicenseDialog_Query;
 	public static String RemoveLicenseDialog_QueryBody;
 	public static String RemoveLicenseJob_Removing;
@@ -4214,6 +4225,7 @@ public class Messages extends NLS {
 	public static String ServiceDiagnosis_UpTooltip;
 	public static String ServiceDiagnosis_View;
 	public static String Services_ExplanationLine1;
+	public static String Service_Tarif;
 	public static String SetNonPathologic;
 	public static String SetPathologic;
 	public static String Settings_AutoCreateLabItem;
@@ -4259,6 +4271,7 @@ public class Messages extends NLS {
 	public static String StickyNotesView_StickyNotesNameDash;
 	public static String StockDetailComposite_availableInStock;
 	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
+	public static String StockManagementPreferencePage_btnStoreOnlyStockeArticles_text;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
 	public static String StockManagementPreferencePage_group_text;
 	public static String StockManagementPreferencePage_lblCode_toolTipText;
@@ -4275,6 +4288,17 @@ public class Messages extends NLS {
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_tblclmnNewColumn_text_2;
 	public static String StockManagementPreferencePage_txtOwner_text;
+	public static String StockManagementPreferencePage_delete_stock_dsc;
+	public static String StockManagementPreference_no_drivers;
+	public static String StockManagementPreferencePage_delete_stock;
+	public static String StockManagementPreference_select_owner;
+	public static String StockManagementPreference_select_stock_owner;
+	public static String StockManagementPreference_select_stock_owner_dsc;
+	public static String StockManagementPreference_select_stock_select_default_supplier;
+	public static String StockManagementPreference_select_stock_select_default_supplier_dsc;
+	public static String StockManagementPreference_no_drivers_dsc;
+	public static String StockManagementPreference_select_driver;
+	public static String StockManagementPreference_select_driver_dsc;
 	public static String StockView_OutlayArticle;
 	public static String StockView_PerformFullInventoryOnCommSystem;
 	public static String StockView_reload;
@@ -4982,6 +5006,17 @@ public class Messages extends NLS {
 	public static String RemoveDSGWhenDeceased_description;
 	public static String Warning;
 	public static String Warning_No_Pea;
+	public static String AgendaFarben_Bereich_Description;
+	public static String AgendaFarben_Titel;
+	public static String AgendaFarben_Link;
+	public static String Agenda_Mandator;
+	public static String Prefs_DefaultMessageRecipient;
+	public static String Web_Favorit_Limit;
+	public static String Web_Favorit_Limit_Text;
+	public static String Web_History_Delete;
+	public static String Web_Button_Favoriten;
+	public static String Web_Button_Forward;
+	public static String Inputfield_empty;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

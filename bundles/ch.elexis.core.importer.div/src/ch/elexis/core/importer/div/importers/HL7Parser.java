@@ -336,6 +336,10 @@ public class HL7Parser {
 				results.add(patientNoteAndComment);
 			}
 
+			if (patientResolver.userResolved()) {
+				results.forEach(r -> r.setUserResolved(Boolean.TRUE));
+			}
+
 			orderId = labImportUtil.importLabResults(results, importHandler);
 
 		} catch (Exception e) {

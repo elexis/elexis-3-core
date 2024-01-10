@@ -15,7 +15,7 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if ("isSCSAvailable".equals(property)) { //$NON-NLS-1$
 			if (isScsAvailable == null) {
-				List<IStock> allStocks = StockServiceHolder.get().getAllStocks(true);
+				List<IStock> allStocks = StockServiceHolder.get().getAllStocks(true, false);
 				Optional<IStock> scs = allStocks.stream().filter(s -> s.isCommissioningSystem()).findFirst();
 				isScsAvailable = scs.isPresent();
 			}

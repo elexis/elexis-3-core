@@ -25,6 +25,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.data.interfaces.IVerrechenbar;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.ui.dialogs.EigenLeistungDialog;
 import ch.elexis.data.PersistentObject;
 
@@ -39,9 +41,11 @@ public class EditEigenleistungUi extends AbstractHandler {
 			String param = event.getParameter(PARAMETERID);
 			IVerrechenbar verrechenbar = (IVerrechenbar) event.getCommand().getParameterType(PARAMETERID)
 					.getValueConverter().convertToObject(param);
+			ICustomService customService = NoPoUtil.loadAsIdentifiable((PersistentObject) verrechenbar,
+					ICustomService.class).orElse(null);
 			// create and open the dialog with the parameter
 			Shell parent = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
-			EigenLeistungDialog dialog = new EigenLeistungDialog(parent, verrechenbar);
+			EigenLeistungDialog dialog = new EigenLeistungDialog(parent, customService);
 			dialog.open();
 		} catch (Exception ex) {
 			throw new RuntimeException(COMMANDID, ex);

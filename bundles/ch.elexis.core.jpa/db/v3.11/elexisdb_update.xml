@@ -313,4 +313,27 @@ UPDATE ARTIKEL SET ID = REPLACE(ID, ' ', '') WHERE Typ = 'MiGeL';
 	    </sql>
 	</changeSet>
 	
+	<changeSet id="increase_stock_code" author="pdenzler">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(ID)
+				FROM STOCK
+				WHERE CHAR_LENGTH(CODE) = 7
+				</sqlCheck>
+		</preConditions>
+		<modifyDataType tableName="STOCK" columnName="CODE" newDataType="CHAR(7)"/>
+		<addUniqueConstraint columnNames="CODE" tableName="STOCK"/>
+	</changeSet>
+	
+	<changeSet id="manual_update_laborder_userresolved" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="LABORDER" columnName="USERRESOLVED" />
+			</not>
+		</preConditions>
+		<addColumn tableName="LABORDER">
+			<column name="USERRESOLVED" type="CHAR(1)" defaultValue="0"/>
+		</addColumn>
+	</changeSet>
+	
 </databaseChangeLog>

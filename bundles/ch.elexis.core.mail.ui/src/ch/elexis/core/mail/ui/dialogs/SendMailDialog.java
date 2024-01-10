@@ -91,7 +91,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-	private boolean doSend;
+	private boolean doSend = true;
 	private LocalDateTime sentTime;
 
 	public SendMailDialog(Shell parentShell) {
@@ -282,7 +282,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					updateLayout();
 				}
 			});
-			if (Boolean.valueOf(doSend)) {
+			if (!doSend) {
 				lbl.setVisible(false);
 				templatesViewer.getCombo().setVisible(false);
 				attachments.setVisible(false);
@@ -405,9 +405,9 @@ public class SendMailDialog extends TitleAreaDialog {
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);
 			if (doSend) {
-				okButton.setText(IDialogConstants.OK_LABEL);
-			} else {
 				okButton.setText("Senden");
+			} else {
+				okButton.setText(IDialogConstants.OK_LABEL);
 			}
 			if (sentTime != null) {
 				setTitle("E-Mail Anzeige");

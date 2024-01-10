@@ -11,3 +11,4 @@ Bundle-Vendor: ch.elexis
 Automatic-Module-Name: ch.elexis.core.test.context
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
+Export-Package: ch.elexis.core.test.context

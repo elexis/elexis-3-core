@@ -3,10 +3,11 @@ package ch.elexis.core.findings.ui.composites;
 import java.util.Optional;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
@@ -43,15 +44,15 @@ public class PersonalAnamnesisComposite extends Composite {
 		if (textOberservation != null) {
 			item.setValue(new ObservationBeanAdapter(
 					input.isPresent() ? input.get() : FindingsServiceComponent.getService().create(IObservation.class))
-							.category(ObservationCategory.SOCIALHISTORY)
-							.coding(new TransientCoding(ObservationCode.ANAM_PERSONAL)).autoSave(true));
+					.category(ObservationCategory.SOCIALHISTORY)
+					.coding(new TransientCoding(ObservationCode.ANAM_PERSONAL)).autoSave(true));
 		}
 	}
 
 	protected void initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		IObservableValue target = WidgetProperties.text(SWT.Modify).observeDelayed(1500, textOberservation);
-		IObservableValue model = PojoProperties.value(ObservationBeanAdapter.class, "text", String.class)
+		ISWTObservableValue<String> target = WidgetProperties.text(SWT.Modify).observeDelayed(150, textOberservation);
+		IObservableValue<String> model = PojoProperties.value(AbstractBeanAdapter.class, "text", String.class)
 				.observeDetail(item);
 
 		bindingContext.bindValue(target, model, null, null);

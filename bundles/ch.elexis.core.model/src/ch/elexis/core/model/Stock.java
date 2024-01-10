@@ -15,6 +15,11 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
+	public void setId(String id) {
+		getEntity().setId(id);
+	}
+
+	@Override
 	public String getCode() {
 		return getEntity().getCode();
 	}
@@ -35,9 +40,27 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public IMandator getOwner() {
+	public IPerson getOwner() {
 		if (getEntity().getOwner() != null) {
-			return ModelUtil.getAdapter(getEntity().getOwner(), IMandator.class, true);
+			return ModelUtil.getAdapter(getEntity().getOwner(), IPerson.class, true);
+		}
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		return getEntity().getDescription();
+	}
+
+	@Override
+	public String getLocation() {
+		return getEntity().getLocation();
+	}
+
+	@Override
+	public IContact getResponsible() {
+		if (getEntity().getResponsible() != null) {
+			return ModelUtil.getAdapter(getEntity().getResponsible(), IContact.class, true);
 		}
 		return null;
 	}
@@ -63,7 +86,7 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public void setOwner(IMandator value) {
+	public void setOwner(IPerson value) {
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty().setOwner((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
@@ -71,6 +94,26 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		} else {
 			getEntityMarkDirty().setOwner(null);
 		}
+	}
+
+	@Override
+	public void setDescription(String value) {
+		getEntityMarkDirty().setDescription(value);
+	}
+
+	@Override
+	public void setLocation(String value) {
+		getEntityMarkDirty().setLocation(value);
+	}
+
+	@Override
+	public void setResponsible(IContact value) {
+		if (value instanceof AbstractIdModelAdapter aida) {
+			getEntityMarkDirty().setResponsible((Kontakt) ((AbstractIdModelAdapter<?>) aida).getEntity());
+		} else {
+			getEntityMarkDirty().setResponsible(null);
+		}
+
 	}
 
 	@Override

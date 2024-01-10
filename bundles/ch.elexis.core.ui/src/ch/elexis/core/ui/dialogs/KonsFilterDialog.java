@@ -88,7 +88,6 @@ public class KonsFilterDialog extends TitleAreaDialog {
 		bRegex = new Button(ret, SWT.CHECK);
 		bRegex.setText(Messages.KonsFilterDialog_regExp); // $NON-NLS-1$
 		cbFaelle.select(0);
-		bCase.setSelection(true);
 		return ret;
 	}
 

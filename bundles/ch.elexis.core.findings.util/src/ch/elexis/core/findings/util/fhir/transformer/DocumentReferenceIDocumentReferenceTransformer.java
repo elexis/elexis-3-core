@@ -20,6 +20,7 @@ import org.hl7.fhir.r4.model.DocumentReference.DocumentReferenceContentComponent
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
@@ -27,6 +28,7 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IFindingsService;
+import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
@@ -45,7 +47,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
 
-	@Reference
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private List<IDocumentStore> documentStores;
 
 	@Reference
@@ -67,8 +69,8 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			if (ret.getContent().isEmpty()) {
 				IDocument document = localObject.getDocument();
 				if (document != null) {
-					ret.addCategory(new CodeableConcept(
-							new Coding("http://elexis.info/document/storeid", document.getStoreId(), "")));
+					ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(),
+							document.getStoreId(), StringUtils.EMPTY)));
 
 					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 					Attachment attachment = new Attachment();
@@ -144,9 +146,9 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	}
 
 	private IDocumentStore getDocumentStoreId(DocumentReference fhirObject) {
-		if(fhirObject.hasCategory()) {
-			Optional<String> storeIdCode = FhirUtil.getCodeFromConceptList("http://elexis.info/document/storeid",
-					fhirObject.getCategory());
+		if (fhirObject.hasCategory()) {
+			Optional<String> storeIdCode = FhirUtil
+					.getCodeFromConceptList(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(), fhirObject.getCategory());
 			if (storeIdCode.isPresent()) {
 				return getDocumentStoreWithId(storeIdCode.get()).orElse(getDefaultDocumentStore());
 			}

@@ -17,6 +17,8 @@ public class TestContext implements IContext {
 
 	private TestContext parent;
 
+	private final String STATION_IDENTIFIER = UUID.randomUUID().toString();
+
 	public TestContext() {
 		this(null, "root");
 	}
@@ -54,11 +56,11 @@ public class TestContext implements IContext {
 				}
 			}
 			Optional<Class<?>> modelInterface = getModelInterface(object);
-			if (object.equals(context.get(modelInterface.get().getName()))) {
-				// object is already in the context do nothing otherwise loop happens
-				return;
-			}
 			if (modelInterface.isPresent()) {
+				if (object.equals(context.get(modelInterface.get().getName()))) {
+					// object is already in the context do nothing otherwise loop happens
+					return;
+				}
 				context.put(modelInterface.get().getName(), object);
 			} else {
 				context.put(object.getClass().getName(), object);
@@ -110,6 +112,6 @@ public class TestContext implements IContext {
 
 	@Override
 	public String getStationIdentifier() {
-		return UUID.randomUUID().toString();
+		return STATION_IDENTIFIER;
 	}
 }
