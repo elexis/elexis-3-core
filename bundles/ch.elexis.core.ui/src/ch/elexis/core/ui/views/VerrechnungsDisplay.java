@@ -146,7 +146,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
-	private boolean isPriceSortedAscending = true;
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
@@ -478,10 +477,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		});
 	}
 
-	protected boolean getSortedAscending(TableViewer viewer2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
