@@ -146,6 +146,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
+
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
@@ -535,6 +536,39 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return price.getAmountAsString();
 				}
 				return StringUtils.EMPTY;
+			}
+		});
+		ViewerComparator priceComparator = new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IBilled && e2 instanceof IBilled) {
+					IBilled b1 = (IBilled) e1;
+					IBilled b2 = (IBilled) e2;
+					int result = b1.getTotal().compareTo(b2.getTotal());
+					return getSortedAscending(viewer) ? result : -result;
+				}
+				return 0;
+			}
+
+			private boolean getSortedAscending(Viewer viewer) {
+				if (viewer.getData("priceSortAscending") != null) {
+					return (Boolean) viewer.getData("priceSortAscending");
+				}
+				return true;
+			}
+		};
+		col.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewer.setComparator(priceComparator);
+				if (viewer.getComparator() == priceComparator) {
+					if (viewer.getData("priceSortAscending") != null) {
+						viewer.setData("priceSortAscending", !(Boolean) viewer.getData("priceSortAscending"));
+					} else {
+						viewer.setData("priceSortAscending", Boolean.FALSE);
+					}
+					viewer.refresh();
+				}
 			}
 		});
 
