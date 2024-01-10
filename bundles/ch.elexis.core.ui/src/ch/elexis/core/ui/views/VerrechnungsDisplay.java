@@ -146,6 +146,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private final GenericObjectDropTarget dropTarget;
 	private IAction applyMedicationAction, chPriceAction, chCountAction, chTextAction, removeAction, removeAllAction;
 	private TableColumnLayout tableLayout;
+	
 	private static final String INDICATED_MEDICATION = Messages.VerrechnungsDisplay_indicatedMedication;
 	private static final String APPLY_MEDICATION = Messages.VerrechnungsDisplay_applyMedication;
 	private static final String CHPRICE = Messages.VerrechnungsDisplay_changePrice;
