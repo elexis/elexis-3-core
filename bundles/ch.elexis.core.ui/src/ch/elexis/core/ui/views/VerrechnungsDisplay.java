@@ -477,7 +477,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		});
 	}
 
-
 	private TableViewerColumn createTableViewerColumn(String title, int weight, int colNumber, int style) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, style);
 		final TableColumn column = viewerColumn.getColumn();
