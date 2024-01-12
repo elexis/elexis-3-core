@@ -12,6 +12,7 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
@@ -129,5 +130,40 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		String template = "[Datum.heute]";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals(TimeUtil.DATE_GER.format(LocalDate.now()), replaced);
+	}
+
+	@Test
+	public void aufReplacement() {
+		LocalDate start = LocalDate.of(2000, 1, 12);
+		ISickCertificate sickCertificate = CoreModelServiceHolder.get().create(ISickCertificate.class);
+		sickCertificate.setPatient(AllServiceTests.getPatient());
+		sickCertificate.setStart(start);
+		sickCertificate.setEnd(start.plusDays(7));
+		sickCertificate.setNote("note");
+		sickCertificate.setReason("reason");
+		sickCertificate.setPercent(99);
+		CoreModelServiceHolder.get().save(sickCertificate);
+
+		contextService.getRootContext().setTyped(sickCertificate);
+
+		String template = "[AUF.von]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("12.01.2000", replaced);
+		
+		template = "[AUF.bis]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("19.01.2000", replaced);
+
+		template = "[AUF.Grund]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("reason", replaced);
+
+		template = "[AUF.Prozent]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("99", replaced);
+
+		template = "[AUF.Zusatz]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("note", replaced);
 	}
 }
