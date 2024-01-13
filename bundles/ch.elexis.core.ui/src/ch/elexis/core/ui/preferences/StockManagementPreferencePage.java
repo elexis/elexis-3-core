@@ -48,6 +48,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -74,13 +75,14 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	private Button btnChkStoreInvalidNumbers;
 	private Button btnIgnoreOrderedArticlesOnNextOrder;
 
-	private WritableValue<Stock> stockDetail = new WritableValue<Stock>(null, Stock.class);
+	private WritableValue<Stock> stockDetail = new WritableValue<>(null, Stock.class);
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
 
 	private Label lblDefaultArticleProvider;
 	private Button btnMachineOutlayPartialPackages;
+	private Button btnMachineStoreOnlyStockArticles;
 
 	private Button btnStoreBelow;
 	private Button btnStoreAtMin;
@@ -398,6 +400,15 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
 
+		btnMachineStoreOnlyStockArticles = new Button(compositeDetail, SWT.CHECK);
+		btnMachineStoreOnlyStockArticles.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		btnMachineStoreOnlyStockArticles
+				.setText(Messages.StockManagementPreferencePage_btnStoreOnlyStockeArticles_text);
+		boolean storeOnlyStockedArticles = ConfigServiceHolder.getGlobal(
+				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
+		btnMachineStoreOnlyStockArticles.setSelection(storeOnlyStockedArticles);
+
 		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
 		btnIgnoreOrderedArticlesOnNextOrder.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
 		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
@@ -528,6 +539,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				btnIgnoreOrderedArticlesOnNextOrder.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				btnMachineOutlayPartialPackages.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+				btnMachineStoreOnlyStockArticles.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
 				btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
 						: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
