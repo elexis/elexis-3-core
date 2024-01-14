@@ -270,7 +270,7 @@ public class BestellView extends ViewPart {
 		tv.setInput(getViewSite());
 	}
 
-	private void setOrder(final IOrder order) {
+	public void setOrder(final IOrder order) {
 		actOrder = order;
 		if (order != null && !form.isDisposed()) {
 			form.setText(order.getName());
@@ -280,6 +280,12 @@ public class BestellView extends ViewPart {
 			checkInAction.setEnabled(false);
 			checkInAction.setToolTipText(Messages.BestellView_NoOrder);
 		}
+	}
+
+	@Inject
+	@org.eclipse.e4.core.di.annotations.Optional
+	public void onOrderSelected(@UIEventTopic("BestellenView/orderSelected") IOrder order) {
+		setOrder(order);
 	}
 
 	private void updateCheckIn() {
