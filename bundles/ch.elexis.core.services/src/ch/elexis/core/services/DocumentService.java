@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,14 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.internal.text.RecipeDocumentTemplateReplacement;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.ReplaceCallback;
 
 @Component
 public class DocumentService implements IDocumentService {
+
+	public static final String MATCH_DIRECTTEMPLATE = "\\[[-a-zA-ZäöüÄÖÜéàè_]+\\]";
 
 	@Reference
 	private ITextPlugin textPlugin;
@@ -30,6 +34,22 @@ public class DocumentService implements IDocumentService {
 
 	@Reference
 	private List<IDocumentStore> documentStores;
+
+	private Map<String, IDirectTemplateReplacement> directTemplateReplacement;
+
+	@Activate
+	public void activate() {
+		directTemplateReplacement = new HashMap<>();
+
+		addDirectTemplateReplacement("[Rezeptzeilen]",
+				new RecipeDocumentTemplateReplacement("[Rezeptzeilen]", false, false));
+		addDirectTemplateReplacement("[RezeptzeilenExt]",
+				new RecipeDocumentTemplateReplacement("[RezeptzeilenExt]", false, true));
+		addDirectTemplateReplacement("[Medikamentenliste]",
+				new RecipeDocumentTemplateReplacement("[Medikamentenliste]", true, false));
+		addDirectTemplateReplacement("[MedikamentenlisteExt]",
+				new RecipeDocumentTemplateReplacement("[MedikamentenlisteExt]", true, true));
+	}
 
 	@Override
 	public IDocument createDocument(IDocumentTemplate template, IContext context) {
@@ -50,6 +70,14 @@ public class DocumentService implements IDocumentService {
 						return textReplacementService.performReplacement(context, in);
 					}
 				});
+
+				List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
+				for (String string : matches) {
+					IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
+					if (templateReplacement != null) {
+						templateReplacement.replace(textPlugin, context);
+					}
+				}
 
 				IDocument document = documentStore.createDocument(getPatientId(context), getTitle(template, context),
 						getCategory(template, context));
@@ -88,6 +116,14 @@ public class DocumentService implements IDocumentService {
 						return StringUtils.EMPTY;
 					}
 				});
+				
+				List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
+				for (String string : matches) {
+					IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
+					if (templateReplacement != null) {
+						result.put(string, templateReplacement.replace(textPlugin, context));
+					}
+				}
 
 				return result;
 			} else {
@@ -122,5 +158,14 @@ public class DocumentService implements IDocumentService {
 			return documentStores.stream().filter(ds -> storeId.equals(ds.getId())).findAny().orElse(null);
 		}
 		return null;
+	}
+
+	@Override
+	public void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer) {
+		if (directTemplateReplacement.containsKey(template)) {
+			LoggerFactory.getLogger(getClass()).warn(
+					"Direct template consumer [" + template + "] replaced with [" + textTemplateConsumer + "]");
+		}
+		directTemplateReplacement.put(template, textTemplateConsumer);
 	}
 }
