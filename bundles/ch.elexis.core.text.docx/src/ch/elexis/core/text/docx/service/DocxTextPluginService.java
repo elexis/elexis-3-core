@@ -1,6 +1,7 @@
 package ch.elexis.core.text.docx.service;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -109,7 +110,13 @@ public class DocxTextPluginService implements ITextPlugin {
 		return instance.get().getCurrentDocument();
 	}
 
-	public int findTextCount(String text) {
-		return instance.get().findTextCount(text);
+	@Override
+	public int findCount(String pattern) {
+		return instance.get().findCount(pattern);
+	}
+
+	@Override
+	public List<String> findMatching(String pattern) {
+		return instance.get().findMatching(pattern);
 	}
 }

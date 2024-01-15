@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -1316,6 +1317,18 @@ public class TextContainer {
 		public Object getCurrentDocument() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public int findCount(String pattern) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public List<String> findMatching(String pattern) {
+			// TODO Auto-generated method stub
+			return Collections.emptyList();
 		}
 	}
 

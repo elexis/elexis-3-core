@@ -12,6 +12,8 @@
 package ch.elexis.core.ui.text;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -79,6 +81,18 @@ public class ETFTextPlugin implements ITextPlugin {
 	public boolean findOrReplace(String pattern, ReplaceCallback cb) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public int findCount(String pattern) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<String> findMatching(String pattern) {
+		// TODO Auto-generated method stub
+		return Collections.emptyList();
 	}
 
 	public PageFormat getFormat() {

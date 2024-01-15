@@ -49,7 +49,7 @@ public class DocxTextPluginTest {
 
 		WordprocessingMLPackage document = (WordprocessingMLPackage) plugin.getCurrentDocument();
 		assertNotNull(document);
-		int foundCount = plugin.findTextCount("test replace text");
+		int foundCount = plugin.findCount("test replace text");
 		assertTrue(foundCount > 0);
 
 		saveToTempFileAndDelete(document, "ueberweisungSie");
@@ -127,7 +127,7 @@ public class DocxTextPluginTest {
 		WordprocessingMLPackage document = (WordprocessingMLPackage) plugin.getCurrentDocument();
 		assertNotNull(document);
 
-		int foundCount = plugin.findTextCount("EAN List");
+		int foundCount = plugin.findCount("EAN List");
 		assertTrue(foundCount > 0);
 
 		// find in textbox required, tab problem
@@ -136,7 +136,7 @@ public class DocxTextPluginTest {
 				return "Falldatum";
 			}
 		});
-		foundCount = plugin.findTextCount("Falldatum");
+		foundCount = plugin.findCount("Falldatum");
 		assertTrue(foundCount > 0);
 
 		plugin.findOrReplace("\\[Fall.BeginnDatum\\]", new ReplaceCallback() {
@@ -144,7 +144,7 @@ public class DocxTextPluginTest {
 				return "01.01.2011";
 			}
 		});
-		foundCount = plugin.findTextCount("01.01.2011");
+		foundCount = plugin.findCount("01.01.2011");
 		assertTrue(foundCount > 0);
 
 		// replace in textbox with line break
@@ -153,7 +153,7 @@ public class DocxTextPluginTest {
 				return "test adressat\ntest adresse";
 			}
 		});
-		foundCount = plugin.findTextCount("test adressat");
+		foundCount = plugin.findCount("test adressat");
 		assertTrue(foundCount > 0);
 
 		// insert absolute position with cursor

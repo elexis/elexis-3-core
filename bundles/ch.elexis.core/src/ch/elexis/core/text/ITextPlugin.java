@@ -1,6 +1,7 @@
 package ch.elexis.core.text;
 
 import java.io.InputStream;
+import java.util.List;
 
 public interface ITextPlugin {
 
@@ -79,6 +80,24 @@ public interface ITextPlugin {
 	 * @return true if pattern was found at least once
 	 */
 	public boolean findOrReplace(String pattern, ReplaceCallback cb);
+
+	/**
+	 * Find exact matches of the text in the document, and return how often it was
+	 * found.
+	 * 
+	 * @param pattern
+	 * @return
+	 */
+	public int findCount(String text);
+
+	/**
+	 * Find a pattern (regular expression) in the document, and return all found
+	 * matches.
+	 * 
+	 * @param matchDirecttemplate
+	 * @return
+	 */
+	public List<String> findMatching(String pattern);
 
 	/**
 	 * Store the document into the byte array. The format can be any component

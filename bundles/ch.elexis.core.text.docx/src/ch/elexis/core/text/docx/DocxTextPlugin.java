@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.MimeTypeUtil;
 import ch.elexis.core.text.ReplaceCallback;
+import ch.elexis.core.text.docx.stax.RegexFindStAXHandler;
 import ch.elexis.core.text.docx.stax.TextFindStAXHandler;
 import ch.elexis.core.text.docx.util.DocxUtil;
 import ch.elexis.core.text.docx.util.FindTextVisitor;
@@ -134,7 +136,36 @@ public class DocxTextPlugin implements ITextPlugin {
 		return false;
 	}
 
-	public int findTextCount(String text) {
+	@Override
+	public List<String> findMatching(String pattern) {
+		if (currentDocument != null) {
+			try {
+				prepare();
+
+				RegexFindStAXHandler stAXHAndler = new RegexFindStAXHandler(pattern);
+				MainDocumentPart documentPart = currentDocument.getMainDocumentPart();
+				// find header and footer
+				RelationshipsPart relationshipPart = documentPart.getRelationshipsPart();
+				List<Relationship> relationships = relationshipPart.getRelationships().getRelationship();
+				for (Relationship relationship : relationships) {
+					if (relationship.getType().equals(Namespaces.HEADER)
+							|| relationship.getType().equals(Namespaces.FOOTER)) {
+						JaxbXmlPart part = (JaxbXmlPart) relationshipPart.getPart(relationship);
+						part.pipe(stAXHAndler);
+					}
+				}
+				// find main document
+				documentPart.pipe(stAXHAndler);
+				return stAXHAndler.getFoundList();
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).error("Error finding text [" + pattern + "]", e);
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public int findCount(String text) {
 		if (currentDocument != null) {
 			try {
 				prepare();
