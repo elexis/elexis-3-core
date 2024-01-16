@@ -30,10 +30,13 @@ public class TextReplacementService implements ITextReplacementService {
 
 	private Pattern matchGenderize;
 
+	private Pattern matchDataAccess;
+
 	@Activate
 	public void activate() {
 		matchTemplate = Pattern.compile(MATCH_TEMPLATE);
 		matchGenderize = Pattern.compile(MATCH_GENDERIZE);
+		matchDataAccess = Pattern.compile(MATCH_IDATACCESS);
 	}
 
 	private String replacePlaceholder(IContext context, String placeholder) {
@@ -73,6 +76,14 @@ public class TextReplacementService implements ITextReplacementService {
 		while (matcher.find()) {
 			String found = matcher.group();
 			matcher.appendReplacement(sb, Matcher.quoteReplacement(replaceGenderize(context, found)));
+		}
+		matcher.appendTail(sb);
+
+		matcher = matchDataAccess.matcher(sb.toString());
+		sb = new StringBuffer();
+		while (matcher.find()) {
+			String found = matcher.group();
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(replaceDataAccess(context, found)));
 		}
 		matcher.appendTail(sb);
 
@@ -147,5 +158,35 @@ public class TextReplacementService implements ITextReplacementService {
 			}
 			return g[2];
 		}
+	}
+
+	private String replaceDataAccess(IContext context, String placeholder) {
+		String substring = placeholder.substring(1, placeholder.length() - 1);
+
+		String[] adr = substring.split(":");
+		if (adr.length < 4) {
+			LoggerFactory.getLogger(getClass()).warn("Invalid data access placeholder [" + substring + "]");
+			return null;
+		}
+		String type = adr[0];
+		String dependendObject = adr[1];
+		String dates = adr[2];
+		String desc = adr[3];
+		String[] params = null;
+		if (adr.length == 5) {
+			params = adr[4].split("\\.");
+		}
+
+		if (StringUtils.isNoneBlank(type) && StringUtils.isNoneBlank(desc)) {
+			for (ITextPlaceholderResolver resolver : placeholderResolvers) {
+				if (resolver.getSupportedType().equalsIgnoreCase(type)) {
+					Optional<String> result = resolver.replaceByTypeAndAttribute(context, desc);
+					if (result.isPresent()) {
+						return result.get();
+					}
+				}
+			}
+		}
+		return "?";
 	}
 }

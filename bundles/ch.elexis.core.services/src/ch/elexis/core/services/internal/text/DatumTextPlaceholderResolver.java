@@ -2,6 +2,7 @@ package ch.elexis.core.services.internal.text;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,19 +53,29 @@ public class DatumTextPlaceholderResolver implements ITextPlaceholderResolver {
 		return null;
 	}
 
-	private enum DatumAttribute implements ILocalizedEnum {
-		Heute("Datum Heute");
+	private enum DatumAttribute implements ILocalizedEnum, IPlaceholderAttributeEnum {
+		Heute("Datum Heute", new String[] { "Datum" });
 
 		final String description;
+		private String[] alternativeNames;
 
 		private DatumAttribute(String description) {
 			this.description = description;
+		}
+
+		private DatumAttribute(String description, String[] alternativeNames) {
+			this.description = description;
+			this.alternativeNames = alternativeNames;
 		}
 
 		@Override
 		public String getLocaleText() {
 			return description;
 		}
-	}
 
+		@Override
+		public List<String> getAlternativeNames() {
+			return alternativeNames != null ? Arrays.asList(alternativeNames) : Collections.emptyList();
+		}
+	}
 }

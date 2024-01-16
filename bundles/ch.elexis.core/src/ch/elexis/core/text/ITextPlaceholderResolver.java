@@ -52,12 +52,33 @@ public interface ITextPlaceholderResolver {
 	 * @return
 	 */
 	default <T extends Enum<?>> T searchEnum(Class<T> enumeration, String search) {
-		search = search.replace('-', '_');
+		String searchEnumName = search.replace('-', '_');
 		for (T each : enumeration.getEnumConstants()) {
-			if (each.name().compareToIgnoreCase(search) == 0) {
+			if (each.name().compareToIgnoreCase(searchEnumName) == 0) {
 				return each;
+			}
+			if (each instanceof IPlaceholderAttributeEnum) {
+				Optional<String> found = ((IPlaceholderAttributeEnum) each).getAlternativeNames().stream()
+						.filter(an -> an.compareToIgnoreCase(searchEnumName) == 0).findFirst();
+				if (found.isPresent()) {
+					return each;
+				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Extend the std. Enum class used for placeholder attributes with additional
+	 * functionality.
+	 */
+	public interface IPlaceholderAttributeEnum {
+
+		/**
+		 * Get alternative names for the attribute.
+		 * 
+		 * @return
+		 */
+		public List<String> getAlternativeNames();
 	}
 }

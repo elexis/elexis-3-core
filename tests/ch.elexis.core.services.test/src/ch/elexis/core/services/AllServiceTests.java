@@ -46,6 +46,7 @@ public class AllServiceTests {
 		tdb.initializeMandant();
 		tdb.initializeLabResult();
 		tdb.initializePrescription();
+		tdb.initializeFall();
 
 		ContextServiceHolder.get().setActiveUser(tdb.getUser());
 	}

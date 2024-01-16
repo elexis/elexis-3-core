@@ -130,6 +130,10 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		String template = "[Datum.heute]";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals(TimeUtil.DATE_GER.format(LocalDate.now()), replaced);
+
+		template = "[Datum.Datum]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals(TimeUtil.DATE_GER.format(LocalDate.now()), replaced);
 	}
 
 	@Test
@@ -165,5 +169,22 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		template = "[AUF.Zusatz]";
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("note", replaced);
+	}
+
+	@Test
+	public void fallReplacement() {
+		contextService.getRootContext().setNamed("Fall", AllServiceTests.getCoverage());
+
+		String template = "[Fall.Versicherungsnummer]";
+		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("1234-5678", replaced);
+
+		template = "[Fall.Kostentraeger]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Test Organization\n" + "Street 10\n" + "123 City\n", replaced);
+
+		template = "[Fall:-:-:Kostentraeger]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Test Organization\n" + "Street 10\n" + "123 City\n", replaced);
 	}
 }

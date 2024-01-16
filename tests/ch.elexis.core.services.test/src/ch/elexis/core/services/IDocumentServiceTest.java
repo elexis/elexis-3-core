@@ -275,6 +275,42 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		assertTrue(foundCount > 0);
 	}
 
+	@Test
+	public void fallValidation() throws Exception {
+		Map<String, Boolean> validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		for (String key : validationResult.keySet()) {
+			if (key.startsWith("[Fall")) {
+				assertFalse(validationResult.get(key));
+			}
+		}
+		context.setTyped(AllServiceTests.getCoverage());
+		validationResult = documentService.validateTemplate(documentTemplate, context);
+		assertNotNull(validationResult);
+		for (String key : validationResult.keySet()) {
+			if (key.startsWith("[Fall")) {
+				assertTrue(validationResult.get(key));
+			}
+		}
+	}
+
+	@Test
+	public void fallReplacement() throws Exception {
+		context.setTyped(AllServiceTests.getCoverage());
+
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		assertNotNull(createdDocument);
+
+		saveToTempFileAndDelete(createdDocument);
+
+		int foundCount = textPlugin.findCount("[Fall:-:-:Kostentraeger]");
+		assertEquals(0, foundCount);
+		foundCount = textPlugin.findCount("1234-5678");
+		assertTrue(foundCount > 0);
+		foundCount = textPlugin.findCount("Test Organization");
+		assertTrue(foundCount > 0);
+	}
+
 	private void saveToTempFileAndDelete(IDocument document) throws IOException {
 		File tempFile = File.createTempFile(document.getTitle(), ".docx");
 		FileUtils.copyInputStreamToFile(document.getContent(), tempFile);

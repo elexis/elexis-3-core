@@ -71,6 +71,13 @@ public class DocumentService implements IDocumentService {
 					}
 				});
 
+				textPlugin.findOrReplace(ITextReplacementService.MATCH_IDATACCESS, new ReplaceCallback() {
+					@Override
+					public Object replace(final String in) {
+						return textReplacementService.performReplacement(context, in);
+					}
+				});
+
 				List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
 				for (String string : matches) {
 					IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
@@ -109,6 +116,15 @@ public class DocumentService implements IDocumentService {
 				});
 
 				textPlugin.findOrReplace(ITextReplacementService.MATCH_GENDERIZE, new ReplaceCallback() {
+					@Override
+					public Object replace(final String in) {
+						String replacement = textReplacementService.performReplacement(context, in);
+						result.put(in, validateIsReplaced(replacement));
+						return StringUtils.EMPTY;
+					}
+				});
+
+				textPlugin.findOrReplace(ITextReplacementService.MATCH_IDATACCESS, new ReplaceCallback() {
 					@Override
 					public Object replace(final String in) {
 						String replacement = textReplacementService.performReplacement(context, in);

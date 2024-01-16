@@ -18,6 +18,8 @@ public interface ITextReplacementService {
 	public static final String MATCH_TEMPLATE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
 			+ "]?[-a-zA-ZäöüÄÖÜéàè_ ]+\\.[-a-zA-Z0-9äöüÄÖÜéàè_ ]+\\]";
 	public static final String MATCH_GENDERIZE = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS + "]?[a-zA-Z]+:mwn?:[^\\[]+\\]"; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String MATCH_IDATACCESS = "\\[[" + DONT_SHOW_REPLACEMENT_ERRORS //$NON-NLS-1$
+			+ "]?[-_a-zA-Z0-9]+:[-a-zA-Z0-9]+:[-a-zA-Z0-9\\.]+:[-a-zA-Z0-9\\.]:?[^\\]]*\\]"; //$NON-NLS-1$
 
 	/**
 	 * Get all currently available {@link ITextPlaceholderResolver} implemenations.
