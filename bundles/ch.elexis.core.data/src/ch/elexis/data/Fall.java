@@ -239,7 +239,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 			Abrechnungsmethode = Fall.getDefaultCaseLaw();
 		}
 		String[] fields = new String[] { FLD_PATIENT_ID, FLD_BEZEICHNUNG, FLD_GRUND, FLD_DATUM_VON, FLD_BILLINGSYSTEM };
-		String[] values = new String[] { PatientID, Bezeichnung, Grund, new TimeTool().toString(TimeTool.DATE_GER),
+		String[] values = new String[] { PatientID, Bezeichnung, Grund, new TimeTool().toString(TimeTool.DATE_COMPACT),
 				Abrechnungsmethode };
 		create(null, fields, values);
 	}
