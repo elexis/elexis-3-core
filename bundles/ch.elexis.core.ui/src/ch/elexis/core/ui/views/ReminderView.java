@@ -122,7 +122,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	private Set<Integer> filterActionSet = new HashSet<Integer>();
 
 	private long cvHighestLastUpdate = 0l;
-
+	private boolean sortByDueDateSetting = ConfigServiceHolder.getUser(Preferences.USR_SORT_BY_DUE_DATE, false);
 	private int filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
 	private boolean autoSelectPatient = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT,
 			false);
@@ -139,7 +139,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	private ReminderFilter filter = new ReminderFilter();
 	private Patient actPatient;
 	private Text txtSearch;
-
+	private int state;
+	private int state2 = ConfigServiceHolder.getUser(Preferences.USR_SORT_BY_DUE_DATE, 0);
 	@Optional
 	@Inject
 	void crudFinding(@UIEventTopic(ElexisEventTopics.BASE_MODEL + "*") IReminder reminder) {
@@ -153,7 +154,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	void activePatient(IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
 			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
-			if (((Patient) selectedPatient).equals(actPatient)) {
+			if (selectedPatient.equals(actPatient)) {
 				return;
 			}
 			actPatient = selectedPatient;
@@ -249,11 +250,20 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		reminderLabelProvider.updateUserConfiguration();
 
 		ReminderViewCommonContentProvider contentProvider = new ReminderViewCommonContentProvider();
+		if (sortByDueDateSetting) {
+			contentProvider.setComparator(new Comparator<Reminder>() {
+				@Override
+				public int compare(Reminder o1, Reminder o2) {
+					return TimeTool.compare(o1.getDateDue(), o2.getDateDue());
+				}
+			});
+		}
 		vc = new ViewerConfigurer(contentProvider, reminderLabelProvider, null,
 				new ViewerConfigurer.DefaultButtonProvider(),
 				new SimpleWidgetProvider(SimpleWidgetProvider.TYPE_LAZYLIST, SWT.MULTI, cv));
 
 		makeActions(contentProvider);
+		initializeSortByDueDateAction(contentProvider);
 
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(reloadAction, newReminderAction, toggleAutoSelectPatientAction);
@@ -458,15 +468,14 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		};
 		sortByDueDate = new Action(Messages.ReminderView_sortByDueDate, Action.AS_CHECK_BOX) {
 
-			int state = 0;
-
 			@Override
 			public void run() {
-
+				
 				if (state == 0) {
 					contentProvider.setComparator(new Comparator<Reminder>() {
 						@Override
 						public int compare(Reminder o1, Reminder o2) {
+							ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 0);
 							return TimeTool.compare(o2.getDateDue(), o1.getDateDue());
 						}
 					});
@@ -477,6 +486,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 					contentProvider.setComparator(new Comparator<Reminder>() {
 						@Override
 						public int compare(Reminder o1, Reminder o2) {
+							ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 1);
 							return TimeTool.compare(o1.getDateDue(), o2.getDateDue());
 						}
 					});
@@ -484,16 +494,18 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 					sortByDueDate.setText(Messages.ReminderView_sortByDueDateDescending);
 					sortByDueDate.setChecked(true);
 				} else if (state == 2) {
+					ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 2);
 					contentProvider.setComparator(null);
 					state = 0;
 					sortByDueDate.setText(Messages.ReminderView_sortByDueDate);
 					sortByDueDate.setChecked(false);
 				}
 
+				sortByDueDateSetting = sortByDueDate.isChecked();
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
 		};
-
+		sortByDueDate.setChecked(sortByDueDateSetting);
 		showOnlyOwnDueReminderToggleAction = new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
 			{
 				setToolTipText(Messages.ReminderView_onlyDueToolTip); // $NON-NLS-1$
@@ -518,8 +530,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				cv.notify(CommonViewer.Message.update_keeplabels);
 			}
 		};
-		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW),
-				Messages.Core_All, Action.AS_CHECK_BOX) {
+		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW), Messages.Core_All,
+				Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.ReminderView_foreignTooltip);
 				setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
@@ -901,5 +913,40 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 		CoreUiUtil.runAsyncIfActive(() -> {
 			cv.notify(CommonViewer.Message.update);
 		}, cv);
+	}
+
+	private void initializeSortByDueDateAction(final ReminderViewCommonContentProvider contentProvider) {
+		System.out.println("state  33 " + state2);
+		if (state2 == 0) {
+			contentProvider.setComparator(new Comparator<Reminder>() {
+				@Override
+				public int compare(Reminder o1, Reminder o2) {
+					ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 0);
+					return TimeTool.compare(o2.getDateDue(), o1.getDateDue());
+
+				}
+			});
+			state = 1;
+			sortByDueDate.setText(Messages.ReminderView_sortByDueDateAscending);
+			sortByDueDate.setChecked(true);
+		} else if (state2 == 1) {
+			
+			contentProvider.setComparator(new Comparator<Reminder>() {
+				@Override
+				public int compare(Reminder o1, Reminder o2) {
+					ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 1);
+					return TimeTool.compare(o1.getDateDue(), o2.getDateDue());
+				}
+			});
+			state = 2;
+			sortByDueDate.setText(Messages.ReminderView_sortByDueDateDescending);
+			sortByDueDate.setChecked(true);
+		} else if (state2 == 2) {
+			ConfigServiceHolder.setUser(Preferences.USR_SORT_BY_DUE_DATE, 2);
+			contentProvider.setComparator(null);
+			state = 0;
+			sortByDueDate.setText(Messages.ReminderView_sortByDueDate);
+			sortByDueDate.setChecked(false);
+		}
 	}
 }
