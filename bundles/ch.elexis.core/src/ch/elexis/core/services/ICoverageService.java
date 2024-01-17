@@ -5,6 +5,7 @@ import java.util.Optional;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
 
 public interface ICoverageService {
 
@@ -87,4 +88,20 @@ public interface ICoverageService {
 	 * @return
 	 */
 	public Optional<IEncounter> getLatestEncounter(ICoverage coverage);
+
+	/**
+	 * Returns the latest open coverage of the patient
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	Optional<ICoverage> getLatestOpenCoverage(IPatient patient);
+
+	/**
+	 * Creates a default coverage for the patient
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	ICoverage createDefaultCoverage(IPatient patient);
 }

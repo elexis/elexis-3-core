@@ -28,7 +28,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
@@ -64,6 +63,9 @@ public class EncounterService implements IEncounterService {
 
 	@Reference
 	private IStoreToStringService storeToStringService;
+	
+	@Reference
+	private ICoverageService coverageService;
 
 	@Override
 	public boolean isEditable(IEncounter encounter) {
@@ -216,11 +218,7 @@ public class EncounterService implements IEncounterService {
 		}
 
 		boolean ok = mandatorOK && mandatorLoggedIn;
-		if (ok) {
-			return true;
-		} else {
-			return false;
-		}
+		return ok ? true : false;
 	}
 
 	@Override
@@ -263,10 +261,7 @@ public class EncounterService implements IEncounterService {
 	}
 
 	private Optional<IEncounter> createCoverageAndEncounter(IPatient patient) {
-		ICoverage coverage = new ICoverageBuilder(CoreModelServiceHolder.get(), patient,
-				CoverageServiceHolder.get().getDefaultCoverageLabel(),
-				CoverageServiceHolder.get().getDefaultCoverageReason(),
-				CoverageServiceHolder.get().getDefaultCoverageLaw()).buildAndSave();
+		ICoverage coverage = CoverageServiceHolder.get().createDefaultCoverage(patient);
 		Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
 		if (activeMandator.isPresent()) {
 			return Optional.of(
