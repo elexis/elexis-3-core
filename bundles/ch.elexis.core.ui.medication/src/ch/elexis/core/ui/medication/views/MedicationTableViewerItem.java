@@ -138,6 +138,10 @@ public class MedicationTableViewerItem {
 		return disposalComment != null ? disposalComment : "..."; //$NON-NLS-1$
 	}
 
+	public IArticle getArticle() {
+		return article;
+	}
+
 	/**
 	 * An active medication is not a recipe and not a dispensation and is not
 	 * stopped.

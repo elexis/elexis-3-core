@@ -80,6 +80,7 @@ import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 
@@ -215,7 +216,19 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		medicationHistoryFilter = new MedicationFilter(medicationHistoryTableComposite.getTableViewer());
 		medicationHistoryTableComposite.getTableViewer().addFilter(medicationHistoryFilter);
 
+		addDragSource(medicationTableComposite.getTableViewer());
+
 		tablesLayout.topControl = medicationTableComposite;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addDragSource(TableViewer tableViewer) {
+		new GenericObjectDragSource(tableViewer, () -> {
+			List selection = tableViewer.getStructuredSelection().toList();
+			return selection.stream().filter(MedicationTableViewerItem.class::isInstance)
+					.map(p -> ((MedicationTableViewerItem) p).getArticle())
+					.toList();
+		});
 	}
 
 	public void setViewerSortOrder(ViewerSortOrder vso) {
