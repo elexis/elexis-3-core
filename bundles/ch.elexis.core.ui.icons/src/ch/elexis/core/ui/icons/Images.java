@@ -178,6 +178,7 @@ public enum Images {
 	IMG_PILL,
 	/** a pill with an exclamation */
 	IMG_PILL_EXCLAMATION_WO_SHADOW,
+	IMG_PILLS,
 	/** a link symbol */
 	IMG_LINK,
 	/** Move to upper list */
