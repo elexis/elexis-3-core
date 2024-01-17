@@ -59,6 +59,10 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		String template = "Liebe[Adressat:mw:r/ ] [Adressat.Vorname]";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("Lieber Test", replaced);
+
+		template = "[Adressat.Anschrift]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Herr\n" + "Test Mandant\n" + "Street 100\n" + "123 City\n", replaced);
 	}
 	
 	@Test

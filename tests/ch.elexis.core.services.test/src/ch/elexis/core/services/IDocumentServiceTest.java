@@ -147,6 +147,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		validationResult = documentService.validateTemplate(documentTemplate, context);
 		assertNotNull(validationResult);
 		assertTrue(validationResult.get("[Adressat.Vorname]"));
+		assertTrue(validationResult.get("[Adressat.Anschrift]"));
 	}
 
 	@Test
@@ -160,6 +161,8 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 		assertTrue(foundCount > 0);
 		foundCount = textPlugin.findCount("Lieber");
 		assertTrue(foundCount > 0);
+		foundCount = textPlugin.findCount("[Adressat.Anschrift]");
+		assertTrue(foundCount == 0);
 
 		saveToTempFileAndDelete(createdDocument);
 	}
