@@ -29,7 +29,7 @@ public class ConsoleCommandPovider extends AbstractConsoleCommandProvider {
 
 	@CmdAdvisor(description = "declarative services")
 	public void _ds(CommandInterpreter ci) {
-		ci.print(getHelp((String[]) null));
+		executeCommand("ds", ci);
 	}
 
 	@CmdAdvisor(description = "list unsatisfied osgi services")
