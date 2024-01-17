@@ -6,7 +6,8 @@ public class Messages {
 	public static String HL7_ORU_R01_Error_WrongObsIdentifier = ch.elexis.core.l10n.Messages.HL7_ORU_R01_Error_WrongObsIdentifier;
 	public static String HL7_ORU_R01_LabResult_Abs_Neg = ch.elexis.core.l10n.Messages.HL7_ORU_R01_LabResult_Abs_Neg;
 	public static String Literal_One = ch.elexis.core.l10n.Messages.Literal_One;
-
+	public static String NO_BILLABLE_ENCOUNTER1 = ch.elexis.core.l10n.Messages.NO_BILLABLE_ENCOUNTER1;
+	public static String NO_BILLABLE_ENCOUNTER2 = ch.elexis.core.l10n.Messages.NO_BILLABLE_ENCOUNTER2;
 	public static String HL7Reader_CannotReadFile = ch.elexis.core.l10n.Messages.HL7Reader_CannotReadFile;
 	public static String Core_Exception_while_reading = ch.elexis.core.l10n.Messages.Core_Exception_while_reading;
 	public static String Core_Select_Patient = ch.elexis.core.l10n.Messages.Core_Select_Patient;

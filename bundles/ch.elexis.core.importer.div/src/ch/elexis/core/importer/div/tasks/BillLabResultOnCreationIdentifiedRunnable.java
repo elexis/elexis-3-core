@@ -51,6 +51,7 @@ import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.LabServiceHolder;
 import ch.elexis.core.services.holder.MessageServiceHolder;
 import ch.elexis.core.time.TimeUtil;
+import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.Result;
 
 /**
@@ -262,8 +263,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
 		transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
 		transientMessage.setSenderAcceptsAnswer(false);
-		transientMessage.setMessageText("No billable encounter for patient " + patient.getPatientNr()
-				+ " found. A new encounter was created to bill the imported values on.");
+		transientMessage.setMessageText(
+				Messages.NO_BILLABLE_ENCOUNTER1 + patient.getPatientNr() + Messages.NO_BILLABLE_ENCOUNTER2);
 		return MessageServiceHolder.get().send(transientMessage);
 	}
 
