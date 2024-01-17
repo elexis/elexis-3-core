@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -99,9 +100,8 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(name = "driver_config")
 	String driverConfig;
 
-	@OneToMany(cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "STOCK", insertable = false, updatable = false)
-	protected List<StockEntry> entries;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "stock", cascade = CascadeType.REMOVE)
+	private List<StockEntry> entries;
 
 	@Override
 	public String toString() {

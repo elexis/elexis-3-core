@@ -1,11 +1,14 @@
 package ch.elexis.core.model;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Stock>
 		implements IdentifiableWithXid, IStock {
@@ -121,5 +124,12 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		return StringUtils.isNotBlank(getEntity().getDescription())
 				? "[" + getCode() + "] " + getEntity().getDescription()
 				: getCode();
+	}
+
+	@Override
+	public List<IStockEntry> getStockEntries() {
+		CoreModelServiceHolder.get().refresh(this, true);
+		return getEntity().getEntries().stream().filter(se -> !se.isDeleted())
+				.map(se -> ModelUtil.getAdapter(se, IStockEntry.class)).toList();
 	}
 }

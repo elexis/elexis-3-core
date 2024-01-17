@@ -7,6 +7,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -50,9 +51,9 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	/**
 	 * Stock this entry is shelved in
 	 */
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "STOCK", insertable = true)
-	Stock stock;
+	private Stock stock;
 
 	@Column(name = "article_type", length = 255, nullable = false)
 	String articleType;

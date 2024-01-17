@@ -10,6 +10,8 @@
  */
 package ch.elexis.core.model;
 
+import java.util.List;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -27,6 +29,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IStock#getOwner <em>Owner</em>}</li>
  *   <li>{@link ch.elexis.core.model.IStock#getLocation <em>Location</em>}</li>
  *   <li>{@link ch.elexis.core.model.IStock#getResponsible <em>Responsible</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IStock#getStockEntries <em>Stock Entries</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIStock()
@@ -43,7 +46,7 @@ public interface IStock extends Identifiable, Deleteable, WithAssignableId {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A unique code to define a specific stock. Stocks starting with 'P', followed by a number refer to patient located stocks (location will then be "Patient" too).
+	 * A unique code to define a specific stock
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Code</em>' attribute.
 	 * @see #setCode(String)
@@ -216,5 +219,17 @@ public interface IStock extends Identifiable, Deleteable, WithAssignableId {
 	 * @param value
 	 */
 	void setResponsible(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Stock Entries</b></em>' reference list.
+	 * The list contents are of type {@link ch.elexis.core.model.IStockEntry}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Stock Entries</em>' reference list.
+	 * @see ch.elexis.core.model.ModelPackage#getIStock_StockEntries()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<IStockEntry> getStockEntries();
 
 } // IStock

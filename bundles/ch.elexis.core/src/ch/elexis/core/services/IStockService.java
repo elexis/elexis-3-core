@@ -83,7 +83,9 @@ public interface IStockService {
 	 *
 	 * @param stock
 	 * @return
+	 * @deprecated use {@link IStock#getStockEntries()}
 	 */
+	@Deprecated
 	public List<IStockEntry> findAllStockEntriesForStock(IStock stock);
 
 	/**

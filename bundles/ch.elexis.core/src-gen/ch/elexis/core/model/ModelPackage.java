@@ -5829,13 +5829,22 @@ public interface ModelPackage extends EPackage {
 	int ISTOCK__RESPONSIBLE = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>Stock Entries</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISTOCK__STOCK_ENTRIES = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
 	 * The number of structural features of the '<em>IStock</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISTOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+	int ISTOCK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.
@@ -11267,6 +11276,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIStock_Responsible();
 
 	/**
+	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IStock#getStockEntries <em>Stock Entries</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Stock Entries</em>'.
+	 * @see ch.elexis.core.model.IStock#getStockEntries()
+	 * @see #getIStock()
+	 * @generated
+	 */
+	EReference getIStock_StockEntries();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15466,6 +15486,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ISTOCK__RESPONSIBLE = eINSTANCE.getIStock_Responsible();
+
+		/**
+		 * The meta object literal for the '<em><b>Stock Entries</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ISTOCK__STOCK_ENTRIES = eINSTANCE.getIStock_StockEntries();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IStockEntry <em>IStock Entry</em>}' class.

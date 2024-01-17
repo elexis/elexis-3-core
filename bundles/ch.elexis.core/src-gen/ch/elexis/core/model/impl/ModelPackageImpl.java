@@ -3628,6 +3628,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIStock_StockEntries() {
+		return (EReference)iStockEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIStockEntry() {
 		return iStockEntryEClass;
 	}
@@ -5574,6 +5584,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iStockEClass, ISTOCK__OWNER);
 		createEAttribute(iStockEClass, ISTOCK__LOCATION);
 		createEReference(iStockEClass, ISTOCK__RESPONSIBLE);
+		createEReference(iStockEClass, ISTOCK__STOCK_ENTRIES);
 
 		iStockEntryEClass = createEClass(ISTOCK_ENTRY);
 		createEAttribute(iStockEntryEClass, ISTOCK_ENTRY__MINIMUM_STOCK);
@@ -6586,6 +6597,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIStock_Owner(), this.getIPerson(), null, "owner", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_Location(), ecorePackage.getEString(), "location", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIStock_Responsible(), this.getIContact(), null, "responsible", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIStock_StockEntries(), this.getIStockEntry(), null, "stockEntries", null, 0, -1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iStockEClass, ecorePackage.getEBoolean(), "isCommissioningSystem", 0, 1, IS_UNIQUE, IS_ORDERED);
 

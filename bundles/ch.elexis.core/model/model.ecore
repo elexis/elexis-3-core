@@ -905,6 +905,8 @@
         <details key="documentation" value="The person or contact responsible for managing this stock"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stockEntries" upperBound="-1"
+        eType="#//IStockEntry" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStockEntry" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable">
