@@ -69,6 +69,7 @@
     <module>ch.elexis.core.ui.importer.div</module>
     <module>ch.elexis.core.ui.laboratory</module>
     <module>ch.elexis.core.ui.medication</module>
+    <module>ch.elexis.core.ui.mediorder</module>
     <module>ch.elexis.core.ui.p2</module>
     <module>ch.elexis.core.ui.stock</module>
     <module>ch.elexis.core.ui.usage</module>
