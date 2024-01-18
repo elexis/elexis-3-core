@@ -88,13 +88,14 @@ public class DocumentService implements IDocumentService {
 
 				IDocument document = documentStore.createDocument(getPatientId(context), getTitle(template, context),
 						getCategory(template, context));
+				document.setMimeType(template.getMimeType());
 				documentStore.saveDocument(document, new ByteArrayInputStream(textPlugin.storeToByteArray()));
 				return document;
 			} else {
-				LoggerFactory.getLogger(getClass()).error("Could not load template " + template.getTitle());
+				LoggerFactory.getLogger(getClass()).error("Could not load template {}", template.getTitle());
 			}
 		} catch (Exception e) {
-			LoggerFactory.getLogger(getClass()).error("Error creating document from template " + template.getTitle(),
+			LoggerFactory.getLogger(getClass()).error("Error creating document from template {}", template.getTitle(),
 					e);
 		}
 		return null;

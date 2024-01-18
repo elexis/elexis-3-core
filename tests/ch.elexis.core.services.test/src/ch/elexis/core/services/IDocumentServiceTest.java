@@ -173,6 +173,9 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 
 		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
 		assertNotNull(createdDocument);
+		assertEquals(testPatients.get(0), createdDocument.getPatient());
+		assertNotNull(createdDocument.getCreated());
+		assertEquals("docx", createdDocument.getMimeType());
 
 		int foundCount = textPlugin.findCount("Armer");
 		assertTrue(foundCount > 0);

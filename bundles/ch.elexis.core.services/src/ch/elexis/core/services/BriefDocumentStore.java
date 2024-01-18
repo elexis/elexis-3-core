@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -135,6 +136,7 @@ public class BriefDocumentStore implements IDocumentStore {
 		IDocumentLetter letter = coreModelService.create(IDocumentLetter.class);
 		letter.setStoreId(STORE_ID);
 		letter.setTitle(title);
+		letter.setCreated(new Date());
 		letter.setPatient(coreModelService.load(patientId, IPatient.class).orElse(null));
 		ICategory iCategory = categoryName != null ? new CategoryDocumentDTO(categoryName) : getCategoryDefault();
 		letter.setCategory(iCategory);
