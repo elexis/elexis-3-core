@@ -166,7 +166,7 @@ public class BestellView extends ViewPart {
 				if (se == null) {
 					return null;
 				}
-				return (IContact) se.getProvider();
+				return se.getProvider();
 			}
 
 			@Override
@@ -266,8 +266,10 @@ public class BestellView extends ViewPart {
 		viewmenus.createViewerContextMenu(tv, new IAction[] { removeAction });
 		form.getToolBarManager().add(checkInAction);
 		form.updateToolBar();
-		setOrder(null);
 		tv.setInput(getViewSite());
+
+		// #activeOrder may be called before this method
+		setOrder(actOrder);
 	}
 
 	private void setOrder(final IOrder order) {
@@ -294,7 +296,7 @@ public class BestellView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-
+		tv.getTable().setFocus();
 	}
 
 	private Map<IContact, List<IOrderEntry>> prepareOrderMap() {
@@ -695,6 +697,18 @@ public class BestellView extends ViewPart {
 		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
 				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
 			addItemsToOrder(Collections.singletonList((IArticle) event));
+		}
+	}
+
+	@org.eclipse.e4.core.di.annotations.Optional
+	@Inject
+	void activeOrder(IOrder order) {
+		if (order != null) {
+			if (form != null && !form.isDisposed()) {
+				setOrder(order);
+			} else {
+				actOrder = order;
+			}
 		}
 	}
 

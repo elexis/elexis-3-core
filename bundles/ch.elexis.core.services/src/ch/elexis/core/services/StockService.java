@@ -418,6 +418,9 @@ public class StockService implements IStockService {
 
 	@Override
 	public Optional<IStock> getPatientStock(IPatient patient) {
+		if (patient == null) {
+			return Optional.empty();
+		}
 		return coreModelService.load("PatientStock-" + patient.getPatientNr(), IStock.class);
 	}
 
