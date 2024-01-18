@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICodeElement;
@@ -51,7 +52,6 @@ import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.LabServiceHolder;
 import ch.elexis.core.services.holder.MessageServiceHolder;
 import ch.elexis.core.time.TimeUtil;
-import ch.elexis.hl7.v26.Messages;
 import ch.rgw.tools.Result;
 
 /**
