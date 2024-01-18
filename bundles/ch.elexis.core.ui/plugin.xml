@@ -1032,13 +1032,5 @@
 	   </extension>
       <extension
             point="org.eclipse.ui.views">
-         <view
-               category="ch.elexis.core.ui.eenv.category"
-               class="ch.elexis.core.ui.views.BrowserView"
-               icon="icon://IMG_WEB"
-               id="ch.elexis.core.ui.chromium.views.BrowserView"
-               name="Chromium Browser"
-               restorable="true">
-         </view>
       </extension>
 </plugin>
