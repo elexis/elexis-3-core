@@ -187,6 +187,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 									true);
 						} else {
 							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
+							query.limit(1);
 						}
 					}
 				}

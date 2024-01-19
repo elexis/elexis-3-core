@@ -20,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -68,7 +70,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	protected CommonViewer myViewer;
 	protected int focusField;
 	boolean bCeaseFire;
-
+	boolean test = true;
 	private Composite inner;
 
 	/**
@@ -167,6 +169,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			selectors[i].setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			SWTHelper.setSelectOnFocus((Text) selectors[i].getWidget());
 		}
+		addFieldListeners();
 	}
 
 	@Override
@@ -256,8 +259,15 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			Text t = (Text) e.getSource();
 			String s = t.getText();
 			if (!StringTool.leer.equals(s)) {
-				if (s.length() == 1) {
-					return;
+				if (test) {
+					if (s.length() == 1) {
+						return;
+					}
+				} else {
+					if (s.length() == 0) {
+						return;
+
+					}
 				}
 			}
 			for (int i = 0; i < lastFiltered.length; i++) {
@@ -456,5 +466,30 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 
 	public CommonViewer getCommonViewer() {
 		return this.myViewer;
+	}
+
+	private void addFieldListeners() {
+		for (int i = 0; i < selectors.length; i++) {
+			ElexisText selector = selectors[i];
+			Text textWidget = (Text) selector.getWidget();
+			String fieldName = dbFields[i];
+
+			textWidget.addFocusListener(new FocusListener() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					if ("code".equals(fieldName)) {
+						test = false;
+
+					}
+				}
+
+				@Override
+				public void focusLost(FocusEvent e) {
+					if ("code".equals(fieldName)) {
+						test = true;
+					}
+				}
+			});
+		}
 	}
 }
