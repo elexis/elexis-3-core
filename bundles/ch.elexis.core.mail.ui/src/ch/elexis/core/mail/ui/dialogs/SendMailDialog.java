@@ -85,7 +85,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
-
+	private Button confidentialCheckbox;
 	private String accountId;
 	private String attachmentsString;
 	private String documentsString;
@@ -232,6 +232,10 @@ public class SendMailDialog extends TitleAreaDialog {
 			subjectText = new Text(container, SWT.BORDER);
 			subjectText.setText(subjectString);
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+			confidentialCheckbox = new Button(container, SWT.CHECK); // Checkbox initialisieren
+			confidentialCheckbox.setText("Vertraulich");
+			confidentialCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 			attachments = new AttachmentsComposite(container, SWT.NONE);
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -500,7 +504,11 @@ public class SendMailDialog extends TitleAreaDialog {
 
 		ccString = ccText.getText();
 
-		subjectString = subjectText.getText();
+		if (confidentialCheckbox != null && confidentialCheckbox.getSelection()) {
+			subjectString = subjectText.getText() + " (Vertraulich)";
+		} else {
+			subjectString = subjectText.getText();
+		}
 
 		textString = textText.getText();
 
