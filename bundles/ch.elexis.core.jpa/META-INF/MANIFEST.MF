@@ -41,8 +41,8 @@ Export-Package: ch.elexis.core.jpa.entitymanager.ui,
  ch.elexis.core.jpa.model.adapter.proxy,
  ch.elexis.core.jpa.model.util,
  ch.elexis.core.jpa.model.util.compatibility
-Service-Component: OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder.xml,
- OSGI-INF/ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder.xml,
+Service-Component: OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml,
  OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListener.xml,
- OSGI-INF/ch.elexis.core.jpa.entitymanager.ElexisEntityManger.xml,
- OSGI-INF/ch.elexis.core.jpa.model.service.holder.ContextServiceHolder.xml
+ OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.service.holder.ContextServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder.xml

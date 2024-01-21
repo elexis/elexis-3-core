@@ -224,8 +224,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	 *         werden aus den übergebenen Settings entnommen. Falls am angegebenen
 	 *         Ort keine Datenbank gefunden wird, wird eine neue erstellt, falls ein
 	 *         create-Script für diesen Datenbanktyp unter rsc gefunden wurde. Wenn
-	 *         die Verbindung hergestell werden konnte, werden die global Settings
-	 *         mit dieser Datenbank verbunden.
+	 *         die Verbindung hergestell werden konnte, werden die global
+	 *         SettingsdbConnectString mit dieser Datenbank verbunden.
 	 * @return true für ok, false wenn keine Verbindung hergestellt werden konnte.
 	 * @deprecated since 3.10 use {@link #connect(DataSource)}
 	 */

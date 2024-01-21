@@ -11,5 +11,5 @@ Import-Package: org.apache.commons.lang3;version="3.12.0"
 Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.rgw.utility;bundle-version="3.8.0",
  ch.elexis.core;bundle-version="3.10.0"
-Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml,
- OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.xml
+Service-Component: OSGI-INF/ch.elexis.core.spotlight.internal.SpotlightService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.internal.contributors.PatientCategorySpotlightResultContributor.xml

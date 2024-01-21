@@ -21,6 +21,6 @@ Import-Package: ch.elexis.core.documents,
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.spotlight.ui
-Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml
+Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml,
+ OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
+ OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml

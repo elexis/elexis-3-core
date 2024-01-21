@@ -18,6 +18,6 @@ Import-Package: ch.elexis.core.exceptions,
  org.apache.commons.io;version="2.4.0",
  org.osgi.service.component.annotations;version="1.3.0"
 Service-Component: OSGI-INF/ch.elexis.core.findings.DocumentStoreComponent.xml,
- OSGI-INF/ch.elexis.core.findings.codings.ValueSetServiceComponent.xml,
+ OSGI-INF/ch.elexis.core.findings.FindingsServiceComponent.xml,
  OSGI-INF/ch.elexis.core.findings.codings.CodingServiceComponent.xml,
- OSGI-INF/ch.elexis.core.findings.FindingsServiceComponent.xml
+ OSGI-INF/ch.elexis.core.findings.codings.ValueSetServiceComponent.xml
