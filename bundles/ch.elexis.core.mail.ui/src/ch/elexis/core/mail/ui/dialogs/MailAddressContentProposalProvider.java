@@ -3,12 +3,17 @@ package ch.elexis.core.mail.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.fieldassist.ContentProposal;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.Query;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 
 public class MailAddressContentProposalProvider implements IContentProposalProvider {
 
@@ -17,14 +22,20 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		if (contents != null && !contents.isEmpty()) {
 			String addressString = getContentAddress(contents);
-			if (!addressString.isEmpty()) {
-				Query<Kontakt> query = new Query<Kontakt>(Kontakt.class);
-				query.add(Kontakt.FLD_E_MAIL, Query.LIKE, addressString + "%");
-				List<Kontakt> contacts = query.execute();
+			if (!addressString.isEmpty() && addressString.length() > 1) {
+				IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
+				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.LIKE, "%" + addressString + "%");
+				query.startGroup();
+				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + addressString + "%");
+				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + addressString + "%");
+				query.orJoinGroups();
+				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, null);
+				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, StringUtils.EMPTY);
+				query.orderBy(ModelPackage.Literals.ICONTACT__EMAIL, ORDER.DESC);
 
-				for (Kontakt contact : contacts) {
-					String mailAddress = contact.getMailAddress();
-					ret.add(new ContentProposal(mailAddress));
+				for (IContact contact : query.execute()) {
+					ret.add(new IdentifiableContentProposal<IContact>(contact.getEmail() + " - " + contact.getLabel(),
+							contact));
 				}
 			}
 		}

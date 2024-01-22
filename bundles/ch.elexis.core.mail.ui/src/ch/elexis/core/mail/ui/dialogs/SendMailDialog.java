@@ -58,6 +58,7 @@ import ch.elexis.core.mail.ui.preference.SerializableFile;
 import ch.elexis.core.mail.ui.preference.SerializableFileUtil;
 import ch.elexis.core.mail.ui.preference.TextTemplates;
 import ch.elexis.core.model.IBlobSecondary;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
@@ -66,6 +67,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
 
@@ -133,19 +135,25 @@ public class SendMailDialog extends TitleAreaDialog {
 			toText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(toText,
 					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			toAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
 				public void proposalAccepted(IContentProposal proposal) {
-					int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
-					StringBuilder sb = new StringBuilder();
-					if (index != 0) {
-						sb.append(toText.getText().substring(0, index)).append(", ").append(proposal.getContent());
-					} else {
-						sb.append(proposal.getContent());
+					if (proposal instanceof IdentifiableContentProposal) {
+						@SuppressWarnings("unchecked")
+						IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
+						IContact contact = identifiableContentProposal.getIdentifiable();
+						int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
+						StringBuilder sb = new StringBuilder();
+						if (index != 0) {
+							sb.append(toText.getText().substring(0, index)).append(", ").append(contact.getEmail());
+						} else {
+							sb.append(contact.getEmail());
+						}
+						toText.setText(sb.toString());
+						toText.setSelection(toText.getText().length());
+						attachments.setPostfix(toText.getText());
 					}
-					toText.setText(sb.toString());
-					toText.setSelection(toText.getText().length());
-					attachments.setPostfix(toText.getText());
 				}
 			});
 			MenuManager menuManager = new MenuManager();
@@ -184,15 +192,19 @@ public class SendMailDialog extends TitleAreaDialog {
 			ccText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter ccAddressProposalAdapter = new ContentProposalAdapter(ccText,
 					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			ccAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			ccAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
 				public void proposalAccepted(IContentProposal proposal) {
+					@SuppressWarnings("unchecked")
+					IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
+					IContact contact = identifiableContentProposal.getIdentifiable();
 					int index = MailAddressContentProposalProvider.getLastAddressIndex(ccText.getText());
 					StringBuilder sb = new StringBuilder();
 					if (index != 0) {
-						sb.append(ccText.getText().substring(0, index)).append(", ").append(proposal.getContent());
+						sb.append(ccText.getText().substring(0, index)).append(", ").append(contact.getEmail());
 					} else {
-						sb.append(proposal.getContent());
+						sb.append(contact.getEmail());
 					}
 					ccText.setText(sb.toString());
 					ccText.setSelection(ccText.getText().length());
