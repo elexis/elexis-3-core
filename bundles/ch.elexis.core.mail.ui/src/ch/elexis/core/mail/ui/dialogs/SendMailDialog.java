@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -134,7 +136,17 @@ public class SendMailDialog extends TitleAreaDialog {
 			toText.setText(toString);
 			toText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(toText,
-					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+					new TextContentAdapter(), new MailAddressContentProposalProvider(),
+					null, null);
+			toText.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						toAddressProposalAdapter.openProposalPopup();
+					}
+					super.keyPressed(e);
+				}
+			});
 			toAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
@@ -192,6 +204,15 @@ public class SendMailDialog extends TitleAreaDialog {
 			ccText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter ccAddressProposalAdapter = new ContentProposalAdapter(ccText,
 					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			ccText.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						toAddressProposalAdapter.openProposalPopup();
+					}
+					super.keyPressed(e);
+				}
+			});
 			ccAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			ccAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
