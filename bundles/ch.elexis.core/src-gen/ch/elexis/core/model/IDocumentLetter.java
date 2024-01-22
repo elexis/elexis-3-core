@@ -21,6 +21,7 @@ package ch.elexis.core.model;
  * </p>
  * <ul>
  *   <li>{@link ch.elexis.core.model.IDocumentLetter#getEncounter <em>Encounter</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IDocumentLetter#getRecipient <em>Recipient</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIDocumentLetter()
@@ -50,6 +51,28 @@ public interface IDocumentLetter extends IDocument {
 	 * @generated
 	 */
 	void setEncounter(IEncounter value);
+
+	/**
+	 * Returns the value of the '<em><b>Recipient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Recipient</em>' reference.
+	 * @see #setRecipient(IContact)
+	 * @see ch.elexis.core.model.ModelPackage#getIDocumentLetter_Recipient()
+	 * @model
+	 * @generated
+	 */
+	IContact getRecipient();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IDocumentLetter#getRecipient <em>Recipient</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Recipient</em>' reference.
+	 * @see #getRecipient()
+	 * @generated
+	 */
+	void setRecipient(IContact value);
 
 	/**
 	 * <!-- begin-user-doc -->

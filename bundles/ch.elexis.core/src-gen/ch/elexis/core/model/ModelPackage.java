@@ -3298,13 +3298,22 @@ public interface ModelPackage extends EPackage {
 	int IDOCUMENT_LETTER__ENCOUNTER = IDOCUMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Recipient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDOCUMENT_LETTER__RECIPIENT = IDOCUMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>IDocument Letter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDOCUMENT_LETTER_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 1;
+	int IDOCUMENT_LETTER_FEATURE_COUNT = IDOCUMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDocumentTemplate <em>IDocument Template</em>}' class.
@@ -9644,6 +9653,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIDocumentLetter_Encounter();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IDocumentLetter#getRecipient <em>Recipient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Recipient</em>'.
+	 * @see ch.elexis.core.model.IDocumentLetter#getRecipient()
+	 * @see #getIDocumentLetter()
+	 * @generated
+	 */
+	EReference getIDocumentLetter_Recipient();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IDocumentTemplate <em>IDocument Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14220,6 +14240,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IDOCUMENT_LETTER__ENCOUNTER = eINSTANCE.getIDocumentLetter_Encounter();
+
+		/**
+		 * The meta object literal for the '<em><b>Recipient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IDOCUMENT_LETTER__RECIPIENT = eINSTANCE.getIDocumentLetter_Recipient();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IDocumentTemplate <em>IDocument Template</em>}' class.

@@ -257,6 +257,7 @@
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IDocumentLetter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentLetter/encounter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentLetter/recipient"/>
       <genOperations ecoreOperation="model.ecore#//IDocumentLetter/isTemplate"/>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IDocumentTemplate">

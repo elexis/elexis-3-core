@@ -389,6 +389,7 @@
       eSuperTypes="#//IDocument">
     <eOperations name="isTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounter" eType="#//IEncounter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="recipient" eType="#//IContact"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDocumentTemplate" abstract="true" interface="true"
       eSuperTypes="#//IDocument">

@@ -2118,6 +2118,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIDocumentLetter_Recipient() {
+		return (EReference)iDocumentLetterEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIDocumentTemplate() {
 		return iDocumentTemplateEClass;
 	}
@@ -5404,6 +5414,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iDocumentLetterEClass = createEClass(IDOCUMENT_LETTER);
 		createEReference(iDocumentLetterEClass, IDOCUMENT_LETTER__ENCOUNTER);
+		createEReference(iDocumentLetterEClass, IDOCUMENT_LETTER__RECIPIENT);
 
 		iDocumentTemplateEClass = createEClass(IDOCUMENT_TEMPLATE);
 		createEAttribute(iDocumentTemplateEClass, IDOCUMENT_TEMPLATE__TEMPLATE_TYP);
@@ -6224,6 +6235,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iDocumentLetterEClass, IDocumentLetter.class, "IDocumentLetter", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIDocumentLetter_Encounter(), this.getIEncounter(), null, "encounter", null, 0, 1, IDocumentLetter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIDocumentLetter_Recipient(), this.getIContact(), null, "recipient", null, 0, 1, IDocumentLetter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iDocumentLetterEClass, ecorePackage.getEBoolean(), "isTemplate", 0, 1, IS_UNIQUE, IS_ORDERED);
 
