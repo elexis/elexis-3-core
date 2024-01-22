@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ch.elexis.core</groupId>
+    <artifactId>ch.elexis.core.bundles</artifactId>
+    <version>3.12.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>ch.elexis.core</artifactId>
+  <version>3.12.0-SNAPSHOT</version>
+  <packaging>eclipse-plugin</packaging>
+  <name>[bundle] Elexis 3 Core</name>
+  <organization>
+    <name>elexis.info</name>
+  </organization>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>eclipse-classpath-add-source-5</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src-gen</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
