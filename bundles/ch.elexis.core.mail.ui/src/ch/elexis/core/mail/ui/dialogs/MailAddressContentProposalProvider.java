@@ -10,6 +10,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -25,42 +26,51 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 		List<IContentProposal> ret = new ArrayList<IContentProposal>();
 		HashSet<IContact> contacts = new HashSet<IContact>();
 
-		ContextServiceHolder.get().getActivePatient().ifPresent(patient -> {
+		String addressString = null;
+		if (contents != null && !contents.isEmpty()) {
+			addressString = getContentAddress(contents);
+		}
+
+		IPatient activePatient = ContextServiceHolder.get().getActivePatient().orElse(null);
+		if (activePatient != null) {
 			IQuery<IDocumentLetter> lastQuery = CoreModelServiceHolder.get().getQuery(IDocumentLetter.class);
-			lastQuery.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, patient);
+			lastQuery.and(ModelPackage.Literals.IDOCUMENT__PATIENT, COMPARATOR.EQUALS, activePatient);
 			lastQuery.and(ModelPackage.Literals.IDOCUMENT_LETTER__RECIPIENT, COMPARATOR.NOT_EQUALS, null);
 			lastQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 			for (IDocumentLetter document : lastQuery.execute()) {
 				if (document.getRecipient() != null && StringUtils.isNotBlank(document.getRecipient().getEmail())) {
+					String email = document.getRecipient().getEmail();
+					if (addressString != null && addressString.length() > 1) {
+						if (!(email.contains(addressString)
+								|| document.getRecipient().getDescription1().contains(addressString)
+								|| document.getRecipient().getDescription2().contains(addressString))) {
+							continue;
+						}
+					}
 					if (!contacts.contains(document.getRecipient())) {
 						contacts.add(document.getRecipient());
 						ret.add(new IdentifiableContentProposal<IContact>(
-								document.getRecipient().getEmail() + " - " + document.getRecipient().getLabel(),
+								email + " - " + document.getRecipient().getLabel(),
 								document.getRecipient()));
 					}
 				}
 			}
-		});
-		if (contents != null && !contents.isEmpty()) {
-			String addressString = getContentAddress(contents);
+		}
+		if (addressString != null && addressString.length() > 1) {
+			IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
+			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.LIKE, "%" + addressString + "%");
+			query.startGroup();
+			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + addressString + "%");
+			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + addressString + "%");
+			query.orJoinGroups();
+			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, null);
+			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, StringUtils.EMPTY);
 
-			if (!addressString.isEmpty() && addressString.length() > 1) {
-				IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
-				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.LIKE, "%" + addressString + "%");
-				query.startGroup();
-				query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + addressString + "%");
-				query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + addressString + "%");
-				query.orJoinGroups();
-				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, null);
-				query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, StringUtils.EMPTY);
-
-				for (IContact contact : query.execute()) {
-					if (!contacts.contains(contact)) {
-						ret.add(new IdentifiableContentProposal<IContact>(
-								contact.getEmail() + " - " + contact.getLabel(), contact));
-					}
+			for (IContact contact : query.execute()) {
+				if (!contacts.contains(contact)) {
+					ret.add(new IdentifiableContentProposal<IContact>(contact.getEmail() + " - " + contact.getLabel(),
+							contact));
 				}
-
 			}
 		}
 		return ret.toArray(new IContentProposal[ret.size()]);

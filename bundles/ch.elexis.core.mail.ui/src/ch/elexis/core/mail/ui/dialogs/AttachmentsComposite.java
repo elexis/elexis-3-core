@@ -59,7 +59,9 @@ public class AttachmentsComposite extends Composite {
 		attachmentsParent.setLayout(new GridLayout(2, false));
 
 		ToolBarManager mgr = new ToolBarManager();
-		mgr.add(new AddAttachmentAction(this));
+		// do not add attachments action, since DocumentsSelectionComposite is used on
+		// SendMailDialog
+		// mgr.add(new AddAttachmentAction(this));
 		if (createRocheLaborCommand != null && createRocheLaborCommand.isEnabled()) {
 			mgr.add(new LaborAttachmentAction(this, createRocheLaborCommand));
 		}
