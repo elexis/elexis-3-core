@@ -312,6 +312,9 @@
       </eGenericType>
     </eOperations>
     <eOperations name="triggerSync" eType="#//ITask" eExceptions="#//TaskException">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Trigger a task for synchronous execution. The task will be run with the current users rights (overriding the setting in the original task descriptor)"/>
+      </eAnnotations>
       <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
       <eParameters name="progressMonitor" eType="#//IProgressMonitor">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -338,6 +341,12 @@
     <eOperations name="refresh" eExceptions="#//TaskException">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Refreshes the info on this taskDescriptor, and acts on it.&#xA;&lt;ul>&#xA; &lt;li>Is this taskDescriptor currently incurred? -> A&#xA; &lt;li>Is this station a designated runner for this taskDescriptor? -> B&#xA; &lt;li>Is this taskDescriptor marked as active? -> C&#xA; &lt;/ul>&#xA; A,B,C: reload&lt;br>&#xA; A,B,!C: release&lt;br>&#xA; A,!B,C: release&lt;br>&#xA; A,!B,!C: release&lt;br>&#xA; !A,B,C: incur&lt;br>&#xA;!A,B,!C: do nothing&lt;br>&#xA;!A,!B,C: do nothing&lt;br>&#xA; !A,!B,!C: do nothing &lt;br>"/>
+      </eAnnotations>
+      <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
+    </eOperations>
+    <eOperations name="assertIncurOnThisStation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="to incur? only iff not delete, active, and this station is a&#xA;&#x9; *         designated runner"/>
       </eAnnotations>
       <eParameters name="taskDescriptor" lowerBound="1" eType="#//ITaskDescriptor"/>
     </eOperations>

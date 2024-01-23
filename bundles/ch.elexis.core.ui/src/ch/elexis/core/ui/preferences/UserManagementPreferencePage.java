@@ -1,23 +1,28 @@
 package ch.elexis.core.ui.preferences;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -52,6 +57,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -61,7 +67,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -85,6 +93,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.coolbar.MandantSelectionContributionItem;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.dialogs.ChangePasswordDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
@@ -390,7 +399,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IUser user = (IUser) wvUser.getValue();
+				IUser user = wvUser.getValue();
 				if (user == null) {
 					return;
 				}
@@ -429,7 +438,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				cd.setText(Messages.UserManagementPreferencePage_MandatorColorSelectTitle);
 				RGB rgb = cd.open();
 
-				IUser user = (IUser) wvUser.getValue();
+				IUser user = wvUser.getValue();
 				if (user.getAssignedContact() != null) {
 					Optional<IMandator> mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(),
 							IMandator.class);
@@ -451,7 +460,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		linkRechnungssteller.setText("nicht gesetzt " + CHANGE_LINK);
 		linkRechnungssteller.setToolTipText("Set the invoice contact for this mandator");
 		linkRechnungssteller.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IUser user = wvUser.getValue();
@@ -492,7 +501,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_compositeMandator.marginWidth = 0;
 		compositeMandator.setLayout(gl_compositeMandator);
 		compositeMandator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		
+
 		btnIsExecutiveDoctor = new Button(compositeMandator, SWT.CHECK);
 		btnIsExecutiveDoctor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		btnIsExecutiveDoctor.setText("ist verantwortlicher Arzt");
@@ -501,7 +510,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (btnIsExecutiveDoctor.getSelection()) {
-					IUser user = (IUser) wvUser.getValue();
+					IUser user = wvUser.getValue();
 					if (user == null) {
 						return;
 					}
@@ -523,11 +532,11 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				btnMandatorIsInactive.setEnabled(btnIsExecutiveDoctor.getSelection());
 			}
 		});
-		
+
 		btnMandatorIsInactive = new Button(compositeMandator, SWT.CHECK);
 		btnMandatorIsInactive.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnMandatorIsInactive.setText("ehemalig (Verrechn. sperren)");
-		
+
 		btnMandatorIsInactive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -544,19 +553,17 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 					return;
 				}
 
-				if (btnMandatorIsInactive.getSelection() && SWTHelper.askYesNo("Mandanten deaktivieren",
-					mandator.get().getDescription1() + " " + mandator.get().getDescription2() +
-					" wirklich deaktivieren?")) {
+				if (btnMandatorIsInactive.getSelection()
+						&& SWTHelper.askYesNo("Mandanten deaktivieren", mandator.get().getDescription1() + " "
+								+ mandator.get().getDescription2() + " wirklich deaktivieren?")) {
 					btnMandatorIsInactive.setEnabled(true);
-				}
-				else {
-					btnMandatorIsInactive.setSelection(false);	
+				} else {
+					btnMandatorIsInactive.setSelection(false);
 				}
 				mandator.get().setActive(!btnMandatorIsInactive.getSelection());
 				CoreModelServiceHolder.get().save(mandator.get());
 			}
 		});
-		
 
 		Composite compositeAccounting = new Composite(grpAccounting, SWT.NONE);
 		compositeAccounting.setLayout(new GridLayout(2, true));
@@ -604,10 +611,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 										.getDefaultExecutiveDoctorWorkingFor(user).orElse(null);
 								if (stdWorkingFor != null && stdWorkingFor.equals(selected)) {
 									manager.add(new Action() {
+										@Override
 										public String getText() {
 											return "Std. Mandant entfernen";
 										};
 
+										@Override
 										public void run() {
 											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user, null);
 											checkboxTableViewerAssociation.refresh();
@@ -615,10 +624,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 									});
 								} else {
 									manager.add(new Action() {
+										@Override
 										public String getText() {
 											return "Std. Mandant setzen";
 										};
 
+										@Override
 										public void run() {
 											UserServiceHolder.get().setDefaultExecutiveDoctorWorkingFor(user,
 													(IMandator) selected);
@@ -646,6 +657,174 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		compositeRoles.setLayout(new FillLayout(SWT.HORIZONTAL));
 		compositeRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
+		MenuManager rolePopManager = new MenuManager();
+		rolePopManager.add(new Action() {
+
+			@Override
+			public void run() {
+				List<String> existingRoleIds = CoreModelServiceHolder.get().getQuery(IRole.class).execute().stream()
+						.map(r -> r.getId()).collect(Collectors.toList());
+
+				InputDialog dialog = new InputDialog(getShell(), "Neue Rolle", "Rollen Name", null,
+						new IInputValidator() {
+
+							@Override
+							public String isValid(String newText) {
+								if (StringUtils.isBlank(newText)) {
+									return "Rollen Name kann nicht leer sein.";
+								} else if (existingRoleIds.contains(newText)) {
+									return "Rollen mit Name existiert bereits.";
+								}
+								return null;
+							}
+						});
+				if (dialog.open() == Dialog.OK) {
+					IRole role = CoreModelServiceHolder.get().create(IRole.class);
+					role.setId(dialog.getValue());
+					role.setSystemRole(false);
+					CoreModelServiceHolder.get().save(role);
+					updateRoles();
+				}
+			};
+
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_NEW.getImageDescriptor();
+			};
+
+			@Override
+			public String getText() {
+				return "Neue Rolle";
+			};
+		});
+		rolePopManager.add(new Action() {
+
+			@Override
+			public void run() {
+				IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement();
+				// remove from all users
+				for (IUser user : CoreModelServiceHolder.get().getQuery(IUser.class).execute()) {
+					if (user.getRoles().contains(role)) {
+						user.getRoles().remove(role);
+						CoreModelServiceHolder.get().save(user);
+					}
+				}
+				CoreModelServiceHolder.get().remove(role);
+				updateRoles();
+			};
+
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_DELETE.getImageDescriptor();
+			};
+
+			@Override
+			public String getText() {
+				return "Rolle entfernen";
+			};
+
+			@Override
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+		rolePopManager.add(new Action() {
+
+			@Override
+			public void run() {
+				FileDialog dialog = new FileDialog(getShell());
+				dialog.setFilterExtensions(new String[] { "*.json" });
+				if (dialog.open() != null) {
+					File file = new File(dialog.getFilterPath() + File.separator + dialog.getFileName());
+					if (file.exists()) {
+						try {
+							String jsonContent = FileUtils.readFileToString(file, "UTF-8");
+
+							Optional<AccessControlList> acl = AccessControlServiceHolder.get()
+									.readAccessControlList(new ByteArrayInputStream(jsonContent.getBytes("UTF-8")));
+							if (acl.isPresent()) {
+								IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection()
+										.getFirstElement();
+								role.setExtInfo("json", jsonContent);
+								CoreModelServiceHolder.get().save(role);
+								updateRoles();
+							} else {
+								MessageDialog.openError(getShell(), "Fehler", "Fehlerhafter Berechtigungs Definition");
+							}
+						} catch (IOException e) {
+							LoggerFactory.getLogger(getClass()).error("Error reading json file", e);
+						}
+					}
+				}
+			};
+
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_IMPORT.getImageDescriptor();
+			};
+
+			@Override
+			public String getText() {
+				return "Berechtigungen importieren";
+			};
+
+			@Override
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+		rolePopManager.add(new Action() {
+
+			@Override
+			public void run() {
+				IRole role = (IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement();
+				String jsonString = (String) role.getExtInfo("json");
+				if (StringUtils.isNotBlank(jsonString)) {
+					FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+					if (dialog.open() != null) {
+						File file = new File(dialog.getFilterPath() + File.separator + dialog.getFileName());
+						try {
+							FileUtils.writeStringToFile(file, jsonString, "UTF-8");
+						} catch (IOException e) {
+							LoggerFactory.getLogger(getClass()).error("Error writing json file", e);
+						}
+					}
+				} else {
+					MessageDialog.openError(getShell(), "Fehler", "Die Rolle hat keine Berechtigungs Definition");
+				}
+			};
+
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return Images.IMG_EXPORT.getImageDescriptor();
+			};
+
+			@Override
+			public String getText() {
+				return "Berechtigungen exportieren";
+			};
+
+			@Override
+			public boolean isEnabled() {
+				if (checkboxTableViewerRoles != null && checkboxTableViewerRoles.getStructuredSelection() != null
+						&& !checkboxTableViewerRoles.getStructuredSelection().isEmpty()) {
+					return !((IRole) checkboxTableViewerRoles.getStructuredSelection().getFirstElement())
+							.isSystemRole();
+				}
+				return false;
+			};
+		});
+
 		checkboxTableViewerRoles = CheckboxTableViewer.newCheckList(compositeRoles, SWT.BORDER | SWT.FULL_SELECTION);
 		new Label(compositeEdit, SWT.NONE);
 		new Label(compositeEdit, SWT.NONE);
@@ -653,8 +832,17 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		checkboxTableViewerRoles.setLabelProvider(new DefaultLabelProvider() {
 			@Override
 			public String getColumnText(Object element, int columnIndex) {
+				StringBuilder sb = new StringBuilder();
 				IRole r = (IRole) element;
-				return r.getId();
+				sb.append(r.getId());
+				if (!r.isSystemRole()) {
+					sb.append(" *");
+					String jsonString = (String) r.getExtInfo("json");
+					if (StringUtils.isEmpty(jsonString)) {
+						sb.append(" (leer)");
+					}
+				}
+				return sb.toString();
 			}
 		});
 		checkboxTableViewerRoles.addCheckStateListener((e) -> {
@@ -669,6 +857,18 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			}
 			CoreModelServiceHolder.get().save(user);
 		});
+		Menu roleContextmenu = rolePopManager.createContextMenu(checkboxTableViewerRoles.getControl());
+		checkboxTableViewerRoles.getControl().setMenu(roleContextmenu);
+		rolePopManager.addMenuListener(new IMenuListener() {
+
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				for (IContributionItem item : manager.getItems()) {
+					item.update();
+				}
+			}
+		});
+
 		checkboxTableViewerAssociation.setContentProvider(ArrayContentProvider.getInstance());
 		checkboxTableViewerAssociation.setLabelProvider(new DefaultLabelProvider() {
 			@Override
@@ -742,8 +942,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			} else {
 				setMessage("Der Benutzer ist in Gruppe(n) "
 						+ userGroups.stream().map(ug -> ug.getGroupname()).collect(Collectors.joining(","))
-						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.",
-						WARNING);
+						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.", WARNING);
 			}
 
 			IContact anw = user.getAssignedContact();
@@ -773,8 +972,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
 
 			if (anw != null) {
-				checkboxTableViewerAssociation
-						.setCheckedElements(UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).toArray());
+				checkboxTableViewerAssociation.setCheckedElements(
+						UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user, true).toArray());
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
 				if (mandator.isPresent()) {
 					Color color = UiMandant.getColorForMandator(Mandant.load(mandator.get().getId()));
@@ -821,20 +1020,25 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue observeSelectionBtnIsAdminObserveWidget = WidgetProperties.selection().observe(btnUserIsAdmin);
-		IObservableValue wvAdminObserveDetailValue = PojoProperties.value(IUser.class, "administrator", Boolean.class) //$NON-NLS-1$
+		IObservableValue<Boolean> observeSelectionBtnIsAdminObserveWidget = WidgetProperties.buttonSelection()
+				.observe(btnUserIsAdmin);
+		IObservableValue<Boolean> wvAdminObserveDetailValue = PojoProperties
+				.value(IUser.class, "administrator", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
-		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue, null, null);
+		bindingContext.bindValue(observeSelectionBtnIsAdminObserveWidget, wvAdminObserveDetailValue,
+				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), wvUser), null);
 
-		IObservableValue observeSelectionBtnIsActiveObserveWidget = WidgetProperties.selection()
+		IObservableValue<Boolean> observeSelectionBtnIsActiveObserveWidget = WidgetProperties.buttonSelection()
 				.observe(btnUserIsLocked);
-		IObservableValue wvActiveObserveDetailValue = PojoProperties.value(IUser.class, "active", Boolean.class) //$NON-NLS-1$
+		IObservableValue<Boolean> wvActiveObserveDetailValue = PojoProperties
+				.value(IUser.class, "active", Boolean.class) //$NON-NLS-1$
 				.observeDetail(wvUser);
 		bindingContext.bindValue(observeSelectionBtnIsActiveObserveWidget, wvActiveObserveDetailValue,
-				new UpdateValueStrategy().setConverter(new BooleanNotConverter()),
+				new SavingUpdateValueStrategy(CoreModelServiceHolder.get(), wvUser).setConverter(new BooleanNotConverter()),
 				new UpdateValueStrategy().setConverter(new BooleanNotConverter()));
 		//
 		return bindingContext;
@@ -883,6 +1087,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		public MandantViewerComparator(Viewer viewer) {
 		}
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;

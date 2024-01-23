@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.201.0",
  ch.elexis.core.ui.laboratory;bundle-version="3.0.0",
  ch.elexis.core.ui.medication;bundle-version="3.0.0",
  org.iatrix.help.wiki;bundle-version="3.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.services.holder,
  org.eclipse.e4.ui.workbench.modeling

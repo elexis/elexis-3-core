@@ -77,7 +77,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
 
-	private static final String MOBIL = Messages.Core_Mobilphone; // $NON-NLS-1$
+	private static final String MOBIL = Messages.Core_Mobilephone; // $NON-NLS-1$
 	private static final String VORNAME = Messages.Core_Firstname; // $NON-NLS-1$
 	private static final String NAME = Messages.Core_Name; // $NON-NLS-1$
 	private static final String TEL_DIREKT = Messages.KontaktBlatt_OhoneDirect; // $NON-NLS-1$
@@ -97,8 +97,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	Listener mandantListener, checkIfContactExistsListener;
 
 	static final InputData[] def = new InputData[] {
-			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null),
-			new InputData(Messages.Core_Description_2, Kontakt.FLD_NAME2, Typ.STRING, null),
+			new InputData(Messages.Core_Name, Kontakt.FLD_NAME1, Typ.STRING, null),
+			new InputData(Messages.Core_Firstname, Kontakt.FLD_NAME2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
 			new InputData(Messages.Sex, Person.SEX, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_LawCode, Person.FLD_TITLE_SUFFIX, Typ.STRING, null),
@@ -107,9 +107,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_City, Kontakt.FLD_PLACE, Typ.STRING, null),
 			new InputData(Messages.Core_Country, Kontakt.FLD_COUNTRY, Typ.STRING, null, 3),
 			new InputData(Messages.KontaktBlatt_XMLName, Patient.FLD_ALLERGIES, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
-			new InputData(Messages.KontaktBlatt_Mobile, Kontakt.FLD_MOBILEPHONE, Typ.STRING, null, 30),
 			new InputData(Messages.Core_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX, null),
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
@@ -124,6 +124,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Title, Person.TITLE, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_extid, "UUID", new LabeledInputField.IContentProvider() { //$NON-NLS-1$ //$NON-NLS-2$
 
+				@Override
 				public void displayContent(Object po, InputData ltf) {
 					StringBuilder sb = new StringBuilder();
 					Kontakt k = (Kontakt) po;
@@ -133,6 +134,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					ltf.setText(sb.toString());
 				}
 
+				@Override
 				public void reloadContent(Object po, InputData ltf) {
 					ArrayList<String> extFlds = new ArrayList<String>();
 					Kontakt k = (Kontakt) po;
@@ -167,7 +169,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (LocalLockServiceHolder.get().isLockedLocal(deselectedKontakt)) {
 						LocalLockServiceHolder.get().releaseLock(deselectedKontakt);
 					}
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					ICommandService commandService = PlatformUI.getWorkbench()
 							.getService(ICommandService.class);
 					commandService.refreshElements(ToggleCurrentKontaktLockHandler.COMMAND_ID, null);
 				}
@@ -243,7 +245,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 				List<Kontakt> list = queryContact();
 
 				if ((list != null) && (!list.isEmpty())) {
-					Kontakt kontakt = (Kontakt) list.get(0);
+					Kontakt kontakt = list.get(0);
 					if (kontakt.istPerson()) {
 						MessageDialog.openInformation(getShell(), "Kontakt existiert",
 								"Ein Kontakt mit diesen Daten existiert bereits in der Datenbank");
@@ -380,7 +382,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		if (actKontakt != null) {
 			boolean updateRight = AccessControlServiceHolder.get()
 					.evaluate(EvACE.of(IContact.class, Right.UPDATE,
-							StoreToStringServiceHolder.getStoreToString(actKontakt)));
+							StoreToStringServiceHolder.getStoreToString(actKontakt.toIContact())));
 
 			String[] ret = new String[types.length];
 			actKontakt.get(types, ret);

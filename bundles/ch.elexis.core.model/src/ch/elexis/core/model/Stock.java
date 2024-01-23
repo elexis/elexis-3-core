@@ -1,17 +1,25 @@
 package ch.elexis.core.model;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Stock>
 		implements IdentifiableWithXid, IStock {
 
 	public Stock(ch.elexis.core.jpa.entities.Stock entity) {
 		super(entity);
+	}
+
+	@Override
+	public void setId(String id) {
+		getEntity().setId(id);
 	}
 
 	@Override
@@ -35,9 +43,27 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public IMandator getOwner() {
+	public IPerson getOwner() {
 		if (getEntity().getOwner() != null) {
-			return ModelUtil.getAdapter(getEntity().getOwner(), IMandator.class, true);
+			return ModelUtil.getAdapter(getEntity().getOwner(), IPerson.class, true);
+		}
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		return getEntity().getDescription();
+	}
+
+	@Override
+	public String getLocation() {
+		return getEntity().getLocation();
+	}
+
+	@Override
+	public IContact getResponsible() {
+		if (getEntity().getResponsible() != null) {
+			return ModelUtil.getAdapter(getEntity().getResponsible(), IContact.class, true);
 		}
 		return null;
 	}
@@ -63,7 +89,7 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
-	public void setOwner(IMandator value) {
+	public void setOwner(IPerson value) {
 		if (value != null) {
 			if (value instanceof AbstractIdModelAdapter) {
 				getEntityMarkDirty().setOwner((Kontakt) ((AbstractIdModelAdapter<?>) value).getEntity());
@@ -74,9 +100,36 @@ public class Stock extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	}
 
 	@Override
+	public void setDescription(String value) {
+		getEntityMarkDirty().setDescription(value);
+	}
+
+	@Override
+	public void setLocation(String value) {
+		getEntityMarkDirty().setLocation(value);
+	}
+
+	@Override
+	public void setResponsible(IContact value) {
+		if (value instanceof AbstractIdModelAdapter aida) {
+			getEntityMarkDirty().setResponsible((Kontakt) ((AbstractIdModelAdapter<?>) aida).getEntity());
+		} else {
+			getEntityMarkDirty().setResponsible(null);
+		}
+
+	}
+
+	@Override
 	public String getLabel() {
 		return StringUtils.isNotBlank(getEntity().getDescription())
 				? "[" + getCode() + "] " + getEntity().getDescription()
 				: getCode();
+	}
+
+	@Override
+	public List<IStockEntry> getStockEntries() {
+		CoreModelServiceHolder.get().refresh(this, true);
+		return getEntity().getEntries().stream().filter(se -> !se.isDeleted())
+				.map(se -> ModelUtil.getAdapter(se, IStockEntry.class)).toList();
 	}
 }

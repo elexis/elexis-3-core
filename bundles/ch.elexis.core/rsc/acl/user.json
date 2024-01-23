@@ -17,7 +17,7 @@
 		"ACL_AUTO_INSTALL_FEATURES": "x"
 	},
 	"object": {
-		"at.medevit.ch.artikelstamm.model.IArtikelstammItem": "rv",
+		"at.medevit.ch.artikelstamm.IArtikelstammItem": "rv",
 		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.complementary.IComplementaryLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.nutrition.INutritionLeistung": "rv",
@@ -46,7 +46,7 @@
 		"ch.elexis.core.model.IDiagnosisReference": "rv",
 		"ch.elexis.core.model.IDiagnosisTree": "rv",
 		"ch.elexis.core.model.IDocumentTemplate": "rv",
-		"ch.elexis.core.model.IInvoice": "rv",
+		"ch.elexis.core.model.IInvoice": "rv:self",
 		"ch.elexis.core.model.IInvoiceBilled": "rv",
 		"ch.elexis.core.model.ILabItem": "rv",
 		"ch.elexis.core.model.ILabMapping": "rv",

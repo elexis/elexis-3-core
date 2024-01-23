@@ -9,9 +9,12 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.runtime.ServiceComponentRuntime;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.osgi.UnsatisfiedComponentUtil;
 
 public class OsgiServiceUtil {
 
@@ -119,8 +122,13 @@ public class OsgiServiceUtil {
 			if (service != null) {
 				ServiceReference<?> serviceReferenceTracker = serviceTracker.getServiceReference();
 				serviceReferences.put(service, serviceReferenceTracker);
+				return Optional.of(service);
+			} else {
+				ServiceComponentRuntime scr = getService(ServiceComponentRuntime.class).get();
+				String unsatisfiedComponents = UnsatisfiedComponentUtil.listUnsatisfiedComponents(scr, bundle);
+				logger.warn("ERR getServiceWait [{}]: {}", clazz.getName(), unsatisfiedComponents);
+				ungetService(scr);
 			}
-			return Optional.of(service);
 		} catch (InterruptedException e) {
 			logger.error("Could not get service", e);
 		} finally {

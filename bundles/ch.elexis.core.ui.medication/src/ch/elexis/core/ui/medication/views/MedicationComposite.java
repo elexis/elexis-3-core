@@ -16,14 +16,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.DateAndTimeObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -80,6 +80,7 @@ import ch.elexis.core.ui.medication.handlers.ApplyCustomSortingHandler;
 import ch.elexis.core.ui.medication.views.MedicationTableViewerContentProvider.MedicationContentProviderComposite;
 import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
+import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 
@@ -114,9 +115,9 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private Composite compositeStopMedicationTextDetails;
 	private Composite stackedMedicationDetailComposite;
 
-	private WritableValue<MedicationTableViewerItem> selectedMedication = new WritableValue(null,
+	private WritableValue<MedicationTableViewerItem> selectedMedication = new WritableValue<>(null,
 			MedicationTableViewerItem.class);
-	private WritableValue<Identifiable> lastDisposal = new WritableValue(null, Identifiable.class);
+	private WritableValue<Identifiable> lastDisposal = new WritableValue<>(null, Identifiable.class);
 
 	private DateTime dateStart;
 	private DateTime timeStopped;
@@ -183,6 +184,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtSearch.setMessage(Messages.Core_DoSearch);
 		txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 				medicationHistoryFilter.setSearchText(txtSearch.getText());
 			};
@@ -214,7 +216,19 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		medicationHistoryFilter = new MedicationFilter(medicationHistoryTableComposite.getTableViewer());
 		medicationHistoryTableComposite.getTableViewer().addFilter(medicationHistoryFilter);
 
+		addDragSource(medicationTableComposite.getTableViewer());
+
 		tablesLayout.topControl = medicationTableComposite;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addDragSource(TableViewer tableViewer) {
+		new GenericObjectDragSource(tableViewer, () -> {
+			List selection = tableViewer.getStructuredSelection().toList();
+			return selection.stream().filter(MedicationTableViewerItem.class::isInstance)
+					.map(p -> ((MedicationTableViewerItem) p).getArticle())
+					.toList();
+		});
 	}
 
 	public void setViewerSortOrder(ViewerSortOrder vso) {
@@ -222,7 +236,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		medicationTableComposite.getTableViewer().setComparator(vso.vc);
 		medicationHistoryTableComposite.getTableViewer().setComparator(vso.vc);
 
-		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = service.getCommand(ApplyCustomSortingHandler.CMD_ID);
 		command.getState(ApplyCustomSortingHandler.STATE_ID).setValue(vso.equals(ViewerSortOrder.MANUAL));
 	}
@@ -337,7 +351,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 				if (btnToggleDetailComposite.getSelection()) {
 					Object selectedObj = selectedMedication.getValue();
 					if (selectedObj instanceof MedicationTableViewerItem) {
-						showMedicationDetailComposite((MedicationTableViewerItem) selectedMedication.getValue());
+						showMedicationDetailComposite(selectedMedication.getValue());
 					}
 				}
 			}
@@ -420,6 +434,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtEvening.setLayoutData(gd_txtEvening);
 			txtEvening.addModifyListener(new SignatureArrayModifyListener(2));
 			txtEvening.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -444,6 +459,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtNight.setLayoutData(gd_txtNight);
 			txtNight.addModifyListener(new SignatureArrayModifyListener(3));
 			txtNight.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -473,6 +489,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			txtFreeText.setTextLimit(255);
 			txtFreeText.addModifyListener(new SignatureArrayModifyListener(0));
 			txtFreeText.addKeyListener(new KeyAdapter() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					switch (e.keyCode) {
 					case SWT.CR:
@@ -494,6 +511,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
@@ -521,8 +539,8 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		DataBindingContext dbc = new DataBindingContext();
 		IObservableValue dateTimeStopObservable = PojoProperties.value("endTime", Date.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
-		IObservableValue timeObservable = WidgetProperties.selection().observe(timeStopped);
-		IObservableValue dateObservable = WidgetProperties.selection().observe(dateStopped);
+		IObservableValue<Date> timeObservable = WidgetProperties.dateTimeSelection().observe(timeStopped);
+		IObservableValue<Date> dateObservable = WidgetProperties.dateTimeSelection().observe(dateStopped);
 		dbc.bindValue(new DateAndTimeObservableValue(dateObservable, timeObservable), dateTimeStopObservable);
 
 		btnStopMedication = new Button(compositeMedicationDetail, SWT.FLAT | SWT.TOGGLE);
@@ -590,9 +608,9 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtIntakeOrder = new Text(compositeMedicationTextDetails, SWT.BORDER);
 		txtIntakeOrder.setMessage(Messages.Prescription_Instruction);
 		txtIntakeOrder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		IObservableValue txtIntakeOrderObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
+		IObservableValue<String> txtIntakeOrderObservable = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtIntakeOrder);
-		IObservableValue intakeOrderObservable = PojoProperties.value("remark", String.class) //$NON-NLS-1$
+		IObservableValue<String> intakeOrderObservable = PojoProperties.value("remark", String.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		dbc.bindValue(txtIntakeOrderObservable, intakeOrderObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
@@ -635,9 +653,9 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		txtStopComment = new Text(compositeStopMedicationTextDetails, SWT.BORDER);
 		txtStopComment.setMessage(Messages.MedicationComposite_stopReason);
 		txtStopComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		IObservableValue txtStopCommentObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100,
+		IObservableValue<String> txtStopCommentObservableUi = WidgetProperties.text(SWT.Modify).observeDelayed(100,
 				txtStopComment);
-		IObservableValue txtStopCommentObservable = PojoProperties.value("stopReason", String.class) //$NON-NLS-1$
+		IObservableValue<String> txtStopCommentObservable = PojoProperties.value("stopReason", String.class) //$NON-NLS-1$
 				.observeDetail(selectedMedication);
 		dbc.bindValue(txtStopCommentObservableUi, txtStopCommentObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
@@ -653,7 +671,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	}
 
 	private void applyDetailChanges() {
-		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
+		MedicationTableViewerItem pres = selectedMedication.getValue();
 		if (pres == null)
 			return; // prevent npe
 
@@ -915,7 +933,7 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		if (ctrlDecor == null)
 			initControlDecoration();
 
-		MedicationTableViewerItem pres = (MedicationTableViewerItem) selectedMedication.getValue();
+		MedicationTableViewerItem pres = selectedMedication.getValue();
 		if (pres == null || pres.isStopped()) {
 			// activate = false;
 		}

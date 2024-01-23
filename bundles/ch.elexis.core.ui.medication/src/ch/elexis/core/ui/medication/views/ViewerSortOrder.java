@@ -162,6 +162,11 @@ public enum ViewerSortOrder {
 
 				rc = prescriptor1.compareTo(prescriptor2);
 				break;
+			case 8:
+				String disposal1 = p1.getDisposalComment();
+				String disposal2 = p2.getDisposalComment();
+				rc = disposal1.compareTo(disposal2);
+				break;
 			default:
 				rc = 0;
 			}

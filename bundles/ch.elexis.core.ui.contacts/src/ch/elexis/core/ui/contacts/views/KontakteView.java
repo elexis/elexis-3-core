@@ -68,8 +68,8 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	PersistentObjectLoader loader;
 
 	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.Core_Kuerzel, // $NON-NLS-1$
-			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.Core_Description_1, // $NON-NLS-1$
-			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.Core_Description_2, // $NON-NLS-1$
+			Kontakt.FLD_NAME1 + Query.EQUALS + Messages.Core_Name, // $NON-NLS-1$
+			Kontakt.FLD_NAME2 + Query.EQUALS + Messages.Core_Firstname, // $NON-NLS-1$
 			Kontakt.FLD_STREET + Query.EQUALS + Messages.Core_Street, // $NON-NLS-1$
 			Kontakt.FLD_ZIP + Query.EQUALS + Messages.Core_Postal_code, // $NON-NLS-1$
 			Kontakt.FLD_PLACE + Query.EQUALS + Messages.Core_City }; // $NON-NLS-1$
@@ -163,8 +163,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	}
 
 	private void makeActions() {
-		delKontakt = new LockedRestrictedAction<Kontakt>(EvACE.of(IContact.class, Right.DELETE),
-				Messages.Core_Delete) {
+		delKontakt = new LockedRestrictedAction<Kontakt>(EvACE.of(IContact.class, Right.DELETE), Messages.Core_Delete) {
 			@Override
 			public void doRun(Kontakt k) {
 				if (SWTHelper.askYesNo("Wirklich löschen?", k.getLabel())) {
@@ -224,7 +223,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 					for (int i = 0; i < sel.length; i++) {
 						Kontakt k = (Kontakt) sel[i];
 						String[] f = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+								Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 						String[] v = new String[f.length];
 						k.get(f, v);
 						adrs[i] = new String[4];
@@ -246,7 +245,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		@Override
 		public String getText(Object element) {
 			String[] fields = new String[] { Kontakt.FLD_NAME1, Kontakt.FLD_NAME2, Kontakt.FLD_NAME3,
-					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_PHONE1 };
+					Kontakt.FLD_STREET, Kontakt.FLD_ZIP, Kontakt.FLD_PLACE, Kontakt.FLD_MOBILEPHONE };
 			String[] values = new String[fields.length];
 			((Kontakt) element).get(fields, values);
 			return StringTool.join(values, StringConstants.COMMA);

@@ -1,5 +1,9 @@
 package ch.elexis.core.mail.ui.dialogs;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -43,19 +49,27 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
+import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
+import ch.elexis.core.mail.ui.preference.SerializableFile;
+import ch.elexis.core.mail.ui.preference.SerializableFileUtil;
+import ch.elexis.core.mail.ui.preference.TextTemplates;
+import ch.elexis.core.model.IBlobSecondary;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
 
@@ -75,13 +89,13 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
-
+	private Button confidentialCheckbox;
 	private String accountId;
 	private String attachmentsString;
 	private String documentsString;
 	private boolean disableOutbox;
 	private ComboViewer templatesViewer;
-
+	private boolean doSend = true;
 	private LocalDateTime sentTime;
 
 	public SendMailDialog(Shell parentShell) {
@@ -122,20 +136,36 @@ public class SendMailDialog extends TitleAreaDialog {
 			toText.setText(toString);
 			toText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter toAddressProposalAdapter = new ContentProposalAdapter(toText,
-					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+					new TextContentAdapter(), new MailAddressContentProposalProvider(),
+					null, null);
+			toText.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						toAddressProposalAdapter.openProposalPopup();
+					}
+					super.keyPressed(e);
+				}
+			});
+			toAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			toAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
 				public void proposalAccepted(IContentProposal proposal) {
-					int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
-					StringBuilder sb = new StringBuilder();
-					if (index != 0) {
-						sb.append(toText.getText().substring(0, index)).append(", ").append(proposal.getContent());
-					} else {
-						sb.append(proposal.getContent());
+					if (proposal instanceof IdentifiableContentProposal) {
+						@SuppressWarnings("unchecked")
+						IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
+						IContact contact = identifiableContentProposal.getIdentifiable();
+						int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
+						StringBuilder sb = new StringBuilder();
+						if (index != 0) {
+							sb.append(toText.getText().substring(0, index)).append(", ").append(contact.getEmail());
+						} else {
+							sb.append(contact.getEmail());
+						}
+						toText.setText(sb.toString());
+						toText.setSelection(toText.getText().length());
+						attachments.setPostfix(toText.getText());
 					}
-					toText.setText(sb.toString());
-					toText.setSelection(toText.getText().length());
-					attachments.setPostfix(toText.getText());
 				}
 			});
 			MenuManager menuManager = new MenuManager();
@@ -174,15 +204,28 @@ public class SendMailDialog extends TitleAreaDialog {
 			ccText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			ContentProposalAdapter ccAddressProposalAdapter = new ContentProposalAdapter(ccText,
 					new TextContentAdapter(), new MailAddressContentProposalProvider(), null, null);
+			ccText.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						toAddressProposalAdapter.openProposalPopup();
+					}
+					super.keyPressed(e);
+				}
+			});
+			ccAddressProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_IGNORE);
 			ccAddressProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 				@Override
 				public void proposalAccepted(IContentProposal proposal) {
+					@SuppressWarnings("unchecked")
+					IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
+					IContact contact = identifiableContentProposal.getIdentifiable();
 					int index = MailAddressContentProposalProvider.getLastAddressIndex(ccText.getText());
 					StringBuilder sb = new StringBuilder();
 					if (index != 0) {
-						sb.append(ccText.getText().substring(0, index)).append(", ").append(proposal.getContent());
+						sb.append(ccText.getText().substring(0, index)).append(", ").append(contact.getEmail());
 					} else {
-						sb.append(proposal.getContent());
+						sb.append(contact.getEmail());
 					}
 					ccText.setText(sb.toString());
 					ccText.setSelection(ccText.getText().length());
@@ -223,6 +266,10 @@ public class SendMailDialog extends TitleAreaDialog {
 			subjectText.setText(subjectString);
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
+			confidentialCheckbox = new Button(container, SWT.CHECK); // Checkbox initialisieren
+			confidentialCheckbox.setText("Vertraulich");
+			confidentialCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
 			attachments = new AttachmentsComposite(container, SWT.NONE);
 			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachments.setAttachments(attachmentsString);
@@ -256,15 +303,27 @@ public class SendMailDialog extends TitleAreaDialog {
 							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
 						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
 								.getFirstElement();
+
+						setTemplateAttachments(selectedTemplate);
+
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
+						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
+							subjectText.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT)
+									+ StringUtils.SPACE + subjectString);
+						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
+						subjectText.setText(StringUtils.EMPTY);
 					}
 					updateLayout();
 				}
 			});
-
+			if (!doSend) {
+				lbl.setVisible(false);
+				templatesViewer.getCombo().setVisible(false);
+				attachments.setVisible(false);
+			}
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
@@ -349,6 +408,10 @@ public class SendMailDialog extends TitleAreaDialog {
 		updateLayout();
 	}
 
+	public void doSend(boolean doSend) {
+		this.doSend = doSend;
+	}
+	
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<String>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
@@ -378,7 +441,11 @@ public class SendMailDialog extends TitleAreaDialog {
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);
-			okButton.setText("Senden");
+			if (doSend) {
+				okButton.setText("Senden");
+			} else {
+				okButton.setText(IDialogConstants.OK_LABEL);
+			}
 			if (sentTime != null) {
 				setTitle("E-Mail Anzeige");
 				setMessage("Diese E-Mail wurde versendet am "
@@ -422,6 +489,33 @@ public class SendMailDialog extends TitleAreaDialog {
 		parent.layout();
 	}
 
+	private void setTemplateAttachments(ITextTemplate selectedTemplate) {
+		IBlobSecondary textTemplate = CoreModelServiceHolder.get()
+				.load(TextTemplates.NAMED_BLOB_PREFIX + selectedTemplate.getId(), IBlobSecondary.class).orElse(null);// $NON-NLS-1$
+		if (textTemplate != null) {
+			byte[] DBArrayList = textTemplate.getContent();
+
+			Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+			List<String> attachmentPaths = new ArrayList<>();
+			try {
+				List<SerializableFile> deserializedContent = SerializableFileUtil.deserializeData(DBArrayList);
+				for (SerializableFile serializableFile : deserializedContent) {
+					Path tempFile = tempDir.resolve(serializableFile.getName());
+					if (!Files.exists(tempFile)) {
+						Files.write(tempFile, serializableFile.getData());
+						tempFile.toFile().deleteOnExit();
+					}
+					attachmentPaths.add(tempFile.toString());
+				}
+				attachments.setAttachments(String.join(AttachmentsComposite.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			attachments.setAttachments(null);
+		}
+	}
+
 	private String getValidation() {
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
@@ -443,7 +537,11 @@ public class SendMailDialog extends TitleAreaDialog {
 
 		ccString = ccText.getText();
 
-		subjectString = subjectText.getText();
+		if (confidentialCheckbox != null && confidentialCheckbox.getSelection()) {
+			subjectString = subjectText.getText() + " (Vertraulich)";
+		} else {
+			subjectString = subjectText.getText();
+		}
 
 		textString = textText.getText();
 
@@ -532,5 +630,9 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	public void sent(LocalDateTime sentTime) {
 		this.sentTime = sentTime;
+	}
+
+	public Boolean doSend() {
+		return doSend;
 	}
 }

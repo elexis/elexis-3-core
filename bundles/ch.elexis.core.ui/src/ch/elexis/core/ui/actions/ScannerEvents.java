@@ -73,9 +73,9 @@ public class ScannerEvents implements Listener {
 	 */
 	private String getBarcode(StringBuffer strBuf) {
 		String barcode = strBuf.toString();
-		barcode = barcode.replaceAll(new Character(SWT.CR).toString(), StringUtils.EMPTY);
-		barcode = barcode.replaceAll(new Character(SWT.LF).toString(), StringUtils.EMPTY);
-		barcode = barcode.replaceAll(new Character((char) 0).toString(), StringUtils.EMPTY);
+		barcode = barcode.replaceAll(Character.valueOf(SWT.CR).toString(), StringUtils.EMPTY);
+		barcode = barcode.replaceAll(Character.valueOf(SWT.LF).toString(), StringUtils.EMPTY);
+		barcode = barcode.replaceAll(Character.valueOf((char) 0).toString(), StringUtils.EMPTY);
 		if (barcode.length() > barcodeLength) {
 			return barcode.substring(barcode.length() - barcodeLength);
 		}
@@ -86,6 +86,7 @@ public class ScannerEvents implements Listener {
 	 * Verarbeitet jedes Key-Event und entscheidet danach ob es sich um ein
 	 * Scanner-Event handelt oder nicht.
 	 */
+	@Override
 	public void handleEvent(Event event) {
 		if (listenerList.size() > 0) {
 			if (event.keyCode == prefixCode) {

@@ -20,12 +20,13 @@ import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
-@SuiteClasses({ RoleBasedAccessControlServiceTest.class, IAppointmentServiceTest.class, IBillingServiceTest.class,
-		IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
+@SuiteClasses({ RoleBasedAccessControlServiceTest.class, IContextServiceTest.class, IAppointmentServiceTest.class,
+		IBillingServiceTest.class, IConfigServiceTest.class, IElexisEnvironmentServiceTest.class, ILabServiceTest.class,
 		IStoreToStringServiceTest.class, IStickerServiceTest.class, BriefDocumentStoreTest.class,
 		IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
 		IMedicationServiceTest.class, ITextReplacementServiceTest.class, IEncounterServiceTest.class,
-		IInvoiceServiceTest.class, ICoverageServiceTest.class, IContactServiceTest.class })
+		IInvoiceServiceTest.class, ICoverageServiceTest.class, IContactServiceTest.class,
+		IDocumentServiceTest.class, IStockServiceTest.class })
 public class AllServiceTests {
 
 	private static IModelService modelService;
@@ -45,6 +46,7 @@ public class AllServiceTests {
 		tdb.initializeMandant();
 		tdb.initializeLabResult();
 		tdb.initializePrescription();
+		tdb.initializeFall();
 
 		ContextServiceHolder.get().setActiveUser(tdb.getUser());
 	}

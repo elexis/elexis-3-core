@@ -1,2 +1,0 @@
-DROP INDEX IF EXISTS idxResult;
-CREATE INDEX idxResult ON LABORDER(Result);

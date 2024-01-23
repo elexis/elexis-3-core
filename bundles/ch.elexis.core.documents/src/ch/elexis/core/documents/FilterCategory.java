@@ -2,6 +2,8 @@ package ch.elexis.core.documents;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.ICategory;
 
 public class FilterCategory implements ICategory {
@@ -10,7 +12,11 @@ public class FilterCategory implements ICategory {
 	private String label;
 
 	public FilterCategory(ICategory category) {
-		this.name = category.getName();
+		if (category != null) {
+			this.name = category.getName();
+		} else {
+			this.name = StringUtils.EMPTY;
+		}
 	}
 
 	public FilterCategory(String name, String lbl) {

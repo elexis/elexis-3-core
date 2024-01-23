@@ -38,16 +38,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ISticker;
 import ch.elexis.core.model.BriefConstants;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Brief;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Sticker;
 import ch.rgw.tools.StringTool;
@@ -79,7 +78,6 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	protected static boolean dontAskForAddresseeStickerCreated = false;
 
 	static final int TEMPLATE = TYPE_LOAD_TEMPLATE | TYPE_LOAD_SYSTEMPLATE;
-	Person rel;
 	int type;
 	Brief result;
 	Text tBetreff;
@@ -95,12 +93,10 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * Create a new DocumentSelector. If the user clicks OK, the selected Brief will
 	 * be in result.
 	 *
-	 * @param p   the mandator whose templates/letters should be displayed
 	 * @param typ type of the selector to display (see TYPE_ constants)
 	 */
-	public DocumentSelectDialog(Shell shell, Person p, int typ) {
+	public DocumentSelectDialog(Shell shell, int typ) {
 		super(shell);
-		rel = p;
 		type = typ;
 	}
 
@@ -146,6 +142,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		tv = new TableViewer(ret, SWT.V_SCROLL);
 		tv.setContentProvider(new IStructuredContentProvider() {
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				Query<Brief> qbe = new Query<Brief>(Brief.class);
 				if (type == TYPE_LOAD_DOCUMENT) {
@@ -155,7 +152,8 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 					qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 					qbe.add(Brief.FLD_KONSULTATION_ID, sys, "SYS"); //$NON-NLS-1$
 					qbe.startGroup();
-					qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, CoreHub.actMandant.getId());
+					qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS,
+							ContextServiceHolder.getActiveMandatorOrNull().getId());
 					qbe.or();
 					qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
 					qbe.endGroup();
@@ -172,9 +170,11 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 				return l.toArray();
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
@@ -183,6 +183,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 		menu = new MenuManager();
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				menu.add(editNameAction);
 				if (type == TYPE_LOAD_TEMPLATE) {
@@ -220,6 +221,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 *
 	 */
 	public class MyLabelProvider extends DefaultLabelProvider implements ITableLabelProvider {
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			PersistentObject po = (PersistentObject) element;
 			if (type == TYPE_LOAD_TEMPLATE) {

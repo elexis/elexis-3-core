@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -30,38 +29,10 @@ public class ArticleDefaultSignature extends PersistentObject {
 	public static final String EXT_FLD_FREETEXT = "textSignature";
 
 	public static final String TABLENAME = "default_signatures";
-	private static final String VERSION_ENTRY_ID = "VERSION";
-	private static final String VERSION = "1.0.0";
-
-	//@formatter:off
-	/** Definition of the database table */
-	@Deprecated(forRemoval = true)
-	static final String createDB = "CREATE TABLE " + TABLENAME
-		+ "("
-		+ "ID VARCHAR(25) primary key,"
-		+ "lastupdate BIGINT," + "deleted CHAR(1) default '0',"
-		+ FLD_ATC_CODE + " CHAR(10),"
-		+ FLD_ARTICLE + " VARCHAR(255)," // contains EAN%Pharmacode$Article_StoreToString
-		+ FLD_TYPE + " VARCHAR(255),"
-		+ FLD_SIG_MORNING + " CHAR(10)," // id(VERSION) contains cummulated N dataset vers
-		+ FLD_SIG_NOON + " CHAR(10),"
-		+ FLD_SIG_EVENING + " CHAR(10),"
-		+ FLD_SIG_NIGHT + " CHAR(10),"
-		+ FLD_SIG_COMMENT + " TEXT,"
-		+ PersistentObject.FLD_EXTINFO + " BLOB"
-		+ "); "
-		+ "CREATE INDEX idxATCCode ON " + TABLENAME + " (" + FLD_ATC_CODE + "); "
-		+ "INSERT INTO " + TABLENAME + " (ID," + FLD_ATC_CODE + ") VALUES ('VERSION', "
-		+ JdbcLink.wrap(VERSION) + ")";
-	//@formatter:on
 
 	static {
 		addMapping(TABLENAME, FLD_ATC_CODE, FLD_ARTICLE, FLD_TYPE, FLD_SIG_MORNING, FLD_SIG_NOON, FLD_SIG_EVENING,
 				FLD_SIG_NIGHT, FLD_SIG_COMMENT, FLD_EXTINFO);
-		ArticleDefaultSignature version = load(VERSION_ENTRY_ID);
-		if (!version.exists()) {
-			createOrModifyTable(createDB);
-		}
 	}
 
 	protected ArticleDefaultSignature() {

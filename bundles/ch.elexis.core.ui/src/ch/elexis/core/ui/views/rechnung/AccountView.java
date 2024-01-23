@@ -185,7 +185,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 			tc[i] = new TableColumn(table, SWT.NONE);
 			tc[i].setText(COLUMN_TEXT[i]);
 			tc[i].setWidth(COLUMN_WIDTH[i]);
-			tc[i].setData(new Integer(i));
+			tc[i].setData(Integer.valueOf(i));
 			tc[i].addSelectionListener(sortListener);
 		}
 

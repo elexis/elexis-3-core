@@ -8,6 +8,7 @@
    <reference cardinality="1..1" field="codeElementService" interface="ch.elexis.core.services.ICodeElementService" name="codeElementService"/>
    <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="coverageService" interface="ch.elexis.core.services.ICoverageService" name="coverageService"/>
    <reference cardinality="1..1" field="storeToStringService" interface="ch.elexis.core.services.IStoreToStringService" name="storeToStringService"/>
    <implementation class="ch.elexis.core.services.EncounterService"/>
 </scr:component>

@@ -151,7 +151,10 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		taskDescriptors.removeAll(incurredTasks);
 		taskDescriptors.stream().forEach(td -> {
 
-			String state = td.isActive() ? boundForThisStation(td.getRunner()) ? "!ACT!" : "ACT" : "INACT";
+			// **ACT active on this machine
+			// --ACT active but not on this machine
+			// INACT inactive
+			String state = td.isActive() ? (boundForThisStation(td.getRunner()) ? "**ACT" : "--ACT") : "INACT";
 			prflp(state, 8);
 			prflp(td.getTriggerType().getName(), 11);
 			prflp(StringUtils.EMPTY, 27);

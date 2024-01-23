@@ -1,5 +1,9 @@
 package ch.elexis.core.findings.util.fhir;
 
+import java.util.Optional;
+
+import ch.elexis.core.model.Identifiable;
+
 /**
  * Registry definition used to collect all {@link IFhirTransformer} services
  * available.
@@ -18,4 +22,13 @@ public interface IFhirTransformerRegistry {
 	 */
 	public <FHIR, LOCAL> IFhirTransformer<FHIR, LOCAL> getTransformerFor(Class<FHIR> fhirClazz,
 			Class<LOCAL> localClazz);
+
+	/**
+	 * Use the {@link IFhirTransformer} implementations to load the local object for
+	 * a FHIR reference String.
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public Optional<? extends Identifiable> getLocalObjectForReference(String fhirReference);
 }

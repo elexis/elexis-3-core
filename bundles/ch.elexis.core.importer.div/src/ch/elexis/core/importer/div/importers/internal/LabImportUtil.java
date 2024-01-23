@@ -1,6 +1,5 @@
 package ch.elexis.core.importer.div.importers.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -9,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -21,8 +21,8 @@ import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.IContactResolver;
 import ch.elexis.core.importer.div.importers.ILabImportUtil;
 import ch.elexis.core.importer.div.importers.ImportHandler;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.importer.div.importers.TransientLabResult;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.ILabItem;
@@ -499,7 +499,7 @@ public class LabImportUtil implements ILabImportUtil {
 	@Override
 	public ILabResult createLabResult(IPatient patient, TimeTool date, ILabItem labItem, String result, String comment,
 			String refVal, ILaboratory laboratory, String subId, ILabOrder labOrder, String orderId, IMandator mandator,
-			TimeTool observationTime, String groupName) {
+			TimeTool observationTime, String groupName, boolean userResolved) {
 
 		logger.info("Creating result with patient [" + patient.getId() + "] labitem [" + labItem + "] origin ["
 				+ laboratory + "] observationTime [" + observationTime + "] labOrder [" + labOrder + "]");
@@ -532,6 +532,7 @@ public class LabImportUtil implements ILabImportUtil {
 			order.setObservationTime(observationTime.toLocalDateTime());
 			order.setMandator(mandator);
 			order.setGroupName(groupName);
+			order.setUserResolved(userResolved);
 			if (orderId != null) {
 				order.setOrderId(orderId);
 			}

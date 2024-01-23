@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -49,9 +50,10 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	int priority;
 
 	/**
-	 * A short name or code for this stock
+	 * A short name or code for this stock. If the code matches <code>P[0-9]+</code>
+	 * it is a patient located stock.
 	 */
-	@Column(length = 3)
+	@Column(length = 7, unique = true)
 	String code;
 
 	/**
@@ -73,7 +75,7 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	 * articles.
 	 */
 	@OneToOne
-	@JoinColumn(name = "OWNER", insertable = false)
+	@JoinColumn(name = "OWNER")
 	Kontakt owner;
 
 	/**
@@ -98,9 +100,8 @@ public class Stock extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(name = "driver_config")
 	String driverConfig;
 
-	@OneToMany(cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "STOCK", insertable = false, updatable = false)
-	protected List<StockEntry> entries;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "stock", cascade = CascadeType.REMOVE)
+	private List<StockEntry> entries;
 
 	@Override
 	public String toString() {

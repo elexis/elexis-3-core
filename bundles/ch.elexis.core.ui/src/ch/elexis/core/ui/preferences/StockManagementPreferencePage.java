@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -48,6 +49,13 @@ import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -56,12 +64,9 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.Query;
-import ch.elexis.data.Stock;
 
 public class StockManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	private DataBindingContext m_bindingContext;
-
+	
 	private Table tableStocks;
 	private Text txtCode;
 	private Text txtDescription;
@@ -74,13 +79,14 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	private Button btnChkStoreInvalidNumbers;
 	private Button btnIgnoreOrderedArticlesOnNextOrder;
 
-	private WritableValue<Stock> stockDetail = new WritableValue<Stock>(null, Stock.class);
+	private WritableValue<IStock> stockDetail = new WritableValue<>(null, IStock.class);
 	private TableViewer tableViewer;
 	private Text txtMachineConfig;
 	private Label lblMachineuuid;
 
 	private Label lblDefaultArticleProvider;
 	private Button btnMachineOutlayPartialPackages;
+	private Button btnMachineStoreOnlyStockArticles;
 
 	private Button btnStoreBelow;
 	private Button btnStoreAtMin;
@@ -119,10 +125,10 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		tableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				Stock s1 = (Stock) e1;
-				int s1I = (s1.getPriority() != null) ? s1.getPriority() : Integer.MAX_VALUE;
-				Stock s2 = (Stock) e2;
-				int s2I = (s2.getPriority() != null) ? s2.getPriority() : Integer.MAX_VALUE;
+				IStock s1 = (IStock) e1;
+				int s1I = s1.getPriority();
+				IStock s2 = (IStock) e2;
+				int s2I = s2.getPriority();
 				return Integer.compare(s1I, s2I);
 			}
 		});
@@ -131,7 +137,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 			if (ss.isEmpty()) {
 				stockDetail.setValue(null);
 			} else {
-				stockDetail.setValue((Stock) ss.getFirstElement());
+				stockDetail.setValue((IStock) ss.getFirstElement());
 			}
 		});
 		tableStocks = tableViewer.getTable();
@@ -147,7 +153,10 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		mntmAddStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock stock = new Stock(StringUtils.EMPTY, Integer.MAX_VALUE);
+				IStock stock = CoreModelServiceHolder.get().create(IStock.class);
+				stock.setCode(StringUtils.EMPTY);
+				stock.setPriority(Integer.MAX_VALUE);
+				CoreModelServiceHolder.get().save(stock);
 				tableViewer.add(stock);
 				tableViewer.setSelection(new StructuredSelection(stock));
 			}
@@ -158,12 +167,19 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		mntmRemoveStock.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock stock = (Stock) stockDetail.getValue();
+				IStock stock = stockDetail.getValue();
 				if (stock != null) {
-					boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(), "Lager löschen",
-							"Das Löschen dieses Lagers löscht alle darauf verzeichneten Lagerbestände. Sind Sie sicher?");
+					boolean ret = MessageDialog.openQuestion(UiDesk.getTopShell(),
+							Messages.StockManagementPreferencePage_delete_stock,
+							Messages.StockManagementPreferencePage_delete_stock_dsc);
 					if (ret) {
-						stock.removeFromDatabase();
+						List<IStockEntry> entries = StockServiceHolder.get().findAllStockEntriesForStock(stock);
+						for (IStockEntry entry : entries) {
+							entry.setDeleted(true);
+						}
+						CoreModelServiceHolder.get().save(entries);
+						stock.setDeleted(true);
+						CoreModelServiceHolder.get().save(stock);
 						tableViewer.remove(stock);
 					}
 				}
@@ -178,7 +194,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 			@Override
 			public void update(ViewerCell cell) {
-				Stock s = (Stock) cell.getElement();
+				IStock s = (IStock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(Integer.toString(s.getPriority()));
@@ -193,7 +209,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 			@Override
 			public void update(ViewerCell cell) {
-				Stock s = (Stock) cell.getElement();
+				IStock s = (IStock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(s.getCode());
@@ -208,7 +224,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 			@Override
 			public void update(ViewerCell cell) {
-				Stock s = (Stock) cell.getElement();
+				IStock s = (IStock) cell.getElement();
 				if (s == null)
 					return;
 				cell.setText(s.getDescription());
@@ -223,9 +239,9 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 			@Override
 			public void update(ViewerCell cell) {
-				Stock s = (Stock) cell.getElement();
+				IStock s = (IStock) cell.getElement();
 				if (s != null) {
-					Mandant owner = s.getOwner();
+					IPerson owner = s.getOwner();
 					if (owner != null) {
 						cell.setText(owner.getLabel());
 					}
@@ -276,15 +292,16 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		lblOwner.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock s = (Stock) stockDetail.getValue();
+				IStock s = stockDetail.getValue();
 				if (s == null)
 					return;
-				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Mandant.class, "Mandant auswählen",
-						"Bitte selektieren Sie den Eigentümer", new String[] {});
+				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Mandant.class,
+						ch.elexis.core.l10n.Messages.Core_Select_Mandator,
+						Messages.StockManagementPreference_select_owner, new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Mandant p = (Mandant) ks.getSelection();
-					s.setOwner(p);
+					s.setOwner(p.toIContact().asIPerson());
 					String label = (p != null) ? p.getLabel() : StringUtils.EMPTY;
 					lblOwnerText.setText(label);
 				} else {
@@ -292,6 +309,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 					lblOwnerText.setText(StringConstants.EMPTY);
 				}
 				tableViewer.update(s, null);
+				CoreModelServiceHolder.get().save(s);
 			}
 		});
 
@@ -304,22 +322,24 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		lblResponsible.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock s = (Stock) stockDetail.getValue();
+				IStock s = stockDetail.getValue();
 				if (s == null)
 					return;
 				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
-						"Lagerverantwortlichen auswählen", "Bitte selektieren Sie den Lagerverantwortlichen",
+						Messages.StockManagementPreference_select_stock_owner,
+						Messages.StockManagementPreference_select_stock_owner_dsc,
 						new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
-					s.setResponsible(p);
+					s.setResponsible(p.toIContact());
 					String label = (p != null) ? p.getLabel() : StringUtils.EMPTY;
 					lblResponsibleText.setText(label);
 				} else {
 					s.setResponsible(null);
 					lblResponsibleText.setText(StringUtils.EMPTY);
 				}
+				CoreModelServiceHolder.get().save(s);
 			}
 		});
 
@@ -336,20 +356,20 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		lblMachine.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Stock s = (Stock) stockDetail.getValue();
+				IStock s = stockDetail.getValue();
 				if (s == null) {
 					return;
 				}
 				List<UUID> allDrivers = StockCommissioningServiceHolder.get().listAllAvailableDrivers();
 				if (allDrivers.size() == 0) {
-					MessageDialog.openInformation(UiDesk.getTopShell(), "No drivers found",
-							"There are no stock commissioning system drivers available.");
+					MessageDialog.openInformation(UiDesk.getTopShell(), Messages.StockManagementPreference_no_drivers,
+							Messages.StockManagementPreference_no_drivers_dsc);
 					return;
 				}
 
 				ListDialog ld = new ListDialog(UiDesk.getTopShell());
-				ld.setTitle("Driver selection");
-				ld.setMessage("Please select a commissioning system driver");
+				ld.setTitle(Messages.StockManagementPreference_select_driver);
+				ld.setMessage(Messages.StockManagementPreference_select_driver_dsc);
 				ld.setContentProvider(ArrayContentProvider.getInstance());
 				ld.setAddCancelButton(true);
 				ld.setLabelProvider(new LabelProvider() {
@@ -398,6 +418,15 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
 
+		btnMachineStoreOnlyStockArticles = new Button(compositeDetail, SWT.CHECK);
+		btnMachineStoreOnlyStockArticles.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		btnMachineStoreOnlyStockArticles
+				.setText(Messages.StockManagementPreferencePage_btnStoreOnlyStockeArticles_text);
+		boolean storeOnlyStockedArticles = ConfigServiceHolder.getGlobal(
+				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES_DEFAULT);
+		btnMachineStoreOnlyStockArticles.setSelection(storeOnlyStockedArticles);
+
 		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
 		btnIgnoreOrderedArticlesOnNextOrder.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
 		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
@@ -437,17 +466,17 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Kontakt.class,
-						"Standard-Lieferant auswählen", "Bitte selektieren Sie den Standard-Lieferanten",
-						new String[] {});
+						Messages.StockManagementPreference_select_stock_select_default_supplier,
+						Messages.StockManagementPreference_select_stock_select_default_supplier_dsc, new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					if (p != null) {
-						ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, p.getId());
+						ConfigServiceHolder.get().set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, p.getId());
 						lblDefaultArticleProvider.setText(p.getLabel());
 					}
 				} else {
-					ConfigServiceHolder.setGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+					ConfigServiceHolder.get().set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 					lblDefaultArticleProvider.setText(StringUtils.EMPTY);
 				}
 			}
@@ -465,19 +494,19 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 			}
 		}
 
-		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
-		m_bindingContext = initDataBindings();
+		tableViewer.setInput(refresh());
+		initDataBindings();
 
 		stockDetail.addChangeListener(e -> {
-			Stock stock = (Stock) stockDetail.getValue();
+			IStock stock = stockDetail.getValue();
 			if (stock != null) {
-				Mandant owner = stock.getOwner();
+				IPerson owner = stock.getOwner();
 				if (owner != null) {
 					lblOwnerText.setText(owner.getLabel());
 				} else {
 					lblOwnerText.setText(StringUtils.EMPTY);
 				}
-				Kontakt responsible = stock.getResponsible();
+				IContact responsible = stock.getResponsible();
 				if (responsible != null) {
 					lblResponsibleText.setText(responsible.getLabel());
 				} else {
@@ -503,6 +532,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
 		getPreferenceStore().setDefault(Preferences.INVENTORY_CHECK_ILLEGAL_VALUES,
@@ -513,10 +543,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 	@Override
 	protected void performApply() {
-		tableViewer.setInput(new Query<Stock>(Stock.class).execute());
-
+		tableViewer.setInput(refresh());
 		setErrorMessage(null);
-
 		super.performApply();
 	}
 
@@ -528,6 +556,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				btnIgnoreOrderedArticlesOnNextOrder.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				btnMachineOutlayPartialPackages.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+				btnMachineStoreOnlyStockArticles.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
 				btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
 						: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
@@ -535,40 +565,58 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		return super.performOk();
 	}
 
+	private List<IStock> refresh() {
+		return StockServiceHolder.get().getAllStocks(true, false);
+	}
+
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
-		//
-		IObservableValue observeTextTxtCodeObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtCode);
-		IObservableValue stockDetailCodeObserveDetailValue = PojoProperties.value(Stock.class, "code", String.class) //$NON-NLS-1$
+
+		IChangeListener saveStockListener = event -> {
+			IStock stock = stockDetail.getValue();
+			if (stock != null) {
+				CoreModelServiceHolder.get().save(stock);
+			}
+		};
+
+		IObservableValue<?> observeTextTxtCodeObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtCode);
+		IObservableValue<String> stockDetailCodeObserveDetailValue = PojoProperties
+				.value(IStock.class, "code", String.class) //$NON-NLS-1$
 				.observeDetail(stockDetail);
 		bindingContext.bindValue(observeTextTxtCodeObserveWidget, stockDetailCodeObserveDetailValue, null, null);
-		//
-		IObservableValue observeTextTxtDescriptionObserveWidget = WidgetProperties.text(SWT.Modify)
+		stockDetailCodeObserveDetailValue.addChangeListener(saveStockListener);
+
+		IObservableValue<?> observeTextTxtDescriptionObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtDescription);
-		IObservableValue stockDetailDescriptionObserveDetailValue = PojoProperties
-				.value(Stock.class, "description", String.class).observeDetail(stockDetail); //$NON-NLS-1$
+		IObservableValue<String> stockDetailDescriptionObserveDetailValue = PojoProperties
+				.value(IStock.class, "description", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtDescriptionObserveWidget, stockDetailDescriptionObserveDetailValue, null,
 				null);
-		//
-		IObservableValue observeTextTxtLocationObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtLocation);
-		IObservableValue stockDetailLocationObserveDetailValue = PojoProperties
-				.value(Stock.class, "location", String.class).observeDetail(stockDetail); //$NON-NLS-1$
+		stockDetailDescriptionObserveDetailValue.addChangeListener(saveStockListener);
+
+		IObservableValue<?> observeTextTxtLocationObserveWidget = WidgetProperties.text(SWT.Modify)
+				.observe(txtLocation);
+		IObservableValue<String> stockDetailLocationObserveDetailValue = PojoProperties
+				.value(IStock.class, "location", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtLocationObserveWidget, stockDetailLocationObserveDetailValue, null,
 				null);
-		//
-		IObservableValue observeTextTxtPrioObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtPrio);
-		IObservableValue stockDetailGlobalPreferenceObserveDetailValue = PojoProperties
-				.value(Stock.class, "priority", Integer.class).observeDetail(stockDetail); //$NON-NLS-1$
+		stockDetailLocationObserveDetailValue.addChangeListener(saveStockListener);
+
+		IObservableValue<?> observeTextTxtPrioObserveWidget = WidgetProperties.text(SWT.Modify).observe(txtPrio);
+		IObservableValue<Integer> stockDetailGlobalPreferenceObserveDetailValue = PojoProperties
+				.value(IStock.class, "priority", Integer.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtPrioObserveWidget, stockDetailGlobalPreferenceObserveDetailValue, null,
 				null);
-		//
-		IObservableValue observeTextTxtMachineConfigObserveWidget = WidgetProperties.text(SWT.Modify)
+		stockDetailGlobalPreferenceObserveDetailValue.addChangeListener(saveStockListener);
+
+		IObservableValue<?> observeTextTxtMachineConfigObserveWidget = WidgetProperties.text(SWT.Modify)
 				.observe(txtMachineConfig);
-		IObservableValue stockDetailMachineConfigObserveDetailValue = PojoProperties
-				.value(Stock.class, "driverConfig", String.class).observeDetail(stockDetail); //$NON-NLS-1$
+		IObservableValue<String> stockDetailMachineConfigObserveDetailValue = PojoProperties
+				.value(IStock.class, "driverConfig", String.class).observeDetail(stockDetail); //$NON-NLS-1$
 		bindingContext.bindValue(observeTextTxtMachineConfigObserveWidget, stockDetailMachineConfigObserveDetailValue,
 				null, null);
-		//
+		stockDetailMachineConfigObserveDetailValue.addChangeListener(saveStockListener);
+
 		return bindingContext;
 	}
 }

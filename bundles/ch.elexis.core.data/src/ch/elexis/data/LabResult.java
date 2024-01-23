@@ -753,18 +753,34 @@ public class LabResult extends PersistentObject implements ILabResult {
 
 	/**
 	 * Gets a {@link LabResult} for observationTime timespan.
-	 *
+	 * 
 	 * @param pat
 	 * @param fromObservationTime
 	 * @param toObservationTime
 	 * @param item
 	 * @return
+	 * 
 	 */
 	public static LabResult getForObservationTime(final Patient pat, final TimeTool fromObservationTime,
 			final TimeTool toObservationTime, final LabItem item) {
+		return getForObservationTime(pat.getId(), fromObservationTime, toObservationTime, item);
+	}
+
+	/**
+	 * Gets a {@link LabResult} for observationTime timespan.
+	 *
+	 * @param patientId
+	 * @param fromObservationTime
+	 * @param toObservationTime
+	 * @param item
+	 * @return
+	 * @since 3.10
+	 */
+	public static LabResult getForObservationTime(final String patientId, final TimeTool fromObservationTime,
+			final TimeTool toObservationTime, final LabItem item) {
 		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
-		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
+		qbe.add(PATIENT_ID, Query.EQUALS, patientId);
 
 		if (fromObservationTime != null) {
 			fromObservationTime.set(TimeTool.HOUR_OF_DAY, 0);

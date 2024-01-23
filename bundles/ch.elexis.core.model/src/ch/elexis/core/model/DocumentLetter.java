@@ -207,6 +207,20 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	}
 
 	@Override
+	public IContact getRecipient() {
+		return ModelUtil.getAdapter(getEntity().getRecipient(), IContact.class);
+	}
+
+	@Override
+	public void setRecipient(IContact value) {
+		if (value instanceof AbstractIdDeleteModelAdapter) {
+			getEntityMarkDirty().setRecipient((Kontakt) ((AbstractIdDeleteModelAdapter<?>) value).getEntity());
+		} else if (value == null) {
+			getEntityMarkDirty().setRecipient(null);
+		}
+	}
+
+	@Override
 	public InputStream getContent() {
 		// try to open from external file if applicable
 		IVirtualFilesystemHandle vfsHandle = DocumentLetterUtil.getExternalHandleIfApplicable(this);

@@ -88,7 +88,8 @@ public class Messages {
 	public static String Presets_ImportingContacts = ch.elexis.core.l10n.Messages.Presets_ImportingContacts;
 	public static String Core_Costbearer = ch.elexis.core.l10n.Messages.Core_Costbearer;
 	public static String Core_Insurance_Number = ch.elexis.core.l10n.Messages.Core_Insurance_Number;
-
+	public static String NO_BILLABLE_ENCOUNTER1 = ch.elexis.core.l10n.Messages.NO_BILLABLE_ENCOUNTER1;
+	public static String NO_BILLABLE_ENCOUNTER2 = ch.elexis.core.l10n.Messages.NO_BILLABLE_ENCOUNTER2;
 	public static String Case_KVG_Short = ch.elexis.core.l10n.Messages.Case_KVG_Short;
 	public static String Presets_PreviousID = ch.elexis.core.l10n.Messages.Presets_PreviousID;
 	public static String Presets_Switzerland = ch.elexis.core.l10n.Messages.Presets_Switzerland;

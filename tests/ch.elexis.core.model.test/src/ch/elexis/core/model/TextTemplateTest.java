@@ -17,12 +17,16 @@ import ch.elexis.core.types.TextTemplateCategory;
 
 public class TextTemplateTest extends AbstractTest {
 
+	@Override
 	@Before
 	public void before() {
 		super.before();
 		createMandator();
+		IQuery<ITextTemplate> query = coreModelService.getQuery(ITextTemplate.class);
+		query.execute().forEach(t -> coreModelService.remove(t));
 	}
 
+	@Override
 	@After
 	public void after() {
 		super.after();

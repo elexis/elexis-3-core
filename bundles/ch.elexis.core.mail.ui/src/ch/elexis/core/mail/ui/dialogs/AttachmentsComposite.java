@@ -38,10 +38,12 @@ public class AttachmentsComposite extends Composite {
 
 	private Composite attachmentsParent;
 
+	public static final String ATTACHMENT_DELIMITER = ":::";
+
 	public AttachmentsComposite(Composite parent, int style) {
 		super(parent, style);
 		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		createRocheLaborCommand = commandService.getCommand("at.medevit.elexis.roche.labor.CreatePdfSelection");
 
 		createContent();
@@ -96,7 +98,7 @@ public class AttachmentsComposite extends Composite {
 			control.dispose();
 		}
 		if (StringUtils.isNotBlank(attachments)) {
-			String[] attachmentsParts = attachments.split(":::");
+			String[] attachmentsParts = attachments.split(ATTACHMENT_DELIMITER);
 			for (String string : attachmentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				label.setText(FilenameUtils.getName(string));
@@ -117,9 +119,9 @@ public class AttachmentsComposite extends Composite {
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getAttachments().split(":::"));
+						List<String> removeParts = Arrays.asList(getAttachments().split(ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(":::"));
+								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
 						setAttachments(removedString);
 					}
 				});
@@ -127,11 +129,11 @@ public class AttachmentsComposite extends Composite {
 			}
 		}
 		if (StringUtils.isNotBlank(documents)) {
-			String[] documentsParts = documents.split(":::");
+			String[] documentsParts = documents.split(ATTACHMENT_DELIMITER);
 			for (String string : documentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
-				if (!tmpFile.endsWith(".pdf")) {
+				if (!tmpFile.toLowerCase().endsWith(".pdf")) {
 					MessageDialog.openWarning(getShell(), "Warnung", "Dokument " + FilenameUtils.getName(tmpFile)
 							+ " konnte nicht konvertiert werden, bzw. ist kein pdf.\nBitte prüfen ob ein editierbares Dokument versendet werden soll.");
 				}
@@ -151,10 +153,11 @@ public class AttachmentsComposite extends Composite {
 				remove.setImage(Images.IMG_DELETE.getImage());
 				remove.setData(string);
 				remove.addMouseListener(new MouseAdapter() {
+					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getDocuments().split(":::"));
+						List<String> removeParts = Arrays.asList(getDocuments().split(ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(":::"));
+								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
 						setDocuments(removedString);
 					};
 				});
@@ -170,7 +173,8 @@ public class AttachmentsComposite extends Composite {
 			if (StringUtils.isBlank(documents)) {
 				documents = AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			} else {
-				documents += ":::" + AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
+				documents += ATTACHMENT_DELIMITER
+						+ AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			}
 		}
 		updateAttachments();

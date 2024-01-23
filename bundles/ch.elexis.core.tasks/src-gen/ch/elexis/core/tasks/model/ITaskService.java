@@ -167,6 +167,7 @@ public interface ITaskService {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Trigger a task for synchronous execution. The task will be run with the current users rights (overriding the setting in the original task descriptor)
 	 * @param progressMonitor The progress monitor to report to. If null the task will initialise its own progress monitor.
 	 * @param runContext key value pairs to add to the task run context already populated out of ITaskDescriptor#runContext (e.g. the file system trigger adds the file triggering the event)
 	 * <!-- end-model-doc -->
@@ -199,7 +200,7 @@ public interface ITaskService {
 	 * <ul>
 	 *  <li>Is this taskDescriptor currently incurred? -> A
 	 *  <li>Is this station a designated runner for this taskDescriptor? -> B
-	 *  <li>Is this taskDescriptor marked as active and not deleted? -> C
+	 *  <li>Is this taskDescriptor marked as active? -> C
 	 *  </ul>
 	 *  A,B,C: reload<br>
 	 *  A,B,!C: release<br>
@@ -214,5 +215,17 @@ public interface ITaskService {
 	 * @generated
 	 */
 	void refresh(ITaskDescriptor taskDescriptor) throws TaskException;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * to incur? only iff not delete, active, and this station is a
+	 * 	 *         designated runner
+	 * <!-- end-model-doc -->
+	 * @model taskDescriptorRequired="true"
+	 * @generated
+	 */
+	boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor);
 
 } // ITaskService

@@ -26,9 +26,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -39,7 +40,6 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
@@ -75,14 +75,17 @@ class RnContentProvider
 		rlv = l;
 	}
 
+	@Override
 	public void startListening() {
 		cv.getConfigurer().getControlFieldProvider().addChangeListener(this);
 	}
 
+	@Override
 	public void stopListening() {
 		cv.getConfigurer().getControlFieldProvider().removeChangeListener(this);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getElements(final Object inputElement) {
 		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -116,21 +119,25 @@ class RnContentProvider
 		return result == null ? new Tree[0] : result;
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		// TODO Automatisch erstellter Methoden-Stub
 
 	}
 
 	// Vom ControlFieldListener
+	@Override
 	public void changed(HashMap<String, String> values) {
 		cv.notify(CommonViewer.Message.update);
 	}
 
+	@Override
 	public void reorder(final String field) {
 		cv.getViewerWidget().setSorter(new ViewerSorter() {
 
@@ -144,6 +151,7 @@ class RnContentProvider
 		});
 	}
 
+	@Override
 	public void selected() {
 		// nothing to do
 	}
@@ -183,6 +191,7 @@ class RnContentProvider
 		return tL;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getChildren(final Object parentElement) {
 		if (parentElement instanceof Tree) {
@@ -193,6 +202,7 @@ class RnContentProvider
 		return new Object[0];
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getParent(final Object element) {
 		if (element instanceof Tree) {
@@ -201,6 +211,7 @@ class RnContentProvider
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(final Object element) {
 		if (element instanceof Tree) {
 			if (((Tree) element).contents instanceof Rechnung) {
@@ -224,10 +235,10 @@ class RnContentProvider
 		});
 		Query<Rechnung> q1 = new Query<Rechnung>(Rechnung.class);
 		if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
-			if (CoreHub.actMandant == null) {
+			if (ContextServiceHolder.getActiveMandatorOrNull() == null) {
 				return null;
 			}
-			q1.add(Rechnung.MANDATOR_ID, Query.EQUALS, CoreHub.actMandant.getId());
+			q1.add(Rechnung.MANDATOR_ID, Query.EQUALS, ContextServiceHolder.getActiveMandatorOrNull().getId());
 		}
 		if (val[2] != null) {
 			q1.add(Rechnung.BILL_NUMBER, Query.EQUALS, val[2]);
@@ -235,22 +246,25 @@ class RnContentProvider
 		} else if (val[3] != null) {
 			q1.add(Rechnung.BILL_AMOUNT_CENTS, Query.EQUALS, val[3]);
 		} else {
-			if (Integer.parseInt(val[0]) == RnStatus.ZU_DRUCKEN) {
+			if (Integer.parseInt(val[0]) == InvoiceState.TO_PRINT.getState()) {
 				q1.startGroup();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.OFFEN));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(InvoiceState.OPEN.getState()));
 				q1.or();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_1));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_2));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_3));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(InvoiceState.DEMAND_NOTE_1.getState()));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(InvoiceState.DEMAND_NOTE_2.getState()));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(InvoiceState.DEMAND_NOTE_3.getState()));
 				q1.endGroup();
 				q1.and();
-			} else if (Integer.parseInt(val[0]) == RnStatus.AUSSTEHEND) {
+			} else if (Integer.parseInt(val[0]) == InvoiceState.OWING.getState()) {
 				q1.startGroup();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.OFFEN_UND_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(InvoiceState.OPEN_AND_PRINTED.getState()));
 				q1.or();
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_1_GEDRUCKT));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_2_GEDRUCKT));
-				q1.add(Rechnung.BILL_STATE, Query.EQUALS, Integer.toString(RnStatus.MAHNUNG_3_GEDRUCKT));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
+						Integer.toString(InvoiceState.DEMAND_NOTE_1_PRINTED.getState()));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
+						Integer.toString(InvoiceState.DEMAND_NOTE_2_PRINTED.getState()));
+				q1.add(Rechnung.BILL_STATE, Query.EQUALS,
+						Integer.toString(InvoiceState.DEMAND_NOTE_3_PRINTED.getState()));
 				q1.endGroup();
 				q1.and();
 			} else if (!val[0].equals(StringConstants.ZERO)) {
@@ -282,6 +296,7 @@ class RnContentProvider
 		if (val[4] != null) {
 			q1.addPostQueryFilter(new IFilter() {
 
+				@Override
 				public boolean select(Object toTest) {
 					if (toTest instanceof Rechnung) {
 						Rechnung rn = (Rechnung) toTest;
@@ -393,6 +408,7 @@ class RnContentProvider
 	}
 
 	private static class PatientComparator implements Comparator {
+		@Override
 		public int compare(final Object o1, final Object o2) {
 			Patient p1 = (Patient) o1;
 			Patient p2 = (Patient) o2;
@@ -404,6 +420,7 @@ class RnContentProvider
 		TimeTool tt0 = new TimeTool();
 		TimeTool tt1 = new TimeTool();
 
+		@Override
 		public int compare(final Object arg0, final Object arg1) {
 			Tree t0 = (Tree) arg0;
 			Tree t1 = (Tree) arg1;

@@ -28,6 +28,6 @@
 		"ch.elexis.core.model.IPerson": "cruvd",
 		"ch.elexis.core.model.IPrescription": "rv:aobo",
 		"ch.elexis.core.model.ISticker": "cruvd",
-		"ch.elexis.core.model.IStockEntry": "cruvd"
+		"ch.elexis.core.model.IStockEntry": "cruvdz"
 	}
 }

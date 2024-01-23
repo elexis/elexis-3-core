@@ -460,7 +460,7 @@ public class StringTool {
 		case 'A':
 			return sx;
 		case 'B':
-			return (new Integer(Integer.parseInt(sx)));
+			return (Integer.valueOf(Integer.parseInt(sx)));
 		case 'Z':
 			byte[] b = dePrintable(sx);
 			try {

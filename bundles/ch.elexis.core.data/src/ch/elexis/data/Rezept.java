@@ -11,16 +11,16 @@
  *******************************************************************************/
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -55,7 +55,8 @@ public class Rezept extends PersistentObject {
 
 	public Rezept(final Patient pat) {
 		create(null);
-		set(new String[] { PATIENT_ID, MANDATOR_ID, DATE }, pat.getId(), CoreHub.actMandant.getId(),
+		set(new String[] { PATIENT_ID, MANDATOR_ID, DATE }, pat.getId(),
+				ContextServiceHolder.get().getActiveMandator().get().getId(),
 				new TimeTool().toString(TimeTool.DATE_GER));
 	}
 

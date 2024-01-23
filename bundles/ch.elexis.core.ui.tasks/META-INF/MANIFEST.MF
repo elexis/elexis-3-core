@@ -22,7 +22,7 @@ Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  org.quartz
 Automatic-Module-Name: ch.elexis.core.ui.tasks
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions.xml,
  OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.tasks.internal.detailcontributors.HL7ImporterIdentifiedRunnableContributor.xml

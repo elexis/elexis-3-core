@@ -77,7 +77,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
 
-	protected static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
+	public static final String NAMED_BLOB_PREFIX = "TEXTTEMPLATE_";
 
 	private static Logger logger = LoggerFactory.getLogger(TextTemplates.class);
 
@@ -176,8 +176,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 						Files.write(temp, fileList.get(index).getData());
 						Program.launch(temp.toString());
 					} catch (IOException | ClassNotFoundException e) {
-						MessageDialog.openError(getShell(), "Fehler",
-								"Das Dokument kann nicht geladen werden.");
+						MessageDialog.openError(getShell(), "Fehler", "Das Dokument kann nicht geladen werden.");
 						logger.info("Error loading document", e);
 					}
 				}
@@ -385,13 +384,13 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						if (textTemplate.getContent() != null) {
 							byte[] DBArrayList = textTemplate.getContent();
-								List<SerializableFile> deserializedContent = SerializableFileUtil
-										.deserializeData(DBArrayList);
+							List<SerializableFile> deserializedContent = SerializableFileUtil
+									.deserializeData(DBArrayList);
 
-								for (SerializableFile serializableFile : deserializedContent) {
-									fileList.add(new SerializableFile(serializableFile.getName(),
-											serializableFile.getMimeType(), serializableFile.getData()));
-								}
+							for (SerializableFile serializableFile : deserializedContent) {
+								fileList.add(new SerializableFile(serializableFile.getName(),
+										serializableFile.getMimeType(), serializableFile.getData()));
+							}
 						}
 
 						byte[] data = SerializableFileUtil.serializeData(fileList);
@@ -399,8 +398,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 
 						CoreModelServiceHolder.get().save(textTemplate);
 					} catch (IOException | ClassNotFoundException e) {
-						MessageDialog.openError(getShell(), "Fehler",
-								"Das Dokument kann nicht hinzugefügt werden.");
+						MessageDialog.openError(getShell(), "Fehler", "Das Dokument kann nicht hinzugefügt werden.");
 						logger.info("Error saving document", e);
 					}
 				}

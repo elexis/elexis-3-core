@@ -1,10 +1,12 @@
 package ch.elexis.core.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 
@@ -81,7 +83,9 @@ public interface IStockService {
 	 *
 	 * @param stock
 	 * @return
+	 * @deprecated use {@link IStock#getStockEntries()}
 	 */
+	@Deprecated
 	public List<IStockEntry> findAllStockEntriesForStock(IStock stock);
 
 	/**
@@ -206,7 +210,15 @@ public interface IStockService {
 		return determineAvailability(stockEntry.getCurrentStock(), stockEntry.getMinimumStock(), true);
 	}
 
-	public List<IStock> getAllStocks(boolean includeCommissioningSystems);
+	/**
+	 * Get all defined {@link IStock} entries, including stock commissioning systems
+	 * and patient stocks.
+	 * 
+	 * @param includeCommissioningSystems
+	 * @param includePatientStocks
+	 * @return
+	 */
+	public List<IStock> getAllStocks(boolean includeCommissioningSystems, boolean includePatientStocks);
 
 	public List<IStockEntry> getAllStockEntries();
 
@@ -219,4 +231,22 @@ public interface IStockService {
 	 * @since 3.10
 	 */
 	public IStock getMandatorDefaultStock(String mandatorId);
+
+	/**
+	 * Creates or deletes a patient stock.
+	 * 
+	 * @param patient
+	 * @param stockState
+	 * @since 3.12
+	 */
+	public void setEnablePatientStock(IPatient patient, boolean stockState);
+
+	/**
+	 * Get the patient stock, if available
+	 * 
+	 * @param patient
+	 * @return
+	 * @since 3.12
+	 */
+	public Optional<IStock> getPatientStock(IPatient patient);
 }

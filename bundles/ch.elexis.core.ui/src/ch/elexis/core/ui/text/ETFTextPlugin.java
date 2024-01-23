@@ -12,6 +12,8 @@
 package ch.elexis.core.ui.text;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -19,7 +21,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.data.interfaces.text.ReplaceCallback;
+import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.rgw.compress.CompEx;
 import ch.rgw.tools.ExHandler;
@@ -81,6 +83,18 @@ public class ETFTextPlugin implements ITextPlugin {
 		return false;
 	}
 
+	@Override
+	public int findCount(String pattern) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<String> findMatching(String pattern) {
+		// TODO Auto-generated method stub
+		return Collections.emptyList();
+	}
+
 	public PageFormat getFormat() {
 		return PageFormat.USER;
 	}
@@ -104,7 +118,7 @@ public class ETFTextPlugin implements ITextPlugin {
 			etf.text.setSelection(pos, pos + marke.length());
 		}
 		etf.text.insert(text);
-		return new Integer(pos + text.length());
+		return Integer.valueOf(pos + text.length());
 	}
 
 	public Object insertText(Object pos, String text, int adjust) {
@@ -114,7 +128,7 @@ public class ETFTextPlugin implements ITextPlugin {
 		Integer px = (Integer) pos;
 		etf.text.setSelection(px);
 		etf.text.insert(text);
-		return new Integer(px + text.length());
+		return Integer.valueOf(px + text.length());
 	}
 
 	public Object insertTextAt(int x, int y, int w, int h, String text, int adjust) {
@@ -208,6 +222,12 @@ public class ETFTextPlugin implements ITextPlugin {
 	public void initTemplatePrintSettings(String template) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Object getCurrentDocument() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2019 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2024 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
     modelDirectory="/ch.elexis.core/src-gen" modelPluginID="ch.elexis.core" modelName="Model"
     rootExtendsInterface="" rootExtendsClass="" suppressEMFTypes="true" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="11.0" copyrightFields="false" language="" usedGenPackages="types.genmodel#//types"
+    complianceLevel="17.0" copyrightFields="false" language="" usedGenPackages="types.genmodel#//types"
     runtimePlatform="RCP">
   <foreignModel>model.ecore</foreignModel>
   <genPackages prefix="Model" basePackage="ch.elexis.core" disposableProviderFactory="true"
@@ -215,6 +215,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/orderId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/state"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/groupName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabOrder/userResolved"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabMapping/itemName"/>
@@ -256,6 +257,7 @@
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IDocumentLetter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentLetter/encounter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IDocumentLetter/recipient"/>
       <genOperations ecoreOperation="model.ecore#//IDocumentLetter/isTemplate"/>
     </genClasses>
     <genClasses ecoreClass="model.ecore#//IDocumentTemplate">
@@ -340,7 +342,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/netPrice"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IService/minutes"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="model.ecore#//ICustomService"/>
+    <genClasses image="false" ecoreClass="model.ecore#//ICustomService">
+      <genOperations ecoreOperation="model.ecore#//ICustomService/setCodeSystemCode">
+        <genParameters ecoreParameter="model.ecore#//ICustomService/setCodeSystemCode/value"/>
+      </genOperations>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IArticle">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/gtin"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IArticle/atcCode"/>
@@ -545,6 +551,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/driverConfig"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/priority"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStock/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/location"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IStock/responsible"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//IStock/stockEntries"/>
       <genOperations ecoreOperation="model.ecore#//IStock/isCommissioningSystem"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStockEntry">

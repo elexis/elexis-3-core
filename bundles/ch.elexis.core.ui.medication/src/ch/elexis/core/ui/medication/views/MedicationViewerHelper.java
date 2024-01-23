@@ -168,6 +168,28 @@ public class MedicationViewerHelper {
 		return ret;
 	}
 
+	public static TableViewerColumn createDisposalCommentColumn(TableViewer viewer, TableColumnLayout layout,
+			int columnIndex) {
+		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
+		TableColumn tblclmnComment = ret.getColumn();
+		layout.setColumnData(tblclmnComment, new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
+		tblclmnComment.setText(Messages.Prescription_Reason);
+		tblclmnComment.setToolTipText(
+				Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Prescription_Reason);
+		tblclmnComment.addSelectionListener(getSelectionAdapter(viewer, tblclmnComment, columnIndex));
+		tblclmnComment.setToolTipText(
+				Messages.MedicationComposite_column_sortBy + StringUtils.SPACE + Messages.Prescription_Reason);
+		ret.setLabelProvider(new MedicationCellLabelProvider() {
+
+			@Override
+			public String getText(Object element) {
+				MedicationTableViewerItem pres = (MedicationTableViewerItem) element;
+				return pres.getDisposalComment();
+			}
+		});
+		return ret;
+	}
+
 	public static TableViewerColumn createStopColumn(TableViewer viewer, TableColumnLayout layout, int columnIndex) {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.CENTER);
 		TableColumn tblclmnStop = ret.getColumn();

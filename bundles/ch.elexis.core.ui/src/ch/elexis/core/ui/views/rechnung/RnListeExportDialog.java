@@ -27,13 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.RnStatus;
 import ch.elexis.data.Zahlung;
 import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
@@ -220,14 +220,14 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 				SimpleDateFormat df2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
 				String dateText = df2.format(date);
 				line[8] = dateText.toString();
-				int st = rn.getStatus();
-				line[9] = Integer.toString(st);
-				if (RnStatus.isActive(st)) {
+				InvoiceState st = rn.getInvoiceState();
+				line[9] = Integer.toString(st.getState());
+				if (st.isActive()) {
 					line[10] = "True"; //$NON-NLS-1$
 				} else {
 					line[10] = "False"; //$NON-NLS-1$
 				}
-				line[11] = RnStatus.getStatusText(st);
+				line[11] = st.getLocaleText();
 				// 201512210310js: New: produce 4 fields, each with multiline content.
 				List<String> statuschgs = rn.getTrace(Rechnung.STATUS_CHANGED);
 				String a = statuschgs.toString();
@@ -242,7 +242,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					// Führende und Trailende [] bei der Ausgabe (!) rauswerfen
 					line[12] = a.substring(1, a.length() - 1);
 				}
-				if (rn.getStatus() == RnStatus.FEHLERHAFT) {
+				if (rn.getInvoiceState() == InvoiceState.DEFECTIVE) {
 					List<String> rejects = rn.getTrace(Rechnung.REJECTED);
 					String rnStatus = rejects.toString();
 					if (rnStatus != null && rnStatus.length() > 1) {
@@ -325,7 +325,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 					List<Rechnung> rechnungen = p.getRechnungen();
 					for (Rechnung rechnung : rechnungen) {
 						// don't consider canceled bills
-						if (rechnung.getStatus() != RnStatus.STORNIERT) {
+						if (rechnung.getInvoiceState() != InvoiceState.CANCELLED) {
 							total.addMoney(rechnung.getBetrag());
 							for (Zahlung zahlung : rechnung.getZahlungen()) {
 								paid.addMoney(zahlung.getBetrag());

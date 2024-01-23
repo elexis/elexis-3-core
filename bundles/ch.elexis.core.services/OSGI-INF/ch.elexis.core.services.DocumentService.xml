@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" name="ch.elexis.core.services.DocumentService">
+   <service>
+      <provide interface="ch.elexis.core.services.IDocumentService"/>
+   </service>
+   <reference cardinality="0..n" field="documentStores" interface="ch.elexis.core.services.IDocumentStore" name="documentStores"/>
+   <reference cardinality="1..1" field="textPlugin" interface="ch.elexis.core.text.ITextPlugin" name="textPlugin"/>
+   <reference cardinality="1..1" field="textReplacementService" interface="ch.elexis.core.services.ITextReplacementService" name="textReplacementService"/>
+   <implementation class="ch.elexis.core.services.DocumentService"/>
+</scr:component>

@@ -11,10 +11,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.data.UiMandant;
-import ch.elexis.data.Mandant;
-import ch.elexis.data.Stock;
 
 public class StockSelectorDialog extends ListDialog {
 
@@ -22,7 +23,7 @@ public class StockSelectorDialog extends ListDialog {
 
 	public StockSelectorDialog(Shell parent, boolean includeCommissioningSystems) {
 		super(parent);
-		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems);
+		List<IStock> allStocks = StockServiceHolder.get().getAllStocks(includeCommissioningSystems, false);
 		if (allStocks.size() == 1) {
 			onlyOneStock = allStocks.get(0);
 		}
@@ -36,22 +37,22 @@ public class StockSelectorDialog extends ListDialog {
 
 		@Override
 		public String getText(Object element) {
-			Stock s = (Stock) element;
+			IStock s = (IStock) element;
 			return s.getLabel();
 		}
 
 		@Override
 		public Color getForeground(Object element) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public Color getBackground(Object element) {
-			Stock se = (Stock) element;
-			Mandant owner = se.getOwner();
-			if (owner != null) {
-				return UiMandant.getColorForMandator(owner);
+			IStock se = (IStock) element;
+			IPerson owner = se.getOwner();
+			if (owner != null && owner.isMandator()) {
+				IMandator mandator = CoreModelServiceHolder.get().load(owner.getId(), IMandator.class).orElse(null);
+				return UiMandant.getColorForIMandator(mandator);
 			}
 			return null;
 		}

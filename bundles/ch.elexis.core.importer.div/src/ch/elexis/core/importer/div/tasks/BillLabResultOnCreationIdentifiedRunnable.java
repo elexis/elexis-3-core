@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICodeElement;
@@ -262,8 +263,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 				MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
 		transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
 		transientMessage.setSenderAcceptsAnswer(false);
-		transientMessage.setMessageText("No billable encounter for patient " + patient.getPatientNr()
-				+ " found. A new encounter was created to bill the imported values on.");
+		transientMessage.setMessageText(
+				Messages.NO_BILLABLE_ENCOUNTER1 + patient.getPatientNr() + Messages.NO_BILLABLE_ENCOUNTER2);
 		return MessageServiceHolder.get().send(transientMessage);
 	}
 

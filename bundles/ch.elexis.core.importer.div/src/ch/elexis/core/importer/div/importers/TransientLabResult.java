@@ -34,6 +34,7 @@ public class TransientLabResult {
 	private String subId;
 	private Integer flags;
 	private String rawAbnormalFlags;
+	private Boolean userResolved;
 
 	private TimeTool date;
 	private TimeTool analyseTime;
@@ -68,6 +69,26 @@ public class TransientLabResult {
 		this.labImportUtil = labImportUtil;
 		this.orcMessage = builder.orcMessage;
 		this.subId = builder.subId;
+
+		this.userResolved = Boolean.FALSE;
+	}
+
+	/**
+	 * Mark the result with info that the patient was resolved by the user.
+	 * 
+	 * @param userResolved
+	 */
+	public void setUserResolved(Boolean userResolved) {
+		this.userResolved = userResolved;
+	}
+
+	/**
+	 * Test if the patient of this result was resolved by the user.
+	 * 
+	 * @return
+	 */
+	public Boolean isUserResolved() {
+		return userResolved;
 	}
 
 	/**
@@ -133,7 +154,7 @@ public class TransientLabResult {
 		}
 
 		ILabResult labResult = labImportUtil.createLabResult(patient, date, labItem, result, comment, refVal, origin,
-				subId, labOrder, orderId, mandantor, time, groupName);
+				subId, labOrder, orderId, mandantor, time, groupName, userResolved);
 
 		setFieldsAndInterpret(labResult);
 

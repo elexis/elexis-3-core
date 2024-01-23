@@ -477,6 +477,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIStock(iStock);
 				if (result == null) result = caseIdentifiable(iStock);
 				if (result == null) result = caseDeleteable(iStock);
+				if (result == null) result = caseWithAssignableId(iStock);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -612,6 +613,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseITextTemplate(iTextTemplate);
 				if (result == null) result = caseIdentifiable(iTextTemplate);
 				if (result == null) result = caseDeleteable(iTextTemplate);
+				if (result == null) result = caseWithExtInfo(iTextTemplate);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

@@ -31,6 +31,16 @@ public class IPrescriptionBuilder extends AbstractBuilder<IPrescription> {
 		return this;
 	}
 
+	public IPrescriptionBuilder disposalComment(String comment) {
+		object.setDisposalComment(comment);
+		return this;
+	}
+
+	public IPrescriptionBuilder dosageInstruction(String dosageInstruction) {
+		object.setDosageInstruction(dosageInstruction);
+		return this;
+	}
+
 	public IPrescriptionBuilder remark(String remark) {
 		object.setRemark(remark);
 		return this;

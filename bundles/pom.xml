@@ -46,7 +46,6 @@
     <module>ch.elexis.core.importer.div</module>
     <module>ch.elexis.core.jcifs</module>
     <module>ch.elexis.core.webdav</module>
-    <module>ch.elexis.core.logback.rocketchat</module>
     <module>ch.elexis.core.logging.default_configuration</module>
     <module>ch.elexis.core.logging.osgi</module>
     <module>ch.elexis.core.mail.ui</module>
@@ -70,6 +69,7 @@
     <module>ch.elexis.core.ui.importer.div</module>
     <module>ch.elexis.core.ui.laboratory</module>
     <module>ch.elexis.core.ui.medication</module>
+    <module>ch.elexis.core.ui.mediorder</module>
     <module>ch.elexis.core.ui.p2</module>
     <module>ch.elexis.core.ui.stock</module>
     <module>ch.elexis.core.ui.usage</module>
@@ -80,6 +80,7 @@
     <module>org.iatrix.help.wiki</module>
     <module>ch.elexis.core.pdfbox</module>
     <module>ch.elexis.core.pdfbox.ui</module>
+    <module>ch.elexis.core.text.docx</module>
 	<module>at.medevit.elexis.text.docx</module>
   </modules>
 </project>

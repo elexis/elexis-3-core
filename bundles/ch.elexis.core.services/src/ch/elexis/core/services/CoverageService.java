@@ -15,7 +15,11 @@ import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
+import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -146,6 +150,7 @@ public class CoverageService implements ICoverageService {
 	 * should be generated.
 	 *
 	 */
+	@Override
 	public boolean getCopyForPatient(ICoverage coverage) {
 		return StringConstants.ONE.equals(coverage.getExtInfo(FallConstants.FLD_EXT_COPY_FOR_PATIENT));
 	}
@@ -165,6 +170,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageLabel() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -180,6 +186,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageReason() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -197,6 +204,7 @@ public class CoverageService implements ICoverageService {
 	 *
 	 * @return
 	 */
+	@Override
 	public String getDefaultCoverageLaw() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -256,5 +264,24 @@ public class CoverageService implements ICoverageService {
 			return Optional.of(encounters.get(0));
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Optional<ICoverage> getLatestOpenCoverage(IPatient patient) {
+		IQuery<ICoverage> openCoverageQuery = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
+		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__DATE_TO, COMPARATOR.EQUALS, null);
+		openCoverageQuery.orderBy(ModelPackage.Literals.ICOVERAGE__DATE_FROM, ORDER.DESC);
+		List<ICoverage> openCoverages = openCoverageQuery.execute();
+		if (!openCoverages.isEmpty()) {
+			return Optional.of(openCoverages.get(0));
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public ICoverage createDefaultCoverage(IPatient patient) {
+		return new ICoverageBuilder(CoreModelServiceHolder.get(), patient, getDefaultCoverageLabel(),
+				getDefaultCoverageReason(), getDefaultCoverageLaw()).buildAndSave();
 	}
 }

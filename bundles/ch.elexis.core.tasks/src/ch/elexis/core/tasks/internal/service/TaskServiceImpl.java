@@ -37,6 +37,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.IVirtualFilesystemService;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.tasks.internal.service.quartz.QuartzExecutor;
 import ch.elexis.core.tasks.internal.service.sysevents.SysEventWatcher;
 import ch.elexis.core.tasks.internal.service.vfs.FilesystemChangeWatcher;
@@ -90,7 +91,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (runnableWithContextFactories == null) {
 			runnableWithContextFactories = new ArrayList<>();
 		}
-		logger.debug("Binding " + runnableWithContextFactory.getClass().getName());
+		logger.info("Binding " + runnableWithContextFactory.getClass().getName());
 		runnableWithContextFactories.add(runnableWithContextFactory);
 
 		try {
@@ -204,7 +205,8 @@ public class TaskServiceImpl implements ITaskService {
 	 * @return to incur? only iff not delete, active, and this station is a
 	 *         designated runner
 	 */
-	private boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor) {
+	@Override
+	public boolean assertIncurOnThisStation(ITaskDescriptor taskDescriptor) {
 		if (taskDescriptor != null && !taskDescriptor.isDeleted() && taskDescriptor.isActive()) {
 			String runner = taskDescriptor.getRunner();
 			if (StringUtils.isNotBlank(runner)) {
@@ -324,6 +326,7 @@ public class TaskServiceImpl implements ITaskService {
 	 * @return
 	 * @throws TaskException
 	 */
+	@Override
 	public void refresh(ITaskDescriptor taskDescriptor) throws TaskException {
 		boolean toIncurOnThisStation = assertIncurOnThisStation(taskDescriptor);
 		Optional<ITaskDescriptor> incurredTask = getIncurredTasks().stream()
@@ -332,20 +335,20 @@ public class TaskServiceImpl implements ITaskService {
 		if (incurredTask.isPresent()) {
 			if (toIncurOnThisStation) {
 				if (taskDescriptor.getLastupdate() > incurredTask.get().getLastupdate()) {
-					logger.info("(refresh) taskDesc change [{}/{}], rel/inc", taskDescriptor.getId(),
-							taskDescriptor.getReferenceId());
+					logger.info("(refresh) taskDesc change [{}/{}], rel/inc", taskDescriptor.getReferenceId(),
+							taskDescriptor.getId());
 					release(taskDescriptor);
 					incur(taskDescriptor);
 				}
 			} else {
-				logger.info("(refresh) taskDesc release [{}/{}], rel/inc", taskDescriptor.getId(),
-						taskDescriptor.getReferenceId());
+				logger.info("(refresh) taskDesc release [{}/{}], rel/inc", taskDescriptor.getReferenceId(),
+						taskDescriptor.getId());
 				release(taskDescriptor);
 			}
 		} else {
 			if (toIncurOnThisStation) {
-				logger.info("(refresh) taskDesc incur [{}/{}], rel/inc", taskDescriptor.getId(),
-						taskDescriptor.getReferenceId());
+				logger.info("(refresh) taskDesc incur [{}/{}], rel/inc", taskDescriptor.getReferenceId(),
+						taskDescriptor.getId());
 				incur(taskDescriptor);
 			}
 		}
@@ -484,15 +487,21 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.EXECUTION_REJECTED,
 					"Task Descriptor [" + taskDescriptor.getId() + "] is not active");
 		}
+		
+		if(sync) {
+			// create modifiable copy
+			runContext = new HashMap<String, String>(runContext);
+			runContext.put("isTriggerSync", Boolean.TRUE.toString());
+		}
 
-		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType, taskDescriptor.getId(),
-				taskDescriptor.getReferenceId(), runContext);
+		logger.info("[{}] trigger taskDesc [{}/{}] runContext [{}]", triggerType, taskDescriptor.getReferenceId(),
+				taskDescriptor.getId(), runContext);
 
 		Task task = new Task(taskDescriptor, triggerType, progressMonitor, runContext);
 		task.setSystem(taskDescriptor.isSystem());
 
 		// TODO test if all runContext parameters are satisfied, else reject execution
-		task.setState(TaskState.QUEUED);
+		AccessControlServiceHolder.get().doPrivileged(() -> task.setState(TaskState.QUEUED));
 
 		String identifiedRunnableId = taskDescriptor.getIdentifiedRunnableId();
 		boolean singletonRunnable = instantiateRunnableById(identifiedRunnableId).isSingleton();
@@ -518,7 +527,7 @@ public class TaskServiceImpl implements ITaskService {
 				triggeredTasks.add(task);
 			}
 		} catch (RejectedExecutionException re) {
-			task.setState(TaskState.CANCELLED);
+			AccessControlServiceHolder.get().doPrivileged(() -> task.setState(TaskState.CANCELLED));
 			// TODO triggering failed, where to show?
 			throw new TaskException(TaskException.EXECUTION_REJECTED, re);
 		}
@@ -543,7 +552,7 @@ public class TaskServiceImpl implements ITaskService {
 		}
 
 		logger.info("[{}] detected taskDesc change [{}/{}], reloading", taskDescriptor.getTriggerType(),
-				taskDescriptor.getId(), taskDescriptor.getReferenceId());
+				taskDescriptor.getReferenceId(), taskDescriptor.getId());
 		ITaskDescriptor changedTaskDescriptor = taskModelService
 				.load(taskDescriptor.getId(), ITaskDescriptor.class, true, true).orElse(null);
 		if (changedTaskDescriptor == null || changedTaskDescriptor.isDeleted()) {
@@ -650,8 +659,10 @@ public class TaskServiceImpl implements ITaskService {
 		}
 
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
+			assertFilesystemChangeWatcher();
 			// url will be provided on trigger, remove s.t. required param test considers
 			defaultRunContext.remove(IIdentifiedRunnable.RunContextParameter.STRING_URL);
+			fileSystemChangeWatcher.validate(taskDescriptor);
 		}
 
 		Set<Entry<String, Serializable>> entrySet = defaultRunContext.entrySet();

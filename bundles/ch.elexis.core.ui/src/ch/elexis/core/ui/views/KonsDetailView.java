@@ -410,11 +410,17 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 						Messages.Core_Select_Mandator, // $NON-NLS-1$
 						Messages.KonsDetailView_SelectMandatorBody,
 						new String[] { Mandant.FLD_SHORT_LABEL, Mandant.FLD_NAME1, Mandant.FLD_NAME2 }); // $NON-NLS-1$
+				ksl.disableContextSelection();
 				if (ksl.open() == Dialog.OK) {
 					IMandator mandator = CoreModelServiceHolder.get()
 							.load(((Mandant) ksl.getSelection()).getId(), IMandator.class).orElse(null);
 					if (mandator != null) {
-						EncounterServiceHolder.get().transferToMandator(actEncounter, mandator, false);
+						Result<IEncounter> result = EncounterServiceHolder.get().transferToMandator(actEncounter,
+								mandator, false);
+						if (!result.isOK()) {
+							MessageDialog.openError(getSite().getShell(), Messages.Core_Error,
+									result.getCombinedMessages());
+						}
 					}
 				}
 				ElexisEventDispatcher.fireSelectionEvent(currentMandant);
@@ -629,7 +635,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				hlDate.setBackground(defaultBackground);
 			} else {
 				text.setToolTipText("Konsultation geschlossen oder nicht von Ihnen");
-				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_GREY60));
+				hlDate.setForeground(UiDesk.getColor(UiDesk.COL_WHITE));
 				hlDate.setBackground(UiDesk.getColor(UiDesk.COL_GREY20));
 			}
 			if (encounter.getDate().isEqual(LocalDate.now())) {

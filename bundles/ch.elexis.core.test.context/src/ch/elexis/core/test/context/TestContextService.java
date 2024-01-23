@@ -3,13 +3,17 @@ package ch.elexis.core.test.context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
@@ -92,5 +96,15 @@ public class TestContextService implements IContextService {
 			throw new IllegalStateException("No EventAdmin available");
 		}
 
+	}
+
+	@Override
+	public <T> T submitContextInheriting(Callable<T> callable) {
+		try {
+			return ForkJoinPool.commonPool().submit(callable).get();
+		} catch (InterruptedException | ExecutionException e) {
+			LoggerFactory.getLogger(getClass()).error("", e);
+			return null;
+		}
 	}
 }

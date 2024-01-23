@@ -78,6 +78,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
@@ -102,6 +103,7 @@ import ch.elexis.core.ui.views.KonsDetailView;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
@@ -192,7 +194,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				if (obj instanceof Patient) {
 					try {
-						ElexisEventDispatcher.fireSelectionEvent((Patient) obj);
+						ElexisEventDispatcher.fireSelectionEvent(obj);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 								.showView(UiResourceConstants.PatientDetailView2_ID);
 					} catch (PartInitException e) {
@@ -200,7 +202,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 					}
 				} else if (obj instanceof Fall) {
 					try {
-						ElexisEventDispatcher.fireSelectionEvent((Fall) obj);
+						ElexisEventDispatcher.fireSelectionEvent(obj);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 								.showView(FallDetailView.ID);
 					} catch (PartInitException e) {
@@ -208,7 +210,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 					}
 				} else if (obj instanceof Konsultation) {
 					try {
-						ElexisEventDispatcher.fireSelectionEvent((Konsultation) obj);
+						ElexisEventDispatcher.fireSelectionEvent(obj);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 								.showView(KonsDetailView.ID);
 					} catch (PartInitException e) {
@@ -272,6 +274,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 		selMenu.setRemoveAllWhenShown(true);
 		selMenu.addMenuListener(new IMenuListener() {
 
+			@Override
 			public void menuAboutToShow(final IMenuManager manager) {
 				manager.add(removeAction);
 				manager.add(expandSelAction);
@@ -333,6 +336,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 	class RLazyTreeListener implements LazyTreeListener {
 		final LazyTreeListener self = this;
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean fetchChildren(final LazyTree l) {
 			PersistentObject cont = (PersistentObject) l.contents;
@@ -342,14 +346,16 @@ public class KonsZumVerrechnenView extends ViewPart {
 				try {
 					progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 							new IRunnableWithProgress() {
+								@Override
 								public void run(final IProgressMonitor monitor) {
 									monitor.beginTask(Messages.KonsZumVerrechnenView_findCons, 100); // $NON-NLS-1$
 									monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
 									String sql = "SELECT distinct PATIENTID FROM FAELLE " + //$NON-NLS-1$
-									"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
+											"JOIN BEHANDLUNGEN ON BEHANDLUNGEN.FALLID=FAELLE.ID WHERE BEHANDLUNGEN.deleted='0' AND BEHANDLUNGEN.billable='1' AND BEHANDLUNGEN.RECHNUNGSID is null "; //$NON-NLS-1$
 									if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 										sql += "AND BEHANDLUNGEN.MANDANTID=" //$NON-NLS-1$
-												+ CoreHub.actMandant.getWrappedId();
+												+ Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId())
+														.getWrappedId();
 									}
 									ResultSet rs = stm.query(sql);
 									monitor.worked(10);
@@ -382,7 +388,9 @@ public class KonsZumVerrechnenView extends ViewPart {
 								+ "WHERE BEHANDLUNGEN.RECHNUNGSID is null AND BEHANDLUNGEN.DELETED='0' AND BEHANDLUNGEN.billable='1' AND FAELLE.PATIENTID=" //$NON-NLS-1$
 								+ cont.getWrappedId(); // $NON-NLS-1$
 						if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
-							sql += " AND BEHANDLUNGEN.MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
+							sql += " AND BEHANDLUNGEN.MANDANTID=" //$NON-NLS-1$
+									+ Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId())
+											.getWrappedId();
 						}
 						rs = stm.query(sql);
 						while ((rs != null) && rs.next()) {
@@ -396,7 +404,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 						sql = "SELECT ID FROM BEHANDLUNGEN WHERE RECHNUNGSID is null AND deleted='0' AND billable='1' AND FALLID=" //$NON-NLS-1$
 								+ cont.getWrappedId();
 						if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
-							sql += " AND MANDANTID=" + CoreHub.actMandant.getWrappedId(); //$NON-NLS-1$
+							sql += " AND MANDANTID=" + Mandant //$NON-NLS-1$
+									.load(ContextServiceHolder.getActiveMandatorOrNull().getId()).getWrappedId();
 						}
 						rs = stm.query(sql);
 						while ((rs != null) && rs.next()) {
@@ -419,6 +428,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			return false;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public boolean hasChildren(final LazyTree l) {
 			Object po = l.contents;
@@ -671,6 +681,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 					try {
 						progressService.runInUI(PlatformUI.getWorkbench().getProgressService(),
 								new IRunnableWithProgress() {
+									@Override
 									public void run(final IProgressMonitor monitor) {
 										doSelectByDate(monitor, fromDate, toDate);
 									}
@@ -684,8 +695,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 			}
 
 		};
-		detailAction = new RestrictedAction(EvACEs.LSTG_VERRECHNEN,
-				Messages.KonsZumVerrechnenView_billingDetails) { // $NON-NLS-1$
+		detailAction = new RestrictedAction(EvACEs.LSTG_VERRECHNEN, Messages.KonsZumVerrechnenView_billingDetails) { // $NON-NLS-1$
 			@SuppressWarnings("unchecked")
 			@Override
 			public void doRun() {
@@ -881,11 +891,13 @@ public class KonsZumVerrechnenView extends ViewPart {
 			super.okPressed();
 		}
 
+		@Override
 		public void save() {
 			// TODO Auto-generated method stub
 
 		}
 
+		@Override
 		public boolean saveAs() {
 			// TODO Auto-generated method stub
 			return false;
@@ -905,8 +917,7 @@ public class KonsZumVerrechnenView extends ViewPart {
 		getViewSite().getPage().addPartListener(new IPartListener() {
 			@Override
 			public void partActivated(IWorkbenchPart part) {
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-						.getService(ICommandService.class);
+				ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 				Command command = commandService.getCommand("ch.elexis.core.command.linkViews"); //$NON-NLS-1$
 				boolean state = (boolean) command.getState(RegistryToggleState.STATE_ID).getValue();
 
@@ -914,8 +925,8 @@ public class KonsZumVerrechnenView extends ViewPart {
 					try {
 						command.getState(RegistryToggleState.STATE_ID).setValue(Boolean.FALSE);
 						// execute the command
-						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow().getService(IHandlerService.class);
+						IHandlerService handlerService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getService(IHandlerService.class);
 
 						handlerService.executeCommand(KonsZumVerrechnenLinkCommand.CMD_ID, null);
 					} catch (Exception ex) {

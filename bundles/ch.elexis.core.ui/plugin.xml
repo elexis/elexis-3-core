@@ -126,7 +126,7 @@
             locationURI="toolbar:ch.elexis.FallDetailView">
          <command
                commandId="ch.elexis.core.command.copyFall"
-               icon="icon://IMG_COPY"
+               icon="icon://IMG_DOCUMENT_TEXT"
                label="Fall kopieren"
                style="push">
          </command>
@@ -168,6 +168,13 @@
                icon="icon://IMG_DELETE"
                label="Löschen"
                style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.command.TemplateRenameSettingsCommand"
+               icon="icon://IMG_EDIT"
+               label="Vorlage umbenennen"
+               style="push"
+               tooltip="Selektierte Vorlage umbenennen">
          </command>
          <separator
                name="Separator1.textTemplateView"
@@ -371,16 +378,6 @@
                icon="icon://IMG_PERSPECTIVE_BILLS"
                style="push"
                tooltip="Konsultation verrechnen und ausgeben">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:ch.elexis.core.ui.chromium.views.BrowserView">
-              <command
-               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler"
-               icon="icon://IMG_WEB"
-               label="Adresse eingeben"
-               style="push">
          </command>
       </menuContribution>
    </extension>
@@ -838,6 +835,16 @@
             id="ch.elexis.core.ui.BillActiveEncounter"
             name="Bill active encounter">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.TemplateRenameSettingsCommand"
+            id="ch.elexis.core.ui.command.TemplateRenameSettingsCommand"
+            name="Vorlage umbenennen">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.AufPrintListHandler"
+            id="ch.elexis.core.ui.commands.AufPrintList"
+            name="Auf Liste Drucken">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -1002,10 +1009,6 @@
                </and>
             </enabledWhen>
          </handler>
-         <handler
-               class="ch.elexis.core.ui.commands.OpenUrlHandler"
-               commandId="ch.elexis.core.ui.chromium.handler.OpenUrlHandler">
-         </handler>
       </extension>
       <extension
             point="org.eclipse.core.expressions.propertyTesters">
@@ -1033,13 +1036,5 @@
 	   </extension>
       <extension
             point="org.eclipse.ui.views">
-         <view
-               category="ch.elexis.core.ui.eenv.category"
-               class="ch.elexis.core.ui.views.BrowserView"
-               icon="icon://IMG_WEB"
-               id="ch.elexis.core.ui.chromium.views.BrowserView"
-               name="Chromium Browser"
-               restorable="true">
-         </view>
       </extension>
 </plugin>

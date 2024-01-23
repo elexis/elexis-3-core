@@ -1,8 +1,11 @@
 package ch.elexis.core.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +15,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -78,4 +82,27 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 			coreModelService.remove(service);
 		}
 	}
+
+	@Test
+	public void getLatestEncounter() {
+
+		ICoverage iCoverage = testCoverages.get(0);
+		testCoverages.remove(iCoverage);
+		coreModelService.remove(iCoverage);
+		IEncounter iEncounter = testEncounters.get(0);
+		testEncounters.remove(iEncounter);
+		coreModelService.remove(iEncounter);
+
+		Optional<IEncounter> encounter = encounterService.getLatestEncounter(testPatients.get(0));
+		assertFalse(encounter.isPresent());
+
+		encounter = encounterService.getLatestEncounter(testPatients.get(0), true);
+		assertTrue(encounter.isPresent());
+		assertNotNull(encounter.get().getCoverage());
+		assertEquals(testPatients.get(0), encounter.get().getPatient());
+
+		coreModelService.remove(encounter.get().getCoverage());
+		coreModelService.remove(encounter.get());
+	}
+
 }

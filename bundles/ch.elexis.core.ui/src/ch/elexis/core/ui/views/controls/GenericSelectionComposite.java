@@ -11,6 +11,7 @@
 package ch.elexis.core.ui.views.controls;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
@@ -29,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link Composite} to manage the selection from a list of objects. A
@@ -41,6 +43,8 @@ import org.eclipse.swt.widgets.Label;
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
 
 	private ListenerList<ISelectionChangedListener> selectionListeners = new ListenerList<ISelectionChangedListener>();
+
+	private Function<String, List<?>> inputFunction;
 
 	private List<?> input;
 	private IStructuredSelection selection;
@@ -76,9 +80,16 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				GenericSearchSelectionDialog dialog = null;
 				if (input != null && !input.isEmpty()) {
-					GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(getShell(), input,
+					dialog = new GenericSearchSelectionDialog(getShell(), input,
 							shellTitle, title, message, null, SWT.CHECK);
+
+				} else if (inputFunction != null) {
+					dialog = new GenericSearchSelectionDialog(getShell(), inputFunction, shellTitle, title, message,
+							null, SWT.CHECK);
+				}
+				if (dialog != null) {
 					if (selection != null) {
 						dialog.setSelection(selection.toList());
 					}
@@ -88,8 +99,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 					}
 				}
 			}
-
 		});
+	}
+
+	protected void customSelection() {
+		LoggerFactory.getLogger(getClass()).warn("Custom selection not implemented");
 	}
 
 	private void updateLabel() {
@@ -116,7 +130,11 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		this.input = input;
 	}
 
-	private void callSelectionListeners() {
+	public void setInputFunction(Function<String, List<?>> inputFunction) {
+		this.inputFunction = inputFunction;
+	}
+
+	protected void callSelectionListeners() {
 		Object[] listeners = selectionListeners.getListeners();
 		if (listeners != null && listeners.length > 0) {
 			for (Object object : listeners) {

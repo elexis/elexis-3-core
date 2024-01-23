@@ -378,6 +378,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			try {
 				return webdavFile.get().canRead();
 			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("canRead()", e);
 			}
 		}
 

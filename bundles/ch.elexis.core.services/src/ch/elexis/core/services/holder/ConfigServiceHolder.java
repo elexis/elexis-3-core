@@ -72,12 +72,12 @@ public class ConfigServiceHolder {
 		return raw.split(",");
 	}
 
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, String value) {
 		return configService.set(key, value);
 	}
 
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, boolean value) {
 		return configService.set(key, value);
 	}

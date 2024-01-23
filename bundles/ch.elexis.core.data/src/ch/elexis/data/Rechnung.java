@@ -28,18 +28,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.interfaces.IDiagnose;
-import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.Money;
@@ -259,7 +256,6 @@ public class Rechnung extends PersistentObject {
 		if (f == null) {
 			result = result.add(Result.SEVERITY.ERROR, 8,
 					"Die Rechnung hat keinen zugehörigen Fall (" + getRnDesc(ret) + ")", ret, true);
-			// garant=CoreHub.actMandant;
 		} else {
 			if (ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true) && !f.isValid()) {
 				result = result.add(Result.SEVERITY.ERROR, 8,
@@ -285,7 +281,7 @@ public class Rechnung extends PersistentObject {
 		ret.set(BILL_DATE_FROM, startDate.toString(TimeTool.DATE_GER));
 		ret.set(BILL_DATE_UNTIL, endDate.toString(TimeTool.DATE_GER));
 		ret.set(BILL_DATE, Datum);
-		ret.setStatus(RnStatus.OFFEN);
+		ret.setStatus(InvoiceState.OPEN);
 		// summe.roundTo5();
 		ret.set(BILL_AMOUNT_CENTS, summe.getCentsAsString());
 		// ret.setExtInfo("Rundungsdifferenz", summe.getFracAsString());
@@ -308,7 +304,7 @@ public class Rechnung extends PersistentObject {
 			}
 		}
 		if (ret.getOffenerBetrag().isZero()) {
-			ret.setStatus(RnStatus.BEZAHLT);
+			ret.setStatus(InvoiceState.PAID);
 		} else {
 			if (f != null) {
 				new AccountTransaction(f.getPatient(), ret, summe.negate(), Datum, "Rn " + nr + " erstellt.");
@@ -411,9 +407,9 @@ public class Rechnung extends PersistentObject {
 			new Zahlung(this, betrag, "Storno", null);
 			if (reopen) {
 				kons = removeBillFromKons();
-				setStatus(InvoiceState.CANCELLED.getState());
+				setStatus(InvoiceState.CANCELLED);
 			} else {
-				setStatus(InvoiceState.DEPRECIATED.getState());
+				setStatus(InvoiceState.DEPRECIATED);
 			}
 		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
 			// if bill is canceled ensure that all kons are opened
@@ -534,7 +530,9 @@ public class Rechnung extends PersistentObject {
 	/**
 	 * @return the current {@link InvoiceState} numeric value
 	 * @since 3.2 resolves via {@link #getInvoiceState()}
+	 * @deprecated use getInvoiceState()
 	 */
+	@Deprecated(forRemoval = true)
 	public int getStatus() {
 		return getInvoiceState().numericValue();
 	}
@@ -598,10 +596,10 @@ public class Rechnung extends PersistentObject {
 	 *
 	 * @param state as defined by {@link InvoiceState#numericValue()}
 	 */
-	public void setStatus(final int state) {
-		set(BILL_STATE, Integer.toString(state));
+	public void setStatus(final InvoiceState state) {
+		set(BILL_STATE, Integer.toString(state.getState()));
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
-		addTrace(STATUS_CHANGED, Integer.toString(state));
+		addTrace(STATUS_CHANGED, Integer.toString(state.getState()));
 	}
 
 	/**
@@ -624,9 +622,9 @@ public class Rechnung extends PersistentObject {
 		Money newOffen = new Money(oldOffen);
 		newOffen.subtractMoney(betrag);
 		if (newOffen.isNeglectable()) {
-			setStatus(RnStatus.BEZAHLT);
+			setStatus(InvoiceState.PAID);
 		} else if (newOffen.isNegative()) {
-			setStatus(RnStatus.ZUVIEL_BEZAHLT);
+			setStatus(InvoiceState.EXCESSIVE_PAYMENT);
 		} else if (newOffen.equals(getBetrag())) {
 			// if the remainder is equal to the total, it was probably a
 			// negative payment -> storno
@@ -642,7 +640,7 @@ public class Rechnung extends PersistentObject {
 			// thus let's check the last few states.
 			List<String> zahlungen = getTrace(STATUS_CHANGED);
 			if (zahlungen.size() < 2) {
-				setStatus(RnStatus.OFFEN_UND_GEDRUCKT);
+				setStatus(InvoiceState.OPEN_AND_PRINTED);
 			} else {
 				// status description is of the form "11.01.2008, 09:16:42: 15"
 				String statusDescription = zahlungen.get(zahlungen.size() - 2);
@@ -650,13 +648,13 @@ public class Rechnung extends PersistentObject {
 				if (matcher.matches()) {
 					String prevStatus = matcher.group(1);
 					int newStatus = Integer.parseInt(prevStatus);
-					setStatus(newStatus);
+					setStatus(InvoiceState.fromState(newStatus));
 				} else {
 					// we couldn't find the previous status, do nothing
 				}
 			}
 		} else if (newOffen.getCents() < oldOffenCents) {
-			setStatus(RnStatus.TEILZAHLUNG);
+			setStatus(InvoiceState.PARTIAL_PAYMENT);
 		}
 		return new Zahlung(this, betrag, text, date);
 	}
@@ -781,22 +779,18 @@ public class Rechnung extends PersistentObject {
 	}
 
 	public String getRnDatumFrist() {
-		Mandant currMandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		Settings rnsSettings = CoreHub.getUserSetting(currMandant.getRechnungssteller());
-
 		String stat = get(BILL_STATE_DATE);
 		int frist = 0;
-		switch (getStatus()) {
-		case RnStatus.OFFEN_UND_GEDRUCKT:
-			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30);
-			break;
-		case RnStatus.MAHNUNG_1_GEDRUCKT:
-			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
-			break;
-		case RnStatus.MAHNUNG_2_GEDRUCKT:
-			frist = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
-			break;
+		
+		int status = getStatus();
+		if(status == InvoiceState.OPEN_AND_PRINTED.getState()) {
+			frist = ConfigServiceHolder.get().getActiveMandator(Preferences.RNN_DAYSUNTIL1ST, 30);
+		} else if (status == InvoiceState.DEMAND_NOTE_1_PRINTED.getState()) {
+			frist = ConfigServiceHolder.get().getActiveMandator(Preferences.RNN_DAYSUNTIL2ND, 10);
+		} else if (status == InvoiceState.DEMAND_NOTE_2_PRINTED.getState()) {
+			frist = ConfigServiceHolder.get().getActiveMandator(Preferences.RNN_DAYSUNTIL3RD, 10);
 		}
+		
 		TimeTool tm = new TimeTool(stat);
 		tm.add(TimeTool.DAY_OF_MONTH, frist);
 		return tm.toString(TimeTool.DATE_GER);
@@ -805,8 +799,8 @@ public class Rechnung extends PersistentObject {
 	/**
 	 * Mark bill as rejected
 	 */
-	public void reject(final RnStatus.REJECTCODE reason, final String text) {
-		setStatus(RnStatus.FEHLERHAFT);
+	public void reject(final InvoiceState.REJECTCODE reason, final String text) {
+		setStatus(InvoiceState.DEFECTIVE);
 		addTrace(REJECTED, reason.toString() + ", " + text);
 	}
 

@@ -64,8 +64,8 @@ public class DocumentsViewerComparator extends ViewerComparator {
 		} else {
 			IDocument dh1 = (IDocument) e1;
 			IDocument dh2 = (IDocument) e2;
-			cat1 = dh1.getCategory().getName();
-			cat2 = dh2.getCategory().getName();
+			cat1 = dh1.getCategory() != null ? dh1.getCategory().getName() : StringUtils.EMPTY;
+			cat2 = dh2.getCategory() != null ? dh2.getCategory().getName() : StringUtils.EMPTY;
 
 			switch (propertyIndex) {
 			case 1:

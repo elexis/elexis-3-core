@@ -3,14 +3,11 @@ package ch.elexis.core.ac;
 import java.beans.Transient;
 import java.util.Arrays;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.annotations.JsonAdapter;
 
-import ch.elexis.core.ac.internal.ACEAccessBitMapDeserializer;
-import ch.elexis.core.ac.internal.ACEAccessBitMapSerializer;
+import ch.elexis.core.ac.internal.ACEAccessBitMapJsonAdapter;
 
-@JsonSerialize(using = ACEAccessBitMapSerializer.class)
-@JsonDeserialize(using = ACEAccessBitMapDeserializer.class)
+@JsonAdapter(value = ACEAccessBitMapJsonAdapter.class)
 public class ACEAccessBitMap {
 
 	private final byte[] accessRightMap;

@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.XChangeExporter;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -93,7 +93,7 @@ public class ServiceBlockElement extends XChangeElement {
 	public void doImport() {
 		String name = getAttr(ATTR_NAME);
 		if (!StringTool.isNothing(name)) {
-			Leistungsblock block = new Leistungsblock(name, CoreHub.actMandant);
+			Leistungsblock block = new Leistungsblock(name, ContextServiceHolder.getActiveMandatorOrNull().getId());
 			List<ServiceElement> lService = (List<ServiceElement>) getChildren(ServiceElement.XMLNAME,
 					ServiceElement.class);
 			for (ServiceElement se : lService) {
@@ -115,6 +115,7 @@ public class ServiceBlockElement extends XChangeElement {
 	 * @deprecated use
 	 *             {@link ServiceBlockElement#importCodeElement(Leistungsblock, ServiceElement)}
 	 */
+	@Deprecated
 	private void importXidElement(Leistungsblock block, ServiceElement se) {
 		XidElement xid = se.getXid();
 		List<IPersistentObject> ls = xid.findObject();

@@ -25,7 +25,7 @@ public class Counter {
 	private Hashtable<Object, Integer> hash = new Hashtable<Object, Integer>();
 
 	public void add(float i) {
-		list.add(new Float(i));
+		list.add(Float.valueOf(i));
 	}
 
 	public void clear() {
@@ -62,7 +62,7 @@ public class Counter {
 		} else {
 			cx = c + 1;
 		}
-		hash.put(o, new Integer(cx));
+		hash.put(o, Integer.valueOf(cx));
 	}
 
 	public ObjCounter[] getTopList(int num) {
@@ -72,6 +72,7 @@ public class Counter {
 		}
 		Collections.sort(aoc, new Comparator<ObjCounter>() {
 
+			@Override
 			public int compare(ObjCounter arg0, ObjCounter arg1) {
 				return arg1.count - arg0.count;
 			}
