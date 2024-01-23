@@ -185,9 +185,10 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
 							query.and(dbFields[i], COMPARATOR.LIKE, NoPoUtil.getElexisDateSearchString(lastFiltered[i]),
 									true);
+						} else if ("code".equals(dbFields[i])) {
+							query.and(dbFields[i], COMPARATOR.EQUALS, lastFiltered[i]);
 						} else {
 							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
-							query.limit(1);
 						}
 					}
 				}

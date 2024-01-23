@@ -70,7 +70,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	protected CommonViewer myViewer;
 	protected int focusField;
 	boolean bCeaseFire;
-	boolean test = true;
+	boolean codeFocused = true;
 	private Composite inner;
 
 	/**
@@ -259,7 +259,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			Text t = (Text) e.getSource();
 			String s = t.getText();
 			if (!StringTool.leer.equals(s)) {
-				if (test) {
+				if (codeFocused) {
 					if (s.length() == 1) {
 						return;
 					}
@@ -478,7 +478,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void focusGained(FocusEvent e) {
 					if ("code".equals(fieldName)) {
-						test = false;
+						codeFocused = false;
 
 					}
 				}
@@ -486,7 +486,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void focusLost(FocusEvent e) {
 					if ("code".equals(fieldName)) {
-						test = true;
+						codeFocused = true;
 					}
 				}
 			});
