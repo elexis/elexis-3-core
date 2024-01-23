@@ -2,7 +2,6 @@ package ch.elexis.core.ui.contacts.command;
 
 import java.util.HashMap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,7 +29,7 @@ public class SendMailCommand extends AbstractHandler implements IHandler {
 
 				HashMap<String, String> params = new HashMap<String, String>();
 
-				params.put("ch.elexis.core.mail.ui.sendMail.to", StringUtils.SPACE + patient.getMailAddress()); //$NON-NLS-1$
+				params.put("ch.elexis.core.mail.ui.sendMail.to", patient.getMailAddress()); //$NON-NLS-1$
 
 				ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(sendMailCommand,
 						params);

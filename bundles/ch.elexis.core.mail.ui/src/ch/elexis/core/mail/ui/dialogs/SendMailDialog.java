@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailConstants;
@@ -171,6 +172,9 @@ public class SendMailDialog extends TitleAreaDialog {
 						toText.setText(sb.toString());
 						toText.setSelection(toText.getText().length());
 						attachments.setPostfix(toText.getText());
+						Display.getDefault().asyncExec(() -> {
+							toAddressProposalAdapter.closeProposalPopup();
+						});
 					}
 				}
 			});
@@ -235,6 +239,9 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 					ccText.setText(sb.toString());
 					ccText.setSelection(ccText.getText().length());
+					Display.getDefault().asyncExec(() -> {
+						ccAddressProposalAdapter.closeProposalPopup();
+					});
 				}
 			});
 			menuManager = new MenuManager();
@@ -529,7 +536,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 					attachmentPaths.add(tempFile.toString());
 				}
-				attachments.setAttachments(String.join(AttachmentsComposite.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
+				attachments.setAttachments(String.join(AttachmentsUtil.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}

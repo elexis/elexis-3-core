@@ -38,8 +38,6 @@ public class AttachmentsComposite extends Composite {
 
 	private Composite attachmentsParent;
 
-	public static final String ATTACHMENT_DELIMITER = ":::";
-
 	public AttachmentsComposite(Composite parent, int style) {
 		super(parent, style);
 		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
@@ -100,7 +98,7 @@ public class AttachmentsComposite extends Composite {
 			control.dispose();
 		}
 		if (StringUtils.isNotBlank(attachments)) {
-			String[] attachmentsParts = attachments.split(ATTACHMENT_DELIMITER);
+			String[] attachmentsParts = attachments.split(AttachmentsUtil.ATTACHMENT_DELIMITER);
 			for (String string : attachmentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				label.setText(FilenameUtils.getName(string));
@@ -121,9 +119,10 @@ public class AttachmentsComposite extends Composite {
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getAttachments().split(ATTACHMENT_DELIMITER));
+						List<String> removeParts = Arrays
+								.asList(getAttachments().split(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
+								.collect(Collectors.joining(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						setAttachments(removedString);
 					}
 				});
@@ -131,7 +130,7 @@ public class AttachmentsComposite extends Composite {
 			}
 		}
 		if (StringUtils.isNotBlank(documents)) {
-			String[] documentsParts = documents.split(ATTACHMENT_DELIMITER);
+			String[] documentsParts = documents.split(AttachmentsUtil.ATTACHMENT_DELIMITER);
 			for (String string : documentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
@@ -157,9 +156,10 @@ public class AttachmentsComposite extends Composite {
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getDocuments().split(ATTACHMENT_DELIMITER));
+						List<String> removeParts = Arrays
+								.asList(getDocuments().split(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
+								.collect(Collectors.joining(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						setDocuments(removedString);
 					};
 				});
@@ -175,7 +175,7 @@ public class AttachmentsComposite extends Composite {
 			if (StringUtils.isBlank(documents)) {
 				documents = AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			} else {
-				documents += ATTACHMENT_DELIMITER
+				documents += AttachmentsUtil.ATTACHMENT_DELIMITER
 						+ AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			}
 		}
