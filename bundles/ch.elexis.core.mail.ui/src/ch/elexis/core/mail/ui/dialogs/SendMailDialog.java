@@ -340,6 +340,13 @@ public class SendMailDialog extends TitleAreaDialog {
 			attachments.setDocuments(documentsString);
 			attachments.setPostfix(toString);
 
+			lbl = new Label(container, SWT.HORIZONTAL | SWT.SEPARATOR);
+			lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+
+			lbl = new Label(container, SWT.NONE);
+			lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			lbl.setText("Dokument zum anhängen doppelklicken");
+
 			attachmentsSelection = new DocumentsSelectionComposite(container, SWT.NONE);
 			attachmentsSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachmentsSelection.setPatient(ContextServiceHolder.get().getActivePatient().orElse(null));

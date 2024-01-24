@@ -13,6 +13,12 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
@@ -65,6 +71,38 @@ public class AttachmentsComposite extends Composite {
 		}
 		ToolBar toolbar = mgr.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
+
+		Label dropLabel = new Label(this, SWT.BORDER | SWT.CENTER);
+		dropLabel.setText("Externe Datei hierhin ziehen");
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		gd.heightHint = 30;
+		dropLabel.setLayoutData(gd);
+
+		final Transfer[] dropTransferTypes = new Transfer[] { FileTransfer.getInstance() };
+
+		DropTarget target = new DropTarget(dropLabel, DND.DROP_COPY);
+		target.setTransfer(dropTransferTypes);
+		target.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+				event.detail = DND.DROP_COPY;
+			}
+
+			public void drop(DropTargetEvent event) {
+				if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+					String[] files = (String[]) event.data;
+					Arrays.asList(files).forEach(s -> {
+						if (StringUtils.isBlank(getAttachments())) {
+							setAttachments(s);
+						} else {
+							setAttachments(getAttachments() + AttachmentsUtil.ATTACHMENT_DELIMITER + s);
+						}
+					});
+					updateAttachments();
+				}
+			}
+		});
 	}
 
 	public String getAttachmentNames(String attachmentAsString) {
