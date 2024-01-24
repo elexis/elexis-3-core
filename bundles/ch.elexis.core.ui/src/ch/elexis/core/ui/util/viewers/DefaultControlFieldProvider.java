@@ -260,11 +260,11 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			String s = t.getText();
 			if (!StringTool.leer.equals(s)) {
 				if (codeFocused) {
-					if (s.length() == 1) {
+					if (s.length() == 0) {
 						return;
 					}
 				} else {
-					if (s.length() == 0) {
+					if (s.length() == 1) {
 						return;
 
 					}
@@ -478,15 +478,14 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				@Override
 				public void focusGained(FocusEvent e) {
 					if ("code".equals(fieldName)) {
-						codeFocused = false;
-
+						codeFocused = true;
 					}
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
 					if ("code".equals(fieldName)) {
-						codeFocused = true;
+						codeFocused = false;
 					}
 				}
 			});
