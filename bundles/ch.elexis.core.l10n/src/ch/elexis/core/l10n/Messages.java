@@ -5,6 +5,12 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	// BUNDLE_NAME is needed for core.data
 	public static final String BUNDLE_NAME = "ch.elexis.core.l10n.messages";
+	
+	public static String Core_Barcode_global_settings;
+	public static String Core_BarcodePat;
+	public static String Core_BarcodeElexis;
+	public static String TemplatePreferences_TextBarCodeFormate;
+	public static String BarCodeLabel_Name;
 	public static String Core_Area_Bereiche;
 	public static String ABX_CheckPath;
 	public static String ABX_ConnectionName;
