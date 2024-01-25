@@ -53,6 +53,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 				return "406";
 			} else if (subTyp == ArticleSubTyp.MAGISTERY) {
 				return "410";
+			} else if (subTyp == ArticleSubTyp.MIGEL) {
+				return "452";
 			}
 		} else if (typ == ArticleTyp.MIGEL) {
 			return "452";
