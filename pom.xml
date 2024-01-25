@@ -234,7 +234,6 @@
 						<strictBinIncludes>false</strictBinIncludes>
 						<format>yyyyMMdd-HHmm</format>
 						<timestampProvider>jgit</timestampProvider>
-						<timestampProvider>jgit</timestampProvider>
 						<jgit.ignore>
 							pom.xml
 							.polyglot.build.properties
