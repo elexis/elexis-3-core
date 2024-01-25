@@ -384,6 +384,7 @@ public class Messages extends NLS {
 	public static String ArticleSubTyp_COMPLEMENTARY;
 	public static String ArticleSubTyp_COMPLEMENTARY_REDUCED;
 	public static String ArticleSubTyp_MAGISTERY;
+	public static String ArticleSubTyp_MIGEL;
 	public static String ArticleSubTyp_NONPHARMA;
 	public static String ArticleSubTyp_PHARMA;
 	public static String Article_Detail;
