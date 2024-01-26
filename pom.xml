@@ -45,6 +45,8 @@
 		<buildplan.plugin.version>1.5</buildplan.plugin.version>
 		<formatter.plugin.version>2.18.0</formatter.plugin.version>
 		<clean.plugin.version>2.5</clean.plugin.version>	
+                <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+                <buildNumber>${maven.build.timestamp}</buildNumber>
 	</properties>
 	<repositories>
 		<repository>
@@ -232,8 +234,7 @@
 					</dependencies>
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
-						<format>yyyyMMdd-HHmm</format>
-					        <forceContextQualifier>20240125-1800</forceContextQualifier> 	
+					        <forceContextQualifier>${buildNumber}</forceContextQualifier> 	
 						<timestampProvider>jgit</timestampProvider>
 						<jgit.ignore>
 							pom.xml
