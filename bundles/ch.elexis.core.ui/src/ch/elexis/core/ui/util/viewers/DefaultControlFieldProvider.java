@@ -70,7 +70,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 	protected CommonViewer myViewer;
 	protected int focusField;
 	boolean bCeaseFire;
-	boolean codeFocused = true;
+	boolean codeFocused = false;
 	private Composite inner;
 
 	/**
