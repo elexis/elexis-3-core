@@ -1,6 +1,5 @@
 package ch.elexis.core.mail;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +12,7 @@ import java.util.Optional;
 import java.util.StringJoiner;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +30,8 @@ public class AttachmentsUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AttachmentsUtil.class);
 
 	private static File attachmentsFolder;
+
+	public static final String ATTACHMENT_DELIMITER = ":::";
 
 	private synchronized static File getAttachmentsFolder() {
 		if (attachmentsFolder == null) {
@@ -193,6 +195,24 @@ public class AttachmentsUtil {
 			}
 		}
 		return sj.toString();
+	}
+
+	/**
+	 * Get a list of {@link IDocument}s from their String representation.
+	 * 
+	 * @param documents
+	 * @return
+	 */
+	public static List<IDocument> getDocuments(String documents) {
+		List<IDocument> ret = new ArrayList<>();
+		String[] documentsParts = documents.split(ATTACHMENT_DELIMITER);
+		for (String string : documentsParts) {
+			Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(string);
+			if (loaded.isPresent() && loaded.get() instanceof IDocument) {
+				ret.add((IDocument) loaded.get());
+			}
+		}
+		return ret;
 	}
 
 	public static File getAttachmentsFile(IImage iImage) {

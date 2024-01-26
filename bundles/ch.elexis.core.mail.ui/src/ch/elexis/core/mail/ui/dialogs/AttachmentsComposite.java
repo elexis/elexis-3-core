@@ -13,6 +13,12 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
@@ -38,8 +44,6 @@ public class AttachmentsComposite extends Composite {
 
 	private Composite attachmentsParent;
 
-	public static final String ATTACHMENT_DELIMITER = ":::";
-
 	public AttachmentsComposite(Composite parent, int style) {
 		super(parent, style);
 		this.setData("org.eclipse.e4.ui.css.CssClassName", "CustomComposite");
@@ -59,12 +63,46 @@ public class AttachmentsComposite extends Composite {
 		attachmentsParent.setLayout(new GridLayout(2, false));
 
 		ToolBarManager mgr = new ToolBarManager();
-		mgr.add(new AddAttachmentAction(this));
+		// do not add attachments action, since DocumentsSelectionComposite is used on
+		// SendMailDialog
+		// mgr.add(new AddAttachmentAction(this));
 		if (createRocheLaborCommand != null && createRocheLaborCommand.isEnabled()) {
 			mgr.add(new LaborAttachmentAction(this, createRocheLaborCommand));
 		}
 		ToolBar toolbar = mgr.createControl(this);
 		toolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
+
+		Label dropLabel = new Label(this, SWT.BORDER | SWT.CENTER);
+		dropLabel.setText("Externe Datei hierhin ziehen");
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		gd.heightHint = 30;
+		dropLabel.setLayoutData(gd);
+
+		final Transfer[] dropTransferTypes = new Transfer[] { FileTransfer.getInstance() };
+
+		DropTarget target = new DropTarget(dropLabel, DND.DROP_COPY);
+		target.setTransfer(dropTransferTypes);
+		target.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+				event.detail = DND.DROP_COPY;
+			}
+
+			public void drop(DropTargetEvent event) {
+				if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+					String[] files = (String[]) event.data;
+					Arrays.asList(files).forEach(s -> {
+						if (StringUtils.isBlank(getAttachments())) {
+							setAttachments(s);
+						} else {
+							setAttachments(getAttachments() + AttachmentsUtil.ATTACHMENT_DELIMITER + s);
+						}
+					});
+					updateAttachments();
+				}
+			}
+		});
 	}
 
 	public String getAttachmentNames(String attachmentAsString) {
@@ -98,7 +136,7 @@ public class AttachmentsComposite extends Composite {
 			control.dispose();
 		}
 		if (StringUtils.isNotBlank(attachments)) {
-			String[] attachmentsParts = attachments.split(ATTACHMENT_DELIMITER);
+			String[] attachmentsParts = attachments.split(AttachmentsUtil.ATTACHMENT_DELIMITER);
 			for (String string : attachmentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				label.setText(FilenameUtils.getName(string));
@@ -119,9 +157,10 @@ public class AttachmentsComposite extends Composite {
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getAttachments().split(ATTACHMENT_DELIMITER));
+						List<String> removeParts = Arrays
+								.asList(getAttachments().split(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
+								.collect(Collectors.joining(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						setAttachments(removedString);
 					}
 				});
@@ -129,7 +168,7 @@ public class AttachmentsComposite extends Composite {
 			}
 		}
 		if (StringUtils.isNotBlank(documents)) {
-			String[] documentsParts = documents.split(ATTACHMENT_DELIMITER);
+			String[] documentsParts = documents.split(AttachmentsUtil.ATTACHMENT_DELIMITER);
 			for (String string : documentsParts) {
 				Label label = new Label(attachmentsParent, SWT.NONE);
 				String tmpFile = AttachmentsUtil.toAttachment(string);
@@ -155,9 +194,10 @@ public class AttachmentsComposite extends Composite {
 				remove.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
-						List<String> removeParts = Arrays.asList(getDocuments().split(ATTACHMENT_DELIMITER));
+						List<String> removeParts = Arrays
+								.asList(getDocuments().split(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						String removedString = removeParts.stream().filter(part -> !part.equals(remove.getData()))
-								.collect(Collectors.joining(ATTACHMENT_DELIMITER));
+								.collect(Collectors.joining(AttachmentsUtil.ATTACHMENT_DELIMITER));
 						setDocuments(removedString);
 					};
 				});
@@ -173,7 +213,7 @@ public class AttachmentsComposite extends Composite {
 			if (StringUtils.isBlank(documents)) {
 				documents = AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			} else {
-				documents += ATTACHMENT_DELIMITER
+				documents += AttachmentsUtil.ATTACHMENT_DELIMITER
 						+ AttachmentsUtil.getDocumentsString(Collections.singletonList(document));
 			}
 		}

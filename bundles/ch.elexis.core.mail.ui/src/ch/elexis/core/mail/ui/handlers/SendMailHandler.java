@@ -1,6 +1,7 @@
 package ch.elexis.core.mail.ui.handlers;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,9 +13,12 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.ui.dialogs.SendMailDialog;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
@@ -49,6 +53,14 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		String documents = event.getParameter("ch.elexis.core.mail.ui.sendMail.documents");
 		if (documents != null) {
 			sendMailDialog.setDocumentsString(documents);
+			List<IDocument> loadedDocuments = AttachmentsUtil.getDocuments(documents);
+			for (IDocument iDocument : loadedDocuments) {
+				if (iDocument instanceof IDocumentLetter && ((IDocumentLetter) iDocument).getRecipient() != null
+						&& StringUtils.isNotBlank(((IDocumentLetter) iDocument).getRecipient().getEmail())) {
+					sendMailDialog.setTo(((IDocumentLetter) iDocument).getRecipient().getEmail());
+					break;
+				}
+			}
 		}
 		String to = event.getParameter("ch.elexis.core.mail.ui.sendMail.to");
 		if (to != null) {

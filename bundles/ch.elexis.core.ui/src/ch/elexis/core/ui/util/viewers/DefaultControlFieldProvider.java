@@ -259,7 +259,6 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			Text t = (Text) e.getSource();
 			String s = t.getText();
 			if (!StringTool.leer.equals(s)) {
-				System.out.println("code fokus" + codeFocused);
 				if (codeFocused) {
 					if (s.length() == 0) {
 						return;
@@ -487,7 +486,6 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 				public void focusLost(FocusEvent e) {
 					if ("code".equals(fieldName)) {
 						codeFocused = false;
-
 					}
 				}
 			});

@@ -28,7 +28,10 @@ import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailConstants;
@@ -61,6 +65,7 @@ import ch.elexis.core.mail.ui.preference.SerializableFileUtil;
 import ch.elexis.core.mail.ui.preference.TextTemplates;
 import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
@@ -69,6 +74,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.documents.composites.DocumentsSelectionComposite;
 import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
@@ -89,6 +95,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
+	private DocumentsSelectionComposite attachmentsSelection;
 	private Button confidentialCheckbox;
 	private String accountId;
 	private String attachmentsString;
@@ -165,6 +172,9 @@ public class SendMailDialog extends TitleAreaDialog {
 						toText.setText(sb.toString());
 						toText.setSelection(toText.getText().length());
 						attachments.setPostfix(toText.getText());
+						Display.getDefault().asyncExec(() -> {
+							toAddressProposalAdapter.closeProposalPopup();
+						});
 					}
 				}
 			});
@@ -208,7 +218,7 @@ public class SendMailDialog extends TitleAreaDialog {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if (e.keyCode == SWT.ARROW_DOWN) {
-						toAddressProposalAdapter.openProposalPopup();
+						ccAddressProposalAdapter.openProposalPopup();
 					}
 					super.keyPressed(e);
 				}
@@ -229,6 +239,9 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 					ccText.setText(sb.toString());
 					ccText.setSelection(ccText.getText().length());
+					Display.getDefault().asyncExec(() -> {
+						ccAddressProposalAdapter.closeProposalPopup();
+					});
 				}
 			});
 			menuManager = new MenuManager();
@@ -266,15 +279,10 @@ public class SendMailDialog extends TitleAreaDialog {
 			subjectText.setText(subjectString);
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
+			lbl = new Label(container, SWT.NONE);
+			lbl.setText("Vertraulich");
 			confidentialCheckbox = new Button(container, SWT.CHECK); // Checkbox initialisieren
-			confidentialCheckbox.setText("Vertraulich");
 			confidentialCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-
-			attachments = new AttachmentsComposite(container, SWT.NONE);
-			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-			attachments.setAttachments(attachmentsString);
-			attachments.setDocuments(documentsString);
-			attachments.setPostfix(toString);
 
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Vorlage");
@@ -319,17 +327,45 @@ public class SendMailDialog extends TitleAreaDialog {
 					updateLayout();
 				}
 			});
-			if (!doSend) {
-				lbl.setVisible(false);
-				templatesViewer.getCombo().setVisible(false);
-				attachments.setVisible(false);
-			}
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Text");
 			textText = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			textText.setLayoutData(gd);
 			textText.setText(textString);
+
+			attachments = new AttachmentsComposite(container, SWT.NONE);
+			attachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			attachments.setAttachments(attachmentsString);
+			attachments.setDocuments(documentsString);
+			attachments.setPostfix(toString);
+
+			lbl = new Label(container, SWT.HORIZONTAL | SWT.SEPARATOR);
+			lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+
+			lbl = new Label(container, SWT.NONE);
+			lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			lbl.setText("Dokument zum anhängen doppelklicken");
+
+			attachmentsSelection = new DocumentsSelectionComposite(container, SWT.NONE);
+			attachmentsSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+			attachmentsSelection.setPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
+			attachmentsSelection.addDoubleClickListener(new IDoubleClickListener() {
+				@Override
+				public void doubleClick(DoubleClickEvent event) {
+					if (event.getSelection() instanceof IStructuredSelection && !event.getSelection().isEmpty()) {
+						attachments.addDocument(
+								(IDocument) ((IStructuredSelection) event.getSelection()).getFirstElement());
+					}
+				}
+			});
+
+			if (!doSend) {
+				lbl.setVisible(false);
+				templatesViewer.getCombo().setVisible(false);
+				attachments.setVisible(false);
+				attachmentsSelection.setVisible(false);
+			}
 
 			if (accountId == null) {
 				// set selected account for mandant
@@ -507,7 +543,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 					attachmentPaths.add(tempFile.toString());
 				}
-				attachments.setAttachments(String.join(AttachmentsComposite.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
+				attachments.setAttachments(String.join(AttachmentsUtil.ATTACHMENT_DELIMITER, attachmentPaths));// $NON-NLS-1$
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
