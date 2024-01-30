@@ -9,6 +9,12 @@ public interface IDocumentReference extends IFinding {
 
 	public IDocument getDocument();
 
+	/**
+	 * Sets the link to the document, and all derived attributes (patient, category,
+	 * author, creationTime)
+	 * 
+	 * @param document
+	 */
 	public void setDocument(IDocument document);
 
 	public String getCategory();

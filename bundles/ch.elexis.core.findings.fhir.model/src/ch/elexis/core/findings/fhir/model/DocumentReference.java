@@ -69,6 +69,18 @@ public class DocumentReference extends AbstractFindingModelAdapter<ch.elexis.cor
 	public void setDocument(IDocument document) {
 		getEntity().setDocumentStoreId(document.getStoreId());
 		getEntity().setDocumentId(document.getId());
+		if (document.getPatient() != null) {
+			setPatientId(document.getPatient().getId());
+		}
+		if (document.getAuthor() != null) {
+			setAuthorId(document.getAuthor().getId());
+		}
+		if (document.getCreated() != null) {
+			setDate(getLocalDateTime(document.getCreated()));
+		}
+		if (document.getCategory() != null) {
+			setCategory(document.getCategory().getName());
+		}
 	}
 
 	@Override
