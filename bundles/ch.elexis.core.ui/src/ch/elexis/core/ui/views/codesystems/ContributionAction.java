@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.action.Action;
@@ -32,8 +33,16 @@ public class ContributionAction extends Action {
 	private Object[] selection;
 
 	public ContributionAction(IConfigurationElement command) {
+		super(command.getAttribute("label"), getActionStyle(command.getAttribute("style")));
 		commandId = command.getAttribute("commandId"); //$NON-NLS-1$
 		label = command.getAttribute("label"); //$NON-NLS-1$
+	}
+
+	private static int getActionStyle(String attribute) {
+		if ("toggle".equals(attribute)) {
+			return AS_CHECK_BOX;
+		}
+		return AS_PUSH_BUTTON;
 	}
 
 	public void setSelection(Object[] selection) {
@@ -85,5 +94,23 @@ public class ContributionAction extends Action {
 			return handler.isEnabled();
 		}
 		return true;
+	}
+
+	@Override
+	public boolean isChecked() {
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command cmd = commandService.getCommand(commandId);
+		if (cmd.getStateIds() != null) {
+			for (String stateId : cmd.getStateIds()) {
+				State state = cmd.getState(stateId);
+				if (state != null) {
+					Object ret = state.getValue();
+					if (ret instanceof Boolean) {
+						return (Boolean) ret;
+					}
+				}
+			}
+		}
+		return super.isChecked();
 	}
 }

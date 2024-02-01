@@ -11,6 +11,8 @@ public class Constants {
 
 	public static final String FLD_EXT_PFLICHTLEISTUNG = "obligation";
 
+	public static final String FLD_EXT_ORIGINALNOSUBSTITUTE = "originalnosubstitute";
+
 	public static final String FLD_EXT_SIDE = "Seite";
 	public static final String SIDE_L = "l";
 	public static final String SIDE_R = "r";
