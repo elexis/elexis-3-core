@@ -25,6 +25,8 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.findings.IDocumentReference;
+import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
@@ -42,6 +44,9 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private List<IDocumentStore> documentStores;
+
+	@Reference
+	private IFindingsService findingsService;
 
 	@Override
 	public Optional<DocumentReference> getFhirObject(IDocument localObject, SummaryEnum summaryEnum,
@@ -94,8 +99,21 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 	public Optional<IDocument> getLocalObject(DocumentReference fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
 			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
+			// lookup reference first, and fall back to document for reference without
+			// persistent DocumentReference (document templates)
 			if (localId.isPresent()) {
-
+				Optional<IDocumentReference> templateReference = findingsService.findById(localId.get(),
+						IDocumentReference.class);
+				if (templateReference.isPresent()) {
+					return Optional.of(templateReference.get().getDocument());
+				} else {
+					for (IDocumentStore iDocumentStore : documentStores) {
+						IDocument ret = iDocumentStore.loadDocument(localId.get()).orElse(null);
+						if (ret != null) {
+							return Optional.of(ret);
+						}
+					}
+				}
 			}
 		}
 		return Optional.empty();
