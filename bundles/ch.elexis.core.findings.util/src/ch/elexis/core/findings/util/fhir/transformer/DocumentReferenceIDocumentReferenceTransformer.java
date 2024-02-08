@@ -42,7 +42,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		implements IFhirTransformer<DocumentReference, IDocumentReference> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService codeModelService;
+	private IModelService coreModelService;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
 	private IModelService findingsModelService;
@@ -125,7 +125,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 
 			Optional<String> patientId = FhirUtil.getId(fhirObject.getSubject());
 			if (patientId.isPresent()) {
-				Optional<IPatient> patient = codeModelService.load(patientId.get(), IPatient.class);
+				Optional<IPatient> patient = coreModelService.load(patientId.get(), IPatient.class);
 				if (patient.isPresent()) {
 					iDocumentReference.setPatientId(patient.get().getId());
 				}

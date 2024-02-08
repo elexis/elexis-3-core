@@ -40,7 +40,7 @@ import ch.elexis.core.services.IModelService;
 public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<DocumentReference, IDocument> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService codeModelService;
+	private IModelService coreModelService;
 
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private List<IDocumentStore> documentStores;
