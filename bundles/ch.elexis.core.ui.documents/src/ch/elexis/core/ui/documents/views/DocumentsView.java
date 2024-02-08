@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -93,8 +92,6 @@ import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
-import ch.elexis.core.findings.IDocumentReference;
-import ch.elexis.core.findings.util.FindingsServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
@@ -441,16 +438,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					List<IDocumentReference> documentReferences = FindingsServiceHolder.getiFindingsService()
-							.getDocumentFindings(doc.getId(), IDocumentReference.class);
-					if (documentReferences.isEmpty()) {
-						return java.util.Optional.ofNullable(doc.getKeywords()).orElse(StringUtils.EMPTY);
-					} else {
-						return java.util.Optional
-								.ofNullable(
-										Objects.toString(documentReferences.get(0).getKeywords(), doc.getKeywords()))
-								.orElse(StringUtils.EMPTY);
-					}
+					return java.util.Optional.ofNullable(doc.getKeywords()).orElse(StringUtils.EMPTY);
 				}
 				return StringUtils.EMPTY;
 			}

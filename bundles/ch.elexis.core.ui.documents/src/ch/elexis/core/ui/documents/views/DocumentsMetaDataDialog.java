@@ -78,6 +78,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	public String category;
 
 	private final boolean categoryCrudAllowed;
+	private final boolean keywordsAllowed;
 
 	private CDateTime creationDate;
 	private CDateTime lastchangedDate;
@@ -92,6 +93,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 		this.documentReference = findDocumentReference();
 
 		categoryCrudAllowed = DocumentStoreServiceHolder.getService().isAllowed(document, Capability.CATEGORY);
+		keywordsAllowed = DocumentStoreServiceHolder.getService().isAllowed(document, Capability.KEYWORDS);
 	}
 
 	@Override
@@ -143,8 +145,7 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	private void createUIDocumentReferences(Composite ret) {
 		new Label(ret, SWT.NONE).setText(Messages.Core_Keywords);
 		tKeywords = SWTHelper.createText(ret, 4, SWT.NONE);
-		tKeywords.setText(Optional.ofNullable(Objects.toString(documentReference.getKeywords(), document.getKeywords()))
-				.orElse(StringUtils.EMPTY));
+		tKeywords.setText(keywordsAllowed ? document.getKeywords() : StringUtils.EMPTY);
 		tKeywords.setLayoutData(SWTHelper.getFillGridData(3, true, 1, false));
 
 		new Label(ret, SWT.NONE).setText(Messages.DocumentsView_Author);
@@ -241,11 +242,13 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 			document.setCategory(category);
 		}
 		document.setTitle(title);
-		keywords = tKeywords.getText();
-		document.setKeywords(keywords);
 		document.setAuthor((IContact) AutoCompleteTextUtil.getData(tAuthor));
 		document.setCreated(creationDate.getSelection());
 		document.setLastchanged(lastchangedDate.getSelection());
+		if (keywordsAllowed) {
+			keywords = tKeywords.getText();
+			document.setKeywords(keywords);
+		}
 
 		saveDocumentReference();
 		super.okPressed();
@@ -254,7 +257,6 @@ public class DocumentsMetaDataDialog extends TitleAreaDialog {
 	private void saveDocumentReference() {
 		documentReference.setPatientId(document.getPatient().getId());
 		documentReference.setDocument(document);
-		documentReference.setKeywords(tKeywords.getText());
 		documentReference.setAuthorId(Optional.ofNullable((IContact) AutoCompleteTextUtil.getData(tAuthor))
 				.map(IContact::getId).orElse(null));
 
