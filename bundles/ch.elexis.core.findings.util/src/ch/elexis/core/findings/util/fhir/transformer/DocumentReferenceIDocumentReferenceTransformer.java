@@ -72,6 +72,8 @@ public class DocumentReferenceIDocumentReferenceTransformer
 					ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(),
 							document.getStoreId(), StringUtils.EMPTY)));
 
+					ret.setDate(document.getLastchanged());
+
 					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 					Attachment attachment = new Attachment();
 					String title = document.getTitle();
@@ -83,6 +85,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 					}
 					attachment.setTitle(title);
 					attachment.setUrl(getBinaryUrl(ret));
+					attachment.setCreation(document.getCreated());
 					content.setAttachment(attachment);
 					ret.addContent(content);
 				} else {
@@ -135,6 +138,17 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			IDocument document = createDocument(patientId.orElse(null), attachment, iDocumentReference.getCategory(),
 					documentStore);
 			if (document != null) {
+				try {
+					if (fhirObject.hasDate()) {
+						document.setLastchanged(fhirObject.getDate());
+					}
+					if (attachment != null && attachment.hasCreation()) {
+						document.setCreated(attachment.getCreation());
+					}
+					documentStore.saveDocument(document);
+				} catch (ElexisException e) {
+					LoggerFactory.getLogger(getClass()).error("Error updating document", e);
+				}
 				fhirObject.getContent().clear();
 				contentHelper.setResource(fhirObject, iDocumentReference);
 				iDocumentReference.setDocument(document);
