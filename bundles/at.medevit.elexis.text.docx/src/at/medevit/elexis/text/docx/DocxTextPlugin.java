@@ -50,6 +50,7 @@ public class DocxTextPlugin extends ch.elexis.core.text.docx.DocxTextPlugin impl
 
 	private Composite composite;
 	private Button openButton;
+        private String testString;
 
 	@Override
 	public void setFocus() {
