@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.DocumentReference.DocumentReferenceContextComponent;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.slf4j.LoggerFactory;
@@ -112,5 +113,9 @@ public class DocumentReferenceAccessor extends AbstractFindingsAccessor {
 					new Coding(CodingSystem.ELEXIS_DOCUMENT_CATEGORY.getSystem(), value, value));
 			fhirResource.addCategory(newConcept);
 		}
+	}
+
+	public Optional<String> getKeywords(DocumentReference fhir) {
+		return Optional.ofNullable(fhir.getDescription());
 	}
 }

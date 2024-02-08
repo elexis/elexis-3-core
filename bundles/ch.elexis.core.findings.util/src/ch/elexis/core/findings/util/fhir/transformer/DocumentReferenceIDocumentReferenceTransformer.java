@@ -5,18 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Attachment;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.DocumentReference.DocumentReferenceContentComponent;
+import org.hl7.fhir.r4.model.Meta;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -24,14 +23,17 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.IDocumentAttributeMapper;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
@@ -44,9 +46,6 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	private IModelService findingsModelService;
-
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private List<IDocumentStore> documentStores;
 
@@ -55,9 +54,12 @@ public class DocumentReferenceIDocumentReferenceTransformer
 
 	private FindingsContentHelper contentHelper;
 
+	private IDocumentAttributeMapper attributeMapper;
+
 	@Activate
 	public void activate() {
 		contentHelper = new FindingsContentHelper();
+		attributeMapper = new IDocumentAttributeMapper(documentStores);
 	}
 
 	@Override
@@ -69,25 +71,16 @@ public class DocumentReferenceIDocumentReferenceTransformer
 			if (ret.getContent().isEmpty()) {
 				IDocument document = localObject.getDocument();
 				if (document != null) {
-					ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(),
-							document.getStoreId(), StringUtils.EMPTY)));
+					attributeMapper.elexisToFhir(document, ret, summaryEnum, includes);
 
-					ret.setDate(document.getLastchanged());
+					ret.setId(new IdDt(DocumentReference.class.getSimpleName(), localObject.getId()));
+					Meta meta = new Meta();
+					meta.setLastUpdated(new Date(localObject.getLastupdate()));
+					ret.setMeta(meta);
 
-					DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
-					Attachment attachment = new Attachment();
-					String title = document.getTitle();
-					String extension = FilenameUtils.getExtension(title);
-					String documentExtension = document.getExtension();
-					if (StringUtils.isEmpty(extension)
-							|| (StringUtils.isNotBlank(documentExtension) && !documentExtension.equals(extension))) {
-						title = title + "." + documentExtension;
+					if (ret.hasContent() && ret.getContent().get(0).hasAttachment()) {
+						ret.getContent().get(0).getAttachment().setUrl(getBinaryUrl(ret));
 					}
-					attachment.setTitle(title);
-					attachment.setUrl(getBinaryUrl(ret));
-					attachment.setCreation(document.getCreated());
-					content.setAttachment(attachment);
-					ret.addContent(content);
 				} else {
 					LoggerFactory.getLogger(getClass()).error("No document with content found for reference " + ret);
 				}
@@ -98,7 +91,6 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	}
 
 	private String getBinaryUrl(DocumentReference ret) {
-
 		return ret.getId() + "/$binary-access-read";
 	}
 
@@ -116,7 +108,24 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	@Override
 	public Optional<IDocumentReference> updateLocalObject(DocumentReference fhirObject,
 			IDocumentReference localObject) {
-		return Optional.empty();
+		IDocument document = localObject.getDocument();
+		attributeMapper.fhirToElexis(fhirObject, document);
+		saveDocument(document);
+		return Optional.of(localObject);
+	}
+
+	private void saveDocument(IDocument document) {
+		Optional<IDocumentStore> documentStore = getDocumentStoreWithId(document.getStoreId());
+		if (documentStore.isPresent()) {
+			try {
+				documentStore.get().saveDocument(document);
+			} catch (ElexisException e) {
+				LoggerFactory.getLogger(getClass()).error("Error saving document", e);
+				throw new IFhirTransformerException("WARNING", "Error saving document", 500);
+			}
+		} else {
+			throw new IFhirTransformerException("WARNING", "No document store for document", 412);
+		}
 	}
 
 	@Override
@@ -124,35 +133,25 @@ public class DocumentReferenceIDocumentReferenceTransformer
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
-			IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
-
 			Optional<String> patientId = FhirUtil.getId(fhirObject.getSubject());
 			if (patientId.isPresent()) {
 				Optional<IPatient> patient = coreModelService.load(patientId.get(), IPatient.class);
-				if (patient.isPresent()) {
-					iDocumentReference.setPatientId(patient.get().getId());
+				if (!patient.isPresent()) {
+					throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
 				}
 			}
-			contentHelper.setResource(fhirObject, iDocumentReference);
+
 			IDocumentStore documentStore = getDocumentStoreId(fhirObject);
-			IDocument document = createDocument(patientId.orElse(null), attachment, iDocumentReference.getCategory(),
-					documentStore);
-			if (document != null) {
-				try {
-					if (fhirObject.hasDate()) {
-						document.setLastchanged(fhirObject.getDate());
-					}
-					if (attachment != null && attachment.hasCreation()) {
-						document.setCreated(attachment.getCreation());
-					}
-					documentStore.saveDocument(document);
-				} catch (ElexisException e) {
-					LoggerFactory.getLogger(getClass()).error("Error updating document", e);
-				}
-				fhirObject.getContent().clear();
-				contentHelper.setResource(fhirObject, iDocumentReference);
-				iDocumentReference.setDocument(document);
-			}
+			IDocument document = createDocument(patientId.orElse(null), attachment, attributeMapper.getAccessor()
+					.getCategory(fhirObject).orElse(documentStore.getCategoryDefault().getName()), documentStore);
+			IDocumentReference iDocumentReference = findingsService.create(IDocumentReference.class);
+			iDocumentReference.setDocument(document);
+			attributeMapper.fhirToElexis(fhirObject, document);
+			saveDocument(document);
+
+			fhirObject.getContent().clear();
+			contentHelper.setResource(fhirObject, iDocumentReference);
+
 			findingsService.saveFinding(iDocumentReference);
 			return Optional.of(iDocumentReference);
 		}

@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Attachment;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DocumentReference;
 import org.hl7.fhir.r4.model.DocumentReference.DocumentReferenceContentComponent;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
@@ -27,10 +25,11 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.model.ICategory;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.IDocumentAttributeMapper;
 import ch.elexis.core.model.IDocument;
-import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IModelService;
 
@@ -43,54 +42,23 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	private List<IDocumentStore> documentStores;
 
+	private IDocumentAttributeMapper attributeMapper;
+
+	@Activate
+	public void activate() {
+		attributeMapper = new IDocumentAttributeMapper(documentStores);
+	}
+
 	@Override
 	public Optional<DocumentReference> getFhirObject(IDocument localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		DocumentReference ret = new DocumentReference();
-		FhirUtil.setVersionedIdPartLastUpdatedMeta(DocumentReference.class, ret, localObject);
-
-		ret.setDate(localObject.getLastchanged());
-
-		ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(),
-				localObject.getStoreId(), StringUtils.EMPTY)));
-
-		if (localObject.getCategory() != null) {
-			ICategory category = localObject.getCategory();
-			CodeableConcept newConcept = new CodeableConcept(new Coding(
-					CodingSystem.ELEXIS_DOCUMENT_CATEGORY.getSystem(), category.getName(), category.getName()));
-			ret.addCategory(newConcept);
-		}
-
-		if (localObject instanceof IDocumentTemplate
-				&& StringUtils.isNotBlank(((IDocumentTemplate) localObject).getTemplateTyp())) {
-			ret.addCategory(new CodeableConcept(new Coding(CodingSystem.ELEXIS_DOCUMENT_TEMPLATE_TYP.getSystem(),
-					((IDocumentTemplate) localObject).getTemplateTyp(), StringUtils.EMPTY)));
-		}
+		attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
 
 		if (localObject.getPatient() != null) {
 			ret.setSubject(new org.hl7.fhir.r4.model.Reference(new IdDt("Patient", localObject.getPatient().getId())));
 		}
-
-		DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
-		Attachment attachment = new Attachment();
-		String title = localObject.getTitle();
-		String extension = FilenameUtils.getExtension(title);
-		String documentExtension = localObject.getExtension();
-		if (StringUtils.isEmpty(extension)
-				|| (StringUtils.isNotBlank(documentExtension) && !documentExtension.equals(extension))) {
-			title = title + "." + documentExtension;
-		}
-		attachment.setTitle(title);
-		attachment.setUrl(getBinaryUrl(ret));
-		attachment.setCreation(localObject.getCreated());
-		content.setAttachment(attachment);
-		ret.addContent(content);
-
 		return Optional.of(ret);
-	}
-
-	private String getBinaryUrl(DocumentReference ret) {
-		return ret.getId() + "/$binary-access-read";
 	}
 
 	@Override
@@ -117,29 +85,38 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 	@Override
 	public Optional<IDocument> createLocalObject(DocumentReference fhirObject) {
 		if (fhirObject.getContent() != null && !fhirObject.getContent().isEmpty()) {
-
 			DocumentReferenceContentComponent content = fhirObject.getContent().get(0);
 			Attachment attachment = content.getAttachment();
-
 			Optional<String> patientId = FhirUtil.getId(fhirObject.getSubject());
-			IDocumentStore documentStore = getDocumentStoreId(fhirObject);
-			IDocument document = createDocument(patientId.orElse(null), attachment, "TODOCATEGORY",
-					documentStore);
-			try {
-				if (fhirObject.hasDate()) {
-					document.setLastchanged(fhirObject.getDate());
+			if (patientId.isPresent()) {
+				Optional<IPatient> patient = coreModelService.load(patientId.get(), IPatient.class);
+				if (!patient.isPresent()) {
+					throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
 				}
-				if (attachment != null && attachment.hasCreation()) {
-					document.setCreated(attachment.getCreation());
-				}
-				documentStore.saveDocument(document);
-			} catch (ElexisException e) {
-				LoggerFactory.getLogger(getClass()).error("Error updating document", e);
 			}
-			return Optional.of(document);
 
+			IDocumentStore documentStore = getDocumentStoreId(fhirObject);
+			IDocument document = createDocument(patientId.orElse(null), attachment,
+					attributeMapper.getAccessor().getCategory(fhirObject).orElse(""), documentStore);
+			attributeMapper.fhirToElexis(fhirObject, document);
+			saveDocument(document);
+			return Optional.of(document);
 		}
 		return Optional.empty();
+	}
+
+	private void saveDocument(IDocument document) {
+		Optional<IDocumentStore> documentStore = getDocumentStoreWithId(document.getStoreId());
+		if (documentStore.isPresent()) {
+			try {
+				documentStore.get().saveDocument(document);
+			} catch (ElexisException e) {
+				LoggerFactory.getLogger(getClass()).error("Error saving document", e);
+				throw new IFhirTransformerException("WARNING", "Error saving document", 500);
+			}
+		} else {
+			throw new IFhirTransformerException("WARNING", "No document store for document", 412);
+		}
 	}
 
 	private IDocumentStore getDocumentStoreId(DocumentReference fhirObject) {
