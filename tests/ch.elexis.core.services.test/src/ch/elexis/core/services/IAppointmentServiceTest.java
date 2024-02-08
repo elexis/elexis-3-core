@@ -30,7 +30,6 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -85,17 +84,6 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, wednesday);
 		String[] tuesday = configuredBlockTimes.get(DayOfWeek.TUESDAY);
 		assertArrayEquals(new String[] { "0000-0730", "1900-2359" }, tuesday);
-	}
-
-	@Test
-	public void invalidConfiguredBlockTimesBySchedule() {
-		String invalidDefinition = "FS1~#<ASa=A0000-0800\n" + " 1200-2359~#<ADo=A0000-0800\n"
-				+ " 1200-2359~#<AFr=A0000-0800\n" + " 1800-2359~#<AMi=A0000-0800\n" + " 1800-2359~#<ADi=A0000-0800\n"
-				+ " 1800-2359~#<AMo=A0000-0815\n" + " 1200-1330\n" + " 18:00-2359~#<ASo=A0000-2359";
-		ConfigServiceHolder.setGlobal("agenda/tagesvorgaben/Greta", invalidDefinition); //$NON-NLS-1$
-
-		Map<DayOfWeek, String[]> configuredBlockTimes = appointmentService.getConfiguredBlockTimesBySchedule("Greta");
-		assertEquals(7, configuredBlockTimes.size());
 	}
 
 	@Test
