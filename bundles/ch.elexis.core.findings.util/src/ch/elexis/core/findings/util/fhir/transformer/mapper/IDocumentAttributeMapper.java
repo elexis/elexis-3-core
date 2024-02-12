@@ -39,8 +39,7 @@ public class IDocumentAttributeMapper
 	}
 
 	@Override
-	public void elexisToFhir(IDocument elexis, DocumentReference fhir, SummaryEnum summaryEnum,
-			Set<Include> includes) {
+	public void elexisToFhir(IDocument elexis, DocumentReference fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
 		fhir.setId(new IdDt(DocumentReference.class.getSimpleName(), elexis.getId()));
 		mapMetaData(elexis, fhir);
@@ -97,6 +96,10 @@ public class IDocumentAttributeMapper
 		Optional<IDocumentStore> documentStore = getDocumentStoreWithId(elexis.getStoreId());
 		if (fhir.hasDate()) {
 			elexis.setLastchanged(fhir.getDate());
+		}
+		if (fhir.hasContent() && fhir.getContent().get(0).hasAttachment()
+				&& fhir.getContent().get(0).getAttachment().hasTitle()) {
+			elexis.setTitle(fhir.getContent().get(0).getAttachment().getTitle());
 		}
 		if (fhir.hasContent() && fhir.getContent().get(0).hasAttachment()
 				&& fhir.getContent().get(0).getAttachment().hasCreation()) {
