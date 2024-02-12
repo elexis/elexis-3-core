@@ -71,6 +71,10 @@ public class IDocumentAttributeMapper
 					((IDocumentTemplate) elexis).getTemplateTyp(), StringUtils.EMPTY)));
 		}
 
+		if (StringUtils.isNotBlank(elexis.getKeywords())) {
+			fhir.setDescription(elexis.getKeywords());
+		}
+
 		DocumentReferenceContentComponent content = new DocumentReferenceContentComponent();
 		Attachment attachment = new Attachment();
 		String title = elexis.getTitle();
