@@ -95,6 +95,9 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 	@Column(name = "DOCUMENT_STATUS")
 	protected int status;
 
+	@Column(length = 255)
+	protected String keywords;
+
 	@Override
 	public String getId() {
 		return id;
@@ -243,6 +246,14 @@ public class Brief extends AbstractEntityWithId implements EntityWithId, EntityW
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	public Heap getOrCreateContent() {

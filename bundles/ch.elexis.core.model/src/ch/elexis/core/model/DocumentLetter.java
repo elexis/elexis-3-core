@@ -37,7 +37,6 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 	private ICategory category;
 	private String storeId = StringUtils.EMPTY;
 	private List<IHistory> history;
-	private String keywords;
 
 	public DocumentLetter(Brief entity) {
 		super(entity);
@@ -170,12 +169,12 @@ public class DocumentLetter extends AbstractIdDeleteModelAdapter<Brief>
 
 	@Override
 	public String getKeywords() {
-		return this.keywords;
+		return StringUtils.defaultString(getEntity().getKeywords());
 	}
 
 	@Override
 	public void setKeywords(String value) {
-		this.keywords = value;
+		getEntityMarkDirty().setKeywords(value);
 	}
 
 	@Override

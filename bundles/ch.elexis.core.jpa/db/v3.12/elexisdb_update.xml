@@ -45,4 +45,37 @@
 		</createIndex>
 	</changeSet>
 
+	<changeSet id="manual_update_briefe_keywords" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="BRIEFE" columnName="KEYWORDS" />
+			</not>
+		</preConditions>
+		<addColumn tableName="BRIEFE">
+			<column name="KEYWORDS" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_update_briefe_keywords_from_documentreference">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="ARTIKEL"/>
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE BRIEFE JOIN ch_elexis_core_findings_documentreference ON BRIEFE.ID = ch_elexis_core_findings_documentreference.DOCUMENTID  SET BRIEFE.keywords = CONCAT(COALESCE(BRIEFE.KEYWORDS, ''), COALESCE(ch_elexis_core_findings_documentreference.KEYWORDS, ''));
+]]>
+	    </sql>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_update_ch_elexis_omnivore_data_keywords_from_documentreference">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="ARTIKEL"/>
+		</preConditions>
+		<sql>
+<![CDATA[
+UPDATE ch_elexis_omnivore_data JOIN ch_elexis_core_findings_documentreference ON ch_elexis_omnivore_data.ID = ch_elexis_core_findings_documentreference.DOCUMENTID  SET ch_elexis_omnivore_data.keywords = CONCAT(COALESCE(ch_elexis_omnivore_data.KEYWORDS, ''), COALESCE(ch_elexis_core_findings_documentreference.KEYWORDS, ''));
+]]>
+	    </sql>
+	</changeSet>
+
 </databaseChangeLog>
