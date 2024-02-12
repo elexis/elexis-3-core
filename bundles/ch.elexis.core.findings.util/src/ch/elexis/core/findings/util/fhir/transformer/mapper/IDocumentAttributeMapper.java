@@ -51,6 +51,9 @@ public class IDocumentAttributeMapper
 			return;
 		}
 
+		// we replace all entries in the existing list
+		fhir.getCategory().clear();
+
 		fhir.addCategory(new CodeableConcept(
 				new Coding(CodingSystem.ELEXIS_DOCUMENT_STOREID.getSystem(), elexis.getStoreId(), StringUtils.EMPTY)));
 
