@@ -62,7 +62,8 @@
 		</preConditions>
 		<sql>
 <![CDATA[
-UPDATE BRIEFE JOIN ch_elexis_core_findings_documentreference ON BRIEFE.ID = ch_elexis_core_findings_documentreference.DOCUMENTID  SET BRIEFE.keywords = CONCAT(COALESCE(BRIEFE.KEYWORDS, ''), COALESCE(ch_elexis_core_findings_documentreference.KEYWORDS, ''));
+UPDATE BRIEFE B 
+SET B.keywords = CONCAT(COALESCE(B.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE B.ID = D.DOCUMENTID), ''))
 ]]>
 	    </sql>
 	</changeSet>
@@ -73,7 +74,8 @@ UPDATE BRIEFE JOIN ch_elexis_core_findings_documentreference ON BRIEFE.ID = ch_e
 		</preConditions>
 		<sql>
 <![CDATA[
-UPDATE ch_elexis_omnivore_data JOIN ch_elexis_core_findings_documentreference ON ch_elexis_omnivore_data.ID = ch_elexis_core_findings_documentreference.DOCUMENTID  SET ch_elexis_omnivore_data.keywords = CONCAT(COALESCE(ch_elexis_omnivore_data.KEYWORDS, ''), COALESCE(ch_elexis_core_findings_documentreference.KEYWORDS, ''));
+UPDATE ch_elexis_omnivore_data O 
+SET O.keywords = CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE O.ID = D.DOCUMENTID), ''))
 ]]>
 	    </sql>
 	</changeSet>
