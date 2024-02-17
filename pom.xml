@@ -233,7 +233,6 @@
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<format>yyyyMMdd-HHmm</format>
-					        <forceContextQualifier>20240125-1800</forceContextQualifier> 	
 						<timestampProvider>jgit</timestampProvider>
 						<jgit.ignore>
 							pom.xml
