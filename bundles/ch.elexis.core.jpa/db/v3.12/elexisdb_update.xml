@@ -56,6 +56,26 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="thomas" id="manual_delete_duplicates_documentreference">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="ARTIKEL"/>
+		</preConditions>
+		<sql>
+<![CDATA[
+CREATE TEMPORARY TABLE duplicate_documentreference_id AS
+SELECT d1.ID FROM ch_elexis_core_findings_documentreference d1
+INNER JOIN ch_elexis_core_findings_documentreference d2 
+WHERE 
+    d1.LASTUPDATE < d2.LASTUPDATE AND 
+    d1.DOCUMENTID = d2.DOCUMENTID;
+
+DELETE FROM ch_elexis_core_findings_documentreference WHERE ID IN (SELECT ID FROM duplicate_documentreference_id);
+
+DROP TEMPORARY TABLE duplicate_documentreference_id;
+]]>
+	    </sql>
+	</changeSet>
+
 	<changeSet author="thomas" id="manual_update_briefe_keywords_from_documentreference">
 		<preConditions onFail="MARK_RAN">
 			<tableExists tableName="ARTIKEL"/>
