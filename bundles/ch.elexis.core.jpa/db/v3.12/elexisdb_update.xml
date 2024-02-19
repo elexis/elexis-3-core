@@ -71,7 +71,7 @@ WHERE
 
 DELETE FROM ch_elexis_core_findings_documentreference WHERE ID IN (SELECT ID FROM duplicate_documentreference_id);
 
-DROP TEMPORARY TABLE duplicate_documentreference_id;
+DROP TABLE duplicate_documentreference_id;
 ]]>
 	    </sql>
 	</changeSet>
