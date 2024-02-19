@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,9 +100,10 @@ public class LiquibaseDBInitializer {
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB init.", e); //$NON-NLS-1$
-			if (e instanceof SQLNonTransientConnectionException && updateProgress != null) {
-				updateProgress
-						.requestDatabaseConnectionConfiguration(e.getMessage());
+			String exceptionClassName = e.getClass().getSimpleName().toLowerCase();
+			if ((exceptionClassName.contains("connection") || exceptionClassName.contains("communication"))
+					&& updateProgress != null) {
+				updateProgress.requestDatabaseConnectionConfiguration(e.getMessage());
 			}
 		} finally {
 			try {
