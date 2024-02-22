@@ -41,16 +41,19 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 	}
 
 	private String performVariableReplacement(String uriString) {
-		if (uriString.startsWith("davs") && uriString.contains("{ctx")) {
+		if (uriString.startsWith("davs")) {
 			uriString = uriString.replace("%7B", "{").replace("%7D", "}");
-			AccessToken accessToken = contextService.getTyped(AccessToken.class).orElse(null);
-			if (accessToken != null) {
-				uriString = uriString.replace("{ctx.access-token}", accessToken.getToken())
-						.replace("{ctx.preferred-username}", accessToken.getUsername());
-			} else {
-				LoggerFactory.getLogger(getClass())
-						.warn("No access-token for replacement in url [{}] found, or no davs url", uriString);
+			if (uriString.contains("{ctx")) {
+				AccessToken accessToken = contextService.getTyped(AccessToken.class).orElse(null);
+				if (accessToken != null) {
+					uriString = uriString.replace("{ctx.access-token}", accessToken.getToken())
+							.replace("{ctx.preferred-username}", accessToken.getUsername());
+				} else {
+					LoggerFactory.getLogger(getClass())
+							.warn("No access-token for replacement in url [{}] found, or no davs url", uriString);
+				}
 			}
+
 		}
 		return uriString;
 	}
