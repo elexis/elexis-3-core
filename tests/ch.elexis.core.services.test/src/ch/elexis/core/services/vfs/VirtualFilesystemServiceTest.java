@@ -53,10 +53,15 @@ public class VirtualFilesystemServiceTest {
 		AccessToken accessToken = new AccessToken("token", new Date(), "username");
 		ContextServiceHolder.get().setTyped(accessToken);
 
-		IVirtualFilesystemHandle handle = service
-				.of("davs://{ctx.access-token}@my.nextcloud.ch/cloud/remote.php/dav/");
+		IVirtualFilesystemHandle handle = service.of(
+				"davs://{ctx.access-token}@my.nextcloud.ch/cloud/remote.php/dav/groupfolders/{ctx.preferred-username}/");
 		String string = handle.toURL().toString();
-		assertEquals("davs://token@my.nextcloud.ch/cloud/remote.php/dav/", string);
+		assertEquals("davs://token@my.nextcloud.ch/cloud/remote.php/dav/groupfolders/username/", string);
+
+		handle = service.of(
+				"davs://%7Bctx.access-token%7D@my.nextcloud.ch/cloud/remote.php/dav/groupfolders/%7Bctx.preferred-username%7D/");
+		string = handle.toURL().toString();
+		assertEquals("davs://token@my.nextcloud.ch/cloud/remote.php/dav/groupfolders/username/", string);
 	}
 
 	@Test
