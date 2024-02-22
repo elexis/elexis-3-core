@@ -95,7 +95,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 						.orElse(null);
 				if (eeService != null) {
 					txtHost.setText(eeService.getHostname());
-					txtPath.setText("/cloud/remote.php/dav/files/");
+					txtPath.setText("/cloud/remote.php/dav/groupfolders/{ctx.preferred-username}/");
 					txtUser.setText("{ctx.access-token}");
 					OsgiServiceUtil.ungetService(eeService);
 				}
