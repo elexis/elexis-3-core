@@ -24,11 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
 
@@ -102,9 +102,8 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		if (factory == null) {
 			// try to initialize
 			if (factoryBuilder != null) {
-
 				if (!SKIP_LIQUIBASE) {
-					if (updateProgress != null) {
+					if (updateProgress != null && !isSystemPropertyDBConfig()) {
 						try {
 							updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
 								dbInit(updateProgress);
@@ -155,6 +154,12 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		} else {
 			throw new IllegalStateException("No EntityManagerFactory available"); //$NON-NLS-1$
 		}
+	}
+
+	private boolean isSystemPropertyDBConfig() {
+		String prop_dbUser = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_USERNAME);
+		String prop_dbConnSpec = System.getProperty(ElexisSystemPropertyConstants.CONN_DB_SPEC);
+		return prop_dbUser != null && prop_dbConnSpec != null;
 	}
 
 	private void dbUpdate(IDatabaseUpdateUi updateProgress2) {
