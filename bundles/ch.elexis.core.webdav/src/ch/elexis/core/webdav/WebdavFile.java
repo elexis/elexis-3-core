@@ -75,9 +75,16 @@ public class WebdavFile extends URLConnection {
 		final PipedInputStream in = new PipedInputStream(out);
 		new Thread(() -> {
 			try {
-				webdav.put(url.toString(), in);
+				byte[] allBytes = in.readAllBytes();
+				webdav.put(url.toString(), allBytes);
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).warn("Error writing file [{}]", url.toString(), e);
+			} finally {
+				try {
+					in.close();
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).warn("Error closing PipedInputStream [{}]", url.toString(), e);
+				}
 			}
 		}).start();
 
