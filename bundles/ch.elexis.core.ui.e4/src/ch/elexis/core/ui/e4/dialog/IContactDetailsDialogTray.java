@@ -14,7 +14,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.time.TimeUtil;
 
-public class IContactDetailsDialogTry extends DialogTrayWithSelectionListener {
+public class IContactDetailsDialogTray extends DialogTrayWithSelectionListener {
 
 	private Text txtFamilyName;
 	private Text txtName;
