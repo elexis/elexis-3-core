@@ -28,8 +28,14 @@
 	<changeSet author="thomas"
 		id="manual_update_CH_ELEXIS_MESSAGES_messageCodes_columnname" dbms="postgresql">
 		<preConditions onFail="MARK_RAN">
+			<and>
 			<columnExists tableName="CH_ELEXIS_MESSAGES"
 				columnName="messageCodes" />
+			<not>
+				<columnExists tableName="CH_ELEXIS_MESSAGES"
+					columnName="MESSAGECODES" />
+			</not>
+			</and>
 		</preConditions>
 		<renameColumn tableName="CH_ELEXIS_MESSAGES"
 			oldColumnName="messageCodes" newColumnName="MESSAGECODES" />
