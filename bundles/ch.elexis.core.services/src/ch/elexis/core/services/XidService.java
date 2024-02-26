@@ -182,10 +182,17 @@ public class XidService implements IXidService {
 		if (dom != null) {
 			domainName = dom;
 		}
-		// the type is unknown here
-		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "domainid");
-		List<IXid> xids = query
-				.executeWithParameters(query.getParameterMap("domain", domainName, "domainid", domainId));
+
+		List<IXid> xids;
+		if (Objects.equals(CH_AHV, domainName)) {
+			INamedQuery<IXid> namedQuery = coreModelService.getNamedQuery(IXid.class, "ahvdomainid");
+			xids = namedQuery.executeWithParameters(namedQuery.getParameterMap("ahvdomainid", domainId));
+		} else {
+			// the type is unknown here
+			INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "domainid");
+			xids = query.executeWithParameters(query.getParameterMap("domain", domainName, "domainid", domainId));
+		}
+
 		// filter results, getObject will filter by type
 		List<T> ret = xids.parallelStream().map(iXid -> iXid.getObject(clazz)).filter(Objects::nonNull)
 				.collect(Collectors.toList());
