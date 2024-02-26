@@ -49,7 +49,11 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private List<? extends IContact> initialInput;
 	private String _message;
 	private String _title;
+	private DialogTrayWithSelectionListener dialogTray;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public IContactSelectorDialog(Shell parentShell, IModelService coreModelService) {
 		this(parentShell, coreModelService, IContact.class);
 	}
@@ -59,6 +63,10 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		super(parentShell);
 		this.coreModelService = coreModelService;
 		this.queryClass = queryClass;
+	}
+
+	public void setDialogTray(DialogTrayWithSelectionListener dialogTray) {
+		this.dialogTray = dialogTray;
 	}
 
 	@Override
@@ -71,6 +79,15 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		}
 		super.setMessage(_message);
 		super.setTitle(_title);
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control contents = super.createContents(parent);
+		if (dialogTray != null) {
+			openTray(dialogTray);
+		}
+		return contents;
 	}
 
 	/**
@@ -108,6 +125,9 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		tableViewerContacts.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerContacts.addSelectionChangedListener((e) -> {
 			selectedContact = (IContact) tableViewerContacts.getStructuredSelection().getFirstElement();
+			if (dialogTray != null) {
+				dialogTray.selectionChanged(selectedContact);
+			}
 		});
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerContacts, SWT.NONE);
@@ -178,6 +198,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 							|| StringUtils.containsIgnoreCase(c.getDescription3(), value)));
 				} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(patterns[i])) {
 					TimeTool value = new TimeTool(patterns[i]);
+					@SuppressWarnings("unchecked")
 					List<IPerson> matches = (List<IPerson>) result;
 					matches.removeIf(p -> !(p.getDateOfBirth().toLocalDate().equals(value.toLocalDate())));
 					result = matches;
