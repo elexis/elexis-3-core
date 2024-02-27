@@ -192,4 +192,13 @@ public class IConfigServiceTest extends AbstractServiceTest {
 		fail("could not find trace");
 	}
 
+	@Test
+	public void getSetLocal() {
+		assertEquals("foo", configService.getLocal("localKey", "foo"));
+		configService.setLocal("localKey", "localValue");
+		assertEquals("localValue", configService.getLocal("localKey", "foo"));
+		configService.setLocal("localKey", null);
+		assertEquals("foo", configService.getLocal("localKey", "foo"));
+	}
+
 }

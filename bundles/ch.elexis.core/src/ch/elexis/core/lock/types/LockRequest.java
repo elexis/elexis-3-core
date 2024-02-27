@@ -36,4 +36,9 @@ public class LockRequest {
 		this.lockInfo = lockInfo;
 	}
 
+	@Override
+	public String toString() {
+		return getRequestType() + " " + getLockInfo();
+	}
+
 }

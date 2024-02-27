@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -20,15 +18,12 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Platform;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.Desk;
-import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Config;
 import ch.elexis.core.jpa.entities.Userconfig;
@@ -43,10 +38,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
-import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.rgw.io.Settings;
-import ch.rgw.io.SysSettings;
 import ch.rgw.tools.net.NetTool;
 
 @Component
@@ -63,8 +55,6 @@ public class ConfigService implements IConfigService {
 
 	public static final String LIST_SEPARATOR = ",";
 
-	private Settings localConfig;
-
 	private Map<Object, LocalLock> managedLocks;
 
 	private ExecutorService traceExecutor;
@@ -75,10 +65,6 @@ public class ConfigService implements IConfigService {
 
 			validateConfiguredDatabaseLocale();
 
-			SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
-			cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
-			localConfig = cfg;
-
 			managedLocks = new HashMap<>();
 
 			traceExecutor = Executors.newSingleThreadExecutor();
@@ -87,26 +73,7 @@ public class ConfigService implements IConfigService {
 
 	@Deactivate
 	public void deactivate() {
-		SysSettings localCfg = (SysSettings) localConfig;
-		localCfg.write_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
-
 		traceExecutor.shutdown();
-	}
-
-	private String getLocalConfigFileName() {
-		String[] args = Platform.getApplicationArgs();
-		String config = "default"; //$NON-NLS-1$
-		for (String s : args) {
-			if (s.startsWith("--use-config=")) { //$NON-NLS-1$
-				String[] c = s.split("="); //$NON-NLS-1$
-				config = c[1];
-			}
-		}
-		if (ElexisSystemPropertyConstants.RUN_MODE_FROM_SCRATCH
-				.equals(System.getProperty(ElexisSystemPropertyConstants.RUN_MODE))) {
-			config = UUID.randomUUID().toString();
-		}
-		return "localCfg_" + config + ".xml";
 	}
 
 	/**
@@ -511,13 +478,6 @@ public class ConfigService implements IConfigService {
 	}
 
 	@Override
-	public boolean setLocal(String key, String value) {
-		boolean result = localConfig.set(key, value);
-		localConfig.flush();
-		return result;
-	}
-
-	@Override
 	public String getActiveMandator(String key, String defaultValue, boolean refreshCache) {
 		if (contextService != null) {
 			Optional<IMandator> activeMandator = contextService.getActiveMandator();
@@ -563,41 +523,6 @@ public class ConfigService implements IConfigService {
 					.warn("(getActiveUserContact) IContextService not available, returning defaultValue for [{}]", key);
 		}
 		return defaultValue;
-	}
-
-	@Override
-	public boolean setLocal(String key, boolean value) {
-		boolean result = localConfig.set(key, value);
-		localConfig.flush();
-		return result;
-	}
-
-	@Override
-	public boolean setLocal(String key, int value) {
-		localConfig.set(key, value);
-		localConfig.flush();
-		return true;
-	}
-
-	@Override
-	public String getLocal(String key, String defaultValue) {
-		return localConfig.get(key, defaultValue);
-	}
-
-	@Override
-	public boolean getLocal(String key, boolean defaultValue) {
-		return localConfig.get(key, defaultValue);
-	}
-
-	@Override
-	public int getLocal(String key, int defaultValue) {
-		return localConfig.get(key, defaultValue);
-	}
-
-	@Override
-	public Map<String, String> getLocalAsMap() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

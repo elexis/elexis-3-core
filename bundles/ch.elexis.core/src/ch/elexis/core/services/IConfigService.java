@@ -39,9 +39,10 @@ public interface IConfigService {
 	 *
 	 * @param key   identifying the configuration entry
 	 * @param value to set, <code>null</code> to delete the entry
-	 * @return <code>true</code> if the value was successfully set
 	 */
-	public boolean setLocal(String key, String value);
+	default void setLocal(String key, String value) {
+		LocalConfigService.set(key, value);
+	}
 
 	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save
@@ -58,18 +59,20 @@ public interface IConfigService {
 	 *
 	 * @param key   identifying the configuration entry
 	 * @param value to set
-	 * @return <code>true</code> if the value was successfully set
 	 */
-	public boolean setLocal(String key, boolean value);
+	default void setLocal(String key, boolean value) {
+		LocalConfigService.set(key, value);
+	}
 
 	/**
 	 * Set a local configuration entry. Overwrites existing values.
 	 *
 	 * @param key   identifying the configuration entry
 	 * @param value to set
-	 * @return <code>true</code> if the value was successfully set
 	 */
-	public boolean setLocal(String name, int value);
+	default void setLocal(String name, int value) {
+		LocalConfigService.set(name, value);
+	}
 
 	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save
@@ -245,7 +248,9 @@ public interface IConfigService {
 	 * @param defaultValue to return if configuration entry does not exist
 	 * @return
 	 */
-	public String getLocal(String key, String defaultValue);
+	default String getLocal(String key, String defaultValue) {
+		return LocalConfigService.get(key, defaultValue);
+	}
 
 	/**
 	 * Convenience method wrapping {@link #get(String, String)}
@@ -263,7 +268,9 @@ public interface IConfigService {
 	 * @param defaultValue to return if configuration entry does not exist
 	 * @return
 	 */
-	public boolean getLocal(String key, boolean defaultValue);
+	default boolean getLocal(String key, boolean defaultValue) {
+		return LocalConfigService.get(key, defaultValue);
+	}
 
 	/**
 	 * Convenience method wrapping {@link #getLocal(String, String)}
@@ -272,9 +279,9 @@ public interface IConfigService {
 	 * @param defaultValue to return if configuration entry does not exist
 	 * @return
 	 */
-	public int getLocal(String key, int defaultValue);
-
-	public Map<String, String> getLocalAsMap();
+	default int getLocal(String key, int defaultValue) {
+		return LocalConfigService.get(key, defaultValue);
+	}
 
 	/**
 	 * Get a stored value for the current active {@link IMandator} configuration.
@@ -574,4 +581,15 @@ public interface IConfigService {
 		 */
 		public boolean tryLock();
 	}
+
+	/** methods from ConfigServiceHolder **/
+
+	default String getUser(String key, String defaultValue) {
+		return getActiveUserContact(key, defaultValue);
+	}
+
+	default boolean getUser(String key, boolean defaultValue) {
+		return getActiveUserContact(key, defaultValue);
+	}
+
 }
