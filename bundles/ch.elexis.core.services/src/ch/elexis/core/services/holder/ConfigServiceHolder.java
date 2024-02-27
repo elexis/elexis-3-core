@@ -11,15 +11,16 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.services.IConfigService;
 
-@Component(immediate = true)
+@Component
 public class ConfigServiceHolder {
 
 	private static IConfigService configService;
 
-	@Reference
+	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	public void setModelService(IConfigService configService) {
 		ConfigServiceHolder.configService = configService;
 	}
