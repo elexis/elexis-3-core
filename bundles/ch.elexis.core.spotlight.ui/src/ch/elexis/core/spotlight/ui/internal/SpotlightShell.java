@@ -13,9 +13,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -47,8 +50,9 @@ public class SpotlightShell extends Shell {
 	private SpotlightResultComposite resultComposite;
 	private SpotlightReadyComposite readyComposite;
 	private StackLayout detailCompositeStackLayout;
-
+	private Point origin;
 	private SpotlightUiUtil uiUtil;
+	private String searchText;
 
 	private Object selectedElement;
 
@@ -95,6 +99,26 @@ public class SpotlightShell extends Shell {
 
 		setSize(700, 500);
 		createContents();
+		// Maus-Listener für Verschiebbarkeit
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				origin = new Point(e.x, e.y);
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				origin = null;
+			}
+		});
+
+		addMouseMoveListener(e -> {
+			if (origin != null) {
+				Point p = toDisplay(e.x, e.y);
+				setLocation(p.x - origin.x, p.y - origin.y);
+			}
+		});
+
 	}
 
 	private final String SEARCH_ICON = "spotlight-search-icon";
@@ -189,7 +213,10 @@ public class SpotlightShell extends Shell {
 			}
 
 		});
-
+		txtSearchInput.addModifyListener(change -> {
+			String newText = ((Text) change.widget).getText();
+			setSearchText(newText); // Aktualisiere den Suchtext über den Setter
+		});
 		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
@@ -252,4 +279,12 @@ public class SpotlightShell extends Shell {
 		return uiUtil.handleEnter(selectedElement);
 	}
 
+	public String getSearchText() {
+		return searchText;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+
+	}
 }
