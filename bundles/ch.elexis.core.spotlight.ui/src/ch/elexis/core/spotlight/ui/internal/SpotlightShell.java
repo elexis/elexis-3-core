@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.controls.SpotlightResultComposite;
 import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyComposite;
@@ -139,6 +140,7 @@ public class SpotlightShell extends Shell {
 
 		txtSearchInput = new Text(this, SWT.None);
 		txtSearchInput.setBackground(this.getBackground());
+		txtSearchInput.setToolTipText(Messages.SpotlightSerchHelText);
 		Font biggerFont;
 		if (JFaceResources.getFontRegistry().hasValueFor(SEARCHTEXT_FONT)) {
 			biggerFont = JFaceResources.getFontRegistry().get(SEARCHTEXT_FONT);
