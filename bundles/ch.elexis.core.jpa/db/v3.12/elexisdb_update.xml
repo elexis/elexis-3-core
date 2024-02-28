@@ -138,7 +138,7 @@ SET O.keywords = CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM
 		<sql>
 <![CDATA[
 UPDATE ch_elexis_omnivore_data
-SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference D, ch_elexis_omnivore_data AS O WHERE O.ID = D.DOCUMENTID), ''))
+SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference AS D, ch_elexis_omnivore_data AS O WHERE O.ID = D.DOCUMENTID LIMIT 1), ''))
 ]]>
 	    </sql>
 	</changeSet>
