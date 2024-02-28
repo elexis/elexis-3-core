@@ -102,6 +102,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.DocumentStatus;
@@ -631,7 +632,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 				if (cmd != null) {
 					Object createdAuf = handlerService.executeHandler(cmd);
 					if (createdAuf instanceof ISickCertificate) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+						ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 								createdAuf);
 						// print
 						cmd = commandService.createCommand("ch.elexis.core.ui.commands.AufPrint", null); //$NON-NLS-1$

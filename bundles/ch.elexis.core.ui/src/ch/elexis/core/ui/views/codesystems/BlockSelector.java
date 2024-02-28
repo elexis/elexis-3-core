@@ -57,6 +57,7 @@ import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.builder.ICodeElementBlockBuilder;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
@@ -102,7 +103,7 @@ public class BlockSelector extends CodeSelectorFactory {
 			}
 			tvfa.updateSelection((Identifiable) selected);
 			if (selected != null) {
-				ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, selected);
+				ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK, selected);
 			}
 		}
 	};

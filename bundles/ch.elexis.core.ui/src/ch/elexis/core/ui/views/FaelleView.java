@@ -51,6 +51,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
@@ -199,7 +200,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 					if (!selection.isEmpty()) {
 						ICoverage selectedCoverage = (ICoverage) ((StructuredSelection) selection).getFirstElement();
 						if (selectedCoverage != null && !selectedCoverage.equals(actCoverage)) {
-							ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 									selectedCoverage);
 						}
 					}

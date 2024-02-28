@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 
 public class MedicationTableComposite extends Composite {
@@ -63,7 +64,7 @@ public class MedicationTableComposite extends Composite {
 				medicationComposite.setSelectedMedication(presc);
 				if (presc != null) {
 					IPrescription selectedObj = presc.getPrescription();
-					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+					ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 							selectedObj);
 				} else {
 					ContextServiceHolder.get().getRootContext().removeTyped(IPrescription.class);

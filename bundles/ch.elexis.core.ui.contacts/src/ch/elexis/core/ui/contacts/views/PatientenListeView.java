@@ -554,7 +554,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
 				if (element instanceof IPatient) {
-					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+					ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 							(IPatient) element);
 				}
 			}

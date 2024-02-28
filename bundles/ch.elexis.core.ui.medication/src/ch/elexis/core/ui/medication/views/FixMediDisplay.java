@@ -46,6 +46,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
@@ -211,7 +212,7 @@ public class FixMediDisplay extends ListDisplay<IPrescription> {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+				ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 						(getSelection()));
 			}
 		});

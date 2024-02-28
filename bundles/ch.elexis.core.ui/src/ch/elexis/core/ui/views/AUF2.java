@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -167,7 +168,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof ISickCertificate) {
 					ContextServiceHolder.get().getRootContext()
-							.setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							.setNamed(IContextService.SELECTIONFALLBACK,
 									event.getStructuredSelection().getFirstElement());
 				}
 			}
@@ -224,7 +225,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 				try {
 					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
 					if (createdAuf instanceof ISickCertificate) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+						ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 								createdAuf);
 					}
 					refresh();

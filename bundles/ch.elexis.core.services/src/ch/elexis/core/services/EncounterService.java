@@ -125,9 +125,9 @@ public class EncounterService implements IEncounterService {
 		coreModelService.save(encounter);
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 		fallBackConsumer = ContextServiceHolder.get().getRootContext()
-				.getNamed(ContextServiceHolder.SELECTIONFALLBACK);
+				.getNamed(IContextService.SELECTIONFALLBACK);
 		if (fallBackConsumer.isPresent() && fallBackConsumer.get() instanceof Consumer) {
-			ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, coverage);
+			ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK, coverage);
 		} else {
 			ContextServiceHolder.get().setActiveCoverage(coverage);
 		}

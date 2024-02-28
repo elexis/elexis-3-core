@@ -97,6 +97,7 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -286,7 +287,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = viewer.getStructuredSelection();
 				if (selection != null && !selection.isEmpty() && (selection.getFirstElement() instanceof IBilled)) {
-					ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+					ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 							selection.getFirstElement());
 				}
 			}

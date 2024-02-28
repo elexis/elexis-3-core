@@ -79,6 +79,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
 import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -217,7 +218,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getStructuredSelection().getFirstElement() instanceof IRecipe) {
 					ContextServiceHolder.get().getRootContext()
-							.setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+							.setNamed(IContextService.SELECTIONFALLBACK,
 									event.getStructuredSelection().getFirstElement());
 				}
 			}

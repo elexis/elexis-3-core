@@ -12,6 +12,8 @@ import ch.elexis.core.model.IUser;
 
 public interface IContextService {
 
+	public static String SELECTIONFALLBACK = "elexiseventdispatcher.selection.fallback"; //$NON-NLS-1$
+
 	/**
 	 * Get the root context of the service.
 	 *

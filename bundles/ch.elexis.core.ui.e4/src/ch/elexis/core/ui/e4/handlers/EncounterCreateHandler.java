@@ -100,7 +100,7 @@ public class EncounterCreateHandler extends RestrictedHandler {
 
 		IEncounter enounter = new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, mandator).buildAndSave();
 		encounterService.addDefaultDiagnosis(enounter);
-		contextService.getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK, enounter);
+		contextService.getRootContext().setNamed(IContextService.SELECTIONFALLBACK, enounter);
 	}
 
 }

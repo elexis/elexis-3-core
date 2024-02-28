@@ -43,6 +43,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IContext;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -402,7 +403,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				} else {
 					// fallback to ElexisEventDispatcher
 					if (sel[0] instanceof Identifiable) {
-						ContextServiceHolder.get().getRootContext().setNamed(ContextServiceHolder.SELECTIONFALLBACK,
+						ContextServiceHolder.get().getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 								sel[0]);
 					} else {
 						ContextServiceHolder.get().getRootContext().setTyped(sel[0]);

@@ -478,7 +478,7 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	public void registerFallbackConsumer(IContextService contextService) {
-		contextService.getRootContext().setNamed(ch.elexis.core.services.holder.ContextServiceHolder.SELECTIONFALLBACK,
+		contextService.getRootContext().setNamed(IContextService.SELECTIONFALLBACK,
 				new Consumer<Identifiable>() { // $NON-NLS-1$
 
 					@Override
