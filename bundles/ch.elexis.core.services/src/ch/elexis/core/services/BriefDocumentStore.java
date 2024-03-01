@@ -164,6 +164,11 @@ public class BriefDocumentStore implements IDocumentStore {
 	}
 
 	@Override
+	public void removeCategory(ICategory category, ICategory newCategory) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void renameCategory(ICategory category, String newCategory) {
 		throw new UnsupportedOperationException();
 	}

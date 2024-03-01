@@ -126,6 +126,17 @@ public interface IDocumentStore {
 	public ICategory getCategoryDefault();
 
 	/**
+	 * Returns an existing category by its name
+	 * 
+	 * @param name
+	 * @return
+	 * @since 3.12
+	 */
+	default Optional<ICategory> getCategoryByName(String name) {
+		return getCategories().stream().filter(c -> name.equalsIgnoreCase(c.getName())).findFirst();
+	}
+
+	/**
 	 * Creates or returns an existing {@link ICategory} with the provided name from
 	 * the store.
 	 *
@@ -151,6 +162,17 @@ public interface IDocumentStore {
 	 * @param newCategory
 	 */
 	public void renameCategory(ICategory category, String newCategory);
+
+	/**
+	 * Remove the {@link ICategory} from the store. If there are any
+	 * {@link IDocument} referencing the provided category, move them to newCategory
+	 * 
+	 * @param category
+	 * @param newCategory to move to, or default category if <code>null</code>
+	 * @return
+	 * @since 3.12
+	 */
+	void removeCategory(ICategory category, @Nullable ICategory newCategory);
 
 	public default boolean isAllowed(Capability restricted) {
 		return true;

@@ -455,5 +455,9 @@ public class DocumentStore {
 		public List<IDocumentTemplate> getDocumentTemplates(boolean includeSystem) {
 			return Collections.emptyList();
 		}
+
+		@Override
+		public void removeCategory(ICategory category, ICategory newCategory) {
+		}
 	}
 }
