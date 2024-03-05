@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.data.DBConnection;
-import ch.rgw.tools.StringTool;
 
 /**
  * Move to ch.elexis.core
@@ -62,29 +61,10 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 					Long.toString(Timestamp.valueOf(LocalDateTime.now()).toInstant().toEpochMilli()));
 		}
 
-		// Texterstellung
-		if (System.getProperty("os.name").toLowerCase().startsWith("win")) { //$NON-NLS-1$ //$NON-NLS-2$
-			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-					|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, StringUtils.EMPTY).equals(StringTool.leer)) {
-				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "NOA-Text"); //$NON-NLS-1$
-			}
-		} else {
-			if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null
-					|| CoreHub.localCfg.get(Preferences.P_TEXTMODUL, StringUtils.EMPTY).equals(StringTool.leer)) {
-				CoreHub.localCfg.set(Preferences.P_TEXTMODUL, "OpenOffice Wrapper");
-			}
+		// default text module
+		if (CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null) == null) {
+			CoreHub.localCfg.set(Preferences.P_TEXTMODUL, Preferences.P_TEXTMODUL_DEFAULT); // $NON-NLS-1$
 		}
-		File elexisbase = new File(CoreHub.getBasePath());
-		File fDef = new File(elexisbase.getParentFile().getParent() + "/ooo"); //$NON-NLS-1$
-		String defaultbase;
-		if (fDef.exists()) {
-			defaultbase = fDef.getAbsolutePath();
-		} else {
-			defaultbase = CoreHub.localCfg.get(Preferences.P_OOBASEDIR, "."); //$NON-NLS-1$
-		}
-		System.setProperty("openoffice.path.name", defaultbase); //$NON-NLS-1$
-		CoreHub.localCfg.set(Preferences.P_OOBASEDIR + SETTINGS_PREFERENCE_STORE_DEFAULT, defaultbase);
-		CoreHub.localCfg.set(Preferences.P_OOBASEDIR, defaultbase);
 
 		CoreHub.localCfg.flush();
 	}

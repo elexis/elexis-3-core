@@ -95,9 +95,9 @@ public class Preferences {
 
 	// Texterstellung
 	public static final String P_TEXTMODUL = "briefe/Textmodul"; //$NON-NLS-1$
+	public static final String P_TEXTMODUL_DEFAULT = "Docx-Document"; //$NON-NLS-1$
 	public static final String P_TEXT_SUPPORT_LEGACY = "briefe/Textmodul_Support_Legacy"; //$NON-NLS-1$
 	public static final String P_TEXT_RENAME_WITH_F2 = "briefe/rename_with_f2"; //$NON-NLS-1$
-	public final static String P_OOBASEDIR = "briefe/OOBasis"; //$NON-NLS-1$
 	public static final String P_TEXT_EDIT_LOCAL = "briefe/Textmodul_Edit_Local"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE = "briefe/Textmodul_Extern_File"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE_PATH = "briefe/Textmodul_Extern_File_Path"; //$NON-NLS-1$
