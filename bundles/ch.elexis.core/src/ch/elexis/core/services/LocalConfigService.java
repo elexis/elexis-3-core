@@ -1,19 +1,25 @@
 package ch.elexis.core.services;
 
+import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Hashtable;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.Settings;
 import ch.rgw.io.SysSettings;
@@ -34,6 +40,7 @@ public class LocalConfigService {
 		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
 		localConfig = cfg;
+		initializeDefaultPreferences();
 	}
 
 	private static String getLocalConfigFileName() {
@@ -50,6 +57,14 @@ public class LocalConfigService {
 			config = UUID.randomUUID().toString();
 		}
 		return "localCfg_" + config + ".xml";
+	}
+
+	public static void clear() {
+		localConfig.clear();
+	}
+
+	public static void flush() {
+		localConfig.flush();
 	}
 
 	public static String get(String key, String defaultValue) {
@@ -93,7 +108,49 @@ public class LocalConfigService {
 
 	private static synchronized void persist() {
 		SysSettings localCfg = (SysSettings) localConfig;
-		localCfg.write_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
+		String xmlFileName = CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName();
+		localCfg.write_xml(xmlFileName);
+		LoggerFactory.getLogger(LocalConfigService.class).info("LocalConfig persisted to [{}]", xmlFileName);
+	}
+
+	private static void initializeDefaultPreferences() {
+
+		// default database
+		localConfig.set(Preferences.DB_NAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "h2");
+		String base = CoreUtil.getDefaultDBPath();
+
+		localConfig.set(Preferences.DB_CONNECT + SETTINGS_PREFERENCE_STORE_DEFAULT,
+				"jdbc:h2:" + base + "/db;MODE=MySQL"); //$NON-NLS-1$ //$NON-NLS-2$
+		localConfig.set(Preferences.DB_USERNAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "sa"); //$NON-NLS-1$
+		localConfig.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, StringUtils.EMPTY);
+		localConfig.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
+
+		// create default elexis homedir
+		File userhome = new File(System.getProperty("user.home") + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!userhome.exists()) {
+			userhome.mkdirs();
+		}
+
+		localConfig.set(Preferences.ABL_LOGALERT + SETTINGS_PREFERENCE_STORE_DEFAULT, 1);
+		localConfig.set(Preferences.ABL_LOGLEVEL + SETTINGS_PREFERENCE_STORE_DEFAULT, 2);
+		localConfig.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT, userhome.getAbsolutePath());
+		localConfig.set(Preferences.ABL_CACHELIFETIME + SETTINGS_PREFERENCE_STORE_DEFAULT, 15);
+		localConfig.set(Preferences.ABL_HEARTRATE + SETTINGS_PREFERENCE_STORE_DEFAULT, 30);
+		localConfig.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT, userhome.getAbsolutePath());
+
+		String string = get(Preferences.STATION_IDENT_ID, null);
+		if (string == null) {
+			localConfig.set(Preferences.STATION_IDENT_ID,
+					Long.toString(Timestamp.valueOf(LocalDateTime.now()).toInstant().toEpochMilli()));
+		}
+
+		// default text module
+		if (get(Preferences.P_TEXTMODUL, null) == null) {
+			localConfig.set(Preferences.P_TEXTMODUL, Preferences.P_TEXTMODUL_DEFAULT);
+		}
+
+		localConfig.flush();
+		persist();
 	}
 
 	/**

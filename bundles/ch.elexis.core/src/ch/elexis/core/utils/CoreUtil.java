@@ -275,6 +275,15 @@ public class CoreUtil {
 		return getWritableUserDir();
 	}
 
+	public static String getDefaultDBPath() {
+		String base = System.getProperty("user.home") + "/elexisdata";
+		File f = new File(base);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		return base;
+	}
+
 	/**
 	 * @return the operating system type as integer. See {@link #MAC},
 	 *         {@link #LINUX}, {@link #WINDOWS} or {@link #UNSPECIFIED}

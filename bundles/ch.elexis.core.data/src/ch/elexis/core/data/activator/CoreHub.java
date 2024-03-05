@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2022 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2015-2024 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,6 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
-import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -50,6 +49,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -105,14 +105,16 @@ public class CoreHub implements BundleActivator {
 	 *
 	 * @deprecated use {@link IConfigService}
 	 */
+	@Deprecated
 	public static Settings globalCfg;
 
 	/**
 	 * Lokale Einstellungen (Werden in userhome/localCfg_xxx.xml gespeichert) </br>
 	 * <b>WARNING: can not handle more than one / in config name!</b>
 	 *
-	 * @deprecated use {@link IConfigService}
+	 * @deprecated use {@link LocalConfigService}
 	 */
+	@Deprecated
 	public static Settings localCfg;
 
 	/**
@@ -121,9 +123,6 @@ public class CoreHub implements BundleActivator {
 	 */
 	@Deprecated(forRemoval = true)
 	public static Mandant actMandant;
-
-	/** Der Initialisierer für die Voreinstellungen */
-	public static final CorePreferenceInitializer pin = new CorePreferenceInitializer();
 
 	/**
 	 * Returns the actual contact of the logged in User. Use it only for PO
@@ -240,13 +239,13 @@ public class CoreHub implements BundleActivator {
 		loadLocalCfg(config);
 
 		int instanceNo = initializeLock();
-		stationIdentifier = CoreHub.localCfg.get(Preferences.STATION_IDENT_ID, "notset_" + System.currentTimeMillis());
+		stationIdentifier = LocalConfigService.get(Preferences.STATION_IDENT_ID,
+				"notset_" + System.currentTimeMillis());
 		if (instanceNo > 0) {
 			stationIdentifier += "$" + instanceNo;
 		}
 
 		log.info("Basepath: " + getBasePath());
-		pin.initializeDefaultPreferences();
 
 		heart = Heartbeat.getInstance();
 
@@ -345,6 +344,7 @@ public class CoreHub implements BundleActivator {
 	 * @deprecated set the active {@link IMandator} using the
 	 *             {@link IContextService} impl.
 	 */
+	@Deprecated
 	public static void setMandant(Mandant newMandant) {
 		actMandant = newMandant;
 

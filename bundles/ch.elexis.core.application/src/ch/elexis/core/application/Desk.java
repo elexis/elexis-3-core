@@ -29,12 +29,12 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
-import ch.elexis.core.data.preferences.CorePreferenceInitializer;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.status.StatusUtil;
 import ch.elexis.core.ui.UiDesk;
@@ -96,10 +96,10 @@ public class Desk implements IApplication {
 		@SuppressWarnings("unchecked")
 		Map<String, String> args = context.getArguments();
 		if (args.containsKey("--clean-all")) { //$NON-NLS-1$
-			String p = CorePreferenceInitializer.getDefaultDBPath();
+			String p = CoreUtil.getDefaultDBPath();
 			FileTool.deltree(p);
-			CoreHub.localCfg.clear();
-			CoreHub.localCfg.flush();
+			LocalConfigService.clear();
+			LocalConfigService.flush();
 		}
 
 		// make sure identifiers are initialized
@@ -127,7 +127,7 @@ public class Desk implements IApplication {
 			int returnCode = PlatformUI.createAndRunWorkbench(UiDesk.getDisplay(), new ApplicationWorkbenchAdvisor());
 			// Die Funktion kehrt erst beim Programmende zurück.
 			CoreHub.heart.suspend();
-			CoreHub.localCfg.flush();
+			LocalConfigService.flush();
 			if (CoreHub.globalCfg != null) {
 				CoreHub.globalCfg.flush();
 			}

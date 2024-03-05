@@ -59,10 +59,4 @@
            type="ch.elexis.data.Fall">
      </TextPlaceHolder>
   </extension>
-  <extension
-        point="org.eclipse.core.runtime.preferences">
-     <initializer
-           class="ch.elexis.core.data.preferences.CorePreferenceInitializer">
-     </initializer>
-  </extension>
 </plugin>
