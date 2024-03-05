@@ -12,7 +12,6 @@
 package ch.elexis.core.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
@@ -22,7 +21,6 @@ import org.eclipse.swt.widgets.Display;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 
 /**
  * Vorgabewerte setzen, wo nötig. Bitte in den drei Funktionen dieser Klasse
@@ -54,17 +52,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		FontData[] small = new FontData[] { new FontData("Helvetica", 7, SWT.NORMAL) }; //$NON-NLS-1$
 		ConfigServiceHolder.setUser(Preferences.USR_SMALLFONT + "_default", //$NON-NLS-1$
 				PreferenceConverter.getStoredRepresentation(small));
-	}
-
-	/**
-	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
-	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
-	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
-	 *
-	 */
-	public void initializeGlobalPreferences() {
-		IPreferenceStore global = new ConfigServicePreferenceStore(Scope.GLOBAL);
-		global.setDefault(Preferences.ABL_TRACE, "none"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -81,7 +81,7 @@ public class Preferences {
 	public static final String ABL_LOGFILE = "ablauf/Log-Datei"; //$NON-NLS-1$
 	public static final String ABL_LOGLEVEL = "ablauf/LogLevel"; //$NON-NLS-1$
 	public static final String ABL_LOGALERT = "ablauf/LogAlertLevel"; //$NON-NLS-1$
-	public static final String ABL_TRACE = "ablauf/Trace"; //$NON-NLS-1$
+
 	public static final String ABL_BASEPATH = "ablauf/basepath"; //$NON-NLS-1$
 	public static final String ABL_CACHELIFETIME = "ablauf/cachelifetime"; //$NON-NLS-1$
 	public static final String ABL_UPDATESITE = "ablauf/updatesite"; //$NON-NLS-1$

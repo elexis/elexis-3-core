@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.services.IConfigService;
 import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
 
@@ -51,7 +50,6 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 
 		CoreHub.localCfg.set(Preferences.ABL_LOGALERT + SETTINGS_PREFERENCE_STORE_DEFAULT, 1);
 		CoreHub.localCfg.set(Preferences.ABL_LOGLEVEL + SETTINGS_PREFERENCE_STORE_DEFAULT, 2);
-		CoreHub.localCfg.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none"); //$NON-NLS-1$
 		CoreHub.localCfg.set(Preferences.ABL_BASEPATH + SETTINGS_PREFERENCE_STORE_DEFAULT, userhome.getAbsolutePath());
 		CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME + SETTINGS_PREFERENCE_STORE_DEFAULT,
 				DBConnection.CACHE_DEFAULT_LIFETIME);
@@ -89,18 +87,6 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.P_OOBASEDIR, defaultbase);
 
 		CoreHub.localCfg.flush();
-	}
-
-	/**
-	 * Diese Funktion wird nach erstem Erstellen der Datenbank (d.h. nur ein
-	 * einziges Mal) aufgerufen und belegt globale Voreinstellungen. Hier alle im
-	 * ganzen Netzwerk und für alle Benutzer gültigen Voreinstellungen eintragen
-	 *
-	 * @param configService
-	 *
-	 */
-	public void initializeGlobalPreferences(IConfigService configService) {
-		configService.set(Preferences.ABL_TRACE + SETTINGS_PREFERENCE_STORE_DEFAULT, "none");
 	}
 
 	public static String getDefaultDBPath() {
