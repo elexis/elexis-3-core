@@ -118,9 +118,6 @@ public class Preferences {
 	@Deprecated
 	public static final String ACC_SHOWVIEW = "showViewAction"; //$NON-NLS-1$
 
-	// Briefe
-	public static final String DOC_CATEGORY = "dokumente/kategorien"; //$NON-NLS-1$
-
 	// Sidebar/Perspektivenauswahl
 	public final static String SIDEBAR = "sidebar/pages"; //$NON-NLS-1$
 	public static final String SHOWSIDEBAR = "sidebar/show"; //$NON-NLS-1$

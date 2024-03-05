@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.services.IConfigService;
-import ch.elexis.data.Brief;
 import ch.elexis.data.DBConnection;
 import ch.rgw.tools.StringTool;
 
@@ -89,12 +88,6 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.P_OOBASEDIR + SETTINGS_PREFERENCE_STORE_DEFAULT, defaultbase);
 		CoreHub.localCfg.set(Preferences.P_OOBASEDIR, defaultbase);
 
-		// Dokument
-		StringBuilder sb = new StringBuilder();
-		sb.append("Alle,").append(Brief.UNKNOWN).append(",").append(Brief.AUZ).append(",") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.append(Brief.RP).append(",").append(Brief.LABOR); //$NON-NLS-1$
-
-		CoreHub.localCfg.set(Preferences.DOC_CATEGORY + SETTINGS_PREFERENCE_STORE_DEFAULT, sb.toString());
 		CoreHub.localCfg.flush();
 	}
 

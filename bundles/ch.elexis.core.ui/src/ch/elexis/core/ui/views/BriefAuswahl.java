@@ -71,17 +71,18 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.BriefConstants;
+import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.BriefDocumentStoreHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -177,10 +178,13 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.BriefAuswahlAllLetters).append(Brief.UNKNOWN).append(",") //$NON-NLS-1$
-				.append(Brief.AUZ).append(",").append(Brief.RP).append(",").append(Brief.LABOR); //$NON-NLS-1$ //$NON-NLS-2$
-		String cats = ConfigServiceHolder.getGlobal(Preferences.DOC_CATEGORY, sb.toString());
+		List<String> _categories = BriefDocumentStoreHolder.get().getCategories().stream().map(ICategory::getName)
+				.filter(c -> !BriefConstants.TEMPLATE.equalsIgnoreCase(c)).toList();
+
+		List<String> categories = new ArrayList<>();
+		categories.add(Messages.BriefAuswahlAllLetters);
+		categories.addAll(_categories);
+
 		parent.setLayout(new GridLayout());
 
 		form = tk.createForm(parent);
@@ -203,12 +207,12 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		makeActions();
 		menus = new ViewMenus(getViewSite());
 
-		for (String cat : cats.split(",")) { //$NON-NLS-1$
+		for (String cat : categories) { // $NON-NLS-1$
 			CTabItem ct = new CTabItem(ctab, SWT.NONE);
 			ct.setText(cat);
 			sPage page = new sPage(ctab, cat);
 			pages.add(page);
-			if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+			if (LocalConfigService.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
 				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction,
 						startLocalEditAction, endLocalEditAction, cancelLocalEditAction);
 			} else {
@@ -339,7 +343,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			createColumns();
 			comparator = new LetterViewerComparator();
 			tableViewer.setComparator(comparator);
-			if (CoreHub.localCfg.get(Preferences.P_TEXT_RENAME_WITH_F2, false)) {
+			if (LocalConfigService.get(Preferences.P_TEXT_RENAME_WITH_F2, false)) {
 				tableViewer.getTable().addKeyListener(new KeyListener() {
 					@Override
 					public void keyPressed(KeyEvent e) {
@@ -484,8 +488,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 		briefNeuAction = new Action(Messages.Core_New_ellipsis) { // $NON-NLS-1$
 			@Override
 			public void run() {
-				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
-						.getService(IHandlerService.class);
+				IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
 					handlerService.executeCommand(BriefNewHandler.CMD_ID, null);
 				} catch (Exception e) {
@@ -500,7 +503,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				try {
 					Brief brief = getSelectedBrief();
 					if (brief != null) {
-						if (CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
+						if (LocalConfigService.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
 							startLocalEditAction.run();
 						} else {
 							TextView tv = (TextView) getViewSite().getPage().showView(TextView.ID);
@@ -589,8 +592,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			public void run() {
 				IDocumentLetter brief = getSelected();
 				if (brief != null) {
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
+					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)
 							.set(command.getId().concat(".selection"), new StructuredSelection(brief)); //$NON-NLS-1$
@@ -619,8 +621,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			public void run() {
 				IDocumentLetter brief = getSelected();
 				if (brief != null) {
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
+					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)
@@ -650,8 +651,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			public void run() {
 				IDocumentLetter brief = getSelected();
 				if (brief != null) {
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
-							.getService(ICommandService.class);
+					ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 					Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 
 					PlatformUI.getWorkbench().getService(IEclipseContext.class)

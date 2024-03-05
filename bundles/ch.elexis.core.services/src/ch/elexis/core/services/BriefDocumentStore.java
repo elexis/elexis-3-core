@@ -72,13 +72,13 @@ public class BriefDocumentStore implements IDocumentStore {
 	@Override
 	public List<ICategory> getCategories() {
 		List<ICategory> categories = new ArrayList<>();
-		categories.add(new CategoryDocumentDTO(BriefConstants.TEMPLATE));
+		categories.add(new CategoryDocumentDTO(BriefConstants.UNKNOWN));
 		categories.add(new CategoryDocumentDTO(BriefConstants.AUZ));
 		categories.add(new CategoryDocumentDTO(BriefConstants.RP));
-		categories.add(new CategoryDocumentDTO(BriefConstants.UNKNOWN));
 		categories.add(new CategoryDocumentDTO(BriefConstants.LABOR));
 		categories.add(new CategoryDocumentDTO(BriefConstants.BESTELLUNG));
 		categories.add(new CategoryDocumentDTO(BriefConstants.RECHNUNG));
+		categories.add(new CategoryDocumentDTO(BriefConstants.TEMPLATE));
 		return categories;
 	}
 
