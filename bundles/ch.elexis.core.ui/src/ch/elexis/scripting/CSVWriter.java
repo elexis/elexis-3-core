@@ -66,7 +66,7 @@ public class CSVWriter {
 	public static final char ESCAPE_CHARACTER = '"';
 
 	/** The default separator to use if none is supplied to the constructor. */
-	public static final char DEFAULT_SEPARATOR = ',';
+	public static final char DEFAULT_SEPARATOR = ';';
 
 	/**
 	 * The default quote character to use if none is supplied to the constructor.
@@ -82,6 +82,8 @@ public class CSVWriter {
 	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"); //$NON-NLS-1$
 
 	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy"); //$NON-NLS-1$
+
+	public static final String DEFAULT_ESCAPE_CHARACTER = null;
 
 	/**
 	 * Constructs CSVWriter using a comma for the separator.
@@ -292,7 +294,7 @@ public class CSVWriter {
 	public void writeNext(String[] nextLine) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < nextLine.length; i++) {
-
+			
 			if (i != 0) {
 				sb.append(separator);
 			}
@@ -300,25 +302,38 @@ public class CSVWriter {
 			String nextElement = nextLine[i];
 			if (nextElement == null)
 				continue;
+			nextElement = formatElement(nextElement);
+
 			if (quotechar != NO_QUOTE_CHARACTER)
 				sb.append(quotechar);
-			for (int j = 0; j < nextElement.length(); j++) {
-				char nextChar = nextElement.charAt(j);
-				if (nextChar == quotechar) {
-					sb.append(ESCAPE_CHARACTER).append(nextChar);
-				} else if (nextChar == ESCAPE_CHARACTER) {
-					sb.append(ESCAPE_CHARACTER).append(nextChar);
-				} else {
-					sb.append(nextChar);
-				}
-			}
+
+			sb.append(escapeSpecialCharacters(nextElement));
+
 			if (quotechar != NO_QUOTE_CHARACTER)
 				sb.append(quotechar);
 		}
 
 		sb.append(lineEnd);
 		pw.write(sb.toString());
+	}
 
+	private String formatElement(String element) {
+		return element;
+	}
+
+	private String escapeSpecialCharacters(String text) {
+		StringBuilder escapedText = new StringBuilder();
+		for (int i = 0; i < text.length(); i++) {
+			char nextChar = text.charAt(i);
+			if (nextChar == quotechar) {
+				escapedText.append(ESCAPE_CHARACTER).append(nextChar);
+			} else if (nextChar == ESCAPE_CHARACTER) {
+				escapedText.append(ESCAPE_CHARACTER).append(nextChar);
+			} else {
+				escapedText.append(nextChar);
+			}
+		}
+		return escapedText.toString();
 	}
 
 	/**

@@ -12,8 +12,9 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -726,7 +727,7 @@ public class RnDialogs {
 			CSVWriter csv = null;
 			int nrLines = 0;
 			try {
-				csv = new CSVWriter(new FileWriter(pathToSave));
+				csv = new CSVWriter(new OutputStreamWriter(new FileOutputStream(pathToSave), "ISO-8859-1"));
 				// @formatter:off
 					String[] header = new String[] {
 						"Aktion?", // line 0 //$NON-NLS-1$
