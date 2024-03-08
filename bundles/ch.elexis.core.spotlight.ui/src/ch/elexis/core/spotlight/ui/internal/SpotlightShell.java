@@ -1,5 +1,6 @@
 package ch.elexis.core.spotlight.ui.internal;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Timer;
@@ -19,6 +20,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,7 +29,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IDocument;
+import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPart;
+import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.controls.SpotlightResultComposite;
 import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyComposite;
@@ -37,6 +44,7 @@ import ch.elexis.core.ui.icons.Images;
 
 public class SpotlightShell extends Shell {
 
+	private static boolean ispdfPreviewComp = false;
 	private EPartService partService;
 	private ISpotlightService spotlightService;
 	private ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService;
@@ -50,11 +58,14 @@ public class SpotlightShell extends Shell {
 	private SpotlightResultComposite resultComposite;
 	private SpotlightReadyComposite readyComposite;
 	private StackLayout detailCompositeStackLayout;
-	private Point origin;
 	private SpotlightUiUtil uiUtil;
 	private String searchText;
-
 	private Object selectedElement;
+	private PdfPreviewPart pdfPreviewPart;
+	private Composite pdfPreviewComposite;
+	private GridData layeredCompositeGridData;
+	private Point origin;
+	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
 
 	public SpotlightShell(Shell shell, EPartService partService, ISpotlightService spotlightService,
 			ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
@@ -97,9 +108,9 @@ public class SpotlightShell extends Shell {
 		uiUtil = new SpotlightUiUtil(partService);
 		CoreUiUtil.injectServicesWithContext(uiUtil);
 
-		setSize(700, 500);
+		setSize(800, 500);
 		createContents();
-		// Maus-Listener für Verschiebbarkeit
+
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -118,7 +129,15 @@ public class SpotlightShell extends Shell {
 				setLocation(p.x - origin.x, p.y - origin.y);
 			}
 		});
-
+		addListener(SWT.Dispose, event -> {
+			if (pdfPreviewPartLoadHandler != null) {
+				try {
+					pdfPreviewPartLoadHandler.unloadDocument();
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).warn("Exception closing PDDocument", e);
+				}
+			}
+		});
 	}
 
 	private final String SEARCH_ICON = "spotlight-search-icon";
@@ -130,9 +149,9 @@ public class SpotlightShell extends Shell {
 	 * @param spotlightService
 	 */
 	protected void createContents() {
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		setLayout(gridLayout);
-
+		addListener(SWT.Show, event -> adjustShellSize(false));
 		Label lblIcon = new Label(this, SWT.NONE);
 		Image logo = JFaceResources.getImageRegistry().get(SEARCH_ICON);
 		if (logo == null) {
@@ -163,6 +182,7 @@ public class SpotlightShell extends Shell {
 
 		txtSearchInput = new Text(this, SWT.None);
 		txtSearchInput.setBackground(this.getBackground());
+		txtSearchInput.setToolTipText(Messages.SpotlightSerchHelText);
 		Font biggerFont;
 		if (JFaceResources.getFontRegistry().hasValueFor(SEARCHTEXT_FONT)) {
 			biggerFont = JFaceResources.getFontRegistry().get(SEARCHTEXT_FONT);
@@ -178,6 +198,8 @@ public class SpotlightShell extends Shell {
 		txtSearchInput.setTextLimit(256);
 		txtSearchInput.addModifyListener(change -> {
 			final String text = ((Text) change.widget).getText();
+			setSearchText(text);
+			String searchTextForSearch = text.replace("+", " ");
 			if (timer != null) {
 				timer.cancel();
 			}
@@ -190,7 +212,7 @@ public class SpotlightShell extends Shell {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					spotlightService.computeResult(text, spotlightContextParameters);
+					spotlightService.computeResult(searchTextForSearch, spotlightContextParameters);
 				}
 			}, 200);
 		});
@@ -213,29 +235,40 @@ public class SpotlightShell extends Shell {
 			}
 
 		});
-		txtSearchInput.addModifyListener(change -> {
-			String newText = ((Text) change.widget).getText();
-			setSearchText(newText); // Aktualisiere den Suchtext über den Setter
-		});
+
 		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
-		layeredComposite = new Composite(this, SWT.NONE);
+		Composite parentComposite = new Composite(this, SWT.NONE);
+		GridLayout parentLayout = new GridLayout(2, false);
+		parentComposite.setLayout(parentLayout);
+		parentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		layeredComposite = new Composite(parentComposite, SWT.NONE);
 		detailCompositeStackLayout = new StackLayout();
 		layeredComposite.setLayout(detailCompositeStackLayout);
-		layeredComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		layeredCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		layeredCompositeGridData.widthHint = 800;
+		layeredComposite.setLayoutData(layeredCompositeGridData);
 
 		readyComposite = new SpotlightReadyComposite(layeredComposite, SWT.NONE, partService, spotlightReadyService);
 		detailCompositeStackLayout.topControl = readyComposite;
-
 		resultComposite = new SpotlightResultComposite(layeredComposite, SWT.NONE, spotlightService, uiUtil,
 				resultEntryDetailCompositeService);
-
-		setTabList(new Control[] { txtSearchInput, layeredComposite });
-
+			pdfPreviewPart = new PdfPreviewPart();
+		pdfPreviewComposite = new Composite(parentComposite, SWT.NONE);
+		pdfPreviewComposite.setLayout(new FillLayout()); 
+		pdfPreviewComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		try {
+			pdfPreviewPart.postConstruct(pdfPreviewComposite);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.setTabList(new Control[] { txtSearchInput, parentComposite });
+		parentComposite.setTabList(new Control[] { layeredComposite, pdfPreviewComposite });
 		switchReadyResultMode(true);
-
 		txtSearchInput.setFocus();
+		pdfPreviewComposite.setVisible(ispdfPreviewComp);
 	}
 
 	private void switchReadyResultMode(boolean setReadyMode) {
@@ -251,6 +284,9 @@ public class SpotlightShell extends Shell {
 			layeredComposite.setTabList(new Control[] { resultComposite });
 		}
 
+	}
+	public static boolean ispdfPreviewComposite() {
+		return ispdfPreviewComp;
 	}
 
 	public boolean setFocusAppendChar(char charachter) {
@@ -284,7 +320,25 @@ public class SpotlightShell extends Shell {
 	}
 
 	public void setSearchText(String searchText) {
-		this.searchText = searchText;
+		this.searchText = searchText.trim();
+	}
 
+	public void updatePdfPreview(IDocument pdfIDocument) {
+		PdfPreviewPart.setFromSpotlightShell(searchText);
+		if (pdfPreviewPart != null) {
+			pdfPreviewPart.updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
+			pdfPreviewComposite.setVisible(ispdfPreviewComp);
+		}
+	}
+	public void adjustShellSize(boolean pdfViewerVisible) {
+		if (pdfViewerVisible) {
+			setSize(1300, 800);
+			layeredCompositeGridData.widthHint = 950;
+			ispdfPreviewComp = true;
+		} else {
+			setSize(700, 500);
+			layeredCompositeGridData.widthHint = 450;
+			ispdfPreviewComp = false;
+		}
 	}
 }

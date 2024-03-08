@@ -2,6 +2,9 @@ package ch.elexis.core.spotlight.ui.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.function.Supplier;
 
@@ -199,4 +202,45 @@ public class SpotlightUiUtil {
 		return false;
 	}
 
+	/**
+	 * Handles the selection of a document in the Spotlight search and initiates the
+	 * PDF preview update. This method determines whether the selected element from
+	 * the Spotlight search is a document. If so, it enables the PDF preview
+	 * composite for displaying the document. For non-document categories, it
+	 * disables the PDF preview composite. It then retrieves the document using the
+	 * document's ID and updates the PDF preview in the SpotlightShell.
+	 *
+	 * @param firstElement    The selected element from the Spotlight search
+	 *                        results.
+	 * @param _spotlightShell The instance of SpotlightShell used to update the PDF
+	 *                        preview.
+	 * @return true if the method completes successfully. This return value is
+	 *         currently not used to indicate the success of document loading or
+	 *         preview updating.
+	 */
+	public boolean handleDocumentSelectionAndPreview(Object firstElement, SpotlightShell _spotlightShell) {
+		ISpotlightResultEntry selectedElement = (ISpotlightResultEntry) firstElement;
+		String objectId = selectedElement.getLoaderString();
+		IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
+				.orElse(null);
+		if (document != null && "docx".equalsIgnoreCase(document.getExtension())) {
+			try (InputStream contentStream = document.getContent()) {
+				File tempFile = File.createTempFile("document", ".docx");
+				tempFile.deleteOnExit();
+				Files.copy(contentStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				DocumentConverter.convertDocxToPdfAndSaveInTemp(tempFile.getAbsolutePath());
+				DocumentConverter.createPdfIDocumentAndUpdatePreview(document, _spotlightShell, documentStore);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
+				&& "pdf".equalsIgnoreCase(document.getExtension())) {
+			_spotlightShell.adjustShellSize(true);
+			_spotlightShell.updatePdfPreview(document);
+		}
+		else {
+			_spotlightShell.adjustShellSize(false);
+		}
+		return true;
+	}
 }

@@ -12,14 +12,23 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  org.eclipse.swt;bundle-version="3.114.0",
  org.eclipse.jface;bundle-version="3.19.0",
  org.apache.commons.lang3;bundle-version="3.7.0",
- ch.elexis.core.ui.icons;bundle-version="3.3.0"
+ ch.elexis.core.ui.icons;bundle-version="3.3.0",
+ org.apache.poi;bundle-version="4.1.1",
+ ch.elexis.core.pdfbox;bundle-version="2.0.24",
+ org.apache.poi.ooxml;bundle-version="4.1.1",
+ org.apache.poi.ooxml.schemas;bundle-version="4.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: ch.elexis.core.documents,
+ ch.elexis.core.pdfbox.ui.parts,
  javax.inject;version="1.0.0",
+ org.apache.poi.xwpf.usermodel;version="4.1.1",
  org.eclipse.e4.ui.services,
+ org.openxmlformats.schemas.drawingml.x2006.picture;version="4.1.1",
  org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/itextpdf-5.5.13.3.jar,
+ .
 Export-Package: ch.elexis.core.spotlight.ui,
  ch.elexis.core.spotlight.ui.controls,
  ch.elexis.core.spotlight.ui.internal

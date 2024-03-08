@@ -1,6 +1,5 @@
 package ch.elexis.core.pdfbox.ui.parts;
 
-import org.apache.commons.lang3.StringUtils;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
@@ -10,6 +9,7 @@ import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.swt.SWT;
@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Label;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextHighlighter;
+
 
 public class PdfPreviewPartLoadHandler {
 
@@ -41,17 +43,22 @@ public class PdfPreviewPartLoadHandler {
 
 	private PDDocument pdDocument;
 
+	private String searchText;
+
+	private static int currentPageNo;
+
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor, Composite previewComposite,
-			ScrolledComposite scrolledComposite) {
+			ScrolledComposite scrolledComposite, String fromSpotlightShell) {
 
 		this.previewComposite = previewComposite;
 		this.scrolledComposite = scrolledComposite;
 		this.scalingFactor = scalingFactor != null ? scalingFactor : 1f;
+		this.searchText = fromSpotlightShell;
 
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 
-	protected void unloadDocument() throws IOException {
+	public void unloadDocument() throws IOException {
 		if (pdDocument != null) {
 			pdDocument.close();
 			pdDocument = null;
@@ -94,6 +101,11 @@ public class PdfPreviewPartLoadHandler {
 					if (pdfInputStream != null) {
 						pdDocument = PDDocument.load(pdfInputStream);
 						pdfInputStream.close();
+						if (!searchText.isEmpty()) {
+							PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
+							highlighter.highlightSearchTextInPDF(searchText.toLowerCase());
+
+						}
 						numberOfPages = pdDocument.getNumberOfPages();
 						images = new Image[numberOfPages];
 					} else if (pdfInputStream == null && pdDocument == null) {
@@ -124,6 +136,10 @@ public class PdfPreviewPartLoadHandler {
 						previewComposite.layout(true, true);
 						scrolledComposite.layout(true, true);
 						scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+						if (!searchText.isEmpty()) {
+							centerContentHorizontally();
+							centerContentOnPage(currentPageNo);
+						}
 					});
 				}
 
@@ -219,4 +235,61 @@ public class PdfPreviewPartLoadHandler {
 		return null;
 	}
 
+	/**
+	 * Centers the content horizontally within the {@link ScrolledComposite}. This
+	 * method calculates the horizontal position needed to center the content of
+	 * {@code previewComposite} within {@code scrolledComposite} and sets the
+	 * horizontal scroll position accordingly. It's executed asynchronously to
+	 * ensure that it runs on the UI thread without blocking the caller. This method
+	 * does nothing if either the scrolledComposite or previewComposite is disposed
+	 * at the time of execution.
+	 */
+	private void centerContentHorizontally() {
+		previewComposite.getDisplay().asyncExec(() -> {
+			if (!scrolledComposite.isDisposed() && !previewComposite.isDisposed()) {
+				int clientWidth = scrolledComposite.getClientArea().width;
+				int contentWidth = previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+				int hScrollPos = (contentWidth - clientWidth) / 2;
+				if (hScrollPos > 0) {
+					scrolledComposite.getHorizontalBar().setSelection(hScrollPos);
+				}
+				scrolledComposite.setOrigin(hScrollPos, scrolledComposite.getOrigin().y);
+			}
+		});
+	}
+
+	/**
+	 * Centers the content on a specific page number within the
+	 * {@link ScrolledComposite}. This method is similar to
+	 * {@link #centerContentHorizontally()} but also adjusts the vertical scroll
+	 * position to bring the target page into view. The target page is specified by
+	 * the {@code targetPage} parameter. The method calculates the necessary
+	 * horizontal and vertical scroll positions to center the content horizontally
+	 * and position it at the beginning of the specified page. It's executed
+	 * asynchronously to ensure that it runs on the UI thread without blocking the
+	 * caller. This method does nothing if either the scrolledComposite or
+	 * previewComposite is disposed at the time of execution.
+	 *
+	 * @param targetPage The page number to center content on. This should be a
+	 *                   positive integer, where 1 corresponds to the first page.
+	 */
+	private void centerContentOnPage(int targetPage) {
+		previewComposite.getDisplay().asyncExec(() -> {
+			if (!scrolledComposite.isDisposed() && !previewComposite.isDisposed()) {
+				int clientWidth = scrolledComposite.getClientArea().width;
+				int contentWidth = previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+				int hScrollPos = (contentWidth - clientWidth) / 6;
+				if (hScrollPos > 0) {
+					scrolledComposite.getHorizontalBar().setSelection(hScrollPos);
+				}
+				scrolledComposite.setOrigin(hScrollPos, scrolledComposite.getOrigin().y);
+				int yOffset = (targetPage - 1) * scrolledComposite.getClientArea().height;
+				scrolledComposite.setOrigin(scrolledComposite.getOrigin().x, yOffset);
+			}
+		});
+	}
+
+	public static void setCurrentPageNo(int pageNo) {
+		currentPageNo = pageNo;
+	}
 }
