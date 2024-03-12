@@ -49,13 +49,17 @@ public class DocumentLetterUtil {
 			return null;
 		}
 
+		IVirtualFilesystemHandle externalStoragePath;
 		try {
-			IVirtualFilesystemHandle externalStoragePath = VirtualFilesystemServiceHolder.get().of(path);
-			if (externalStoragePath.exists() && externalStoragePath.canRead() && externalStoragePath.canWrite()) {
-				logger.error("External storage path [{}] does not exist or is not read/writable", externalStoragePath);
-				return null;
-			}
+			externalStoragePath = VirtualFilesystemServiceHolder.get().of(path);
+		} catch (IOException e) {
+			logger.error("Invalid external storage path [{}]", path, e.getMessage());
+			return null;
+		}
 
+		try {
+			// optimistic - we assume the external storage path exists and validate on the
+			// target of the resulting doc path only
 			if (document instanceof IDocumentLetter documentLetter) {
 				if (documentLetter.getPatient() != null) {
 					return getDocumentLetterFilePath(externalStoragePath, documentLetter);
@@ -83,6 +87,10 @@ public class DocumentLetterUtil {
 
 		IVirtualFilesystemHandle patientSubDir = externalStoragePath.subDir(documentLetter.getPatient().getPatientNr());
 		if (!patientSubDir.exists()) {
+			if (!(externalStoragePath.canRead() && externalStoragePath.canWrite())) {
+				logger.error("External storage path [{}] does not exist or is not read/writable", externalStoragePath);
+				return null;
+			}
 			logger.info("mkdir [{}]",
 					IVirtualFilesystemService.hidePasswordInUrlString(patientSubDir.toURL().toString()));
 			patientSubDir.mkdir();
@@ -108,6 +116,10 @@ public class DocumentLetterUtil {
 		IVirtualFilesystemHandle targetDirectory = mandatorTypedTemplatesSubDir != null ? mandatorTypedTemplatesSubDir
 				: typedTemplatesSubDir;
 		if (!targetDirectory.canRead()) {
+			if (!(externalStoragePath.canRead() && externalStoragePath.canWrite())) {
+				logger.error("External storage path [{}] does not exist or is not read/writable", externalStoragePath);
+				return null;
+			}
 			if (!templatesSubDir.exists()) {
 				logger.info("mkdir [{}]",
 						IVirtualFilesystemService.hidePasswordInUrlString(templatesSubDir.toURL().toString()));
