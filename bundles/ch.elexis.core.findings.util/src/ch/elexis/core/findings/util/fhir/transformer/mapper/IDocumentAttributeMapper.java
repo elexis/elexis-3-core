@@ -42,6 +42,7 @@ public class IDocumentAttributeMapper
 	public void elexisToFhir(IDocument elexis, DocumentReference fhir, SummaryEnum summaryEnum, Set<Include> includes) {
 
 		fhir.setId(new IdDt(DocumentReference.class.getSimpleName(), elexis.getId()));
+		fhir.addIdentifier().setSystem("http://elexis.info/referenced-document-id").setValue(elexis.getId());
 		mapMetaData(elexis, fhir);
 		if (SummaryEnum.DATA != summaryEnum) {
 			mapNarrative(elexis, fhir);
