@@ -5,8 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
 
-import org.exparity.hamcrest.date.LocalDateMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 public class LocalDateConverterTest {
@@ -23,7 +21,7 @@ public class LocalDateConverterTest {
 	@Test
 	public void testConvertToEntityAttribute() {
 		LocalDate value = ldc.convertToEntityAttribute(DATE_STRING);
-		MatcherAssert.assertThat(value, LocalDateMatchers.sameDay(instant));
+		assertEquals(value.toString(), instant.toString());
 		
 		assertNull(ldc.convertToEntityAttribute("dalkfjasldkfjasdkjf"));
 		assertNull(ldc.convertToEntityAttribute(""));

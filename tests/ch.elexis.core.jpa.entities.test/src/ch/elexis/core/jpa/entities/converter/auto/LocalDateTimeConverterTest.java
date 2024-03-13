@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.exparity.hamcrest.date.LocalDateTimeMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 public class LocalDateTimeConverterTest {
@@ -25,14 +23,14 @@ public class LocalDateTimeConverterTest {
 	@Test
 	public void testConvertToEntityAttribute() {
 		LocalDateTime value = ldtc.convertToEntityAttribute(DATETIME_STRING);
-		MatcherAssert.assertThat(value, LocalDateTimeMatchers.sameInstant(instant));
+		assertEquals(value.toString(), instant.toString());
 		
 		instant = LocalDate.of(2015, 05, 12).atStartOfDay();
 		value = ldtc.convertToEntityAttribute("20150512");
-		MatcherAssert.assertThat(value, LocalDateTimeMatchers.sameInstant(instant));
+		assertEquals(value.toString(), instant.toString());
 		
 		value = ldtc.convertToEntityAttribute("12.05.2015");
-		MatcherAssert.assertThat(value, LocalDateTimeMatchers.sameInstant(instant));
+		assertEquals(value.toString(), instant.toString());
 		
 		assertNull(ldtc.convertToEntityAttribute("dalkfjasldkfjasdkjf"));
 		assertNull(ldtc.convertToEntityAttribute(""));
