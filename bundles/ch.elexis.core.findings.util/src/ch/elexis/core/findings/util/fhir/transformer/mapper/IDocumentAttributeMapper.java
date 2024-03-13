@@ -116,8 +116,8 @@ public class IDocumentAttributeMapper
 				elexis.setCategory(ds.createCategory(category.get()));
 			}
 			Optional<String> keywords = accessor.getKeywords(fhir);
-			if (keywords.isPresent() && ds.isAllowed(Capability.KEYWORDS)) {
-				elexis.setKeywords(keywords.get());
+			if (ds.isAllowed(Capability.KEYWORDS)) {
+				elexis.setKeywords(keywords.orElse(null));
 			}
 		});
 	}
