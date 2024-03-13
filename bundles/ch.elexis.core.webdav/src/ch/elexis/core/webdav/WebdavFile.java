@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
@@ -48,6 +49,8 @@ public class WebdavFile extends URLConnection {
 
 	private Sardine webdav;
 
+	private boolean isWriting = false;
+
 	public WebdavFile(URL url) throws MalformedURLException {
 		super(url);
 		webdav = new SardineImpl();
@@ -73,22 +76,34 @@ public class WebdavFile extends URLConnection {
 	public OutputStream getOutputStream() throws IOException {
 		PipedOutputStream out = new PipedOutputStream();
 		final PipedInputStream in = new PipedInputStream(out);
-		new Thread(() -> {
+		CompletableFuture.runAsync(() -> {
 			try {
-				byte[] allBytes = in.readAllBytes();
-				webdav.put(url.toString(), allBytes);
+				isWriting = true;
+				webdav.put(url.toString(), in, null, false);
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).warn("Error writing file [{}]", url.toString(), e);
 			} finally {
-				try {
-					in.close();
-				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).warn("Error closing PipedInputStream [{}]", url.toString(), e);
-				}
+				isWriting = false;
 			}
-		}).start();
+		});
 
 		return out;
+	}
+
+	/**
+	 * Wait until the current write operation finished and the {@link DavResource}
+	 * is present. See {@link WebdavFile#getOutputStream()}.
+	 */
+	public void waitWriteComplete() {
+		try {
+			DavResource davResource = getDavResource();
+			while (isWriting || davResource == null) {
+				Thread.sleep(10);
+				davResource = getDavResource();
+			}
+		} catch (InterruptedException | IOException e) {
+			// ignore
+		}
 	}
 
 	@Override
@@ -196,7 +211,7 @@ public class WebdavFile extends URLConnection {
 				if (href.isAbsolute()) {
 					url = href.toURL();
 				} else {
-					url = getURL().toURI().resolve(href.getPath()).toURL();
+					url = getURL().toURI().resolve(href).toURL();
 				}
 				result[i++] = new WebdavFile(url);
 			} catch (URISyntaxException | MalformedURLException e) {
