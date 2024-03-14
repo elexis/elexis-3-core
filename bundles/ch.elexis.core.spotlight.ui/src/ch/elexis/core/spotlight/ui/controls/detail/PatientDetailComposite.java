@@ -37,6 +37,7 @@ import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
 import ch.elexis.core.spotlight.ui.ISpotlightResultEntryDetailComposite;
 import ch.elexis.core.spotlight.ui.controls.AbstractSpotlightResultEntryDetailComposite;
+import ch.elexis.core.spotlight.ui.controls.SpotlightSearchHelper;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
 import ch.elexis.core.spotlight.ui.internal.SpotlightUiUtil;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -104,7 +105,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		gd_stickerComposite.heightHint = 16;
 		stickerComposite.setLayoutData(gd_stickerComposite);
 
-		styledText = new StyledText(this, SWT.WRAP);
+		styledText = new StyledText(this, SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		styledText.setEditable(false);
 		// TODO setEnabled?
@@ -231,6 +232,9 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 
 		styledText.setText(replaceAll);
 		styledText.setStyleRanges(styleRanges);
+		SpotlightShell shell = (SpotlightShell) getShell();
+		String currentSearchText = shell.getSearchText();
+		SpotlightSearchHelper.highlightSearchText(styledText, currentSearchText);
 	}
 
 	private final Pattern TAG_PATTERN = Pattern.compile("<([a-z])([0a-z])>(.+?)</[a-z]>");
@@ -335,5 +339,4 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 
 		return false;
 	}
-
 }

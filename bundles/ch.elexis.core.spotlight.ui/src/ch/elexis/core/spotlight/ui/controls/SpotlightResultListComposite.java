@@ -116,6 +116,7 @@ public class SpotlightResultListComposite extends Composite {
 			if (firstElement instanceof ISpotlightResultEntry) {
 				resultDetailComposite.setSelection((ISpotlightResultEntry) firstElement);
 				((SpotlightShell) getShell()).setSelectedElement(firstElement);
+				uiUtil.handleDocumentSelectionAndPreview(firstElement, _spotlightShell);
 			}
 		});
 

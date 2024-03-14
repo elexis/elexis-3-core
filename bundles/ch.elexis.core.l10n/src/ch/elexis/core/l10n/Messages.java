@@ -5022,6 +5022,7 @@ public class Messages extends NLS {
 	public static String Inputfield_empty;
 	public static String Rename_Folder_Error;
 	public static String Rename_Group_Text;
+	public static String SpotlightSerchHelText;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
