@@ -62,9 +62,6 @@ public class SpotlightUiUtil {
 	@Inject
 	private IEclipseContext eclipseContext;
 
-	@Inject
-	private IDocumentConverter converter;
-
 	private EPartService partService;
 
 	public SpotlightUiUtil(EPartService partService) {
@@ -228,16 +225,19 @@ public class SpotlightUiUtil {
 		IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
 				.orElse(null);
 		if (document != null && "docx".equalsIgnoreCase(document.getExtension())) {
-			try {
-				Optional<File> pdfFile = converter.convertToPdf(document);
-				if (pdfFile.isPresent()) {
-					FileInputStream pdfStream = new FileInputStream(pdfFile.get());
-					_spotlightShell.adjustShellSize(true);
-					_spotlightShell.updatePdfPreview(pdfStream);
-					return true;
+			Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+			if (converterService.isPresent() && converterService.get().isAvailable()) {
+				try {
+					Optional<File> pdfFile = converterService.get().convertToPdf(document);
+					if (pdfFile.isPresent()) {
+						FileInputStream pdfStream = new FileInputStream(pdfFile.get());
+						_spotlightShell.adjustShellSize(true);
+						_spotlightShell.updatePdfPreview(pdfStream);
+						return true;
+					}
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
 				}
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
 			}
 		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
 				&& "pdf".equalsIgnoreCase(document.getExtension())) {
