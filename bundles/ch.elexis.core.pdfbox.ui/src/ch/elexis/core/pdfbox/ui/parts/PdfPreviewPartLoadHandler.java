@@ -48,17 +48,16 @@ public class PdfPreviewPartLoadHandler {
 	private static int currentPageNo;
 
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor, Composite previewComposite,
-			ScrolledComposite scrolledComposite, String fromSpotlightShell) {
+			ScrolledComposite scrolledComposite) {
 
 		this.previewComposite = previewComposite;
 		this.scrolledComposite = scrolledComposite;
 		this.scalingFactor = scalingFactor != null ? scalingFactor : 1f;
-		this.searchText = fromSpotlightShell;
 
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
 
-	public void unloadDocument() throws IOException {
+	protected void unloadDocument() throws IOException {
 		if (pdDocument != null) {
 			pdDocument.close();
 			pdDocument = null;
@@ -101,10 +100,9 @@ public class PdfPreviewPartLoadHandler {
 					if (pdfInputStream != null) {
 						pdDocument = PDDocument.load(pdfInputStream);
 						pdfInputStream.close();
-						if (!searchText.isEmpty()) {
+						if (StringUtils.isNotBlank(searchText)) {
 							PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
 							highlighter.highlightSearchTextInPDF(searchText.toLowerCase());
-
 						}
 						numberOfPages = pdDocument.getNumberOfPages();
 						images = new Image[numberOfPages];
@@ -112,7 +110,6 @@ public class PdfPreviewPartLoadHandler {
 						return;
 					}
 				}
-
 				// render pages and display
 				PDFRenderer renderer = new PDFRenderer(pdDocument);
 				for (int i = 0; i < numberOfPages; i++) {
@@ -136,7 +133,7 @@ public class PdfPreviewPartLoadHandler {
 						previewComposite.layout(true, true);
 						scrolledComposite.layout(true, true);
 						scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-						if (!searchText.isEmpty()) {
+						if (StringUtils.isNotBlank(searchText)) {
 							centerContentHorizontally();
 							centerContentOnPage(currentPageNo);
 						}
@@ -291,5 +288,9 @@ public class PdfPreviewPartLoadHandler {
 
 	public static void setCurrentPageNo(int pageNo) {
 		currentPageNo = pageNo;
+	}
+
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
 	}
 }

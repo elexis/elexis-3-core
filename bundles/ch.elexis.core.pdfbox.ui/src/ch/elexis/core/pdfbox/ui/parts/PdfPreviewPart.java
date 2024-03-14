@@ -28,16 +28,13 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 
 public class PdfPreviewPart {
 
-
 	@Inject
 	private IConfigService configService;
 
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-	private String zoomLevel;
 	private IDocument currentDocument;
-	private static String fromSpotlightShell;
 
 	@PostConstruct
 	public void postConstruct(Composite parent) throws IOException {
@@ -53,15 +50,6 @@ public class PdfPreviewPart {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		parent.addDisposeListener(event -> {
-			if (pdfPreviewPartLoadHandler != null) {
-				try {
-					pdfPreviewPartLoadHandler.unloadDocument();
-				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).warn("Exception closing PDDocument", e);
-				}
-			}
-		});
 	}
 
 	@Inject
@@ -85,7 +73,7 @@ public class PdfPreviewPart {
 		updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
 	}
 
-	public void updatePreview(InputStream pdfInputStream) {
+	private void updatePreview(InputStream pdfInputStream) {
 		if (pdfPreviewPartLoadHandler != null) {
 			if (pdfInputStream == null) {
 				try {
@@ -97,16 +85,12 @@ public class PdfPreviewPart {
 			pdfPreviewPartLoadHandler.close();
 		}
 
-		if (!fromSpotlightShell.isEmpty()) {
-			zoomLevel = "0.9f";
+		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
+				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 
-		} else {
-			zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
-					Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
-		}
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
-				previewComposite, scrolledComposite, fromSpotlightShell);
-		setFromSpotlightShell("");
+				previewComposite, scrolledComposite);
+
 	}
 
 	public void changeScalingFactor(Float _zoomLevel) {
@@ -119,11 +103,4 @@ public class PdfPreviewPart {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
-	public static String isFromSpotlightShell() {
-		return fromSpotlightShell;
-	}
-
-	public static void setFromSpotlightShell(String fromSpotlight) {
-		fromSpotlightShell = fromSpotlight;
-	}
 }

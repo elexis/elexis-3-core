@@ -1,11 +1,11 @@
 package ch.elexis.core.spotlight.ui.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
@@ -27,6 +27,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
@@ -60,6 +61,9 @@ public class SpotlightUiUtil {
 
 	@Inject
 	private IEclipseContext eclipseContext;
+
+	@Inject
+	private IDocumentConverter converter;
 
 	private EPartService partService;
 
@@ -224,21 +228,27 @@ public class SpotlightUiUtil {
 		IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
 				.orElse(null);
 		if (document != null && "docx".equalsIgnoreCase(document.getExtension())) {
-			try (InputStream contentStream = document.getContent()) {
-				File tempFile = File.createTempFile("document", ".docx");
-				tempFile.deleteOnExit();
-				Files.copy(contentStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-				DocumentConverter.convertDocxToPdfAndSaveInTemp(tempFile.getAbsolutePath());
-				DocumentConverter.createPdfIDocumentAndUpdatePreview(document, _spotlightShell, documentStore);
-			} catch (Exception e) {
-				e.printStackTrace();
+			try {
+				Optional<File> pdfFile = converter.convertToPdf(document);
+				if (pdfFile.isPresent()) {
+					FileInputStream pdfStream = new FileInputStream(pdfFile.get());
+					_spotlightShell.adjustShellSize(true);
+					_spotlightShell.updatePdfPreview(pdfStream);
+					return true;
+				}
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
 			}
 		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
 				&& "pdf".equalsIgnoreCase(document.getExtension())) {
-			_spotlightShell.adjustShellSize(true);
-			_spotlightShell.updatePdfPreview(document);
-		}
-		else {
+			try (InputStream pdfStream = document.getContent()) {
+				_spotlightShell.adjustShellSize(true);
+				_spotlightShell.updatePdfPreview(pdfStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
 			_spotlightShell.adjustShellSize(false);
 		}
 		return true;

@@ -1,6 +1,6 @@
 package ch.elexis.core.spotlight.ui.internal;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Timer;
@@ -13,6 +13,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -20,7 +21,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,11 +29,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.FrameworkUtil;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.l10n.Messages;
-import ch.elexis.core.model.IDocument;
-import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPart;
 import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.controls.SpotlightResultComposite;
@@ -61,12 +58,12 @@ public class SpotlightShell extends Shell {
 	private SpotlightUiUtil uiUtil;
 	private String searchText;
 	private Object selectedElement;
-	private PdfPreviewPart pdfPreviewPart;
+	private Composite previewComposite;
 	private Composite pdfPreviewComposite;
 	private GridData layeredCompositeGridData;
 	private Point origin;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
-
+	private ScrolledComposite scrolledComposite;
 	public SpotlightShell(Shell shell, EPartService partService, ISpotlightService spotlightService,
 			ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
 			SpotlightReadyService spotlightReadyService, Map<String, String> spotlightContextParameters) {
@@ -127,15 +124,6 @@ public class SpotlightShell extends Shell {
 			if (origin != null) {
 				Point p = toDisplay(e.x, e.y);
 				setLocation(p.x - origin.x, p.y - origin.y);
-			}
-		});
-		addListener(SWT.Dispose, event -> {
-			if (pdfPreviewPartLoadHandler != null) {
-				try {
-					pdfPreviewPartLoadHandler.unloadDocument();
-				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).warn("Exception closing PDDocument", e);
-				}
 			}
 		});
 	}
@@ -254,21 +242,26 @@ public class SpotlightShell extends Shell {
 		detailCompositeStackLayout.topControl = readyComposite;
 		resultComposite = new SpotlightResultComposite(layeredComposite, SWT.NONE, spotlightService, uiUtil,
 				resultEntryDetailCompositeService);
-			pdfPreviewPart = new PdfPreviewPart();
-		pdfPreviewComposite = new Composite(parentComposite, SWT.NONE);
-		pdfPreviewComposite.setLayout(new FillLayout()); 
-		pdfPreviewComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		try {
-			pdfPreviewPart.postConstruct(pdfPreviewComposite);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
+		scrolledComposite = new ScrolledComposite(parentComposite, SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData scGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		scrolledComposite.setLayoutData(scGridData);
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+
+		previewComposite = new Composite(scrolledComposite, SWT.NONE);
+		previewComposite.setLayout(new GridLayout(1, true));
+
+		Label label = new Label(previewComposite, SWT.NONE);
+		label.setText(Messages.PdfPreview_NoPDFSelected);
+		previewComposite.layout();
+		scrolledComposite.setContent(previewComposite);
+		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		this.setTabList(new Control[] { txtSearchInput, parentComposite });
-		parentComposite.setTabList(new Control[] { layeredComposite, pdfPreviewComposite });
+		parentComposite.setTabList(new Control[] { layeredComposite, scrolledComposite });
 		switchReadyResultMode(true);
 		txtSearchInput.setFocus();
-		pdfPreviewComposite.setVisible(ispdfPreviewComp);
+		previewComposite.setVisible(ispdfPreviewComp);
 	}
 
 	private void switchReadyResultMode(boolean setReadyMode) {
@@ -323,12 +316,11 @@ public class SpotlightShell extends Shell {
 		this.searchText = searchText.trim();
 	}
 
-	public void updatePdfPreview(IDocument pdfIDocument) {
-		PdfPreviewPart.setFromSpotlightShell(searchText);
-		if (pdfPreviewPart != null) {
-			pdfPreviewPart.updatePreview(pdfIDocument != null ? pdfIDocument.getContent() : null);
-			pdfPreviewComposite.setVisible(ispdfPreviewComp);
-		}
+	public void updatePdfPreview(InputStream pdfIDocument) {
+		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfIDocument, Float.valueOf("0.9f"), previewComposite,
+				scrolledComposite);
+		pdfPreviewPartLoadHandler.setSearchText(searchText);
+		previewComposite.setVisible(ispdfPreviewComp);
 	}
 	public void adjustShellSize(boolean pdfViewerVisible) {
 		if (pdfViewerVisible) {
