@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 public class ClientTest {
 
@@ -41,7 +42,7 @@ public class ClientTest {
 		}).collect(Collectors.toList());
 		files.forEach(f -> {
 			try {
-				System.out.println("Delete " + f.toString());
+				LoggerFactory.getLogger(getClass()).info("TEST delete " + f.toString());
 				f.delete();
 			} catch (IOException e) {
 				fail(e.getMessage());
@@ -50,7 +51,7 @@ public class ClientTest {
 	}
 
 	@Test
-	public void createConnection() throws MalformedURLException, IOException, InterruptedException {
+	public void putSmallTxt() throws MalformedURLException, IOException, InterruptedException {
 
 		URLConnection connection = new URL(
 				"dav://admin:admin@localhost:22808/remote.php/dav/files/admin/webdavTest.txt")
@@ -59,10 +60,12 @@ public class ClientTest {
 
 		byte[] randomBytes = UUID.randomUUID().toString().getBytes();
 
+		LoggerFactory.getLogger(getClass()).info("TEST write start");
 		try (OutputStream outputStream = connection.getOutputStream()) {
 			IOUtils.write(randomBytes, outputStream);
 		}
 		((WebdavFile) connection).waitWriteComplete();
+		LoggerFactory.getLogger(getClass()).info("TEST write complete");
 
 		assertEquals(randomBytes.length, connection.getContentLength());
 
@@ -85,10 +88,12 @@ public class ClientTest {
 				"dav://admin:admin@localhost:22808/remote.php/dav/files/admin/webdavTest.bin").openConnection();
 		assertTrue(connection instanceof WebdavFile);
 
+		LoggerFactory.getLogger(getClass()).info("TEST write start");
 		try (OutputStream outputStream = connection.getOutputStream()) {
 			IOUtils.write(randomBytes, outputStream);
 		}
 		((WebdavFile) connection).waitWriteComplete();
+		LoggerFactory.getLogger(getClass()).info("TEST write complete");
 
 		assertEquals(randomBytes.length, connection.getContentLength());
 
@@ -101,27 +106,36 @@ public class ClientTest {
 		((WebdavFile) connection).delete();
 	}
 
+	private byte[] testBytes;
+	private URLConnection testConnection;
+
 	@Test
 	public void put10MbMultithread() throws MalformedURLException, IOException, InterruptedException {
-
-		byte[] randomBytes = new byte[1000 * 1000 * 10];
-		new Random().nextBytes(randomBytes);
 
 		List<CompletableFuture<Void>> futures = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
 			final int index = i;
 			futures.add(CompletableFuture.runAsync(() -> {
+				byte[] randomBytes = new byte[1000 * 1000 * 10];
+				new Random().nextBytes(randomBytes);
+
 				try {
 					URLConnection connection;
 					connection = new URL(
 							"dav://admin:admin@localhost:22808/remote.php/dav/files/admin/webdavTest_" + index + ".bin")
 							.openConnection();
 					assertTrue(connection instanceof WebdavFile);
-
+					LoggerFactory.getLogger(getClass()).info("TEST write start " + index);
 					try (OutputStream outputStream = connection.getOutputStream()) {
 						IOUtils.write(randomBytes, outputStream);
 					}
 					((WebdavFile) connection).waitWriteComplete();
+					LoggerFactory.getLogger(getClass()).info("TEST write complete " + index);
+
+					if (index == 7) {
+						testBytes = randomBytes;
+						testConnection = connection;
+					}
 				} catch (IOException e) {
 					fail(e.getMessage());
 				}
@@ -129,6 +143,12 @@ public class ClientTest {
 		}
 
 		CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+
+		byte[] readByteArray;
+		try (InputStream inputStream = testConnection.getInputStream()) {
+			readByteArray = IOUtils.toByteArray(inputStream);
+		}
+		assertArrayEquals(testBytes, readByteArray);
 
 		URLConnection directory = new URL("dav://admin:admin@localhost:22808/remote.php/dav/files/admin")
 				.openConnection();

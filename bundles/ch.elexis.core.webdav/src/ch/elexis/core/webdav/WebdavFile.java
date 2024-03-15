@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.impl.SardineException;
-import com.github.sardine.impl.SardineImpl;
 
 /**
  * @see https://docs.nextcloud.com/server/25/developer_manual/client_apis/WebDAV/basic.html
@@ -49,23 +48,13 @@ public class WebdavFile extends URLConnection {
 
 	private Sardine webdav;
 
-	private boolean isWriting = false;
+	private Object isWriting;
 
 	public WebdavFile(URL url) throws MalformedURLException {
 		super(url);
-		webdav = new SardineImpl();
 		if (url.getUserInfo() != null) {
-			if (url.getUserInfo().contains(":")) {
-				// username:password
-				String[] userInfo = url.getUserInfo().split(":");
-				webdav.setCredentials(userInfo[0], userInfo[1]);
-			} else {
-				// bearer token
-				webdav = new SardineImpl(url.getUserInfo());
-			}
-			webdav.enablePreemptiveAuthentication(url);
+			webdav = WebdavPool.INSTANCE.getSardine(url);
 		}
-		webdav.enableCompression();
 	}
 
 	@Override
@@ -78,12 +67,15 @@ public class WebdavFile extends URLConnection {
 		final PipedInputStream in = new PipedInputStream(out);
 		CompletableFuture.runAsync(() -> {
 			try {
-				isWriting = true;
+				isWriting = new Object();
 				webdav.put(url.toString(), in, null, false);
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).warn("Error writing file [{}]", url.toString(), e);
 			} finally {
-				isWriting = false;
+				synchronized (isWriting) {
+					isWriting.notifyAll();
+					isWriting = null;
+				}
 			}
 		});
 
@@ -95,14 +87,14 @@ public class WebdavFile extends URLConnection {
 	 * is present. See {@link WebdavFile#getOutputStream()}.
 	 */
 	public void waitWriteComplete() {
-		try {
-			DavResource davResource = getDavResource();
-			while (isWriting || davResource == null) {
-				Thread.sleep(10);
-				davResource = getDavResource();
+		if (isWriting != null) {
+			synchronized (isWriting) {
+				try {
+					isWriting.wait();
+				} catch (InterruptedException e) {
+					// ignore
+				}
 			}
-		} catch (InterruptedException | IOException e) {
-			// ignore
 		}
 	}
 
