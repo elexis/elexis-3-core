@@ -58,17 +58,13 @@ public enum WebdavPool {
 
 	public synchronized Sardine getSardine(URL url) {
 		try {
-			Sardine sardine = sardines.get(getSardineKey(url), () -> {
+			return sardines.get(getSardineKey(url), () -> {
 				HttpClientBuilder builder = getHttpClientBuilder(url);
 				Sardine sardineImpl = new SardineImpl(builder);
 				sardineImpl.enablePreemptiveAuthentication(url);
 				sardineImpl.enableCompression();
 				return sardineImpl;
 			});
-			if (sardine == null) {
-				sardines.put(getSardineKey(url), sardine);
-			}
-			return sardine;
 		} catch (ExecutionException e) {
 			LoggerFactory.getLogger(getClass()).error("Error getting webdav", e);
 			return null;
