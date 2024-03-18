@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Extension;
@@ -46,6 +47,7 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId> extend
 
 	@Override
 	public void setText(String text) {
+		text = filterNonPrintable(text);
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent() && resource.get() instanceof DomainResource) {
 			DomainResource domainResource = (DomainResource) resource.get();
@@ -81,5 +83,12 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId> extend
 							extension -> ((StringType) extension.getValue()).getValueAsString()));
 		}
 		return Collections.emptyMap();
+	}
+
+	private String filterNonPrintable(String input) {
+		if (StringUtils.isNotBlank(input)) {
+			return input.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return input;
 	}
 }
