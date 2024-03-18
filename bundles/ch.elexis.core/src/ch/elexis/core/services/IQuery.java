@@ -8,6 +8,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import ch.elexis.core.jdt.Nullable;
 
+/**
+ * 
+ * @param <T>
+ * @since 3.12 implements Fluent Interface pattern
+ */
 public interface IQuery<T> {
 	public static enum COMPARATOR {
 		LIKE, EQUALS, LESS, LESS_OR_EQUAL, GREATER, NOT_LIKE, NOT_EQUALS, GREATER_OR_EQUAL, IN
@@ -24,17 +29,17 @@ public interface IQuery<T> {
 	 * are started, {@link #andEndGroup()} or {@link #orEndGroup()} must be called
 	 * to join the groups.
 	 */
-	public void startGroup();
+	IQuery<T> startGroup();
 
 	/**
 	 * Join the current group to the previous group with and.
 	 */
-	public void andJoinGroups();
+	IQuery<T> andJoinGroups();
 
 	/**
 	 * Join the current group to the previous group with or.
 	 */
-	public void orJoinGroups();
+	IQuery<T> orJoinGroups();
 
 	/**
 	 * Add a where clause based on the value of the {@link EStructuralFeature} to
@@ -44,11 +49,12 @@ public interface IQuery<T> {
 	 * @param comparator
 	 * @param value
 	 */
-	public default void and(EStructuralFeature feature, COMPARATOR comparator, Object value) {
+	default IQuery<T> and(EStructuralFeature feature, COMPARATOR comparator, Object value) {
 		and(feature, comparator, value, false);
+		return this;
 	}
 
-	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase);
+	IQuery<T> and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase);
 
 	/**
 	 * Add a where clause based in the two provided {@link EStructuralFeature} to
@@ -58,7 +64,7 @@ public interface IQuery<T> {
 	 * @param object
 	 * @param otherFeature
 	 */
-	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator, EStructuralFeature otherFeature);
+	IQuery<T> andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator, EStructuralFeature otherFeature);
 
 	/**
 	 * Add a where clause based on the value of the specified entityAttributeName to
@@ -68,11 +74,12 @@ public interface IQuery<T> {
 	 * @param comparator
 	 * @param value
 	 */
-	public default void and(String entityAttributeName, COMPARATOR comparator, Object value) {
+	default IQuery<T> and(String entityAttributeName, COMPARATOR comparator, Object value) {
 		and(entityAttributeName, comparator, value, false);
+		return this;
 	}
 
-	public void and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase);
+	IQuery<T> and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase);
 
 	/**
 	 * Add a where clause based on the value of the {@link EStructuralFeature} to
@@ -82,11 +89,12 @@ public interface IQuery<T> {
 	 * @param equals
 	 * @param patientId
 	 */
-	public default void or(EStructuralFeature feature, COMPARATOR comparator, Object value) {
+	default IQuery<T> or(EStructuralFeature feature, COMPARATOR comparator, Object value) {
 		or(feature, comparator, value, false);
+		return this;
 	}
 
-	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase);
+	IQuery<T> or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase);
 
 	/**
 	 * Add a where clause based on the value of the specified entityAttributeName to
@@ -96,18 +104,19 @@ public interface IQuery<T> {
 	 * @param comparator
 	 * @param value
 	 */
-	public default void or(String entityAttributeName, COMPARATOR comparator, Object value) {
+	default IQuery<T> or(String entityAttributeName, COMPARATOR comparator, Object value) {
 		or(entityAttributeName, comparator, value, false);
+		return this;
 	}
 
-	public void or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase);
+	IQuery<T> or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase);
 
 	/**
 	 * Execute the query and return a list with the resulting objects.
 	 *
 	 * @return
 	 */
-	public List<T> execute();
+	List<T> execute();
 
 	/**
 	 * Execute the query and return a stream with the resulting objects.<br>
@@ -117,7 +126,7 @@ public interface IQuery<T> {
 	 *
 	 * @return
 	 */
-	public IQueryCursor<T> executeAsCursor();
+	IQueryCursor<T> executeAsCursor();
 
 	/**
 	 * Execute the query with the given queryHints and return a stream with the
@@ -132,7 +141,7 @@ public interface IQuery<T> {
 	 *                   {@link #executeAsCursor()}
 	 * @return
 	 */
-	public IQueryCursor<T> executeAsCursor(@Nullable Map<String, Object> queryHints);
+	IQueryCursor<T> executeAsCursor(@Nullable Map<String, Object> queryHints);
 
 	/**
 	 * Execute the query and return a single result. If more than one result is
@@ -140,7 +149,7 @@ public interface IQuery<T> {
 	 *
 	 * @return
 	 */
-	public Optional<T> executeSingleResult();
+	Optional<T> executeSingleResult();
 
 	/**
 	 * Add an order by to the query.
@@ -148,7 +157,7 @@ public interface IQuery<T> {
 	 * @param fieldOrderBy
 	 * @param order
 	 */
-	public void orderBy(String fieldOrderBy, ORDER order);
+	IQuery<T> orderBy(String fieldOrderBy, ORDER order);
 
 	/**
 	 * Add an order by to the query.
@@ -156,7 +165,7 @@ public interface IQuery<T> {
 	 * @param fieldOrderBy
 	 * @param order
 	 */
-	public void orderBy(EStructuralFeature feature, ORDER order);
+	IQuery<T> orderBy(EStructuralFeature feature, ORDER order);
 
 	/**
 	 * Add an order by results of CASE statement. The caseContext map containes a
@@ -179,7 +188,7 @@ public interface IQuery<T> {
 	 * @param fieldOrderBy
 	 * @param order
 	 */
-	public void orderBy(Map<String, Object> caseContext, ORDER order);
+	IQuery<T> orderBy(Map<String, Object> caseContext, ORDER order);
 
 	/**
 	 * Create a sub query from the current {@link IQuery}. A {@link IModelService}
@@ -189,7 +198,7 @@ public interface IQuery<T> {
 	 * @param modelService
 	 * @return
 	 */
-	public <S> ISubQuery<S> createSubQuery(Class<S> modelClazz, IModelService modelService);
+	<S> ISubQuery<S> createSubQuery(Class<S> modelClazz, IModelService modelService);
 
 	/**
 	 * Add an EXISTS to the where clause based on the provided {@link ISubQuery} to
@@ -197,7 +206,7 @@ public interface IQuery<T> {
 	 *
 	 * @param subQuery
 	 */
-	public void exists(ISubQuery<?> subQuery);
+	IQuery<T> exists(ISubQuery<?> subQuery);
 
 	/**
 	 * Add a NOT EXISTS to the where clause based on the provided {@link ISubQuery}
@@ -205,19 +214,19 @@ public interface IQuery<T> {
 	 *
 	 * @param subQuery
 	 */
-	public void notExists(ISubQuery<?> subQuery);
+	IQuery<T> notExists(ISubQuery<?> subQuery);
 
 	/**
 	 * Limit the maximum number of results to retrieve.
 	 *
 	 * @param limit
 	 */
-	public void limit(int limit);
+	IQuery<T> limit(int limit);
 
 	/**
 	 * The result index to start from.
 	 *
 	 * @param offset
 	 */
-	public void offset(int offset);
+	IQuery<T> offset(int offset);
 }
