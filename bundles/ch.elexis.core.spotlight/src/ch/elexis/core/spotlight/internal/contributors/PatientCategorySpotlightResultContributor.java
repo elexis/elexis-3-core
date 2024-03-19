@@ -35,42 +35,41 @@ public class PatientCategorySpotlightResultContributor implements ISpotlightResu
 		}
 
 		IQuery<IPatient> query = modelService.getQuery(IPatient.class);
+		boolean isFirstGroup = true;
 
-		if (stringTerms.size() == 1) {
-			// only single name - don't know if part of firstname or lastname
+		if (!stringTerms.isEmpty()) {
 			query.startGroup();
-			query.or(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
-			query.or(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
-
-		} else if (stringTerms.size() > 1) {
-			// two names, could either be parts of "firstname lastname" or "lastname
-			// firstname"
-			query.startGroup();
-			query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
-			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(1) + "%", true);
-
-			query.startGroup();
-			query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(1) + "%", true);
-			query.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
-			query.orJoinGroups();
+			if (stringTerms.size() == 1) {
+				query.or(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true)
+						.or(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
+			} else {
+				query.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true)
+						.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(1) + "%", true)
+						.startGroup()
+						.and(ModelPackage.Literals.IPERSON__FIRST_NAME, COMPARATOR.LIKE, stringTerms.get(1) + "%", true)
+						.and(ModelPackage.Literals.IPERSON__LAST_NAME, COMPARATOR.LIKE, stringTerms.get(0) + "%", true);
+				query.orJoinGroups();
+			}
+			isFirstGroup = false;
 		}
 
 		if (!dateTerms.isEmpty()) {
-			if (!stringTerms.isEmpty()) {
+			if (!isFirstGroup) {
 				query.andJoinGroups();
 			}
-			query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, dateTerms.get(0));
+			query.startGroup().and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, dateTerms.get(0));
+			isFirstGroup = false;
 		}
 
 		if (!numericTerms.isEmpty()) {
-			if (!stringTerms.isEmpty() || !dateTerms.isEmpty()) {
+			if (!isFirstGroup) {
 				query.andJoinGroups();
 			}
-			query.and(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, numericTerms.get(0).intValue() + "%");
+			query.startGroup().and(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE,
+					numericTerms.get(0).intValue() + "%");
 		}
 
-		query.orderBy(ModelPackage.Literals.IPERSON__LAST_NAME, ORDER.ASC);
-		query.limit(5);
+		query.orderBy(ModelPackage.Literals.IPERSON__LAST_NAME, ORDER.ASC).limit(5);
 
 		List<IPatient> patients = query.execute();
 		for (IPatient patient : patients) {
