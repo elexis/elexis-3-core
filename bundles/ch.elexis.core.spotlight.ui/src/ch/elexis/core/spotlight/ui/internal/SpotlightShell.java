@@ -194,7 +194,8 @@ public class SpotlightShell extends Shell {
 			boolean isReadyMode = StringUtils.isEmpty(text);
 			switchReadyResultMode(isReadyMode);
 			layeredComposite.layout(true, true);
-
+			adjustShellSize(false);
+			resultComposite.clearResults();
 			timer = new Timer();
 			timer.schedule(new TimerTask() {
 				@Override
@@ -269,6 +270,7 @@ public class SpotlightShell extends Shell {
 			readyComposite.setEnabled(true);
 			detailCompositeStackLayout.topControl = readyComposite;
 			layeredComposite.setTabList(new Control[] { readyComposite });
+			resultComposite.clearResults();
 		} else {
 			resultComposite.setEnabled(true);
 			readyComposite.setEnabled(false);
