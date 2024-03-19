@@ -54,4 +54,10 @@ public class SpotlightResultComposite extends Composite {
 		return resultDetailComposite.handleAltKeyPressed(keyCode);
 	}
 
+	public void clearResults() {
+		if (resultDetailComposite != null) {
+			resultDetailComposite.clearDetails();
+		}
+	}
+
 }
