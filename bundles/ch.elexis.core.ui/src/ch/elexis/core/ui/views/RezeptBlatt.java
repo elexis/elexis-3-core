@@ -17,6 +17,7 @@ import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_PRESCRIPTION;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Image;
@@ -26,8 +27,11 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IOutputter;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.ITextPlugin.Parameter;
 import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
@@ -277,10 +281,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 
 	public boolean createRezept(Rezept rp) {
-		boolean ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4);
-		if (ret) { // $NON-NLS-1$ //$NON-NLS-2$
-			new OutputLog(rp, this);
-			return true;
+		NoPoUtil.loadAsIdentifiable(rp, IRecipe.class).ifPresent(r -> ContextServiceHolder.get().setTyped(r));
+		Optional<?> validationResult = ContextServiceHolder.get().getNamed("artikelstamm.selected.recipe.validate"); // $NON-NLS-1$
+		if (validationResult.isEmpty() || Boolean.TRUE.equals(validationResult.get())) {
+			boolean ret = createList(rp, TT_PRESCRIPTION, Messages.RezeptBlatt_4);
+			if (ret) {
+				new OutputLog(rp, this);
+				return true;
+			}
 		}
 		return false;
 	}
