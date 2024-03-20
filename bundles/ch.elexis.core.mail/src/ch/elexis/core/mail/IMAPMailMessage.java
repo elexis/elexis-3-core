@@ -1,6 +1,7 @@
 package ch.elexis.core.mail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.LoggerFactory;
 
 import com.sun.mail.imap.IMAPMessage;
 
@@ -67,7 +69,19 @@ public class IMAPMailMessage {
 
 	private void extractOtherContent(String contentType, Object content) {
 		if (contentType.toLowerCase().contains("text/plain")) {
-			text = (String) content;
+			if (content instanceof String) {
+				text = (String) content;
+			} else if (content instanceof InputStream) {
+				try {
+					text = IOUtils.toString((InputStream) content, "ISO-8859-1");
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).warn("Error extraction other content", e);
+				}
+			} else {
+				LoggerFactory.getLogger(getClass()).warn("Unknown other content [" + content + "]");
+			}
+		} else {
+			LoggerFactory.getLogger(getClass()).warn("Unknown other content type [" + contentType + "]");
 		}
 	}
 
