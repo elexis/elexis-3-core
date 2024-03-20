@@ -6,6 +6,7 @@ import java.util.Optional;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.ITextPlugin;
 
@@ -20,7 +21,7 @@ public interface IDocumentService {
 	 * @param context
 	 * @return
 	 */
-	public IDocument createDocument(IDocumentTemplate template, IContext context);
+	ObjectStatus<IDocument> createDocument(IDocumentTemplate template, IContext context);
 
 	/**
 	 * Validate if all placeholders in the {@link IDocumentTemplate} can be resolved
@@ -31,7 +32,7 @@ public interface IDocumentService {
 	 * @param context
 	 * @return
 	 */
-	public Map<String, Boolean> validateTemplate(IDocumentTemplate template, IContext context);
+	Map<String, Boolean> validateTemplate(IDocumentTemplate template, IContext context);
 
 	/**
 	 * Add an {@link IDirectTemplateReplacement} that will be called for matching
@@ -40,14 +41,14 @@ public interface IDocumentService {
 	 * @param template
 	 * @param textTemplateConsumer
 	 */
-	public void addDirectTemplateReplacement(String template,
+	void addDirectTemplateReplacement(String template,
 			IDirectTemplateReplacement textTemplateConsumer);
 
 	/**
 	 * Interface for direct template replacement using provided {@link ITextPlugin}
 	 * and {@link IContext}.
 	 */
-	public interface IDirectTemplateReplacement {
+	interface IDirectTemplateReplacement {
 
 		/**
 		 * Perform the replacement in the document. Return false if something went

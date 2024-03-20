@@ -18,6 +18,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.internal.text.RecipeDocumentTemplateReplacement;
+import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.ReplaceCallback;
 
@@ -52,53 +53,41 @@ public class DocumentService implements IDocumentService {
 	}
 
 	@Override
-	public IDocument createDocument(IDocumentTemplate template, IContext context) {
+	public ObjectStatus<IDocument> createDocument(IDocumentTemplate template, IContext context) {
 		try {
 			IDocumentStore documentStore = getDocumentStore(template.getStoreId());
 
-			if (textPlugin.loadFromStream(template.getContent(), true)) {
-				textPlugin.findOrReplace(ITextReplacementService.MATCH_TEMPLATE, new ReplaceCallback() {
-					@Override
-					public Object replace(final String in) {
-						return textReplacementService.performReplacement(context, in);
-					}
-				});
-
-				textPlugin.findOrReplace(ITextReplacementService.MATCH_GENDERIZE, new ReplaceCallback() {
-					@Override
-					public Object replace(final String in) {
-						return textReplacementService.performReplacement(context, in);
-					}
-				});
-
-				textPlugin.findOrReplace(ITextReplacementService.MATCH_IDATACCESS, new ReplaceCallback() {
-					@Override
-					public Object replace(final String in) {
-						return textReplacementService.performReplacement(context, in);
-					}
-				});
-
-				List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
-				for (String string : matches) {
-					IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
-					if (templateReplacement != null) {
-						templateReplacement.replace(textPlugin, context);
-					}
-				}
-
-				IDocument document = documentStore.createDocument(getPatientId(context), getTitle(template, context),
-						getCategory(template, context));
-				document.setMimeType(template.getMimeType());
-				documentStore.saveDocument(document, new ByteArrayInputStream(textPlugin.storeToByteArray()));
-				return document;
-			} else {
-				LoggerFactory.getLogger(getClass()).error("Could not load template {}", template.getTitle());
+			if (!textPlugin.loadFromStream(template.getContent(), true)) {
+				return ObjectStatus.ERROR("Could not load template " + template.getTitle());
 			}
+
+			textPlugin.findOrReplace(ITextReplacementService.MATCH_TEMPLATE,
+					in -> textReplacementService.performReplacement(context, in));
+
+			textPlugin.findOrReplace(ITextReplacementService.MATCH_GENDERIZE,
+					in -> textReplacementService.performReplacement(context, in));
+
+			textPlugin.findOrReplace(ITextReplacementService.MATCH_IDATACCESS,
+					in -> textReplacementService.performReplacement(context, in));
+
+			List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
+			for (String string : matches) {
+				IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
+				if (templateReplacement != null) {
+					templateReplacement.replace(textPlugin, context);
+				}
+			}
+
+			IDocument document = documentStore.createDocument(getPatientId(context), getTitle(template, context),
+					getCategory(template, context));
+			document.setMimeType(template.getMimeType());
+			documentStore.saveDocument(document, new ByteArrayInputStream(textPlugin.storeToByteArray()));
+			return ObjectStatus.OK(document);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(getClass()).error("Error creating document from template {}", template.getTitle(),
 					e);
+			return ObjectStatus.ERROR("Error creating document from template " + template.getTitle(), e);
 		}
-		return null;
 	}
 
 	@Override
@@ -133,7 +122,7 @@ public class DocumentService implements IDocumentService {
 						return StringUtils.EMPTY;
 					}
 				});
-				
+
 				List<String> matches = textPlugin.findMatching(MATCH_DIRECTTEMPLATE);
 				for (String string : matches) {
 					IDirectTemplateReplacement templateReplacement = directTemplateReplacement.get(string);
@@ -180,8 +169,8 @@ public class DocumentService implements IDocumentService {
 	@Override
 	public void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer) {
 		if (directTemplateReplacement.containsKey(template)) {
-			LoggerFactory.getLogger(getClass()).warn(
-					"Direct template consumer [" + template + "] replaced with [" + textTemplateConsumer + "]");
+			LoggerFactory.getLogger(getClass())
+					.warn("Direct template consumer [" + template + "] replaced with [" + textTemplateConsumer + "]");
 		}
 		directTemplateReplacement.put(template, textTemplateConsumer);
 	}

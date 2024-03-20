@@ -118,7 +118,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	@After
 	public void after() {
 		removeTestPrescriptions();
-		
+
 		ContextServiceHolder.get().releaseContext("create_document_context");
 
 		cleanup();
@@ -154,7 +154,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void adressatReplacement() throws Exception {
 		context.setNamed("Adressat", testMandators.get(0));
 
-		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		int foundCount = textPlugin.findCount("mandator1");
@@ -171,7 +171,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void patientReplacement() throws Exception {
 		context.setTyped(testPatients.get(0));
 
-		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context).getObject();
 		assertNotNull(createdDocument);
 		assertEquals(testPatients.get(0), createdDocument.getPatient());
 		assertNotNull(createdDocument.getCreated());
@@ -208,7 +208,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void mandantReplacement() throws Exception {
 		context.setTyped(testMandators.get(0));
 
-		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		int foundCount = textPlugin.findCount("mandator1");
@@ -240,7 +240,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void directRezeptzeilenReplacement() throws Exception {
 		context.setTyped(recipe);
 
-		IDocument createdDocument = documentService.createDocument(directTemplate, context);
+		IDocument createdDocument = documentService.createDocument(directTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		saveToTempFileAndDelete(createdDocument);
@@ -255,7 +255,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void directRezeptzeilenExtReplacement() throws Exception {
 		context.setTyped(recipe);
 
-		IDocument createdDocument = documentService.createDocument(directTemplate, context);
+		IDocument createdDocument = documentService.createDocument(directTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		saveToTempFileAndDelete(createdDocument);
@@ -270,7 +270,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void directMedikamentenlisteReplacement() throws Exception {
 		context.setTyped(recipe);
 
-		IDocument createdDocument = documentService.createDocument(directTemplate, context);
+		IDocument createdDocument = documentService.createDocument(directTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		saveToTempFileAndDelete(createdDocument);
@@ -304,7 +304,7 @@ public class IDocumentServiceTest extends AbstractServiceTest {
 	public void fallReplacement() throws Exception {
 		context.setTyped(AllServiceTests.getCoverage());
 
-		IDocument createdDocument = documentService.createDocument(documentTemplate, context);
+		IDocument createdDocument = documentService.createDocument(documentTemplate, context).getObject();
 		assertNotNull(createdDocument);
 
 		saveToTempFileAndDelete(createdDocument);
