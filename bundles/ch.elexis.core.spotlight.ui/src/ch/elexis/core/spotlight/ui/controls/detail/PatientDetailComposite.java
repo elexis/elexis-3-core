@@ -234,7 +234,8 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 		styledText.setStyleRanges(styleRanges);
 		SpotlightShell shell = (SpotlightShell) getShell();
 		String currentSearchText = shell.getSearchText();
-		SpotlightSearchHelper.highlightSearchText(styledText, currentSearchText);
+		int count = SpotlightSearchHelper.highlightSearchText(styledText, currentSearchText);
+		shell.setlableText(count);
 	}
 
 	private final Pattern TAG_PATTERN = Pattern.compile("<([a-z])([0a-z])>(.+?)</[a-z]>");

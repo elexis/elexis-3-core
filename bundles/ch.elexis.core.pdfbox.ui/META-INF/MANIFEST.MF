@@ -16,4 +16,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  javax.inject;version="1.0.0",
  org.slf4j;version="1.6.6"
-Export-Package: ch.elexis.core.pdfbox.ui.parts
+Export-Package: ch.elexis.core.pdfbox.ui.parts,
+ ch.elexis.core.pdfbox.ui.parts.handlers
