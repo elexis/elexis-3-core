@@ -1,8 +1,11 @@
 package ch.elexis.core.spotlight.ui.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
@@ -24,6 +27,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
@@ -199,4 +203,54 @@ public class SpotlightUiUtil {
 		return false;
 	}
 
+	/**
+	 * Handles the selection of a document in the Spotlight search and initiates the
+	 * PDF preview update. This method determines whether the selected element from
+	 * the Spotlight search is a document. If so, it enables the PDF preview
+	 * composite for displaying the document. For non-document categories, it
+	 * disables the PDF preview composite. It then retrieves the document using the
+	 * document's ID and updates the PDF preview in the SpotlightShell.
+	 *
+	 * @param firstElement    The selected element from the Spotlight search
+	 *                        results.
+	 * @param _spotlightShell The instance of SpotlightShell used to update the PDF
+	 *                        preview.
+	 * @return true if the method completes successfully. This return value is
+	 *         currently not used to indicate the success of document loading or
+	 *         preview updating.
+	 */
+	public boolean handleDocumentSelectionAndPreview(Object firstElement, SpotlightShell _spotlightShell) {
+		ISpotlightResultEntry selectedElement = (ISpotlightResultEntry) firstElement;
+		String objectId = selectedElement.getLoaderString();
+		IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
+				.orElse(null);
+		if (document != null && "docx".equalsIgnoreCase(document.getExtension())) {
+			Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+			if (converterService.isPresent() && converterService.get().isAvailable()) {
+				try {
+					Optional<File> pdfFile = converterService.get().convertToPdf(document);
+					if (pdfFile.isPresent()) {
+						FileInputStream pdfStream = new FileInputStream(pdfFile.get());
+						_spotlightShell.adjustShellSize(true);
+						_spotlightShell.updatePdfPreview(pdfStream);
+						return true;
+					}
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
+				}
+			}
+		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
+				&& "pdf".equalsIgnoreCase(document.getExtension())) {
+			try (InputStream pdfStream = document.getContent()) {
+				_spotlightShell.adjustShellSize(true);
+				_spotlightShell.updatePdfPreview(pdfStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			_spotlightShell.adjustShellSize(false);
+		}
+		return true;
+	}
 }

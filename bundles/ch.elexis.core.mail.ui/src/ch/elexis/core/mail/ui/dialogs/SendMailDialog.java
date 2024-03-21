@@ -282,7 +282,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Vertraulich");
 			confidentialCheckbox = new Button(container, SWT.CHECK); // Checkbox initialisieren
-			confidentialCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+			getConfidentialCheckbox().setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 			lbl = new Label(container, SWT.NONE);
 			lbl.setText("Vorlage");
@@ -553,6 +553,12 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 
 	private String getValidation() {
+		if (getConfidentialCheckbox() != null && getConfidentialCheckbox().getSelection()) {
+			subjectString = subjectText.getText() + " (Vertraulich)";
+		} else {
+			subjectString = subjectText.getText();
+		}
+
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
 			return "Kein Konto ausgewählt.";
@@ -572,12 +578,6 @@ public class SendMailDialog extends TitleAreaDialog {
 		toString = to;
 
 		ccString = ccText.getText();
-
-		if (confidentialCheckbox != null && confidentialCheckbox.getSelection()) {
-			subjectString = subjectText.getText() + " (Vertraulich)";
-		} else {
-			subjectString = subjectText.getText();
-		}
 
 		textString = textText.getText();
 
@@ -670,5 +670,9 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	public Boolean doSend() {
 		return doSend;
+	}
+
+	public Button getConfidentialCheckbox() {
+		return confidentialCheckbox;
 	}
 }

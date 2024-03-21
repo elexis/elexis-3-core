@@ -48,7 +48,6 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.ISubQuery;
-import ch.elexis.core.services.IUserService;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
@@ -83,7 +82,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	private PredicateHandler predicateHandler;
 
 	private IAccessControlService accessControlService;
-	private IUserService userService;
 
 	public AbstractModelQuery(Class<T> clazz, boolean refreshCache, EntityManager entityManager,
 			boolean includeDeleted) {
@@ -172,32 +170,38 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	protected abstract void initialize();
 
 	@Override
-	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		predicateHandler.and(feature, comparator, value, ignoreCase);
+		return this;
 	}
 
 	@Override
-	public void and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		predicateHandler.and(entityAttributeName, comparator, value, ignoreCase);
+		return this;
 	}
 
 	@Override
-	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator, EStructuralFeature otherFeature) {
+	public IQuery<T> andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
+			EStructuralFeature otherFeature) {
 		predicateHandler.andFeatureCompare(feature, comparator, otherFeature);
+		return this;
 	}
 
 	@Override
-	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		predicateHandler.or(feature, comparator, value, ignoreCase);
+		return this;
 	}
 
 	@Override
-	public void or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
 		predicateHandler.or(entityAttributeName, comparator, value, ignoreCase);
+		return this;
 	}
 
 	@Override
-	public void orderBy(EStructuralFeature feature, ORDER order) {
+	public IQuery<T> orderBy(EStructuralFeature feature, ORDER order) {
 		String entityAttributeName = predicateHandler.getAttributeName(feature, entityClazz);
 		@SuppressWarnings("rawtypes")
 		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(),
@@ -209,6 +213,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			throw new IllegalStateException(
 					"Could not resolve attribute [" + entityAttributeName + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
+		return this;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -225,7 +230,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	}
 
 	@Override
-	public void orderBy(String fieldOrderBy, ORDER order) {
+	public IQuery<T> orderBy(String fieldOrderBy, ORDER order) {
 		@SuppressWarnings("rawtypes")
 		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
 		if (attribute.isPresent()) {
@@ -235,16 +240,19 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			throw new IllegalStateException(
 					"Could not resolve attribute [" + fieldOrderBy + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
+		return this;
 	}
 
 	@Override
-	public void limit(int limit) {
+	public IQuery<T> limit(int limit) {
 		this.limit = limit;
+		return this;
 	}
 
 	@Override
-	public void offset(int offset) {
+	public IQuery<T> offset(int offset) {
 		this.offset = offset;
+		return this;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -278,7 +286,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 	}
 
 	@Override
-	public void orderBy(Map<String, Object> caseContext, ORDER order) {
+	public IQuery<T> orderBy(Map<String, Object> caseContext, ORDER order) {
 		if (caseContext != null && !caseContext.isEmpty()) {
 			Case<Object> caseExpression = getCaseExpression(caseContext);
 			Order orderBy = null;
@@ -291,6 +299,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 				orderByList.add(orderBy);
 			}
 		}
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -299,32 +308,37 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		Class<? extends EntityWithId> subEntityClazz = (Class<? extends EntityWithId>) modelService
 				.getEntityClass(clazz);
 		Subquery<? extends EntityWithId> sq = criteriaQuery.subquery(subEntityClazz);
-		return new SubQuery<S>(sq, subEntityClazz);
+		return new SubQuery<>(sq, subEntityClazz);
 	}
 
 	@Override
-	public void exists(ISubQuery<?> subQuery) {
+	public IQuery<T> exists(ISubQuery<?> subQuery) {
 		predicateHandler.exists((Subquery<?>) subQuery.getQuery());
+		return this;
 	}
 
 	@Override
-	public void notExists(ISubQuery<?> subQuery) {
+	public IQuery<T> notExists(ISubQuery<?> subQuery) {
 		predicateHandler.notExists((Subquery<?>) subQuery.getQuery());
+		return this;
 	}
 
 	@Override
-	public void startGroup() {
+	public IQuery<T> startGroup() {
 		predicateGroups.createPredicateGroup();
+		return this;
 	}
 
 	@Override
-	public void andJoinGroups() {
+	public IQuery<T> andJoinGroups() {
 		predicateGroups.andPredicateGroups();
+		return this;
 	}
 
 	@Override
-	public void orJoinGroups() {
+	public IQuery<T> orJoinGroups() {
 		predicateGroups.orPredicateGroups();
+		return this;
 	}
 
 	private TypedQuery<?> getTypedQuery() {
@@ -370,11 +384,11 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		if (queryHints == null) {
 			query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
 		} else {
-			queryHints.forEach((hintName, value) -> query.setHint(hintName, value));
+			queryHints.forEach(query::setHint);
 		}
 		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
 		ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-		return new QueryCursor<T>(cursor, adapterFactory, clazz);
+		return new QueryCursor<>(cursor, adapterFactory, clazz);
 	}
 
 	@SuppressWarnings("unchecked")

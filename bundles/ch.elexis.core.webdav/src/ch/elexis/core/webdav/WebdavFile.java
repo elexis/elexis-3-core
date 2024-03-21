@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.impl.SardineException;
-import com.github.sardine.impl.SardineImpl;
 
 /**
  * @see https://docs.nextcloud.com/server/25/developer_manual/client_apis/WebDAV/basic.html
@@ -48,21 +48,13 @@ public class WebdavFile extends URLConnection {
 
 	private Sardine webdav;
 
+	private Object isWriting;
+
 	public WebdavFile(URL url) throws MalformedURLException {
 		super(url);
-		webdav = new SardineImpl();
 		if (url.getUserInfo() != null) {
-			if (url.getUserInfo().contains(":")) {
-				// username:password
-				String[] userInfo = url.getUserInfo().split(":");
-				webdav.setCredentials(userInfo[0], userInfo[1]);
-			} else {
-				// bearer token
-				webdav = new SardineImpl(url.getUserInfo());
-			}
-			webdav.enablePreemptiveAuthentication(url);
+			webdav = WebdavPool.INSTANCE.getSardine(url);
 		}
-		webdav.enableCompression();
 	}
 
 	@Override
@@ -73,22 +65,37 @@ public class WebdavFile extends URLConnection {
 	public OutputStream getOutputStream() throws IOException {
 		PipedOutputStream out = new PipedOutputStream();
 		final PipedInputStream in = new PipedInputStream(out);
-		new Thread(() -> {
+		CompletableFuture.runAsync(() -> {
 			try {
-				byte[] allBytes = in.readAllBytes();
-				webdav.put(url.toString(), allBytes);
+				isWriting = new Object();
+				webdav.put(url.toString(), in, null, false);
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).warn("Error writing file [{}]", url.toString(), e);
 			} finally {
-				try {
-					in.close();
-				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).warn("Error closing PipedInputStream [{}]", url.toString(), e);
+				synchronized (isWriting) {
+					isWriting.notifyAll();
+					isWriting = null;
 				}
 			}
-		}).start();
+		});
 
 		return out;
+	}
+
+	/**
+	 * Wait until the current write operation finished and the {@link DavResource}
+	 * is present. See {@link WebdavFile#getOutputStream()}.
+	 */
+	public void waitWriteComplete() {
+		if (isWriting != null) {
+			synchronized (isWriting) {
+				try {
+					isWriting.wait();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+		}
 	}
 
 	@Override
@@ -196,7 +203,7 @@ public class WebdavFile extends URLConnection {
 				if (href.isAbsolute()) {
 					url = href.toURL();
 				} else {
-					url = getURL().toURI().resolve(href.getPath()).toURL();
+					url = getURL().toURI().resolve(href).toURL();
 				}
 				result[i++] = new WebdavFile(url);
 			} catch (URISyntaxException | MalformedURLException e) {

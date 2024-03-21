@@ -56,19 +56,22 @@ public class CreatePrescriptionHelper {
 	}
 
 	public void createPrescription() {
-		Optional<IArticleDefaultSignature> defaultSignature = MedicationServiceHolder.get()
-				.getDefaultSignature(article);
+		Optional<?> validationResult = ContextServiceHolder.get().getNamed("artikelstamm.selected.article.validate"); // $NON-NLS-1$
+		if (validationResult.isEmpty() || Boolean.TRUE.equals(validationResult.get())) {
+			Optional<IArticleDefaultSignature> defaultSignature = MedicationServiceHolder.get()
+					.getDefaultSignature(article);
 
-		Optional<IArticleDefaultSignature> signature = Optional.empty();
-		if (defaultSignature.isPresent()) {
-			signature = defaultSignature;
-			if (ConfigServiceHolder.getUser(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
-				signature = getSignatureWithDialog(defaultSignature);
+			Optional<IArticleDefaultSignature> signature = Optional.empty();
+			if (defaultSignature.isPresent()) {
+				signature = defaultSignature;
+				if (ConfigServiceHolder.getUser(MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG, false)) {
+					signature = getSignatureWithDialog(defaultSignature);
+				}
+			} else {
+				signature = getSignatureWithDialog(Optional.empty());
 			}
-		} else {
-			signature = getSignatureWithDialog(Optional.empty());
+			signature.ifPresent(s -> createPrescriptionFromSignature(s));
 		}
-		signature.ifPresent(s -> createPrescriptionFromSignature(s));
 	}
 
 	private Optional<IArticleDefaultSignature> getSignatureWithDialog(

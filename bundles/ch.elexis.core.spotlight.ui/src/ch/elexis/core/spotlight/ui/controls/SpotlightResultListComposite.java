@@ -9,12 +9,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 import ch.elexis.core.spotlight.ISpotlightResult;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
@@ -99,11 +103,14 @@ public class SpotlightResultListComposite extends Composite {
 			_spotlightShell.setFocusAppendChar(event.character);
 		});
 
-		tableSpotlightResults.addListener(SWT.FocusIn, event -> {
-			int itemCount = tableSpotlightResults.getItemCount();
-			if (itemCount >= 1) {
-				Object item = tableSpotlightResults.getItem(1).getData();
-				tvSpotlightResults.setSelection(new StructuredSelection(item));
+		tableSpotlightResults.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				TableItem item = tableSpotlightResults.getItem(new Point(e.x, e.y));
+				if (item != null) {
+					tvSpotlightResults.setSelection(new StructuredSelection(item.getData()), true);
+
+				}
 			}
 		});
 
@@ -116,6 +123,7 @@ public class SpotlightResultListComposite extends Composite {
 			if (firstElement instanceof ISpotlightResultEntry) {
 				resultDetailComposite.setSelection((ISpotlightResultEntry) firstElement);
 				((SpotlightShell) getShell()).setSelectedElement(firstElement);
+				uiUtil.handleDocumentSelectionAndPreview(firstElement, _spotlightShell);
 			}
 		});
 

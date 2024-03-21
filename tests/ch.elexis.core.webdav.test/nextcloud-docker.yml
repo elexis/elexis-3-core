@@ -1,0 +1,15 @@
+#
+# Run this image to execute the VirtualFileHandle_Webdav*_Tests
+# Start with docker-compose -f nextcloud-docker.yml up
+# Remove with docker-compose -f nextcloud-docker.yml down
+version: '2'
+
+services:
+  nextcloud-test:
+    image: nextcloud
+    ports:
+      - 22808:80
+    environment:
+      - SQLITE_DATABASE=nextcloud-test
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=admin

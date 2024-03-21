@@ -15,35 +15,44 @@ import ch.elexis.core.services.ISubQuery;
 public class EmptyQuery<T> implements IQuery<T> {
 
 	@Override
-	public void startGroup() {
+	public IQuery<T> startGroup() {
+		return this;
 	}
 
 	@Override
-	public void andJoinGroups() {
+	public IQuery<T> andJoinGroups() {
+		return this;
 	}
 
 	@Override
-	public void orJoinGroups() {
+	public IQuery<T> orJoinGroups() {
+		return this;
 	}
 
 	@Override
-	public void and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> and(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+		return this;
 	}
 
 	@Override
-	public void andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator, EStructuralFeature otherFeature) {
+	public IQuery<T> andFeatureCompare(EStructuralFeature feature, COMPARATOR comparator,
+			EStructuralFeature otherFeature) {
+		return this;
 	}
 
 	@Override
-	public void and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> and(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+		return this;
 	}
 
 	@Override
-	public void or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> or(EStructuralFeature feature, COMPARATOR comparator, Object value, boolean ignoreCase) {
+		return this;
 	}
 
 	@Override
-	public void or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+	public IQuery<T> or(String entityAttributeName, COMPARATOR comparator, Object value, boolean ignoreCase) {
+		return this;
 	}
 
 	@Override
@@ -67,15 +76,18 @@ public class EmptyQuery<T> implements IQuery<T> {
 	}
 
 	@Override
-	public void orderBy(String fieldOrderBy, ORDER order) {
+	public IQuery<T> orderBy(String fieldOrderBy, ORDER order) {
+		return this;
 	}
 
 	@Override
-	public void orderBy(EStructuralFeature feature, ORDER order) {
+	public IQuery<T> orderBy(EStructuralFeature feature, ORDER order) {
+		return this;
 	}
 
 	@Override
-	public void orderBy(Map<String, Object> caseContext, ORDER order) {
+	public IQuery<T> orderBy(Map<String, Object> caseContext, ORDER order) {
+		return this;
 	}
 
 	@Override
@@ -84,19 +96,23 @@ public class EmptyQuery<T> implements IQuery<T> {
 	}
 
 	@Override
-	public void exists(ISubQuery<?> subQuery) {
+	public IQuery<T> exists(ISubQuery<?> subQuery) {
+		return this;
 	}
 
 	@Override
-	public void notExists(ISubQuery<?> subQuery) {
+	public IQuery<T> notExists(ISubQuery<?> subQuery) {
+		return this;
 	}
 
 	@Override
-	public void limit(int limit) {
+	public IQuery<T> limit(int limit) {
+		return this;
 	}
 
 	@Override
-	public void offset(int offset) {
+	public IQuery<T> offset(int offset) {
+		return this;
 	}
 
 	private class EmptySubQuery<S> implements ISubQuery<S> {

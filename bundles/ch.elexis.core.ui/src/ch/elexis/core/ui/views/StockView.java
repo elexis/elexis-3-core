@@ -11,8 +11,9 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -427,12 +428,14 @@ public class StockView extends ViewPart implements IRefreshable {
 				if (pathToSave != null) {
 					CSVWriter csv = null;
 					try {
-						int errorUnkownArticle = 0;
+						int errorUnknownArticle = 0;
 						int success = 0;
-						csv = new CSVWriter(new FileWriter(pathToSave));
+						FileOutputStream fos = new FileOutputStream(pathToSave);
+						OutputStreamWriter osw = new OutputStreamWriter(fos, "ISO-8859-1");
+						csv = new CSVWriter(osw);
 						log.debug("csv export started for: " + pathToSave); //$NON-NLS-1$
 						String[] header = new String[] { "Name", "Pharmacode", "EAN", "Max", "Min",
-								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)", " Stück pro Packung",
+								"Aktuell Packung an Lager", "Aktuell an Lager (Anbruch)", "Stück pro Packung",
 								"Stück pro Abgabe", "Einkaufspreis", "Verkaufspreis", "Typ (P, N, ...)", "Lieferant" };
 						csv.writeNext(header);
 
@@ -460,7 +463,7 @@ public class StockView extends ViewPart implements IRefreshable {
 								csv.writeNext(line);
 								success++;
 							} else {
-								errorUnkownArticle++;
+								errorUnknownArticle++;
 								log.warn("cannot export: id [" + iStockEntry.getId() + "] " + iStockEntry.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
@@ -473,9 +476,9 @@ public class StockView extends ViewPart implements IRefreshable {
 						msg.append("\n\n");
 						msg.append(success);
 						msg.append(" Artikel wurden erfolgreich exportiert.");
-						if (errorUnkownArticle > 0) {
+						if (errorUnknownArticle > 0) {
 							msg.append(StringUtils.LF);
-							msg.append(errorUnkownArticle);
+							msg.append(errorUnknownArticle);
 							msg.append(" Artikel konnten nicht exportiert werden (Unbekannte Artikel Typen).");
 						}
 						SWTHelper.showInfo("Lager export", msg.toString());
