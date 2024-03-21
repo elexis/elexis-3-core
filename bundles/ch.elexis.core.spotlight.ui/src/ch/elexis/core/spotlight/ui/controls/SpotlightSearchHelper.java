@@ -1,5 +1,7 @@
 package ch.elexis.core.spotlight.ui.controls;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +20,9 @@ import org.eclipse.swt.widgets.Display;
  * @version 0.1
  */
 public class SpotlightSearchHelper {
-
+	private static final List<MatchPosition> foundPositions = new ArrayList<>();
+	private static int currentPosition = -1;
+	private static StyledText styledText;
 	/**
 	 * Highlights the phrase in the specified StyledText widget where the search
 	 * terms are connected with a plus sign ('+'). It treats the terms separated by
@@ -37,9 +41,13 @@ public class SpotlightSearchHelper {
 	 *                   within the text. Terms connected with '+' indicate a single
 	 *                   phrase.
 	 */
-	public static void highlightSearchText(StyledText styledText, String searchText) {
+	public static int highlightSearchText(StyledText styledText2, String searchText) {
+		currentPosition = 0;
+		styledText = styledText2;
+		foundPositions.clear();
 		String fullText = styledText.getText().toLowerCase();
 		styledText.setStyleRange(null);
+		int highlightCount = 0;
 		int plusIndex = searchText.indexOf('+');
 		if (plusIndex != -1) {
 			String beforePlus = searchText.substring(0, plusIndex).toLowerCase();
@@ -55,9 +63,10 @@ public class SpotlightSearchHelper {
 			for (String word : searchWords) {
 				if (word.isEmpty())
 					continue;
-				highlightWord(styledText, word, fullText);
+				highlightCount += highlightWord(styledText, word, fullText);
 			}
 		}
+		return highlightCount;
 	}
 
 	/**
@@ -80,6 +89,7 @@ public class SpotlightSearchHelper {
 		Matcher matcher = pattern.matcher(fullText);
 		if (matcher.find()) {
 			int index = matcher.start();
+			foundPositions.add(new MatchPosition(matcher.start(), matcher.end() - matcher.start()));
 			StyleRange styleRange = new StyleRange();
 			styleRange.start = index;
 			styleRange.length = matcher.end() - index;
@@ -104,13 +114,16 @@ public class SpotlightSearchHelper {
 	 * @param fullText   The full text contained within the {@link StyledText}
 	 *                   widget.
 	 */
-	private static void highlightWord(StyledText styledText, String word, String fullText) {
+	private static int highlightWord(StyledText styledText, String word, String fullText) {
 		String searchRegex = escapeRegexSpecialCharacters(word);
 		Pattern pattern = Pattern.compile(searchRegex);
 		Matcher matcher = pattern.matcher(fullText);
+		int wordCount = 0;
 		boolean isFirstMatch = true;
 		while (matcher.find()) {
+			wordCount++;
 			int index = matcher.start();
+			foundPositions.add(new MatchPosition(matcher.start(), matcher.end() - matcher.start()));
 			StyleRange styleRange = new StyleRange();
 			styleRange.start = index;
 			styleRange.length = matcher.end() - index;
@@ -121,6 +134,7 @@ public class SpotlightSearchHelper {
 				isFirstMatch = false;
 			}
 		}
+		return wordCount;
 	}
 
 	/**
@@ -161,5 +175,93 @@ public class SpotlightSearchHelper {
 				styledText.redraw();
 			}
 		});
+	}
+
+	public static MatchPosition getNextPosition() {
+		if (currentPosition >= foundPositions.size() - 1) {
+			return null;
+		}
+		currentPosition++;
+		highlightCurrentPosition(styledText);
+		return foundPositions.get(currentPosition);
+	}
+	public static MatchPosition getPreviousPosition() {
+		if (currentPosition <= 0) {
+			currentPosition = 0;
+		} else {
+			currentPosition--;
+		}
+		highlightCurrentPosition(styledText);
+		return currentPosition >= 0 ? foundPositions.get(currentPosition) : null;
+	}
+
+	public static void highlightCurrentPosition(StyledText styledText) {
+		resetHighlightingExceptCurrentPosition();
+		if (currentPosition >= 0 && currentPosition < foundPositions.size()) {
+			MatchPosition match = foundPositions.get(currentPosition);
+			Display.getDefault().syncExec(() -> {
+				if (!styledText.isDisposed() && match.start < styledText.getCharCount()) {
+					StyleRange styleRange = new StyleRange();
+					styleRange.start = match.start;
+					styleRange.length = match.length;
+					styledText.setStyleRange(styleRange);
+					centerTextAtPosition(styledText, match.start + match.length / 2);
+					styledText.showSelection();
+				}
+			});
+		}
+	}
+
+	public static void highlightWordAtPosition(StyledText styledText, MatchPosition match, int color) {
+		Display.getDefault().asyncExec(() -> {
+			if (!styledText.isDisposed() && match.start >= 0
+					&& match.start + match.length <= styledText.getText().length()) {
+				StyleRange styleRange = new StyleRange();
+				styleRange.start = match.start;
+				styleRange.length = match.length;
+				styleRange.background = Display.getCurrent().getSystemColor(color);
+				styledText.setStyleRange(styleRange);
+			}
+		});
+	}
+
+	public static void resetHighlightingExceptCurrentPosition() {
+		Display.getDefault().syncExec(() -> {
+			if (!styledText.isDisposed()) {
+				styledText.setStyleRange(null);
+				for (int i = 0; i < foundPositions.size(); i++) {
+					if (i != currentPosition) {
+						MatchPosition position = foundPositions.get(i);
+						highlightWordAtPosition(styledText, position, SWT.COLOR_YELLOW);
+					}
+				}
+				if (currentPosition >= 0 && currentPosition < foundPositions.size()) {
+					MatchPosition currentMatch = foundPositions.get(currentPosition);
+					highlightWordAtPosition(styledText, currentMatch, SWT.COLOR_CYAN);
+				}
+			}
+		});
+	}
+
+	public static class MatchPosition {
+		public int start;
+		public int length;
+
+		public MatchPosition(int start, int length) {
+			this.start = start;
+			this.length = length;
+		}
+	}
+
+	public static int getCurrentPosition() {
+		return currentPosition;
+	}
+
+	public static int getTotalMatches() {
+		return foundPositions.size();
+	}
+
+	public static void clearTotalMatches() {
+		foundPositions.clear();
 	}
 }

@@ -1,6 +1,7 @@
 package ch.elexis.core.pdfbox.ui.parts.handlers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
@@ -27,16 +29,17 @@ import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
  */
 public class PDFTextHighlighter {
 
-	private PDDocument pdDocument;
+	private static PDDocument pdDocument;
 	private boolean pageSet = false;
-
+	private static List<MatchPosition> foundPositions = new ArrayList<>();
+	private static int currentPosition = -1;
 	/**
 	 * Constructs a new PDFTextHighlighter with the specified PDF document.
 	 *
 	 * @param pdDocument The {@link PDDocument} to be used for text highlighting.
 	 */
 	public PDFTextHighlighter(PDDocument pdDocument) {
-		this.pdDocument = pdDocument;
+		PDFTextHighlighter.pdDocument = pdDocument;
 	}
 
 	/**
@@ -61,7 +64,8 @@ public class PDFTextHighlighter {
 		if (pdDocument == null) {
 			throw new IOException("pdDocument is null");
 		}
-
+		currentPosition = 0;
+		foundPositions.clear();
 		boolean isExactPhrase = searchText.contains("+");
 		String searchPattern = isExactPhrase ? searchText.replaceAll("\\+", " ") : searchText;
 		PDFTextStripper stripper = new PDFTextStripper() {
@@ -130,12 +134,12 @@ public class PDFTextHighlighter {
 			throws IOException {
 		int textIndex = matcher.start();
 		int endIndex = matcher.end();
-		PDPage page = document.getPage(pageNo - 1); // Page index is zero-based
+		PDPage page = document.getPage(pageNo - 1);
 		PDRectangle cropBox = page.getCropBox();
 		float pageHeight = cropBox.getHeight();
 		TextPosition start = textPositions.get(textIndex);
 		TextPosition end = textPositions.get(endIndex - 1);
-		float tolerance = 5.0f;
+		float tolerance = 2.0f;
 		float width = end.getEndX() - start.getXDirAdj() + tolerance;
 		float height = start.getHeightDir() * 2.5f;
 		float newY = pageHeight - (start.getYDirAdj());
@@ -143,6 +147,9 @@ public class PDFTextHighlighter {
 		markup.setRectangle(new PDRectangle(start.getXDirAdj(), newY, width, height));
 		markup.setQuadPoints(new float[] { start.getXDirAdj(), newY, start.getXDirAdj() + width, newY,
 				start.getXDirAdj(), newY + height, start.getXDirAdj() + width, newY + height });
+		MatchPosition matchPosition = new MatchPosition(start.getXDirAdj(), newY - height, start.getXDirAdj() + width,
+				newY, pageNo);
+		foundPositions.add(matchPosition);
 		markup.setColor(new PDColor(new float[] { 1, 1, 0 }, PDDeviceRGB.INSTANCE));
 		page.getAnnotations().add(markup);
 		if (!pageSet) {
@@ -163,5 +170,112 @@ public class PDFTextHighlighter {
 		String escapedWord = word.replaceAll("([\\\\\\[\\](){}.*+?^$|])", "\\\\$1").replace("ue", "(ü|ue)")
 				.replace("oe", "(ö|oe)").replace("ae", "(ä|ae)").replace("ss", "(ß|ss)");
 		return escapedWord;
+	}
+
+	public static MatchPosition getNextMatch() throws IOException {
+		if (currentPosition >= foundPositions.size() - 1) {
+			return null;
+		}
+		currentPosition++;
+		MatchPosition nextMatch = foundPositions.get(currentPosition);
+		highlightCurrentMatch(nextMatch);
+		return nextMatch;
+	}
+
+	public static MatchPosition getPreviousMatch() throws IOException {
+		if (currentPosition <= 0) {
+			return null;
+		}
+		currentPosition--;
+		MatchPosition previousMatch = foundPositions.get(currentPosition);
+		highlightCurrentMatch(previousMatch);
+		return previousMatch;
+	}
+
+	public static void resetHighlighting() throws IOException {
+		for (PDPage page : pdDocument.getPages()) {
+			List<PDAnnotation> annotationsToRemove = new ArrayList<>();
+			for (PDAnnotation annotation : page.getAnnotations()) {
+				if (annotation instanceof PDAnnotationTextMarkup) {
+					PDAnnotationTextMarkup textMarkup = (PDAnnotationTextMarkup) annotation;
+					if (textMarkup.getSubtype().equals(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT)) {
+						annotationsToRemove.add(textMarkup);
+					}
+				}
+			}
+			page.getAnnotations().removeAll(annotationsToRemove);
+		}
+	}
+
+	public static void highlightCurrentMatch(MatchPosition currentMatch) throws IOException {
+		if (currentMatch == null) {
+			return;
+		}
+		resetHighlighting();
+		PDPage page = pdDocument.getPage(currentMatch.pageNo - 1);
+		PDAnnotationTextMarkup annotation = new PDAnnotationTextMarkup(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT);
+		PDRectangle rect = new PDRectangle();
+		rect.setLowerLeftX(currentMatch.startX);
+		rect.setLowerLeftY(currentMatch.startY);
+		rect.setUpperRightX(currentMatch.endX);
+		rect.setUpperRightY(currentMatch.endY);
+		annotation.setRectangle(rect);
+		annotation.setQuadPoints(new float[] { currentMatch.startX, currentMatch.endY, currentMatch.endX,
+				currentMatch.endY, currentMatch.startX, currentMatch.startY, currentMatch.endX, currentMatch.startY });
+		annotation.setColor(new PDColor(new float[] { 1, 1, 1 }, PDDeviceRGB.INSTANCE));
+		page.getAnnotations().add(annotation);
+		PdfPreviewPartLoadHandler.setCurrentPageNo(currentMatch.pageNo);
+	}
+
+	public static class MatchPosition {
+		public float startX;
+		public float startY;
+		public float endX;
+		public float endY;
+		public int pageNo;
+		public List<TextPosition> textPositions;
+
+		public MatchPosition(float startX, float startY, float endX, float endY, int pageNo) {
+			this.startX = startX;
+			this.startY = startY;
+			this.endX = endX;
+			this.endY = endY;
+			this.pageNo = pageNo;
+			this.textPositions = new ArrayList<>();
+		}
+	}
+
+	public void reapplyHighlights() {
+	    try {
+			resetHighlighting();
+			final float cmToPointsFactor = 28.346457f;
+			final float adjustmentHeight = 0.4f * cmToPointsFactor;
+	        for (int i = 0; i < foundPositions.size(); i++) {
+	            MatchPosition match = foundPositions.get(i);
+	            PDPage page = pdDocument.getPage(match.pageNo - 1);
+	            PDAnnotationTextMarkup annotation = new PDAnnotationTextMarkup(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT);
+				float adjustedStartY = match.startY + adjustmentHeight;
+				float adjustedEndY = match.endY + adjustmentHeight;
+	            PDRectangle rect = new PDRectangle();
+	            rect.setLowerLeftX(match.startX);
+				rect.setLowerLeftY(adjustedStartY);
+	            rect.setUpperRightX(match.endX);
+				rect.setUpperRightY(adjustedEndY);
+	            annotation.setRectangle(rect);
+	            float[] quadPoints = new float[]{
+						match.startX, adjustedEndY, match.endX, adjustedEndY, match.startX, adjustedStartY, match.endX,
+						adjustedStartY
+	            };
+	            annotation.setQuadPoints(quadPoints);
+	            if (i == currentPosition) {
+					annotation.setColor(new PDColor(new float[] { 0, 1, 1 }, PDDeviceRGB.INSTANCE));
+	            } else {
+					annotation.setColor(new PDColor(new float[] { 1, 1, 0 }, PDDeviceRGB.INSTANCE));
+	            }
+	            page.getAnnotations().add(annotation);
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 }

@@ -18,8 +18,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.slf4j.LoggerFactory;
 
@@ -231,6 +233,36 @@ public class PdfPreviewPartLoadHandler {
 		return null;
 	}
 
+	private void renderPdfWithHighlights() {
+		Display.getDefault().syncExec(() -> {
+			try {
+				if (pdDocument != null) {
+					PDFRenderer renderer = new PDFRenderer(pdDocument);
+					for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+						if (StringUtils.isNotBlank(searchText)) {
+							PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
+							highlighter.reapplyHighlights();
+						}
+						BufferedImage bufferedImage = renderer.renderImage(i, scalingFactor);
+						ImageData imageData = convertToSWT(bufferedImage);
+						Image image = new Image(Display.getDefault(), imageData);
+						Label label = new Label(previewComposite, SWT.NONE);
+						label.setImage(image);
+						label.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false));
+						label.addDisposeListener(e -> image.dispose());
+					}
+					previewComposite.layout(true);
+					scrolledComposite.layout(true);
+					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					centerContentHorizontally();
+					centerContentOnPage(currentPageNo);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	/**
 	 * Centers the content horizontally within the {@link ScrolledComposite}. This
 	 * method calculates the horizontal position needed to center the content of
@@ -269,18 +301,26 @@ public class PdfPreviewPartLoadHandler {
 	 * @param targetPage The page number to center content on. This should be a
 	 *                   positive integer, where 1 corresponds to the first page.
 	 */
+
 	private void centerContentOnPage(int targetPage) {
 		previewComposite.getDisplay().asyncExec(() -> {
 			if (!scrolledComposite.isDisposed() && !previewComposite.isDisposed()) {
 				int clientWidth = scrolledComposite.getClientArea().width;
 				int contentWidth = previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-				int hScrollPos = (contentWidth - clientWidth) / 6;
+				int hScrollPos = (contentWidth - clientWidth) / 2;
 				if (hScrollPos > 0) {
 					scrolledComposite.getHorizontalBar().setSelection(hScrollPos);
 				}
-				scrolledComposite.setOrigin(hScrollPos, scrolledComposite.getOrigin().y);
-				int yOffset = (targetPage - 1) * scrolledComposite.getClientArea().height;
-				scrolledComposite.setOrigin(scrolledComposite.getOrigin().x, yOffset);
+				Control[] children = previewComposite.getChildren();
+				int yOffset = 0;
+				for (int i = 0; i < targetPage - 1 && i < children.length; i++) {
+					yOffset += children[i].getSize().y;
+				}
+				int remainingSpace = (scrolledComposite.getClientArea().height - children[targetPage - 1].getSize().y)
+						/ 2;
+				int newVScrollPos = yOffset - remainingSpace;
+				newVScrollPos = Math.max(0, newVScrollPos);
+				scrolledComposite.setOrigin(hScrollPos, newVScrollPos);
 			}
 		});
 	}
@@ -291,5 +331,16 @@ public class PdfPreviewPartLoadHandler {
 
 	public void setSearchText(String searchText) {
 		this.searchText = searchText;
+	}
+
+	public void reloadPdf() {
+		loader.submit(() -> {
+			Display.getDefault().syncExec(() -> {
+				for (Control control : previewComposite.getChildren()) {
+					control.dispose();
+				}
+			});
+			renderPdfWithHighlights();
+		});
 	}
 }
