@@ -1,1 +1,0 @@
-According to http://hapifhir.io/ - HAPI FHIR is licensed under the business-friendly Apache Software License, version 2.0. 

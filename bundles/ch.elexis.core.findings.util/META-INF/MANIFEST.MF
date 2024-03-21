@@ -9,7 +9,7 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.services;bundle-version="3.10.0",
  ch.elexis.core.findings;bundle-version="3.10.0",
- ch.elexis.core.hapi.fhir;bundle-version="4.1.0"
+ info.elexis.target.hapi.fhir;bundle-version="5.4.2"
 Export-Package: ch.elexis.core.findings.scripting,
  ch.elexis.core.findings.util,
  ch.elexis.core.findings.util.commands,

@@ -11,7 +11,7 @@ Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.jpa;bundle-version="3.10.0",
  ch.elexis.core.jpa.entities;bundle-version="3.10.0",
  ch.elexis.core.findings.util;bundle-version="1.0.0",
- ch.elexis.core.hapi.fhir;bundle-version="4.1.0"
+ info.elexis.target.hapi.fhir;bundle-version="5.4.2"
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.persistence;version="2.2.3",
  javax.persistence.criteria;version="2.2.3",
