@@ -120,4 +120,13 @@ public interface IEncounterService {
 	 */
 	public void addDefaultDiagnosis(IEncounter encounter);
 
+	/**
+	 * All {@link IBilled} of the {@link IEncounter} will be updated according to
+	 * the information of the {@link ICoverage}.
+	 * 
+	 * @param encounter
+	 * @return
+	 */
+	public Result<IEncounter> reBillEncounter(IEncounter encounter);
+
 }
