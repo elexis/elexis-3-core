@@ -64,23 +64,29 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.OrganizationConstants;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
+import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.core.ui.util.DayDateCombo;
@@ -88,11 +94,13 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Fall.Tiers;
+import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.dto.FallDTO;
+import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -259,9 +267,23 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
 							if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE))) {
-								if (SWTHelper.askYesNo(Messages.FallDetailBlatt2_DontChangeBillingSystemCaption, // $NON-NLS-1$
-										Messages.FallDetailBlatt2_DontChangeBillingSystemBody)) { // $NON-NLS-1$
+								if (SWTHelper.askYesNo(Messages.Invoice_System, // $NON-NLS-1$
+										MessageFormat.format(Messages.FallDetailBlatt2_Change_Invoice_System,
+												new Object[] { fall.getAbrechnungsSystem(),
+														cAbrechnung.getItem(i) }))) { // $NON-NLS-1$
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
+									for (Konsultation behandlung : fall.getBehandlungen(false)) {
+										IEncounter encounter = NoPoUtil.loadAsIdentifiable(behandlung, IEncounter.class)
+												.get();
+										// make sure to work with updated data
+										CoreModelServiceHolder.get().refresh(encounter.getCoverage(), true);
+										Result<IEncounter> result = EncounterServiceHolder.get().reBillEncounter(
+												NoPoUtil.loadAsIdentifiable(behandlung, IEncounter.class).get());
+										if (!result.isOK()) {
+											SWTHelper.alert(behandlung.getLabel(), result.toString());
+										}
+										ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+									}
 									setFall(fall);
 									return;
 								}
