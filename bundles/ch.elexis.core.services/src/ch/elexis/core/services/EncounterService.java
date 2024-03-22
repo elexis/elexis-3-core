@@ -132,7 +132,8 @@ public class EncounterService implements IEncounterService {
 		return result;
 	}
 
-	private Result<IEncounter> reBillEncounter(IEncounter encounter) {
+	@Override
+	public Result<IEncounter> reBillEncounter(IEncounter encounter) {
 		Result<IEncounter> result = new Result<IEncounter>(encounter);
 
 		ch.elexis.core.services.ICodeElementService codeElementService = CodeElementServiceHolder.get();
