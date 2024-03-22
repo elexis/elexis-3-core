@@ -1,5 +1,6 @@
 package ch.elexis.core.spotlight.ui.internal;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
@@ -17,14 +18,18 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -32,8 +37,10 @@ import org.osgi.framework.FrameworkUtil;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
+import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextHighlighter;
 import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.controls.SpotlightResultComposite;
+import ch.elexis.core.spotlight.ui.controls.SpotlightSearchHelper;
 import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyComposite;
 import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -63,6 +70,8 @@ public class SpotlightShell extends Shell {
 	private Point origin;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
 	private ScrolledComposite scrolledComposite;
+	private Label lblFound;
+
 	public SpotlightShell(Shell shell, EPartService partService, ISpotlightService spotlightService,
 			ISpotlightResultEntryDetailCompositeService resultEntryDetailCompositeService,
 			SpotlightReadyService spotlightReadyService, Map<String, String> spotlightContextParameters) {
@@ -95,7 +104,6 @@ public class SpotlightShell extends Shell {
 				event.doit = true;
 				break;
 			}
-
 		});
 
 		// clicking outside closes shell
@@ -129,6 +137,9 @@ public class SpotlightShell extends Shell {
 
 	private final String SEARCH_ICON = "spotlight-search-icon";
 	private final String SEARCHTEXT_FONT = "spotlight-searchtext-font";
+	private int lableText ;
+	private Composite parentComposite;
+	private InputStream pdfIDocument;
 
 	/**
 	 * Create contents of the shell.
@@ -149,16 +160,16 @@ public class SpotlightShell extends Shell {
 			logo = JFaceResources.getImageRegistry().get(SEARCH_ICON);
 		}
 		lblIcon.setImage(logo);
-		lblIcon.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-
+		lblIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		filterComposite = new Composite(this, SWT.NO_FOCUS);
 		filterComposite.setLayout(new GridLayout(1, false));
 		filterComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		filterComposite.setBackground(this.getBackground());
-
+		lblFound = new Label(this, SWT.RIGHT | SWT.CENTER);
+		lblFound.setText("Gefundene Suchwörter:     00 / 00  ");
+		lblFound.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false, 4, 1));
 		if (spotlightContextParameters != null) {
 			if (spotlightContextParameters.containsKey(ISpotlightService.CONTEXT_FILTER_PATIENT_ID)) {
-
 				Label patientFilter = new Label(filterComposite, SWT.None);
 				patientFilter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 				patientFilter.setImage(Images.IMG_PERSON.getImage());
@@ -168,6 +179,8 @@ public class SpotlightShell extends Shell {
 		}
 
 		txtSearchInput = new Text(this, SWT.None);
+		GridData txtSearchInputGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		txtSearchInput.setLayoutData(txtSearchInputGridData);
 		txtSearchInput.setBackground(this.getBackground());
 		txtSearchInput.setToolTipText(Messages.SpotlightSerchHelText);
 		Font biggerFont;
@@ -183,6 +196,47 @@ public class SpotlightShell extends Shell {
 		txtSearchInput.setMessage("Suchbegriff eingeben");
 		txtSearchInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearchInput.setTextLimit(256);
+		Button upButton = new Button(this, SWT.PUSH | SWT.FLAT);
+		Button downButton = new Button(this, SWT.PUSH | SWT.FLAT);
+		GridData gridData = new GridData(SWT.END, SWT.LEFT, false, false);
+		gridData.widthHint = 75;
+		gridData.heightHint = 24;
+		upButton.setText(Messages.TimeMachineDisplay_back);
+		upButton.setLayoutData(gridData);
+		downButton.setText(Messages.Next);
+		downButton.setLayoutData(gridData);
+		downButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SpotlightSearchHelper.getNextPosition();
+				updateLabel();
+				try {
+					PDFTextHighlighter.getNextMatch();
+					if (pdfPreviewPartLoadHandler != null) {
+						pdfPreviewPartLoadHandler.reloadPdf();
+					}
+					updateLabel();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		upButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SpotlightSearchHelper.getPreviousPosition();
+				updateLabel();
+				try {
+					PDFTextHighlighter.getPreviousMatch();
+					if (pdfPreviewPartLoadHandler != null) {
+						pdfPreviewPartLoadHandler.reloadPdf();
+					}
+					updateLabel();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		txtSearchInput.addModifyListener(change -> {
 			final String text = ((Text) change.widget).getText();
 			setSearchText(text);
@@ -190,7 +244,6 @@ public class SpotlightShell extends Shell {
 			if (timer != null) {
 				timer.cancel();
 			}
-
 			boolean isReadyMode = StringUtils.isEmpty(text);
 			switchReadyResultMode(isReadyMode);
 			layeredComposite.layout(true, true);
@@ -200,7 +253,12 @@ public class SpotlightShell extends Shell {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					spotlightService.computeResult(searchTextForSearch, spotlightContextParameters);
+					Display.getDefault().asyncExec(() -> {
+						if (!isDisposed()) {
+							spotlightService.computeResult(searchTextForSearch, spotlightContextParameters);
+							SpotlightSearchHelper.clearTotalMatches();
+						}
+					});
 				}
 			}, 200);
 		});
@@ -221,13 +279,12 @@ public class SpotlightShell extends Shell {
 					close();
 				}
 			}
-
 		});
 
 		Label lblSeparator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
-		Composite parentComposite = new Composite(this, SWT.NONE);
+		parentComposite = new Composite(this, SWT.NONE);
 		GridLayout parentLayout = new GridLayout(2, false);
 		parentComposite.setLayout(parentLayout);
 		parentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
@@ -235,7 +292,7 @@ public class SpotlightShell extends Shell {
 		detailCompositeStackLayout = new StackLayout();
 		layeredComposite.setLayout(detailCompositeStackLayout);
 		layeredCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		layeredCompositeGridData.widthHint = 800;
+		layeredCompositeGridData.widthHint = 1200;
 		layeredComposite.setLayoutData(layeredCompositeGridData);
 
 		readyComposite = new SpotlightReadyComposite(layeredComposite, SWT.NONE, partService, spotlightReadyService);
@@ -262,6 +319,7 @@ public class SpotlightShell extends Shell {
 		switchReadyResultMode(true);
 		txtSearchInput.setFocus();
 		previewComposite.setVisible(ispdfPreviewComp);
+		adjustShellSize(true);
 	}
 
 	private void switchReadyResultMode(boolean setReadyMode) {
@@ -270,14 +328,13 @@ public class SpotlightShell extends Shell {
 			readyComposite.setEnabled(true);
 			detailCompositeStackLayout.topControl = readyComposite;
 			layeredComposite.setTabList(new Control[] { readyComposite });
-			resultComposite.clearResults();
+			resultComposite.clearResults();	
 		} else {
 			resultComposite.setEnabled(true);
 			readyComposite.setEnabled(false);
 			detailCompositeStackLayout.topControl = resultComposite;
 			layeredComposite.setTabList(new Control[] { resultComposite });
 		}
-
 	}
 
 	public static boolean ispdfPreviewComposite() {
@@ -292,7 +349,6 @@ public class SpotlightShell extends Shell {
 		} else {
 			txtSearchInput.setText(text + charachter);
 		}
-
 		txtSearchInput.setSelection(txtSearchInput.getText().length());
 		return result;
 	}
@@ -318,8 +374,20 @@ public class SpotlightShell extends Shell {
 		this.searchText = searchText.trim();
 	}
 
-	public void updatePdfPreview(InputStream pdfIDocument) {
-		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfIDocument, Float.valueOf("0.9f"), previewComposite,
+	public void setlableText(int count) {
+		this.lableText = count;
+		lblFound.setText("Gefundene Suchwörter: " + count);
+		Display.getCurrent().syncExec(() -> this.getParent().layout(true, true));
+	}
+
+	public int getlableText() {
+		return lableText;
+	}
+
+	public void updatePdfPreview(InputStream pdfIDocument2) {
+		this.pdfIDocument = pdfIDocument2;
+		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfIDocument2, Float.valueOf("0.9f"),
+				previewComposite,
 				scrolledComposite);
 		pdfPreviewPartLoadHandler.setSearchText(searchText);
 		previewComposite.setVisible(ispdfPreviewComp);
@@ -331,9 +399,16 @@ public class SpotlightShell extends Shell {
 			layeredCompositeGridData.widthHint = 950;
 			ispdfPreviewComp = true;
 		} else {
-			setSize(700, 500);
-			layeredCompositeGridData.widthHint = 450;
+			setSize(800, 500);
+			layeredCompositeGridData.widthHint = 500;
 			ispdfPreviewComp = false;
 		}
+	}
+
+	public void updateLabel() {
+		int currentPosition = SpotlightSearchHelper.getCurrentPosition() + 1;
+		int total = SpotlightSearchHelper.getTotalMatches();
+		lblFound.setText("Gefundene Suchwörter: " + currentPosition + " / " + total);
+		Display.getCurrent().syncExec(() -> this.getParent().layout(true, true));
 	}
 }

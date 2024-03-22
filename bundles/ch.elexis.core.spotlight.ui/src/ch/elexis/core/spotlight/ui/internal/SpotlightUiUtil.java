@@ -231,8 +231,8 @@ public class SpotlightUiUtil {
 					Optional<File> pdfFile = converterService.get().convertToPdf(document);
 					if (pdfFile.isPresent()) {
 						FileInputStream pdfStream = new FileInputStream(pdfFile.get());
-						_spotlightShell.adjustShellSize(true);
 						_spotlightShell.updatePdfPreview(pdfStream);
+						_spotlightShell.adjustShellSize(true);
 						return true;
 					}
 				} catch (IOException e) {
@@ -242,8 +242,8 @@ public class SpotlightUiUtil {
 		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
 				&& "pdf".equalsIgnoreCase(document.getExtension())) {
 			try (InputStream pdfStream = document.getContent()) {
-				_spotlightShell.adjustShellSize(true);
 				_spotlightShell.updatePdfPreview(pdfStream);
+				_spotlightShell.adjustShellSize(true);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;

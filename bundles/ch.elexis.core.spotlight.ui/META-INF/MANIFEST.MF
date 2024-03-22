@@ -16,7 +16,9 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: ch.elexis.core.documents,
  ch.elexis.core.pdfbox.ui.parts,
+ ch.elexis.core.pdfbox.ui.parts.handlers,
  javax.inject;version="1.0.0",
+ org.apache.pdfbox.pdmodel,
  org.eclipse.e4.ui.services,
  org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
