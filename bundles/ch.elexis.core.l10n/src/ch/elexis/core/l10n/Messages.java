@@ -1828,6 +1828,7 @@ public class Messages extends NLS {
 	public static String FallDetailBlatt2_BillingMethod;
 	public static String FallDetailBlatt2_CantChangeBillingSystemBody;
 	public static String FallDetailBlatt2_ChangeBillingSystemNotAllowedBody;
+	public static String FallDetailBlatt2_Change_Invoice_System;
 	public static String FallDetailBlatt2_CopyToPatient;
 	public static String FallDetailBlatt2_DaysOrAfter;
 	public static String FallDetailBlatt2_DaysOrAfterNeg;
