@@ -56,7 +56,7 @@ public class SysEventWatcher implements EventHandler {
 
 	public void release(ITaskDescriptor taskDescriptor) {
 		String topic = fetchTopic(taskDescriptor);
-		String clazz = fetchTopic(taskDescriptor);
+		String clazz = fetchClass(taskDescriptor);
 		synchronized (incurred) {
 			Set<ITaskDescriptor> topicTds = incurred.get(topic + "_" + clazz);
 			if (topicTds != null) {
