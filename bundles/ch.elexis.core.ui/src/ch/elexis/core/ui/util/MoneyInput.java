@@ -40,7 +40,7 @@ import ch.rgw.tools.StringTool;
  */
 public class MoneyInput extends Composite {
 	Text text;
-	List<SelectionListener> listeners = new LinkedList<SelectionListener>();
+	List<SelectionListener> listeners = new LinkedList<>();
 
 	public MoneyInput(final Composite parent) {
 		super(parent, SWT.NONE);

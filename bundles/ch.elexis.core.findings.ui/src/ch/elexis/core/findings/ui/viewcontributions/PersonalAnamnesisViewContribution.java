@@ -58,7 +58,7 @@ public class PersonalAnamnesisViewContribution implements IViewContribution {
 						.collect(Collectors.toList());
 			}
 
-			if (observations != null && observations.size() >= 1) {
+			if (observations != null && !observations.isEmpty()) {
 				if (observations.size() > 1) {
 					MessageDialog.openWarning(anamnesisComposite.getShell(), "Persönliche Anamnese",
 							"Mehr als eine persönliche Anamnese gefunden.\n Nur die letzte persönliche Anamnese wird angezeigt.");

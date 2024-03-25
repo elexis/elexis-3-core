@@ -1391,15 +1391,15 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							actualInvoice.setBemerkung(txtBemerkung.toString());
 
 							log.debug("invoice correction: successfully finished"); //$NON-NLS-1$
-							return new Result<String>("ok");
+							return new Result<>("ok");
 						}
 						log.debug("invoice correction: failed with warnings"); //$NON-NLS-1$
-						return new Result<String>(SEVERITY.WARNING, 2, "warn", null, false); //$NON-NLS-1$
+						return new Result<>(SEVERITY.WARNING, 2, "warn", null, false); //$NON-NLS-1$
 					}
 				} catch (Exception e) {
 					log.error("invoice correction: failed with errors [{}]", actualInvoice.getId(), e); //$NON-NLS-1$
 					setInvoiceCorrectionInfo(actualInvoice);
-					return new Result<String>(SEVERITY.ERROR, 2, "error", //$NON-NLS-1$
+					return new Result<>(SEVERITY.ERROR, 2, "error", //$NON-NLS-1$
 							"Die Rechnungskorrektur konnte nicht vollständig durchgeführt werden.\nFür mehr Details, beachten Sie bitte das Log-File.",
 							false);
 				}

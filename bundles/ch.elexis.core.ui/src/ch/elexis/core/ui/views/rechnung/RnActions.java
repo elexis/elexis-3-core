@@ -197,7 +197,7 @@ public class RnActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = view.createList();
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					Rechnung actRn = list.get(0);
 					try {
 						if (new RnDialogs.BuchungHinzuDialog(view.getViewSite().getShell(), actRn)
@@ -301,7 +301,7 @@ public class RnActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = view.createList();
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					for (Rechnung actRn : list) {
 						InvoiceState invoiceState = actRn.getInvoiceState();
 						switch (invoiceState) {
@@ -324,7 +324,7 @@ public class RnActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = view.createList();
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					Rechnung actRn = list.get(0);
 
 					// Allfaelliges Guthaben des Patienten der Rechnung als

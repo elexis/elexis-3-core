@@ -198,7 +198,7 @@ public class UserService implements IUserService {
 		public Set<IMandator> load(IUser user) throws Exception {
 			List<IUserGroup> groups = getUserGroups(user);
 			if (!groups.isEmpty()) {
-				Set<IMandator> ret = new HashSet<IMandator>();
+				Set<IMandator> ret = new HashSet<>();
 				groups.forEach(gr -> {
 					ret.addAll(getExecutiveDoctorsWorkingFor(gr, true));
 				});
@@ -241,14 +241,14 @@ public class UserService implements IUserService {
 	public boolean verifyUsernameNotTaken(String username) {
 		IQuery<IUser> query = modelService.getQuery(IUser.class, true);
 		query.and("id", COMPARATOR.EQUALS, username);
-		return query.execute().size() == 0;
+		return query.execute().isEmpty();
 	}
 
 	@Override
 	public boolean verifyGroupnameNotTaken(String groupname) {
 		IQuery<IUserGroup> query = modelService.getQuery(IUserGroup.class, true);
 		query.and("id", COMPARATOR.EQUALS, groupname);
-		return query.execute().size() == 0;
+		return query.execute().isEmpty();
 	}
 
 	@Override
@@ -282,16 +282,16 @@ public class UserService implements IUserService {
 	public List<IRole> getUserRoles(IUser user) {
 		List<IUserGroup> groups = getUserGroups(user);
 		if (!groups.isEmpty()) {
-			Set<IRole> roles = new HashSet<IRole>();
+			Set<IRole> roles = new HashSet<>();
 			groups.forEach(g -> roles.addAll(g.getRoles()));
-			return new ArrayList<IRole>(roles);
+			return new ArrayList<>(roles);
 		}
 		return user.getRoles();
 	}
 
 	@Override
 	public Set<String> setUserRoles(IUser user, Set<String> userRoles) {
-		List<IRole> targetUserRoleSet = new LinkedList<IRole>();
+		List<IRole> targetUserRoleSet = new LinkedList<>();
 		for (String roleId : userRoles) {
 			Optional<IRole> _role = modelService.load(roleId, IRole.class);
 			if (_role.isPresent()) {

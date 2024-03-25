@@ -61,14 +61,14 @@ public class DBImage extends PersistentObject {
 	}
 
 	public static DBImage find(String prefix, String name) {
-		Query<DBImage> qbe = new Query<DBImage>(DBImage.class);
+		Query<DBImage> qbe = new Query<>(DBImage.class);
 		if (StringTool.isNothing(prefix)) {
 			prefix = DEFAULT_PREFIX;
 		}
 		qbe.add(FLD_PREFIX, Query.EQUALS, prefix);
 		qbe.add(FLD_TITLE, Query.EQUALS, name);
 		List<DBImage> ret = qbe.execute();
-		if (ret != null && ret.size() > 0) {
+		if (ret != null && !ret.isEmpty()) {
 			return ret.get(0);
 		}
 		return null;

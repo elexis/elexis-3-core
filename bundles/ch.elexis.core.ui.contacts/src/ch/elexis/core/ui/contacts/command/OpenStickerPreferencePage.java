@@ -34,7 +34,7 @@ public class OpenStickerPreferencePage extends AbstractHandler {
 
 		Command cmd = commandService.getCommand("org.eclipse.ui.window.preferences"); //$NON-NLS-1$
 		try {
-			HashMap<String, String> hm = new HashMap<String, String>();
+			HashMap<String, String> hm = new HashMap<>();
 			hm.put("preferencePageId", "ch.elexis.prefs.sticker"); //$NON-NLS-1$ //$NON-NLS-2$
 			ExecutionEvent ev = new ExecutionEvent(cmd, hm, null, null);
 			cmd.executeWithChecks(ev);

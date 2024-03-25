@@ -39,7 +39,7 @@ public class LaborMappingComposite extends Composite {
 	@SuppressWarnings("unchecked")
 	protected List<LabMapping> content = Collections.EMPTY_LIST;
 
-	protected List<TransientLabMapping> transientContent = new ArrayList<TransientLabMapping>();
+	protected List<TransientLabMapping> transientContent = new ArrayList<>();
 
 	public LaborMappingComposite(Composite parent, int style) {
 		super(parent, style);

@@ -29,7 +29,7 @@ public class MoveFallAHVNrToContact extends ExternalMaintenance {
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder output = new StringBuilder();
 
-		Query<Fall> qbe = new Query<Fall>(Fall.class);
+		Query<Fall> qbe = new Query<>(Fall.class);
 		List<Fall> qre = qbe.execute();
 		pm.beginTask("Verschiebe Fall.AHV-Nummer Zuordnung zu Kontakt", qre.size());
 		for (Fall fall : qre) {

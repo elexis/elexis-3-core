@@ -96,7 +96,7 @@ public class EncounterService implements IEncounterService {
 			return editableResult;
 		}
 
-		Result<IEncounter> result = new Result<IEncounter>(encounter);
+		Result<IEncounter> result = new Result<>(encounter);
 
 		// transfer encounter and save to clear dirty flag
 		encounter.setMandator(mandator);
@@ -119,7 +119,7 @@ public class EncounterService implements IEncounterService {
 			return editableResult;
 		}
 
-		Result<IEncounter> result = new Result<IEncounter>(encounter);
+		Result<IEncounter> result = new Result<>(encounter);
 
 		ICoverage encounterCovearage = encounter.getCoverage();
 		// transfer encounter and save to clear dirty flag
@@ -136,7 +136,7 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public Result<IEncounter> reBillEncounter(IEncounter encounter) {
-		Result<IEncounter> result = new Result<IEncounter>(encounter);
+		Result<IEncounter> result = new Result<>(encounter);
 
 		ch.elexis.core.services.ICodeElementService codeElementService = CodeElementServiceHolder.get();
 		HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
@@ -147,7 +147,7 @@ public class EncounterService implements IEncounterService {
 			IBillable billable = billed.getBillable();
 			if (billable == null) {
 				String message = "Could not resolve billable for billed [" + billed + "]";
-				return new Result<IEncounter>(SEVERITY.ERROR, 0, message, encounter, false);
+				return new Result<>(SEVERITY.ERROR, 0, message, encounter, false);
 			}
 		}
 

@@ -396,7 +396,7 @@ public class Connection implements SerialPortDataListener {
 	}
 
 	public static String[] getComPorts() {
-		ArrayList<String> p = new ArrayList<String>();
+		ArrayList<String> p = new ArrayList<>();
 		try {
 			for (SerialPort serialPort : SerialPort.getCommPorts()) {
 				p.add(serialPort.getSystemPortName());

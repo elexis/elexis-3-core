@@ -92,7 +92,7 @@ public class ScriptView extends ViewPart {
 
 			@Override
 			public Object[] getElements(Object inputElement) {
-				SortedList<Script> sortedScripts = new SortedList<Script>(new ScriptComparator());
+				SortedList<Script> sortedScripts = new SortedList<>(new ScriptComparator());
 				List<Script> scripts = Script.getScripts();
 				for (int i = 0; i < scripts.size(); i++) {
 					Script script = scripts.get(i);
@@ -274,7 +274,7 @@ public class ScriptView extends ViewPart {
 					Script script = (Script) sel.getFirstElement();
 					try {
 						String contents = script.getString();
-						ArrayList<String> vars = new ArrayList<String>();
+						ArrayList<String> vars = new ArrayList<>();
 						Pattern var = Pattern.compile("\\$[0-9a-z]+", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 						Matcher m = var.matcher(contents);
 						while (m.find()) {
@@ -284,7 +284,7 @@ public class ScriptView extends ViewPart {
 							}
 						}
 						String varString = null;
-						if (vars.size() > 0) {
+						if (!vars.isEmpty()) {
 							SetVarsDlg dlg = new SetVarsDlg(getViewSite().getShell(), vars);
 							if (dlg.open() == Dialog.OK) {
 								varString = dlg.getResult();
@@ -309,7 +309,7 @@ public class ScriptView extends ViewPart {
 		SetVarsDlg(Shell shell, List<String> vars) {
 			super(shell);
 			myVars = vars;
-			inputs = new ArrayList<Text>(vars.size());
+			inputs = new ArrayList<>(vars.size());
 		}
 
 		@Override

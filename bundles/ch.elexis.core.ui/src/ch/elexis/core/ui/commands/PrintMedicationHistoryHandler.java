@@ -132,7 +132,7 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 	public Optional<MedicationHistoryLetter> getToPrint() {
 		Patient patient = ElexisEventDispatcher.getSelectedPatient();
 		if (patient != null) {
-			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+			Query<Prescription> qbe = new Query<>(Prescription.class);
 			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patient.getId());
 			List<Prescription> list = qbe.execute();
 			if (!list.isEmpty()) {

@@ -47,8 +47,8 @@ public class ServiceBlockElement extends XChangeElement {
 
 	static {
 		codesystems = Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
-		codeElements = new ArrayList<ICodeElement>(codesystems.size());
-		factories = new HashMap<ICodeElement, CodeSelectorFactory>(codesystems.size());
+		codeElements = new ArrayList<>(codesystems.size());
+		factories = new HashMap<>(codesystems.size());
 		for (IConfigurationElement ic : codesystems) {
 			try {
 				PersistentObjectFactory po = (PersistentObjectFactory) ic

@@ -22,7 +22,7 @@ public class LabItemLabelProvider extends ColumnLabelProvider implements ILabelP
 		REFERENCES, KUERZEL, NAME, GROUP, UNIT
 	}
 
-	private HashMap<LabItem, String> cache = new HashMap<LabItem, String>();
+	private HashMap<LabItem, String> cache = new HashMap<>();
 
 	private static List<ItemLabelFields> defaultFields = Arrays.asList(ItemLabelFields.KUERZEL, ItemLabelFields.NAME,
 			ItemLabelFields.GROUP, ItemLabelFields.UNIT, ItemLabelFields.REFERENCES);

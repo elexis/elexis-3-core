@@ -27,7 +27,7 @@ import ch.rgw.tools.StringTool;
 
 public class NetTool {
 	static final String Version = "1.0.1";
-	public static final java.util.ArrayList<String> IPs = new java.util.ArrayList<String>();
+	public static final java.util.ArrayList<String> IPs = new java.util.ArrayList<>();
 	public static String hostname;
 
 	static {

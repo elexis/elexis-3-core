@@ -189,7 +189,7 @@ public class ImageChooser extends AbstractElementListSelectionDialog {
 		});
 		bDB.setSelection(true);
 
-		Query<DBImage> qbe = new Query<DBImage>(DBImage.class);
+		Query<DBImage> qbe = new Query<>(DBImage.class);
 		List<DBImage> imgs = qbe.execute();
 		if (imgs != null) {
 			fElements = imgs.toArray();

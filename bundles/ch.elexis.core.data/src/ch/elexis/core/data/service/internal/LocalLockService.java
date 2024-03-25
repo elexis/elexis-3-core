@@ -64,8 +64,8 @@ public class LocalLockService implements ILocalLockService {
 	@Reference
 	private IStoreToStringService storeToStringService;
 
-	private final HashMap<String, Integer> lockCount = new HashMap<String, Integer>();
-	private final HashMap<String, LockInfo> locks = new HashMap<String, LockInfo>();
+	private final HashMap<String, Integer> lockCount = new HashMap<>();
+	private final HashMap<String, LockInfo> locks = new HashMap<>();
 	private Logger logger = LoggerFactory.getLogger(LocalLockService.class);
 
 	private Timer timer;
@@ -82,7 +82,7 @@ public class LocalLockService implements ILocalLockService {
 			return LockResponse.OK;
 		}
 
-		List<LockInfo> lockList = new ArrayList<LockInfo>(locks.values());
+		List<LockInfo> lockList = new ArrayList<>(locks.values());
 		for (LockInfo lockInfo : lockList) {
 			LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lockInfo);
 			LockResponse lr = acquireOrReleaseLocks(lockRequest);
@@ -420,11 +420,11 @@ public class LocalLockService implements ILocalLockService {
 	@Override
 	public List<LockInfo> getCopyOfAllHeldLocks() {
 		Collection<LockInfo> values = locks.values();
-		if (values.size() == 0) {
+		if (values.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		return new ArrayList<LockInfo>(values);
+		return new ArrayList<>(values);
 	}
 
 	@Override
@@ -447,7 +447,7 @@ public class LocalLockService implements ILocalLockService {
 				// verify and update the locks
 				boolean publishUpdate = false;
 				synchronized (locks) {
-					List<String> lockKeys = new ArrayList<String>();
+					List<String> lockKeys = new ArrayList<>();
 					lockKeys.addAll(locks.keySet());
 					for (String key : lockKeys) {
 						boolean success = elexisServerService.isLocked(new LockRequest(Type.INFO, locks.get(key)));

@@ -144,7 +144,7 @@ public class HL7Parser {
 			}
 
 			int number = 0;
-			List<TransientLabResult> results = new ArrayList<TransientLabResult>();
+			List<TransientLabResult> results = new ArrayList<>();
 			List<IValueType> observations = obsMessage.getObservations();
 			initCommentDate(obsMessage);
 
@@ -347,7 +347,7 @@ public class HL7Parser {
 			return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, e.getMessage(),
 					true);
 		}
-		return new Result<Object>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
+		return new Result<>(SEVERITY.OK, 0, "OK", orderId, false); //$NON-NLS-1$
 	}
 
 	private void initCommentDate(ObservationMessage obsMessage) {

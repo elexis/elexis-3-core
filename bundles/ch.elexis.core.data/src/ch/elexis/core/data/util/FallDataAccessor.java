@@ -38,7 +38,7 @@ public class FallDataAccessor implements IDataAccess {
 
 	public FallDataAccessor() {
 		// initialize the list of defined elements
-		elementsList = new ArrayList<Element>();
+		elementsList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++)
 			elementsList.add(elements[i]);
 	}
@@ -61,7 +61,7 @@ public class FallDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
+		Result<Object> result = new Result<>(StringUtils.EMPTY);
 
 		Fall fall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
 		Kontakt costBearer = fall.getCostBearer();
@@ -69,43 +69,43 @@ public class FallDataAccessor implements IDataAccess {
 		if (costBearer != null) {
 			if (descriptor.equalsIgnoreCase(KOSTENTRAEGER) || descriptor.equalsIgnoreCase(KOSTENTRAEGER_UMLAUT)) {
 				// WARN does not seem to be called anymore - see FallKostentraegerResolver
-				result = new Result<Object>(costBearer.getPostAnschrift(true));
+				result = new Result<>(costBearer.getPostAnschrift(true));
 
 			} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL)
 					|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_KUERZEL_UMLAUT)) {
 				String label = costBearer.getLabel();
 				String fullName = label.substring(0, label.indexOf(","));
-				result = new Result<Object>(fullName);
+				result = new Result<>(fullName);
 
 			} else if (descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT)
 					|| descriptor.equalsIgnoreCase(KOSTENTRAEGER_ORT_UMLAUT)) {
-				result = new Result<Object>(costBearer.getAnschrift().getOrt());
+				result = new Result<>(costBearer.getAnschrift().getOrt());
 			}
 		}
 		if (descriptor.equalsIgnoreCase(ARBEITGEBER)) {
 			Kontakt contact = fall.getRequiredContact(ARBEITGEBER);
 			if (contact != null && contact.exists()) {
-				result = new Result<Object>(contact.getPostAnschrift(true));
+				result = new Result<>(contact.getPostAnschrift(true));
 			}
 		} else if (descriptor.equalsIgnoreCase(ARBEITGEBER_KUERZEL)) {
 			Kontakt contact = fall.getRequiredContact(ARBEITGEBER);
 			if (contact != null && contact.exists()) {
 				String label = contact.getLabel();
 				String fullName = label.substring(0, label.indexOf(","));
-				result = new Result<Object>(fullName);
+				result = new Result<>(fullName);
 			}
 		}
 		if (descriptor.equalsIgnoreCase(ZUWEISER)) {
 			Kontakt contact = fall.getRequiredContact(ZUWEISER);
 			if (contact != null && contact.exists()) {
-				result = new Result<Object>(contact.getPostAnschrift(true));
+				result = new Result<>(contact.getPostAnschrift(true));
 			}
 		} else if (descriptor.equalsIgnoreCase(ZUWEISER_KUERZEL)) {
 			Kontakt contact = fall.getRequiredContact(ZUWEISER);
 			if (contact != null && contact.exists()) {
 				String label = contact.getLabel();
 				String fullName = label.substring(0, label.indexOf(","));
-				result = new Result<Object>(fullName);
+				result = new Result<>(fullName);
 			}
 		}
 		return result;

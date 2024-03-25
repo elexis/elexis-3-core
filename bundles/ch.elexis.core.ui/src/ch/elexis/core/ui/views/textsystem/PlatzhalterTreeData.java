@@ -17,7 +17,7 @@ import ch.elexis.core.data.util.SortedList;
 
 public class PlatzhalterTreeData {
 	private PlatzhalterTreeData parent;
-	final private SortedList<PlatzhalterTreeData> childrenList = new SortedList<PlatzhalterTreeData>(
+	final private SortedList<PlatzhalterTreeData> childrenList = new SortedList<>(
 			new TreeComparator());
 
 	final private String name;

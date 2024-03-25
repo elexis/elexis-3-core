@@ -21,8 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.data.PersistentObject;
 
 public class Counter {
-	private ArrayList<Float> list = new ArrayList<Float>();
-	private Hashtable<Object, Integer> hash = new Hashtable<Object, Integer>();
+	private ArrayList<Float> list = new ArrayList<>();
+	private Hashtable<Object, Integer> hash = new Hashtable<>();
 
 	public void add(float i) {
 		list.add(Float.valueOf(i));
@@ -66,7 +66,7 @@ public class Counter {
 	}
 
 	public ObjCounter[] getTopList(int num) {
-		ArrayList<ObjCounter> aoc = new ArrayList<ObjCounter>(hash.size());
+		ArrayList<ObjCounter> aoc = new ArrayList<>(hash.size());
 		for (Object o : hash.keySet()) {
 			aoc.add(new ObjCounter(o, hash.get(o)));
 		}

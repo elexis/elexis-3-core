@@ -187,7 +187,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 			public void run() {
 				if (!isDisposed()) {
 					scrolledComposite.setOrigin(0, 0);
-					if (lKons.size() > 0) {
+					if (!lKons.isEmpty()) {
 						text.setText("wird geladen...", false, false);
 						text.setSize(text.computeSize(scrolledComposite.getSize().x - 10, SWT.DEFAULT));
 					}
@@ -250,7 +250,7 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 			}
 
 			public String getDateFromToText() {
-				if (loader.getlKons() != null && loader.getlKons().size() > 0) {
+				if (loader.getlKons() != null && !loader.getlKons().isEmpty()) {
 					IEncounter firstKons = loader.getlKons().get(loader.getlKons().size() - 1);
 					IEncounter lastKons = loader.getlKons().get(0);
 					String fromDate = firstKons != null

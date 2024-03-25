@@ -46,7 +46,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 
 		File file = new File(CoreHub.getWritableUserDir(), "5579_diagnosisFix.csv");
 		try (FileWriter fw = new FileWriter(file)) {
-			Query<Konsultation> qre = new Query<Konsultation>(Konsultation.class);
+			Query<Konsultation> qre = new Query<>(Konsultation.class);
 			qre.clear(true);
 
 			List<Konsultation> execute = qre.execute();
@@ -55,7 +55,7 @@ public class FixMultipleDiagnosis extends ExternalMaintenance {
 			for (Konsultation konsultation : execute) {
 				ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
 				Set<String> uniqueDiagnosenThisCons = new HashSet<>();
-				if (diagnosen.size() > 0) {
+				if (!diagnosen.isEmpty()) {
 					fw.write(konsultation.getId() + ";");
 					for (IDiagnose iDiagnose : diagnosen) {
 						String diagnoseSts = iDiagnose.getClass().getName() + StringConstants.DOUBLECOLON

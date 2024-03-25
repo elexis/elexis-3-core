@@ -49,7 +49,7 @@ public class DBConnectWizard extends Wizard {
 		dbConnNewConnPage = new DBConnectNewOrEditConnectionWizardPage();
 		initStoredJDBCConnections();
 		targetedConnection = getCurrentConnection();
-		if (targetedConnection == null && storedConnectionList.size() > 0) {
+		if (targetedConnection == null && !storedConnectionList.isEmpty()) {
 			targetedConnection = storedConnectionList.get(0);
 		} else {
 			targetedConnection = new DBConnection();
@@ -63,7 +63,7 @@ public class DBConnectWizard extends Wizard {
 	}
 
 	public List<DBConnection> getStoredConnectionList() {
-		ArrayList<DBConnection> arrayList = new ArrayList<DBConnection>(storedConnectionList);
+		ArrayList<DBConnection> arrayList = new ArrayList<>(storedConnectionList);
 		arrayList.add(0, new DBConnection());
 		return arrayList;
 	}
@@ -129,7 +129,7 @@ public class DBConnectWizard extends Wizard {
 					ccResolver);
 		} else {
 			// initialize the current connection (if available)
-			storedConnectionList = new ArrayList<DBConnection>();
+			storedConnectionList = new ArrayList<>();
 			String cnt = CoreHub.localCfg.get(Preferences.CFG_FOLDED_CONNECTION, null);
 			if (cnt != null) {
 				Hashtable<Object, Object> hConn = PersistentObject.fold(StringTool.dePrintable(cnt), ccResolver);
@@ -233,7 +233,7 @@ public class DBConnectWizard extends Wizard {
 	}
 
 	private boolean setUsedConnection() {
-		Hashtable<String, String> h = new Hashtable<String, String>();
+		Hashtable<String, String> h = new Hashtable<>();
 		h.put(Preferences.CFG_FOLDED_CONNECTION_DRIVER, targetedConnection.rdbmsType.driverName);
 		h.put(Preferences.CFG_FOLDED_CONNECTION_CONNECTSTRING, targetedConnection.connectionString);
 		h.put(Preferences.CFG_FOLDED_CONNECTION_USER, targetedConnection.username);

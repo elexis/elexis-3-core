@@ -204,7 +204,7 @@ public class TimeTool extends GregorianCalendar {
 	}
 
 	private static Map<Integer, SimpleDateFormat> initIntSdfMapping() {
-		Map<Integer, SimpleDateFormat> map = new HashMap<Integer, SimpleDateFormat>();
+		Map<Integer, SimpleDateFormat> map = new HashMap<>();
 		map.put(DATE_SIMPLE, pref_small);
 		map.put(FULL_GER, full_ger);
 		map.put(LARGE_GER, large_ger);

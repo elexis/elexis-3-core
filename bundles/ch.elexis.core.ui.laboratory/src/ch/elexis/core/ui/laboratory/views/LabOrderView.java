@@ -81,13 +81,13 @@ public class LabOrderView extends ViewPart implements ICallback {
 	 * @return array of all relevant {@link LabOrder}s (incl. headers)
 	 */
 	private String[][] populateLabOrderTable(List<LabOrder> labOrders, String patientGender) {
-		LinkedList<String[]> usedRows = new LinkedList<String[]>();
+		LinkedList<String[]> usedRows = new LinkedList<>();
 		// add headers
 		usedRows.add(headers);
 
 		// group labOrders and sort them from a-z
 		Map<String, List<LabOrder>> groupMap = groupLabOrders(labOrders);
-		ArrayList<String> keySet = new ArrayList<String>(groupMap.keySet());
+		ArrayList<String> keySet = new ArrayList<>(groupMap.keySet());
 		Collections.sort(keySet);
 
 		for (String groupKey : keySet) {
@@ -142,12 +142,12 @@ public class LabOrderView extends ViewPart implements ICallback {
 	 * @return a map of groups (each group stores a list of belonging labOrders)
 	 */
 	private Map<String, List<LabOrder>> groupLabOrders(List<LabOrder> labOrders) {
-		Map<String, List<LabOrder>> gloMap = new HashMap<String, List<LabOrder>>();
+		Map<String, List<LabOrder>> gloMap = new HashMap<>();
 		for (LabOrder labOrder : labOrders) {
 			String group = labOrder.get(LabOrder.FLD_GROUPNAME);
 			List<LabOrder> orders = gloMap.get(group);
 			if (orders == null) {
-				orders = new ArrayList<LabOrder>();
+				orders = new ArrayList<>();
 			}
 			orders.add(labOrder);
 			gloMap.put(group, orders);

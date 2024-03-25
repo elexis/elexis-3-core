@@ -84,7 +84,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
 
-		LinkedList<String[]> usedRows = new LinkedList<String[]>();
+		LinkedList<String[]> usedRows = new LinkedList<>();
 		usedRows.add(header);
 		for (int i = 0; i < rows.length; i++) {
 			boolean used = false;
@@ -140,7 +140,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
 
-		LinkedList<String[]> usedRows = new LinkedList<String[]>();
+		LinkedList<String[]> usedRows = new LinkedList<>();
 		usedRows.add(header);
 		for (int i = 0; i < rows.length; i++) {
 			boolean used = false;
@@ -167,7 +167,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 	public boolean createLaborblatt(Patient pat, Document doc) {
 		/* Brief br= */text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 
-		ArrayList<String[]> rows = new ArrayList<String[]>();
+		ArrayList<String[]> rows = new ArrayList<>();
 		Element root = doc.getRootElement();
 		String druckdat = root.getAttributeValue(Messages.LaborblattView_created);
 		Element daten = root.getChild("Daten"); //$NON-NLS-1$

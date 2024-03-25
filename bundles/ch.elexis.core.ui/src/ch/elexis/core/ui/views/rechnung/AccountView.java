@@ -194,7 +194,7 @@ public class AccountView extends ViewPart implements IActivationListener {
 				if (actPatient == null) {
 					return new Object[] { Messages.Core_No_patient_selected_point };
 				}
-				Query<AccountTransaction> qa = new Query<AccountTransaction>(AccountTransaction.class);
+				Query<AccountTransaction> qa = new Query<>(AccountTransaction.class);
 				qa.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, actPatient.getId());
 				qa.orderBy(true, new String[] { AccountTransaction.FLD_DATE });
 				return qa.execute().toArray();

@@ -57,7 +57,7 @@ class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 
 	public RnListeExportDialog(final Shell shell, final Object[] tree) {
 		super(shell);
-		rnn = new ArrayList<Rechnung>(tree.length);
+		rnn = new ArrayList<>(tree.length);
 		for (Object o : tree) {
 			if (o instanceof Tree) {
 				Tree tr = (Tree) o;

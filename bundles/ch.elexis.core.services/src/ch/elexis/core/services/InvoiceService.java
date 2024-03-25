@@ -150,7 +150,7 @@ public class InvoiceService implements IInvoiceService {
 					continue;
 				}
 			}
-			if ((encounterDiagnosis == null) || (encounterDiagnosis.size() == 0)) {
+			if ((encounterDiagnosis == null) || (encounterDiagnosis.isEmpty())) {
 				encounterDiagnosis = encounter.getDiagnoses();
 			}
 			if (encounter.getDate() == null) {
@@ -301,7 +301,7 @@ public class InvoiceService implements IInvoiceService {
 	public Optional<IInvoice> getInvoiceWithNumber(String number) {
 		INamedQuery<IInvoice> query = CoreModelServiceHolder.get().getNamedQuery(IInvoice.class, "number");
 		List<IInvoice> found = query.executeWithParameters(query.getParameterMap("number", number));
-		if (found.size() > 0) {
+		if (!found.isEmpty()) {
 			if (found.size() > 1) {
 				logger.warn("Found " + found.size() + " invoices with number " + number + " using first");
 			}
@@ -315,9 +315,9 @@ public class InvoiceService implements IInvoiceService {
 		INamedQuery<IInvoiceBilled> query = CoreModelServiceHolder.get().getNamedQuery(IInvoiceBilled.class,
 				"encounter");
 		List<IInvoiceBilled> invoicebilled = query.executeWithParameters(query.getParameterMap("encounter", encounter));
-		HashSet<IInvoice> uniqueInvoices = new HashSet<IInvoice>();
+		HashSet<IInvoice> uniqueInvoices = new HashSet<>();
 		invoicebilled.stream().filter(ib -> ib.getInvoice() != null).forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
-		return new ArrayList<IInvoice>(uniqueInvoices);
+		return new ArrayList<>(uniqueInvoices);
 	}
 
 	@Override

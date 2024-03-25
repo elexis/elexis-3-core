@@ -254,7 +254,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ipp = null;
 		}
 
-		ArrayList<InputData> fields = new ArrayList<InputData>(20);
+		ArrayList<InputData> fields = new ArrayList<>(20);
 		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
@@ -646,7 +646,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		ecZA.addExpansionListener(ecExpansionListener);
 
-		inpZusatzAdresse = new ListDisplay<BezugsKontakt>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
+		inpZusatzAdresse = new ListDisplay<>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
 			/*
 			 * public boolean dropped(final PersistentObject dropped) { return false; }
 			 */
@@ -682,7 +682,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 				Kontakt other = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 				if (other.exists()) {
-					List<String> tokens = new ArrayList<String>();
+					List<String> tokens = new ArrayList<>();
 					String mobile = other.get(Kontakt.FLD_MOBILEPHONE);
 
 					String telefon1 = other.get(Kontakt.FLD_PHONE1);
@@ -731,7 +731,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
 		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
 
-		additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
+		additionalAddresses = new ListDisplay<>(compAdditionalAddresses, SWT.NONE,
 				new ListDisplay.LDListener() {
 					/*
 					 * public boolean dropped(final PersistentObject dropped) { return false; }

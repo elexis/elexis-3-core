@@ -47,7 +47,7 @@ public class MultiFileParser implements IMultiFileParser {
 			IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(directory);
 			return importFromHandle(fileHandle, importStrategyFactory, hl7parser, persistenceHandler);
 		} catch (IOException e) {
-			return new Result<Object>(e);
+			return new Result<>(e);
 		}
 	}
 

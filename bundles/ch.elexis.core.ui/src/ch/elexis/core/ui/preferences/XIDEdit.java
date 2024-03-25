@@ -104,7 +104,7 @@ public class XIDEdit extends PreferencePage implements IWorkbenchPreferencePage 
 		table.setHeaderVisible(true);
 		tv.setContentProvider(ArrayContentProvider.getInstance());
 
-		Set<XIDRow> input = new HashSet<XIDEdit.XIDRow>();
+		Set<XIDRow> input = new HashSet<>();
 		List<IXidDomain> domains = xidService.getDomains();
 		for (IXidDomain dom : domains) {
 			input.add(new XIDRow(dom));

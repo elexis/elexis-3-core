@@ -99,8 +99,8 @@ public class Xid extends PersistentObject implements IXid {
 
 	static {
 		addMapping(TABLENAME, FLD_TYPE, FLD_OBJECT, FLD_DOMAIN, FLD_ID_IN_DOMAIN, FLD_QUALITY);
-		domains = new HashMap<String, XIDDomain>();
-		domainMap = new HashMap<String, String>();
+		domains = new HashMap<>();
+		domainMap = new HashMap<>();
 		// TODO move to NoPo initialisation
 		String storedDomains = CoreHub.globalCfg.get("LocalXIDDomains", null);
 		if (storedDomains == null) {
@@ -261,7 +261,7 @@ public class Xid extends PersistentObject implements IXid {
 		if (dom != null) {
 			domain = dom;
 		}
-		Query<Xid> qbe = new Query<Xid>(Xid.class);
+		Query<Xid> qbe = new Query<>(Xid.class);
 		qbe.add(FLD_DOMAIN, Query.EQUALS, domain);
 		qbe.add(FLD_ID_IN_DOMAIN, Query.EQUALS, id);
 		List<Xid> ret = qbe.execute();
@@ -306,7 +306,7 @@ public class Xid extends PersistentObject implements IXid {
 		if (dom != null) {
 			domain = dom;
 		}
-		Query<Xid> qbe = new Query<Xid>(Xid.class);
+		Query<Xid> qbe = new Query<>(Xid.class);
 		qbe.add(FLD_DOMAIN, Query.EQUALS, domain);
 		qbe.add(FLD_OBJECT, Query.EQUALS, o.getId());
 		List<Xid> ret = qbe.execute();
@@ -444,7 +444,7 @@ public class Xid extends PersistentObject implements IXid {
 		int quality;
 
 		private String options;
-		private ArrayList<Class<? extends PersistentObject>> displayOptions = new ArrayList<Class<? extends PersistentObject>>();
+		private ArrayList<Class<? extends PersistentObject>> displayOptions = new ArrayList<>();
 
 		public XIDDomain(String dname, String simplename, int quality, String options) {
 			domain_name = dname;

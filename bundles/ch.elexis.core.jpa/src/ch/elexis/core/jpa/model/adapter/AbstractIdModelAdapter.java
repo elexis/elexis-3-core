@@ -109,7 +109,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public void addUpdated(EStructuralFeature feature) {
 		if (updatedList == null) {
-			updatedList = new ArrayList<EStructuralFeature>();
+			updatedList = new ArrayList<>();
 		}
 		updatedList.add(feature);
 	}
@@ -127,7 +127,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public void addRefresh(Identifiable changed) {
 		if (refreshList == null) {
-			refreshList = new ArrayList<Identifiable>();
+			refreshList = new ArrayList<>();
 		}
 		refreshList.add(changed);
 	}
@@ -145,7 +145,7 @@ public abstract class AbstractIdModelAdapter<T extends EntityWithId> implements 
 	@Override
 	public void addChanged(Identifiable changed) {
 		if (changedList == null) {
-			changedList = new ArrayList<Identifiable>();
+			changedList = new ArrayList<>();
 			changedList.add(this);
 		}
 		changedList.add(changed);

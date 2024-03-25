@@ -127,7 +127,7 @@ public class RnFilterDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<>();
 
 		if (includeMoneySelector) {
 			Money mFrom = miVon.getMoney(true);
@@ -168,7 +168,7 @@ public class RnFilterDialog extends TitleAreaDialog {
 		invoiceOutputDateFrom = diOutVon.getDate();
 		invoiceOutputDateTo = diOutBis.getDate();
 
-		if (al.size() > 0) {
+		if (!al.isEmpty()) {
 			ret = al.toArray(new String[0]);
 		} else {
 			ret = null;

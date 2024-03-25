@@ -67,7 +67,7 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
-		importers = new Hashtable<String, ImporterPage>();
+		importers = new Hashtable<>();
 
 		new FavoritenCTabItem(ctab, SWT.None);
 		addPagesFor(ExtensionPointConstantsUi.VERRECHNUNGSCODE);

@@ -45,7 +45,7 @@ public class MahnlaufCommand extends AbstractHandler {
 		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();
 		rnsSettings = CoreHub.getUserSetting(rechnungssteller);
 
-		Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+		Query<Mandant> qbe = new Query<>(Mandant.class);
 		List<Mandant> allMandants = qbe.execute();
 
 		for (Mandant m : allMandants) {
@@ -56,7 +56,7 @@ public class MahnlaufCommand extends AbstractHandler {
 	}
 
 	private void performMahnlaufForMandant(String mandantId) {
-		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> qbe = new Query<>(Rechnung.class);
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.OPEN_AND_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 

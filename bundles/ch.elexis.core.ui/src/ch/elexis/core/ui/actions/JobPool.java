@@ -48,10 +48,10 @@ import ch.rgw.tools.ExHandler;
  */
 @Deprecated
 public class JobPool implements BackgroundJobListener {
-	private Hashtable<String, BackgroundJob> pool = new Hashtable<String, BackgroundJob>();
-	private Vector<String> running = new Vector<String>();
-	private Vector<String> waiting = new Vector<String>();
-	private Vector<String> queued = new Vector<String>();
+	private Hashtable<String, BackgroundJob> pool = new Hashtable<>();
+	private Vector<String> running = new Vector<>();
+	private Vector<String> waiting = new Vector<>();
+	private Vector<String> queued = new Vector<>();
 	private ILock changeLock;
 	private static JobPool thePool;
 

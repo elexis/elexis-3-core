@@ -132,7 +132,7 @@ public class Anwender extends Person {
 	 * @return a
 	 */
 	public SortedSet<Reminder> getReminders() {
-		SortedSet<Reminder> ret = new TreeSet<Reminder>();
+		SortedSet<Reminder> ret = new TreeSet<>();
 		List<String[]> rem = getList(FLD_JOINT_REMINDERS, (String[]) null);
 		if (rem != null) {
 			for (String[] l : rem) {
@@ -164,7 +164,7 @@ public class Anwender extends Person {
 	 * @since 3.1
 	 */
 	public void addOrRemoveExecutiveDoctorWorkingFor(Mandant m, boolean checked) {
-		HashSet<Mandant> hashSet = new HashSet<Mandant>(getExecutiveDoctorsWorkingFor());
+		HashSet<Mandant> hashSet = new HashSet<>(getExecutiveDoctorsWorkingFor());
 		if (checked) {
 			hashSet.add(m);
 		} else {
@@ -271,7 +271,7 @@ public class Anwender extends Person {
 				CoreHub.setMandant(m);
 			} else {
 				List<Mandant> ml = new Query<Mandant>(Mandant.class).execute();
-				if ((ml != null) && (ml.size() > 0)) {
+				if ((ml != null) && (!ml.isEmpty())) {
 					m = ml.get(0);
 					CoreHub.setMandant(m);
 

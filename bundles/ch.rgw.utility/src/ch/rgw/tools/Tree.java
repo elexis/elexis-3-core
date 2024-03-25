@@ -111,7 +111,7 @@ public class Tree<T> {
 	 * @return das erzeugte Tree-Objekt
 	 */
 	public Tree<T> add(T elem) {
-		Tree<T> ret = new Tree<T>(this, elem, filter);
+		Tree<T> ret = new Tree<>(this, elem, filter);
 		return ret;
 	}
 
@@ -193,7 +193,7 @@ public class Tree<T> {
 	 * @return eine Collection mit den Kind-Trees
 	 */
 	public Collection<Tree<T>> getChildren() {
-		ArrayList<Tree<T>> al = new ArrayList<Tree<T>>();
+		ArrayList<Tree<T>> al = new ArrayList<>();
 		Tree<T> cursor = first;
 		while (cursor != null) {
 			if (filter == null) {
@@ -272,7 +272,7 @@ public class Tree<T> {
 	 * @return
 	 */
 	public Collection<Tree<T>> getAll() {
-		ArrayList<Tree<T>> al = new ArrayList<Tree<T>>();
+		ArrayList<Tree<T>> al = new ArrayList<>();
 		Tree<T> child = first;
 		while (child != null) {
 			al.add(child);

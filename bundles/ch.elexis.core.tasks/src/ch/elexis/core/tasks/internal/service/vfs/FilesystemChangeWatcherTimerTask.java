@@ -105,7 +105,7 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 	}
 
 	public Set<String[]> getIncurred() {
-		Set<String[]> incurred = new HashSet<String[]>();
+		Set<String[]> incurred = new HashSet<>();
 		pollMap.entrySet()
 				.forEach(es -> incurred.add(new String[] { es.getKey(), es.getValue()[0], es.getValue()[1] }));
 		return incurred;

@@ -514,7 +514,7 @@ public class JdbcLink {
 		}
 	}
 
-	private HashMap<PreparedStatement, Connection> preparedConnections = new HashMap<PreparedStatement, Connection>();
+	private HashMap<PreparedStatement, Connection> preparedConnections = new HashMap<>();
 
 	/**
 	 * Create a new PreparedStatement.

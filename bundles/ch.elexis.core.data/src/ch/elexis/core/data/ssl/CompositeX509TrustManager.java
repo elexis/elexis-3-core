@@ -12,7 +12,7 @@ import javax.net.ssl.X509TrustManager;
 
 public class CompositeX509TrustManager implements X509TrustManager {
 
-	private final Set<X509TrustManager> trustManagers = new HashSet<X509TrustManager>();
+	private final Set<X509TrustManager> trustManagers = new HashSet<>();
 
 	@Override
 	public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {

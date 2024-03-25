@@ -35,15 +35,15 @@ public class ExternalSort {
 	 * @return a list of temporary flat files
 	 */
 	public static List<File> sortInBatch(File file, Comparator<String> cmp) throws IOException {
-		List<File> files = new Vector<File>();
+		List<File> files = new Vector<>();
 		BufferedReader fbr = new BufferedReader(new FileReader(file));
 		long totalrowread = 0;
 		try {
-			List<String> tmplist = new Vector<String>();
+			List<String> tmplist = new Vector<>();
 			String line = "";
 			try {
 				while (line != null) {
-					tmplist = new Vector<String>();
+					tmplist = new Vector<>();
 					while ((Runtime.getRuntime().freeMemory() > 2097152) && ((line = fbr.readLine()) != null)) { // as
 																													// long
 						// as you
@@ -54,7 +54,7 @@ public class ExternalSort {
 					tmplist.clear();
 				}
 			} catch (EOFException oef) {
-				if (tmplist.size() > 0) {
+				if (!tmplist.isEmpty()) {
 					files.add(sortAndSave(tmplist, cmp));
 					tmplist.clear();
 				}
@@ -88,7 +88,7 @@ public class ExternalSort {
 	 * @param output file
 	 */
 	public static int mergeSortedFiles(List<File> files, File outputfile, Comparator<String> cmp) throws IOException {
-		PriorityQueue<BinaryFileBuffer> pq = new PriorityQueue<BinaryFileBuffer>();
+		PriorityQueue<BinaryFileBuffer> pq = new PriorityQueue<>();
 		for (File f : files) {
 			BinaryFileBuffer bfb = new BinaryFileBuffer(f, cmp);
 			pq.add(bfb);
@@ -96,7 +96,7 @@ public class ExternalSort {
 		BufferedWriter fbw = new BufferedWriter(new FileWriter(outputfile));
 		int rowcounter = 0;
 		try {
-			while (pq.size() > 0) {
+			while (!pq.isEmpty()) {
 				BinaryFileBuffer bfb = pq.poll();
 				String r = bfb.pop();
 				fbw.write(r);
@@ -122,7 +122,7 @@ public class ExternalSort {
 		}
 		String inputfile = args[0];
 		String outputfile = args[1];
-		Comparator<String> comparator = new Comparator<String>() {
+		Comparator<String> comparator = new Comparator<>() {
 			public int compare(String r1, String r2) {
 				return r1.compareTo(r2);
 			}
@@ -139,7 +139,7 @@ public class ExternalSort {
 	static class BinaryFileBuffer implements Comparable<BinaryFileBuffer> {
 		public static int BUFFERSIZE = 512;
 		public BufferedReader fbr;
-		private List<String> buf = new Vector<String>();
+		private List<String> buf = new Vector<>();
 		int currentpointer = 0;
 		Comparator<String> mCMP;
 		public File originalfile;
@@ -152,7 +152,7 @@ public class ExternalSort {
 		}
 
 		public boolean empty() {
-			return buf.size() == 0;
+			return buf.isEmpty();
 		}
 
 		private void reload() throws IOException {

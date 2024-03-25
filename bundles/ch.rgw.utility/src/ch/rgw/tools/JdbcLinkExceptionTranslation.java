@@ -36,15 +36,15 @@ import java.util.Set;
  */
 public class JdbcLinkExceptionTranslation {
 
-	private static final Set<String> BAD_SQL_GRAMMAR_CODES = new HashSet<String>(8);
+	private static final Set<String> BAD_SQL_GRAMMAR_CODES = new HashSet<>(8);
 
-	private static final Set<String> DATA_INTEGRITY_VIOLATION_CODES = new HashSet<String>(8);
+	private static final Set<String> DATA_INTEGRITY_VIOLATION_CODES = new HashSet<>(8);
 
-	private static final Set<String> DATA_ACCESS_RESOURCE_FAILURE_CODES = new HashSet<String>(8);
+	private static final Set<String> DATA_ACCESS_RESOURCE_FAILURE_CODES = new HashSet<>(8);
 
-	private static final Set<String> TRANSIENT_DATA_ACCESS_RESOURCE_CODES = new HashSet<String>(8);
+	private static final Set<String> TRANSIENT_DATA_ACCESS_RESOURCE_CODES = new HashSet<>(8);
 
-	private static final Set<String> CONCURRENCY_FAILURE_CODES = new HashSet<String>(4);
+	private static final Set<String> CONCURRENCY_FAILURE_CODES = new HashSet<>(4);
 
 	static {
 		BAD_SQL_GRAMMAR_CODES.add("07"); // Dynamic SQL error

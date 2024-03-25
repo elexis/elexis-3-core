@@ -62,7 +62,7 @@ public abstract class AbstractNoObligationOptifier<T extends IBillable> extends 
 				if (noOblEncounter != null) {
 					encounter = noOblEncounter;
 				} else {
-					return new Result<IBilled>(Result.SEVERITY.WARNING, 0,
+					return new Result<>(Result.SEVERITY.WARNING, 0,
 							"Auf diesen Fall können nur Pflichtleistungen verrechnet werden. Bitte einen separaten Fall für Nichtpflichtleistungen anlegen.",
 							null, false);
 				}

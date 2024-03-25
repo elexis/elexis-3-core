@@ -209,7 +209,7 @@ public class BillingService implements IBillingService {
 				return translateResult(verificationResult);
 			}
 		} else {
-			return new Result<IBilled>(Result.SEVERITY.WARNING, 1,
+			return new Result<>(Result.SEVERITY.WARNING, 1,
 					"Folgende Leistung '" + beforeAdjust.getCode()
 							+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
 					null, false);

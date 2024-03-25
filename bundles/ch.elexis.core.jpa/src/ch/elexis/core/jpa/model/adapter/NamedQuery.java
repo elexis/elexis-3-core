@@ -106,10 +106,10 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
 		if (returnValueClazz.equals(interfaceClazz)) {
 			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-			return new QueryCursor<R>(cursor, adapterFactory, interfaceClazz);
+			return new QueryCursor<>(cursor, adapterFactory, interfaceClazz);
 		} else {
 			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-			return new QueryCursor<R>(cursor, null, null);
+			return new QueryCursor<>(cursor, null, null);
 		}
 	}
 

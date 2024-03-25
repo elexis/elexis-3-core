@@ -180,7 +180,7 @@ public class Kontakt extends PersistentObject {
 	 * @return Ein Adress-Array, das auch die Länge null haben kann
 	 */
 	public List<BezugsKontakt> getBezugsKontakte() {
-		Query<BezugsKontakt> qbe = new Query<BezugsKontakt>(BezugsKontakt.class);
+		Query<BezugsKontakt> qbe = new Query<>(BezugsKontakt.class);
 		qbe.add("myID", StringTool.equals, getId()); //$NON-NLS-1$
 		return qbe.execute();
 	}
@@ -191,7 +191,7 @@ public class Kontakt extends PersistentObject {
 	 * @return Ein {@link ZusatzAdresse}-Array
 	 */
 	public List<ZusatzAdresse> getZusatzAdressen() {
-		Query<ZusatzAdresse> qbe = new Query<ZusatzAdresse>(ZusatzAdresse.class);
+		Query<ZusatzAdresse> qbe = new Query<>(ZusatzAdresse.class);
 		qbe.add(ZusatzAdresse.KONTAKT_ID, StringTool.equals, getId()); // $NON-NLS-1$
 		qbe.orderBy(false, ZusatzAdresse.TYPE, ZusatzAdresse.FLD_LASTUPDATE);
 		return qbe.execute();
@@ -568,7 +568,7 @@ public class Kontakt extends PersistentObject {
 	public List<String> getStatForItem(String typ) {
 		Map exi = getMap(FLD_EXTINFO);
 		ArrayList<statL> al = (ArrayList<statL>) exi.get(typ);
-		ArrayList<String> ret = new ArrayList<String>(al == null ? 1 : al.size());
+		ArrayList<String> ret = new ArrayList<>(al == null ? 1 : al.size());
 		if (al != null) {
 			for (statL sl : al) {
 				ret.add(sl.v);
@@ -606,7 +606,7 @@ public class Kontakt extends PersistentObject {
 		// Die Rangliste für diesen Objekttyp auslesen bzw. neu anlegen.
 		ArrayList<statL> l = (ArrayList<statL>) exi.get(typ);
 		if (l == null) {
-			l = new ArrayList<statL>();
+			l = new ArrayList<>();
 		}
 		// Grösse der Rangliste limitieren. ggf. least frequently used entfernen
 		while (l.size() > 40) {
@@ -653,7 +653,7 @@ public class Kontakt extends PersistentObject {
 		Map exi = getMap(FLD_EXTINFO);
 		MFUList<String> l = (MFUList<String>) exi.get(typ);
 		if (l == null) {
-			l = new MFUList<String>(5, 15);
+			l = new MFUList<>(5, 15);
 		}
 		l.count(toStat);
 		exi.put(typ, l);
@@ -665,7 +665,7 @@ public class Kontakt extends PersistentObject {
 		Map exi = getMap(FLD_EXTINFO);
 		MFUList<String> al = (MFUList<String>) exi.get(typ);
 		if (al == null) {
-			al = new MFUList<String>(5, 15);
+			al = new MFUList<>(5, 15);
 		}
 		return al.getAll();
 	}
@@ -675,7 +675,7 @@ public class Kontakt extends PersistentObject {
 		Map exi = getMap(FLD_EXTINFO);
 		MFUList<String> l = (MFUList<String>) exi.get(typ);
 		if (l == null) {
-			l = new MFUList<String>(5, 15);
+			l = new MFUList<>(5, 15);
 		}
 		return l;
 	}

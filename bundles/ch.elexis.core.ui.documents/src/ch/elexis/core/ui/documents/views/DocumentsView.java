@@ -560,7 +560,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 				currentDragSelection = selection;
 				if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 					String[] documents = new String[selection.size()];
-					Set<String> titles = new HashSet<String>();
+					Set<String> titles = new HashSet<>();
 					for (int i = 0; i < selection.size(); i++) {
 						IDocument dh = (IDocument) selection.toList().get(i);
 						try {

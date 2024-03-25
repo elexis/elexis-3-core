@@ -45,12 +45,12 @@ public abstract class PersistentObjectLoader implements ICommonViewerContentProv
 	public final static String PARAM_VALUES = "fieldvalues"; //$NON-NLS-1$
 	protected CommonViewer cv;
 	protected Query<? extends PersistentObject> qbe;
-	private final LinkedList<QueryFilter> queryFilters = new LinkedList<QueryFilter>();
+	private final LinkedList<QueryFilter> queryFilters = new LinkedList<>();
 	protected String[] orderFields;
 	private boolean bSuspended;
 
 	protected Job job;
-	protected HashMap<String, Object> privdata = new HashMap<String, Object>();
+	protected HashMap<String, Object> privdata = new HashMap<>();
 
 	public PersistentObjectLoader(CommonViewer cv, Query<? extends PersistentObject> qbe) {
 		this.cv = cv;

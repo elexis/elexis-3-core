@@ -61,7 +61,7 @@ public class StockDetailComposite extends Composite {
 
 	private Table table;
 
-	private Map<IStock, IStockEntry> stockEntries = new HashMap<IStock, IStockEntry>();
+	private Map<IStock, IStockEntry> stockEntries = new HashMap<>();
 	private CheckboxTableViewer checkboxTableViewer;
 
 	/**

@@ -15,7 +15,7 @@ public class CreateMappingFrom2_1_7 extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Query<LabItem> qbli = new Query<LabItem>(LabItem.class);
+		Query<LabItem> qbli = new Query<>(LabItem.class);
 		List<LabItem> items = qbli.execute();
 
 		for (LabItem item : items) {

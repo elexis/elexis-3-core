@@ -120,7 +120,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 			grp = Messages.LabItem_defaultGroup;
 		}
 		if (laborId == null) {
-			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+			Query<Kontakt> qbe = new Query<>(Kontakt.class);
 			String labid = qbe.findSingle(Kontakt.FLD_IS_LAB, Query.EQUALS, StringConstants.ONE);
 			if (labid == null) {
 				laborId = new Labor(Messages.LabItem_shortOwnLab, Messages.LabItem_longOwnLab).getId();
@@ -326,7 +326,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 		if (!getTyp().equals(LabItemTyp.FORMULA)) {
 			return null;
 		}
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(LabResult.PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(LabResult.DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
 		List<ILabResult> results = (List<ILabResult>) (List<?>) qbe.execute();
@@ -525,7 +525,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * @return List of {@link LabItem}
 	 */
 	public static List<LabItem> getLabItems(String laborId, String shortDesc, String refM, String refW, String unit) {
-		Query<LabItem> qbe = new Query<LabItem>(LabItem.class);
+		Query<LabItem> qbe = new Query<>(LabItem.class);
 		if (laborId != null && laborId.length() > 0) {
 			qbe.add("LaborID", "=", laborId); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -556,7 +556,7 @@ public class LabItem extends PersistentObject implements Comparable<LabItem>, IL
 	 * @param source
 	 */
 	public void mergeWith(LabItem source) {
-		Query<LabResult> qsr = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qsr = new Query<>(LabResult.class);
 		qsr.add(LabResult.ITEM_ID, Query.EQUALS, source.getId());
 		List<LabResult> sourceResults = qsr.execute();
 

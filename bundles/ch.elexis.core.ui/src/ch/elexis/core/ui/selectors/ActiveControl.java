@@ -45,7 +45,7 @@ public abstract class ActiveControl extends Composite {
 	protected String textContents = StringUtils.EMPTY;
 	private String labelContents = StringUtils.EMPTY;
 	private LinkedList<ActiveControlListener> listeners;
-	private HashMap<String, Object> properties = new HashMap<String, Object>();
+	private HashMap<String, Object> properties = new HashMap<>();
 	private int flags;
 
 	/** Constant to hide the label (Default: Label is visible) */
@@ -103,7 +103,7 @@ public abstract class ActiveControl extends Composite {
 
 	public void addListener(ActiveControlListener listen) {
 		if (listeners == null) {
-			listeners = new LinkedList<ActiveControlListener>();
+			listeners = new LinkedList<>();
 		}
 		listeners.add(listen);
 	}

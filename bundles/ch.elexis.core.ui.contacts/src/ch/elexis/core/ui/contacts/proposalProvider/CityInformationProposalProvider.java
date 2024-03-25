@@ -22,7 +22,7 @@ public class CityInformationProposalProvider implements IContentProposalProvider
 
 	public IContentProposal[] getProposals(String contents, int position) {
 		// System.out.println("getProposals()");
-		List<ContentProposal> cp = new LinkedList<ContentProposal>();
+		List<ContentProposal> cp = new LinkedList<>();
 		List<String[]> cities = ContactGeonames.getLabeledCities();
 		for (int i = 0; i < cities.size(); i++) {
 			String[] currCity = cities.get(i);
@@ -38,7 +38,7 @@ public class CityInformationProposalProvider implements IContentProposalProvider
 
 	public String findZipForCityName(String content) {
 		List<String> result = ContactGeonames.getZipByCity(content);
-		if (result.size() >= 1)
+		if (!result.isEmpty())
 			return result.get(0);
 		return StringUtils.EMPTY;
 	}

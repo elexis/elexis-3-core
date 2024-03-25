@@ -21,7 +21,7 @@ public class PluginCleaner {
 
 	public static void clean(String basedir) {
 		// basedir="d:/apps/elexis-1.2.0";
-		HashMap<String, String> plugins = new HashMap<String, String>();
+		HashMap<String, String> plugins = new HashMap<>();
 		File pluginDir = new File(basedir, "plugins");
 		if (pluginDir.exists() && pluginDir.isDirectory()) {
 			String[] files = pluginDir.list();

@@ -404,7 +404,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 								"Could not add tarif [%s] for result of patient [%s] because no billable kons found.",
 								ealCode, labResult.getPatient().getLabel());
 						logger.warn(errorString);
-						Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
+						Map<String, Serializable> resultMap = new HashMap<>();
 						resultMap.put(ReturnParameter.MARKER_WARN, null);
 						resultMap.put(ReturnParameter.RESULT_DATA, errorString);
 						return resultMap;

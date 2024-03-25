@@ -27,7 +27,7 @@ public class SendMailCommand extends AbstractHandler implements IHandler {
 			try {
 				Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
-				HashMap<String, String> params = new HashMap<String, String>();
+				HashMap<String, String> params = new HashMap<>();
 
 				params.put("ch.elexis.core.mail.ui.sendMail.to", patient.getMailAddress()); //$NON-NLS-1$
 

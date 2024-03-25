@@ -37,7 +37,7 @@ public class BriefExport {
 	public String doExport(String filename, String stickerName) {
 		if (stickerName != null) {
 			List<Sticker> ls = new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
-			if (ls != null && ls.size() > 0) {
+			if (ls != null && !ls.isEmpty()) {
 				sticker = ls.get(0);
 			} else {
 				return "Sticker " + stickerName + " nicht gefunden.";

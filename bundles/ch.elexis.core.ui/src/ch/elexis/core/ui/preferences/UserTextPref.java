@@ -39,7 +39,7 @@ public class UserTextPref extends FieldEditorPreferencePage implements IWorkbenc
 
 	private static final String[] texte = { Messages.UserTextPref_MacroKey };
 
-	private HashMap<String, String> makros = new HashMap<String, String>();
+	private HashMap<String, String> makros = new HashMap<>();
 
 	public UserTextPref() {
 		super(GRID);

@@ -12,9 +12,9 @@ import ch.elexis.core.services.IQuery;
 
 public class IdentifiableProposalProvider<T extends Identifiable> implements IContentProposalProvider {
 
-	private List<IdentifiableContentProposal<T>> proposals = new LinkedList<IdentifiableContentProposal<T>>();
+	private List<IdentifiableContentProposal<T>> proposals = new LinkedList<>();
 	private IQuery<T> query;
-	private List<T> queryResults = new LinkedList<T>();
+	private List<T> queryResults = new LinkedList<>();
 
 	public IdentifiableProposalProvider(IQuery<T> query) {
 		this.query = query;

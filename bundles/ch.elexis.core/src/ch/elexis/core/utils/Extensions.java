@@ -59,7 +59,7 @@ public class Extensions {
 	 * @since 3.3
 	 */
 	public static List<IConfigurationElement> getExtensions(String ext, String elementName) {
-		List<IConfigurationElement> ret = new LinkedList<IConfigurationElement>();
+		List<IConfigurationElement> ret = new LinkedList<>();
 		IExtensionRegistry exr = Platform.getExtensionRegistry();
 		IExtensionPoint exp = exr.getExtensionPoint(ext);
 		if (exp != null) {
@@ -191,7 +191,7 @@ public class Extensions {
 	 * @return
 	 */
 	public static List<String> getStrings(List<IConfigurationElement> list, String attr) {
-		List<String> ret = new LinkedList<String>();
+		List<String> ret = new LinkedList<>();
 		for (IConfigurationElement el : list) {
 			ret.add(el.getAttribute(attr));
 		}

@@ -86,7 +86,7 @@ public class HuffmanTree {
 		if (freq[Huff.eof] == 0)
 			freq[Huff.eof] = 1;
 
-		List<Node> nodes = new ArrayList<Node>(freq.length);
+		List<Node> nodes = new ArrayList<>(freq.length);
 		for (int i = 0; i < freq.length; i++) {
 			if (freq[i] == 0)
 				continue;

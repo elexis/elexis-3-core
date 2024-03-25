@@ -88,7 +88,7 @@ public class PrintRecipeHandler extends AbstractHandler {
 		if ("selection".equals(medicationType)) { //$NON-NLS-1$
 			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 			if (selection != null && !selection.isEmpty()) {
-				List<IPrescription> ret = new ArrayList<IPrescription>();
+				List<IPrescription> ret = new ArrayList<>();
 				IStructuredSelection strucSelection = (IStructuredSelection) selection;
 				if (strucSelection.getFirstElement() instanceof MedicationTableViewerItem) {
 					List<MedicationTableViewerItem> mtvItems = (List<MedicationTableViewerItem>) strucSelection

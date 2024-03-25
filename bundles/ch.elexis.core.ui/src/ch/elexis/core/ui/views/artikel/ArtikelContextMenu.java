@@ -36,7 +36,7 @@ public class ArtikelContextMenu {
 	ArtikelDetailDisplay add;
 	ArtikelMenuListener menuListener = new ArtikelMenuListener();
 	MenuManager menu;
-	ArrayList<IAction> actions = new ArrayList<IAction>();
+	ArrayList<IAction> actions = new ArrayList<>();
 
 	public ArtikelContextMenu(final Artikel template, final CommonViewer cv) {
 		this.cv = cv;

@@ -201,7 +201,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 					element = Rezept.load(((IRecipe) element).getId());
 				}
 				List<OutputLog> outputs = OutputLog.getOutputs((PersistentObject) element);
-				if (outputs != null && outputs.size() > 0) {
+				if (outputs != null && !outputs.isEmpty()) {
 					OutputLog o = outputs.get(0);
 					String outputterID = o.getOutputterID();
 					IOutputter io = OutputLog.getOutputter(outputterID);
@@ -238,7 +238,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		for (IAction ac : importers) {
 			tm.add(ac);
 		}
-		if (importers.size() > 0) {
+		if (!importers.isEmpty()) {
 			tm.add(new Separator());
 		}
 		tm.add(newRpAction);

@@ -221,9 +221,9 @@ public class GenericImporterBlatt extends Composite {
 			private List<Field> dbAvailableFields;
 
 			// accessed by SyncPage
-			private List<Field> inputChosenFields = new ArrayList<Field>();
-			private List<Field> dbChosenFields = new ArrayList<Field>();
-			private HashMap<String, Integer> inputFieldIndices = new HashMap<String, Integer>();
+			private List<Field> inputChosenFields = new ArrayList<>();
+			private List<Field> dbChosenFields = new ArrayList<>();
+			private HashMap<String, Integer> inputFieldIndices = new HashMap<>();
 
 			MappingPage() {
 				super("Mapping", "Mapping", null); //$NON-NLS-1$ //$NON-NLS-2$
@@ -252,7 +252,7 @@ public class GenericImporterBlatt extends Composite {
 				setChosenFields();
 
 				inputAvailableFieldsViewer.setInput(inputAvailableFields);
-				if (inputAvailableFields.size() > 0) {
+				if (!inputAvailableFields.isEmpty()) {
 					inputAvailableFieldsViewer
 							.setSelection(new StructuredSelection(inputAvailableFieldsViewer.getElementAt(0)));
 				}
@@ -260,7 +260,7 @@ public class GenericImporterBlatt extends Composite {
 				inputChosenFieldsViewer.setInput(inputChosenFields);
 
 				dbAvailableFieldsViewer.setInput(dbAvailableFields);
-				if (dbAvailableFields.size() > 0) {
+				if (!dbAvailableFields.isEmpty()) {
 					dbAvailableFieldsViewer
 							.setSelection(new StructuredSelection(dbAvailableFieldsViewer.getElementAt(0)));
 				}
@@ -298,7 +298,7 @@ public class GenericImporterBlatt extends Composite {
 				PersistentObject type = getSelectedType();
 				StringBuilder excelFieldsStrings = new StringBuilder(StringUtils.EMPTY);
 
-				inputAvailableFields = new ArrayList<Field>();
+				inputAvailableFields = new ArrayList<>();
 				if (type != null) {
 					if (excel != null) {
 						int firstRowIndex = excel.getFirstRow();
@@ -335,8 +335,8 @@ public class GenericImporterBlatt extends Composite {
 			// choose initial set of fields
 			private void setChosenFields() {
 				if (inputAvailableFields != null && dbAvailableFields != null) {
-					ArrayList<Field> inputFields = new ArrayList<Field>();
-					ArrayList<Field> dbFields = new ArrayList<Field>();
+					ArrayList<Field> inputFields = new ArrayList<>();
+					ArrayList<Field> dbFields = new ArrayList<>();
 					for (Field inputField : inputAvailableFields) {
 						Field dbField = findDbField(inputField);
 						if (dbField != null) {
@@ -408,7 +408,7 @@ public class GenericImporterBlatt extends Composite {
 			}
 
 			private List<PersistentObject> getTypes() {
-				List<PersistentObject> types = new ArrayList<PersistentObject>();
+				List<PersistentObject> types = new ArrayList<>();
 				// TODO return all types available
 				// (use the plugins PersistentObjectFactories)
 
@@ -422,7 +422,7 @@ public class GenericImporterBlatt extends Composite {
 			}
 
 			private List<Field> getAvailableFields(PersistentObject template) {
-				List<Field> fields = new ArrayList<Field>();
+				List<Field> fields = new ArrayList<>();
 				Field field;
 
 				if (template instanceof Person) {
@@ -687,7 +687,7 @@ public class GenericImporterBlatt extends Composite {
 				typesViewer = new ComboViewer(topArea, SWT.DROP_DOWN | SWT.READ_ONLY);
 				typesViewer.setContentProvider(arrayContentProvider);
 				typesViewer.setLabelProvider(typeLabelProvider);
-				List<Object> types = new ArrayList<Object>();
+				List<Object> types = new ArrayList<>();
 				types.add(Messages.GenericImporterBlatt_PleaseSelect);
 				types.addAll(getTypes());
 				typesViewer.setInput(types);
@@ -966,7 +966,7 @@ public class GenericImporterBlatt extends Composite {
 			private Button importNewButton;
 			private Button updateButton;
 
-			private List<SyncElement> syncElements = new ArrayList<SyncElement>();
+			private List<SyncElement> syncElements = new ArrayList<>();
 			private SyncElement currentSyncElement = null;
 
 			SyncPage() {
@@ -1287,7 +1287,7 @@ public class GenericImporterBlatt extends Composite {
 				syncElements.clear();
 
 				// initialize input/db field mapping
-				HashMap<String, String> dbFieldNames = new HashMap<String, String>();
+				HashMap<String, String> dbFieldNames = new HashMap<>();
 				for (int i = 0; i < mappingPage.inputChosenFields.size(); i++) {
 					String inputName = mappingPage.inputChosenFields.get(i).name;
 					String dbName = mappingPage.dbChosenFields.get(i).name;
@@ -1304,11 +1304,11 @@ public class GenericImporterBlatt extends Composite {
 				 */
 
 				// load objects from excel, start with second row (first row is header)
-				List<HashMap<String, String>> inputObjects = new ArrayList<HashMap<String, String>>();
+				List<HashMap<String, String>> inputObjects = new ArrayList<>();
 				for (int i = excel.getFirstRow() + 1; i <= excel.getLastRow(); i++) {
 					List<String> row = excel.getRow(i);
 					if (row != null) {
-						HashMap<String, String> rowMap = new HashMap<String, String>();
+						HashMap<String, String> rowMap = new HashMap<>();
 						for (Field field : mappingPage.inputChosenFields) {
 							int index = mappingPage.inputFieldIndices.get(field.name).intValue();
 							String key = field.name;
@@ -1327,7 +1327,7 @@ public class GenericImporterBlatt extends Composite {
 				}
 
 				// get key fields
-				List<KeyFields> keyFields = new ArrayList<KeyFields>();
+				List<KeyFields> keyFields = new ArrayList<>();
 				for (int i = 0; i < mappingPage.inputChosenFields.size(); i++) {
 					Field inputField = mappingPage.inputChosenFields.get(i);
 					Field dbField = mappingPage.dbChosenFields.get(i);
@@ -1357,14 +1357,14 @@ public class GenericImporterBlatt extends Composite {
 
 			private PersistentObject findDbObject(HashMap<String, String> inputObject, List<KeyFields> keyFields,
 					Class typ) {
-				Query<PersistentObject> query = new Query<PersistentObject>(typ);
+				Query<PersistentObject> query = new Query<>(typ);
 				for (KeyFields keyField : keyFields) {
 					String name = keyField.dbName;
 					String value = inputObject.get(keyField.inputName);
 					query.add(name, "=", value); //$NON-NLS-1$
 				}
 				List<PersistentObject> dbObjects = query.execute();
-				if (dbObjects != null && dbObjects.size() > 0) {
+				if (dbObjects != null && !dbObjects.isEmpty()) {
 					// found
 					return dbObjects.get(0);
 				}
@@ -1440,7 +1440,7 @@ public class GenericImporterBlatt extends Composite {
 			}
 
 			private void importNew() {
-				List<SyncElement> imported = new ArrayList<SyncElement>();
+				List<SyncElement> imported = new ArrayList<>();
 				for (SyncElement syncElement : syncElements) {
 					// don't import existing objects here
 					if (syncElement.state != SyncElement.INPUT_ONLY) {

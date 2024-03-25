@@ -29,7 +29,7 @@ public abstract class AllOrNoneLockRequestingRestrictedAction<T extends Persiste
 		}
 
 		objects = getTargetedObjects();
-		if (objects == null || objects.size() == 0) {
+		if (objects == null || objects.isEmpty()) {
 			return;
 		}
 

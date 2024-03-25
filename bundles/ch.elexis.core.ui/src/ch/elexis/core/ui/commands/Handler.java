@@ -41,7 +41,7 @@ public class Handler {
 
 	private static final String STR_MONITOR = "monitor"; //$NON-NLS-1$
 	private static final String STR_PARAM = "param"; //$NON-NLS-1$
-	private static HashMap<String, Object> paramMap = new HashMap<String, Object>();
+	private static HashMap<String, Object> paramMap = new HashMap<>();
 	public static final String DEFAULTPARAM = "ch.elexis.commands.defaultParameter"; //$NON-NLS-1$
 
 	/**
@@ -54,7 +54,7 @@ public class Handler {
 	 */
 	public static Object executeWithProgress(IViewSite origin, String commandID, Object param,
 			IProgressMonitor monitor) {
-		HashMap<String, Object> hp = new HashMap<String, Object>();
+		HashMap<String, Object> hp = new HashMap<>();
 		hp.put(STR_PARAM, param);
 		hp.put(STR_MONITOR, monitor);
 		return execute(origin, commandID, hp);
@@ -69,7 +69,7 @@ public class Handler {
 	 * @return the return value of the Command's execute method
 	 */
 	public static Object execute(IViewSite origin, String commandID, Object param) {
-		HashMap<String, Object> hp = new HashMap<String, Object>();
+		HashMap<String, Object> hp = new HashMap<>();
 		if (param != null) {
 			hp.put(STR_PARAM, param);
 		}

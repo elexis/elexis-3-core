@@ -164,7 +164,7 @@ public class UiDesk {
 
 	public static Cursor getCursor(String name) {
 		if (cursors == null) {
-			cursors = new HashMap<String, Cursor>();
+			cursors = new HashMap<>();
 		}
 		Cursor ret = cursors.get(name);
 		if (ret == null) {

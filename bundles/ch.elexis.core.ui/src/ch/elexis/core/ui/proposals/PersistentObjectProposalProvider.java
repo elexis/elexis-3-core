@@ -13,9 +13,9 @@ import ch.elexis.data.Query;
 
 public class PersistentObjectProposalProvider<T extends PersistentObject> implements IContentProposalProvider {
 
-	private List<PersistentObjectContentProposal<T>> proposals = new LinkedList<PersistentObjectContentProposal<T>>();
+	private List<PersistentObjectContentProposal<T>> proposals = new LinkedList<>();
 	private Query<T> query;
-	private List<T> queryResults = new LinkedList<T>();
+	private List<T> queryResults = new LinkedList<>();
 
 	public PersistentObjectProposalProvider(Class<? extends PersistentObject> clazz) {
 		this(clazz, null, null, null);
@@ -30,7 +30,7 @@ public class PersistentObjectProposalProvider<T extends PersistentObject> implem
 	 */
 	public PersistentObjectProposalProvider(Class<? extends PersistentObject> clazz, String field, String operator,
 			String value) {
-		query = new Query<T>(clazz);
+		query = new Query<>(clazz);
 		if (field != null)
 			query.add(field, operator, value);
 	}

@@ -39,7 +39,7 @@ public class LimitSizeStack<T> extends LinkedList<T> {
 	}
 
 	public T pop() {
-		if (size() == 0) {
+		if (isEmpty()) {
 			return null;
 		}
 		return remove(0);

@@ -273,7 +273,7 @@ public class FindingsSelectionDialog extends TitleAreaDialog {
 
 	public FindingsTemplate getSingleSelection() {
 		List<FindingsTemplate> findingsTemplates = getSelection();
-		if (findingsTemplates.size() > 0) {
+		if (!findingsTemplates.isEmpty()) {
 			return findingsTemplates.get(0);
 		}
 		return null;

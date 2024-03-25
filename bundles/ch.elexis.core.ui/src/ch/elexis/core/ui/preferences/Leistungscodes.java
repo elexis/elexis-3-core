@@ -933,7 +933,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 			// *** label/editor for case constants
 			new Label(rightMiddlePart, SWT.NONE).setText(Messages.Leistungscodes_caseConstants);
-			ldConstants = new ListDisplay<String>(rightMiddlePart, SWT.NONE, new ListDisplay.LDListener() {
+			ldConstants = new ListDisplay<>(rightMiddlePart, SWT.NONE, new ListDisplay.LDListener() {
 				public String getLabel(Object o) {
 					return (String) o;
 				}
@@ -1233,7 +1233,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 		// *** additional action items for toolbar and popupmenu
 		Short additionalItemsCount = 0;
-		List<ListDisplay<String>> moveTo_DestinationLists = new ArrayList<ListDisplay<String>>(30);
+		List<ListDisplay<String>> moveTo_DestinationLists = new ArrayList<>(30);
 		IAction[] actions = new IAction[LASTFIXEDITEM + 1];
 
 		/**
@@ -1320,7 +1320,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			label.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 
 			// ****** create the ListDisplay
-			listDisplay = new ListDisplay<String>(this, SWT.NONE, new ListDisplay.LDListener() {
+			listDisplay = new ListDisplay<>(this, SWT.NONE, new ListDisplay.LDListener() {
 				public void hyperlinkActivated(final String l) {
 					_FieldsHyperlinkActivated(l, StringTool.leer);
 				}

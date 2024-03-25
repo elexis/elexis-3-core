@@ -324,12 +324,12 @@ public class LabGroupPrefs extends PreferencePage implements IWorkbenchPreferenc
 	static class GroupsContentProvider implements IStructuredContentProvider {
 		@Override
 		public Object[] getElements(Object inputElement) {
-			Query<LabGroup> query = new Query<LabGroup>(LabGroup.class);
+			Query<LabGroup> query = new Query<>(LabGroup.class);
 			query.orderBy(false, new String[] { "Name" }); //$NON-NLS-1$
 
 			List<LabGroup> groups = query.execute();
 			if (groups == null) {
-				groups = new ArrayList<LabGroup>();
+				groups = new ArrayList<>();
 			}
 
 			return groups.toArray();

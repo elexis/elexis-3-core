@@ -44,7 +44,7 @@ public class Sticker extends PersistentObject implements ISticker {
 	private static final String RGB_BLACK = "000000";
 	private static final String RGB_WHITE = "FFFFFF";
 
-	static final HashMap<Class<?>, List<Sticker>> cache = new HashMap<Class<?>, List<Sticker>>();
+	static final HashMap<Class<?>, List<Sticker>> cache = new HashMap<>();
 
 	static {
 		addMapping(TABLENAME, DATE_COMPOUND, FLD_IMAGE_ID + "=Image", FLD_FOREGROUND + "=foreground",
@@ -134,7 +134,7 @@ public class Sticker extends PersistentObject implements ISticker {
 			+ " WHERE sticker=?";
 
 	public List<String> getClassesForSticker() {
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 		PreparedStatement queryClasses = null;
 		try {
 			queryClasses = getDBConnection().getPreparedStatement(queryClassStickerString);
@@ -167,7 +167,7 @@ public class Sticker extends PersistentObject implements ISticker {
 		if (ret != null) {
 			return ret;
 		}
-		HashSet<Sticker> uniqueRet = new HashSet<Sticker>();
+		HashSet<Sticker> uniqueRet = new HashSet<>();
 		PreparedStatement queryStickers = null;
 		try {
 			queryStickers = getDefaultConnection().getPreparedStatement(queryStickerClassString);
@@ -187,7 +187,7 @@ public class Sticker extends PersistentObject implements ISticker {
 			getDefaultConnection().releasePreparedStatement(queryStickers);
 		}
 		cache.put(clazz, new ArrayList<Sticker>(uniqueRet));
-		return new ArrayList<Sticker>(uniqueRet);
+		return new ArrayList<>(uniqueRet);
 	}
 
 	public int compareTo(ISticker o) {

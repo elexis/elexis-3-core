@@ -23,7 +23,7 @@ public class StreetInformationProposalProvider implements IContentProposalProvid
 	private static List<String> streets;
 
 	public IContentProposal[] getProposals(String contents, int position) {
-		List<ContentProposal> cp = new LinkedList<ContentProposal>();
+		List<ContentProposal> cp = new LinkedList<>();
 		for (int i = 0; i < streets.size(); i++) {
 			String currStreet = streets.get(i);
 			if (contents == null) {

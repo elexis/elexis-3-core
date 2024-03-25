@@ -96,7 +96,7 @@ public class LazyTreeLoader<T> extends AbstractDataLoaderJob implements LazyTree
 			for (PersistentObject o : (List<PersistentObject>) ret) {
 				l.add(o, this);
 			}
-			return ret.size() > 0;
+			return !ret.isEmpty();
 		}
 		return false;
 	}

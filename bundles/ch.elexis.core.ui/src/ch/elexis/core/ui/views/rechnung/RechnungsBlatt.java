@@ -316,7 +316,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 		ecAttachments = WidgetFactory.createExpandableComposite(tk, form, Messages.RechnungsBlatt_attachments);
 		ecAttachments.addExpansionListener(ecExpansionListener);
-		attachments = new IIdentifiableModifiableListComposite<IDocument>(ecAttachments, getStyle());
+		attachments = new IIdentifiableModifiableListComposite<>(ecAttachments, getStyle());
 		GridData gd = SWTHelper.setGridDataHeight(attachments.getStructuredViewer().getControl(), 4, true);
 		gd.widthHint = 300;
 		attachments.getStructuredViewer().setContentProvider(new IStructuredContentProvider() {
@@ -432,7 +432,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					if (cmd != null) {
 						try {
 							// create the parameter
-							HashMap<String, Object> param = new HashMap<String, Object>();
+							HashMap<String, Object> param = new HashMap<>();
 							param.put("ch.elexis.ebanking_ch.command.openESR.InvoiceId", zahlung.getRechnung().getId()); //$NON-NLS-1$
 							param.put("ch.elexis.ebanking_ch.command.openESR.PaymentDate", //$NON-NLS-1$
 									new TimeTool(zahlung.getDatum()).toString(TimeTool.DATE_COMPACT));
@@ -575,7 +575,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		konsultationenViewer.setContentProvider(new IStructuredContentProvider() {
 			@Override
 			public Object[] getElements(Object inputElement) {
-				List<Object> elements = new ArrayList<Object>();
+				List<Object> elements = new ArrayList<>();
 				if (actRn != null) {
 					IInvoice invoice = NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).get();
 					for (IEncounter encounter : invoice.getEncounters()) {
@@ -644,11 +644,11 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 			@Override
 			public Object[] getElements(Object inputElement) {
-				List<Object> elements = new ArrayList<Object>();
+				List<Object> elements = new ArrayList<>();
 				if (actRn != null) {
 					List<Konsultation> konsultationen = actRn.getKonsultationen();
 					if (konsultationen == null || konsultationen.isEmpty()) {
-						HashMap<IEncounter, List<IInvoiceBilled>> elementsMap = new HashMap<IEncounter, List<IInvoiceBilled>>();
+						HashMap<IEncounter, List<IInvoiceBilled>> elementsMap = new HashMap<>();
 						// prepare heading label that will look like this dd.MM.yyyy (cancelled) -
 						// amountOfMoney
 						StringBuilder sbHeadingLabel = new StringBuilder();
@@ -691,14 +691,14 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				if (encounter != null) {
 					List<IInvoiceBilled> list = elementsMap.get(encounter);
 					if (list == null) {
-						list = new ArrayList<IInvoiceBilled>();
+						list = new ArrayList<>();
 					}
 					list.add(copy);
 					elementsMap.put(encounter, list);
 				} else {
 					List<IInvoiceBilled> list = elementsMap.get(null);
 					if (list == null) {
-						list = new ArrayList<IInvoiceBilled>();
+						list = new ArrayList<>();
 					}
 					list.add(copy);
 					elementsMap.put(null, list);

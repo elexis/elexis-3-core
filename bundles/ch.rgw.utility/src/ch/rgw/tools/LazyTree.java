@@ -53,7 +53,7 @@ public class LazyTree<T> extends Tree<T> {
 	}
 
 	public LazyTree<T> add(T elem, LazyTreeListener l) {
-		LazyTree<T> ret = new LazyTree<T>(this, elem, filter, l);
+		LazyTree<T> ret = new LazyTree<>(this, elem, filter, l);
 		return ret;
 	}
 

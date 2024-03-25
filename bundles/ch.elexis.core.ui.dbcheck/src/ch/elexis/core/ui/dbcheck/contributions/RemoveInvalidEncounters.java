@@ -15,7 +15,7 @@ public class RemoveInvalidEncounters extends ExternalMaintenance {
 		int checked = 0;
 		int deleted = 0;
 
-		Query<Konsultation> query = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> query = new Query<>(Konsultation.class);
 		List<Konsultation> encounters = query.execute();
 		pm.beginTask("Delete invalid encounters", encounters.size());
 		for (Konsultation encounter : encounters) {

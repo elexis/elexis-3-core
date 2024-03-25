@@ -41,7 +41,7 @@ public class EigenartikelUtil {
 	@SuppressWarnings("unchecked")
 	public static void copyProductAttributesToArticleSetAsChild(IArticle product, IArticle eaPackage) {
 
-		List<IArticle> eaPackages = new ArrayList<IArticle>();
+		List<IArticle> eaPackages = new ArrayList<>();
 		if (eaPackage != null) {
 			eaPackages.add(eaPackage);
 		} else {

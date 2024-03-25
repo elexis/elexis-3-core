@@ -176,7 +176,7 @@ public class TextUtil {
 	}
 
 	public static boolean isMultiTextRun(R cursor) {
-		List<Object> content = new ArrayList<Object>(cursor.getContent());
+		List<Object> content = new ArrayList<>(cursor.getContent());
 		int textCount = 0;
 		for (Object object : content) {
 			Object nonJaxBObject = object;
@@ -201,7 +201,7 @@ public class TextUtil {
 	}
 
 	private static void transferFirstText(R from, R to) {
-		List<Object> content = new ArrayList<Object>(from.getContent());
+		List<Object> content = new ArrayList<>(from.getContent());
 		for (Object object : content) {
 			Object nonJaxBObject = object;
 			if (object instanceof JAXBElement<?>) {

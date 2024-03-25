@@ -113,7 +113,7 @@ public class LabGroup extends PersistentObject implements Comparable<LabGroup> {
 	 * @return a list of items
 	 */
 	public List<LabItem> getItems() {
-		ArrayList<LabItem> items = new ArrayList<LabItem>();
+		ArrayList<LabItem> items = new ArrayList<>();
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ItemID FROM " + GROUP_ITEM_TABLENAME).append(" WHERE GroupID = " + getWrappedId());

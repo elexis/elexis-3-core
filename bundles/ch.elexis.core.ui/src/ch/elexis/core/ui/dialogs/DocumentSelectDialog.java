@@ -144,7 +144,7 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 
 			@Override
 			public Object[] getElements(Object inputElement) {
-				Query<Brief> qbe = new Query<Brief>(Brief.class);
+				Query<Brief> qbe = new Query<>(Brief.class);
 				if (type == TYPE_LOAD_DOCUMENT) {
 					qbe.add(Brief.FLD_TYPE, Query.NOT_EQUAL, Brief.TEMPLATE);
 				} else {
@@ -314,10 +314,10 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * @author marlovitsh
 	 */
 	public static String getDontAskForAddresseeStickerID() {
-		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
+		Query<Sticker> qry = new Query<>(Sticker.class);
 		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
-		if (stickerList.size() > 0)
+		if (!stickerList.isEmpty())
 			return stickerList.get(0).getId();
 		return StringTool.leer;
 	}
@@ -331,10 +331,10 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * @author marlovitsh
 	 */
 	public static Sticker getDontAskForAddresseeSticker() {
-		Query<Sticker> qry = new Query<Sticker>(Sticker.class);
+		Query<Sticker> qry = new Query<>(Sticker.class);
 		qry.add(Sticker.FLD_NAME, Query.EQUALS, BriefConstants.DONT_ASK_FOR_ADDRESS_STICKER);
 		List<Sticker> stickerList = qry.execute();
-		if (stickerList.size() > 0)
+		if (!stickerList.isEmpty())
 			return stickerList.get(0);
 		return null;
 	}
@@ -368,11 +368,11 @@ public class DocumentSelectDialog extends TitleAreaDialog {
 	 * @author marlovitsh
 	 */
 	public static boolean getDontAskForAddresseeForThisTemplateName(String templateName) {
-		Query<Brief> qry = new Query<Brief>(Brief.class);
+		Query<Brief> qry = new Query<>(Brief.class);
 		qry.add(Brief.FLD_SUBJECT, Query.EQUALS, templateName, true);
 		qry.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE, true);
 		List<Brief> result = qry.execute();
-		if (result.size() > 0) {
+		if (!result.isEmpty()) {
 			Brief brief = result.get(0);
 			return DocumentSelectDialog.getDontAskForAddresseeForThisTemplate(brief);
 		}

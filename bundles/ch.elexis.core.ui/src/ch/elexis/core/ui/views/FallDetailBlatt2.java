@@ -137,14 +137,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	CDateTime dpVon, dpBis, dpGestationWeek13;
 	Text tBezeichnung, tGarant, tCostBearer;
 	Hyperlink autoFill, hlGarant, hlCostBearer;
-	List<Control> lReqs = new ArrayList<Control>();
-	List<Control> keepEditable = new ArrayList<Control>();
+	List<Control> lReqs = new ArrayList<>();
+	List<Control> keepEditable = new ArrayList<>();
 	Button btnCopyForPatient;
 	Button btnNoElectronicDelivery;
 	Label dpGestationWeek13Label;
 
-	Set<String> ignoreFocusreacts = new HashSet<String>();
-	List<Focusreact> focusreacts = new ArrayList<Focusreact>();
+	Set<String> ignoreFocusreacts = new HashSet<>();
+	List<Focusreact> focusreacts = new ArrayList<>();
 	boolean lockUpdate = true;
 
 	boolean invoiceCorrection = false;
@@ -831,8 +831,8 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		// *** read field definitions for unused fields (previously required or
 		// optional)
-		List<String> unused = new ArrayList<String>();
-		LinkedHashMap<String, String> unusedHash = new LinkedHashMap<String, String>();
+		List<String> unused = new ArrayList<>();
+		LinkedHashMap<String, String> unusedHash = new LinkedHashMap<>();
 		String strUnused = f.getUnused();
 		if ((strUnused != null) && (!strUnused.isEmpty())) {
 			String[] allUnused = strUnused.split(DEFINITIONSDELIMITER); // $NON-NLS-1$
@@ -866,7 +866,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 		Map<String, String> httmp = getSelectedFall().getMap(PersistentObject.FLD_EXTINFO);
 
-		HashMap<String, String> ht = new HashMap<String, String>(httmp);
+		HashMap<String, String> ht = new HashMap<>(httmp);
 
 		String[] unusedHashStringArray = {};
 		if (unusedHash.size() > 0) {
@@ -1050,7 +1050,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		boolean noExistingInvoicesForThisCoverage = true;
 		boolean costBearerEnabled = true;
 		if (actFall != null) {
-			Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
+			Query<Rechnung> rQuery = new Query<>(Rechnung.class);
 			rQuery.add(Rechnung.CASE_ID, Query.EQUALS, actFall.getId());
 			List<Rechnung> billMatch = rQuery.execute();
 

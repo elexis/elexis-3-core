@@ -45,7 +45,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 	private LabItemsContentProvider contentProvider = new LabItemsContentProvider();
 	private ILabelProvider labelProvider;
 
-	ArrayList<GroupItem> checkState = new ArrayList<GroupItem>();
+	ArrayList<GroupItem> checkState = new ArrayList<>();
 	private ContainerCheckedTreeViewer laborViewer = null;
 	private Text filterText;
 
@@ -90,7 +90,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 				// previously checked items if the user unchecked them.
 				if (!event.getChecked() && checkState != null) {
 					Iterator<GroupItem> iter = checkState.iterator();
-					ArrayList<GroupItem> toRemove = new ArrayList<GroupItem>(1);
+					ArrayList<GroupItem> toRemove = new ArrayList<>(1);
 					if (event.getElement() instanceof GroupItem) {
 						while (iter.hasNext()) {
 							Object element = iter.next();
@@ -142,7 +142,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 	private void rememberLeafCheckState(CheckStateChangedEvent event) {
 		Object[] checked = laborViewer.getCheckedElements();
 		if (checkState == null) {
-			checkState = new ArrayList<GroupItem>(checked.length);
+			checkState = new ArrayList<>(checked.length);
 		}
 		for (int i = 0; i < checked.length; i++) {
 			if (!laborViewer.getGrayed(checked[i])) {
@@ -185,7 +185,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 	}
 
 	public List<GroupItem> getSelectedItems() {
-		return new ArrayList<GroupItem>(checkState);
+		return new ArrayList<>(checkState);
 	}
 
 	/**
@@ -193,9 +193,9 @@ public class LabItemTreeSelectionComposite extends Composite {
 	 *
 	 */
 	private Hashtable<String, Group> loadItems() {
-		Hashtable<String, Group> allGroups = new Hashtable<String, Group>();
+		Hashtable<String, Group> allGroups = new Hashtable<>();
 
-		Query<LabItem> query = new Query<LabItem>(LabItem.class, "LABORITEMS", false, //$NON-NLS-1$
+		Query<LabItem> query = new Query<>(LabItem.class, "LABORITEMS", false, //$NON-NLS-1$
 				new String[] { LabItem.GROUP, LabItem.SHORTNAME, LabItem.TITLE });
 		List<LabItem> lItems = query.execute();
 		if (lItems == null) {
@@ -226,9 +226,9 @@ public class LabItemTreeSelectionComposite extends Composite {
 	 * Load User-defined LabGroups
 	 */
 	private Hashtable<String, Group> loadCustomGroups() {
-		Hashtable<String, Group> customGroups = new Hashtable<String, Group>();
+		Hashtable<String, Group> customGroups = new Hashtable<>();
 
-		Query<LabGroup> query = new Query<LabGroup>(LabGroup.class);
+		Query<LabGroup> query = new Query<>(LabGroup.class);
 		query.orderBy(false, "Name"); //$NON-NLS-1$
 		List<LabGroup> labGroups = query.execute();
 		if (labGroups != null) {
@@ -263,7 +263,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 
 		public void addItem(LabItem labItem) {
 			if (items == null) {
-				items = new ArrayList<GroupItem>();
+				items = new ArrayList<>();
 			}
 			items.add(new GroupItem(name, labItem));
 		}
@@ -299,7 +299,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 		}
 
 		private List<GroupItem> createGroupItems(List<LabItem> labItems) {
-			List<GroupItem> groupItems = new ArrayList<GroupItem>();
+			List<GroupItem> groupItems = new ArrayList<>();
 			for (LabItem labItem : labItems) {
 				groupItems.add(new GroupItem(name, labItem));
 			}
@@ -386,7 +386,7 @@ public class LabItemTreeSelectionComposite extends Composite {
 
 		@Override
 		public Object[] getElements(Object inputElement) {
-			ArrayList<Group> ret = new ArrayList<Group>();
+			ArrayList<Group> ret = new ArrayList<>();
 			ret.addAll(items.values());
 			Collections.sort(ret, new Comparator<Group>() {
 				@Override

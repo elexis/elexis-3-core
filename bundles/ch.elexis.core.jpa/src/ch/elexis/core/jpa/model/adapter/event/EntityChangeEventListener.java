@@ -22,7 +22,7 @@ public class EntityChangeEventListener implements EventHandler {
 	private WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>> listenerMap;
 
 	public EntityChangeEventListener() {
-		listenerMap = new WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>>();
+		listenerMap = new WeakHashMap<>();
 	}
 
 	private int addCount;
@@ -70,7 +70,7 @@ public class EntityChangeEventListener implements EventHandler {
 	private List<WeakReference<AbstractIdModelAdapter<?>>> getListenersFor(EntityWithId entity) {
 		List<WeakReference<AbstractIdModelAdapter<?>>> listeners = listenerMap.get(entity);
 		if (listeners == null) {
-			listeners = new ArrayList<WeakReference<AbstractIdModelAdapter<?>>>();
+			listeners = new ArrayList<>();
 		}
 		return listeners;
 	}

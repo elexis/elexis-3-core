@@ -58,7 +58,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 	private InputData[] def;
 	private Label lColor;
 
-	private Hashtable<String, Mandant> hMandanten = new Hashtable<String, Mandant>();
+	private Hashtable<String, Mandant> hMandanten = new Hashtable<>();
 
 	@Override
 	protected Control createContents(final Composite parent) {
@@ -69,7 +69,7 @@ public class Mandanten extends PreferencePage implements IWorkbenchPreferencePag
 			final Composite body = form.getBody();
 			body.setLayout(new GridLayout(1, false));
 			final Combo mandanten = new Combo(body, SWT.DROP_DOWN | SWT.READ_ONLY);
-			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+			Query<Mandant> qbe = new Query<>(Mandant.class);
 			List<Mandant> list = qbe.execute();
 			for (Mandant m : (List<Mandant>) list) {
 				mandanten.add(m.getLabel());

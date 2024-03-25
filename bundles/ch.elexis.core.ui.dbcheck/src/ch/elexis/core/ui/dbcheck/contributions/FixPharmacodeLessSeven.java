@@ -37,7 +37,7 @@ public class FixPharmacodeLessSeven extends ExternalMaintenance {
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Überprüfe Pharmacode Länge", 2);
 		pm.subTask("Lese Artikel ein...");
-		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
+		Query<Artikel> qbe = new Query<>(Artikel.class);
 		qbe.or();
 		qbe.add(PersistentObject.FLD_DELETED, Query.EQUALS, StringConstants.ONE);
 		List<Artikel> qre = qbe.execute();

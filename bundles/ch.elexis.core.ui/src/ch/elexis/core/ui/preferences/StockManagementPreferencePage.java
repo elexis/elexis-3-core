@@ -361,7 +361,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 					return;
 				}
 				List<UUID> allDrivers = StockCommissioningServiceHolder.get().listAllAvailableDrivers();
-				if (allDrivers.size() == 0) {
+				if (allDrivers.isEmpty()) {
 					MessageDialog.openInformation(UiDesk.getTopShell(), Messages.StockManagementPreference_no_drivers,
 							Messages.StockManagementPreference_no_drivers_dsc);
 					return;

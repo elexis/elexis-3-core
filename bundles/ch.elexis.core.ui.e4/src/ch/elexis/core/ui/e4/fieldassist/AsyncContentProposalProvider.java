@@ -26,7 +26,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public abstract class AsyncContentProposalProvider<T extends Identifiable> implements IContentProposalProvider {
 
-	private List<IdentifiableContentProposal<T>> proposals = new LinkedList<IdentifiableContentProposal<T>>();
+	private List<IdentifiableContentProposal<T>> proposals = new LinkedList<>();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	private String[] dbFields = null;
 	private ContentProposalAdapter adapter = null;

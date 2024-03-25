@@ -49,7 +49,7 @@ public abstract class AbstractDataLoaderJob extends BackgroundJob {
 	protected Query qbe;
 	protected String[] orderBy;
 	private boolean orderReverse;
-	protected LinkedList<FilterProvider> fp = new LinkedList<FilterProvider>();
+	protected LinkedList<FilterProvider> fp = new LinkedList<>();
 
 	protected AbstractDataLoaderJob(String name, Query q, String[] order) {
 		super(name);

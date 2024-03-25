@@ -53,7 +53,7 @@ public class ModelAdapterProxyHandler implements InvocationHandler {
 
 	private Map<String, Method> addToClassMethodMap(Class<? extends Object> clazz) {
 		if (classMethodMap == null) {
-			classMethodMap = new HashMap<Class<?>, Map<String, Method>>();
+			classMethodMap = new HashMap<>();
 		}
 		Method[] methods = clazz.getMethods();
 		Map<String, Method> methodMap = new HashMap<>();

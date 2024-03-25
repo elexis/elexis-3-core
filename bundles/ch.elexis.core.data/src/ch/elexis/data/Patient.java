@@ -193,7 +193,7 @@ public class Patient extends Person {
 	 */
 	public List<Prescription> getMedication(@Nullable EntryType... filterType) {
 		// prefetch the values needed for filter operations
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class, null, null, Prescription.TABLENAME,
+		Query<Prescription> qbe = new Query<>(Prescription.class, null, null, Prescription.TABLENAME,
 				new String[] { Prescription.FLD_DATE_UNTIL, Prescription.FLD_REZEPT_ID, Prescription.FLD_PRESC_TYPE,
 						Prescription.FLD_ARTICLE });
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
@@ -239,7 +239,7 @@ public class Patient extends Person {
 	 *             {@link Patient#getMedication(EntryType)} instead.
 	 */
 	public Prescription[] getFixmedikation() {
-		Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+		Query<Prescription> qbe = new Query<>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
 		qbe.add(Prescription.FLD_REZEPT_ID, StringTool.leer, null);
 		String today = new TimeTool().toString(TimeTool.DATE_COMPACT);
@@ -304,7 +304,7 @@ public class Patient extends Person {
 			MessageEvent.fireError("Kein Mandant angemeldet", "Es ist kein Mandant angemeldet.");
 			return null;
 		}
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 
 		// if not configured otherwise load only consultations of active mandant
 		if (!ConfigServiceHolder.getUser(Preferences.USR_DEFLOADCONSALL, false)) {
@@ -475,7 +475,7 @@ public class Patient extends Person {
 
 		// overpaid bills of this patient
 		// TODO do an optimized query over KONTAKT/FALL/RECHNUNG
-		Query<Rechnung> rQuery = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> rQuery = new Query<>(Rechnung.class);
 
 		// normally do not display other mandator's balance
 
@@ -502,7 +502,7 @@ public class Patient extends Person {
 			for (Rechnung rechnung : rechnungen) {
 				Fall fall = rechnung.getFall();
 				if (fall != null) { // of course this should never happen
-					Query<AccountTransaction> atQuery = new Query<AccountTransaction>(AccountTransaction.class);
+					Query<AccountTransaction> atQuery = new Query<>(AccountTransaction.class);
 					atQuery.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, getId());
 					atQuery.add(AccountTransaction.FLD_BILL_ID, Query.EQUALS, rechnung.getId());
 
@@ -521,7 +521,7 @@ public class Patient extends Person {
 		}
 
 		// account (sum over all account transactions not assigned to a bill)
-		Query<AccountTransaction> atQuery = new Query<AccountTransaction>(AccountTransaction.class);
+		Query<AccountTransaction> atQuery = new Query<>(AccountTransaction.class);
 		atQuery.add(AccountTransaction.FLD_PATIENT_ID, Query.EQUALS, getId());
 		List<AccountTransaction> transactions = atQuery.execute();
 		if (transactions != null) {
@@ -667,11 +667,11 @@ public class Patient extends Person {
 	 * @return a list of bills of this patient
 	 */
 	public List<Rechnung> getRechnungen() {
-		List<Rechnung> rechnungen = new ArrayList<Rechnung>();
+		List<Rechnung> rechnungen = new ArrayList<>();
 
 		Fall[] faelle = getFaelle();
 		if ((faelle != null) && (faelle.length > 0)) {
-			Query<Rechnung> query = new Query<Rechnung>(Rechnung.class);
+			Query<Rechnung> query = new Query<>(Rechnung.class);
 			query.insertTrue();
 			query.startGroup();
 			for (Fall fall : faelle) {

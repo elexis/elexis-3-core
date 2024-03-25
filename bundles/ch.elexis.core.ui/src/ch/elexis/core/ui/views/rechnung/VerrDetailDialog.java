@@ -60,12 +60,12 @@ public class VerrDetailDialog extends TitleAreaDialog {
 			pat = fall.getPatient();
 			this.tree = subTree.getParent().getParent();
 		}
-		faelle = new Hashtable<Fall, List<Konsultation>>();
+		faelle = new Hashtable<>();
 		for (Object of : this.tree.getChildren()) {
 			Tree tFall = (Tree) of;
 			Fall fall = (Fall) tFall.contents;
 			Collection<Tree> c = tFall.getChildren();
-			LinkedList<Konsultation> lKons = new LinkedList<Konsultation>();
+			LinkedList<Konsultation> lKons = new LinkedList<>();
 			for (Tree tKons : c) {
 				lKons.add((Konsultation) tKons.contents);
 			}

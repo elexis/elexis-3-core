@@ -170,7 +170,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 		super();
 		datVon = new TimeTool();
 		datBis = new TimeTool();
-		qbe = new Query<Konsultation>(Konsultation.class);
+		qbe = new Query<>(Konsultation.class);
 		kload = new KonsLoader(qbe);
 		kload.addListener(this);
 	}
@@ -180,7 +180,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 		parent.setLayout(new GridLayout());
 		this.parent = parent;
 		makeActions();
-		ldFilter = new ListDisplay<IBillable>(parent, SWT.NONE, new ListDisplay.LDListener() {
+		ldFilter = new ListDisplay<>(parent, SWT.NONE, new ListDisplay.LDListener() {
 
 			@Override
 			public String getLabel(final Object o) {
@@ -257,7 +257,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 		String allCases = Messages.Core_All;
 		List<String> faelle = Arrays.asList(BillingSystem.getAbrechnungsSysteme());
 
-		List<String> accountingSys = new ArrayList<String>();
+		List<String> accountingSys = new ArrayList<>();
 		accountingSys.add(allCases);
 		accountingSys.addAll(faelle);
 
@@ -456,7 +456,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			HashMap<IBillable, StatCounter> counter = new HashMap<IBillable, StatCounter>();
+			HashMap<IBillable, StatCounter> counter = new HashMap<>();
 			monitor.beginTask(Messages.PatHeuteView_calculateStats, kons.length + 20); // $NON-NLS-1$
 
 			System.out.println(Messages.PatHeuteView_consElexis + kons.length); // $NON-NLS-1$
@@ -482,7 +482,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 
 			System.out.println(Messages.PatHeuteView_servicesElexis + serviceCounter); // $NON-NLS-1$
 
-			final List<StatCounter> sums = new LinkedList<StatCounter>(counter.values());
+			final List<StatCounter> sums = new LinkedList<>(counter.values());
 			Collections.sort(sums);
 			monitor.worked(20);
 			monitor.done();
@@ -558,8 +558,8 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 			if (CoreHub.getLoggedInContact() == null) {
 				return Status.CANCEL_STATUS;
 			}
-			corruptKons = new HashSet<Konsultation>();
-			missingCaseKons = new HashSet<Konsultation>();
+			corruptKons = new HashSet<>();
+			missingCaseKons = new HashSet<>();
 			monitor.beginTask(Messages.Core_Load_Consultations, 1000); // $NON-NLS-1$
 			qbe.clear();
 			qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, datVon.toString(TimeTool.DATE_COMPACT));
@@ -615,7 +615,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 				result = new Konsultation[0];
 			} else {
 				if (accountSys != null && !accountSys.isEmpty() && !accountSys.equals(Messages.Core_All)) {
-					List<Konsultation> konsRet = new ArrayList<Konsultation>();
+					List<Konsultation> konsRet = new ArrayList<>();
 					for (Konsultation kons : list) {
 						if (kons.getFall().getAbrechnungsSystem().equals(accountSys)) {
 							konsRet.add(kons);
@@ -678,7 +678,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 
 			// show message in case there are corrupt consultations
 			StringBuilder sb = new StringBuilder();
-			if (corruptKons.size() > 0) {
+			if (!corruptKons.isEmpty()) {
 				sb.append("Folgende Konsultationen enthalten ungültige Leistungen: \n");
 				for (Konsultation k : corruptKons) {
 					sb.append(k.getLabel() + ", " + k.getFall().getPatient().getLabel()); //$NON-NLS-1$
@@ -687,7 +687,7 @@ public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJo
 				sb.append(StringUtils.LF);
 			}
 
-			if (missingCaseKons.size() > 0) {
+			if (!missingCaseKons.isEmpty()) {
 				sb.append("Folgende Konsultationen sind keinem Fall zugewiesen: \n");
 				for (Konsultation k : missingCaseKons) {
 					sb.append(k.getLabel());

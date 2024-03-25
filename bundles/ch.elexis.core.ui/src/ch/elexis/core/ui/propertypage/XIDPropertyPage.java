@@ -39,7 +39,7 @@ public class XIDPropertyPage extends PropertyPage implements IWorkbenchPropertyP
 
 		List<IXidDomain> domains = XidServiceHolder.get().getDomains();
 
-		if (domains.size() == 0) {
+		if (domains.isEmpty()) {
 			Label lab = new Label(comp, SWT.None);
 			lab.setText("Keine XIDs gefunden.");
 			lab.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

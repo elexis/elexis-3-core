@@ -37,7 +37,7 @@ public class DocumentSendAsMailHandler extends AbstractHandler implements IHandl
 					String documentsString = AttachmentsUtil.getDocumentsString((List<IDocument>) (List<?>) iDocuments);
 					Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
-					HashMap<String, String> params = new HashMap<String, String>();
+					HashMap<String, String> params = new HashMap<>();
 					params.put("ch.elexis.core.mail.ui.sendMail.documents", documentsString); //$NON-NLS-1$
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {

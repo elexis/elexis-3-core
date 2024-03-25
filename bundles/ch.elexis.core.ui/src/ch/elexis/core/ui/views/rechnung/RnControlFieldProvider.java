@@ -94,7 +94,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 
 	public Composite createControl(final Composite parent) {
 		Composite ret = new Composite(parent, SWT.NONE);
-		listeners = new ArrayList<ControlFieldListener>();
+		listeners = new ArrayList<>();
 		ret.setLayout(new GridLayout(5, true));
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		hlPatient = new HyperlinkAdapter() {
@@ -303,7 +303,7 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 	public void fireChangedEvent() {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			public void run() {
-				HashMap<String, String> hm = new HashMap<String, String>();
+				HashMap<String, String> hm = new HashMap<>();
 				hm.put(Messages.Core_Status, StringConstants.ZERO); // $NON-NLS-1$
 				for (ControlFieldListener lis : listeners) {
 					lis.changed(hm);

@@ -19,7 +19,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.Tree;
 
 public class TreeToStringConverter extends AbstractParameterValueConverter {
-	static final HashMap<String, Tree<?>> map = new HashMap<String, Tree<?>>();
+	static final HashMap<String, Tree<?>> map = new HashMap<>();
 
 	@Override
 	public Object convertToObject(String parameterValue) throws ParameterValueConversionException {

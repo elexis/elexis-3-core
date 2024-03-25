@@ -32,7 +32,7 @@ public class TaskDescriptor extends AbstractIdDeleteModelAdapter<ch.elexis.core.
 	public TaskDescriptor(ch.elexis.core.jpa.entities.TaskDescriptor entity) {
 		super(entity);
 		gson = new Gson();
-		transientData = new HashMap<String, Object>();
+		transientData = new HashMap<>();
 	}
 
 	@Override

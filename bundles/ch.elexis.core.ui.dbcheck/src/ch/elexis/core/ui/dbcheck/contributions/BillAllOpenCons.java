@@ -35,7 +35,7 @@ public class BillAllOpenCons extends ExternalMaintenance {
 			public int start(IProgressMonitor monitor) {
 				Integer count = 0;
 
-				Query<Fall> qbe = new Query<Fall>(Fall.class);
+				Query<Fall> qbe = new Query<>(Fall.class);
 				List<Fall> qre = qbe.execute();
 
 				monitor.beginTask("Offene Konsultationen abrechnen und Fälle schliessen", qre.size());
@@ -69,7 +69,7 @@ public class BillAllOpenCons extends ExternalMaintenance {
 				Integer count = 0;
 				fallProblems = new ArrayList<>();
 
-				Query<Fall> qbe = new Query<Fall>(Fall.class);
+				Query<Fall> qbe = new Query<>(Fall.class);
 				List<Fall> faelle = qbe.execute();
 
 				monitor.beginTask("Offene, von Vitodata importierte, Konsultationen abrechnen und Fälle schliessen",

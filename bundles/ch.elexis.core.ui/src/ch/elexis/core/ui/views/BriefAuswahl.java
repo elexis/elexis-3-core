@@ -115,7 +115,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			cancelLocalEditAction;
 	private Action deleteAction;
 	private ViewMenus menus;
-	private ArrayList<sPage> pages = new ArrayList<sPage>();
+	private ArrayList<sPage> pages = new ArrayList<>();
 	CTabFolder ctab;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);

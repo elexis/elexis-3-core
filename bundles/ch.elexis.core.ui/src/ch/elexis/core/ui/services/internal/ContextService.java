@@ -116,7 +116,7 @@ public class ContextService implements IContextService, EventHandler {
 			}
 		});
 
-		runAndTrackConsumer = new Consumer<RunAndTrack>() {
+		runAndTrackConsumer = new Consumer<>() {
 			@Override
 			public void accept(RunAndTrack runAndTrack) {
 				synchronized (delayedRunAndTrack) {

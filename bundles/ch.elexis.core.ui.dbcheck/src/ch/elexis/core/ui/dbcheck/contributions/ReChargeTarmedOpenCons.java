@@ -200,7 +200,7 @@ public class ReChargeTarmedOpenCons extends ExternalMaintenance {
 	}
 
 	public List<Konsultation> getKonsultation(TimeTool from, TimeTool to) {
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add(Konsultation.DATE, Query.GREATER_OR_EQUAL, from.toString(TimeTool.DATE_COMPACT));
 		if (to != null) {
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, to.toString(TimeTool.DATE_COMPACT));

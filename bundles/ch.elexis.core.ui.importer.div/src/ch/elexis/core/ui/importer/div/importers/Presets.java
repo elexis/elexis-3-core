@@ -249,11 +249,11 @@ public class Presets {
 				pat.addXid(XidConstants.DOMAIN_AHV, ahvnr, true);
 			}
 			if (!StringTool.isNothing(kk)) {
-				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+				Query<Kontakt> qbe = new Query<>(Kontakt.class);
 				qbe.add("Bezeichnung1", "=", kk); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> res = qbe.execute();
 				Kontakt k = null;
-				if (res.size() > 0) {
+				if (!res.isEmpty()) {
 					k = res.get(0);
 				} else {
 					k = new Organisation(kk, Messages.Core_KK_Short);
@@ -266,11 +266,11 @@ public class Presets {
 				fall.setRequiredString(INSURANCE_NUMBER, kknr);
 			}
 			if (!StringTool.isNothing(unfallvers)) {
-				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+				Query<Kontakt> qbe = new Query<>(Kontakt.class);
 				qbe.add("Bezeichnung1", "=", unfallvers); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> res = qbe.execute();
 				Kontakt k = null;
-				if (res.size() > 0) {
+				if (!res.isEmpty()) {
 					k = res.get(0);
 				} else {
 					k = new Organisation(unfallvers, Messages.Case_UVG_Short);

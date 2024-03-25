@@ -75,8 +75,8 @@ public class BBSView extends ViewPart implements ISelectionChangedListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		SashForm sash = new SashForm(parent, SWT.NONE);
-		qbe = new Query<BBSEntry>(BBSEntry.class);
-		loader = new LazyTreeLoader<BBSEntry>("BBS", qbe, "reference", new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+		qbe = new Query<>(BBSEntry.class);
+		loader = new LazyTreeLoader<>("BBS", qbe, "reference", new String[] { //$NON-NLS-1$ //$NON-NLS-2$
 				"datum", "time", "Thema" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		});
 		headlines = new CommonViewer();

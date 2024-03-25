@@ -148,7 +148,7 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 		if (evaluateRightNoException(clazz, Right.READ)) {
 			return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
 		}
-		return new EmptyQuery<T>();
+		return new EmptyQuery<>();
 	}
 
 	@Override

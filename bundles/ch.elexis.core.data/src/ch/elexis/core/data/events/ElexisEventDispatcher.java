@@ -109,9 +109,9 @@ public final class ElexisEventDispatcher implements Runnable {
 	}
 
 	private ElexisEventDispatcher() {
-		listeners = new ListenerList<ElexisEventListener>();
-		eventQueue = new ConcurrentLinkedQueue<ElexisEvent>();
-		eventCopy = new ArrayList<ElexisEvent>(50);
+		listeners = new ListenerList<>();
+		eventQueue = new ConcurrentLinkedQueue<>();
+		eventCopy = new ArrayList<>(50);
 
 		elexisUIContext = new ElexisContext();
 

@@ -177,7 +177,7 @@ public class RechnungsListeView extends ViewPart implements IRefreshable {
 	List<Rechnung> createList() {
 		IStructuredSelection sel = (IStructuredSelection) cv.getViewerWidget().getSelection();
 		List<Tree> at = sel.toList();
-		List<Rechnung> ret = new LinkedList<Rechnung>();
+		List<Rechnung> ret = new LinkedList<>();
 		for (Tree<PersistentObject> t : at) {
 			if (t.contents instanceof Patient) {
 				for (Tree<PersistentObject> tp : t.getChildren()) {

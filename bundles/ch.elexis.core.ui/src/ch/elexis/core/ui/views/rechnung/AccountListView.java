@@ -248,9 +248,9 @@ public class AccountListView extends ViewPart implements IActivationListener {
 		}
 
 		public IStatus execute(IProgressMonitor monitor) {
-			List<AccountListEntry> entries = new ArrayList<AccountListEntry>();
+			List<AccountListEntry> entries = new ArrayList<>();
 
-			Query<Patient> query = new Query<Patient>(Patient.class);
+			Query<Patient> query = new Query<>(Patient.class);
 			query.orderBy(false, Patient.FLD_NAME, Patient.FLD_FIRSTNAME);
 			List<Patient> patients = query.execute();
 			if (patients == null) {

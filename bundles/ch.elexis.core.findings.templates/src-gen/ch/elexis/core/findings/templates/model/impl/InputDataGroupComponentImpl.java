@@ -113,7 +113,7 @@ public class InputDataGroupComponentImpl extends MinimalEObjectImpl.Container im
 	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP_COMPONENT__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}

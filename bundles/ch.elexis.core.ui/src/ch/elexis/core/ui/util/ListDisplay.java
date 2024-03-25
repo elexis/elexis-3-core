@@ -77,7 +77,7 @@ public class ListDisplay<T> extends Composite implements IUnlockable {
 
 	public ListDisplay(final Composite parent, final int flags, final LDListener dld) {
 		super(parent, flags);
-		objects = new ArrayList<T>();
+		objects = new ArrayList<>();
 		dlisten = dld;
 		setLayout(new GridLayout(1, false));
 		cLinks = new Composite(this, SWT.NONE);

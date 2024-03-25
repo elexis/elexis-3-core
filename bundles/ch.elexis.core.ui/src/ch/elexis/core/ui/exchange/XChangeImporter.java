@@ -68,7 +68,7 @@ public class XChangeImporter implements IDataReceiver {
 						try {
 							XPath xpath = XPath.newInstance(r);
 							List<?> nodes = xpath.selectNodes(el);
-							if (nodes.size() > 0) {
+							if (!nodes.isEmpty()) {
 								if (++matches > matchedRestrictions) {
 									cand = ice;
 									matchedRestrictions = matches;

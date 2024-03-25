@@ -13,7 +13,7 @@ public class ElexisEvent {
 	private Map<String, String> properties;
 
 	public ElexisEvent() {
-		properties = new HashMap<String, String>();
+		properties = new HashMap<>();
 	}
 
 	public String getTopic() {

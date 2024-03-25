@@ -43,8 +43,8 @@ import ch.rgw.tools.LimitSizeStack;
  */
 public class DisplayPanel extends Composite implements ActiveControlListener {
 	private boolean bCeaseFire, bExclusive, bAutosave;
-	private LinkedList<ActiveControlListener> listeners = new LinkedList<ActiveControlListener>();
-	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<TraceElement>(50);
+	private LinkedList<ActiveControlListener> listeners = new LinkedList<>();
+	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<>(50);
 	private Composite cFields;
 	private ToolBarManager tActions;
 	private ToolBar tb;
@@ -283,7 +283,7 @@ public class DisplayPanel extends Composite implements ActiveControlListener {
 	 * @return al List that might be empty but is never null
 	 */
 	public List<ActiveControl> getControls() {
-		LinkedList<ActiveControl> ret = new LinkedList<ActiveControl>();
+		LinkedList<ActiveControl> ret = new LinkedList<>();
 		for (Control c : cFields.getChildren()) {
 			if (c instanceof ActiveControl) {
 				ActiveControl ac = (ActiveControl) c;

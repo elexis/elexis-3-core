@@ -51,7 +51,7 @@ public class ReferenceDataImporterExtensionPoint {
 	 */
 	private static void initialize() {
 		try {
-			importers = new HashMap<String, AbstractReferenceDataImporter>();
+			importers = new HashMap<>();
 
 			// load reference-data-extensionpoint
 			IExtensionPoint refDataExtensionPoint = RegistryFactory.getRegistry()

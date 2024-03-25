@@ -45,7 +45,7 @@ public class LaborItemResults implements Comparable<LaborItemResults> {
 	}
 
 	public List<String> getDays() {
-		return new ArrayList<String>(results.keySet());
+		return new ArrayList<>(results.keySet());
 	}
 
 	@Override

@@ -28,14 +28,14 @@ public class FhirTransformerRegistry implements IFhirTransformerRegistry {
 	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		if (transformers == null) {
-			transformers = new ArrayList<IFhirTransformer<?, ?>>();
+			transformers = new ArrayList<>();
 		}
 		transformers.add(transformer);
 	}
 
 	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer) {
 		if (transformers == null) {
-			transformers = new ArrayList<IFhirTransformer<?, ?>>();
+			transformers = new ArrayList<>();
 		}
 		transformers.remove(transformer);
 	}

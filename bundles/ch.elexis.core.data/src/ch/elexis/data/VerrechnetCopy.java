@@ -63,8 +63,8 @@ public class VerrechnetCopy extends Verrechnet {
 	 * @return
 	 */
 	public static List<Verrechnet> getVerrechnetByBill(Rechnung bill) {
-		ArrayList<Verrechnet> ret = new ArrayList<Verrechnet>();
-		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
+		ArrayList<Verrechnet> ret = new ArrayList<>();
+		Query<VerrechnetCopy> vcQuery = new Query<>(VerrechnetCopy.class);
 		vcQuery.add(VerrechnetCopy.RECHNUNGID, Query.EQUALS, bill.getId());
 		List<VerrechnetCopy> res = vcQuery.execute();
 		ret.addAll(res);
@@ -80,7 +80,7 @@ public class VerrechnetCopy extends Verrechnet {
 	 * @return
 	 */
 	public static List<VerrechnetCopy> getVerrechnetCopyByConsultation(Konsultation consultation) {
-		Query<VerrechnetCopy> vcQuery = new Query<VerrechnetCopy>(VerrechnetCopy.class);
+		Query<VerrechnetCopy> vcQuery = new Query<>(VerrechnetCopy.class);
 		vcQuery.add(VerrechnetCopy.BEHANDLUNGID, Query.EQUALS, consultation.getId());
 		return vcQuery.execute();
 	}

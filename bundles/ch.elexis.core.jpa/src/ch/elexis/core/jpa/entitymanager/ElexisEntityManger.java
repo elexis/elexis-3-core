@@ -52,7 +52,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 	private boolean updateSuccess;
 
 	public ElexisEntityManger() {
-		threadLocal = new ThreadLocal<EntityManager>();
+		threadLocal = new ThreadLocal<>();
 		threadManagerMap = new ConcurrentHashMap<>();
 		entityManagerCollector = Executors.newSingleThreadScheduledExecutor();
 	}
@@ -125,7 +125,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 				}
 
 				// initialize the entity manager factory
-				HashMap<String, Object> props = new HashMap<String, Object>();
+				HashMap<String, Object> props = new HashMap<>();
 				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
 				props.put("gemini.jpa.providerConnectedDataSource", dataSource); //$NON-NLS-1$
 				props.put("javax.persistence.nonJtaDataSource", dataSource); //$NON-NLS-1$

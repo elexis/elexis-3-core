@@ -66,7 +66,7 @@ public class RnMenuListener implements IMenuListener {
 					manager.add(view.actions.patDetailAction);
 				}
 			} else {
-				List<Rechnung> rechnungen = new ArrayList<Rechnung>();
+				List<Rechnung> rechnungen = new ArrayList<>();
 				generalStatus = -1;
 				boolean compatibleStatus = true;
 

@@ -112,7 +112,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 		}
 
 		public void setKontakt(IContact k) {
-			xids = new HashMap<String, String>();
+			xids = new HashMap<>();
 			fields = new String[fieldDefinitions.length];
 			savedValues = new String[fieldDefinitions.length];
 			values = new Text[fieldDefinitions.length];

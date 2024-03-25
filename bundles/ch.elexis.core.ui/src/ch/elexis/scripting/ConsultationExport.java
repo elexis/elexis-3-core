@@ -35,10 +35,10 @@ public class ConsultationExport {
 
 	public String doExport(String dir, String stickerName) {
 		try {
-			Query<Patient> qbe = new Query<Patient>(Patient.class);
+			Query<Patient> qbe = new Query<>(Patient.class);
 			if (stickerName != null) {
 				List<Sticker> ls = new Query<Sticker>(Sticker.class, Sticker.FLD_NAME, stickerName).execute();
-				if (ls != null && ls.size() > 0) {
+				if (ls != null && !ls.isEmpty()) {
 					final Sticker sticker = ls.get(0);
 
 					final PatFilterImpl pf = new PatFilterImpl();

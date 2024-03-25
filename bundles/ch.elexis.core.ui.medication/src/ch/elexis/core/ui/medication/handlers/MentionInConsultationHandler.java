@@ -30,7 +30,7 @@ public class MentionInConsultationHandler extends AbstractHandler {
 		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
-			List<IPrescription> prescriptions = new ArrayList<IPrescription>();
+			List<IPrescription> prescriptions = new ArrayList<>();
 			List<MedicationTableViewerItem> mtvItems = strucSelection.toList();
 			for (MedicationTableViewerItem mtvItem : mtvItems) {
 				IPrescription p = mtvItem.getPrescription();

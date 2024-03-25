@@ -126,7 +126,7 @@ public class SelectFallNoObligationDialog extends TitleAreaDialog {
 	}
 
 	protected List<Fall> getNoObligationFaelle() {
-		ArrayList<Fall> ret = new ArrayList<Fall>();
+		ArrayList<Fall> ret = new ArrayList<>();
 		Fall[] faelle = oblFall.getPatient().getFaelle();
 		System.out.println("ff -> " + faelle.length);
 		for (Fall f : faelle) {

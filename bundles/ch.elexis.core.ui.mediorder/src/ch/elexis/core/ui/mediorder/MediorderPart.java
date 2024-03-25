@@ -534,7 +534,7 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	private List<IStock> getPatientStocksWithStockEntry() {
-		List<IStock> lStockWithEntry = new ArrayList<IStock>();
+		List<IStock> lStockWithEntry = new ArrayList<>();
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
 

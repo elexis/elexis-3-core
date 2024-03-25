@@ -70,7 +70,7 @@ public class DocumentTemplate extends AbstractIdDeleteModelAdapter<BriefVorlage>
 		if (getEntity().getRecipient() != null) {
 			map.add(DocumentStatus.SENT);
 		}
-		return new ArrayList<DocumentStatus>(map);
+		return new ArrayList<>(map);
 	}
 
 	@Override

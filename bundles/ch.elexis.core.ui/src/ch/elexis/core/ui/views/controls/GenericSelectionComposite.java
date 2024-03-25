@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GenericSelectionComposite extends Composite implements ISelectionProvider {
 
-	private ListenerList<ISelectionChangedListener> selectionListeners = new ListenerList<ISelectionChangedListener>();
+	private ListenerList<ISelectionChangedListener> selectionListeners = new ListenerList<>();
 
 	private Function<String, List<?>> inputFunction;
 

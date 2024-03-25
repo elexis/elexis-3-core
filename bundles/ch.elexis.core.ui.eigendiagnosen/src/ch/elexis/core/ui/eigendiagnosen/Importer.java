@@ -104,13 +104,13 @@ public class Importer extends ImporterPage {
 	private Result<String> importExcel(final String file, final IProgressMonitor mon) {
 		ExcelWrapper xl = new ExcelWrapper();
 		if (!xl.load(file, 0)) {
-			return new Result<String>(Result.SEVERITY.ERROR, 1, Messages.Eigendiagnosen_BadFileFormat, file, true);
+			return new Result<>(Result.SEVERITY.ERROR, 1, Messages.Eigendiagnosen_BadFileFormat, file, true);
 		}
 		for (int i = xl.getFirstRow(); i <= xl.getLastRow(); i++) {
 			List<String> row = xl.getRow(i);
 			importLine(row.toArray(new String[0]));
 		}
-		return new Result<String>("OK"); //$NON-NLS-1$
+		return new Result<>("OK"); //$NON-NLS-1$
 	}
 
 	private Result<String> importCSV(final String file, final IProgressMonitor mon) {
@@ -120,10 +120,10 @@ public class Importer extends ImporterPage {
 			while ((line = cr.readNext()) != null) {
 				importLine(line);
 			}
-			return new Result<String>("OK"); //$NON-NLS-1$
+			return new Result<>("OK"); //$NON-NLS-1$
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			return new Result<String>(Result.SEVERITY.ERROR, 1, Messages.Eigendiagnosen_CantRead + file,
+			return new Result<>(Result.SEVERITY.ERROR, 1, Messages.Eigendiagnosen_CantRead + file,
 					ex.getMessage(), true);
 		}
 

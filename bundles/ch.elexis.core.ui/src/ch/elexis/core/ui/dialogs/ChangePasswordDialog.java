@@ -36,7 +36,7 @@ public class ChangePasswordDialog extends TitleAreaDialog {
 
 	private Button okButton;
 	private PasswordChangeListener pcl = new PasswordChangeListener();
-	private Set<String> disallowedPasswords = new HashSet<String>();
+	private Set<String> disallowedPasswords = new HashSet<>();
 
 	/**
 	 * Create the dialog.

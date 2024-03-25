@@ -25,7 +25,7 @@ import ch.elexis.data.PersistentObject;
 public class AnamnesisElement extends XChangeElement {
 	public static final String XMLNAME = "anamnesis"; //$NON-NLS-1$
 
-	HashMap<IDiagnose, EpisodeElement> hLink = new HashMap<IDiagnose, EpisodeElement>();
+	HashMap<IDiagnose, EpisodeElement> hLink = new HashMap<>();
 	HashMap<Element, IDiagnose> hBacklink;
 	HashMap<String, Element> hElements;
 	MedicalElement eMed;

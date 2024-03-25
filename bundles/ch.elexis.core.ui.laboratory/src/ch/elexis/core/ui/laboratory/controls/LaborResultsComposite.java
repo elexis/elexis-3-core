@@ -58,7 +58,7 @@ public class LaborResultsComposite extends Composite {
 	private int newColumnIndex;
 
 	public final static String COLUMN_DATE_KEY = "labresult.date"; //$NON-NLS-1$
-	private List<TreeViewerColumn> resultColumns = new ArrayList<TreeViewerColumn>();
+	private List<TreeViewerColumn> resultColumns = new ArrayList<>();
 
 	private LaborResultsContentProvider contentProvider = new LaborResultsContentProvider();
 
@@ -215,7 +215,7 @@ public class LaborResultsComposite extends Composite {
 	}
 
 	public String[] getPrintHeaders() {
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 
 		TreeColumn[] columns = viewer.getTree().getColumns();
 		for (TreeColumn treeColumn : columns) {
@@ -227,7 +227,7 @@ public class LaborResultsComposite extends Composite {
 	}
 
 	public TreeItem[] getPrintRows() {
-		ArrayList<TreeItem> ret = new ArrayList<TreeItem>();
+		ArrayList<TreeItem> ret = new ArrayList<>();
 		getAllItems(viewer.getTree(), ret);
 		return ret.toArray(new TreeItem[ret.size()]);
 	}

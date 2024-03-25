@@ -68,9 +68,9 @@ public class Query<T> {
 	private PersistentObject template;
 	private Method load;
 	private String lastQuery = StringUtils.EMPTY;
-	private final LinkedList<IFilter> postQueryFilters = new LinkedList<IFilter>();
+	private final LinkedList<IFilter> postQueryFilters = new LinkedList<>();
 	private String ordering;
-	private final ArrayList<String> exttables = new ArrayList<String>(2);
+	private final ArrayList<String> exttables = new ArrayList<>(2);
 
 	private final String[] ID_FETCH_VAL = new String[] { "ID" };
 	private final String[] fetchVals;
@@ -144,7 +144,7 @@ public class Query<T> {
 			if (prefetch != null) {
 				// resolve the delivered field names to the real database columns
 				// consider the resp. datatypes stored
-				List<String> mappedPrefetchValues = new ArrayList<String>(Arrays.asList(ID_FETCH_VAL));
+				List<String> mappedPrefetchValues = new ArrayList<>(Arrays.asList(ID_FETCH_VAL));
 				for (int i = 0; i < prefetch.length; i++) {
 					String map = PersistentObject.map(tableName, prefetch[i]);
 					if (!map.contains(":")) {
@@ -554,7 +554,7 @@ public class Query<T> {
 	 * @return
 	 */
 	public List<T> execute(DBConnection connection) {
-		LinkedList<T> ret = new LinkedList<T>();
+		LinkedList<T> ret = new LinkedList<>();
 		return (List<T>) execute(ret, connection);
 	}
 
@@ -590,7 +590,7 @@ public class Query<T> {
 				ps.setString(i + 1, values[i]);
 			}
 			if (ps.execute() == true) {
-				ArrayList<String> ret = new ArrayList<String>();
+				ArrayList<String> ret = new ArrayList<>();
 				ResultSet res = ps.getResultSet();
 				while (res.next()) {
 					ret.add(res.getString(1));
@@ -634,7 +634,7 @@ public class Query<T> {
 	 */
 	public Collection<T> queryExpression(final String expr, Collection<T> ret, DBConnection connection) {
 		if (ret == null) {
-			ret = new LinkedList<T>();
+			ret = new LinkedList<>();
 		}
 		// loaded objects should use provided connection if it is not the default
 		// connection

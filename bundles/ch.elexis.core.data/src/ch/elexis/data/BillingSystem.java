@@ -318,7 +318,7 @@ public class BillingSystem {
 	 * @since 3.6 moved from {@link Fall}
 	 */
 	private static void update() {
-		Query<Fall> qbe = new Query<Fall>(Fall.class);
+		Query<Fall> qbe = new Query<>(Fall.class);
 		for (Fall fall : qbe.execute()) {
 			if (fall.getInfoString(Fall.FLD_EXT_KOSTENTRAEGER).equals(StringConstants.EMPTY)) {
 				fall.setInfoString(Fall.FLD_EXT_KOSTENTRAEGER, PersistentObject.checkNull(fall // $NON-NLS-1$
@@ -431,7 +431,7 @@ public class BillingSystem {
 	 * @since 3.6
 	 */
 	public static void moveCostBearerFromExtinfoToDBRow(String billingSystem, String fieldName) {
-		Query<Fall> qre = new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
+		Query<Fall> qre = new Query<>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
 		qre.clear(true);
 		List<Fall> qbe = qre.execute();
 		for (Fall fall : qbe) {
@@ -458,7 +458,7 @@ public class BillingSystem {
 	 * @since 3.6
 	 */
 	public static void removeExtInfoValueForAllFaelleOfBillingSystem(String billingSystem, List<String> fieldNames) {
-		Query<Fall> qre = new Query<Fall>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
+		Query<Fall> qre = new Query<>(Fall.class, Fall.FLD_BILLINGSYSTEM, billingSystem);
 		qre.clear(true);
 		List<Fall> qbe = qre.execute();
 		for (Fall fall : qbe) {

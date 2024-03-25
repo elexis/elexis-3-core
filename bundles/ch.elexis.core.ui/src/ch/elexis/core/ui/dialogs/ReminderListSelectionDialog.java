@@ -64,7 +64,7 @@ public class ReminderListSelectionDialog extends ListSelectionDialog {
 
 		@SuppressWarnings("unchecked")
 		List<Reminder> reminders = (List<Reminder>) getViewer().getInput();
-		if (reminders.size() > 0) {
+		if (!reminders.isEmpty()) {
 			getViewer().setSelection(new StructuredSelection(reminders.get(0)));
 		}
 

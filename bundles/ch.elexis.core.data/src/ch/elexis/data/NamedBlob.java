@@ -174,7 +174,7 @@ public class NamedBlob extends PersistentObject {
 	 *         prefix
 	 */
 	public static List<NamedBlob> findFromPrefix(final String prefix) {
-		Query<NamedBlob> qbe = new Query<NamedBlob>(NamedBlob.class);
+		Query<NamedBlob> qbe = new Query<>(NamedBlob.class);
 		qbe.add("ID", "Like", prefix + "%");
 		return qbe.execute();
 	}
@@ -187,7 +187,7 @@ public class NamedBlob extends PersistentObject {
 	 *         expression
 	 */
 	public static List<NamedBlob> findSimilar(final String name) {
-		Query<NamedBlob> qbe = new Query<NamedBlob>(NamedBlob.class);
+		Query<NamedBlob> qbe = new Query<>(NamedBlob.class);
 		qbe.addPostQueryFilter(new IFilter() {
 			public boolean select(Object toTest) {
 				NamedBlob nb = (NamedBlob) toTest;
@@ -211,7 +211,7 @@ public class NamedBlob extends PersistentObject {
 	public static void cleanup(final String prefix, final TimeTool older) {
 		if (AccessControlServiceHolder.get()
 				.evaluate(new ObjectEvaluatableACE(IBlob.class, ch.elexis.core.ac.Right.REMOVE))) {
-			Query<NamedBlob> qbe = new Query<NamedBlob>(NamedBlob.class);
+			Query<NamedBlob> qbe = new Query<>(NamedBlob.class);
 			qbe.add("Datum", "<", older.toString(TimeTool.DATE_COMPACT));
 			for (NamedBlob nb : qbe.execute()) {
 				if (nb.getId().startsWith(prefix)) {

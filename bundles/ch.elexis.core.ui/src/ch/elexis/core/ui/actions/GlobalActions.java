@@ -586,7 +586,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		moveBehandlungAction = new LockedAction<Konsultation>(Messages.GlobalActions_AssignCase) {
+		moveBehandlungAction = new LockedAction<>(Messages.GlobalActions_AssignCase) {
 			@Override
 			public Konsultation getTargetedObject() {
 				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
@@ -610,7 +610,7 @@ public class GlobalActions {
 				}
 			}
 		};
-		redateAction = new LockedAction<Konsultation>(Messages.GlobalActions_Redate) {
+		redateAction = new LockedAction<>(Messages.GlobalActions_Redate) {
 
 			@Override
 			public Konsultation getTargetedObject() {

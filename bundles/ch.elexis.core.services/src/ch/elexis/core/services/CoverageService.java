@@ -237,7 +237,7 @@ public class CoverageService implements ICoverageService {
 	}
 
 	private List<String> loadFieldKeys(String fieldString) {
-		List<String> keys = new ArrayList<String>();
+		List<String> keys = new ArrayList<>();
 		if (StringUtils.isNotBlank(fieldString)) {
 			String[] fields = fieldString.split(";");
 			for (String field : fields) {

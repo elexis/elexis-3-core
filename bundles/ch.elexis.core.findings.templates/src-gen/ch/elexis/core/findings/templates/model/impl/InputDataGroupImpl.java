@@ -86,7 +86,7 @@ public class InputDataGroupImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectResolvingEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectResolvingEList<>(FindingsTemplate.class, this, ModelPackage.INPUT_DATA_GROUP__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}

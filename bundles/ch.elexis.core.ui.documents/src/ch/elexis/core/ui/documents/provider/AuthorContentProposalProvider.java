@@ -19,7 +19,7 @@ public class AuthorContentProposalProvider implements IContentProposalProvider {
 
 	@Override
 	public IContentProposal[] getProposals(String searchString, int position) {
-		List<IContentProposal> ret = new ArrayList<IContentProposal>();
+		List<IContentProposal> ret = new ArrayList<>();
 		if (searchString != null && !searchString.isEmpty()) {
 			if (searchString.length() > 1) {
 				int firstSpace = searchString.indexOf(StringUtils.SPACE);

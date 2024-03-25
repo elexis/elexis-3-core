@@ -92,10 +92,10 @@ public class ArticleDefaultSignature extends PersistentObject {
 	public static @Nullable ArticleDefaultSignature getDefaultsignatureForArticle(@Nullable Artikel artikel) {
 		if (artikel == null)
 			return null;
-		Query<ArticleDefaultSignature> qbe = new Query<ArticleDefaultSignature>(ArticleDefaultSignature.class);
+		Query<ArticleDefaultSignature> qbe = new Query<>(ArticleDefaultSignature.class);
 		qbe.add(FLD_ARTICLE, Query.LIKE, "%" + artikel.storeToString());
 		List<ArticleDefaultSignature> resultArticle = qbe.execute();
-		if (resultArticle.size() > 0) {
+		if (!resultArticle.isEmpty()) {
 			return resultArticle.get(0);
 		}
 		return ArticleDefaultSignature.getDefaultSignatureForATCCode(artikel.getATC_code());
@@ -107,10 +107,10 @@ public class ArticleDefaultSignature extends PersistentObject {
 	 * @return the default signature or <code>null</code> if no corresponding entry
 	 */
 	public static ArticleDefaultSignature getDefaultSignatureForATCCode(String atcCode) {
-		Query<ArticleDefaultSignature> qbe = new Query<ArticleDefaultSignature>(ArticleDefaultSignature.class);
+		Query<ArticleDefaultSignature> qbe = new Query<>(ArticleDefaultSignature.class);
 		qbe.add(FLD_ATC_CODE, Query.LIKE, atcCode);
 		List<ArticleDefaultSignature> execute = qbe.execute();
-		return (execute.size() > 0) ? execute.get(0) : null;
+		return (!execute.isEmpty()) ? execute.get(0) : null;
 	}
 
 	public String getSignatureMorning() {

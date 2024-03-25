@@ -19,7 +19,7 @@ import ch.elexis.core.services.ICodeElementServiceContribution;
 public class CodeSystemUtil {
 
 	@SuppressWarnings("serial")
-	private static HashMap<String, String> systemIdMap = new HashMap<String, String>() {
+	private static HashMap<String, String> systemIdMap = new HashMap<>() {
 		{
 			put(CodingSystem.ELEXIS_COVERAGE_TYPE.getSystem(), "coveragetype");
 			put(CodingSystem.ELEXIS_DIAGNOSE_TESSINERCODE.getSystem(), "tessinercode");

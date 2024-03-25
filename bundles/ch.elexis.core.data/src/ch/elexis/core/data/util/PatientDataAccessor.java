@@ -41,7 +41,7 @@ public class PatientDataAccessor implements IDataAccess {
 
 	public PatientDataAccessor() {
 		// initialize the list of defined elements
-		elementsList = new ArrayList<Element>();
+		elementsList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++)
 			elementsList.add(elements[i]);
 	}
@@ -64,7 +64,7 @@ public class PatientDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
+		Result<Object> result = new Result<>(StringUtils.EMPTY);
 
 		Patient patient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
 
@@ -72,23 +72,23 @@ public class PatientDataAccessor implements IDataAccess {
 			// gesetzlicher Vertreter
 			if (descriptor.equalsIgnoreCase(GESETZVERTRETER) || descriptor.equalsIgnoreCase(GESETZVERTRETER_UMLAUT)) {
 				Kontakt legalGuardian = getLegalGuardian(patient);
-				result = new Result<Object>(legalGuardian.getPostAnschrift(true));
+				result = new Result<>(legalGuardian.getPostAnschrift(true));
 			} else if (descriptor.equalsIgnoreCase(GESETZVERTRETER_KUERZEL)
 					|| descriptor.equalsIgnoreCase(GESETZVERTRETER_KUERZEL_UMLAUT)) {
 				Kontakt legalGuardian = getLegalGuardian(patient);
 				String label = legalGuardian.getLabel();
 				String fullName = label.substring(0, label.indexOf(","));
-				result = new Result<Object>(fullName);
+				result = new Result<>(fullName);
 			} else if (descriptor.equalsIgnoreCase(GESETZVERTRETER_ORT)
 					|| descriptor.equalsIgnoreCase(GESETZVERTRETER_ORT_UMLAUT)) {
 				Kontakt legalGuardian = getLegalGuardian(patient);
-				result = new Result<Object>(legalGuardian.getAnschrift().getOrt());
+				result = new Result<>(legalGuardian.getAnschrift().getOrt());
 			}
 
 			if (descriptor.equalsIgnoreCase(STAMMARZT) || descriptor.equalsIgnoreCase(STAMMARZT_UMLAUT)) {
 				Kontakt familyDoctor = getFamilyDoctor(patient);
 				if (familyDoctor != null) {
-					result = new Result<Object>(familyDoctor.getPostAnschrift(true));
+					result = new Result<>(familyDoctor.getPostAnschrift(true));
 				}
 			} else if (descriptor.equalsIgnoreCase(STAMMARZT_KUERZEL)
 					|| descriptor.equalsIgnoreCase(STAMMARZT_KUERZEL_UMLAUT)) {
@@ -96,13 +96,13 @@ public class PatientDataAccessor implements IDataAccess {
 				if (familyDoctor != null) {
 					String label = familyDoctor.getLabel();
 					String fullName = label.substring(0, label.indexOf(","));
-					result = new Result<Object>(fullName);
+					result = new Result<>(fullName);
 				}
 			} else if (descriptor.equalsIgnoreCase(STAMMARZT_ORT)
 					|| descriptor.equalsIgnoreCase(STAMMARZT_ORT_UMLAUT)) {
 				Kontakt familyDoctor = getFamilyDoctor(patient);
 				if (familyDoctor != null) {
-					result = new Result<Object>(familyDoctor.getAnschrift().getOrt());
+					result = new Result<>(familyDoctor.getAnschrift().getOrt());
 				}
 			}
 		}

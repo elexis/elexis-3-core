@@ -47,7 +47,7 @@ public class TaskLogDetailPart {
 		String partLabel = task.getTaskDescriptor().getReferenceId() + " - " + runAt; //$NON-NLS-1$
 		part.setLabel(partLabel);
 
-		Map<String, Object> e4Services = new HashMap<String, Object>();
+		Map<String, Object> e4Services = new HashMap<>();
 		e4Services.put(ECommandService.class.getName(), commandService);
 		e4Services.put(EHandlerService.class.getName(), handlerService);
 

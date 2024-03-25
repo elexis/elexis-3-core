@@ -378,7 +378,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 						}
 
 						byte[] bytes = Files.readAllBytes(Paths.get(document));
-						ArrayList<SerializableFile> fileList = new ArrayList<SerializableFile>();
+						ArrayList<SerializableFile> fileList = new ArrayList<>();
 						String mimeType = fileDialog.getFileName().substring(fileDialog.getFileName().lastIndexOf("."));
 						fileList.add(new SerializableFile(fileDialog.getFileName(), mimeType, bytes));
 

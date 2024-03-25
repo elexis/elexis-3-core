@@ -449,7 +449,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 	
 	private List<String> getSendMailAccounts() {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
 		ret.addAll(accounts.stream().filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
 				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)

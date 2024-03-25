@@ -18,7 +18,7 @@ public class BillLabResultOnCreationTemplateTaskDescriptor {
 				.findTaskDescriptorByIIdentifiedRunnableId(BillLabResultOnCreationIdentifiedRunnable.RUNNABLE_ID)
 				.isEmpty();
 
-		Map<String, String> triggerParam = new HashMap<String, String>();
+		Map<String, String> triggerParam = new HashMap<>();
 		triggerParam.put("topic", "info/elexis/po/create");
 		triggerParam.put("class", "ch.elexis.data.LabResult");
 

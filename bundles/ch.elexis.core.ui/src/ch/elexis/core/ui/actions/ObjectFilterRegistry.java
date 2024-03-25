@@ -22,7 +22,7 @@ import ch.elexis.data.PersistentObject;
 public class ObjectFilterRegistry {
 
 	private static ObjectFilterRegistry theInstance;
-	private final Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider> hash = new Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider>();
+	private final Hashtable<Class<? extends PersistentObject>, IObjectFilterProvider> hash = new Hashtable<>();
 
 	private ObjectFilterRegistry() {
 	}

@@ -82,8 +82,8 @@ public class Rechnungslauf implements IRunnableWithProgress {
 
 		List<Konsultation> dbList = getAllKonsultationen(monitor);
 		kons = skipInvalidConsultations(dbList);
-		subResults = new ArrayList<Konsultation>();
-		skipCase = new ArrayList<Fall>();
+		subResults = new ArrayList<>();
+		skipCase = new ArrayList<>();
 		tmpTime = new TimeTool();
 
 		applyBillingFlagFilter(monitor);
@@ -123,7 +123,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	private List<Konsultation> skipInvalidConsultations(List<Konsultation> dbList) {
 		// get Rechnungssteller of current Mandant
 		String rsId = mandant.getRechnungssteller().getId();
-		List<Konsultation> list = new ArrayList<Konsultation>();
+		List<Konsultation> list = new ArrayList<>();
 
 		for (Konsultation k : dbList) {
 			// skip if no valid mandant is set
@@ -164,7 +164,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 	 * @return list of all not yet billed konsultationen
 	 */
 	private List<Konsultation> getAllKonsultationen(IProgressMonitor monitor) {
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
 		qbe.add(Konsultation.FLD_BILLABLE, Query.EQUALS, "1"); //$NON-NLS-1$
 		monitor.beginTask(Messages.Rechnungslauf_analyzingConsultations, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
@@ -255,7 +255,7 @@ public class Rechnungslauf implements IRunnableWithProgress {
 		if (ttFirstBefore != null) {
 			log.debug("apply start time [" + ttFirstBefore.toString(TimeTool.DATE_COMPACT) + "] filter"); //$NON-NLS-1$ //$NON-NLS-2$
 			monitor.subTask("Filtern nach Anfangsdatum ...");
-			List<Fall> treated = new ArrayList<Fall>();
+			List<Fall> treated = new ArrayList<>();
 
 			for (Konsultation k : kons) {
 				if (accepted(k)) {

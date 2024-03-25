@@ -59,11 +59,11 @@ public class MedicationService implements IMedicationService {
 				list.add(num);
 			} else {
 				sub_list = getDosageAsFloats(dosis, "-");
-				if (StringUtils.countMatches(dosis, "-") > 1 && sub_list.size() > 0) {
+				if (StringUtils.countMatches(dosis, "-") > 1 && !sub_list.isEmpty()) {
 					return sub_list;
 				}
 				sub_list = getDosageAsFloats(dosis, "/");
-				if (StringUtils.countMatches(dosis, "/") > 1 && sub_list.size() > 0) {
+				if (StringUtils.countMatches(dosis, "/") > 1 && !sub_list.isEmpty()) {
 					return sub_list;
 				}
 				if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
@@ -90,7 +90,7 @@ public class MedicationService implements IMedicationService {
 	}
 
 	private ArrayList<Float> getDosageAsFloats(String dosis, String trennzeichen) {
-		ArrayList<Float> list = new ArrayList<Float>();
+		ArrayList<Float> list = new ArrayList<>();
 		if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
 			String[] dos = dosis.split(trennzeichen);
 			if (dos.length > 2) {

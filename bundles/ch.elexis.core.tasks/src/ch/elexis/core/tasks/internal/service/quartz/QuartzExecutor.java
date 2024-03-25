@@ -103,7 +103,7 @@ public class QuartzExecutor {
 	}
 
 	public Set<String[]> getIncurred() {
-		Set<String[]> incurred = new HashSet<String[]>();
+		Set<String[]> incurred = new HashSet<>();
 		try {
 			Set<JobKey> jobKeys = sched.getJobKeys(GroupMatcher.anyGroup());
 			for (JobKey jobKey : jobKeys) {

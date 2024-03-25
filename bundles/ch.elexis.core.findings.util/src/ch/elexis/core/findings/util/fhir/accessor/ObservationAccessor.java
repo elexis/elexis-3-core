@@ -330,7 +330,7 @@ public class ObservationAccessor extends AbstractFindingsAccessor {
 
 	public void removeNote(DomainResource resource, String text) {
 		org.hl7.fhir.r4.model.Observation fhirObservation = (org.hl7.fhir.r4.model.Observation) resource;
-		List<Annotation> notes = new ArrayList<Annotation>(fhirObservation.getNote());
+		List<Annotation> notes = new ArrayList<>(fhirObservation.getNote());
 		notes = notes.stream().filter(annotation -> !text.equals(annotation.getText())).collect(Collectors.toList());
 		fhirObservation.setNote(notes);
 	}

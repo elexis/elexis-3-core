@@ -37,7 +37,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 	private final String LAB_ORDER_SELECTED_ACTION_ID = ExtensionPointConstantsUi.LABORORDER + ".selectedId"; //$NON-NLS-1$
 	private static Log log = Log.get("LaborOrderPulldownMenuCreator"); //$NON-NLS-1$
 
-	List<IAction> actions = new Vector<IAction>();
+	List<IAction> actions = new Vector<>();
 	Menu menu = null;
 	IAction selectedAction = null;
 
@@ -59,7 +59,7 @@ public class LaborOrderPulldownMenuCreator implements IMenuCreator {
 						action.getText()), Log.WARNINGS);
 			}
 		}
-		if (this.actions != null && this.actions.size() > 0) {
+		if (this.actions != null && !this.actions.isEmpty()) {
 			String selectedId = CoreHub.localCfg.get(LAB_ORDER_SELECTED_ACTION_ID, null);
 			if (selectedId != null) {
 				for (IAction action : this.actions) {

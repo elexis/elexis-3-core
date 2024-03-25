@@ -49,7 +49,7 @@ public class SqlSettings extends Settings {
 	volatile String valueColumn = "wert";
 
 	private static final String LASTUPDATE_COLUMN = "lastupdate";
-	private HashMap<String, Long> lastUpdateMap = new HashMap<String, Long>();
+	private HashMap<String, Long> lastUpdateMap = new HashMap<>();
 
 	public SqlSettings(JdbcLink j, String tablename, String paramColumn, String valueColumn, String constraint) {
 		this.j = j;

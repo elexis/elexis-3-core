@@ -46,7 +46,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	public TextTemplatePrintSettingsDialog(Shell parentShell, String printer, String tray) {
 		super(parentShell);
 		printServices = Arrays.asList(PrintServiceLookup.lookupPrintServices(null, null));
-		mediaTrays = new ArrayList<MediaTray>();
+		mediaTrays = new ArrayList<>();
 
 		this.selPrinter = printer;
 		this.selTray = tray;
@@ -177,7 +177,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	}
 
 	private List<MediaTray> loadAvailableTrays(PrintService printService) {
-		mediaTrays = new ArrayList<MediaTray>();
+		mediaTrays = new ArrayList<>();
 		Object attributes = printService.getSupportedAttributeValues(Media.class, DocFlavor.SERVICE_FORMATTED.PRINTABLE,
 				null);
 		if (attributes != null && attributes.getClass().isArray()) {

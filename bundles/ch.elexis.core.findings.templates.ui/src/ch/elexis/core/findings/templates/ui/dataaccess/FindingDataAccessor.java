@@ -78,7 +78,7 @@ public class FindingDataAccessor implements IDataAccess {
 					parameters.add(findingTemplate.getTitle());
 				}
 			}
-			List<Element> ret = new ArrayList<Element>(parameters.size());
+			List<Element> ret = new ArrayList<>(parameters.size());
 			for (String n : parameters) {
 				// placeholder for first finding
 				String placeholder = PREFIX_FIRST + n + SUFFIX;
@@ -104,7 +104,7 @@ public class FindingDataAccessor implements IDataAccess {
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String key, String[] params) {
 		Result<Object> ret = null;
 		if (!(dependentObject instanceof Patient)) {
-			ret = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.INVALID_PARAMETERS, "Ungültiger Parameter", //$NON-NLS-1$
+			ret = new Result<>(Result.SEVERITY.ERROR, IDataAccess.INVALID_PARAMETERS, "Ungültiger Parameter", //$NON-NLS-1$
 					dependentObject, true);
 		} else {
 			DBConnection dbConnection = null;
@@ -115,7 +115,7 @@ public class FindingDataAccessor implements IDataAccess {
 				Patient pat = (Patient) dependentObject;
 
 				if (!(ALL.equals(key) || FIRST.equals(key) || LAST.equals(key))) {
-					return new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+					return new Result<>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 							"Fehler beim Parsen der Befund-Daten. Prefix " + key + " nicht bekannt.", params, true);
 				}
 				dbConnection = PersistentObject.getDefaultConnection();
@@ -184,10 +184,10 @@ public class FindingDataAccessor implements IDataAccess {
 					}
 				}
 
-				ret = new Result<Object>(textBuilder.toString());
+				ret = new Result<>(textBuilder.toString());
 			} catch (Exception e) {
 				LoggerFactory.getLogger(FindingDataAccessor.class).error("parse error", e);
-				return new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+				return new Result<>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 						"Fehler beim Parsen der Befunde-Daten", params, true);
 			} finally {
 				if (dbConnection != null && preparedStatement != null) {

@@ -257,7 +257,7 @@ public class Script extends NamedBlob2 {
 	}
 
 	public static List<Script> getScripts() {
-		Query<Script> qbe = new Query<Script>(Script.class);
+		Query<Script> qbe = new Query<>(Script.class);
 		qbe.add("ID", "LIKE", PREFIX + "%");
 		return qbe.execute();
 	}
@@ -279,10 +279,10 @@ public class Script extends NamedBlob2 {
 			name = call.substring(0, x);
 			params = call.substring(x + 1, call.length() - 1);
 		}
-		Query<Script> qbe = new Query<Script>(Script.class);
+		Query<Script> qbe = new Query<>(Script.class);
 		qbe.add("ID", Query.EQUALS, PREFIX + name);
 		List<Script> found = qbe.execute();
-		if (found.size() == 0) {
+		if (found.isEmpty()) {
 			throw new ElexisException(Script.class, "A Script with this name was not found " + name,
 					ElexisException.EE_NOT_FOUND);
 		}

@@ -26,7 +26,7 @@ public class RemoveDSGWhenDeceased extends ExternalMaintenance {
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		int numDeletedSticker = 0;
-		List<IPatient> lIPatients = new ArrayList<IPatient>();
+		List<IPatient> lIPatients = new ArrayList<>();
 		final String STICKER_DECEASED = "Verstorben"; //$NON-NLS-1$
 		final String STICKER_DSG = "missing_dsg_consent_v1"; //$NON-NLS-1$
 		

@@ -84,7 +84,7 @@ public class FilesystemChangeWatcher {
 	}
 
 	public Set<String[]> getIncurred() {
-		Set<String[]> incurred = new HashSet<String[]>();
+		Set<String[]> incurred = new HashSet<>();
 		if (timerTask != null) {
 			incurred.addAll(timerTask.getIncurred());
 		}

@@ -57,7 +57,7 @@ public class RiskViewContribution implements IViewContribution {
 				observations = observations.stream().filter(finding -> isRisk(finding)).collect(Collectors.toList());
 			}
 
-			if (observations != null && observations.size() >= 1) {
+			if (observations != null && !observations.isEmpty()) {
 				if (observations.size() > 1) {
 					MessageDialog.openWarning(riskComposite.getShell(), "Risiken",
 							"Mehr als eine Risiken Einträge gefunden.\n Nur der letzte Risiken Eintrag wird angezeigt.");

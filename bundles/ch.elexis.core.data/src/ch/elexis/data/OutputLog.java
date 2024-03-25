@@ -37,7 +37,7 @@ public class OutputLog extends PersistentObject {
 	public static final String FLD_OBJECT_ID = "ObjectID";
 	public static final String FLD_OUTPUTTER = "Outputter";
 	static final String TABLENAME = "OUTPUT_LOG";
-	static final HashMap<String, IOutputter> outputter_cache = new HashMap<String, IOutputter>();
+	static final HashMap<String, IOutputter> outputter_cache = new HashMap<>();
 
 	static {
 		addMapping(TABLENAME, FLD_OBJECT_ID, FLD_OBJECT_TYPE, FLD_OUTPUTTER, DATE_COMPOUND, FLD_EXTINFO);
@@ -60,7 +60,7 @@ public class OutputLog extends PersistentObject {
 	}
 
 	public static List<OutputLog> getOutputs(PersistentObject po) {
-		Query<OutputLog> qbe = new Query<OutputLog>(OutputLog.class);
+		Query<OutputLog> qbe = new Query<>(OutputLog.class);
 		qbe.add(FLD_OBJECT_ID, Query.EQUALS, po.getId());
 		qbe.orderBy(true, FLD_LASTUPDATE);
 		return qbe.execute();

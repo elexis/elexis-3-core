@@ -24,7 +24,7 @@ public class Slf4jSessionLogger extends AbstractSessionLog {
 
 	public static final String DEFAULT_ECLIPSELINK_NAMESPACE = ECLIPSELINK_NAMESPACE + "." + DEFAULT_CATEGORY;
 
-	private static Map<Integer, LogLevel> MAP_LEVELS = new HashMap<Integer, LogLevel>();
+	private static Map<Integer, LogLevel> MAP_LEVELS = new HashMap<>();
 	static {
 		MAP_LEVELS.put(SessionLog.ALL, LogLevel.TRACE);
 		MAP_LEVELS.put(SessionLog.FINEST, LogLevel.TRACE);
@@ -36,7 +36,7 @@ public class Slf4jSessionLogger extends AbstractSessionLog {
 		MAP_LEVELS.put(SessionLog.SEVERE, LogLevel.ERROR);
 	}
 
-	private Map<String, Logger> categoryLoggers = new HashMap<String, Logger>();
+	private Map<String, Logger> categoryLoggers = new HashMap<>();
 
 	public Slf4jSessionLogger() {
 		super();

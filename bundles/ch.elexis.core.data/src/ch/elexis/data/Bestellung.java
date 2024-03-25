@@ -114,7 +114,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 	}
 
 	public @Nullable BestellungEntry findBestellungEntry(@Nullable Stock stock, Artikel article) {
-		Query<BestellungEntry> qbe = new Query<BestellungEntry>(BestellungEntry.class);
+		Query<BestellungEntry> qbe = new Query<>(BestellungEntry.class);
 		qbe.add(BestellungEntry.FLD_BESTELLUNG, Query.EQUALS, getId());
 		qbe.add(BestellungEntry.FLD_ARTICLE_ID, Query.EQUALS, article.getId());
 		qbe.add(BestellungEntry.FLD_ARTICLE_TYPE, Query.EQUALS, article.getClass().getName());
@@ -123,7 +123,7 @@ public class Bestellung extends PersistentObject implements IOrder {
 		}
 
 		List<BestellungEntry> result = qbe.execute();
-		if (result.size() > 0) {
+		if (!result.isEmpty()) {
 			return result.get(0);
 		}
 		return null;

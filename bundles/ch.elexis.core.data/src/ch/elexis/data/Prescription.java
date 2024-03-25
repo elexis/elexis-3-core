@@ -284,8 +284,8 @@ public class Prescription extends PersistentObject {
 	 * @return a list of (up to 4) floats
 	 */
 	public static ArrayList<Float> getDoseAsFloats(String dosis) {
-		ArrayList<Float> list = new ArrayList<Float>();
-		ArrayList<Float> sub_list = new ArrayList<Float>();
+		ArrayList<Float> list = new ArrayList<>();
+		ArrayList<Float> sub_list = new ArrayList<>();
 		float num = 0;
 		if (dosis != null) {
 			// Match stuff like '1/2', '7/8', '~1,2'
@@ -302,11 +302,11 @@ public class Prescription extends PersistentObject {
 				list.add(num);
 			} else {
 				sub_list = getDoseAsFloats(dosis, "-");
-				if (StringUtils.countMatches(dosis, "-") > 1 && sub_list.size() > 0) {
+				if (StringUtils.countMatches(dosis, "-") > 1 && !sub_list.isEmpty()) {
 					return sub_list;
 				}
 				sub_list = getDoseAsFloats(dosis, "/");
-				if (StringUtils.countMatches(dosis, "/") > 1 && sub_list.size() > 0) {
+				if (StringUtils.countMatches(dosis, "/") > 1 && !sub_list.isEmpty()) {
 					return sub_list;
 				}
 				if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
@@ -333,7 +333,7 @@ public class Prescription extends PersistentObject {
 	}
 
 	private static ArrayList<Float> getDoseAsFloats(String dosis, String trennzeichen) {
-		ArrayList<Float> list = new ArrayList<Float>();
+		ArrayList<Float> list = new ArrayList<>();
 		if (dosis.indexOf('-') != -1 || dosis.indexOf('/') != -1) {
 			String[] dos = dosis.split(trennzeichen);
 			if (dos.length > 2) {
@@ -507,7 +507,7 @@ public class Prescription extends PersistentObject {
 	 * @return a Map of TimeTools and Doses (Sorted by date)
 	 */
 	public SortedMap<TimeTool, String> getTerms() {
-		TreeMap<TimeTool, String> ret = new TreeMap<TimeTool, String>();
+		TreeMap<TimeTool, String> ret = new TreeMap<>();
 		String raw = (String) getExtInfoStoredObjectByKey(FLD_EXT_TERMS);
 		if (raw != null) {
 			String[] terms = raw.split(StringTool.flattenSeparator);
@@ -760,19 +760,19 @@ public class Prescription extends PersistentObject {
 	public @Nullable IPersistentObject getLastDisposed(String rezeptId) {
 		if (StringTool.leer.equals(rezeptId)) {
 			// fixed medication - need to find the last disposition by querying db
-			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
+			Query<Prescription> qre = new Query<>(Prescription.class);
 			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
 			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, StringTool.leer);
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);
 			List<Prescription> execute = qre.execute();
-			if (execute.size() > 0) {
+			if (!execute.isEmpty()) {
 				return execute.get(0).getLastDisposed();
 			} else {
 				return null;
 			}
 		} else {
-			Query<Prescription> qre = new Query<Prescription>(Prescription.class);
+			Query<Prescription> qre = new Query<>(Prescription.class);
 			qre.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, get(Prescription.FLD_PATIENT_ID));
 			qre.add(Prescription.FLD_ARTICLE, Query.EQUALS, get(Prescription.FLD_ARTICLE));
 			qre.add(Prescription.FLD_REZEPT_ID, Query.NOT_EQUAL, FLD_REZEPTID_VAL_DIREKTABGABE);
@@ -780,7 +780,7 @@ public class Prescription extends PersistentObject {
 			qre.orderBy(true, PersistentObject.FLD_LASTUPDATE);
 
 			List<Prescription> execute = qre.execute();
-			if (execute.size() > 0) {
+			if (!execute.isEmpty()) {
 				return Rezept.load(execute.get(0).get(Prescription.FLD_REZEPT_ID));
 			}
 		}

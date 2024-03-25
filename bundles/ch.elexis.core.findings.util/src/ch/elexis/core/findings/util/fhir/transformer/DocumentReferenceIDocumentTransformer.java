@@ -131,7 +131,7 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 	}
 
 	private IDocumentStore getDefaultDocumentStore() {
-		if (documentStores.size() > 0) {
+		if (!documentStores.isEmpty()) {
 			return documentStores.stream().filter(ds -> ds.getId().toLowerCase().contains("omnivore")).findFirst()
 					.orElse(documentStores.get(0));
 		}

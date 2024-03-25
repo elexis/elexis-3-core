@@ -27,7 +27,7 @@ public class UserGroup extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	@Override
 	public IRole addRole(IRole role) {
 		if (role instanceof AbstractIdDeleteModelAdapter) {
-			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
+			Set<Role> roles = new HashSet<>(getEntity().getRoles());
 			roles.add((Role) ((AbstractIdDeleteModelAdapter<?>) role).getEntity());
 			getEntityMarkDirty().setRoles(roles);
 		}
@@ -37,7 +37,7 @@ public class UserGroup extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	@Override
 	public void removeRole(IRole role) {
 		if (role instanceof AbstractIdDeleteModelAdapter) {
-			Set<Role> roles = new HashSet<Role>(getEntity().getRoles());
+			Set<Role> roles = new HashSet<>(getEntity().getRoles());
 			roles.remove(((AbstractIdDeleteModelAdapter<?>) role).getEntity());
 			getEntityMarkDirty().setRoles(roles);
 		}
@@ -52,7 +52,7 @@ public class UserGroup extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	@Override
 	public IUser addUser(IUser user) {
 		if (user instanceof AbstractIdDeleteModelAdapter) {
-			Set<User> users = new HashSet<User>(getEntity().getUsers());
+			Set<User> users = new HashSet<>(getEntity().getUsers());
 			users.add((User) ((AbstractIdDeleteModelAdapter<?>) user).getEntity());
 			getEntityMarkDirty().setUsers(users);
 		}
@@ -62,7 +62,7 @@ public class UserGroup extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.e
 	@Override
 	public void removeUser(IUser user) {
 		if (user instanceof AbstractIdDeleteModelAdapter) {
-			Set<User> users = new HashSet<User>(getEntity().getUsers());
+			Set<User> users = new HashSet<>(getEntity().getUsers());
 			users.remove(((AbstractIdDeleteModelAdapter<?>) user).getEntity());
 			getEntityMarkDirty().setUsers(users);
 		}

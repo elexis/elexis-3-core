@@ -130,7 +130,7 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public List<IRole> getRoles() {
-		List<IRole> _roles = new ArrayList<IRole>();
+		List<IRole> _roles = new ArrayList<>();
 		roles.forEach(rs -> coreModelService.load(rs, IRole.class).ifPresent(r -> _roles.add(r)));
 		return _roles;
 	}

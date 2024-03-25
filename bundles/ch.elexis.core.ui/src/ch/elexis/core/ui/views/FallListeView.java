@@ -202,7 +202,7 @@ public class FallListeView extends ViewPart implements IActivationListener {
 					} else {
 						IFilter filter = fallCf.getControlFieldProvider().createFilter();
 						List<String> list = actPatient.getList(Messages.FallListeView_Cases, true); // $NON-NLS-1$
-						ArrayList<Fall> arr = new ArrayList<Fall>();
+						ArrayList<Fall> arr = new ArrayList<>();
 						for (String s : list) {
 							Fall f = Fall.load(s);
 							if (filter.select(f)) {

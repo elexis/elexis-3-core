@@ -352,7 +352,7 @@ public abstract class AbstractConnection implements PortEventListener {
 	@SuppressWarnings("unchecked")
 	public static String[] getComPorts() {
 		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
-		ArrayList<String> p = new ArrayList<String>();
+		ArrayList<String> p = new ArrayList<>();
 		while (ports.hasMoreElements()) {
 			CommPortIdentifier port = ports.nextElement();
 			p.add(port.getName());

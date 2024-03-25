@@ -34,7 +34,7 @@ public class CodingService implements ICodingService {
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
 	public synchronized void bindFhirTransformer(ICodingContribution contribution) {
 		if (contributions == null) {
-			contributions = new ArrayList<ICodingContribution>();
+			contributions = new ArrayList<>();
 		}
 		if (contribution.getCodeSystem() != null && !contribution.getCodeSystem().isEmpty()) {
 			contributions.add(contribution);
@@ -48,7 +48,7 @@ public class CodingService implements ICodingService {
 
 	public void unbindFhirTransformer(ICodingContribution contribution) {
 		if (contributions == null) {
-			contributions = new ArrayList<ICodingContribution>();
+			contributions = new ArrayList<>();
 		}
 		contributions.remove(contribution);
 	}

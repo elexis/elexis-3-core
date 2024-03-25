@@ -206,7 +206,7 @@ public class InvoiceListHeaderComposite extends Composite {
 		comboViewerBillingSystem = new ComboViewer(this, SWT.SINGLE | SWT.READ_ONLY);
 		comboViewerBillingSystem.setContentProvider(ArrayContentProvider.getInstance());
 		comboViewerBillingSystem.setLabelProvider(new LabelProvider());
-		List<String> billingSystems = new ArrayList<String>();
+		List<String> billingSystems = new ArrayList<>();
 		billingSystems.add(ALL_ELEMENTS_LABEL);
 		billingSystems.addAll(Arrays.asList(getBillingSystems()));
 		comboViewerBillingSystem.setInput(billingSystems);

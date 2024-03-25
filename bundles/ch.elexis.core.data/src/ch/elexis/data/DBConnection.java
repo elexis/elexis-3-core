@@ -62,7 +62,7 @@ public class DBConnection {
 			CoreHub.localCfg.set(Preferences.ABL_CACHELIFETIME, CACHE_MIN_LIFETIME);
 		}
 
-		cache = new MultiGuavaCache<String>(default_lifetime, TimeUnit.SECONDS);
+		cache = new MultiGuavaCache<>(default_lifetime, TimeUnit.SECONDS);
 
 		logger.info("Cache setup: default_lifetime " + default_lifetime);
 	}

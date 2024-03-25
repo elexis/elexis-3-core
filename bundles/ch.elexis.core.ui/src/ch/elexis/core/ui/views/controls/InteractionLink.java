@@ -41,7 +41,7 @@ public class InteractionLink {
 			setSuppressed();
 		} else {
 			// parent.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-			updateAtcs(new ArrayList<IArticle>());
+			updateAtcs(new ArrayList<>());
 		}
 	}
 
@@ -65,7 +65,7 @@ public class InteractionLink {
 		String tooltip = StringUtils.EMPTY;
 		StringBuilder buildUrl = new StringBuilder(Messages.VerrDetailDialog_InteractionBaseURL);
 
-		ArrayList<String> atcs = new ArrayList<String>();
+		ArrayList<String> atcs = new ArrayList<>();
 		gtins.forEach(art -> {
 			String atc = art.getAtcCode();
 			buildUrl.append(art.getGtin());

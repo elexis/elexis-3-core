@@ -72,13 +72,13 @@ public class Patientenzaehler extends TitleAreaDialog {
 	protected void okPressed() {
 		TimeTool ttVon = new TimeTool(dpVon.getDate().getTime());
 		TimeTool ttBis = new TimeTool(dpBis.getDate().getTime());
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add("Datum", ">=", ttVon.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.add("Datum", "<=", ttBis.toString(TimeTool.DATE_COMPACT)); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.add("MandantID", "=", ContextServiceHolder.getActiveMandatorOrNull().getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		HashMap<String, Patient> maenner = new HashMap<String, Patient>();
-		HashMap<String, Patient> frauen = new HashMap<String, Patient>();
-		HashMap<String, Fall> faelle = new HashMap<String, Fall>();
+		HashMap<String, Patient> maenner = new HashMap<>();
+		HashMap<String, Patient> frauen = new HashMap<>();
+		HashMap<String, Fall> faelle = new HashMap<>();
 
 		for (Konsultation k : qbe.execute()) {
 			Fall fall = k.getFall();

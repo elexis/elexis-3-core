@@ -190,7 +190,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 	}
 
 	private List<Fall> getOpenFall() {
-		ArrayList<Fall> ret = new ArrayList<Fall>();
+		ArrayList<Fall> ret = new ArrayList<>();
 		Fall[] faelle = patient.getFaelle();
 		for (Fall f : faelle) {
 			if (f.isOpen()) {
@@ -201,7 +201,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 	}
 
 	protected List<Konsultation> getOpenKons() {
-		ArrayList<Konsultation> ret = new ArrayList<Konsultation>();
+		ArrayList<Konsultation> ret = new ArrayList<>();
 		Fall[] faelle = patient.getFaelle();
 		for (Fall f : faelle) {
 			if (f.isOpen()) {

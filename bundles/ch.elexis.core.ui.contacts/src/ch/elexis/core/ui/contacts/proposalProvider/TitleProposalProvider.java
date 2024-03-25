@@ -48,11 +48,11 @@ public class TitleProposalProvider implements IContentProposalProvider {
 	}
 
 	private void initContentProposals() {
-		titleProposalPrefix = new LinkedList<IContentProposal>();
+		titleProposalPrefix = new LinkedList<>();
 		for (int i = 0; i < titlePrefix.length; i++) {
 			titleProposalPrefix.add(new ContentProposal(titlePrefix[i]));
 		}
-		titleProposalSuffix = new LinkedList<IContentProposal>();
+		titleProposalSuffix = new LinkedList<>();
 		for (int i = 0; i < titleSuffix.length; i++) {
 			titleProposalSuffix.add(new ContentProposal(titleSuffix[i]));
 		}

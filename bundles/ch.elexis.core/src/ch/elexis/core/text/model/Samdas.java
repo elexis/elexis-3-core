@@ -184,7 +184,7 @@ public class Samdas {
 		@SuppressWarnings("unchecked")
 		public List<XRef> getXrefs() {
 			List<Element> lElm = eRecord.getChildren(ELEM_XREF, ns);
-			List<XRef> ret = new ArrayList<XRef>(lElm.size());
+			List<XRef> ret = new ArrayList<>(lElm.size());
 			for (Element el : lElm) {
 				ret.add(new XRef(el));
 			}
@@ -194,7 +194,7 @@ public class Samdas {
 		@SuppressWarnings("unchecked")
 		public List<Markup> getMarkups() {
 			List<Element> lElm = eRecord.getChildren(ELEM_MARKUP, ns);
-			List<Markup> ret = new ArrayList<Markup>(lElm.size());
+			List<Markup> ret = new ArrayList<>(lElm.size());
 			for (Element el : lElm) {
 				ret.add(new Markup(el));
 			}
@@ -204,7 +204,7 @@ public class Samdas {
 		@SuppressWarnings("unchecked")
 		public List<Section> getSections() {
 			List<Element> lElm = eRecord.getChildren(ELEM_SECTION, ns);
-			List<Section> ret = new ArrayList<Section>(lElm.size());
+			List<Section> ret = new ArrayList<>(lElm.size());
 			for (Element el : lElm) {
 				ret.add(new Section(el));
 			}

@@ -126,7 +126,7 @@ public class Rezept extends PersistentObject {
 	 */
 	public List<Prescription> getLines() {
 		List<String> list = getList(LINES, false);
-		List<Prescription> ret = new ArrayList<Prescription>(list.size());
+		List<Prescription> ret = new ArrayList<>(list.size());
 		for (String s : list) {
 			ret.add(Prescription.load(s));
 		}

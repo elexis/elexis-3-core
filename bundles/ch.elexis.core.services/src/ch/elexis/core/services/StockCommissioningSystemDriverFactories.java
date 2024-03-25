@@ -24,7 +24,7 @@ public class StockCommissioningSystemDriverFactories {
 
 	private Logger log = LoggerFactory.getLogger(StockCommissioningSystemDriverFactories.class);
 
-	private static Map<UUID, ICommissioningSystemDriverFactory> driverFactories = new ConcurrentHashMap<UUID, ICommissioningSystemDriverFactory>();
+	private static Map<UUID, ICommissioningSystemDriverFactory> driverFactories = new ConcurrentHashMap<>();
 
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public void bind(ICommissioningSystemDriverFactory driverFactory) {
@@ -60,7 +60,7 @@ public class StockCommissioningSystemDriverFactories {
 	}
 
 	public static List<UUID> getAllDriverUuids() {
-		return new ArrayList<UUID>(driverFactories.keySet());
+		return new ArrayList<>(driverFactories.keySet());
 	}
 
 	public static String getInfoStringForDriver(UUID driverUuid, boolean extended) {

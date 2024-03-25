@@ -22,7 +22,7 @@ public class SpotlightResult implements ISpotlightResult {
 		encounterEntries = Collections.synchronizedSet(new HashSet<>());
 		documentEntries = Collections.synchronizedSet(new HashSet<>());
 		letterEntries = Collections.synchronizedSet(new HashSet<>());
-		usedCategories = new HashSet<ISpotlightResultEntry.Category>(4);
+		usedCategories = new HashSet<>(4);
 	}
 
 	@Override

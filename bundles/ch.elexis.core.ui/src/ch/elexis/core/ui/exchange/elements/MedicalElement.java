@@ -66,7 +66,7 @@ public class MedicalElement extends XChangeElement {
 			}
 		}
 
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(LabResult.PATIENT_ID, Query.EQUALS, p.getId());
 		List<LabResult> labs = qbe.execute();
 		if (labs != null) {
@@ -75,7 +75,7 @@ public class MedicalElement extends XChangeElement {
 			}
 		}
 
-		Query<Brief> qb = new Query<Brief>(Brief.class);
+		Query<Brief> qb = new Query<>(Brief.class);
 		qb.add(LabResult.PATIENT_ID, Query.EQUALS, p.getId());
 		List<Brief> lBriefe = qb.execute();
 		if ((lBriefe != null) && (lBriefe.size()) > 0) {
@@ -84,7 +84,7 @@ public class MedicalElement extends XChangeElement {
 			}
 		}
 
-		List<Prescription> relevantMedis = new ArrayList<Prescription>();
+		List<Prescription> relevantMedis = new ArrayList<>();
 		relevantMedis.addAll(p.getMedication(EntryType.FIXED_MEDICATION));
 		relevantMedis.addAll(p.getMedication(EntryType.RESERVE_MEDICATION));
 		for (Prescription medi : relevantMedis) {
@@ -266,7 +266,7 @@ public class MedicalElement extends XChangeElement {
 					FindingElement.class);
 			return analyses;
 		}
-		return new LinkedList<FindingElement>();
+		return new LinkedList<>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -280,7 +280,7 @@ public class MedicalElement extends XChangeElement {
 			return documents;
 
 		}
-		return new LinkedList<DocumentElement>();
+		return new LinkedList<>();
 	}
 
 	public String toString() {

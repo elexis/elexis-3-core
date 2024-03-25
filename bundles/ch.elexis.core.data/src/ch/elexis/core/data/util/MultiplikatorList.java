@@ -53,7 +53,7 @@ public class MultiplikatorList {
 		sql.append("SELECT * FROM ").append(table).append(" WHERE TYP=").append(JdbcLink.wrap(typ));
 		ResultSet res = statement.query(sql.toString());
 		try {
-			list = new ArrayList<MultiplikatorList.MultiplikatorInfo>();
+			list = new ArrayList<>();
 			while (res.next()) {
 				list.add(new MultiplikatorInfo(res.getString("DATUM_VON"), res.getString("DATUM_BIS"),
 						res.getString("MULTIPLIKATOR")));

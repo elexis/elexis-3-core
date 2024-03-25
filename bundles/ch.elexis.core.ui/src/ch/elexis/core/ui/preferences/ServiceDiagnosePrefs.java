@@ -193,8 +193,8 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 
 	private void loadInput(ViewType view) {
 		String[] settings = new String[] {};
-		input = new ArrayList<String>();
-		aInput = new ArrayList<String>();
+		input = new ArrayList<>();
+		aInput = new ArrayList<>();
 
 		switch (view) {
 		case Leistungen:
@@ -244,7 +244,7 @@ public class ServiceDiagnosePrefs extends PreferencePage implements IWorkbenchPr
 	}
 
 	private List<String> findPagesFor(String point, String ignore) {
-		List<String> pageNames = new ArrayList<String>();
+		List<String> pageNames = new ArrayList<>();
 		List<IConfigurationElement> list = Extensions.getExtensions(point);
 		for (IConfigurationElement ce : list) {
 			try {

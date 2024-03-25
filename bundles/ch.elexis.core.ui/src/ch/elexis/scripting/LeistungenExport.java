@@ -46,7 +46,7 @@ public class LeistungenExport {
 		Double costOther;
 	}
 
-	private HashMap<String, patums> patienten = new HashMap<String, LeistungenExport.patums>();
+	private HashMap<String, patums> patienten = new HashMap<>();
 
 	public String doExport(String from, String until, String toDir) {
 		TimeTool ttFrom = new TimeTool();
@@ -89,7 +89,7 @@ public class LeistungenExport {
 			FileWriter writer = new FileWriter(outFile);
 			CSVWriter out = new CSVWriter(writer);
 			out.writeNext(cols);
-			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+			Query<Konsultation> qbe = new Query<>(Konsultation.class);
 			qbe.add("Datum", ">=", ttFrom.toString(TimeTool.DATE_COMPACT));
 			qbe.add("Datum", "<=", ttUntil.toString(TimeTool.DATE_COMPACT));
 			for (Konsultation k : qbe.execute()) {

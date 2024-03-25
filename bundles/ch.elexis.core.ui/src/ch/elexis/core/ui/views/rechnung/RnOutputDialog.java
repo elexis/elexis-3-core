@@ -51,7 +51,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 	private List<IRnOutputter> lo;
 	private Combo cbLo;
 	private Button bCopy;
-	private final List<Control> ctls = new ArrayList<Control>();
+	private final List<Control> ctls = new ArrayList<>();
 	private final StackLayout stack = new StackLayout();
 
 	public RnOutputDialog(Shell shell, Collection<Rechnung> rnn) {

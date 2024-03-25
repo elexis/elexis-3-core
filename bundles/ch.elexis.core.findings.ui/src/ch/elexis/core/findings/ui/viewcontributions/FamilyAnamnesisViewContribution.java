@@ -52,7 +52,7 @@ public class FamilyAnamnesisViewContribution implements IViewContribution {
 						IFamilyMemberHistory.class);
 			}
 
-			if (iFindings != null && iFindings.size() >= 1) {
+			if (iFindings != null && !iFindings.isEmpty()) {
 				if (iFindings.size() > 1) {
 					MessageDialog.openWarning(famAnamnesisComposite.getShell(), "Familien Anamnese",
 							"Mehr als eine familien Anamnese gefunden.\n Nur die letzte familien Anamnese wird angezeigt.");

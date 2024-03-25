@@ -53,7 +53,7 @@ import ch.rgw.tools.TimeTool;
 
 public class InvoiceListContentProvider implements IStructuredContentProvider {
 
-	private List<InvoiceEntry> currentContent = new ArrayList<InvoiceEntry>();
+	private List<InvoiceEntry> currentContent = new ArrayList<>();
 	private TableViewer structuredViewer;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
 	private InvoiceListBottomComposite invoiceListBottomComposite;

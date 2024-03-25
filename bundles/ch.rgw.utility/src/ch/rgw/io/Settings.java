@@ -268,7 +268,7 @@ public abstract class Settings implements Serializable, Cloneable {
 	}
 
 	public ArrayList<String> getAll() {
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 		addNode(ret, "", node);
 		return ret;
 	}

@@ -414,7 +414,7 @@ public class ConfigService implements IConfigService {
 	}
 
 	private Map<Object, Object> buildMap(List<? extends IConfig> entries) {
-		Hashtable<Object, Object> ret = new Hashtable<Object, Object>();
+		Hashtable<Object, Object> ret = new Hashtable<>();
 		for (IConfig entry : entries) {
 			buildMap(entry.getKey(), entry.getValue(), ret);
 		}
@@ -436,7 +436,7 @@ public class ConfigService implements IConfigService {
 			@SuppressWarnings("unchecked")
 			Hashtable<Object, Object> subMap = (Hashtable<Object, Object>) map.get(currentKey);
 			if (subMap == null) {
-				subMap = new Hashtable<Object, Object>();
+				subMap = new Hashtable<>();
 				map.put(currentKey, subMap);
 			}
 			buildMap(key.substring(key.indexOf("/") + 1), value, subMap);
