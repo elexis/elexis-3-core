@@ -297,7 +297,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 					return;
 				KontaktSelektor ks = new KontaktSelektor(UiDesk.getTopShell(), Mandant.class,
 						ch.elexis.core.l10n.Messages.Core_Select_Mandator,
-						Messages.StockManagementPreference_select_owner, new String[] {});
+						Messages.StockManagementPreference_select_stock_owner, new String[] {});
 				int ret = ks.open();
 				if (ret == Window.OK) {
 					Mandant p = (Mandant) ks.getSelection();
