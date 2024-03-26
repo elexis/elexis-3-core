@@ -369,7 +369,6 @@ public class Messages {
 	public static String StockManagementPreferencePage_lblCode_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblCode_toolTipText;
 	public static String StockManagementPreferencePage_delete_stock = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_delete_stock;
 	public static String StockManagementPreferencePage_delete_stock_dsc = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_delete_stock_dsc;
-	public static String StockManagementPreferencePag_select_owner = ch.elexis.core.l10n.Messages.StockManagementPreference_select_owner;
 	public static String StockManagementPreferencePag_select_stock_owner = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_owner;
 	public static String StockManagementPreferencePag_select_stock_owner_dsc = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_owner_dsc;
 	public static String StockManagementPreference_select_stock_select_default_supplier = ch.elexis.core.l10n.Messages.StockManagementPreference_select_stock_select_default_supplier;
