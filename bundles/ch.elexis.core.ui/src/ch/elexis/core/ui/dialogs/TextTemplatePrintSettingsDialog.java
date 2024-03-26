@@ -122,7 +122,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog dlg = new InputDialog(getParentShell(), "Zusätzlicher Schacht",
-						"Bitten den Namen des zusätzlichen Schacht konfigurieren.", StringUtils.EMPTY, null, SWT.NONE);
+						Messages.Additional_Shaft, StringUtils.EMPTY, null, SWT.NONE);
 				if (dlg.open() == Window.OK) {
 					if (dlg.getValue() != null && !dlg.getValue().isEmpty()) {
 						addCustomMediaTray(dlg.getValue());
