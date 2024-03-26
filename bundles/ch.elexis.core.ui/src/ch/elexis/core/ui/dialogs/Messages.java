@@ -11,6 +11,7 @@ package ch.elexis.core.ui.dialogs;
 
 public class Messages {
 
+	public static String Additional_Shaft = ch.elexis.core.l10n.Messages.Additional_Shaft;
 	public static String AddBuchungDialog_CannotInterpretAmount = ch.elexis.core.l10n.Messages.AddBuchungDialog_CannotInterpretAmount;
 	public static String AddBuchungDialog_ErrorInAmount = ch.elexis.core.l10n.Messages.AddBuchungDialog_ErrorInAmount;
 	public static String AddBuchungDialog_amountAs000 = ch.elexis.core.l10n.Messages.AddBuchungDialog_amountAs000;
