@@ -136,7 +136,7 @@ public class CodeElementServiceHolder {
 				// get or start new list of statL
 				ArrayList<Statistics> list = (ArrayList<Statistics>) contact.getExtInfo(key);
 				if (list == null) {
-					list = new ArrayList<Statistics>();
+					list = new ArrayList<>();
 				}
 				// limit the size of the statistics
 				while (list.size() > 40) {

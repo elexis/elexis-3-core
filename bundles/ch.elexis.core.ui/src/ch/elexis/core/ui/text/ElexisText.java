@@ -42,7 +42,7 @@ public class ElexisText implements IScannerListener, DisposeListener {
 
 	public ElexisText(Text text) {
 		this.text = text;
-		this.scannerListener = new ArrayList<IScannerListener>();
+		this.scannerListener = new ArrayList<>();
 		this.text.addDisposeListener(this);
 	}
 
@@ -75,7 +75,7 @@ public class ElexisText implements IScannerListener, DisposeListener {
 	}
 
 	public void addScannerListener(IScannerListener listener) {
-		if (scannerListener.size() == 0) {
+		if (scannerListener.isEmpty()) {
 			ScannerEvents.getInstance().addScannerListener(this);
 		}
 		scannerListener.add(listener);

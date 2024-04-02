@@ -30,7 +30,7 @@ public class DefaultDocumentSendHandler extends AbstractHandler implements IHand
 		try {
 			Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
-			HashMap<String, String> params = new HashMap<String, String>();
+			HashMap<String, String> params = new HashMap<>();
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null) {
 				params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$

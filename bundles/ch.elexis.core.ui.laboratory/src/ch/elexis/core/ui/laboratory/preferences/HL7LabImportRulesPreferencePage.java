@@ -84,7 +84,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 	private Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic() {
 		List<String> laboratoryIdList = ConfigServiceHolder
 				.getGlobalAsList(Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
-		return new HashSet<Labor>(laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
+		return new HashSet<>(laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
 	}
 
 	@Override

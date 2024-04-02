@@ -27,7 +27,7 @@ import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
 
 public class RnListeDruckDialog extends TitleAreaDialog implements ICallback {
-	ArrayList<Rechnung> rnn = new ArrayList<Rechnung>();
+	ArrayList<Rechnung> rnn = new ArrayList<>();
 	private TextContainer text;
 
 	public RnListeDruckDialog(final Shell shell, final Object[] tree) {

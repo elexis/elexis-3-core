@@ -32,7 +32,7 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 	int maxNum;
 
 	public MFUList(int objectsToStart, int objectsToKeep) {
-		list = new ArrayList<Entry<T>>(objectsToStart);
+		list = new ArrayList<>(objectsToStart);
 		maxNum = objectsToKeep;
 	}
 
@@ -65,7 +65,7 @@ public class MFUList<T> implements Iterable<T>, Serializable {
 	}
 
 	public List<T> getAll() {
-		ArrayList<T> ret = new ArrayList<T>();
+		ArrayList<T> ret = new ArrayList<>();
 		for (Entry<T> e : list) {
 			ret.add(e.o);
 		}

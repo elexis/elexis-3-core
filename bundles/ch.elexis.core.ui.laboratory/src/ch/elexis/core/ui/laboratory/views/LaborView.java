@@ -193,7 +193,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 		for (IAction ac : importers) {
 			tm.add(ac);
 		}
-		if (importers.size() > 0) {
+		if (!importers.isEmpty()) {
 			tm.add(new Separator());
 		}
 		tm.add(refreshAction);
@@ -396,7 +396,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 			}
 			r.addContent(Daten);
 
-			ArrayList<String> groupNames = new ArrayList<String>();
+			ArrayList<String> groupNames = new ArrayList<>();
 			groupNames.addAll(groupedResults.keySet());
 
 			for (String g : groupNames) {
@@ -409,7 +409,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 					log.log("Ungültige Gruppe " + g, Log.WARNINGS); //$NON-NLS-1$
 					continue;
 				}
-				if (items.size() == 0) {
+				if (items.isEmpty()) {
 					continue;
 				}
 				for (LabItem it : items) {
@@ -448,7 +448,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 
 	private List<LabItem> getItems(HashMap<String, HashMap<String, List<LabResult>>> itemMap) {
 		Set<String> keys = itemMap.keySet();
-		ArrayList<LabItem> ret = new ArrayList<LabItem>();
+		ArrayList<LabItem> ret = new ArrayList<>();
 		for (String string : keys) {
 			Collection<List<LabResult>> values = itemMap.get(string).values();
 			if (!values.isEmpty()) {
@@ -464,8 +464,8 @@ public class LaborView extends ViewPart implements IRefreshable {
 	}
 
 	public List<String> getDates(HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> map) {
-		ArrayList<String> ret = new ArrayList<String>();
-		HashSet<String> dateStrings = new HashSet<String>();
+		ArrayList<String> ret = new ArrayList<>();
+		HashSet<String> dateStrings = new HashSet<>();
 		for (String group : map.keySet()) {
 			HashMap<String, HashMap<String, List<LabResult>>> itemMap = map.get(group);
 			for (String item : itemMap.keySet()) {

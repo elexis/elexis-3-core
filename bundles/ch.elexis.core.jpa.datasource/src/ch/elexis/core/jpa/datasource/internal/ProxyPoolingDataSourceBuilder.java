@@ -50,7 +50,7 @@ public class ProxyPoolingDataSourceBuilder {
 
 		poolableConnectionFactory.setPool(connectionPool);
 
-		PoolingDataSource<PoolableConnection> poolingDataSource = new PoolingDataSource<PoolableConnection>(
+		PoolingDataSource<PoolableConnection> poolingDataSource = new PoolingDataSource<>(
 				connectionPool);
 
 		JFRQueryExecutionListener jfrQueryExecutionListener = new JFRQueryExecutionListener();

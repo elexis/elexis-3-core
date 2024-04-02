@@ -31,7 +31,7 @@ public class LocalCodingContribution implements ICodingContribution, ILocalCodin
 	public List<ICoding> getCodes() {
 		IQuery<ILocalCoding> query = findingsModelService.getQuery(ILocalCoding.class);
 		query.and("id", COMPARATOR.NOT_EQUALS, "VERSION");
-		return new ArrayList<ICoding>(query.execute());
+		return new ArrayList<>(query.execute());
 	}
 
 	@Override

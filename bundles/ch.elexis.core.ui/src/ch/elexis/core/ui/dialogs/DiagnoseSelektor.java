@@ -38,7 +38,7 @@ import ch.elexis.core.services.ICodeElementServiceContribution;
 
 public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
-	private List<IDiagnosis> diagnoses = new ArrayList<IDiagnosis>();
+	private List<IDiagnosis> diagnoses = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	public DiagnoseSelektor(Shell shell) {
@@ -134,7 +134,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
 	@Override
 	protected Comparator<IDiagnosis> getItemsComparator() {
-		return new Comparator<IDiagnosis>() {
+		return new Comparator<>() {
 
 			@Override
 			public int compare(IDiagnosis o1, IDiagnosis o2) {

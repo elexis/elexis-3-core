@@ -29,7 +29,7 @@ public class VerrechenbarFavorites {
 	 */
 	public static List<Favorite> getFavorites() {
 		if (favorites == null) {
-			favorites = new ArrayList<VerrechenbarFavorites.Favorite>();
+			favorites = new ArrayList<>();
 
 			String favs = ConfigServiceHolder.getUser(USER_CFG_FAVORITES, StringUtils.EMPTY);
 			String[] entries = favs.split(";");

@@ -357,17 +357,17 @@ public abstract class ImporterPage implements IExecutableExtension {
 			} else if (h.results[0].equalsIgnoreCase("odbc")) { //$NON-NLS-1$
 				ret = JdbcLink.createODBCLink(h.results[1]);
 			} else {
-				return new Result<JdbcLink>(Result.SEVERITY.ERROR, 1, Messages.ImporterPage_unknownType, null, true); // $NON-NLS-1$
+				return new Result<>(Result.SEVERITY.ERROR, 1, Messages.ImporterPage_unknownType, null, true); // $NON-NLS-1$
 			}
 			if (ret != null) {
 				try {
 					ret.connect(h.results[3], h.results[4]);
-					return new Result<JdbcLink>(ret);
+					return new Result<>(ret);
 				} catch (JdbcLinkException je) {
 					// ignore this and fallback to next return statement
 				}
 			}
-			return new Result<JdbcLink>(Result.SEVERITY.ERROR, 2, Messages.ImporterPage_couldntConnect, ret, true); // $NON-NLS-1$
+			return new Result<>(Result.SEVERITY.ERROR, 2, Messages.ImporterPage_couldntConnect, ret, true); // $NON-NLS-1$
 		}
 	}
 }

@@ -231,7 +231,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	private static void addUserSpecifiedTabs(java.util.List<IConfigurationElement> list, String settings,
 			CTabFolder ctab, String point) {
 
-		Map<String, IConfigurationElement> allIcMap = new HashMap<String, IConfigurationElement>();
+		Map<String, IConfigurationElement> allIcMap = new HashMap<>();
 		for (IConfigurationElement ic : list) {
 			try {
 				IDetailDisplay d = (IDetailDisplay) ic

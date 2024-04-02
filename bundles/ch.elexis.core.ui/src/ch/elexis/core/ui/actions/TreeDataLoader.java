@@ -73,7 +73,7 @@ public class TreeDataLoader extends PersistentObjectLoader implements ILazyTreeC
 						new LazyTree(l, po, this);
 					}
 				}
-				return children.size() > 0;
+				return !children.isEmpty();
 			}
 
 			@Override

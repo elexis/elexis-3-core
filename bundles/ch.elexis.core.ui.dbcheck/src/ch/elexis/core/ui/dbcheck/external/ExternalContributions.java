@@ -22,7 +22,7 @@ public class ExternalContributions {
 
 	public static List<ExternalMaintenance> getExt() {
 		if (ext == null) {
-			ext = new LinkedList<ExternalMaintenance>();
+			ext = new LinkedList<>();
 			instantiate();
 		}
 		return ext;

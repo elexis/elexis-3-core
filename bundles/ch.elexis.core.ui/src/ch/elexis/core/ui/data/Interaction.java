@@ -222,7 +222,7 @@ public class Interaction extends PersistentObject {
 	}
 
 	public static Interaction getByContactAndItemName(String contactId, String itemName) {
-		Query<Interaction> qbe = new Query<Interaction>(Interaction.class);
+		Query<Interaction> qbe = new Query<>(Interaction.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ATC1, Query.EQUALS, contactId);
 		qbe.add(FLD_ATC2, Query.EQUALS, itemName);
@@ -241,7 +241,7 @@ public class Interaction extends PersistentObject {
 	public static Interaction getByATC(String atc1, String atc2) {
 		atc1 = atc1.trim();
 		atc2 = atc2.trim();
-		Query<Interaction> qbe = new Query<Interaction>(Interaction.class);
+		Query<Interaction> qbe = new Query<>(Interaction.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ATC1, Query.EQUALS, atc1);
 		qbe.add(FLD_ATC2, Query.EQUALS, atc2);

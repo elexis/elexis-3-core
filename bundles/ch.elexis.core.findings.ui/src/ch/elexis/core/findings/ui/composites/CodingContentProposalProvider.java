@@ -20,7 +20,7 @@ public class CodingContentProposalProvider implements IContentProposalProvider {
 
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
-		List<IContentProposal> ret = new ArrayList<IContentProposal>();
+		List<IContentProposal> ret = new ArrayList<>();
 		if (contents != null && !contents.isEmpty()) {
 			labelToCoding.keySet().stream().forEach(label -> {
 				String match = contents.toLowerCase();

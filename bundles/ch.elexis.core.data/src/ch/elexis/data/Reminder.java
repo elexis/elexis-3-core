@@ -185,7 +185,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	public void addResponsible(final Anwender a) {
 		List<Anwender> responsibles = getResponsibles();
 		if (responsibles == null) {
-			responsibles = new ArrayList<Anwender>();
+			responsibles = new ArrayList<>();
 		}
 		responsibles.add(a);
 		setResponsible(responsibles);
@@ -369,7 +369,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			return null;
 		}
 		List<String[]> lResp = getList(FLD_JOINT_RESPONSIBLES, new String[0]);
-		ArrayList<Anwender> ret = new ArrayList<Anwender>(lResp.size());
+		ArrayList<Anwender> ret = new ArrayList<>(lResp.size());
 		for (String[] r : lResp) {
 			ret.add(Anwender.load(r[0]));
 		}
@@ -400,7 +400,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			+ ALL_RESPONSIBLE + "') AND r.deleted = '0'";
 
 	public static List<Reminder> findAllUserIsResponsibleFor(Anwender anwender, boolean showOnlyDueReminders) {
-		Set<Reminder> ret = new HashSet<Reminder>();
+		Set<Reminder> ret = new HashSet<>();
 		// we have to apply a set, as there may exist
 		// multiple equivalent entries in reminders_responsible_link
 		// which resolve to multiple occurences of the same element, due to the left
@@ -435,7 +435,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			res.close();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			return new ArrayList<Reminder>(ret);
+			return new ArrayList<>(ret);
 		} finally {
 			try {
 				ps.close();
@@ -444,7 +444,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			}
 			dbConnection.releasePreparedStatement(ps);
 		}
-		return new ArrayList<Reminder>(ret);
+		return new ArrayList<>(ret);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * @return eine Liste aller fälligen Reminder
 	 */
 	public static List<Reminder> findForToday() {
-		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
+		Query<Reminder> qbe = new Query<>(Reminder.class);
 		qbe.add(FLD_DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
 		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		List<Reminder> ret = qbe.execute();
@@ -468,7 +468,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * @return eine Liste aller offenen Reminder dieses Patienten
 	 */
 	public static List<Reminder> findForPatient(final Patient p, final Kontakt responsible) {
-		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
+		Query<Reminder> qbe = new Query<>(Reminder.class);
 		qbe.add(FLD_KONTAKT_ID, Query.EQUALS, p.getId());
 		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		qbe.add(FLD_DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
@@ -488,7 +488,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * @return
 	 */
 	public static List<Reminder> findToShowOnStartup(final Anwender a) {
-		Query<Reminder> qbe = new Query<Reminder>(Reminder.class);
+		Query<Reminder> qbe = new Query<>(Reminder.class);
 		qbe.add(FLD_DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
 		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
 		qbe.add(FLD_VISIBILITY, Query.EQUALS, Integer.toString(Visibility.POPUP_ON_LOGIN.numericValue()));
@@ -524,7 +524,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		if (anwender == null) {
 			anwender = CoreHub.getLoggedInContact();
 		}
-		Set<Reminder> ret = new HashSet<Reminder>();
+		Set<Reminder> ret = new HashSet<>();
 		// we have to apply a set, as there may exist
 		// multiple equivalent entries in reminders_responsible_link
 		// which resolve to multiple occurences of the same element, due to the left
@@ -569,7 +569,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			}
 		} catch (Exception ex) {
 			ExHandler.handle(ex);
-			return new ArrayList<Reminder>(ret);
+			return new ArrayList<>(ret);
 		} finally {
 			try {
 				ps.close();
@@ -578,7 +578,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			}
 			dbConnection.releasePreparedStatement(ps);
 		}
-		return new ArrayList<Reminder>(ret);
+		return new ArrayList<>(ret);
 	}
 
 	/**

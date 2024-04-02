@@ -241,7 +241,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 	private final Pattern TAG_PATTERN = Pattern.compile("<([a-z])([0a-z])>(.+?)</[a-z]>");
 
 	private StyleRange[] generateStyleRanges(String text) {
-		List<StyleRange> ranges = new ArrayList<StyleRange>();
+		List<StyleRange> ranges = new ArrayList<>();
 
 		int matchedFormatChars = 0;
 

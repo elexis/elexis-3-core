@@ -57,7 +57,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 	public LocalUserLoginDialog(Shell parentShell, IElexisEnvironmentService elexisEnvironmentService) {
 		super(parentShell);
 
-		Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
+		Query<Anwender> qbe = new Query<>(Anwender.class);
 		List<Anwender> list = qbe.execute();
 		hasUsers = (list.size() > 1);
 
@@ -85,7 +85,7 @@ public class LocalUserLoginDialog extends TitleAreaDialog {
 		@SuppressWarnings("unchecked")
 		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class"); //$NON-NLS-1$
 
-		if (newsModules.size() > 0) {
+		if (!newsModules.isEmpty()) {
 			Composite cNews = new Composite(ret, SWT.NONE);
 			cNews.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
 			cNews.setLayout(new GridLayout());

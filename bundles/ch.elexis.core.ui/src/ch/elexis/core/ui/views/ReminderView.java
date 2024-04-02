@@ -119,7 +119,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 	private ReminderLabelProvider reminderLabelProvider = new ReminderLabelProvider();
 
 	private IAction filterActionType[] = new IAction[Type.values().length];
-	private Set<Integer> filterActionSet = new HashSet<Integer>();
+	private Set<Integer> filterActionSet = new HashSet<>();
 
 	private long cvHighestLastUpdate = 0l;
 	private boolean sortByDueDateSetting = ConfigServiceHolder.getUser(Preferences.USR_SORT_BY_DUE_DATE, false);
@@ -175,7 +175,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 					public void run() {
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 								false, selectedPatient, true);
-						if (list.size() != 0) {
+						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);
@@ -800,7 +800,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				return new Object[0];
 			}
 
-			SortedSet<Reminder> reminders = new TreeSet<Reminder>();
+			SortedSet<Reminder> reminders = new TreeSet<>();
 
 			if (showAllReminders && AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW))) {
 				qbe.clear();
@@ -822,7 +822,7 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				}
 			}
 
-			if (filterActionSet.size() > 0) {
+			if (!filterActionSet.isEmpty()) {
 				reminders.removeIf(p -> !(filterActionSet.contains(p.getActionType().numericValue())));
 			}
 

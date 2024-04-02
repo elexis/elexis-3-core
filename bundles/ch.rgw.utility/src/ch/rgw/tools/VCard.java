@@ -22,7 +22,7 @@ import java.util.Hashtable;
  *
  */
 public class VCard {
-	Hashtable<String, String> elements = new Hashtable<String, String>();
+	Hashtable<String, String> elements = new Hashtable<>();
 
 	/**
 	 * Construct a VCard from an InputStream. If the stream contains more than one

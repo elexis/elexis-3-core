@@ -213,13 +213,13 @@ public class SearchView extends ViewPart {
 	}
 
 	private List<Konsultation> searchForKonsultationText(String searchString) {
-		List<Konsultation> result = new ArrayList<Konsultation>();
+		List<Konsultation> result = new ArrayList<>();
 		boolean considerCases = mainCaseCheckbox.getSelection();
 		if (!considerCases) {
 			searchString = searchString.toLowerCase();
 		}
 
-		Query<Konsultation> query = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> query = new Query<>(Konsultation.class);
 		query.orderBy(false, Messages.Core_Date); // $NON-NLS-1$
 		List<Konsultation> konsultationen = query.execute();
 		if (konsultationen != null) {

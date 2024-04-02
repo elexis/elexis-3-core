@@ -101,7 +101,7 @@ public class MailClient implements IMailClient {
 
 	@Override
 	public List<String> getAccounts() {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<>();
 		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
@@ -112,7 +112,7 @@ public class MailClient implements IMailClient {
 
 	@Override
 	public List<String> getAccountsLocal() {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<>();
 		String accountIds = configService.getLocal(CONFIG_ACCOUNTS, null);
 		if (accountIds != null) {
 			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
@@ -377,7 +377,7 @@ public class MailClient implements IMailClient {
 		try {
 			imapStore = (IMAPStore) getSession(account).getStore();
 			imapStore.connect();
-			List<IMAPMailMessage> listMessages = new ArrayList<IMAPMailMessage>();
+			List<IMAPMailMessage> listMessages = new ArrayList<>();
 			Folder folder = imapStore.getFolder(sourceFolder);
 
 			int openMode = (flag) ? Folder.READ_WRITE : Folder.READ_ONLY;

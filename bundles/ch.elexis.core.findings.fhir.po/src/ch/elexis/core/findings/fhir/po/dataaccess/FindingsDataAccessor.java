@@ -49,7 +49,7 @@ public class FindingsDataAccessor implements IDataAccess {
 
 	public FindingsDataAccessor() {
 		// initialize the list of defined elements
-		elementsList = new ArrayList<Element>();
+		elementsList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			elementsList.add(elements[i]);
 		}
@@ -88,7 +88,7 @@ public class FindingsDataAccessor implements IDataAccess {
 	@Override
 	public Result<Object> getObject(String descriptor, PersistentObject dependentObject, String dates,
 			String[] params) {
-		Result<Object> result = new Result<Object>(StringUtils.EMPTY);
+		Result<Object> result = new Result<>(StringUtils.EMPTY);
 
 		Patient patient = null;
 		if (dependentObject instanceof Patient) {
@@ -124,7 +124,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(observation, codingService));
 		});
-		return new Result<Object>(sb.toString());
+		return new Result<>(sb.toString());
 	}
 
 	private Result<Object> getFamAnamText(Patient patient) {
@@ -137,7 +137,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(famanam, codingService));
 		});
-		return new Result<Object>(sb.toString());
+		return new Result<>(sb.toString());
 	}
 
 	private Result<Object> getAllergiesText(Patient patient) {
@@ -150,7 +150,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(allergy, codingService));
 		});
-		return new Result<Object>(sb.toString());
+		return new Result<>(sb.toString());
 	}
 
 	private Result<Object> getPersAnamText(Patient patient) {
@@ -164,7 +164,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(observation, codingService));
 		});
-		return new Result<Object>(sb.toString());
+		return new Result<>(sb.toString());
 	}
 
 	private Result<Object> getDiagnosisText(Patient patient) {
@@ -177,7 +177,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(condition, codingService));
 		});
-		return new Result<Object>(sb.toString());
+		return new Result<>(sb.toString());
 	}
 
 	private List<ICondition> getDiagnosis(List<ICondition> findings) {

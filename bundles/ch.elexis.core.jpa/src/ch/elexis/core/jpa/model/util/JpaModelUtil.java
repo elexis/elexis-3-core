@@ -107,11 +107,11 @@ public class JpaModelUtil {
 		if (dataValue != null) {
 			Hashtable<Object, Object> ret = fold((byte[]) dataValue);
 			if (ret == null) {
-				return new Hashtable<Object, Object>();
+				return new Hashtable<>();
 			}
 			return ret;
 		}
-		return new Hashtable<Object, Object>();
+		return new Hashtable<>();
 	}
 
 	/**

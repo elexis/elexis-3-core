@@ -62,7 +62,7 @@ public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (!selection.isEmpty()) {
 					String selSystem = (String) selection.getFirstElement();
-					List<String> availableFields = new ArrayList<String>();
+					List<String> availableFields = new ArrayList<>();
 					availableFields.addAll(parseNamelist(BillingSystem.getOptionals(selSystem)));
 					availableFields.addAll(parseNamelist(BillingSystem.getRequirements(selSystem)));
 					cViewerField.setInput(availableFields);
@@ -93,7 +93,7 @@ public class RenameAccountingSysFieldDialog extends TitleAreaDialog {
 	}
 
 	private List<String> parseNamelist(String fields) {
-		List<String> fieldNames = new ArrayList<String>();
+		List<String> fieldNames = new ArrayList<>();
 		if (fields == null || fields.isEmpty()) {
 			return fieldNames;
 		}

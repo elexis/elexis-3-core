@@ -46,7 +46,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 
 		KategorieProperties katProperties = new KategorieProperties();
 
-		Map<String, PlatzhalterTreeData> catTreeMap = new HashMap<String, PlatzhalterTreeData>();
+		Map<String, PlatzhalterTreeData> catTreeMap = new HashMap<>();
 		catTreeMap.put(noKategorie.getName(), noKategorie);
 
 		Enumeration<Object> keyEnumeration = keys();
@@ -124,7 +124,7 @@ public class PlatzhalterProperties extends AbstractProperties {
 			}
 		}
 
-		if (noKategorie.getChildren().size() > 0) {
+		if (!noKategorie.getChildren().isEmpty()) {
 			root.addChild(noKategorie);
 		}
 		return root.getChildren();

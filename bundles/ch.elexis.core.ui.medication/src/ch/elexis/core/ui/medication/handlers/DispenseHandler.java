@@ -29,7 +29,7 @@ public class DispenseHandler extends AbstractHandler {
 			return null;
 		}
 
-		List<IPrescription> prescRecipes = new ArrayList<IPrescription>();
+		List<IPrescription> prescRecipes = new ArrayList<>();
 
 		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		if (!selection.isEmpty()) {

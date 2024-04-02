@@ -190,7 +190,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	private static Hashtable<String, String> mapping;
 
 	static {
-		mapping = new Hashtable<String, String>();
+		mapping = new Hashtable<>();
 	}
 
 	/**
@@ -748,11 +748,11 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (domain.equals(XidConstants.DOMAIN_ELEXIS)) {
 			return getId();
 		}
-		Query<Xid> qbe = new Query<Xid>(Xid.class);
+		Query<Xid> qbe = new Query<>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 		qbe.add(Xid.FLD_DOMAIN, Query.EQUALS, domain);
 		List<Xid> res = qbe.execute();
-		if (res.size() > 0) {
+		if (!res.isEmpty()) {
 			return res.get(0).get(Xid.FLD_ID_IN_DOMAIN);
 		}
 		return StringUtils.EMPTY;
@@ -766,7 +766,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@Override
 	public IXid getXid() {
 		List<IXid> res = getXids();
-		if (res.size() == 0) {
+		if (res.isEmpty()) {
 			try {
 				return new Xid(this, XidConstants.DOMAIN_ELEXIS, getId());
 			} catch (XIDException xex) { // Should never happen, uh?
@@ -796,7 +796,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<IXid> getXids() {
-		Query<Xid> qbe = new Query<Xid>(Xid.class);
+		Query<Xid> qbe = new Query<>(Xid.class);
 		qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 		return (List<IXid>) (List<?>) qbe.execute();
 	}
@@ -845,7 +845,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public ISticker getSticker() {
 		List<ISticker> list = getStickers();
-		return list.size() > 0 ? list.get(0) : null;
+		return !list.isEmpty() ? list.get(0) : null;
 	}
 
 	/**
@@ -868,7 +868,7 @@ public abstract class PersistentObject implements IPersistentObject {
 		if (ret != null) {
 			return ret;
 		}
-		ret = new ArrayList<ISticker>();
+		ret = new ArrayList<>();
 		PreparedStatement queryStickers = dbConnection.getPreparedStatement(queryStickersString);
 		try {
 			queryStickers.setString(1, id);
@@ -1451,7 +1451,7 @@ public abstract class PersistentObject implements IPersistentObject {
 			sql.append(" FROM ").append(abfr[3]).append(" WHERE ").append(abfr[2]).append("=").append(getWrappedId());
 
 			Stm stm = getDBConnection().getStatement();
-			LinkedList<String[]> list = new LinkedList<String[]>();
+			LinkedList<String[]> list = new LinkedList<>();
 			try (ResultSet rs = executeSqlQuery(sql.toString(), stm)) {
 				while ((rs != null) && rs.next()) {
 					String[] line = new String[extra.length + 1];
@@ -1877,10 +1877,10 @@ public abstract class PersistentObject implements IPersistentObject {
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO " + getTableName() + " (");
 
-		List<String> fieldS = new ArrayList<String>();
+		List<String> fieldS = new ArrayList<>();
 		fieldS.add(FLD_ID);
 		fieldS.add(FLD_LASTUPDATE);
-		List<String> valuesS = new ArrayList<String>();
+		List<String> valuesS = new ArrayList<>();
 		valuesS.add(id);
 		valuesS.add(Long.toString(System.currentTimeMillis()));
 		if (fields != null && values != null && fields.length == values.length && fields.length > 0) {
@@ -1986,7 +1986,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 */
 	public boolean undelete() {
 		if (set("deleted", "0")) {
-			Query<Xid> qbe = new Query<Xid>(Xid.class);
+			Query<Xid> qbe = new Query<>(Xid.class);
 			qbe.clear(true);
 			qbe.add(Xid.FLD_OBJECT, Query.EQUALS, getId());
 			List<Xid> xids = qbe.execute();
@@ -2895,7 +2895,7 @@ public abstract class PersistentObject implements IPersistentObject {
 
 			ResultSet rsTables = dmd.getTables(null, null, "%", new String[] { "TABLE" });
 			if (rsTables != null) {
-				List<String> failedFirstRunTables = new ArrayList<String>();
+				List<String> failedFirstRunTables = new ArrayList<>();
 				while (rsTables.next()) {
 					try {
 						// DatabaseMetaData#getTables() specifies TABLE_NAME is in

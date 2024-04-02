@@ -41,8 +41,8 @@ public class XidService implements IXidService {
 	private HashMap<String, String> domainMap;
 
 	public XidService() {
-		domains = new HashMap<String, XidDomain>();
-		domainMap = new HashMap<String, String>();
+		domains = new HashMap<>();
+		domainMap = new HashMap<>();
 	}
 
 	@Reference
@@ -256,7 +256,7 @@ public class XidService implements IXidService {
 		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "domain", "objectid");
 		List<IXid> xids = query
 				.executeWithParameters(query.getParameterMap("domain", domain, "objectid", identifiable.getId()));
-		if (xids.size() > 0) {
+		if (!xids.isEmpty()) {
 			if (xids.size() > 1) {
 				LoggerFactory.getLogger(getClass()).error(
 						"XID [" + domain + "] [" + identifiable.getId() + "] on multiple objects, returning first.");

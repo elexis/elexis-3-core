@@ -47,7 +47,7 @@ public class LabResultConstants {
 	}
 
 	public static List<String> parseRefString(String ref) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 
 		Matcher m = refValuesPattern.matcher(ref);
 

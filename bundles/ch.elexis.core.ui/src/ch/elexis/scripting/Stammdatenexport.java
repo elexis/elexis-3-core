@@ -53,8 +53,8 @@ public class Stammdatenexport {
 						csv.writeNext(line);
 					}
 				} else {
-					HashMap<Patient, String> patienten = new HashMap<Patient, String>();
-					Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+					HashMap<Patient, String> patienten = new HashMap<>();
+					Query<Konsultation> qbe = new Query<>(Konsultation.class);
 					qbe.add("Datum", ">", startDate); //$NON-NLS-1$ //$NON-NLS-2$
 					List<Konsultation> lKons = qbe.execute();
 

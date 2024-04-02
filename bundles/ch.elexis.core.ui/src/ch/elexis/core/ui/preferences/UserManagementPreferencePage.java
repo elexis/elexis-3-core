@@ -112,8 +112,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 	private List<IUserGroup> userGroups = Collections.emptyList();
 
-	private WritableValue<IUser> wvUser = new WritableValue<IUser>(null, IUser.class);
-	private WritableValue<IContact> wvUserContact = new WritableValue<IContact>(null, IContact.class);
+	private WritableValue<IUser> wvUser = new WritableValue<>(null, IUser.class);
+	private WritableValue<IContact> wvUserContact = new WritableValue<>(null, IContact.class);
 	private Button btnIsExecutiveDoctor;
 	private Label lblRespPhysColor;
 

@@ -64,10 +64,10 @@ public class KontaktImporter extends ImporterPage {
 	
 	static Kontakt queryKontakt(final String name, final String vorname, final String strasse, final String plz,
 			final String ort, final boolean createIfMissing) {
-		Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+		Query<Kontakt> qbe = new Query<>(Kontakt.class);
 		List<Kontakt> res = qbe.queryFields(new String[] { "Bezeichnung1", "Bezeichnung2", "Strasse", "Plz", "Ort" }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 				new String[] { name, vorname, strasse, plz, ort }, false);
-		if ((res != null) && (res.size() > 0)) {
+		if ((res != null) && (!res.isEmpty())) {
 			Kontakt found = res.get(0);
 			StringBuilder s1 = new StringBuilder();
 			StringBuilder s2 = new StringBuilder();

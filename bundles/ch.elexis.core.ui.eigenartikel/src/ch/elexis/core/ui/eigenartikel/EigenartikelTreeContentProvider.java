@@ -90,7 +90,7 @@ public class EigenartikelTreeContentProvider implements ITreeContentProvider, IC
 			return false;
 		}
 		IArticle ea = (IArticle) element;
-		return ea.isProduct() && ea.getPackages().size() > 0;
+		return ea.isProduct() && !ea.getPackages().isEmpty();
 	}
 
 	@Override

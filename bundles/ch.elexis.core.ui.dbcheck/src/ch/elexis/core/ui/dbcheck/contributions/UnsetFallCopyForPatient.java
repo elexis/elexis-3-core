@@ -15,7 +15,7 @@ public class UnsetFallCopyForPatient extends ExternalMaintenance {
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		StringBuilder sb = new StringBuilder();
 
-		Query<Fall> query = new Query<Fall>(Fall.class);
+		Query<Fall> query = new Query<>(Fall.class);
 		List<Fall> allFaelle = query.execute();
 		sb.append(allFaelle.size() + " Fälle insgesamt.\n");
 		pm.beginTask("Unset copy to patient...", allFaelle.size());

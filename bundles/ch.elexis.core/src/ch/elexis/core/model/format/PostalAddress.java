@@ -146,7 +146,7 @@ public class PostalAddress {
 	private void initFromText(String text) {
 		// Zeilen lesen
 		StringTokenizer tokenizer = new StringTokenizer(text, StringConstants.LF);
-		List<String> zeileList = new Vector<String>();
+		List<String> zeileList = new Vector<>();
 		while (tokenizer.hasMoreElements()) {
 			zeileList.add(tokenizer.nextToken());
 		}

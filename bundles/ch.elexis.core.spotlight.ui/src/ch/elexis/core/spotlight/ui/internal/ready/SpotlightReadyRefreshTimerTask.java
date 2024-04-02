@@ -48,7 +48,7 @@ public class SpotlightReadyRefreshTimerTask extends TimerTask {
 		this.appointmentService = appointmentService;
 
 		nextAppointmentLabel = NO_NEXT_APPOINTMENT_LABEL;
-		appointmentUserAreas = new HashMap<String, Area>();
+		appointmentUserAreas = new HashMap<>();
 	}
 
 	@Optional

@@ -230,7 +230,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 
 			}
 		});
-		List<Object> inputList = new ArrayList<Object>();
+		List<Object> inputList = new ArrayList<>();
 		inputList.add(TX_ALL);
 		inputList.addAll(getUsers());
 		lvResponsible.setInput(inputList);

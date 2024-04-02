@@ -265,7 +265,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 	@Override
 	public Map<String, Integer> getCandidates(String buffer, int cursor) {
 		Set<String> help = getSubCommands(buffer.split(" "));
-		TreeSet<String> helpSorted = new TreeSet<String>(help);
+		TreeSet<String> helpSorted = new TreeSet<>(help);
 
 		Map<String, Integer> map = new HashMap<>();
 		for (String s : helpSorted) {

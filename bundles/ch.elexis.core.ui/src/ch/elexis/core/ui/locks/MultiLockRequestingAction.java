@@ -54,7 +54,7 @@ public abstract class MultiLockRequestingAction<T extends List<? extends Persist
 
 	public void run() {
 		objects = getTargetedObjects();
-		if (objects == null || objects.size() == 0) {
+		if (objects == null || objects.isEmpty()) {
 			return;
 		}
 

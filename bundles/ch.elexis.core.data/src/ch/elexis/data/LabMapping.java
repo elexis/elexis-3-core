@@ -152,7 +152,7 @@ public class LabMapping extends PersistentObject {
 	}
 
 	public static LabMapping getByContactAndItemName(String contactId, String itemName) {
-		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		Query<LabMapping> qbe = new Query<>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ORIGINID, Query.EQUALS, contactId);
 		qbe.add(FLD_ITEMNAME, Query.EQUALS, itemName);
@@ -169,7 +169,7 @@ public class LabMapping extends PersistentObject {
 	}
 
 	public static LabMapping getByContactAndItemId(String contactId, String itemId) {
-		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		Query<LabMapping> qbe = new Query<>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_ORIGINID, Query.EQUALS, contactId);
 		qbe.add(FLD_LABITEMID, Query.EQUALS, itemId);
@@ -187,7 +187,7 @@ public class LabMapping extends PersistentObject {
 	}
 
 	public static List<LabMapping> getByLabItemId(String labItemId) {
-		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		Query<LabMapping> qbe = new Query<>(LabMapping.class);
 		qbe.add("ID", Query.NOT_EQUAL, VERSIONID); //$NON-NLS-1$
 		qbe.add(FLD_LABITEMID, Query.EQUALS, labItemId);
 		return qbe.execute();
@@ -341,7 +341,7 @@ public class LabMapping extends PersistentObject {
 	}
 
 	private static List<Labor> lookupLabor(String labName) {
-		Query<Labor> qbe = new Query<Labor>(Labor.class);
+		Query<Labor> qbe = new Query<>(Labor.class);
 		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + labName + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		List<Labor> list = qbe.execute();
 		return list;
@@ -352,7 +352,7 @@ public class LabMapping extends PersistentObject {
 		// lookup using loinc first ...
 		List<LabItem> labItems = null;
 		if (loinc != null && !loinc.isEmpty()) {
-			Query<LabItem> qli = new Query<LabItem>(LabItem.class);
+			Query<LabItem> qli = new Query<>(LabItem.class);
 			qli.add(LabItem.LOINCCODE, "=", loinc.trim()); //$NON-NLS-1$
 			labItems = qli.execute();
 			if (labItems.size() == 1) {
@@ -367,7 +367,7 @@ public class LabMapping extends PersistentObject {
 		// dont use laborId of LabItem ... it is in the mappings now
 		List<LabItem> items = LabItem.getLabItems(null, shortDesc, refM, refW, unit);
 		if (!items.isEmpty()) {
-			ArrayList<LabItem> ret = new ArrayList<LabItem>();
+			ArrayList<LabItem> ret = new ArrayList<>();
 			for (LabItem labItem : items) {
 				List<LabMapping> mappings = getByLabItemId(labItem.getId());
 				for (LabMapping labMapping : mappings) {

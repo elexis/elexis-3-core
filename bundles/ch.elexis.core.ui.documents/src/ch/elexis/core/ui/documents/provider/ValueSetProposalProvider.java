@@ -22,7 +22,7 @@ public class ValueSetProposalProvider implements IContentProposalProvider {
 
 	@Override
 	public IContentProposal[] getProposals(String searchString, int position) {
-		List<IContentProposal> ret = new ArrayList<IContentProposal>();
+		List<IContentProposal> ret = new ArrayList<>();
 		if (searchString != null && !searchString.isEmpty()) {
 			ret = ValueSetServiceHolder.getIValueSetService().getValueSetByName(valueSetName).stream()
 					.filter(o -> o.getDisplay().toLowerCase().contains(searchString.trim().toLowerCase()))

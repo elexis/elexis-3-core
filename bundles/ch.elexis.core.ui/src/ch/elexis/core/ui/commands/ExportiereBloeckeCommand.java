@@ -27,7 +27,7 @@ public class ExportiereBloeckeCommand extends AbstractHandler {
 	public static final String ID = "serviceblocks.export"; //$NON-NLS-1$
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
+		Query<Leistungsblock> qbe = new Query<>(Leistungsblock.class);
 		List<Leistungsblock> bloecke = qbe.execute();
 		BlockExporter bc = new BlockExporter();
 		for (Leistungsblock block : bloecke) {

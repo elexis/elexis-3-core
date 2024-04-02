@@ -42,7 +42,7 @@ public class LaborAttachmentAction extends Action implements IAction {
 	public void run() {
 		// now try to call the create roche labor command, is not part of core ...
 		try {
-			HashMap<String, String> params = new HashMap<String, String>();
+			HashMap<String, String> params = new HashMap<>();
 			ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(createRocheLaborCommand,
 					params);
 			Object pdfFile = PlatformUI.getWorkbench().getService(IHandlerService.class)

@@ -55,13 +55,13 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 				coreModelService.save(billed);
 			}
 		}
-		return new Result<IBilled>(billed);
+		return new Result<>(billed);
 	}
 
 	@Override
 	public Result<IBilled> remove(IBilled billed, IEncounter encounter) {
 		encounter.removeBilled(billed);
-		return new Result<IBilled>(billed);
+		return new Result<>(billed);
 	}
 
 	/**

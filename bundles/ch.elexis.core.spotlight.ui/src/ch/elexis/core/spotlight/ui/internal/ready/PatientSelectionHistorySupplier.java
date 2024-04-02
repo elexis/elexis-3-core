@@ -21,7 +21,7 @@ public class PatientSelectionHistorySupplier implements Supplier<List<Object[]>>
 	@SuppressWarnings("serial")
 	public PatientSelectionHistorySupplier() {
 		TIME_ONLY = DateTimeFormatter.ofPattern("HH:mm:ss");
-		selectionsMap = new LinkedHashMap<String, Object[]>() {
+		selectionsMap = new LinkedHashMap<>() {
 			@Override
 			protected boolean removeEldestEntry(java.util.Map.Entry<String, Object[]> eldest) {
 				return size() > 5;

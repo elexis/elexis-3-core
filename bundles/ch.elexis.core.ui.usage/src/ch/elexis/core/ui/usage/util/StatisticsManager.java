@@ -99,7 +99,7 @@ public enum StatisticsManager {
 				.filter(p -> p.getActionType().equals(type) && !p.getAction().equals(action))
 				.collect(Collectors.toList());
 		list.sort((p1, p2) -> p2.getTime().compareTo(p1.getTime()));
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			return list.get(0);
 		}
 		return null;

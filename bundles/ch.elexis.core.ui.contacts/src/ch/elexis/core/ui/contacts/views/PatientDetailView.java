@@ -109,7 +109,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 			showAdditionalAddressAction;
 	private ListDisplay<BezugsKontakt> inpZusatzAdresse;
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
-	private IObservableValue<Patient> patientObservable = new WritableValue<Patient>(null, Patient.class);
+	private IObservableValue<Patient> patientObservable = new WritableValue<>(null, Patient.class);
 	private boolean bLocked = true;
 
 	@Inject
@@ -225,7 +225,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 			ecZA.setExpanded(CoreHub.localCfg.get(KEY_PATIENTENBLATT + ecZA.getText(), false));
 			ecZA.addExpansionListener(new SectionExpansionHandler());
-			inpZusatzAdresse = new ListDisplay<BezugsKontakt>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
+			inpZusatzAdresse = new ListDisplay<>(ecZA, SWT.NONE, new ListDisplay.LDListener() {
 				/*
 				 * public boolean dropped(final PersistentObject dropped) { return false; }
 				 */
@@ -265,7 +265,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 					Kontakt other = Kontakt.load(bezugsKontakt.get(BezugsKontakt.OTHER_ID));
 					if (other.exists()) {
-						List<String> tokens = new ArrayList<String>();
+						List<String> tokens = new ArrayList<>();
 
 						String telefon1 = other.get(Kontakt.FLD_PHONE1);
 						String telefon2 = other.get(Kontakt.FLD_PHONE2);
@@ -310,7 +310,7 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 					Messages.Patientenblatt2_additionalAdresses);
 			compAdditionalAddresses.addExpansionListener(new SectionExpansionHandler());
 
-			additionalAddresses = new ListDisplay<ZusatzAdresse>(compAdditionalAddresses, SWT.NONE,
+			additionalAddresses = new ListDisplay<>(compAdditionalAddresses, SWT.NONE,
 					new ListDisplay.LDListener() {
 						@Override
 						public void hyperlinkActivated(final String l) {

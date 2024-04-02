@@ -76,7 +76,7 @@ public class Role extends PersistentObject {
 	 * @return <code>true</code> if the given rolename is available for use
 	 */
 	public static boolean verifyRoleNameNotTaken(String rolename) {
-		return new Query<Role>(Role.class, FLD_ID, rolename).execute().size() == 0;
+		return new Query<Role>(Role.class, FLD_ID, rolename).execute().isEmpty();
 	}
 
 	public String getTranslatedLabel() {

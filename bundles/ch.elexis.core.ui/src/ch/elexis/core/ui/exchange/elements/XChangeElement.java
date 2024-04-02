@@ -170,7 +170,7 @@ public abstract class XChangeElement {
 	 * @return a possibly empty list or null on errors
 	 */
 	public List<? extends XChangeElement> getChildren(final String name, final Class<? extends XChangeElement> clazz) {
-		LinkedList<XChangeElement> ret = new LinkedList<XChangeElement>();
+		LinkedList<XChangeElement> ret = new LinkedList<>();
 		for (Object el : ex.getChildren(name, XChangeContainer.ns)) {
 			try {
 				XChangeElement xc = clazz.getConstructor().newInstance();
@@ -210,7 +210,7 @@ public abstract class XChangeElement {
 	 *         implementation returns always "Format not supported"
 	 */
 	public Result<String> toString(final FORMAT format) {
-		return new Result<String>(Result.SEVERITY.ERROR, FORMAT_NOT_SUPPORTED, "Format not supported", null, true); //$NON-NLS-1$
+		return new Result<>(Result.SEVERITY.ERROR, FORMAT_NOT_SUPPORTED, "Format not supported", null, true); //$NON-NLS-1$
 	}
 
 	public void setAttribute(String attr, String value) {

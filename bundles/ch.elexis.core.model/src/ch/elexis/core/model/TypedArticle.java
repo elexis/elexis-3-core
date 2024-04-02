@@ -291,7 +291,7 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 	@Override
 	public synchronized IBillableOptifier<TypedArticle> getOptifier() {
 		if (optifier == null) {
-			optifier = new AbstractOptifier<TypedArticle>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
+			optifier = new AbstractOptifier<>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
 
 				@Override
 				protected void setPrice(TypedArticle billable, IBilled billed) {

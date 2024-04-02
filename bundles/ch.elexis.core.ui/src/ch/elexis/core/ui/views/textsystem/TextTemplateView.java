@@ -120,7 +120,7 @@ public class TextTemplateView extends ViewPart {
 	}
 
 	private void loadRequiredAndExistingTemplates() {
-		requiredTemplates = new ArrayList<TextTemplate>();
+		requiredTemplates = new ArrayList<>();
 		if (plugin == null) {
 			return;
 		}
@@ -532,12 +532,12 @@ public class TextTemplateView extends ViewPart {
 		public MandantEditingSupport(TableViewer tableViewer) {
 			super(tableViewer);
 			this.tableViewer = tableViewer;
-			this.mandants = new ArrayList<Mandant>();
+			this.mandants = new ArrayList<>();
 		}
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+			Query<Mandant> qbe = new Query<>(Mandant.class);
 			mandants = qbe.execute();
 
 			String[] mandantArray = new String[mandants.size() + 1];
@@ -669,11 +669,11 @@ public class TextTemplateView extends ViewPart {
 
 	private void refresh() {
 		// load existing templates from database
-		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		Query<Brief> qbe = new Query<>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 		List<Brief> list = qbe.execute();
 
-		List<TextTemplate> txtTemplates = new ArrayList<TextTemplate>();
+		List<TextTemplate> txtTemplates = new ArrayList<>();
 		for (Brief template : list) {
 			txtTemplates.add(createTextTemplateReference(template));
 		}

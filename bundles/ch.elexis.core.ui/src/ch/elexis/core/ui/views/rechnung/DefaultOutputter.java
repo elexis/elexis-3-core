@@ -36,7 +36,7 @@ import ch.rgw.tools.Result;
  *
  */
 public class DefaultOutputter implements IRnOutputter {
-	private ArrayList<IRnOutputter> configured = new ArrayList<IRnOutputter>();
+	private ArrayList<IRnOutputter> configured = new ArrayList<>();
 
 	public boolean canBill(Fall fall) {
 		if (fall.getOutputter().getDescription().equals(getDescription())) {
@@ -60,7 +60,7 @@ public class DefaultOutputter implements IRnOutputter {
 	}
 
 	public Result<Rechnung> doOutput(TYPE type, Collection<Rechnung> rnn, final Properties props) {
-		Result<Rechnung> res = new Result<Rechnung>(null);
+		Result<Rechnung> res = new Result<>(null);
 		props.setProperty(IRnOutputter.PROP_OUTPUT_METHOD, "asDefault"); //$NON-NLS-1$
 		for (Rechnung rn : rnn) {
 			Fall fall = rn.getFall();

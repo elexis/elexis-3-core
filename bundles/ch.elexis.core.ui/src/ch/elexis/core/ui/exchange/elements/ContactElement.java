@@ -143,10 +143,10 @@ public class ContactElement extends XChangeElement {
 		Kontakt ret = null;
 		if (eXid != null) {
 			List<IPersistentObject> cands = eXid.findObject();
-			if (cands.size() == 0) {
+			if (cands.isEmpty()) {
 				AddressElement ae = null;
 				List<AddressElement> lae = getAddresses();
-				if (lae.size() > 0) {
+				if (!lae.isEmpty()) {
 					if (lae.size() == 1) {
 						ae = lae.get(0);
 					} else {

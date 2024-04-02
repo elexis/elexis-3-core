@@ -1051,7 +1051,7 @@ public class TextContainer {
 			line.setLayout(gridLayout);
 			line.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 			cMands = new Combo(line, SWT.SINGLE);
-			Query<Mandant> qbe = new Query<Mandant>(Mandant.class);
+			Query<Mandant> qbe = new Query<>(Mandant.class);
 			lMands = qbe.execute();
 			cMands.add(Messages.Core_All);
 			for (Mandant m : lMands) {
@@ -1105,7 +1105,7 @@ public class TextContainer {
 			}
 			List<Brief> existing = TextTemplate.findExistingTemplates(bSysTemplate, title, null,
 					(selectedMand != null ? selectedMand.getId() : null));
-			if (existing.size() > 0) {
+			if (!existing.isEmpty()) {
 				if (MessageDialog.openQuestion(getShell(), Messages.TextContainer_TemplateExistsCaption,
 						Messages.TextContainer_TemplateExistsBody)) {
 					existing.forEach(b -> b.delete());
@@ -1126,11 +1126,11 @@ public class TextContainer {
 		 * @author marlovitsh
 		 */
 		Brief getBriefForTemplateName(String templateName) {
-			Query<Brief> qry = new Query<Brief>(Brief.class);
+			Query<Brief> qry = new Query<>(Brief.class);
 			qry.add(Brief.FLD_SUBJECT, Query.EQUALS, templateName, true);
 			qry.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE, true);
 			List<Brief> result = qry.execute();
-			if (result.size() > 0)
+			if (!result.isEmpty())
 				return result.get(0);
 			return null;
 		}
@@ -1143,12 +1143,12 @@ public class TextContainer {
 		 * @author marlovitsh
 		 */
 		boolean isSystemTemplate(String templateName) {
-			Query<Brief> qry = new Query<Brief>(Brief.class);
+			Query<Brief> qry = new Query<>(Brief.class);
 			qry.add(Brief.FLD_SUBJECT, Query.EQUALS, templateName, true);
 			qry.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE, true);
 			qry.add(Brief.FLD_KONSULTATION_ID, Query.EQUALS, "SYS", true); //$NON-NLS-1$
 			List<Brief> result = qry.execute();
-			if (result.size() > 0)
+			if (!result.isEmpty())
 				return true;
 			return false;
 		}

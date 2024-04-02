@@ -45,7 +45,7 @@ public class Result<T> {
 		public static final int URL = 779;
 	}
 
-	List<msg> list = new ArrayList<msg>();
+	List<msg> list = new ArrayList<>();
 	private SEVERITY severity = SEVERITY.OK;
 
 	/**
@@ -78,7 +78,7 @@ public class Result<T> {
 	 * @return true wenn ja
 	 */
 	public boolean isOK() {
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			for (msg m : list) {
 				if (m.severity != SEVERITY.OK) {
 					return false;
@@ -95,7 +95,7 @@ public class Result<T> {
 	 * @return
 	 */
 	public T get() {
-		if (list.size() == 0)
+		if (list.isEmpty())
 			return null;
 
 		msg result = list.get(0);
@@ -231,11 +231,11 @@ public class Result<T> {
 	}
 
 	public static final Result<String> OK(String text) {
-		return new Result<String>(SEVERITY.OK, 0, text, text, false);
+		return new Result<>(SEVERITY.OK, 0, text, text, false);
 	}
 
 	public static final Result<String> ERROR(String text) {
-		return new Result<String>(SEVERITY.ERROR, 0, text, text, false);
+		return new Result<>(SEVERITY.ERROR, 0, text, text, false);
 	}
 
 	/**

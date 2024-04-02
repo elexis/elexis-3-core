@@ -35,7 +35,7 @@ public class SignatureImageDataAccess implements IDataAccess {
 
 	@Override
 	public List<Element> getList() {
-		ArrayList<Element> ret = new ArrayList<Element>();
+		ArrayList<Element> ret = new ArrayList<>();
 		ret.add(new IDataAccess.Element(IDataAccess.TYPE.STRING, "Bereich", //$NON-NLS-1$
 				"[Signatur:-:-:-]", DBImage.class, 1));
 		return null;
@@ -52,7 +52,7 @@ public class SignatureImageDataAccess implements IDataAccess {
 				if (mandatorUser.isPresent()) {
 					Optional<IImage> userImage = getUserImage(mandatorUser.get());
 					if (userImage.isPresent()) {
-						return new Result<Object>(userImage.get());
+						return new Result<>(userImage.get());
 					}
 				}
 			}
@@ -60,11 +60,11 @@ public class SignatureImageDataAccess implements IDataAccess {
 		if (user.isPresent()) {
 			Optional<IImage> userImage = getUserImage(user.get());
 			if (userImage.isPresent()) {
-				return new Result<Object>(userImage.get());
+				return new Result<>(userImage.get());
 			}
 		}
 		// default replace with empty String
-		return new Result<Object>(StringUtils.EMPTY);
+		return new Result<>(StringUtils.EMPTY);
 	}
 
 	private Optional<IImage> getUserImage(IUser user) {

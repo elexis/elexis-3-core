@@ -39,7 +39,7 @@ public class MediportInsurerImporter {
 	private static final int IDX_MEDIPORT_SUPPORT = 15;
 
 	public static List<Organisation> importCSVFromStream(InputStream csvInStream) {
-		List<Organisation> insurerList = new ArrayList<Organisation>();
+		List<Organisation> insurerList = new ArrayList<>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(csvInStream));
 			String line = StringUtils.EMPTY;
@@ -70,7 +70,7 @@ public class MediportInsurerImporter {
 				String lawCode = parts[IDX_LAW_CODE];
 				String mediport = parts[IDX_MEDIPORT_SUPPORT];
 
-				Query<Kontakt> contactQuery = new Query<Kontakt>(Kontakt.class);
+				Query<Kontakt> contactQuery = new Query<>(Kontakt.class);
 				contactQuery.add(Kontakt.FLD_NAME1, Query.EQUALS, org);
 				contactQuery.add(Kontakt.FLD_NAME2, Query.EQUALS, dept);
 				contactQuery.add(Kontakt.FLD_STREET, Query.EQUALS, street);

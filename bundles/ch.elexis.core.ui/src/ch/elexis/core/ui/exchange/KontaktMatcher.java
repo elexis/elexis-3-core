@@ -81,7 +81,7 @@ public class KontaktMatcher {
 		hints[HINT_STREET] = strasse;
 		hints[HINT_ZIP] = plz;
 		hints[HINT_PLACE] = ort;
-		Query<Organisation> qbe = new Query<Organisation>(Organisation.class);
+		Query<Organisation> qbe = new Query<>(Organisation.class);
 
 		if (!StringTool.isNothing(name)) {
 			qbe.startGroup();
@@ -107,7 +107,7 @@ public class KontaktMatcher {
 		}
 
 		List<Organisation> found = qbe.execute();
-		if (found.size() == 0) {
+		if (found.isEmpty()) {
 			if (createMode == CreateMode.CREATE) {
 				Organisation org = new Organisation(name, StringTool.unNull(zusatz));
 				addAddress(org, strasse, plz, ort);
@@ -173,7 +173,7 @@ public class KontaktMatcher {
 		}
 
 		boolean hasSignificantValue = false;
-		Query<Person> qbe = new Query<Person>(Person.class);
+		Query<Person> qbe = new Query<>(Person.class);
 		String sex = StringTool.leer;
 		String birthdate = StringTool.leer;
 
@@ -231,7 +231,7 @@ public class KontaktMatcher {
 		}
 
 		List<Person> found = qbe.execute();
-		if (found.size() == 0) {
+		if (found.isEmpty()) {
 			if (createMode == CreateMode.CREATE) {
 				Person ret = new Person(name, vorname, birthdate, sex);
 				addAddress(ret, strasse, plz, ort);

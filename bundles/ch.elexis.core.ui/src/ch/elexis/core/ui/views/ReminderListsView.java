@@ -153,7 +153,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private Color colorOverdue;
 	private Color colorOpen;
 
-	private List<IReminder> currentSelection = new ArrayList<IReminder>();
+	private List<IReminder> currentSelection = new ArrayList<>();
 	private ListenerList<ISelectionChangedListener> selectionChangedListeners = new ListenerList<>();
 
 	private Patient actPatient;
@@ -425,7 +425,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					public void run() {
 						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
 								false, selectedPatient, true);
-						if (list.size() != 0) {
+						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
 							for (Reminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);

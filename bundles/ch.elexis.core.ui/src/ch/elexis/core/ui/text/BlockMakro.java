@@ -33,7 +33,7 @@ public class BlockMakro implements IKonsMakro {
 
 		if (actEncounter.isPresent()) {
 			List<Leistungsblock> macros = Leistungsblock.findMacrosValidForCurrentMandator(makro);
-			if ((macros != null) && (macros.size() > 0)) {
+			if ((macros != null) && (!macros.isEmpty())) {
 				Leistungsblock lb = macros.get(0);
 				addBlock(actEncounter.get(),
 						CoreModelServiceHolder.get().load(lb.getId(), ICodeElementBlock.class).orElse(null));

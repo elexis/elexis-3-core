@@ -21,7 +21,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 public class ZipInformationProposalProvider implements IContentProposalProvider {
 
 	public IContentProposal[] getProposals(String contents, int position) {
-		List<ContentProposal> cp = new LinkedList<ContentProposal>();
+		List<ContentProposal> cp = new LinkedList<>();
 		List<String> zips = ContactGeonames.getZip();
 		for (int i = 0; i < zips.size(); i++) {
 			String currZip = zips.get(i);
@@ -36,7 +36,7 @@ public class ZipInformationProposalProvider implements IContentProposalProvider 
 
 	public String findCityNameForZip(String content) {
 		List<String> result = ContactGeonames.getCityByZip(content);
-		if (result.size() >= 1)
+		if (!result.isEmpty())
 			return result.get(0);
 		return StringUtils.EMPTY;
 	}

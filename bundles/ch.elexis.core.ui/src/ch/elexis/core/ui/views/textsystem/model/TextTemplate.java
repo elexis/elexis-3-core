@@ -331,7 +331,7 @@ public class TextTemplate {
 	 * @return
 	 */
 	public static Brief findExistingTemplate(String name, String mandantId) {
-		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		Query<Brief> qbe = new Query<>(Brief.class);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 		qbe.and();
 		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
@@ -375,7 +375,7 @@ public class TextTemplate {
 	 */
 	public static List<Brief> findExistingTemplates(boolean isSysTemplate, String name, String mimeType,
 			String mandantId) {
-		Query<Brief> qbe = new Query<Brief>(Brief.class);
+		Query<Brief> qbe = new Query<>(Brief.class);
 		qbe.add(Brief.FLD_SUBJECT, Query.EQUALS, name);
 		qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 		if (mimeType != null) {

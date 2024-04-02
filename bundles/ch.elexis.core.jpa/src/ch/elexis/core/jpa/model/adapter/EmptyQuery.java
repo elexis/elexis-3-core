@@ -92,7 +92,7 @@ public class EmptyQuery<T> implements IQuery<T> {
 
 	@Override
 	public <S> ISubQuery<S> createSubQuery(Class<S> modelClazz, IModelService modelService) {
-		return new EmptySubQuery<S>();
+		return new EmptySubQuery<>();
 	}
 
 	@Override

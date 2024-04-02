@@ -40,7 +40,7 @@ public class RenameAccountingSystemField extends ExternalMaintenance {
 			output.append(beginTask + "\n\n");
 
 			pm.subTask("Lade Fälle des betroffenen Abrechnungssystem ...");
-			Query<Fall> qbe = new Query<Fall>(Fall.class);
+			Query<Fall> qbe = new Query<>(Fall.class);
 			qbe.add(FallConstants.FLD_EXTINFO_BILLING, Query.EQUALS, accountingSystem);
 			qbe.addToken(Fall.FLD_DATUM_BIS + " is NULL OR " + Fall.FLD_DATUM_BIS + " = ''");
 			List<Fall> fallList = qbe.execute();

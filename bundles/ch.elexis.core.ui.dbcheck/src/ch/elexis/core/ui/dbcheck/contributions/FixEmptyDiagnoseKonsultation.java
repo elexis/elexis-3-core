@@ -28,13 +28,13 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
-		missingMap = new HashMap<Mandant, Integer>();
-		mandantDiagnoseMap = new HashMap<Mandant, String>();
+		missingMap = new HashMap<>();
+		mandantDiagnoseMap = new HashMap<>();
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Fixing consultations with no diagnose", 3);
 
 		pm.subTask("Find all consultations ...");
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, StringConstants.EMPTY, null);
 		List<Konsultation> kons = qbe.execute();
 		pm.worked(1);
@@ -42,7 +42,7 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 		pm.subTask("Find consultations without diagnose ...");
 		for (Konsultation k : kons) {
 			Fall fall = k.getFall();
-			if (fall != null && fall.exists() && fall.isOpen() && k.getDiagnosen().size() < 1) {
+			if (fall != null && fall.exists() && fall.isOpen() && k.getDiagnosen().isEmpty()) {
 				Mandant mandant = k.getMandant();
 
 				String diagnoseId = CoreHub.getUserSetting(mandant).get(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);

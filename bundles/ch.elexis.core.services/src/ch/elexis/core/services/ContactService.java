@@ -28,7 +28,7 @@ public class ContactService implements IContactService {
 		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, dateOfBirth);
 		query.and(ModelPackage.Literals.IPERSON__GENDER, COMPARATOR.EQUALS, gender);
 		List<IPerson> execute = query.execute();
-		List<IPerson> candidates = new ArrayList<IPerson>();
+		List<IPerson> candidates = new ArrayList<>();
 		execute.forEach(person -> {
 			// Levenshtein
 			Integer firstNameDistance = Integer.MAX_VALUE;

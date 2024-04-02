@@ -48,7 +48,7 @@ public class ResultAdapter {
 				return new org.eclipse.core.runtime.Status(getSeverityAsStatus(r.getSeverity()), PLUGIN_ID, r.getCode(),
 						r.getText() == null ? "?" : r.getText(), null); //$NON-NLS-1$
 			} else {
-				ArrayList<IStatus> as = new ArrayList<IStatus>();
+				ArrayList<IStatus> as = new ArrayList<>();
 				Result.msg r = list.get(0);
 				for (Result.msg m : list) {
 					as.add(new org.eclipse.core.runtime.Status(getSeverityAsStatus(m.getSeverity()), PLUGIN_ID,

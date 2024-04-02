@@ -107,7 +107,7 @@ public class StatisticsImpl extends MinimalEObjectImpl.Container implements Stat
 	 */
 	public EList<IStatistic> getStatistics() {
 		if (statistics == null) {
-			statistics = new EObjectContainmentEList<IStatistic>(IStatistic.class, this, ModelPackage.STATISTICS__STATISTICS);
+			statistics = new EObjectContainmentEList<>(IStatistic.class, this, ModelPackage.STATISTICS__STATISTICS);
 		}
 		return statistics;
 	}

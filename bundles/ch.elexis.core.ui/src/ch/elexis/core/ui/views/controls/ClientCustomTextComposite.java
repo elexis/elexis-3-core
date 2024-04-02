@@ -54,8 +54,8 @@ public class ClientCustomTextComposite extends Composite {
 	private StyledText txtClientCustomText;
 	private Button btnEditCustomText;
 	private DropTarget txtClientCustomTextdropTarget;
-	private List<TokenMap> tokenMap = new ArrayList<TokenMap>();
-	private List<StyleRange> styleList = new ArrayList<StyleRange>();
+	private List<TokenMap> tokenMap = new ArrayList<>();
+	private List<StyleRange> styleList = new ArrayList<>();
 	private ScrolledForm scrldfrm;
 
 	public ClientCustomTextComposite(Composite parent, int style, FormToolkit toolkit, ScrolledForm scrldfrm) {

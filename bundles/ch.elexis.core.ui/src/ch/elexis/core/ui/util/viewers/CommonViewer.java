@@ -241,7 +241,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 				new PersistentObjectDragSource(viewer.getControl(), new ISelectionRenderer() {
 					public List<PersistentObject> getSelection() {
 						Object[] sel = CommonViewer.this.getSelection();
-						ArrayList<PersistentObject> ret = new ArrayList<PersistentObject>(sel.length);
+						ArrayList<PersistentObject> ret = new ArrayList<>(sel.length);
 						for (Object o : sel) {
 							if (o instanceof PersistentObject) {
 								ret.add((PersistentObject) o);
@@ -436,7 +436,7 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 
 	public void addDoubleClickListener(PoDoubleClickListener dl) {
 		if (dlListeners == null) {
-			dlListeners = new HashSet<PoDoubleClickListener>();
+			dlListeners = new HashSet<>();
 			getViewerWidget().addDoubleClickListener(this);
 		}
 		dlListeners.add(dl);

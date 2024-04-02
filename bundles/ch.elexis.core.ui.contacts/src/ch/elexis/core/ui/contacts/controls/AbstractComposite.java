@@ -24,7 +24,7 @@ import ch.elexis.core.model.IContact;
 
 public abstract class AbstractComposite extends Composite {
 
-	IObservableValue<IContact> contactObservable = new WritableValue<IContact>(null, IContact.class);
+	IObservableValue<IContact> contactObservable = new WritableValue<>(null, IContact.class);
 
 	public AbstractComposite(Composite parent, int style) {
 		super(parent, style);

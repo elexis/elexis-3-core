@@ -72,7 +72,7 @@ import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 
 @SuppressWarnings("unchecked")
 public class FindingsDetailComposite extends Composite {
-	private WritableValue<FindingsTemplate> item = new WritableValue<FindingsTemplate>(null, FindingsTemplate.class);
+	private WritableValue<FindingsTemplate> item = new WritableValue<>(null, FindingsTemplate.class);
 	private Text textTitle;
 	private Text textUnit;
 	private Text txtComma;
@@ -203,8 +203,8 @@ public class FindingsDetailComposite extends Composite {
 		IObservableValue<String> observeTextTitle = WidgetProperties.text(SWT.Modify).observe(textTitle);
 		IObservableValue<String> observeValueTextTitle = EMFProperties
 				.value(ModelPackage.Literals.FINDINGS_TEMPLATE__TITLE).observeDetail(item);
-		UpdateValueStrategy<String, String> modelToTarget = new UpdateValueStrategy<String, String>();
-		UpdateValueStrategy<String, String> targetToModel = new UpdateValueStrategy<String, String>();
+		UpdateValueStrategy<String, String> modelToTarget = new UpdateValueStrategy<>();
+		UpdateValueStrategy<String, String> targetToModel = new UpdateValueStrategy<>();
 		targetToModel.setBeforeSetValidator(new IValidator<String>() {
 			public org.eclipse.core.runtime.IStatus validate(String value) {
 				Optional<FindingsTemplate> existing = FindingsServiceHolder.findingsTemplateService

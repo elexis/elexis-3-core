@@ -63,7 +63,7 @@ public class CustomService extends AbstractIdDeleteModelAdapter<ch.elexis.core.j
 	@Override
 	public synchronized IBillableOptifier<CustomService> getOptifier() {
 		if (optifier == null) {
-			optifier = new AbstractOptifier<CustomService>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
+			optifier = new AbstractOptifier<>(CoreModelServiceHolder.get(), ContextServiceHolder.get()) {
 
 				@Override
 				protected void setPrice(CustomService billable, IBilled billed) {

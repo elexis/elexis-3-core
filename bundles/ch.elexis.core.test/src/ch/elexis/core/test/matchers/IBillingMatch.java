@@ -131,7 +131,7 @@ public class IBillingMatch {
 			}
 		}
 
-		if (dontMatchPrice.size() > 0) {
+		if (!dontMatchPrice.isEmpty()) {
 			for (IBillingMatch vm : existingVerrechnet) {
 				if (dontMatchPrice.contains(vm.code)) {
 					vm.vk_preis = null;
@@ -141,7 +141,7 @@ public class IBillingMatch {
 		}
 
 		Collection<IBillingMatch> disjunction = CollectionUtils.disjunction(existingVerrechnet, matches);
-		if (disjunction.size() > 0) {
+		if (!disjunction.isEmpty()) {
 			throw new AssertionError(disjunction);
 		}
 	}

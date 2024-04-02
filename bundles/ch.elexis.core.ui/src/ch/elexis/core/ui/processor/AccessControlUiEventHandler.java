@@ -118,7 +118,7 @@ public class AccessControlUiEventHandler implements EventHandler {
 	}
 
 	private List<MPartDescriptor> updateDescriptors() {
-		List<MPartDescriptor> ret = new ArrayList<MPartDescriptor>();
+		List<MPartDescriptor> ret = new ArrayList<>();
 		for (MPartDescriptor foundPartDescriptor : new ArrayList<>(mApplication.getDescriptors())) {
 			List<String> acStrings = getAccessControlStrings(foundPartDescriptor);
 			if (acStrings != null && !acStrings.isEmpty()) {
@@ -254,7 +254,7 @@ public class AccessControlUiEventHandler implements EventHandler {
 	}
 
 	private List<EvaluatableACE> getAccessControlEntries(List<String> acStrings) {
-		List<EvaluatableACE> ret = new ArrayList<EvaluatableACE>();
+		List<EvaluatableACE> ret = new ArrayList<>();
 		for (String acString : acStrings) {
 			if (acString.startsWith("object:")) {
 				String acObjTag = acString.substring("object:".length());

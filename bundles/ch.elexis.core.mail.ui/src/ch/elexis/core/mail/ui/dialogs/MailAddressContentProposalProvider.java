@@ -23,8 +23,8 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
-		List<IContentProposal> ret = new ArrayList<IContentProposal>();
-		HashSet<IContact> contacts = new HashSet<IContact>();
+		List<IContentProposal> ret = new ArrayList<>();
+		HashSet<IContact> contacts = new HashSet<>();
 
 		String addressString = null;
 		if (contents != null && !contents.isEmpty()) {

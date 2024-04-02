@@ -123,7 +123,7 @@ public class HL7ImporterIIdentifiedRunnable implements IIdentifiedRunnable {
 			Result<?> result = multiFileParser.importFromHandle(fileHandle, importStrategyFactory, hl7Parser,
 					new DefaultPersistenceHandler());
 
-			Map<String, Serializable> resultMap = new HashMap<String, Serializable>();
+			Map<String, Serializable> resultMap = new HashMap<>();
 			@SuppressWarnings("rawtypes")
 			Result.msg fileUrl = result.removeMsgEntry("url", CODE.URL);
 			if (fileUrl != null) {

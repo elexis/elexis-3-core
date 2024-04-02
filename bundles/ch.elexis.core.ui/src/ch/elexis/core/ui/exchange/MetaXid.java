@@ -32,7 +32,7 @@ import ch.rgw.tools.TimeTool;
  */
 public class MetaXid {
 	String id;
-	List<Identity> identities = new ArrayList<Identity>();
+	List<Identity> identities = new ArrayList<>();
 
 	/*
 	 * Construct a MetaXid from an XML Element

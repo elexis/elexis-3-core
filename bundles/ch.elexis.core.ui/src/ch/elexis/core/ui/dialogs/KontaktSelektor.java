@@ -251,8 +251,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 				public Object[] getElements(Object inputElement) {
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
-						ArrayList<PersistentObject> elements = new ArrayList<PersistentObject>();
-						ArrayList<String> addedKontakte = new ArrayList<String>();
+						ArrayList<PersistentObject> elements = new ArrayList<>();
+						ArrayList<String> addedKontakte = new ArrayList<>();
 
 						// add the patient itself
 						elements.add(patient);

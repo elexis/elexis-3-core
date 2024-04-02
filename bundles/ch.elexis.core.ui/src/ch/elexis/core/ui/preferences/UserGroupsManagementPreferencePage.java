@@ -69,7 +69,7 @@ import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 public class UserGroupsManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
 	private TableViewer tableViewerUserGroups;
 
-	private WritableValue<IUserGroup> wvUserGroup = new WritableValue<IUserGroup>(null, IUserGroup.class);
+	private WritableValue<IUserGroup> wvUserGroup = new WritableValue<>(null, IUserGroup.class);
 
 	private CheckboxTableViewer checkboxTableViewerUsers;
 	private CheckboxTableViewer checkboxTableViewerAssociation;

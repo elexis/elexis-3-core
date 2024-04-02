@@ -80,7 +80,7 @@ public class Hub extends AbstractUIPlugin {
 
 	private static Logger log = LoggerFactory.getLogger(Hub.class.getName());
 
-	private static List<ShutdownJob> shutdownJobs = new LinkedList<ShutdownJob>();
+	private static List<ShutdownJob> shutdownJobs = new LinkedList<>();
 
 	/** Der Initialisierer für die Voreinstellungen */
 	public static final PreferenceInitializer pin = new PreferenceInitializer();
@@ -136,7 +136,7 @@ public class Hub extends AbstractUIPlugin {
 				CompletableFuture.runAsync(() -> {
 					List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(), false,
 							patient, true);
-					if (list.size() != 0) {
+					if (!list.isEmpty()) {
 						StringBuilder sb = new StringBuilder();
 						for (Reminder r : list) {
 							sb.append(r.getSubject() + StringUtils.LF);
@@ -167,7 +167,7 @@ public class Hub extends AbstractUIPlugin {
 				CompletableFuture.runAsync(() -> {
 					final List<Reminder> reminderList = Reminder.findToShowOnStartup(loggedInContact);
 
-					if (reminderList.size() > 0) {
+					if (!reminderList.isEmpty()) {
 						// must be called inside display thread
 						UiDesk.runIfWorkbenchRunning(() -> {
 							Display.getDefault().asyncExec(new Runnable() {
@@ -213,7 +213,7 @@ public class Hub extends AbstractUIPlugin {
 	public static void postShutdown() {
 		// shutdownjobs are executed after the workbench has been shut down.
 		// So those jobs must not use any of the workbench's resources.
-		if ((shutdownJobs != null) && (shutdownJobs.size() > 0)) {
+		if ((shutdownJobs != null) && (!shutdownJobs.isEmpty())) {
 			Shell shell = new Shell(Display.getDefault());
 			MessageDialog dlg = new MessageDialog(shell, Messages.Hub_title_configuration, Dialog.getDefaultImage(),
 					Messages.Hub_message_configuration, SWT.ICON_INFORMATION, new String[] {}, 0);
@@ -263,7 +263,7 @@ public class Hub extends AbstractUIPlugin {
 			sb.append("  / ").append(pat.getLabel()).append(" (").append(alter).append(") - ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					.append("[").append(nr).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			if (Reminder.findForPatient(pat, CoreHub.getLoggedInContact()).size() != 0) {
+			if (!Reminder.findForPatient(pat, CoreHub.getLoggedInContact()).isEmpty()) {
 				sb.append(Messages.Hub_message_reminders);
 			}
 			String act = new TimeTool().toString(TimeTool.DATE_COMPACT);

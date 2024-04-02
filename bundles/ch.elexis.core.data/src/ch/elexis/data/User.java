@@ -174,10 +174,10 @@ public class User extends PersistentObject {
 	 * @return <code>true</code> if the given username may be used
 	 */
 	public static boolean verifyUsernameNotTaken(String username) {
-		Query<User> qbe = new Query<User>(User.class);
+		Query<User> qbe = new Query<>(User.class);
 		qbe.clear(true);
 		qbe.add(User.FLD_ID, Query.EQUALS, username);
-		return qbe.execute().size() == 0;
+		return qbe.execute().isEmpty();
 	}
 
 	/**

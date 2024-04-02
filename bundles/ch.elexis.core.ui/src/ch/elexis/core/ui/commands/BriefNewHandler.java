@@ -69,7 +69,7 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 
 		TextView tv = null;
 		try {
-			Query<Brief> qbe = new Query<Brief>(Brief.class);
+			Query<Brief> qbe = new Query<>(Brief.class);
 			qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 			qbe.add(Brief.FLD_KONSULTATION_ID, Query.NOT_EQUAL, "SYS"); //$NON-NLS-1$
 			qbe.startGroup();

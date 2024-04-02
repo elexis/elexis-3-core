@@ -622,7 +622,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	}
 
 	private void updateBilledLabel() {
-		ArrayList<IArticle> gtins = new ArrayList<IArticle>();
+		ArrayList<IArticle> gtins = new ArrayList<>();
 		if (actEncounter != null) {
 			int sumMinutes = 0;
 			Money sum = new Money(0);

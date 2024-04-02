@@ -21,7 +21,7 @@ public class LabResetPathologic extends ExternalMaintenance {
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
-		Query<LabResult> qlr = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qlr = new Query<>(LabResult.class);
 		List<LabResult> results = qlr.execute();
 		int size = results.size();
 		pm.beginTask(getMaintenanceDescription() + " (" + size + " Laborwerte)", results.size());

@@ -34,7 +34,7 @@ public abstract class AllOrNoneLockRequestingAction<T extends PersistentObject> 
 
 	public void run() {
 		objects = getTargetedObjects();
-		if (objects == null || objects.size() == 0) {
+		if (objects == null || objects.isEmpty()) {
 			return;
 		}
 

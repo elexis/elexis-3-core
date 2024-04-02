@@ -53,7 +53,7 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 	private LabeledInputField.AutoForm lfa;
 	private InputData[] def;
 
-	private Hashtable<String, Anwender> hAnwender = new Hashtable<String, Anwender>();
+	private Hashtable<String, Anwender> hAnwender = new Hashtable<>();
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -64,7 +64,7 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 			Composite body = form.getBody();
 			body.setLayout(new GridLayout(1, false));
 			Combo cbAnwender = new Combo(body, SWT.DROP_DOWN | SWT.READ_ONLY);
-			Query<Anwender> qbe = new Query<Anwender>(Anwender.class);
+			Query<Anwender> qbe = new Query<>(Anwender.class);
 			List<Anwender> list = qbe.execute();
 			for (Anwender m : list) {
 				cbAnwender.add(m.getLabel());

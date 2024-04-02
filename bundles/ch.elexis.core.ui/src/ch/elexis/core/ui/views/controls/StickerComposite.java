@@ -82,7 +82,7 @@ public class StickerComposite extends Composite {
 		List<ISticker> etis = StickerServiceHolder.get().getStickers(actPatient);
 		if (etis == null)
 			return;
-		if (etis.size() > 0) {
+		if (!etis.isEmpty()) {
 			this.setVisible(true);
 			for (ISticker et : etis) {
 				if (et != null) {

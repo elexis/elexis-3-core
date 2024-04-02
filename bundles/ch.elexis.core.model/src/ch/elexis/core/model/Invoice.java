@@ -122,7 +122,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			trace = StringTool.unpack(raw);
 		}
 		if (trace == null) {
-			trace = new ArrayList<String>();
+			trace = new ArrayList<>();
 		}
 		return trace;
 	}
@@ -297,14 +297,14 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 			storeToStrings = StringTool.unpack(raw);
 		}
 		if (storeToStrings == null || storeToStrings.isEmpty()) {
-			storeToStrings = new ArrayList<String>();
+			storeToStrings = new ArrayList<>();
 		}
 		return storeToStrings;
 	}
 
 	@Override
 	public List<IDocument> getAttachments() {
-		List<IDocument> documents = new ArrayList<IDocument>();
+		List<IDocument> documents = new ArrayList<>();
 		for (String storeToString : getAttachmentsInternal()) {
 			Optional<Identifiable> loadFromString = StoreToStringServiceHolder.get().loadFromString(storeToString);
 			if (loadFromString.isPresent()) {

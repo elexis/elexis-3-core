@@ -20,21 +20,21 @@ public class MimeTypeUtil {
 
 	static {
 		// init mimeType-human readable name map
-		mimeNameMap = new HashMap<String, String>();
+		mimeNameMap = new HashMap<>();
 		mimeNameMap.put(MIME_TYPE_MSWORD_97_2003, "Word 97-2003 Document (*.doc)"); //$NON-NLS-1$
 		mimeNameMap.put(MIME_TYPE_MSWORD, "Word Document (*.docx)"); //$NON-NLS-1$
 		mimeNameMap.put(MIME_TYPE_OPENOFFICE, "OpenDocument Text (*.odt)"); //$NON-NLS-1$
 		mimeNameMap.put(MIME_TYPE_TEMPLATOR, "Schablonenprozessor (*.xml)"); //$NON-NLS-1$
 
 		// init mimeType-Extensions map
-		mimeExtensionsMap = new HashMap<String, String>();
+		mimeExtensionsMap = new HashMap<>();
 		mimeExtensionsMap.put(MIME_TYPE_MSWORD_97_2003, "*.doc"); //$NON-NLS-1$
 		mimeExtensionsMap.put(MIME_TYPE_MSWORD, "*.docx"); //$NON-NLS-1$
 		mimeExtensionsMap.put(MIME_TYPE_OPENOFFICE, "*.odt"); //$NON-NLS-1$
 		mimeExtensionsMap.put(MIME_TYPE_TEMPLATOR, "*.xml"); //$NON-NLS-1$
 
 		// init mimeType-SimpleName map
-		mimeSimpleNameMap = new HashMap<String, String>();
+		mimeSimpleNameMap = new HashMap<>();
 		mimeSimpleNameMap.put(MIME_TYPE_MSWORD, SIMPLE_NAME_MSWORD);
 		mimeSimpleNameMap.put(MIME_TYPE_MSWORD_97_2003, SIMPLE_NAME_MSWORD);
 		mimeSimpleNameMap.put(MIME_TYPE_OPENOFFICE, SIMPLE_NAME_OPENOFFICE);

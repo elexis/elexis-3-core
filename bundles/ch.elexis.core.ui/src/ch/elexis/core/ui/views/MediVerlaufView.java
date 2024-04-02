@@ -65,7 +65,7 @@ public class MediVerlaufView extends ViewPart implements IRefreshable {
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	TableViewer tv;
-	ArrayList<MediAbgabe> mListe = new ArrayList<MediAbgabe>();
+	ArrayList<MediAbgabe> mListe = new ArrayList<>();
 	private static final String[] columns = { Messages.Core_Since, Messages.Core_Date_Until,
 			Messages.MediVerlaufView_medicament, Messages.Core_Dosage };
 	private static final int[] colwidth = { 90, 90, 300, 200 };
@@ -202,7 +202,7 @@ public class MediVerlaufView extends ViewPart implements IRefreshable {
 
 					monitor.beginTask(Messages.MediVerlaufView_reading, IProgressMonitor.UNKNOWN); // $NON-NLS-1$
 					monitor.subTask(Messages.MediVerlaufView_findPrescriptions); // $NON-NLS-1$
-					Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+					Query<Prescription> qbe = new Query<>(Prescription.class);
 					qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, sp.getId());
 					List<Prescription> list = qbe.execute();
 					mListe.clear();

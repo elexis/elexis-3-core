@@ -46,7 +46,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	public TextTemplatePrintSettingsDialog(Shell parentShell, String printer, String tray) {
 		super(parentShell);
 		printServices = Arrays.asList(PrintServiceLookup.lookupPrintServices(null, null));
-		mediaTrays = new ArrayList<MediaTray>();
+		mediaTrays = new ArrayList<>();
 
 		this.selPrinter = printer;
 		this.selTray = tray;
@@ -122,7 +122,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog dlg = new InputDialog(getParentShell(), "Zusätzlicher Schacht",
-						"Bitten den Namen des zusätzlichen Schacht konfigurieren.", StringUtils.EMPTY, null, SWT.NONE);
+						Messages.Additional_Shaft, StringUtils.EMPTY, null, SWT.NONE);
 				if (dlg.open() == Window.OK) {
 					if (dlg.getValue() != null && !dlg.getValue().isEmpty()) {
 						addCustomMediaTray(dlg.getValue());
@@ -177,7 +177,7 @@ public class TextTemplatePrintSettingsDialog extends TitleAreaDialog {
 	}
 
 	private List<MediaTray> loadAvailableTrays(PrintService printService) {
-		mediaTrays = new ArrayList<MediaTray>();
+		mediaTrays = new ArrayList<>();
 		Object attributes = printService.getSupportedAttributeValues(Media.class, DocFlavor.SERVICE_FORMATTED.PRINTABLE,
 				null);
 		if (attributes != null && attributes.getClass().isArray()) {

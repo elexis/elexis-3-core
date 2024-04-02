@@ -44,7 +44,7 @@ public class SqlWithUiRunner {
 	private String pluginId;
 
 	public SqlWithUiRunner(String[] sql, String pluginId) {
-		sqlStrings = new ArrayList<String>();
+		sqlStrings = new ArrayList<>();
 		for (int i = 0; i < sql.length; i++) {
 			String sqlString = sql[i];
 			sqlString = sqlString.replaceAll(StringUtils.CR, StringUtils.EMPTY);
@@ -57,7 +57,7 @@ public class SqlWithUiRunner {
 	}
 
 	public boolean runSql() {
-		sql = new ArrayList<UpdateDbSql>();
+		sql = new ArrayList<>();
 		// create UpdateDbSql objects from input list
 		for (String sqlString : sqlStrings) {
 			sql.add(new UpdateDbSql(sqlString));

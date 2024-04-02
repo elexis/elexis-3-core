@@ -233,7 +233,7 @@ class RnContentProvider
 				val = cv.getConfigurer().getControlFieldProvider().getValues();
 			}
 		});
-		Query<Rechnung> q1 = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> q1 = new Query<>(Rechnung.class);
 		if (AccessControlServiceHolder.get().evaluate(EvACEs.ACCOUNTING_GLOBAL) == false) {
 			if (ContextServiceHolder.getActiveMandatorOrNull() == null) {
 				return null;
@@ -322,9 +322,9 @@ class RnContentProvider
 	public void reload(final IProgressMonitor monitor) {
 		monitor.beginTask(Messages.RnContentProvider_collectInvoices, Math.round(PREVAL)); // $NON-NLS-1$
 		monitor.subTask(Messages.Core_Database_Query); // $NON-NLS-1$
-		Tree<Patient> root = new Tree<Patient>(null, null);
-		Hashtable<String, Tree<Patient>> hPats = new Hashtable<String, Tree<Patient>>(367, 0.75f);
-		Hashtable<String, Tree<Fall>> hFaelle = new Hashtable<String, Tree<Fall>>(719, 0.75f);
+		Tree<Patient> root = new Tree<>(null, null);
+		Hashtable<String, Tree<Patient>> hPats = new Hashtable<>(367, 0.75f);
+		Hashtable<String, Tree<Fall>> hFaelle = new Hashtable<>(719, 0.75f);
 
 		Query<Rechnung> q1 = prepareQuery();
 		if (q1 == null) {
@@ -371,7 +371,7 @@ class RnContentProvider
 				}
 				Tree<Patient> tPat = hPats.get(pat.getId());
 				if (tPat == null) {
-					tPat = new Tree<Patient>(root, pat, patientComparator);
+					tPat = new Tree<>(root, pat, patientComparator);
 					hPats.put(pat.getId(), tPat);
 					iPat++;
 				}

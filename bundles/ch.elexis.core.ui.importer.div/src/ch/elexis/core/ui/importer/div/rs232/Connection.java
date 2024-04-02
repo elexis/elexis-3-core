@@ -416,7 +416,7 @@ public class Connection implements PortEventListener {
 
 	@SuppressWarnings("unchecked")
 	public static String[] getComPorts() {
-		ArrayList<String> p = new ArrayList<String>();
+		ArrayList<String> p = new ArrayList<>();
 		try {
 			Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
 

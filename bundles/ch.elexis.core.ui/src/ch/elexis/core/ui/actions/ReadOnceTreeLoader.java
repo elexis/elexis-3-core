@@ -42,7 +42,7 @@ public class ReadOnceTreeLoader extends PersistentObjectLoader implements ITreeC
 
 	protected String parentColumn;
 	protected String orderBy;
-	private HashMap<PersistentObject, HashMap<PersistentObject, ?>> allNodes = new HashMap<PersistentObject, HashMap<PersistentObject, ?>>();
+	private HashMap<PersistentObject, HashMap<PersistentObject, ?>> allNodes = new HashMap<>();
 	private PersistentObject[] root;
 
 	TreeViewer tv;

@@ -165,7 +165,7 @@ public class MergeLabItemDialog extends TitleAreaDialog {
 	}
 
 	private void deleteMappings(LabItem li) {
-		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		Query<LabMapping> qbe = new Query<>(LabMapping.class);
 		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabMapping> list = qbe.execute();
 		for (LabMapping po : list) {

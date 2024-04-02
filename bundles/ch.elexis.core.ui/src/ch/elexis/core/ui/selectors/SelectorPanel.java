@@ -44,9 +44,9 @@ import ch.rgw.tools.StringTool;
  */
 public class SelectorPanel extends Composite implements ActiveControlListener {
 	boolean bCeaseFire, bExclusive;
-	private LinkedList<ActiveControlListener> listeners = new LinkedList<ActiveControlListener>();
-	private ArrayList<ActiveControl> activeControls = new ArrayList<ActiveControl>();
-	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<TraceElement>(50);
+	private LinkedList<ActiveControlListener> listeners = new LinkedList<>();
+	private ArrayList<ActiveControl> activeControls = new ArrayList<>();
+	private LimitSizeStack<TraceElement> undoList = new LimitSizeStack<>(50);
 	private Composite cFields;
 	private ToolBarManager tActions;
 	private ToolBar tb;
@@ -237,7 +237,7 @@ public class SelectorPanel extends Composite implements ActiveControlListener {
 	 *         field as keys and the respective field contents as values
 	 */
 	public HashMap<String, String> getValues() {
-		HashMap<String, String> ret = new HashMap<String, String>();
+		HashMap<String, String> ret = new HashMap<>();
 		for (ActiveControl ac : activeControls) {
 			ret.put(ac.getLabelText(), ac.getText());
 			String fld = ac.getProperty(ActiveControl.PROP_FIELDNAME);

@@ -292,7 +292,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	 * @return
 	 */
 	public List<ILabResult> getLabResults() {
-		ArrayList<ILabResult> ret = new ArrayList<ILabResult>();
+		ArrayList<ILabResult> ret = new ArrayList<>();
 		List<ILabOrder> orders = getLabOrdersByOrderId(get(FLD_ORDERID));
 		if (orders != null) {
 			for (ILabOrder labOrder : orders) {
@@ -312,7 +312,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	public static Kontakt getOrCreateManualLabor() {
 		String identifier = Messages.LabOrder_contactOwnLabName;
 		Labor labor = null;
-		Query<Labor> qbe = new Query<Labor>(Labor.class);
+		Query<Labor> qbe = new Query<>(Labor.class);
 		qbe.add(Kontakt.FLD_SHORT_LABEL, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.or();
 		qbe.add(Kontakt.FLD_NAME1, Query.LIKE, "%" + identifier + "%"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -346,7 +346,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	 * @since 3.2
 	 */
 	public static List<ILabOrder> getLabOrdersByOrderId(String orderId) {
-		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		Query<LabOrder> qlo = new Query<>(LabOrder.class);
 		qlo.add(FLD_ORDERID, Query.EQUALS, orderId);
 		qlo.add(FLD_ID, Query.NOT_EQUAL, VERSIONID);
 		@SuppressWarnings("unchecked")
@@ -362,7 +362,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	 * @since 3.2
 	 */
 	public static List<LabOrder> getLabOrdersByLabItem(ILabItem item) {
-		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		Query<LabOrder> qlo = new Query<>(LabOrder.class);
 		qlo.add(FLD_ITEM, Query.EQUALS, item.getId());
 		List<LabOrder> orders = qlo.execute();
 		if (orders.isEmpty()) {
@@ -377,7 +377,7 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	 */
 	public static List<LabOrder> getLabOrders(String patientId, String mandantId, ILabItem labItem, LabResult result,
 			String orderId, TimeTool time, State state) {
-		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		Query<LabOrder> qlo = new Query<>(LabOrder.class);
 		qlo.add(FLD_ID, Query.NOT_EQUAL, VERSIONID);
 
 		if (patientId != null) {
@@ -417,15 +417,15 @@ public class LabOrder extends PersistentObject implements Comparable<LabOrder>, 
 	}
 
 	public static Map<String, List<LabOrder>> getMapByOrderId() {
-		HashMap<String, List<LabOrder>> ret = new HashMap<String, List<LabOrder>>();
-		Query<LabOrder> qlo = new Query<LabOrder>(LabOrder.class);
+		HashMap<String, List<LabOrder>> ret = new HashMap<>();
+		Query<LabOrder> qlo = new Query<>(LabOrder.class);
 		List<LabOrder> orders = qlo.execute();
 		for (LabOrder labOrder : orders) {
 			List<LabOrder> groupedList = ret.get(labOrder.get(LabOrder.FLD_ORDERID));
 			if (groupedList != null) {
 				groupedList.add(labOrder);
 			} else {
-				groupedList = new ArrayList<LabOrder>();
+				groupedList = new ArrayList<>();
 				groupedList.add(labOrder);
 				ret.put(labOrder.get(LabOrder.FLD_ORDERID), groupedList);
 			}

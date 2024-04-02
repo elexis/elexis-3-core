@@ -64,7 +64,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 	List<Sticker> lEtiketten;
 	Button bNew, bRemove;
 	Spinner spWert;
-	HashMap<String, Button> classesCheck = new HashMap<String, Button>();
+	HashMap<String, Button> classesCheck = new HashMap<>();
 
 	void setSticker(Sticker et) {
 		act = et;
@@ -264,12 +264,12 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 	}
 
 	public void init(IWorkbench workbench) {
-		Query<Sticker> qbe = new Query<Sticker>(Sticker.class);
+		Query<Sticker> qbe = new Query<>(Sticker.class);
 		lEtiketten = qbe.execute();
 		if (lEtiketten != null) {
 
 		} else {
-			lEtiketten = new LinkedList<Sticker>();
+			lEtiketten = new LinkedList<>();
 		}
 
 	}

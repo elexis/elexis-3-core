@@ -98,7 +98,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		btnValidateMappings.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Query<LabMapping> query = new Query<LabMapping>(LabMapping.class);
+				Query<LabMapping> query = new Query<>(LabMapping.class);
 				query.add(LabMapping.FLD_ID, Query.NOT_EQUAL, LabMapping.VERSIONID); // $NON-NLS-1$
 				List<LabMapping> mappings = query.execute();
 				int countDeleted = 0;

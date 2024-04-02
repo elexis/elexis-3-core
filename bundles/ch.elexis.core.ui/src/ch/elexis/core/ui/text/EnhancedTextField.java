@@ -136,7 +136,7 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 	@Override
 	public void addXrefHandler(String id, IKonsExtension xref) {
 		if (hXrefs == null) {
-			hXrefs = new Hashtable<String, IKonsExtension>();
+			hXrefs = new Hashtable<>();
 		}
 		hXrefs.put(id, xref);
 	}
@@ -454,8 +454,8 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 		text.setText(record.getText());
 		int textlen = text.getCharCount();
 		markups = record.getMarkups();
-		links = new ArrayList<Samdas.XRef>(xrefs.size());
-		ranges = new ArrayList<Samdas.Range>(xrefs.size() + markups.size());
+		links = new ArrayList<>(xrefs.size());
+		ranges = new ArrayList<>(xrefs.size() + markups.size());
 		for (Samdas.Markup m : markups) {
 			String type = m.getType();
 			StyleRange n = new StyleRange();

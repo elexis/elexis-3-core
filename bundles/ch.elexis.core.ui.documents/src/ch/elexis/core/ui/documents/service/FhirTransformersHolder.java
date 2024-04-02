@@ -14,7 +14,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 
 @Component
 public class FhirTransformersHolder {
-	private static List<IFhirTransformer<?, ?>> transformers = new ArrayList<IFhirTransformer<?, ?>>();
+	private static List<IFhirTransformer<?, ?>> transformers = new ArrayList<>();
 
 	private static HashMap<String, IFhirTransformer<?, ?>> cache = new HashMap<>();
 

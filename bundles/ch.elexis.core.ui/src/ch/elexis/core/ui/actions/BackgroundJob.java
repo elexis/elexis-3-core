@@ -55,7 +55,7 @@ public abstract class BackgroundJob extends Job {
 	protected static Log log = Log.get(Messages.BackgroundJob_0); // $NON-NLS-1$
 	// private boolean running;
 	private BackgroundJob self;
-	protected LinkedList<BackgroundJobListener> listeners = new LinkedList<BackgroundJobListener>();
+	protected LinkedList<BackgroundJobListener> listeners = new LinkedList<>();
 	private boolean valid;
 	protected Object result;
 
@@ -102,7 +102,7 @@ public abstract class BackgroundJob extends Job {
 		log.log(Messages.BackgroundJob_2 + jobname, Log.INFOS); // $NON-NLS-1$
 		UiDesk.getDisplay().syncExec(new Runnable() {
 			public void run() {
-				LinkedList<BackgroundJobListener> lCopy = new LinkedList<BackgroundJobListener>(listeners);
+				LinkedList<BackgroundJobListener> lCopy = new LinkedList<>(listeners);
 				for (BackgroundJobListener l : lCopy) {
 					l.jobFinished(self);
 				}

@@ -115,7 +115,7 @@ public class FindingsTemplatesImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public EList<FindingsTemplate> getFindingsTemplates() {
 		if (findingsTemplates == null) {
-			findingsTemplates = new EObjectContainmentEList<FindingsTemplate>(FindingsTemplate.class, this, ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES);
+			findingsTemplates = new EObjectContainmentEList<>(FindingsTemplate.class, this, ModelPackage.FINDINGS_TEMPLATES__FINDINGS_TEMPLATES);
 		}
 		return findingsTemplates;
 	}

@@ -99,7 +99,7 @@ public class ExcelWrapper {
 		if (row == null) {
 			return null;
 		}
-		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> ret = new ArrayList<>();
 		short first = 0;
 		short last = 100;
 		if (types != null) {

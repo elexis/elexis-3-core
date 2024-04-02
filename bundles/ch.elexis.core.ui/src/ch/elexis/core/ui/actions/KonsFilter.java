@@ -33,7 +33,7 @@ public class KonsFilter {
 	private ICoverage fall;
 	private boolean caseSensitive;
 	private boolean asRegEx;
-	private List<Constraint> lc = new LinkedList<Constraint>();
+	private List<Constraint> lc = new LinkedList<>();
 
 	public void setFall(ICoverage f) {
 		fall = f;
@@ -80,7 +80,7 @@ public class KonsFilter {
 				return false;
 			}
 		}
-		if (lc.size() == 0) {
+		if (lc.isEmpty()) {
 			return true;
 		}
 		boolean nVal = true;

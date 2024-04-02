@@ -17,7 +17,7 @@ import ch.rgw.tools.StringTool;
 public class CorrectGender {
 
 	public void run() {
-		Query<Person> qbe = new Query<Person>(Person.class);
+		Query<Person> qbe = new Query<>(Person.class);
 		for (Person p : qbe.execute()) {
 			String g = p.get(Person.SEX);
 			if (StringTool.isNothing(g)) {

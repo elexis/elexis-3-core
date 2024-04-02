@@ -262,7 +262,7 @@ public class XidElement extends XChangeElement {
 	@SuppressWarnings("unchecked")
 	public List<IPersistentObject> findObject() {
 		List<Identity> idents = (List<Identity>) getChildren(ELEMENT_IDENTITY, Identity.class);
-		List<IPersistentObject> candidates = new LinkedList<IPersistentObject>();
+		List<IPersistentObject> candidates = new LinkedList<>();
 		boolean lastGuid = false;
 		int lastQuality = 0;
 		for (XChangeElement ident : idents) {

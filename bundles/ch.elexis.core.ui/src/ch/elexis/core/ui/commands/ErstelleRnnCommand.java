@@ -84,7 +84,7 @@ public class ErstelleRnnCommand extends AbstractHandler {
 				}
 				Collection<Tree> lt = tFall.getChildren();
 
-				List<Konsultation> toBill = new ArrayList<Konsultation>(lt.size() + 1);
+				List<Konsultation> toBill = new ArrayList<>(lt.size() + 1);
 				for (Tree t : lt) {
 					toBill.add((Konsultation) t.contents);
 				}

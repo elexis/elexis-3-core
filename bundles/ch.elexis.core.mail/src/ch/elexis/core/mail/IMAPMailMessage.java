@@ -35,7 +35,7 @@ public class IMAPMailMessage {
 
 	public IMAPMailMessage(IMAPMessage message) {
 		this.message = message;
-		this.attachments = new ArrayList<IMAPMailMessage.Attachment>();
+		this.attachments = new ArrayList<>();
 	}
 
 	public static IMAPMailMessage of(IMAPMessage message) throws MessagingException {

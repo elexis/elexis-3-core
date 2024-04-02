@@ -236,7 +236,7 @@ public class LabPathologicEvaluator {
 	}
 
 	private List<String> parseRefString(String ref) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		if (ref != null && !ref.isEmpty()) {
 			Matcher m = refValuesPattern.matcher(ref);
 			while (m.find()) {

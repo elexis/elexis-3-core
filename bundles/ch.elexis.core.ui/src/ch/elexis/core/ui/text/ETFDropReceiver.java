@@ -32,7 +32,7 @@ public class ETFDropReceiver implements IReceiver {
 
 	ETFDropReceiver(final EnhancedTextField et) {
 		etf = et;
-		targets = new Hashtable<Class<?>, IKonsExtension>();
+		targets = new Hashtable<>();
 	}
 
 	public void addReceiver(final Class<?> clazz, final IKonsExtension rec) {

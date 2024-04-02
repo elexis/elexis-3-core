@@ -124,7 +124,7 @@ public class LiquibaseDBInitializer {
 	}
 
 	private static List<String> getDbTables(Connection con) {
-		List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<>();
 		ResultSet result = null;
 		try {
 			DatabaseMetaData metaData = con.getMetaData();

@@ -137,7 +137,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		previousBarcodeInputConsumer = (String) contextService.getNamed("barcodeInputConsumer").orElse(null);
 		contextService.getRootContext().setNamed("barcodeInputConsumer", OrderImportDialog.class.getName());
 
-		orderElements = new ArrayList<OrderElement>();
+		orderElements = new ArrayList<>();
 		List<IOrderEntry> items = order != null ? order.getEntries() : Collections.emptyList();
 		for (IOrderEntry entry : items) {
 			// only show entries which are not done

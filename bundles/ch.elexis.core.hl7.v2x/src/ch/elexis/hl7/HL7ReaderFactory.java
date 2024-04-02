@@ -73,7 +73,7 @@ public enum HL7ReaderFactory {
 			throw new IOException(MessageFormat.format(Messages.HL7Reader_CannotReadFile, file.getAbsolutePath()));
 		}
 
-		List<HL7Reader> ret = new ArrayList<HL7Reader>();
+		List<HL7Reader> ret = new ArrayList<>();
 		try (InputStream inputStream = getFileInputStream(file)) {
 			// HAPI utility class will iterate over the messages which appear over an
 			// InputStream

@@ -33,8 +33,8 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
 
 public class CountArticles {
-	HashMap<IBillable, Double> paid = new HashMap<IBillable, Double>();
-	HashMap<IBillable, Double> unpaid = new HashMap<IBillable, Double>();
+	HashMap<IBillable, Double> paid = new HashMap<>();
+	HashMap<IBillable, Double> unpaid = new HashMap<>();
 	Money mPaid = new Money();
 	Money mUnpaid = new Money();
 
@@ -51,7 +51,7 @@ public class CountArticles {
 	 */
 	public String run(String fromDate, String untilDate, String referenceDate, String outputFile) {
 		try {
-			Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+			Query<Konsultation> qbe = new Query<>(Konsultation.class);
 			qbe.add(Konsultation.FLD_DATE, Query.GREATER_OR_EQUAL,
 					new TimeTool(fromDate).toString(TimeTool.DATE_COMPACT));
 			qbe.add(Konsultation.DATE, Query.LESS_OR_EQUAL, new TimeTool(untilDate).toString(TimeTool.DATE_COMPACT));

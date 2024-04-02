@@ -36,7 +36,7 @@ public class ObservationMessage {
 	Date dateTimeOfTransaction = null; // ORC-9
 
 	// OBX
-	List<IValueType> observations = new Vector<IValueType>();
+	List<IValueType> observations = new Vector<>();
 
 	public ObservationMessage(String _sendingApplication, String _sendingFacility, String _dateTimeOfMessage,
 			String _patientId, String _patientName, String _patientNotesAndComments, String _alternatePatientId,

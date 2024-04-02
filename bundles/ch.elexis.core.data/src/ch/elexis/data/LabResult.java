@@ -252,9 +252,9 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @since 3.5
 	 */
 	public @Nullable LabOrder getLabOrder() {
-		Query<LabOrder> qre = new Query<LabOrder>(LabOrder.class, LabOrder.FLD_RESULT, getId());
+		Query<LabOrder> qre = new Query<>(LabOrder.class, LabOrder.FLD_RESULT, getId());
 		List<LabOrder> execute = qre.execute();
-		if (execute.size() > 0) {
+		if (!execute.isEmpty()) {
 			if (execute.size() > 1) {
 				log.warn("Multiple LabOrders for LabResult [{}] found, please check", getId());
 			}
@@ -365,7 +365,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 
 	private static List<String> parseRefString(String ref) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 
 		Matcher m = refValuesPattern.matcher(ref);
 
@@ -740,12 +740,12 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @return
 	 */
 	public static LabResult getForDate(final Patient pat, final TimeTool date, final LabItem item) {
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
 		qbe.add(PATIENT_ID, Query.EQUALS, pat.getId());
 		qbe.add(DATE, Query.EQUALS, date.toString(TimeTool.DATE_COMPACT));
 		List<LabResult> res = qbe.execute();
-		if ((res != null) && (res.size() > 0)) {
+		if ((res != null) && (!res.isEmpty())) {
 			return res.get(0);
 		}
 		return null;
@@ -778,7 +778,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 */
 	public static LabResult getForObservationTime(final String patientId, final TimeTool fromObservationTime,
 			final TimeTool toObservationTime, final LabItem item) {
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(ITEM_ID, Query.EQUALS, item.getId());
 		qbe.add(PATIENT_ID, Query.EQUALS, patientId);
 
@@ -799,7 +799,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 		}
 		qbe.orderBy(true, OBSERVATIONTIME);
 		List<LabResult> res = qbe.execute();
-		if ((res != null) && (res.size() > 0)) {
+		if ((res != null) && (!res.isEmpty())) {
 			return res.get(0);
 		}
 		return null;
@@ -811,7 +811,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 */
 	public void addToUnseen() {
 		List<LabResult> o = getUnseen();
-		LinkedList<String> n = new LinkedList<String>();
+		LinkedList<String> n = new LinkedList<>();
 		n.add(getId());
 		TimeTool limit = new TimeTool();
 		try { // We need to catch wrong formatted numbers in KEEP_UNSEEN
@@ -854,7 +854,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @return
 	 */
 	public static List<LabResult> getUnseen() {
-		LinkedList<LabResult> ret = new LinkedList<LabResult>();
+		LinkedList<LabResult> ret = new LinkedList<>();
 		NamedBlob unseen = NamedBlob.load(LABRESULT_UNSEEN);
 		String results = unseen.getString();
 		if (results.length() > 0) {
@@ -968,7 +968,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> getGrouped(Patient pat) {
-		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> ret = new HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>>();
+		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> ret = new HashMap<>();
 		if (pat == null) {
 			return ret;
 		}
@@ -1005,13 +1005,13 @@ public class LabResult extends PersistentObject implements ILabResult {
 
 				HashMap<String, HashMap<String, List<LabResult>>> groupMap = ret.get(val_itemgroup);
 				if (groupMap == null) {
-					groupMap = new HashMap<String, HashMap<String, List<LabResult>>>();
+					groupMap = new HashMap<>();
 					ret.put(val_itemgroup, groupMap);
 				}
 
 				HashMap<String, List<LabResult>> itemMap = groupMap.get(val_itemshortname);
 				if (itemMap == null) {
-					itemMap = new HashMap<String, List<LabResult>>();
+					itemMap = new HashMap<>();
 					groupMap.put(val_itemshortname, itemMap);
 				}
 
@@ -1025,7 +1025,7 @@ public class LabResult extends PersistentObject implements ILabResult {
 				String date = time.toString(TimeTool.DATE_COMPACT);
 				List<LabResult> resultList = itemMap.get(date);
 				if (resultList == null) {
-					resultList = new ArrayList<LabResult>();
+					resultList = new ArrayList<>();
 					itemMap.put(date, resultList);
 				}
 				// cache result properties
@@ -1070,10 +1070,10 @@ public class LabResult extends PersistentObject implements ILabResult {
 	}
 
 	public static void changeObservationTime(Patient patient, TimeTool from, TimeTool to) {
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(PATIENT_ID, Query.EQUALS, patient.getId());
 		List<LabResult> res = qbe.execute();
-		ArrayList<LabResult> changeList = new ArrayList<LabResult>();
+		ArrayList<LabResult> changeList = new ArrayList<>();
 		for (LabResult labResult : res) {
 			TimeTool obsTime = labResult.getObservationTime();
 			if (obsTime == null) {

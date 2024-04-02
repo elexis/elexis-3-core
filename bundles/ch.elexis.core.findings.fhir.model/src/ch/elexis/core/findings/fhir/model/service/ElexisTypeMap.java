@@ -25,8 +25,8 @@ public class ElexisTypeMap {
 	private static final HashMap<Class<? extends EntityWithId>, String> classToStsMap;
 
 	static {
-		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
-		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
+		stsToClassMap = new HashMap<>();
+		classToStsMap = new HashMap<>();
 
 		// bi-directional mappable
 		stsToClassMap.put("ch.elexis.core.findings.fhir.po.model.Encounter", Encounter.class);

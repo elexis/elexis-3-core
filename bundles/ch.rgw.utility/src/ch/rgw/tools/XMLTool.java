@@ -72,7 +72,7 @@ public class XMLTool {
 	}
 
 	private static class MyErrorHandler implements ErrorHandler {
-		public List<Exception> exceptions = new Vector<Exception>();
+		public List<Exception> exceptions = new Vector<>();
 
 		@Override
 		public void error(SAXParseException exception) throws SAXException {
@@ -94,7 +94,7 @@ public class XMLTool {
 		}
 
 		public List<String> getMessageList() {
-			List<String> messageList = new Vector<String>();
+			List<String> messageList = new Vector<>();
 			for (Exception ex : exceptions) {
 				String msg = ex.getMessage();
 				if (msg == null || msg.length() == 0) {
@@ -268,7 +268,7 @@ public class XMLTool {
 	}
 
 	public static HashMap<String, Object> XMLToHashMap(Element elem) {
-		HashMap<String, Object> ret = new HashMap<String, Object>();
+		HashMap<String, Object> ret = new HashMap<>();
 		List<Element> vars = elem.getChildren();
 		for (Element var : vars) {
 			String type = var.getName();

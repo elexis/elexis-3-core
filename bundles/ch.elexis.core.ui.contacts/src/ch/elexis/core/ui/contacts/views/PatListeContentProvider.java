@@ -246,7 +246,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	void temporaryAddObject(Object newObject) {
 		ArrayList<Object> temp = null;
 		if (pats != null) {
-			temp = new ArrayList<Object>(Arrays.asList(pats));
+			temp = new ArrayList<>(Arrays.asList(pats));
 		} else {
 			temp = new ArrayList<>();
 		}

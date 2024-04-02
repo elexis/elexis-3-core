@@ -69,7 +69,7 @@ public class HistoryLoader extends BackgroundJob {
 			final int currentPage, final int pageSize) {
 		super(Messages.Core_Load_Consultations); // $NON-NLS-1$
 		this.sb = sb;
-		this.lKons = new ArrayList<IEncounter>(paramlKons);
+		this.lKons = new ArrayList<>(paramlKons);
 		this.multiline = multiline;
 		this.setPriority(Job.DECORATE);
 		this.setUser(false);
@@ -114,9 +114,9 @@ public class HistoryLoader extends BackgroundJob {
 			if (fromIdx < 0) {
 				fromIdx = 0;
 			}
-			lKons = new ArrayList<IEncounter>(fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
+			lKons = new ArrayList<>(fromIdx < toIdx ? lKons.subList(fromIdx, toIdx) : lKons);
 		} else {
-			lKons = new ArrayList<IEncounter>(lKons);
+			lKons = new ArrayList<>(lKons);
 		}
 		monitor.worked(50);
 

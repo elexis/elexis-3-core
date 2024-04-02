@@ -43,7 +43,7 @@ public class SqlRunner {
 	private JdbcLink jdbcl;
 
 	public SqlRunner(String[] sql, String pluginId) {
-		sqlStrings = new ArrayList<String>();
+		sqlStrings = new ArrayList<>();
 		for (int i = 0; i < sql.length; i++) {
 			sqlStrings.add(sql[i]);
 		}
@@ -62,7 +62,7 @@ public class SqlRunner {
 	}
 
 	public boolean runSql() {
-		sql = new ArrayList<UpdateDbSql>();
+		sql = new ArrayList<>();
 		// create UpdateDbSql objects from input list
 		for (String sqlString : sqlStrings) {
 			sql.add(new UpdateDbSql(sqlString));

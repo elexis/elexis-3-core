@@ -136,7 +136,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 				@Override
 				public void reloadContent(Object po, InputData ltf) {
-					ArrayList<String> extFlds = new ArrayList<String>();
+					ArrayList<String> extFlds = new ArrayList<>();
 					Kontakt k = (Kontakt) po;
 					for (String dom : Xid.getXIDDomains()) {
 						XIDDomain xd = Xid.getDomain(dom);
@@ -285,7 +285,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		tVorname = def[1].getText();
 		tSex = def[3].getText();
 
-		Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+		Query<Kontakt> qbe = new Query<>(Kontakt.class);
 		qbe.add(Kontakt.FLD_NAME1, "=", tName); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.add(Kontakt.FLD_NAME2, "=", tVorname); //$NON-NLS-1$ //$NON-NLS-2$
 		qbe.add(Patient.FLD_SEX, "=", tSex); //$NON-NLS-1$ //$NON-NLS-2$
@@ -299,8 +299,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	private final class TypButtonAdapter extends SelectionAdapter {
-		ArrayList<String> alTypes = new ArrayList<String>();
-		ArrayList<String> alValues = new ArrayList<String>();
+		ArrayList<String> alTypes = new ArrayList<>();
+		ArrayList<String> alValues = new ArrayList<>();
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {

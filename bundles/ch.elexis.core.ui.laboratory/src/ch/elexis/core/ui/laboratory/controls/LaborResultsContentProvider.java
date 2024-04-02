@@ -17,14 +17,14 @@ import ch.rgw.tools.TimeTool;
 class LaborResultsContentProvider implements ITreeContentProvider {
 
 	private HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> grouped;
-	private ArrayList<String> groups = new ArrayList<String>();
+	private ArrayList<String> groups = new ArrayList<>();
 
-	private HashMap<String, LaborItemResults> itemResults = new HashMap<String, LaborItemResults>();
+	private HashMap<String, LaborItemResults> itemResults = new HashMap<>();
 
-	private HashSet<String> dates = new HashSet<String>();
+	private HashSet<String> dates = new HashSet<>();
 
 	public List<TimeTool> getDates() {
-		ArrayList<TimeTool> ret = new ArrayList<TimeTool>();
+		ArrayList<TimeTool> ret = new ArrayList<>();
 		for (String date : dates) {
 			ret.add(new TimeTool(date));
 		}
@@ -74,7 +74,7 @@ class LaborResultsContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof String) {
 			HashMap<String, HashMap<String, List<LabResult>>> itemMap = grouped.get(parentElement);
-			ArrayList<LaborItemResults> ret = new ArrayList<LaborItemResults>();
+			ArrayList<LaborItemResults> ret = new ArrayList<>();
 			for (String item : itemMap.keySet()) {
 				if (itemResults.get(parentElement + "::" + item) != null) { //$NON-NLS-1$
 					ret.add(itemResults.get(parentElement + "::" + item)); //$NON-NLS-1$

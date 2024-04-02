@@ -56,7 +56,7 @@ public class EditEigenartikelUi extends AbstractHandler {
 			ICommandService cmdService = (ICommandService) window.getService(ICommandService.class);
 			Command cmd = cmdService.getCommand(EditEigenartikelUi.COMMANDID);
 			// create the parameter
-			HashMap<String, Object> param = new HashMap<String, Object>();
+			HashMap<String, Object> param = new HashMap<>();
 			param.put(EditEigenartikelUi.PARAMETERID, parameter);
 			// build the parameterized command
 			ParameterizedCommand pc = ParameterizedCommand.generateCommand(cmd, param);

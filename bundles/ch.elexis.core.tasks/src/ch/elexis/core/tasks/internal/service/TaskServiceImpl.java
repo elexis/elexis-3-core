@@ -490,7 +490,7 @@ public class TaskServiceImpl implements ITaskService {
 		
 		if(sync) {
 			// create modifiable copy
-			runContext = new HashMap<String, String>(runContext);
+			runContext = new HashMap<>(runContext);
 			runContext.put("isTriggerSync", Boolean.TRUE.toString());
 		}
 
@@ -642,7 +642,7 @@ public class TaskServiceImpl implements ITaskService {
 	private void validateTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
 
 		IIdentifiedRunnable runnable = instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
-		Map<String, Serializable> defaultRunContext = new HashMap<String, Serializable>(
+		Map<String, Serializable> defaultRunContext = new HashMap<>(
 				runnable.getDefaultRunContext());
 
 		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
@@ -714,12 +714,12 @@ public class TaskServiceImpl implements ITaskService {
 
 	@Override
 	public List<ITask> getRunningTasks() {
-		return new ArrayList<ITask>(triggeredTasks);
+		return new ArrayList<>(triggeredTasks);
 	}
 
 	@Override
 	public List<ITaskDescriptor> getIncurredTasks() {
-		List<ITaskDescriptor> incurredTaskDescriptors = new ArrayList<ITaskDescriptor>();
+		List<ITaskDescriptor> incurredTaskDescriptors = new ArrayList<>();
 		if (quartzExecutor != null) {
 			Set<String[]> incurred = quartzExecutor.getIncurred();
 			incurred.stream().forEach(i -> {

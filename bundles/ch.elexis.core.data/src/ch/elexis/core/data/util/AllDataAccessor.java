@@ -36,7 +36,7 @@ public class AllDataAccessor implements IDataAccess {
 
 	public AllDataAccessor() {
 		// initialize the list of defined elements
-		elementsList = new ArrayList<Element>();
+		elementsList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++)
 			elementsList.add(elements[i]);
 	}
@@ -64,17 +64,17 @@ public class AllDataAccessor implements IDataAccess {
 		if (descriptor.equals("Konsultationen")) { //$NON-NLS-1$
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null)
-				ret = new Result<Object>(getAllKonsultations(patient, false));
+				ret = new Result<>(getAllKonsultations(patient, false));
 			else
-				ret = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+				ret = new Result<>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 						"Kein Patient selektiert.", //$NON-NLS-1$
 						null, false);
 		} else if (descriptor.equals("KonsultationenFall")) { //$NON-NLS-1$
 			Patient patient = ElexisEventDispatcher.getSelectedPatient();
 			if (patient != null)
-				ret = new Result<Object>(getAllKonsultations(patient, true));
+				ret = new Result<>(getAllKonsultations(patient, true));
 			else
-				ret = new Result<Object>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
+				ret = new Result<>(Result.SEVERITY.ERROR, IDataAccess.OBJECT_NOT_FOUND,
 						"Kein Patient selektiert.", //$NON-NLS-1$
 						null, false);
 		}

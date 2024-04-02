@@ -122,9 +122,9 @@ public class Rechnung extends PersistentObject {
 		System.out.println("js Rechnung: build(): TO DO: Why are both of them in the code?");
 		System.out.println("js Rechnung: build(): TO DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-		Result<Rechnung> result = new Result<Rechnung>();
+		Result<Rechnung> result = new Result<>();
 
-		if ((behandlungen == null) || (behandlungen.size() == 0)) {
+		if ((behandlungen == null) || (behandlungen.isEmpty())) {
 			return result.add(Result.SEVERITY.WARNING, 1, "Die Rechnung enthält keine Behandlungen (Konsultationen)",
 					null, true); // js:
 			// added (Konsultationen) to match
@@ -232,7 +232,7 @@ public class Rechnung extends PersistentObject {
 				}
 			}
 
-			if ((diagnosen == null) || (diagnosen.size() == 0)) {
+			if ((diagnosen == null) || (diagnosen.isEmpty())) {
 				diagnosen = b.getDiagnosen();
 			}
 			if (actDate.set(b.getDatum()) == false) {
@@ -267,7 +267,7 @@ public class Rechnung extends PersistentObject {
 
 		// check if there are any Konsultationen
 		if (ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)) {
-			if ((diagnosen == null) || (diagnosen.size() == 0)) {
+			if ((diagnosen == null) || (diagnosen.isEmpty())) {
 				result = result.add(Result.SEVERITY.ERROR, 6,
 						"Die Rechnung enthält keine Diagnose (" + getRnDesc(ret) + ")", ret, true);
 			}
@@ -366,7 +366,7 @@ public class Rechnung extends PersistentObject {
 
 	/** Eine Liste aller Konsultationen dieser Rechnung holen */
 	public List<Konsultation> getKonsultationen() {
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add("RechnungsID", "=", getId());
 		qbe.orderBy(false, new String[] { "Datum" });
 		return qbe.execute();
@@ -420,7 +420,7 @@ public class Rechnung extends PersistentObject {
 
 	private List<Konsultation> removeBillFromKons() {
 		List<Konsultation> kons = new ArrayList<>();
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		qbe.add(Konsultation.FLD_BILL_ID, Query.EQUALS, getId());
 		for (Konsultation k : qbe.execute()) {
 			k.set(Konsultation.FLD_BILL_ID, null);
@@ -481,7 +481,7 @@ public class Rechnung extends PersistentObject {
 					return false;
 				}
 			}
-			Query<AccountTransaction> qa = new Query<AccountTransaction>(AccountTransaction.class);
+			Query<AccountTransaction> qa = new Query<>(AccountTransaction.class);
 			qa.add(AccountTransaction.FLD_BILL_ID, Query.EQUALS, getId());
 			qa.add(AccountTransaction.FLD_PAYMENT_ID, StringTool.leer, null);
 			List<AccountTransaction> as = qa.execute();
@@ -703,7 +703,7 @@ public class Rechnung extends PersistentObject {
 	/** EIne Liste aller Zahlungen holen */
 	public List<Zahlung> getZahlungen() {
 		List<String> ids = getList("Zahlungen", false);
-		ArrayList<Zahlung> ret = new ArrayList<Zahlung>();
+		ArrayList<Zahlung> ret = new ArrayList<>();
 		for (String id : ids) {
 			Zahlung z = Zahlung.load(id);
 			ret.add(z);
@@ -751,7 +751,7 @@ public class Rechnung extends PersistentObject {
 			trace = StringTool.unpack(raw);
 		}
 		if (trace == null) {
-			trace = new ArrayList<String>();
+			trace = new ArrayList<>();
 		}
 		trace.add(new TimeTool().toString(TimeTool.FULL_GER) + ": " + text);
 		hash.put(name, StringTool.pack(trace));
@@ -773,7 +773,7 @@ public class Rechnung extends PersistentObject {
 			trace = StringTool.unpack(raw);
 		}
 		if (trace == null) {
-			trace = new ArrayList<String>();
+			trace = new ArrayList<>();
 		}
 		return trace;
 	}

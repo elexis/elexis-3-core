@@ -121,7 +121,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 
 		userViewer.setLabelProvider(new DefaultLabelProvider());
 
-		Query<Anwender> query = new Query<Anwender>(Anwender.class);
+		Query<Anwender> query = new Query<>(Anwender.class);
 		List<Anwender> users = query.execute();
 		users.set(0, new NoAnwender());
 		userViewer.setInput(users);
@@ -221,7 +221,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	}
 
 	private List<LabOrder> createLabOrders(List<GroupItem> items) {
-		List<LabOrder> ret = new ArrayList<LabOrder>();
+		List<LabOrder> ret = new ArrayList<>();
 		getTime(observationTime, date);
 		getDate(observationDate, date);
 		TimeTool now = new TimeTool();
@@ -324,7 +324,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	}
 
 	private class LabItemsLabelProvider extends LabelProvider {
-		private HashMap<Object, String> cache = new HashMap<Object, String>();
+		private HashMap<Object, String> cache = new HashMap<>();
 
 		@Override
 		public String getText(Object element) {

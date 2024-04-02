@@ -119,7 +119,7 @@ public class AppointmentService implements IAppointmentService {
 	}
 
 	private void assertConfigInitialization() {
-		List<String> ret = new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
+		List<String> ret = new ArrayList<>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 		if (ret.isEmpty() || ret.size() < 3) {
 			ret = Arrays.asList(Messages.Core_free, Messages.Agenda_Appointement_Locked,
 					Messages.Agenda_Appointement_Normal);
@@ -186,9 +186,9 @@ public class AppointmentService implements IAppointmentService {
 		Hashtable<String, String> map = StringTool
 				.foldStrings(configService.get(Preferences.AG_DAYPREFERENCES + "/" + schedule, null));
 		if (map == null) {
-			map = new Hashtable<String, String>();
+			map = new Hashtable<>();
 		}
-		Map<DayOfWeek, String[]> blockTimesMap = new HashMap<DayOfWeek, String[]>(map.size());
+		Map<DayOfWeek, String[]> blockTimesMap = new HashMap<>(map.size());
 		int[] dayOfWeekLoc = new int[] { 7, 1, 2, 3, 4, 5, 6 }; // map our day index to DayOfWeek index
 		for (int i = 0; i <= 6; i++) {
 			DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekLoc[i]);
@@ -217,7 +217,7 @@ public class AppointmentService implements IAppointmentService {
 			String stateDefault = getState(AppointmentState.DEFAULT);
 			Map<DayOfWeek, String[]> configuredBlockTimesBySchedule = getConfiguredBlockTimesBySchedule(schedule);
 			String[] flds = configuredBlockTimesBySchedule.get(date.getDayOfWeek());
-			List<IAppointment> appointmentsToSave = new ArrayList<IAppointment>();
+			List<IAppointment> appointmentsToSave = new ArrayList<>();
 			for (String fld : flds) {
 				String from = fld.substring(0, 4);
 				String until = fld.replaceAll("-", StringUtils.EMPTY).substring(4); //$NON-NLS-1$
@@ -340,7 +340,7 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public List<String> getTypes() {
-		return new ArrayList<String>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
+		return new ArrayList<>(configService.getAsList(AG_TERMINTYPEN, Collections.emptyList()));
 	}
 
 	@Override
@@ -616,7 +616,7 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public Map<String, Integer> getPreferredDurations(String areaName) {
-		Map<String, Integer> ret = new HashMap<String, Integer>();
+		Map<String, Integer> ret = new HashMap<>();
 		if (StringUtils.isNotBlank(areaName)) {
 			String mTimes = configService.get(AG_TIMEPREFERENCES + "/" + areaName, StringUtils.EMPTY); //$NON-NLS-1$
 			if (StringUtils.isNotBlank(mTimes)) {

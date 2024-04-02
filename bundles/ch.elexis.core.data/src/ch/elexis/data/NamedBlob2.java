@@ -183,7 +183,7 @@ public class NamedBlob2 extends PersistentObject {
 	public static void cleanup(final String prefix, final TimeTool older) {
 		if (AccessControlServiceHolder.get()
 				.evaluate(new ObjectEvaluatableACE(IBlobSecondary.class, ch.elexis.core.ac.Right.REMOVE))) {
-			Query<NamedBlob2> qbe = new Query<NamedBlob2>(NamedBlob2.class);
+			Query<NamedBlob2> qbe = new Query<>(NamedBlob2.class);
 			qbe.add(FLD_DATUM, "<", older.toString(TimeTool.DATE_COMPACT));
 			for (NamedBlob2 nb : qbe.execute()) {
 				if (nb.getId().startsWith(prefix)) {

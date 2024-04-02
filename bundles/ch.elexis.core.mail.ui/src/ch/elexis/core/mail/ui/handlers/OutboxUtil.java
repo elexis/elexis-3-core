@@ -27,7 +27,7 @@ public class OutboxUtil {
 	public static Object getOrCreateElement(ITaskDescriptor iTaskDescriptor, boolean sent) {
 		// now try to call the create outbox command, is not part of core ...
 		try {
-			HashMap<String, String> params = new HashMap<String, String>();
+			HashMap<String, String> params = new HashMap<>();
 			params.put("at.medevit.elexis.outbox.ui.command.getOrCreateElementNoUi.dburi",
 					StoreToStringServiceHolder.getStoreToString(iTaskDescriptor));
 			params.put("at.medevit.elexis.outbox.ui.command.getOrCreateElementNoUi.sent", Boolean.toString(sent));

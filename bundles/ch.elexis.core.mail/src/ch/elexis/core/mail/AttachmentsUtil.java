@@ -132,7 +132,7 @@ public class AttachmentsUtil {
 	 * @return
 	 */
 	public static List<File> getAttachmentsFiles(String attachments) {
-		List<File> ret = new ArrayList<File>();
+		List<File> ret = new ArrayList<>();
 		if (attachments != null && !attachments.isEmpty()) {
 			String[] parts = attachments.split(":::");
 			for (String string : parts) {

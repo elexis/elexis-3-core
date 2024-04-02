@@ -393,7 +393,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public void widgetSelected(SelectionEvent e) {
 				if (SWTHelper.askYesNo(Messages.LaborPrefs_deleteReallyAllItems,
 						Messages.LaborPrefs_deleteAllExplain)) {
-					Query<LabItem> qbli = new Query<LabItem>(LabItem.class);
+					Query<LabItem> qbli = new Query<>(LabItem.class);
 					List<LabItem> items = qbli.execute();
 					boolean success = true;
 					for (LabItem li : items) {
@@ -419,7 +419,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 
 	private boolean deleteResults(LabItem li) {
 		boolean ret = true;
-		Query<LabResult> qbe = new Query<LabResult>(LabResult.class);
+		Query<LabResult> qbe = new Query<>(LabResult.class);
 		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabResult> list = qbe.execute();
 		for (LabResult po : list) {
@@ -434,7 +434,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 	}
 
 	private void deleteMappings(LabItem li) {
-		Query<LabMapping> qbe = new Query<LabMapping>(LabMapping.class);
+		Query<LabMapping> qbe = new Query<>(LabMapping.class);
 		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 		List<LabMapping> list = qbe.execute();
 		for (LabMapping po : list) {

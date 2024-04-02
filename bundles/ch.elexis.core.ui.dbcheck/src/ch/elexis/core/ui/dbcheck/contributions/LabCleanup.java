@@ -17,7 +17,7 @@ public class LabCleanup extends ExternalMaintenance {
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
-		Query<Patient> qp = new Query<Patient>(Patient.class);
+		Query<Patient> qp = new Query<>(Patient.class);
 		List<Patient> results = qp.execute();
 		int deletedCount = 0;
 		int allCount = 0;

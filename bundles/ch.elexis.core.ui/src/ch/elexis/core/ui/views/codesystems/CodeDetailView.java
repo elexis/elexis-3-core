@@ -71,7 +71,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new FillLayout());
 		ctab = new CTabFolder(parent, SWT.NONE);
-		importers = new Hashtable<String, ImporterPage>();
+		importers = new Hashtable<>();
 
 		addAllPages();
 		if (ctab.getItemCount() > 0) {
@@ -167,7 +167,7 @@ public class CodeDetailView extends ViewPart implements IActivationListener {
 
 	private void addUserSpecifiedPages(String settings) {
 		String[] userSettings = settings.split(","); //$NON-NLS-1$
-		Map<Integer, IConfigurationElement> iceMap = new TreeMap<Integer, IConfigurationElement>();
+		Map<Integer, IConfigurationElement> iceMap = new TreeMap<>();
 
 		iceMap = collectNeededPages(ExtensionPointConstantsUi.DIAGNOSECODE, userSettings, iceMap);
 		iceMap = collectNeededPages(ExtensionPointConstantsUi.VERRECHNUNGSCODE, userSettings, iceMap);

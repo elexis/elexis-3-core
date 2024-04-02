@@ -62,9 +62,9 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 	}
 
 	private static List<ICodeElement> getLeistungen(Leistungsblock leistungsblock) {
-		ArrayList<ICodeElement> lst = new ArrayList<ICodeElement>();
+		ArrayList<ICodeElement> lst = new ArrayList<>();
 		try {
-			lst = new ArrayList<ICodeElement>();
+			lst = new ArrayList<>();
 			byte[] compressed = leistungsblock.getBinary(FLD_LEISTUNGEN);
 			if (compressed != null) {
 				String storable = new String(CompEx.expand(compressed), "UTF-8"); //$NON-NLS-1$
@@ -438,7 +438,7 @@ public class Leistungsblock extends PersistentObject implements ICodeElement {
 		if (macro == null || selectedMandator == null)
 			return Collections.emptyList();
 
-		Query<Leistungsblock> qbe = new Query<Leistungsblock>(Leistungsblock.class);
+		Query<Leistungsblock> qbe = new Query<>(Leistungsblock.class);
 		qbe.add(Leistungsblock.FLD_ID, Query.NOT_EQUAL, Leistungsblock.VERSION_ID);
 		qbe.startGroup();
 		qbe.add(Leistungsblock.FLD_NAME, Query.EQUALS, macro);

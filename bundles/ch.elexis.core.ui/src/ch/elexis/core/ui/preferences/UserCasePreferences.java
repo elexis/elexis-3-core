@@ -69,7 +69,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	Button btnUp;
 	Button btnDown;
 
-	LinkedList<String> topItemsLinkedList = new LinkedList<String>();
+	LinkedList<String> topItemsLinkedList = new LinkedList<>();
 
 	public UserCasePreferences() {
 		super(GRID);
@@ -95,7 +95,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		// read the sorting for this user form prefs, convert to LinkedList for editing
 		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
-		topItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
+		topItemsLinkedList = new LinkedList<>(Arrays.asList(topItemsSorting));
 	}
 
 	@Override
@@ -372,7 +372,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	void setButtonEnabling() {
 		// get separator and current sel position
 		int separatorPos;
-		if ((topItemsLinkedList.size() > 0) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
+		if ((!topItemsLinkedList.isEmpty()) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
 			separatorPos = topItemsLinkedList.size();
 		else
 			separatorPos = -1;
@@ -402,8 +402,8 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		// read the sorting for this user form prefs, convert to LinkedList for editing
 		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
-		LinkedList<String> lTopItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
-		if ((lTopItemsLinkedList.size() > 0) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
+		LinkedList<String> lTopItemsLinkedList = new LinkedList<>(Arrays.asList(topItemsSorting));
+		if ((!lTopItemsLinkedList.isEmpty()) && (!lTopItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
 			return lTopItemsLinkedList.size();
 		else
 			return -1;
@@ -421,7 +421,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		// read the sorting for this user form prefs, convert to LinkedList for editing
 		String topItemsSortingStr = ConfigServiceHolder.getUser(Preferences.USR_TOPITEMSSORTING, StringUtils.EMPTY);
 		String[] topItemsSorting = topItemsSortingStr.split(PREFSDELIMITER_REGEX);
-		LinkedList<String> lTopItemsLinkedList = new LinkedList<String>(Arrays.asList(topItemsSorting));
+		LinkedList<String> lTopItemsLinkedList = new LinkedList<>(Arrays.asList(topItemsSorting));
 		return sortBillingSystems(input, lTopItemsLinkedList);
 	}
 
@@ -455,7 +455,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		LinkedList<String> lTopItemsSorting = (LinkedList<String>) topItemsSorting.clone();
 
 		// create sorted list for the other items
-		SortedList<String> sortedList = new SortedList<String>(new Comparator<String>() {
+		SortedList<String> sortedList = new SortedList<>(new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
 				return (o1.compareTo(o2));
@@ -469,7 +469,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 
 		// now append the sorted items to the copied top items
 		if (alwaysShowSeparator
-				|| ((topItemsSorting.size() > 0) && (!topItemsSorting.get(0).equalsIgnoreCase(StringUtils.EMPTY)))) {
+				|| ((!topItemsSorting.isEmpty()) && (!topItemsSorting.get(0).equalsIgnoreCase(StringUtils.EMPTY)))) {
 			lTopItemsSorting.add(MENUSEPARATOR);
 		}
 		lTopItemsSorting.addAll(sortedList);

@@ -41,10 +41,10 @@ public class PatFilterImpl implements IPatFilter {
 	@Override
 	public int accept(Patient p, PersistentObject o) {
 		if (o instanceof Kontakt) {
-			Query<BezugsKontakt> qbe = new Query<BezugsKontakt>(BezugsKontakt.class);
+			Query<BezugsKontakt> qbe = new Query<>(BezugsKontakt.class);
 			qbe.add(BezugsKontakt.MY_ID, Query.EQUALS, p.getId());
 			qbe.add(BezugsKontakt.OTHER_ID, Query.EQUALS, o.getId());
-			if (qbe.execute().size() > 0) {
+			if (!qbe.execute().isEmpty()) {
 				return ACCEPT;
 			}
 			return REJECT;
@@ -62,19 +62,19 @@ public class PatFilterImpl implements IPatFilter {
 			}
 			return REJECT;
 		} else if (o instanceof Artikel) {
-			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+			Query<Prescription> qbe = new Query<>(Prescription.class);
 			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, p.getId());
 			qbe.add(Prescription.FLD_ARTICLE, Query.EQUALS, o.storeToString());
-			if (qbe.execute().size() > 0) {
+			if (!qbe.execute().isEmpty()) {
 				return ACCEPT;
 			}
 			return REJECT;
 		} else if (o instanceof Prescription) {
 			Artikel art = ((Prescription) o).getArtikel();
-			Query<Prescription> qbe = new Query<Prescription>(Prescription.class);
+			Query<Prescription> qbe = new Query<>(Prescription.class);
 			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, p.getId());
 			qbe.add(Prescription.FLD_ARTICLE, Query.EQUALS, art.storeToString());
-			if (qbe.execute().size() > 0) {
+			if (!qbe.execute().isEmpty()) {
 				return ACCEPT;
 			}
 			return REJECT;

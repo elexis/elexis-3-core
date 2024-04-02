@@ -105,7 +105,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	volatile int actEntry;
 
 	// keep a list of all ch.elexis.VerrechenbarAdjuster extensions
-	private static ArrayList<IVerrechenbarAdjuster> adjusters = new ArrayList<IVerrechenbarAdjuster>();
+	private static ArrayList<IVerrechenbarAdjuster> adjusters = new ArrayList<>();
 
 	@Override
 	protected String getTableName() {
@@ -511,8 +511,8 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public List<Rechnung> getRechnungen() {
 		List<VerrechnetCopy> konsVerrechnet = VerrechnetCopy.getVerrechnetCopyByConsultation(this);
-		List<Rechnung> ret = new ArrayList<Rechnung>();
-		HashSet<String> rechnungsIds = new HashSet<String>();
+		List<Rechnung> ret = new ArrayList<>();
+		HashSet<String> rechnungsIds = new HashSet<>();
 		for (VerrechnetCopy verrechnetCopy : konsVerrechnet) {
 			String rechnungsId = verrechnetCopy.get(VerrechnetCopy.RECHNUNGID);
 			rechnungsIds.add(rechnungsId);
@@ -681,7 +681,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	/** Eine Liste der Diagnosen zu dieser Konsultation holen */
 	public ArrayList<IDiagnose> getDiagnosen() {
-		ArrayList<IDiagnose> ret = new ArrayList<IDiagnose>();
+		ArrayList<IDiagnose> ret = new ArrayList<>();
 		Stm stm = getDBConnection().getStatement();
 		ResultSet rs1 = stm.query(
 				"SELECT DIAGNOSEID FROM BEHDL_DG_JOINT INNER JOIN BEHANDLUNGEN on BehandlungsID=BEHANDLUNGEN.id where BEHDL_DG_JOINT.deleted='0' and BEHANDLUNGEN.deleted='0' AND BEHANDLUNGSID="
@@ -814,7 +814,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
 	public List<Verrechnet> getLeistungen() {
-		Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
+		Query<Verrechnet> qbe = new Query<>(Verrechnet.class);
 		qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
 		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
 		return qbe.execute();
@@ -822,7 +822,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 
 	/** Die zu dieser Konsultation gehörenden Leistungen holen */
 	public List<Verrechnet> getLeistungen(String[] prefetch) {
-		Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class, Verrechnet.KONSULTATION, getId(),
+		Query<Verrechnet> qbe = new Query<>(Verrechnet.class, Verrechnet.KONSULTATION, getId(),
 				Verrechnet.TABLENAME, prefetch);
 		qbe.orderBy(false, Verrechnet.CLASS, Verrechnet.LEISTG_CODE);
 		return qbe.execute();
@@ -836,7 +836,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	 */
 	public Verrechnet getVerrechnet(IVerrechenbar iVerrechenbar) {
 		if (iVerrechenbar != null && iVerrechenbar.getId() != null) {
-			Query<Verrechnet> qbe = new Query<Verrechnet>(Verrechnet.class);
+			Query<Verrechnet> qbe = new Query<>(Verrechnet.class);
 			qbe.add(Verrechnet.KONSULTATION, Query.EQUALS, getId());
 			qbe.add(Verrechnet.LEISTG_CODE, Query.EQUALS, iVerrechenbar.getId());
 
@@ -883,7 +883,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			}
 			return result;
 		}
-		return new Result<Verrechnet>(Result.SEVERITY.WARNING, 3, "Behandlung geschlossen oder nicht von Ihnen", null,
+		return new Result<>(Result.SEVERITY.WARNING, 3, "Behandlung geschlossen oder nicht von Ihnen", null,
 				false);
 	}
 
@@ -940,13 +940,13 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 				}
 				return result;
 			} else {
-				return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 1,
+				return new Result<>(Result.SEVERITY.WARNING, 1,
 						"Folgende Leistung '" + beforeAdjust.getCode()
 								+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
 						null, false);
 			}
 		}
-		return new Result<IVerrechenbar>(Result.SEVERITY.WARNING, 2, "Behandlung geschlossen oder nicht von Ihnen",
+		return new Result<>(Result.SEVERITY.WARNING, 2, "Behandlung geschlossen oder nicht von Ihnen",
 				null, false);
 	}
 
@@ -1080,7 +1080,7 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 		if (forced || isEditable(true)) {
 			List<Verrechnet> vv = getLeistungen();
 			// VersionedResource vr=getEintrag();
-			if ((vv.size() == 0) || (forced == true)
+			if ((vv.isEmpty()) || (forced == true)
 					&& (AccessControlServiceHolder.get().evaluate(new ObjectEvaluatableACE(IEncounter.class,
 							Right.REMOVE, StoreToStringServiceHolder.getStoreToString(this))))) {
 				delete_dependent();

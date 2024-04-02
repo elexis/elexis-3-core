@@ -47,7 +47,7 @@ import ch.rgw.tools.Tree;
  *
  */
 public class SelectorPanelProvider implements ControlFieldProvider {
-	private LinkedList<ControlFieldListener> listeners = new LinkedList<ControlFieldListener>();
+	private LinkedList<ControlFieldListener> listeners = new LinkedList<>();
 	private SelectorPanel panel;
 	private FieldDescriptor<?>[] fields;
 	private boolean bExclusive = false;

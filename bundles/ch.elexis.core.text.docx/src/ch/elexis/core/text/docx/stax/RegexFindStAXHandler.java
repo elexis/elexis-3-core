@@ -19,7 +19,7 @@ public class RegexFindStAXHandler extends StAXHandlerAbstract {
 
 	public RegexFindStAXHandler(String regex) {
 		this.pattern = Pattern.compile(regex);
-		this.foundList = new ArrayList<String>();
+		this.foundList = new ArrayList<>();
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class TextPlaceholderContext implements IContext {
 	private IContext parent;
 
 	public TextPlaceholderContext(Identifiable identifiable) {
-		context = new ConcurrentHashMap<String, Object>();
+		context = new ConcurrentHashMap<>();
 		setTyped(identifiable);
 	}
 

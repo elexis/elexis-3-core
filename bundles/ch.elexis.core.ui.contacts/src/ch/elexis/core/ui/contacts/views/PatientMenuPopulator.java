@@ -58,7 +58,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 	PatientenListeView mine;
 
 	public IAction[] fillMenu() {
-		LinkedList<IAction> ret = new LinkedList<IAction>();
+		LinkedList<IAction> ret = new LinkedList<>();
 		ret.add(stickerAction);
 		ret.add(delPatAction);
 		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IContact.class, Right.EXPORT))) {

@@ -45,11 +45,37 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("w", replaced);
 
-		AllServiceTests.getPatient().setPersonalAnamnese("anamnese");
+		AllServiceTests.getPatient().setPersonalAnamnese("pers anamnese");
 		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
 		template = "[Patient.PersAnamnese]";
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
-		assertEquals("anamnese", replaced);
+		assertEquals("pers anamnese", replaced);
+
+		AllServiceTests.getPatient().setFamilyAnamnese("fam anamnese");
+		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
+		template = "[Patient.FamilienAnamnese]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("fam anamnese", replaced);
+
+		AllServiceTests.getPatient().setRisk("risks");
+		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
+		template = "[Patient.Risiken]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("risks", replaced);
+
+		AllServiceTests.getPatient().addXid(XidConstants.DOMAIN_AHV, "1234", true);
+		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
+		template = "[Patient.AHV]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("1234", replaced);
+
+		AllServiceTests.getPatient().setLegalGuardian(AllServiceTests.getCoverage().getCostBearer());
+		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
+		template = "[Patient:-:-:GesetzVertreter]";
+		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
+		assertEquals("Test Organization\n" + "Street 10\n" + "123 City\n", replaced);
+		AllServiceTests.getPatient().setLegalGuardian(null);
+		CoreModelServiceHolder.get().save(AllServiceTests.getPatient());
 	}
 
 	@Test

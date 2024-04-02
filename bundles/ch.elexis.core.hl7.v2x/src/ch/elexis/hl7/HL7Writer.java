@@ -15,8 +15,8 @@ import ch.elexis.hl7.data.HL7Patient;
 import ch.elexis.hl7.util.HL7Helper;
 
 public abstract class HL7Writer {
-	List<String> errorList = new Vector<String>();
-	List<String> warnList = new Vector<String>();
+	List<String> errorList = new Vector<>();
+	List<String> warnList = new Vector<>();
 
 	protected String sendingApplication1 = StringUtils.EMPTY;
 	protected String sendingApplication3 = StringUtils.EMPTY;
@@ -53,8 +53,8 @@ public abstract class HL7Writer {
 	 * Clears all errors and warnings
 	 */
 	public void clearMessages() {
-		errorList = new Vector<String>();
-		warnList = new Vector<String>();
+		errorList = new Vector<>();
+		warnList = new Vector<>();
 	}
 
 	/**

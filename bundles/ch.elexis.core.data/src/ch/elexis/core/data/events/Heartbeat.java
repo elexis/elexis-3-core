@@ -73,9 +73,9 @@ public class Heartbeat {
 
 	private Heartbeat() {
 		theBeat = new beat();
-		highFrequencyListeners = new CopyOnWriteArrayList<HeartListener>();
-		mediumFrequencyListeners = new CopyOnWriteArrayList<HeartListener>();
-		lowFrequencyListeners = new CopyOnWriteArrayList<HeartListener>();
+		highFrequencyListeners = new CopyOnWriteArrayList<>();
+		mediumFrequencyListeners = new CopyOnWriteArrayList<>();
+		lowFrequencyListeners = new CopyOnWriteArrayList<>();
 		pacer = new Timer("Heartbeat", true);
 		int interval = CoreHub.localCfg.get(Preferences.ABL_HEARTRATE, 30); // $NON-NLS-1$
 		isSuspended = true;

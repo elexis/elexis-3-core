@@ -34,7 +34,7 @@ public class ContentProviderAdapter implements IStructuredContentProvider {
 	 */
 	public void addUpdateListener(UpdateListener listener) {
 		if (updateListeners == null) {
-			updateListeners = new LinkedList<UpdateListener>();
+			updateListeners = new LinkedList<>();
 		}
 		updateListeners.add(listener);
 	}

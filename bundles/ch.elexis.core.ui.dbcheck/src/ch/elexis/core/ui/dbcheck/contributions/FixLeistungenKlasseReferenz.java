@@ -25,7 +25,7 @@ public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 
 		pm.subTask("Finding articles ...");
 
-		Query<Artikel> qbe = new Query<Artikel>(Artikel.class);
+		Query<Artikel> qbe = new Query<>(Artikel.class);
 		qbe.or();
 		qbe.add(PersistentObject.FLD_DELETED, Query.EQUALS, StringConstants.ONE);
 		List<Artikel> qre = qbe.execute();
@@ -65,7 +65,7 @@ public class FixLeistungenKlasseReferenz extends ExternalMaintenance {
 		pm.worked(1);
 
 		pm.subTask("Finding leistungen ...");
-		Query<Verrechnet> qbeV = new Query<Verrechnet>(Verrechnet.class);
+		Query<Verrechnet> qbeV = new Query<>(Verrechnet.class);
 		qbeV.or();
 		qbeV.add(PersistentObject.FLD_DELETED, Query.EQUALS, StringConstants.ONE);
 		List<Verrechnet> qreV = qbeV.execute();

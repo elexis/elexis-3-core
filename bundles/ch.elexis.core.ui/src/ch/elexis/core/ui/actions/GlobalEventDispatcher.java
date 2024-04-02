@@ -38,7 +38,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 	private final GlobalListener globalListener = new GlobalListener();
 
 	private GlobalEventDispatcher() {
-		activationListeners = new ConcurrentHashMap<IWorkbenchPart, LinkedList<IActivationListener>>();
+		activationListeners = new ConcurrentHashMap<>();
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
 
 	}
@@ -72,7 +72,7 @@ public class GlobalEventDispatcher implements IPartListener2 {
 		logger.debug("addActivationListener adding " + l + " for " + part); //$NON-NLS-1$ //$NON-NLS-2$
 		LinkedList<IActivationListener> list = getInstance().activationListeners.get(part);
 		if (list == null) {
-			list = new LinkedList<IActivationListener>();
+			list = new LinkedList<>();
 			getInstance().activationListeners.put(part, list);
 		}
 		list.add(l);

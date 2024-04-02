@@ -103,7 +103,7 @@ public class BlockSelektor extends FilteredItemsSelectionDialog {
 
 	@Override
 	protected Comparator<Leistungsblock> getItemsComparator() {
-		return new Comparator<Leistungsblock>() {
+		return new Comparator<>() {
 
 			public int compare(Leistungsblock o1, Leistungsblock o2) {
 				return o1.getLabel().compareTo(o2.getLabel());

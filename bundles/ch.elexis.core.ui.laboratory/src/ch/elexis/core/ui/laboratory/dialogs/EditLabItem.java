@@ -69,8 +69,8 @@ public class EditLabItem extends TitleAreaDialog {
 	public EditLabItem(Shell parentShell, LabItem act) {
 		super(parentShell);
 
-		groups = new ArrayList<String>();
-		exportTags = new ArrayList<String>();
+		groups = new ArrayList<>();
+		exportTags = new ArrayList<>();
 		actLabItem = act;
 		if (act != null) {
 			actLabor = (actLabItem != null) ? actLabItem.getLabor() : null;

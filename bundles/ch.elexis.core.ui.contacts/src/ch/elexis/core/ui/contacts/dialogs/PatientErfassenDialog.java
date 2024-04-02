@@ -226,7 +226,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			} else {
 				check = new TimeTool();
 			}
-			Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+			Query<Kontakt> qbe = new Query<>(Kontakt.class);
 			qbe.add("Bezeichnung1", Query.EQUALS, tName.getText(), true); //$NON-NLS-1$
 			qbe.add("Bezeichnung2", Query.EQUALS, tVorname.getText(), true); //$NON-NLS-1$
 			if (check != null) {

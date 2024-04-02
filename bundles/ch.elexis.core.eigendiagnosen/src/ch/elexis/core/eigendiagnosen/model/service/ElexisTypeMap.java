@@ -23,8 +23,8 @@ public class ElexisTypeMap {
 	public static final String TYPE_EIGENDIAGNOSE = "ch.elexis.data.Eigendiagnose";
 
 	static {
-		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
-		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
+		stsToClassMap = new HashMap<>();
+		classToStsMap = new HashMap<>();
 
 		// bi-directional mappable
 		stsToClassMap.put(TYPE_EIGENDIAGNOSE, Eigendiagnose.class);

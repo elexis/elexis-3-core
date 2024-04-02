@@ -39,7 +39,7 @@ public class ScannerEvents implements Listener {
 	private boolean prefixOn = false;
 
 	ScannerEvents() {
-		listenerList = new ArrayList<IScannerListener>();
+		listenerList = new ArrayList<>();
 		reloadCodes();
 	}
 
@@ -88,7 +88,7 @@ public class ScannerEvents implements Listener {
 	 */
 	@Override
 	public void handleEvent(Event event) {
-		if (listenerList.size() > 0) {
+		if (!listenerList.isEmpty()) {
 			if (event.keyCode == prefixCode) {
 				prefixOn = true;
 				inputBuffer = new StringBuffer();

@@ -45,7 +45,7 @@ public class PasswordValidator {
 			}
 		}
 
-		Set<PasswordValidationResult> result = new HashSet<PasswordValidator.PasswordValidationResult>();
+		Set<PasswordValidationResult> result = new HashSet<>();
 
 		boolean pass = true;
 		for (PasswordRule rule : RULES) {

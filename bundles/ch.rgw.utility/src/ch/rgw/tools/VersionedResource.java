@@ -42,7 +42,7 @@ public class VersionedResource {
 
 	@SuppressWarnings("unchecked")
 	private VersionedResource(byte[] in) {
-		items = new ArrayList<ResourceItem>();
+		items = new ArrayList<>();
 
 		if ((in == null) || (in.length == 0))
 			return;
@@ -138,7 +138,7 @@ public class VersionedResource {
 	 * Alle Einträge ausser dem Neuesten entfernen
 	 */
 	public void purge() {
-		if (items.size() > 0) {
+		if (!items.isEmpty()) {
 			ResourceItem head = items.get(items.size() - 1);
 			items.clear();
 			items.add(head);

@@ -35,7 +35,7 @@ import ch.rgw.tools.ExHandler;
 public class DatabaseCleaner {
 
 	OutputStream osw;
-	ArrayList<PersistentObject> purgeList = new ArrayList<PersistentObject>(200);
+	ArrayList<PersistentObject> purgeList = new ArrayList<>(200);
 	boolean purge;
 
 	/**
@@ -55,7 +55,7 @@ public class DatabaseCleaner {
 	}
 
 	public void checkKonsultationen() {
-		Query<Konsultation> qbe = new Query<Konsultation>(Konsultation.class);
+		Query<Konsultation> qbe = new Query<>(Konsultation.class);
 		List<Konsultation> list = qbe.execute();
 
 		for (Konsultation k : list) {
@@ -74,13 +74,13 @@ public class DatabaseCleaner {
 	}
 
 	public void checkRechnungen() {
-		Query<Rechnung> qbe = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> qbe = new Query<>(Rechnung.class);
 		List<Rechnung> list = (List<Rechnung>) qbe.queryExpression("SELECT ID FROM RECHNUNGEN WHERE FallID is null", //$NON-NLS-1$
 				new LinkedList<Rechnung>());
 		for (Rechnung rn : list) {
 			if (true) {
 				blame(rn, Messages.DatabaseCleaner_NoCaseForBill); // $NON-NLS-1$
-				Query<Konsultation> qk = new Query<Konsultation>(Konsultation.class);
+				Query<Konsultation> qk = new Query<>(Konsultation.class);
 				qk.add("RechnungsID", "=", rn.getId());
 				List<Konsultation> lk = qk.execute();
 				for (Konsultation k : lk) {

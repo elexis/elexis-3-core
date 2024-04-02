@@ -259,7 +259,7 @@ public abstract class AbstractModelService implements IModelService {
 				return;
 			}
 			identifiables = addChanged(identifiables);
-			Map<Identifiable, EntityWithId> dbObjects = new HashMap<Identifiable, EntityWithId>();
+			Map<Identifiable, EntityWithId> dbObjects = new HashMap<>();
 			for (Identifiable identifiable : identifiables) {
 				dbObjects.put(identifiable, getDbObject(identifiable).orElse(null));
 			}
@@ -344,7 +344,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 
 	protected List<? extends Identifiable> addChanged(List<? extends Identifiable> identifiables) {
-		List<Identifiable> ret = new ArrayList<Identifiable>();
+		List<Identifiable> ret = new ArrayList<>();
 		ret.addAll(identifiables);
 		identifiables.forEach(i -> {
 			if (i.getChanged() != null) {
@@ -569,7 +569,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 
 	private void fullNotify(String message, Throwable throwable) {
-		Map<String, Object> eventMap = new HashMap<String, Object>();
+		Map<String, Object> eventMap = new HashMap<>();
 		eventMap.put(ElexisEventTopics.NOTIFICATION_PROPKEY_TITLE, "Access Denied");
 		eventMap.put(ElexisEventTopics.NOTIFICATION_PROPKEY_MESSAGE, message);
 		Event notificationEvent = new Event(ElexisEventTopics.BASE_NOTIFICATION + "warn", eventMap);

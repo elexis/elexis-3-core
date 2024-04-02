@@ -109,7 +109,7 @@ public class DocumentExportHandler extends AbstractHandler implements IHandler {
 				List<IDocument> documentList = DocumentStoreServiceHolder.getService()
 						.getDocumentsByCategory(activePatient.getId(), fc);
 
-				Set<String> titles = new HashSet<String>();
+				Set<String> titles = new HashSet<>();
 				for (int a = 0; a < documentList.size(); a++) {
 					IDocument document = (IDocument) documentList.get(a);
 

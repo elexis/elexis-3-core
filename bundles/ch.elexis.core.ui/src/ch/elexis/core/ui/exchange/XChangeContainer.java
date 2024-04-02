@@ -87,22 +87,22 @@ public class XChangeContainer {
 
 	protected static Log log = Log.get("XChange"); //$NON-NLS-1$
 
-	protected HashMap<String, byte[]> binFiles = new HashMap<String, byte[]>();
+	protected HashMap<String, byte[]> binFiles = new HashMap<>();
 	/**
 	 * Collection of all UserChoices to display to tzhe user for selection
 	 */
-	protected HashMap<Element, UserChoice> choices = new HashMap<Element, UserChoice>();
+	protected HashMap<Element, UserChoice> choices = new HashMap<>();
 
 	/**
 	 * Mapping between element in the xChange Container to the corresponding
 	 * internal data object
 	 */
-	private final HashMap<XChangeElement, PersistentObject> mapElementToObject = new HashMap<XChangeElement, PersistentObject>();
+	private final HashMap<XChangeElement, PersistentObject> mapElementToObject = new HashMap<>();
 
 	/**
 	 * Mapping from an internal data object to an element in the xChange Container
 	 */
-	private final HashMap<PersistentObject, XChangeElement> mapObjectToElement = new HashMap<PersistentObject, XChangeElement>();
+	private final HashMap<PersistentObject, XChangeElement> mapObjectToElement = new HashMap<>();
 
 	private final List<IConfigurationElement> lex = Extensions
 			.getExtensions(ExtensionPointConstantsUi.XCHANGE_CONTRIBUTION);
@@ -266,7 +266,7 @@ public class XChangeContainer {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Element> getElements(String path) {
-		LinkedList<Element> ret = new LinkedList<Element>();
+		LinkedList<Element> ret = new LinkedList<>();
 		String[] trace = path.split(StringTool.slash);
 		Element runner = eRoot;
 		for (int i = 2; i < trace.length - 1; i++) {

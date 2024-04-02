@@ -92,8 +92,8 @@ public class ElexisTypeMap {
 	public static final String TYPE_NAMEDBLOB = "ch.elexis.data.NamedBlob";
 
 	static {
-		stsToClassMap = new HashMap<String, Class<? extends EntityWithId>>();
-		classToStsMap = new HashMap<Class<? extends EntityWithId>, String>();
+		stsToClassMap = new HashMap<>();
+		classToStsMap = new HashMap<>();
 
 		// bi-directional mappable
 		stsToClassMap.put(TYPE_ARTIKELSTAMM, ArtikelstammItem.class);

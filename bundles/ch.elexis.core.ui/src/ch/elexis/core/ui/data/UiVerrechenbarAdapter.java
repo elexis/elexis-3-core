@@ -38,7 +38,7 @@ public abstract class UiVerrechenbarAdapter extends VerrechenbarAdapter {
 
 	@Override
 	public List<Object> getActions(Object kontext) {
-		List<Object> actions = new ArrayList<Object>(1);
+		List<Object> actions = new ArrayList<>(1);
 		if (addToBlockAction == null) {
 			makeActions(this);
 		}

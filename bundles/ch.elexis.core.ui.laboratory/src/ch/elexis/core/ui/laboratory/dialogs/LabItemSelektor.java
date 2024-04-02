@@ -72,7 +72,7 @@ public class LabItemSelektor extends TitleAreaDialog {
 
 	protected void okPressed() {
 		List<GroupItem> groupItems = treeSelectionComposite.getSelectedItems();
-		selection = new ArrayList<LabItem>();
+		selection = new ArrayList<>();
 		for (GroupItem groupItem : groupItems) {
 			selection.add(groupItem.getLabItem());
 		}

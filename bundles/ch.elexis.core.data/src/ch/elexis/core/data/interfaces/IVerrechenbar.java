@@ -178,7 +178,7 @@ public interface IVerrechenbar extends ICodeElement {
 		private Verrechnet newVerrechnet;
 
 		public Result<Object> optify(final Konsultation kons) {
-			return new Result<Object>(kons);
+			return new Result<>(kons);
 		}
 
 		public Result<IVerrechenbar> add(final IVerrechenbar code, final Konsultation kons) {
@@ -210,14 +210,14 @@ public interface IVerrechenbar extends ICodeElement {
 				newVerrechnet = new Verrechnet(code, kons, 1);
 				old.add(newVerrechnet);
 			}
-			return new Result<IVerrechenbar>(code);
+			return new Result<>(code);
 		}
 
 		public Result<Verrechnet> remove(final Verrechnet v, final Konsultation kons) {
 			List<Verrechnet> old = kons.getLeistungen();
 			old.remove(v);
 			v.delete();
-			return new Result<Verrechnet>(null);
+			return new Result<>(null);
 		}
 
 		@Override

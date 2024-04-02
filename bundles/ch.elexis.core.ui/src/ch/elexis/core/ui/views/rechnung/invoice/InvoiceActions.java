@@ -84,7 +84,7 @@ public class InvoiceActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					Rechnung actRn = list.get(0);
 					try {
 						if (new RnDialogs.BuchungHinzuDialog(UiDesk.getTopShell(), actRn).open() == Dialog.OK) {
@@ -105,7 +105,7 @@ public class InvoiceActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					for (Rechnung actRn : list) {
 						switch (actRn.getInvoiceState()) {
 						case OPEN_AND_PRINTED -> actRn.setStatus(InvoiceState.DEMAND_NOTE_1);
@@ -236,7 +236,7 @@ public class InvoiceActions {
 			@Override
 			public void run() {
 				List<Rechnung> list = getInvoiceSelections(viewer);
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					Rechnung actRn = list.get(0);
 
 					// Allfaelliges Guthaben des Patienten der Rechnung als

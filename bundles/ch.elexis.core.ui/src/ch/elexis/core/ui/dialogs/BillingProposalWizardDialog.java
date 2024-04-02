@@ -394,7 +394,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 					@Override
 					public boolean select(Object element) {
 						if(mandatorIds == null) {
-							mandatorIds = new HashSet<String>();
+							mandatorIds = new HashSet<>();
 							IStructuredSelection selection = (IStructuredSelection) mandatorSelector.getSelection();
 							if (selection != null && !selection.isEmpty()) {
 								selection.forEach(o -> mandatorIds.add(((Mandant) o).getId()));

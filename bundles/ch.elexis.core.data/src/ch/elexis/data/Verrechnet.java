@@ -73,7 +73,7 @@ public class Verrechnet extends PersistentObject {
 	public static final String FLD_EXT_CHANGEDPRICE = Constants.FLD_EXT_CHANGEDPRICE;
 
 	// keep a list of all ch.elexis.VerrechnetAdjuster extensions
-	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<IVerrechnetAdjuster>();
+	private static ArrayList<IVerrechnetAdjuster> adjusters = new ArrayList<>();
 
 	static {
 		addMapping(TABLENAME, KONSULTATION + "=Behandlung", LEISTG_TXT, LEISTG_CODE, CLASS, COUNT, COST_BUYING,

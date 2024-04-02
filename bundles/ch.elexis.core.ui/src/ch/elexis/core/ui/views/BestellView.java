@@ -218,7 +218,7 @@ public class BestellView extends ViewPart {
 						}
 					}
 
-					List<IStockEntry> stockEntriesToOrder = new ArrayList<IStockEntry>();
+					List<IStockEntry> stockEntriesToOrder = new ArrayList<>();
 
 					for (String storeToString : parts) {
 						Optional<Identifiable> dropped = StoreToStringServiceHolder.get().loadFromString(storeToString);
@@ -322,7 +322,7 @@ public class BestellView extends ViewPart {
 	}
 
 	private List<IOrderEntry> prepareOrderList(IContact receiver) {
-		ArrayList<IOrderEntry> best = new ArrayList<IOrderEntry>();
+		ArrayList<IOrderEntry> best = new ArrayList<>();
 		List<IOrderEntry> list = actOrder.getEntries();
 		for (IOrderEntry iOrderEntry : list) {
 			if (receiver == null) {
@@ -558,8 +558,8 @@ public class BestellView extends ViewPart {
 					return;
 
 				// organise items in supplier and non-supplier lists
-				List<IOrderEntry> orderableItems = new ArrayList<IOrderEntry>();
-				List<IOrderEntry> noSupplierItems = new ArrayList<IOrderEntry>();
+				List<IOrderEntry> orderableItems = new ArrayList<>();
+				List<IOrderEntry> noSupplierItems = new ArrayList<>();
 				for (IOrderEntry orderEntry : actOrder.getEntries()) {
 					IContact supplier = orderEntry.getProvider();
 					if (supplier != null) {

@@ -167,7 +167,7 @@ public class ConditionAccessor extends AbstractFindingsAccessor {
 
 	public void removeNote(DomainResource resource, String text) {
 		org.hl7.fhir.r4.model.Condition fhirCondition = (org.hl7.fhir.r4.model.Condition) resource;
-		List<Annotation> notes = new ArrayList<Annotation>(fhirCondition.getNote());
+		List<Annotation> notes = new ArrayList<>(fhirCondition.getNote());
 		notes = notes.stream().filter(annotation -> !text.equals(annotation.getText())).collect(Collectors.toList());
 		fhirCondition.setNote(notes);
 	}

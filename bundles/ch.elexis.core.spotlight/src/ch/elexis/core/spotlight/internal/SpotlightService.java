@@ -55,9 +55,9 @@ public class SpotlightService implements ISpotlightService {
 		String[] searchTerms = searchInput.trim().toLowerCase().replaceAll("[^a-z0-9 .,=%]", StringUtils.EMPTY)
 				.split(StringUtils.SPACE);
 
-		List<String> stringTerms = new ArrayList<String>(searchTerms.length);
-		List<LocalDate> dateTerms = new ArrayList<LocalDate>(searchTerms.length);
-		List<Number> numericTerms = new ArrayList<Number>(searchTerms.length);
+		List<String> stringTerms = new ArrayList<>(searchTerms.length);
+		List<LocalDate> dateTerms = new ArrayList<>(searchTerms.length);
+		List<Number> numericTerms = new ArrayList<>(searchTerms.length);
 
 		for (String term : searchTerms) {
 			if (term.length() == 0) {

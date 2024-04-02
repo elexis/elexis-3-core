@@ -64,8 +64,8 @@ public class ElexisContext {
 	private Logger log = LoggerFactory.getLogger(ElexisContext.class);
 
 	public ElexisContext() {
-		currentSelection = new LinkedHashMap<Class<?>, IPersistentObject>();
-		newSelection = new LinkedHashMap<Class<?>, IPersistentObject>();
+		currentSelection = new LinkedHashMap<>();
+		newSelection = new LinkedHashMap<>();
 	}
 
 	/**

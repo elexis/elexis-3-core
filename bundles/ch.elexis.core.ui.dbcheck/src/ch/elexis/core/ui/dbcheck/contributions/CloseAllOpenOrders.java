@@ -15,7 +15,7 @@ public class CloseAllOpenOrders extends ExternalMaintenance {
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Bitte warten, Bestellungen werden geschlossen ...", IProgressMonitor.UNKNOWN);
 
-		Query<BestellungEntry> qre = new Query<BestellungEntry>(BestellungEntry.class);
+		Query<BestellungEntry> qre = new Query<>(BestellungEntry.class);
 		qre.add(BestellungEntry.FLD_STATE, Query.NOT_EQUAL, Integer.toString(BestellungEntry.STATE_DONE));
 		List<BestellungEntry> openEntries = qre.execute();
 		for (BestellungEntry bestellungEntry : openEntries) {

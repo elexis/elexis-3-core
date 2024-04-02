@@ -621,7 +621,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 
 	public Konsultation getLetzteBehandlung() {
 		List<String> list = getList(FLD_BEHANDLUNGEN, true);
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			return Konsultation.load(list.get(0));
 		}
 		return null;
@@ -704,20 +704,20 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 
 	private boolean hasDependent() {
 		Konsultation[] bh = getBehandlungen(false);
-		Query<AUF> qAUF = new Query<AUF>(AUF.class);
+		Query<AUF> qAUF = new Query<>(AUF.class);
 		qAUF.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
-		Query<Rechnung> qRn = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> qRn = new Query<>(Rechnung.class);
 		qRn.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
 		return (bh.length != 0) || !qAUF.execute().isEmpty() || !qRn.execute().isEmpty();
 	}
 
 	private boolean delete_dependent() {
-		Query<AUF> qAUF = new Query<AUF>(AUF.class);
+		Query<AUF> qAUF = new Query<>(AUF.class);
 		qAUF.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
 		for (AUF auf : qAUF.execute()) {
 			auf.delete();
 		}
-		Query<Rechnung> qRn = new Query<Rechnung>(Rechnung.class);
+		Query<Rechnung> qRn = new Query<>(Rechnung.class);
 		qRn.add(AUF.FLD_CASE_ID, Query.EQUALS, getId());
 		for (Rechnung rn : qRn.execute()) {
 			rn.delete();
@@ -894,7 +894,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	}
 
 	private List<String> loadFieldKeys(String fieldString) {
-		List<String> keys = new ArrayList<String>();
+		List<String> keys = new ArrayList<>();
 		String[] fields = fieldString.split(";");
 		for (String field : fields) {
 			String[] nameType = field.split(":");

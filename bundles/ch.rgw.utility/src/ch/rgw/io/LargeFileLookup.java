@@ -37,7 +37,7 @@ public class LargeFileLookup {
 
 	public List<String> binarySearch(String search) throws IOException {
 		String string = search.toLowerCase();
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		long low = 0;
 		long high = len;
 

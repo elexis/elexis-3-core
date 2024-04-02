@@ -259,7 +259,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		EModelService modelService = getService(EModelService.class);
 		MWindow window = getActiveWindow();
 		List<MPerspectiveStack> theStack = modelService.findElements(window, null, MPerspectiveStack.class, null);
-		if (theStack.size() > 0) {
+		if (!theStack.isEmpty()) {
 			return theStack.get(0);
 		}
 

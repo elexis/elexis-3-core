@@ -89,7 +89,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 		updateFields(flds, false);
 		ml = new ModListener();
 		sl = new SelListener();
-		listeners = new LinkedList<ControlFieldListener>();
+		listeners = new LinkedList<>();
 		tk = UiDesk.getToolkit();
 	}
 
@@ -300,7 +300,7 @@ public class DefaultControlFieldProvider implements ControlFieldProvider {
 			UiDesk.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					HashMap<String, String> hm = new HashMap<String, String>();
+					HashMap<String, String> hm = new HashMap<>();
 					for (int i = 0; i < dbFields.length; i++) {
 						hm.put(dbFields[i], lastFiltered[i]);
 					}

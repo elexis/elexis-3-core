@@ -28,13 +28,13 @@ public class TestContextService implements IContextService {
 
 	@Activate
 	public void activate() {
-		rootContext = new ThreadLocal<IContext>() {
+		rootContext = new ThreadLocal<>() {
 			@Override
 			protected IContext initialValue() {
 				return new TestContext();
 			}
 		};
-		contexts = new ConcurrentHashMap<String, TestContext>();
+		contexts = new ConcurrentHashMap<>();
 	}
 
 	private ConcurrentHashMap<String, TestContext> contexts;

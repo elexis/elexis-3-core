@@ -354,7 +354,7 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 			ret[6] = tOrt.getText();
 			ret[7] = tMobile.getText();
 			if (newKontakt == null) {
-				Query<Kontakt> qbe = new Query<Kontakt>(Kontakt.class);
+				Query<Kontakt> qbe = new Query<>(Kontakt.class);
 				qbe.add("Bezeichnung1", "=", ret[0]); //$NON-NLS-1$ //$NON-NLS-2$
 				qbe.add("Bezeichnung2", "=", ret[1]); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> list = qbe.execute();

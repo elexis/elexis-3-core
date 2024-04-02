@@ -159,7 +159,7 @@ public class RnDialogs {
 			super(shell);
 			this.rechnungen = rechnungen;
 
-			rnNumbers = new ArrayList<String>();
+			rnNumbers = new ArrayList<>();
 			for (Rechnung rn : rechnungen) {
 				if (rn.getInvoiceState() == InvoiceState.CANCELLED) {
 					throw new ElexisException(getClass(), RECHNUNG_IST_STORNIERT, ERR_STORNO);
@@ -420,7 +420,7 @@ public class RnDialogs {
 			super(shell);
 			this.rechnungen = rechnungen;
 
-			rnNumbers = new ArrayList<String>();
+			rnNumbers = new ArrayList<>();
 			for (Rechnung rn : rechnungen) {
 				rnNumbers.add(rn.getNr());
 			}
@@ -489,7 +489,7 @@ public class RnDialogs {
 	public static class StornoDialog extends TitleAreaDialog {
 		Rechnung rn;
 		Button bReactivate;
-		List<Button> exporters = new ArrayList<Button>();
+		List<Button> exporters = new ArrayList<>();
 		private List<IRnOutputter> selectedRnOutputters;
 		private List<IRnOutputter> lo;
 		private boolean alwaysReactive = false;
@@ -544,7 +544,7 @@ public class RnDialogs {
 					exporters.add(cbStorno);
 				}
 			}
-			if (exporters.size() > 0) {
+			if (!exporters.isEmpty()) {
 				lbLocal.setText(Messages.RnDialogs_stornoPropagate); // $NON-NLS-1$
 			}
 			new Label(ret, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(1, false, 1, false));
@@ -662,7 +662,7 @@ public class RnDialogs {
 		public RnListeExportDialog(Shell shell, List<Rechnung> rechnungen) {
 			super(shell);
 
-			rnn = new ArrayList<Rechnung>();
+			rnn = new ArrayList<>();
 			for (Rechnung rn : rechnungen) {
 				rnn.add(rn);
 			}

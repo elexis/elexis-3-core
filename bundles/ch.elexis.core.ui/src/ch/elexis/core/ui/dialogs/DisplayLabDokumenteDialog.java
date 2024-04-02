@@ -60,7 +60,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 		super(parentShell);
 		title = _title;
 		labResultList = _labResultList;
-		if (labResultList != null && labResultList.size() > 0) {
+		if (labResultList != null && !labResultList.isEmpty()) {
 			date = new TimeTool(labResultList.get(0).getDate());
 		}
 		initDocumentManager();
@@ -124,7 +124,7 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 			if (this.docManager != null) {
 				java.util.List<IOpaqueDocument> documentList = this.docManager.listDocuments(patient, null, docName,
 						null, new TimeSpan(this.date, this.date), null);
-				if (documentList == null || documentList.size() == 0) {
+				if (documentList == null || documentList.isEmpty()) {
 					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!", docName)); //$NON-NLS-1$
 				}
 				int counter = 0;

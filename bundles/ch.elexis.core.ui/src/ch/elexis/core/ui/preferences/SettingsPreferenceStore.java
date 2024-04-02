@@ -40,7 +40,7 @@ public class SettingsPreferenceStore implements IPreferenceStore {
 	private IScopeContext defaultContext = null;
 
 	Settings base;
-	private LinkedList<IPropertyChangeListener> listeners = new LinkedList<IPropertyChangeListener>();
+	private LinkedList<IPropertyChangeListener> listeners = new LinkedList<>();
 
 	/**
 	 * Default constructor for the SettingsPreferenceStore. ATTENTION initializers

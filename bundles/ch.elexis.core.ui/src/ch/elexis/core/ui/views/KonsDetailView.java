@@ -445,7 +445,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		comboViewerFall.getCombo().setLayoutData(gdFall);
 
 		text = new EnhancedTextField(form.getBody());
-		hXrefs = new Hashtable<String, IKonsExtension>();
+		hXrefs = new Hashtable<>();
 		@SuppressWarnings("unchecked")
 		List<IKonsExtension> xrefs = Extensions
 				.getClasses(Extensions.getExtensions(ExtensionPointConstantsUi.KONSEXTENSION), "KonsExtension", false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -761,7 +761,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				}
 			}
 		};
-		saveAction = new LockedAction<IEncounter>(Messages.KonsDetailView_SaveEntry) {
+		saveAction = new LockedAction<>(Messages.KonsDetailView_SaveEntry) {
 			{
 				setImageDescriptor(Images.IMG_DISK.getImageDescriptor());
 				setToolTipText(Messages.KonsDetailView_SaveExplicit); // $NON-NLS-1$

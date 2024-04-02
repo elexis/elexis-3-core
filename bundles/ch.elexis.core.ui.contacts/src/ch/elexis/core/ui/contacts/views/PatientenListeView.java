@@ -262,7 +262,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	}
 
 	private void collectUserFields() {
-		ArrayList<String> fields = new ArrayList<String>();
+		ArrayList<String> fields = new ArrayList<>();
 		if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
 			fields.add("code" + Query.EQUALS + Messages.PatientenListeView_PatientNr); // $NON-NLS-1$ //$NON-NLS-1$
 		}
@@ -312,10 +312,9 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 				IPatient pat = (IPatient) element;
 
 				if (contextService.getActiveMandator().isPresent()) {
-					if (Reminder
+					if (!Reminder
 							.findRemindersDueFor(Patient.load(pat.getId()),
-									Anwender.load(contextService.getActiveMandator().get().getId()), false)
-							.size() > 0) {
+									Anwender.load(contextService.getActiveMandator().get().getId()), false).isEmpty()) {
 						return Images.IMG_AUSRUFEZ.getImage();
 					}
 				}
@@ -377,7 +376,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 
 			@Override
 			public void doRun() {
-				HashMap<String, String> ctlFields = new HashMap<String, String>();
+				HashMap<String, String> ctlFields = new HashMap<>();
 				String[] fx = vc.getControlFieldProvider().getValues();
 				int i = 0;
 				if (ConfigServiceHolder.getUser(Preferences.USR_PATLIST_SHOWPATNR, false)) {
