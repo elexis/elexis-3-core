@@ -14,6 +14,7 @@
 package ch.elexis.core.ui.util;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -39,8 +40,10 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.wizards.DBImportWizard;
 import ch.rgw.tools.ExHandler;
@@ -56,14 +59,15 @@ import ch.rgw.tools.StringTool;
  *
  */
 public abstract class ImporterPage implements IExecutableExtension {
-	public String[] results;
+
 	protected Log log = Log.get("Import"); //$NON-NLS-1$
+
+	public String[] results;
 
 	/** Nur intern gebraucht; kann bei Bedarf überschrieben oder erweitert werden */
 	@Override
 	public void setInitializationData(final IConfigurationElement config, final String propertyName, final Object data)
 			throws CoreException {
-
 	}
 
 	/**
@@ -86,22 +90,22 @@ public abstract class ImporterPage implements IExecutableExtension {
 	/**
 	 * Hier muss die eigentliche Arbeit erledigt werden
 	 */
-	abstract public IStatus doImport(IProgressMonitor monitor) throws Exception;
+	public abstract IStatus doImport(IProgressMonitor monitor) throws Exception;
 
 	/** Ein Titel, der auf der Titelzeile des Importers erscheint */
-	abstract public String getTitle();
+	public abstract String getTitle();
 
 	/** Eine längere Beschreibung für den Message-Bereich des Dialogs */
-	abstract public String getDescription();
+	public abstract String getDescription();
 
 	/**
-	 * 
-	 * @return The class name of the imported object. Used to evaluate
-	 *         {@link Right#IMPORT}
+	 * @return The class names of the imported object. Only if all of the accounted
+	 *         class names have {@link Right#CREATE}, {@link Right#READ},
+	 *         {@link Right#UPDATE}, {@link Right#DELETE} and {@link Right#IMPORT}
+	 *         will be executed.
+	 * @since 3.12
 	 */
-	public String getObjectClass() {
-		return StringUtils.EMPTY;
-	};
+	public abstract List<String> getObjectClass();
 
 	/**
 	 * Allfällige von User eingegebene Daten einsammeln. Die Default-Implementation
@@ -129,6 +133,15 @@ public abstract class ImporterPage implements IExecutableExtension {
 		protected IStatus run(final IProgressMonitor monitor) {
 
 			try {
+				List<String> objectClass = getObjectClass();
+				boolean allRightsOk = objectClass.stream()
+						.map(type -> AccessControlServiceHolder.get()
+								.evaluate(new ObjectEvaluatableACE(type, Right.IMPORT).and(Right.CREATE)
+										.and(Right.UPDATE).and(Right.DELETE).and(Right.READ)))
+						.allMatch(n -> n == true);
+				if (!allRightsOk) {
+					throw new Exception("Insufficient rights [requires crudi] on objects " + objectClass);
+				}
 				return doImport(monitor);
 			} catch (Exception e) {
 				return new Status(Status.ERROR, Hub.PLUGIN_ID,

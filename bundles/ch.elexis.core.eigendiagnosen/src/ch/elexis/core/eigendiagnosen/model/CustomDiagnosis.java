@@ -3,10 +3,11 @@ package ch.elexis.core.eigendiagnosen.model;
 import java.util.List;
 import java.util.Map;
 
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.eigendiagnosen.model.service.ModelUtil;
 import ch.elexis.core.jpa.entities.Eigendiagnose;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ICustomDiagnosis;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
@@ -14,7 +15,7 @@ import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class CustomDiagnosis extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Eigendiagnose>
-		implements IDiagnosisTree, WithExtInfo, Identifiable {
+		implements ICustomDiagnosis, WithExtInfo, Identifiable {
 
 	public CustomDiagnosis(Eigendiagnose entity) {
 		super(entity);

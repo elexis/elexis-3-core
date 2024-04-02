@@ -12,13 +12,15 @@
 package ch.elexis.core.ui.views.codesystems;
 
 import java.io.FileInputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.ui.exchange.elements.ServiceBlockElement;
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
@@ -63,10 +65,10 @@ public class BlockImporter extends ImporterPage {
 	public String getTitle() {
 		return Messages.BlockImporter_Blocks; // $NON-NLS-1$
 	}
-	
+
 	@Override
-	public String getObjectClass() {
-		return ServiceBlockElement.class.getName();
+	public List<String> getObjectClass() {
+		return Arrays.asList(ICodeElementBlock.class.getName());
 	}
 
 }

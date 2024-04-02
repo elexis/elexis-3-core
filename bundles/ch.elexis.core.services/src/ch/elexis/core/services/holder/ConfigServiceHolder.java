@@ -204,6 +204,10 @@ public class ConfigServiceHolder {
 		return configService.getLocal(key, defaultValue);
 	}
 
+	public static int getLocal(String key, int defaultValue) {
+		return configService.getLocal(key, defaultValue);
+	}
+
 	private static List<Runnable> waitForConfigService;
 
 	public synchronized static void runIfConfigServiceAvailable(Runnable runnable) {

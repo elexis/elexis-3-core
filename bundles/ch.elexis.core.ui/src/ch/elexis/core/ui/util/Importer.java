@@ -62,8 +62,12 @@ public class Importer extends TitleAreaDialog {
 		List<ImporterPage> importers = Extensions.getClasses(ext, "Class"); //$NON-NLS-1$
 		for (ImporterPage p : importers) {
 			if (p != null) {
-				if (AccessControlServiceHolder.get()
-						.evaluate(new ObjectEvaluatableACE(p.getObjectClass(), Right.IMPORT))) {
+				List<String> importTypes = p.getObjectClass();
+				// only show tab if user has import rights on all handled types
+				boolean allImportRightsOk = importTypes.stream().map(
+						type -> AccessControlServiceHolder.get().evaluate(new ObjectEvaluatableACE(type, Right.IMPORT)))
+						.allMatch(n -> n == true);
+				if (allImportRightsOk) {
 					CTabItem item = new CTabItem(ctab, SWT.NONE);
 					item.setText(p.getTitle());
 					item.setControl(p.createPage(ctab));

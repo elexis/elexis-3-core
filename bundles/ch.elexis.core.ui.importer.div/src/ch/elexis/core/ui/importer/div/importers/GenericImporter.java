@@ -11,6 +11,9 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -61,9 +64,9 @@ public class GenericImporter extends ImporterPage {
 	public String getTitle() {
 		return TITLE;
 	}
-	
+
 	@Override
-	public String getObjectClass() {
-		return IContact.class.getName();
+	public List<String> getObjectClass() {
+		return Arrays.asList(IContact.class.getName());
 	}
 }
