@@ -53,17 +53,6 @@ public class ConfigServiceHolder {
 		return configService.get(key, defaultValue);
 	}
 
-	public static List<String> getGlobalAsList(String key) {
-		String string = getGlobal(key, (String) null);
-		if (string != null) {
-			String[] split = string.split(",");
-			if (split != null && split.length > 0) {
-				return Arrays.asList(split);
-			}
-		}
-		return Collections.emptyList();
-	}
-
 	public static String[] getGlobalStringArray(String key) {
 		String raw = getGlobal(key, null);
 		if (StringUtils.isBlank(raw)) {

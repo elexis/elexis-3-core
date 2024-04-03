@@ -83,7 +83,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 
 	private Set<Labor> findAllLabsWithPathFlagMissingMeansNonPathologic() {
 		List<String> laboratoryIdList = ConfigServiceHolder
-				.getGlobalAsList(Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
+				.get().getAsList(Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES);
 		return new HashSet<>(laboratoryIdList.stream().map(id -> Labor.load(id)).collect(Collectors.toList()));
 	}
 
@@ -95,6 +95,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 	/**
 	 * Initialize the preference page.
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -128,6 +129,7 @@ public class HL7LabImportRulesPreferencePage extends PreferencePage implements I
 			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 		}
 
+		@Override
 		public void run() {
 			IStructuredSelection selection = labMPathMNonPathListViewer.getStructuredSelection();
 			if (selection != null && !selection.isEmpty()) {

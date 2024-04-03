@@ -1,7 +1,6 @@
 package ch.elexis.core.services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -13,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
@@ -226,11 +225,11 @@ public class ConfigService implements IConfigService {
 	@Override
 	public List<String> getAsList(String key, List<String> defaultValue) {
 		String val = get(key, null);
-		if (val != null) {
-			String[] split = val.split(LIST_SEPARATOR);
-			return Arrays.asList(split).stream().collect(Collectors.toList());
+		if (val == null) {
+			return defaultValue;
 		}
-		return defaultValue;
+		String[] split = val.split(LIST_SEPARATOR);
+		return Stream.of(split).toList();
 	}
 
 	@Override
@@ -250,7 +249,7 @@ public class ConfigService implements IConfigService {
 			if (!configs.isEmpty()) {
 				if (configs.size() > 1) {
 					LoggerFactory.getLogger(ConfigService.class)
-							.warn("Multiple user config entries for [" + key + "] using first.");
+							.warn("Multiple user config entries for [{}] using first.", key);
 				}
 				loaded = Optional.of(configs.get(0));
 			}
@@ -362,11 +361,11 @@ public class ConfigService implements IConfigService {
 	@Override
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue) {
 		String val = get(contact, key, null);
-		if (val != null) {
-			String[] split = val.split(LIST_SEPARATOR);
-			return Arrays.asList(split).stream().collect(Collectors.toList());
+		if (val == null) {
+			return defaultValue;
 		}
-		return defaultValue;
+		String[] split = val.split(LIST_SEPARATOR);
+		return Stream.of(split).toList();
 	}
 
 	@Override
