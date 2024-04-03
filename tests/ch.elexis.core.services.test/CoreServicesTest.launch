@@ -46,7 +46,7 @@
     <booleanAttribute key="run_in_ui_thread" value="false"/>
     <setAttribute key="selected_target_bundles">
         <setEntry value="bcprov@default:default"/>
-        <setEntry value="ch.elexis.core.logback.rocketchat@default:default"/>
+        <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
@@ -92,7 +92,7 @@
         <setEntry value="org.eclipse.ant.core@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
         <setEntry value="org.eclipse.core.expressions@default:default"/>
-        <setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:default"/>
+        <setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:false"/>
         <setEntry value="org.eclipse.core.filesystem@default:default"/>
         <setEntry value="org.eclipse.core.jobs@default:default"/>
         <setEntry value="org.eclipse.core.resources@default:default"/>
@@ -109,7 +109,7 @@
         <setEntry value="org.eclipse.gemini.jpa@3:true"/>
         <setEntry value="org.eclipse.jdt.junit.runtime@default:default"/>
         <setEntry value="org.eclipse.jdt.junit4.runtime@default:default"/>
-        <setEntry value="org.eclipse.jetty.osgi.alpn.fragment@default:default"/>
+        <setEntry value="org.eclipse.jetty.osgi.alpn.fragment@default:false"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
         <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi.util@default:default"/>
@@ -120,7 +120,7 @@
         <setEntry value="org.eclipse.persistence.core@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
-        <setEntry value="org.eclipse.persistence.oracle@default:default"/>
+        <setEntry value="org.eclipse.persistence.oracle@default:false"/>
         <setEntry value="org.glassfish.hk2.api@default:default"/>
         <setEntry value="org.glassfish.hk2.external.aopalliance-repackaged@default:default"/>
         <setEntry value="org.glassfish.hk2.external.jakarta.inject@default:default"/>
@@ -164,13 +164,13 @@
         <setEntry value="org.tukaani.xz@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="ch.elexis.core.jcifs.test@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities.test@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
-        <setEntry value="ch.elexis.core.jpa.test@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
@@ -180,13 +180,13 @@
         <setEntry value="ch.elexis.core.services.test@default:false"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:false"/>
-        <setEntry value="ch.elexis.core.test.logging@default:default"/>
+        <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.text.docx@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="info.elexis.server.core.logging@default:default"/>
+        <setEntry value="info.elexis.server.core.logging@default:false"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>

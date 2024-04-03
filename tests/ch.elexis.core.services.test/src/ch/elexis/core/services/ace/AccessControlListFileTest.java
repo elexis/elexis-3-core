@@ -59,29 +59,35 @@ public class AccessControlListFileTest {
 		byte[] bs = aclUser.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
 		assertArrayEquals(Arrays.toString(bs), new byte[] { 0, 4, 0, 0, 0, 4, 0, 0, 0 }, bs);
 
-		AccessControlList aclAssistant;
+		bs = aclUser.getObject().get("ch.elexis.core.model.IContact").getAccessRightMap();
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 0, 4, 0, 0, 0, 4, 0, 0, 0 }, bs);
+
+		AccessControlList aclMedicalUser;
 		try (InputStream roleAccessDefaultAssistantFile = AccessControlList.class.getClassLoader()
-				.getResourceAsStream("/rsc/acl/assistant.json")) {
-			aclAssistant = gson.fromJson(new InputStreamReader(roleAccessDefaultAssistantFile),
+				.getResourceAsStream("/rsc/acl/medical-user.json")) {
+			aclMedicalUser = gson.fromJson(new InputStreamReader(roleAccessDefaultAssistantFile),
 					AccessControlList.class);
 		}
-		bs = aclAssistant.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
-		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
+		bs = aclMedicalUser.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 4, 4, 4, 4, 0 }, bs);
 
-		AccessControlList merge = AccessControlListUtil.merge(aclUser, aclAssistant);
-		AccessControlList revMerge = AccessControlListUtil.merge(aclAssistant, aclUser);
+		AccessControlList merge = AccessControlListUtil.merge(aclUser, aclMedicalUser);
+		AccessControlList revMerge = AccessControlListUtil.merge(aclMedicalUser, aclUser);
 
 		assertTrue(merge.getRolesRepresented().contains("user"));
-		assertTrue(merge.getRolesRepresented().contains("assistant"));
+		assertTrue(merge.getRolesRepresented().contains("medical-user"));
 		bs = merge.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
-		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 4, 4, 4, 4, 0 }, bs);
 		bs = revMerge.getObject().get("ch.elexis.core.model.IArticle").getAccessRightMap();
-		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 0, 4, 0, 0, 0 }, bs);
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 4, 4, 4, 4, 0 }, bs);
 
 		bs = merge.getObject().get("ch.elexis.core.model.IInvoice").getAccessRightMap();
-		assertArrayEquals(Arrays.toString(bs), new byte[] { 2, 2, 0, 2, 0, 2, 0, 0, 0 }, bs);
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 1, 1, 1, 1, 1, 1, 0, 0, 0 }, bs);
 		bs = revMerge.getObject().get("ch.elexis.core.model.IInvoice").getAccessRightMap();
-		assertArrayEquals(Arrays.toString(bs), new byte[] { 2, 2, 0, 2, 0, 2, 0, 0, 0 }, bs);
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 1, 1, 1, 1, 1, 1, 0, 0, 0 }, bs);
+
+		bs = revMerge.getObject().get("ch.elexis.core.model.IContact").getAccessRightMap();
+		assertArrayEquals(Arrays.toString(bs), new byte[] { 4, 4, 4, 4, 4, 4, 4, 4, 0 }, bs);
 	}
 
 }
