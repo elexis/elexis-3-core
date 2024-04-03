@@ -30,12 +30,14 @@ import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockRequest.Type;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.PersistentObject;
@@ -60,6 +62,9 @@ public class LocalLockService implements ILocalLockService {
 
 	@Reference
 	private IConfigService configService;
+
+	@Reference
+	private IStickerService stickerSerivce;
 
 	@Reference
 	private IStoreToStringService storeToStringService;
@@ -341,6 +346,10 @@ public class LocalLockService implements ILocalLockService {
 		if (object == null) {
 			return false;
 		}
+		// read only objects can not be locked / edited in ui
+		if (isReadOnly(object)) {
+			return false;
+		}
 		// handle not lockable local object (DTO)
 		if (!isLockable(object)) {
 			return true;
@@ -351,6 +360,20 @@ public class LocalLockService implements ILocalLockService {
 		// check local locks first
 		if (locks.containsKey(getId(object))) {
 			return true;
+		}
+		return false;
+	}
+
+	private boolean isReadOnly(Object object) {
+		if (object instanceof Identifiable) {
+			Optional<ISticker> readOnlySticker = stickerSerivce.getStickers((Identifiable) object).stream()
+					.filter(s -> IStickerService.STICKER_ID_READONLY.equals(s.getId())).findFirst();
+			return readOnlySticker.isPresent();
+		} else if (object instanceof PersistentObject) {
+			Optional<ch.elexis.core.data.interfaces.ISticker> readOnlySticker = ((PersistentObject) object)
+					.getStickers().stream().filter(s -> IStickerService.STICKER_ID_READONLY.equals(s.getId()))
+					.findFirst();
+			return readOnlySticker.isPresent();
 		}
 		return false;
 	}

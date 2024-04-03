@@ -8,6 +8,8 @@ import ch.elexis.core.model.Identifiable;
 
 public interface IStickerService {
 
+	String STICKER_ID_READONLY = "readOnly";
+
 	/**
 	 * Whether the identifiable is tagged with the given sticker
 	 *

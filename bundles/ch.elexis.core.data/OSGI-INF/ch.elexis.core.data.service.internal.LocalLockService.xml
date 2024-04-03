@@ -6,6 +6,7 @@
    <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="elexisServerService" interface="ch.elexis.core.services.IElexisServerService" name="elexisServerService"/>
+   <reference cardinality="1..1" field="stickerSerivce" interface="ch.elexis.core.services.IStickerService" name="stickerSerivce"/>
    <reference cardinality="1..1" field="storeToStringService" interface="ch.elexis.core.services.IStoreToStringService" name="storeToStringService"/>
    <implementation class="ch.elexis.core.data.service.internal.LocalLockService"/>
 </scr:component>

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
@@ -35,11 +36,28 @@ public class StickerService implements IStickerService {
 	@Reference
 	private IStoreToStringService storeToStringServcie;
 
+	@Reference
+	private IAccessControlService accessControlService;
+
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
 	@Reference
 	private EventAdmin eventAdmin;
+
+	@Activate
+	public void activate() {
+		accessControlService.doPrivileged(() -> {
+			Optional<ISticker> readOnlySticker = coreModelService.load(STICKER_ID_READONLY, ISticker.class);
+			if (readOnlySticker.isEmpty()) {
+				ISticker sticker = coreModelService.create(ISticker.class);
+				sticker.setId(STICKER_ID_READONLY);
+				sticker.setName("Read Only Sticker");
+				sticker.setImportance(-1);
+				coreModelService.save(sticker);
+			}
+		});
+	}
 
 	private List<StickerObjectLink> getStickerObjectLinksForId(String id) {
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
