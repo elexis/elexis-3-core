@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.importer.div.importers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -58,8 +59,8 @@ public class KontaktImporter extends ImporterPage {
 	}
 
 	@Override
-	public String getObjectClass() {
-		return IContact.class.getName();
+	public List<String> getObjectClass() {
+		return Arrays.asList(IContact.class.getName());
 	}
 	
 	static Kontakt queryKontakt(final String name, final String vorname, final String strasse, final String plz,

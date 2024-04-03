@@ -13,13 +13,13 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,15 +34,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.exchange.KontaktMatcher;
 import ch.elexis.core.ui.exchange.KontaktMatcher.CreateMode;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Organisation;
-import ch.elexis.data.Person;
 import ch.rgw.tools.BinConverter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
+import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VCard;
 
 /**
@@ -294,8 +298,10 @@ public class KontaktImporterBlatt extends Composite {
 			vorname = names[1];
 			Kontakt k = KontaktImporter.queryKontakt(name, vorname, strasse, plz, ort, false);
 			if (k == null) {
-				k = new Person(name, vorname, gebdat, Person.MALE);
-				k.set("Title", title); //$NON-NLS-1$
+				IPerson iPerson = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), vorname, name,
+						new TimeTool(gebdat).toLocalDate(), Gender.MALE).build();
+				iPerson.setTitel(title);
+				CoreModelServiceHolder.get().save(iPerson);
 			}
 			return true;
 		} catch (Exception ex) {

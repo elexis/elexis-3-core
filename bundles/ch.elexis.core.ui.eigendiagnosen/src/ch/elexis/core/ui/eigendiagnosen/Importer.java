@@ -13,6 +13,7 @@ package ch.elexis.core.ui.eigendiagnosen;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,7 +27,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
-import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.ICustomDiagnosis;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.ui.util.ImporterPage;
@@ -97,9 +98,10 @@ public class Importer extends ImporterPage {
 	}
 
 	@Override
-	public String getObjectClass() {
-		return IDiagnosis.class.getName();
+	public List<String> getObjectClass() {
+		return Arrays.asList(ICustomDiagnosis.class.getName());
 	}
+
 
 	private Result<String> importExcel(final String file, final IProgressMonitor mon) {
 		ExcelWrapper xl = new ExcelWrapper();
