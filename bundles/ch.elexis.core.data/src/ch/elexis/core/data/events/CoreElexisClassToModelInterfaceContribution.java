@@ -15,6 +15,7 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
@@ -29,6 +30,7 @@ import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Person;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Reminder;
@@ -69,6 +71,8 @@ public class CoreElexisClassToModelInterfaceContribution implements ElexisClassT
 			return Optional.of(ILabResult.class);
 		} else if (elexisClazz == LabOrder.class) {
 			return Optional.of(ILabOrder.class);
+		} else if (elexisClazz == Person.class) {
+			return Optional.of(IPerson.class);
 		}
 		return Optional.empty();
 	}
