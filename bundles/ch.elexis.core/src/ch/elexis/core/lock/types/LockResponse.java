@@ -9,7 +9,7 @@ public class LockResponse {
 	public static final LockResponse ERROR = new LockResponse(Status.ERROR, null);
 
 	public enum Status {
-		OK, DENIED, DENIED_PERMANENT, ERROR
+		OK, DENIED, DENIED_PERMANENT, ERROR, NOINFO
 	};
 
 	private Status status;
@@ -60,6 +60,10 @@ public class LockResponse {
 
 	public static LockResponse DENIED(LockInfo lie) {
 		return new LockResponse(Status.DENIED, lie);
+	}
+
+	public static LockResponse NOINFO(LockInfo lie) {
+		return new LockResponse(Status.NOINFO, lie);
 	}
 
 	public boolean isOk() {

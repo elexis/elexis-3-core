@@ -140,6 +140,10 @@ public class LocalLockService implements ILocalLockService {
 		if (object == null) {
 			return LockResponse.DENIED(null);
 		}
+		if (isReadOnly(object)) {
+			return LockResponse.NOINFO(null);
+		}
+
 		if (monitor != null) {
 			monitor.beginTask("Acquiring Lock ...", (secTimeout * 10) + 1);
 		}
@@ -178,6 +182,9 @@ public class LocalLockService implements ILocalLockService {
 	public LockResponse acquireLock(Object object) {
 		if (object == null) {
 			return LockResponse.DENIED(null);
+		}
+		if (isReadOnly(object)) {
+			return LockResponse.NOINFO(null);
 		}
 		logger.debug("Acquiring lock on [" + object + "]");
 		LockResponse lr = acquireLock(StoreToStringServiceHolder.getStoreToString(object));

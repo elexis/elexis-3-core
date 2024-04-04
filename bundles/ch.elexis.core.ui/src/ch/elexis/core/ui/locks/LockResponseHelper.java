@@ -20,6 +20,9 @@ public class LockResponseHelper {
 			}
 			log.warn("showInfo for null object", new Throwable()); //$NON-NLS-1$
 		}
+		if (LockResponse.Status.NOINFO == lr.getStatus()) {
+			return;
+		}
 
 		if (LockResponse.Status.DENIED_PERMANENT == lr.getStatus()) {
 			SWTHelper.showError(Messages.DenyLockPermanent_Title, Messages.DenyLockPermanent_Message);
