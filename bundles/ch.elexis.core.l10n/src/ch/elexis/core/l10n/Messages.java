@@ -2249,12 +2249,6 @@ public class Messages extends NLS {
 	public static String ImportLabMapping_message;
 	public static String ImportLabMapping_selectFile;
 	public static String ImportLabMapping_titleProblemDialog;
-	public static String Import_Agenda_cancelled;
-	public static String Import_Agenda_creatingTables;
-	public static String Import_Agenda_importFromJavaAgenda;
-	public static String Import_Agenda_importWasCancelled;
-	public static String Import_Agenda_importingAgenda;
-	public static String Import_Agenda_importingApps;
 	public static String ImporterCantFindLabContact;
 	public static String ImporterCantFindLabContactDesc;
 	public static String ImporterDescription;
