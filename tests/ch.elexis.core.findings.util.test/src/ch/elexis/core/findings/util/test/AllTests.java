@@ -13,9 +13,11 @@ import ca.uhn.fhir.parser.IParser;
 import ch.elexis.core.findings.util.FindingsFormatUtilTest;
 import ch.elexis.core.findings.util.ModelUtilTest;
 import ch.elexis.core.findings.util.fhir.transformer.AllTransformerTests;
+import ch.elexis.core.findings.util.importer.FhirBundleReferenceDataImporterTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ModelUtilTest.class, FindingsFormatUtilTest.class, AllTransformerTests.class })
+@SuiteClasses({ ModelUtilTest.class, FindingsFormatUtilTest.class, AllTransformerTests.class,
+		FhirBundleReferenceDataImporterTest.class })
 public class AllTests {
 
 	private static FhirContext context3 = FhirContext.forDstu3();

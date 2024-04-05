@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.util.importer.FhirBundleReferenceDataImporter">
+   <property name="referenceDataId" value="fhirbundle"/>
+   <service>
+      <provide interface="ch.elexis.core.interfaces.IReferenceDataImporter"/>
+   </service>
+   <reference cardinality="1..1" field="transformerRegistry" interface="ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry" name="transformerRegistry"/>
+   <reference cardinality="1..1" field="xidService" interface="ch.elexis.core.services.IXidService" name="xidService"/>
+   <implementation class="ch.elexis.core.findings.util.importer.FhirBundleReferenceDataImporter"/>
+</scr:component>
