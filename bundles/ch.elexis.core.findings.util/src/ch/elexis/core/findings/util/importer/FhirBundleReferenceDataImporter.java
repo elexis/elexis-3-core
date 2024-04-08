@@ -27,12 +27,14 @@ import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
+import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IXidService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 
-@Component(property = IReferenceDataImporter.REFERENCEDATAID + "=fhirbundle")
-public class FhirBundleReferenceDataImporter implements IReferenceDataImporter {
+@Component(property = IReferenceDataImporter.REFERENCEDATAID + "=fhirbundle", service = IReferenceDataImporter.class)
+public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImporter {
 
 	@Reference
 	private IFhirTransformerRegistry transformerRegistry;
@@ -71,6 +73,9 @@ public class FhirBundleReferenceDataImporter implements IReferenceDataImporter {
 						}
 					}
 				}
+				if (newVersion != null && getVersionConfigString() != null) {
+					ConfigServiceHolder.get().set(getVersionConfigString(), newVersion);
+				}
 				return Status.OK_STATUS;
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Error importing FHIR bundle", e);
@@ -89,6 +94,10 @@ public class FhirBundleReferenceDataImporter implements IReferenceDataImporter {
 	 */
 	protected void updateLocalObject(Object object) {
 		// default to nothing, override in sub classes
+	}
+
+	protected String getVersionConfigString() {
+		return null;
 	}
 
 	private <T> Optional<T> getLocalObjectByIdentifiers(Resource fhirObject, Class<T> clazz) {
@@ -130,5 +139,13 @@ public class FhirBundleReferenceDataImporter implements IReferenceDataImporter {
 			break;
 		}
 		return null;
+	}
+
+	@Override
+	public int getCurrentVersion() {
+		if (getVersionConfigString() != null) {
+			return ConfigServiceHolder.get().get(getVersionConfigString(), 0);
+		}
+		return 0;
 	}
 }
