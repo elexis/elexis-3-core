@@ -17,12 +17,15 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +39,8 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;
@@ -240,7 +245,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		};
 	}
 
-	class KontaktLabelProvider extends DefaultLabelProvider {
+	class KontaktLabelProvider extends DefaultLabelProvider implements ITableColorProvider {
 
 		@Override
 		public String getText(Object element) {
@@ -252,7 +257,38 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		}
 
 		@Override
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(final Object element, final int columnIndex) {
+			if (element instanceof Kontakt) {
+				IContact pat = ((Kontakt) element).toIContact();
+				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
+				if (sticker != null && sticker.getImage() != null) {
+					return CoreUiUtil.getImageAsIcon(sticker.getImage());
+				}
+			}
+			return super.getColumnImage(element, columnIndex);
+		}
+
+		@Override
+		public Color getForeground(Object element, int columnIndex) {
+			if (element instanceof Kontakt) {
+				IContact pat = ((Kontakt) element).toIContact();
+				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
+				if (sticker != null && StringUtils.isNotBlank(sticker.getForeground())) {
+					return CoreUiUtil.getColorForString(sticker.getForeground());
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public Color getBackground(final Object element, final int columnIndex) {
+			if (element instanceof Kontakt) {
+				IContact pat = ((Kontakt) element).toIContact();
+				ISticker sticker = StickerServiceHolder.get().getSticker(pat).orElse(null);
+				if (sticker != null && StringUtils.isNotBlank(sticker.getBackground())) {
+					return CoreUiUtil.getColorForString(sticker.getBackground());
+				}
+			}
 			return null;
 		}
 	}
