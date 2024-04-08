@@ -21,6 +21,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -48,7 +50,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	private Text txtPassword;
 	private Text txtUri;
 	private Combo comboScheme;
-
+	private boolean passwortPhase = false;
 	/**
 	 * Create the dialog.
 	 *
@@ -121,7 +123,26 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 		txtPassword = new Text(container, SWT.BORDER);
 		txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+		txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		txtPassword.setEchoChar('*');
+		txtPassword.addModifyListener(e -> {
+			if (txtPassword.getText().isEmpty()) {
+				txtPassword.setEchoChar('\0');
+				passwortPhase = true;
+			}
+		});
+		txtPassword.addFocusListener(new FocusListener() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+		        txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		    }
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		        if (txtPassword.getText().isEmpty()) {
+		            txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		        }
+		    }
+		});
 		Label lblNewLabel = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
 
@@ -158,7 +179,8 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 				boolean isOk = vfsHandle.exists() && vfsHandle.canRead();
 				if (isOk) {
 					MessageDialog.openInformation(getShell(), "URL Test",
-							uri.getUri().toString() + " exists and is readable");
+							IVirtualFilesystemService.hidePasswordInUrlString(uri.getUri().toString())
+									+ " exists and is readable");
 				} else {
 					MessageDialog.openWarning(getShell(), "URL Test",
 							uri.getUri().toString() + " does not exist or is not readable");
@@ -219,7 +241,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		IConverter<String, URI> stringToUriConverter = IConverter.create(String.class, URI.class,
 				o -> URI.create(o.toString()));
 		IConverter<URI, String> uriToStringConverter = IConverter.create(URI.class, String.class,
-				(u) -> u != null ? uri.getUri().toString() : "");
+				(u) -> u != null ? uri.getUriDisplay().toString() : "");
 		IObservableValue<String> widgetUri = WidgetProperties.text(SWT.Modify).observe(txtUri);
 		IObservableValue<URI> modelUri = BeanProperties.value(MyURI.class, "uri", URI.class).observe(uri);
 		bindingContext.bindValue(widgetUri, modelUri, UpdateValueStrategy.create(stringToUriConverter),
@@ -318,6 +340,41 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			return null;
 		}
 
+		public URI getUriDisplay() {
+			try {
+				URIBuilder uriBuilder = new URIBuilder();
+				if (StringUtils.isNotBlank(scheme)) {
+					uriBuilder.setScheme(scheme);
+				}
+				if (StringUtils.isNotBlank(host)) {
+					uriBuilder.setHost(host);
+				}
+				if (StringUtils.isNotBlank(path)) {
+					uriBuilder.setPath(path);
+				}
+				if (StringUtils.isNotBlank(user)) {
+					if (passwortPhase) {
+						uriBuilder.setUserInfo(user, pass);
+					} else {
+						uriBuilder.setUserInfo(user, "***");
+					}
+				}
+				if (StringUtils.isNotBlank(user)) {
+					if (StringUtils.isBlank(pass)) {
+						uriBuilder.setUserInfo(user);
+					}
+				}
+				if (port != null && port > 0) {
+					uriBuilder.setPort(port);
+				}
+				return uriBuilder.build();
+
+			} catch (URISyntaxException e) {
+
+			}
+			return null;
+		}
+		
 		public void setUri(URI uri) {
 			setScheme(uri.getScheme());
 			setHost(uri.getHost());

@@ -49,7 +49,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	protected void doLoad() {
 		String value = getPreferenceStore().getString(getPreferenceName());
 		if (getTextControl() != null) {
-			getTextControl().setText(IVirtualFilesystemService.hidePasswordInUrlString(value));
+			getTextControl().setText(value);
 			oldValue = value;
 		}
 	}
