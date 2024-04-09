@@ -13,7 +13,9 @@ import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
@@ -28,7 +30,9 @@ import ch.elexis.data.Kontakt;
 import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabResult;
+import ch.elexis.data.Labor;
 import ch.elexis.data.Mandant;
+import ch.elexis.data.Organisation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.Prescription;
@@ -73,6 +77,10 @@ public class CoreElexisClassToModelInterfaceContribution implements ElexisClassT
 			return Optional.of(ILabOrder.class);
 		} else if (elexisClazz == Person.class) {
 			return Optional.of(IPerson.class);
+		} else if (elexisClazz == Organisation.class) {
+			return Optional.of(IOrganization.class);
+		} else if (elexisClazz == Labor.class) {
+			return Optional.of(ILaboratory.class);
 		}
 		return Optional.empty();
 	}
