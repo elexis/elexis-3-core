@@ -85,8 +85,8 @@
    </configurations>
 
    <repositories>
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-base" enabled="true" />
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-core" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/3.12/p2/elexis-3-base" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/3.12/p2/elexis-3-core" enabled="true" />
    </repositories>
 
    <preferencesInfo>
