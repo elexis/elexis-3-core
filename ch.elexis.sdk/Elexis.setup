@@ -5,14 +5,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
-    xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/pde/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="elexis"
     label="Elexis">
   <setupTask
@@ -245,8 +244,6 @@
   <setupTask
       xsi:type="setup.p2:P2Task">
     <requirement
-        name="org.eclipse.mylyn.github.feature.feature.group"/>
-    <requirement
         name="org.eclipse.cbi.targetplatform.feature.feature.group"/>
     <requirement
         name="com.essiembre.eclipse.rbe.feature.group"/>
@@ -254,8 +251,6 @@
         name="org.eclipse.m2e.feature.feature.group"/>
     <requirement
         name="org.eclipse.wb.rcp.feature.feature.group"/>
-    <requirement
-        name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
     <requirement
         name="net.jeeeyul.pdetools.feature.feature.group"
         filter=""/>
@@ -293,45 +288,6 @@
           xsi:type="predicates:RepositoryPredicate"
           project="es.core.connector.elexis"/>
     </workingSet>
-  </setupTask>
-  <setupTask
-      xsi:type="mylyn:MylynBuildsTask"
-      id="srv.elexis.info.core"
-      serverURL="https://srv.elexis.info/jenkins/"
-      userID="">
-    <buildPlan
-        name="Elexis-3.0-Core"/>
-    <buildPlan
-        name="Elexis-3.0-Base"/>
-  </setupTask>
-  <setupTask
-      xsi:type="mylyn:MylynQueriesTask"
-      id="github.elexis-3-core.pullrequests"
-      connectorKind="githubPullRequests"
-      repositoryURL="https://github.com/elexis/elexis-3-core"
-      userID="${github.user.id}"
-      password="">
-    <query summary="core pull requests"
-        url="">
-      <attribute
-          key="state"
-          value="open::"/>
-    </query>
-    <description>elexis/elexis-3-core pull requests</description>
-  </setupTask>
-  <setupTask
-      xsi:type="mylyn:MylynQueriesTask"
-      id="github.elexis-3-base.pullrequests"
-      connectorKind="githubPullRequests"
-      repositoryURL="https://github.com/elexis/elexis-3-base"
-      userID="${github.user.id}"
-      password="">
-    <query summary="base pull requests">
-      <attribute
-          key="state"
-          value="open::"/>
-    </query>
-    <description>elexis/elexis-3-base pull requests</description>
   </setupTask>
   <setupTask
       xsi:type="projects:ProjectsImportTask">
