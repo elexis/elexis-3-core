@@ -147,27 +147,13 @@ public class SpotlightShell extends Shell {
 	 * @param spotlightService
 	 */
 	protected void createContents() {
-		GridLayout gridLayout = new GridLayout(4, false);
-		setLayout(gridLayout);
+		GridLayout gridLayout = new GridLayout(3, false); 
+	    setLayout(gridLayout);
 		addListener(SWT.Show, event -> adjustShellSize(false));
-		Label lblIcon = new Label(this, SWT.NONE);
-		Image logo = JFaceResources.getImageRegistry().get(SEARCH_ICON);
-		if (logo == null) {
-			Path path = new Path("rsc/icons/magnifier-left-24.png");
-			URL fileLocation = FileLocator.find(FrameworkUtil.getBundle(SpotlightShell.class), path, null);
-			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
-			JFaceResources.getImageRegistry().put(SEARCH_ICON, id);
-			logo = JFaceResources.getImageRegistry().get(SEARCH_ICON);
-		}
-		lblIcon.setImage(logo);
-		lblIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		filterComposite = new Composite(this, SWT.NO_FOCUS);
 		filterComposite.setLayout(new GridLayout(1, false));
 		filterComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		filterComposite.setBackground(this.getBackground());
-		lblFound = new Label(this, SWT.RIGHT | SWT.CENTER);
-		lblFound.setText("Gefundene Suchwörter:     00 / 00  ");
-		lblFound.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false, 4, 1));
 		if (spotlightContextParameters != null) {
 			if (spotlightContextParameters.containsKey(ISpotlightService.CONTEXT_FILTER_PATIENT_ID)) {
 				Label patientFilter = new Label(filterComposite, SWT.None);
@@ -177,11 +163,36 @@ public class SpotlightShell extends Shell {
 				patientFilter.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 			}
 		}
-
-		txtSearchInput = new Text(this, SWT.None);
+		Composite searchComposite = new Composite(this, SWT.NONE);
+		searchComposite.setLayout(new GridLayout(2, false));
+		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		Label lblIcon = new Label(searchComposite, SWT.NONE);
+		lblIcon.setImage(getImage(SEARCH_ICON, "rsc/icons/magnifier-left-24.png"));
+		lblIcon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		txtSearchInput = new Text(searchComposite, SWT.NONE);
 		GridData txtSearchInputGridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		txtSearchInput.setLayoutData(txtSearchInputGridData);
 		txtSearchInput.setBackground(this.getBackground());
+		Composite buttonComposite = new Composite(this, SWT.NONE);
+		buttonComposite.setLayout(new GridLayout(3, false));
+		GridData buttonGridData = new GridData();
+		buttonGridData.horizontalAlignment = GridData.FILL;
+		buttonGridData.grabExcessHorizontalSpace = true;
+		buttonComposite.setLayoutData(buttonGridData);
+		GridData gridData = new GridData(SWT.END, SWT.LEFT, false, false);
+		gridData.widthHint = 55;
+		gridData.heightHint = 20;
+		lblFound = new Label(buttonComposite, SWT.RIGHT | SWT.CENTER);
+		lblFound.setText("Gefundene Suchwörter:     00 / 00  ");
+		lblFound.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		Button upButton = new Button(buttonComposite, SWT.PUSH | SWT.FLAT);
+		upButton.setImage(Images.IMG_PREVIOUS.getImage());
+		upButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		upButton.setLayoutData(gridData);
+		Button downButton = new Button(buttonComposite, SWT.PUSH | SWT.FLAT);
+		downButton.setImage(Images.IMG_NEXT.getImage());
+		downButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		downButton.setLayoutData(gridData);
 		txtSearchInput.setToolTipText(Messages.SpotlightSerchHelText);
 		Font biggerFont;
 		if (JFaceResources.getFontRegistry().hasValueFor(SEARCHTEXT_FONT)) {
@@ -194,17 +205,7 @@ public class SpotlightShell extends Shell {
 		}
 		txtSearchInput.setFont(biggerFont);
 		txtSearchInput.setMessage("Suchbegriff eingeben");
-		txtSearchInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtSearchInput.setTextLimit(256);
-		Button upButton = new Button(this, SWT.PUSH | SWT.FLAT);
-		Button downButton = new Button(this, SWT.PUSH | SWT.FLAT);
-		GridData gridData = new GridData(SWT.END, SWT.LEFT, false, false);
-		gridData.widthHint = 75;
-		gridData.heightHint = 24;
-		upButton.setText(Messages.TimeMachineDisplay_back);
-		upButton.setLayoutData(gridData);
-		downButton.setText(Messages.Next);
-		downButton.setLayoutData(gridData);
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -314,7 +315,7 @@ public class SpotlightShell extends Shell {
 		previewComposite.layout();
 		scrolledComposite.setContent(previewComposite);
 		scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		this.setTabList(new Control[] { txtSearchInput, parentComposite });
+		this.setTabList(new Control[] { searchComposite, parentComposite });
 		parentComposite.setTabList(new Control[] { layeredComposite, scrolledComposite });
 		switchReadyResultMode(true);
 		txtSearchInput.setFocus();
@@ -410,5 +411,17 @@ public class SpotlightShell extends Shell {
 		int total = SpotlightSearchHelper.getTotalMatches();
 		lblFound.setText("Gefundene Suchwörter: " + currentPosition + " / " + total);
 		Display.getCurrent().syncExec(() -> this.getParent().layout(true, true));
+	}
+
+	private Image getImage(String iconKey, String imagePath) {
+		Image icon = JFaceResources.getImageRegistry().get(iconKey);
+		if (icon == null) {
+			Path path = new Path(imagePath);
+			URL fileLocation = FileLocator.find(FrameworkUtil.getBundle(SpotlightShell.class), path, null);
+			ImageDescriptor id = ImageDescriptor.createFromURL(fileLocation);
+			JFaceResources.getImageRegistry().put(iconKey, id);
+			icon = JFaceResources.getImageRegistry().get(iconKey);
+		}
+		return icon;
 	}
 }
