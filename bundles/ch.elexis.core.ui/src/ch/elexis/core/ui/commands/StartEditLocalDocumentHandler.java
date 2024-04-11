@@ -198,19 +198,9 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 					Program.launch(file.get().getAbsolutePath());
 				}
 			} else {
-				try {
-					// if the handle exists, but is not a file uri, try open extern with uri
-					if (handle.exists()) {
-						logger.info("Open external file {}", handle.getAbsolutePath()); //$NON-NLS-1$
-						Program.launch(handle.getAbsolutePath());
-					} else {
-						MessageDialog.openError(UiDesk.getTopShell(), Messages.Core_Error,
-								Messages.Core_Document_Not_Opened_Locally);
-						return false;
-					}
-				} catch (IOException e) {
-					logger.error("Could not open file handle [" + handle.getAbsolutePath() + "]", e);
-				}
+				logger.warn("IVirtualFilesystemHandle [" + handle.getAbsolutePath() + "] can not be opened as file");
+				MessageDialog.openError(UiDesk.getTopShell(), Messages.Core_Error,
+						Messages.Core_Document_Not_Opened_Locally);
 			}
 			return true;
 		}
