@@ -32,7 +32,7 @@ public class TarmedLeistung extends AbstractEntityWithId implements EntityWithId
 	public static String MANDANT_TYPE_EXTINFO_KEY = "ch.elexis.data.tarmed.mandant.type";
 
 	public enum MandantType {
-		SPECIALIST, PRACTITIONER
+		SPECIALIST, PRACTITIONER, TARPSYAPPRENTICE
 	}
 
 	public static final String EXT_FLD_TP_TL = "TP_TL";
