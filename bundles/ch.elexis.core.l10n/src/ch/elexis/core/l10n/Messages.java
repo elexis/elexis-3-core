@@ -3830,6 +3830,7 @@ public class Messages extends NLS {
 	public static String RechnungsPrefs_InfoPostAccount;
 	public static String RechnungsPrefs_MandantType;
 	public static String RechnungsPrefs_MandantType_PRACTITIONER;
+	public static String RechnungsPrefs_MandantType_TARPSYAPPRENTICE;
 	public static String RechnungsPrefs_MandatorDetails;
 	public static String RechnungsPrefs_PleseChooseBank;
 	public static String RechnungsPrefs_Responsible_Doctor;
