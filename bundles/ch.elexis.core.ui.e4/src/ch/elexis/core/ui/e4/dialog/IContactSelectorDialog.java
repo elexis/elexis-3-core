@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
@@ -38,7 +40,7 @@ import ch.rgw.tools.TimeTool;
 public class IContactSelectorDialog extends TitleAreaDialog {
 
 	private final IModelService coreModelService;
-	private final Class<? extends IContact> queryClass;
+	private Class<? extends IContact> queryClass;
 
 	private IContact selectedContact;
 
@@ -50,7 +52,8 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private String _message;
 	private String _title;
 	private DialogTrayWithSelectionListener dialogTray;
-
+	private boolean loadOrganizationsOnOpen = false;
+	private boolean loadPatientsOnOpen = false;
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -63,6 +66,14 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		super(parentShell);
 		this.coreModelService = coreModelService;
 		this.queryClass = queryClass;
+	}
+
+	public void setLoadOrganizationsOnOpen(boolean load) {
+		this.loadOrganizationsOnOpen = load;
+	}
+
+	public void setLoadPatientsOnOpen(boolean load) {
+		this.loadPatientsOnOpen = load;
 	}
 
 	public void setDialogTray(DialogTrayWithSelectionListener dialogTray) {
@@ -160,10 +171,36 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		if (initialInput != null) {
 			tableViewerContacts.setInput(initialInput);
 		}
-
+		if (loadOrganizationsOnOpen && IOrganization.class.isAssignableFrom(queryClass)) {
+			loadInitialOrganizations();
+		} else if (loadPatientsOnOpen && IPatient.class.isAssignableFrom(queryClass)) {
+			loadInitialPatients();
+		}
 		return area;
 	}
 
+	public void initializeForClass(Class<? extends IContact> contactClass) {
+		this.queryClass = contactClass;
+		if (IOrganization.class.isAssignableFrom(contactClass)) {
+			setLoadOrganizationsOnOpen(true);
+		} else if (IPatient.class.isAssignableFrom(contactClass)) {
+			setLoadPatientsOnOpen(true);
+		}
+	}
+
+	private void loadInitialPatients() {
+		IQuery<IPatient> query = coreModelService.getQuery(IPatient.class);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, IQuery.ORDER.ASC);
+		List<IPatient> patients = query.execute();
+		tableViewerContacts.setInput(patients);
+	}
+	
+	private void loadInitialOrganizations() {
+		IQuery<IOrganization> query = coreModelService.getQuery(IOrganization.class);
+		query.orderBy(ModelPackage.Literals.ICONTACT__DESCRIPTION1, IQuery.ORDER.ASC);
+		List<IOrganization> organizations = query.execute();
+		tableViewerContacts.setInput(organizations);
+	}
 	private void refresh() {
 		String _text = text.getText();
 
