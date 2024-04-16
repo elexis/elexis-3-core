@@ -61,7 +61,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		try {
 			String stringValue = getStringValue();
 			if (StringUtils.isNotBlank(stringValue)) {
-				IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(getStringValue());
+				IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(getStringValue(), false);
 				inputUri = fileHandle.toURL().toURI();
 			}
 		} catch (URISyntaxException | IOException e) {

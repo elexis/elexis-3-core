@@ -20,9 +20,12 @@ public class VirtualFilesystemService implements IVirtualFilesystemService {
 	private IContextService contextService;
 
 	@Override
-	public IVirtualFilesystemHandle of(String uriString) throws IOException {
+	public IVirtualFilesystemHandle of(String uriString, boolean performVariableReplacement) throws IOException {
 		try {
-			String _uriString = performVariableReplacement(uriString);
+			String _uriString = uriString;
+			if (performVariableReplacement) {
+				_uriString = performVariableReplacement(_uriString);
+			}
 			URI uri = IVirtualFilesystemService.stringToURI(_uriString);
 			return new VirtualFilesystemHandle(uri);
 		} catch (MalformedURLException | URISyntaxException e) {

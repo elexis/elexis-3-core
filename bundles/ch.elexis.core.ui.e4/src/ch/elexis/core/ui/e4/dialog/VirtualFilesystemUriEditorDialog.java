@@ -54,6 +54,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	private Text txtUri;
 	private Combo comboScheme;
 	private boolean passwortPhase = false;
+
 	/**
 	 * Create the dialog.
 	 *
@@ -148,16 +149,17 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			}
 		});
 		txtPassword.addFocusListener(new FocusListener() {
-		    @Override
-		    public void focusGained(FocusEvent e) {
-		        txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		    }
-		    @Override
-		    public void focusLost(FocusEvent e) {
-		        if (txtPassword.getText().isEmpty()) {
-		            txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-		        }
-		    }
+			@Override
+			public void focusGained(FocusEvent e) {
+				txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (txtPassword.getText().isEmpty()) {
+					txtPassword.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+				}
+			}
 		});
 		Label lblNewLabel = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
@@ -229,6 +231,9 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 
+		IConverter<String, String> partialMimeDecoder = IConverter.create(String.class, String.class,
+				s -> s != null ? s.replace("%7B", "{").replace("%7D", "}") : "");
+
 		//
 		ISWTObservableValue<String> widgetScheme = WidgetProperties.comboSelection().observe(comboScheme);
 		IObservableValue<String> modelScheme = BeanProperties.value(MyURI.class, "scheme", String.class).observe(uri);
@@ -247,7 +252,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		//
 		IObservableValue<String> widgetPath = WidgetProperties.text(SWT.Modify).observe(txtPath);
 		IObservableValue<String> modelPath = BeanProperties.value(MyURI.class, "path", String.class).observe(uri);
-		bindingContext.bindValue(widgetPath, modelPath, null, null);
+		bindingContext.bindValue(widgetPath, modelPath, null, UpdateValueStrategy.create(partialMimeDecoder));
 
 		//
 		IObservableValue<String> widgetPass = WidgetProperties.text(SWT.Modify).observe(txtPassword);
@@ -257,7 +262,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		//
 		IObservableValue<String> widgetUser = WidgetProperties.text(SWT.Modify).observe(txtUser);
 		IObservableValue<String> modelUser = BeanProperties.value(MyURI.class, "user", String.class).observe(uri);
-		bindingContext.bindValue(widgetUser, modelUser, null, null);
+		bindingContext.bindValue(widgetUser, modelUser, null, UpdateValueStrategy.create(partialMimeDecoder));
 
 		//
 		IConverter<String, URI> stringToUriConverter = IConverter.create(String.class, URI.class,
@@ -401,7 +406,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			}
 			return null;
 		}
-		
+
 		public void setUri(URI uri) {
 			setScheme(uri.getScheme());
 			setHost(uri.getHost());

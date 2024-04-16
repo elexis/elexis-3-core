@@ -39,7 +39,23 @@ public interface IVirtualFilesystemService {
 	 * @return
 	 * @throws IOException
 	 */
-	IVirtualFilesystemHandle of(String urlString) throws IOException;
+	default IVirtualFilesystemHandle of(String urlString) throws IOException {
+		return of(urlString, true);
+	}
+
+	/**
+	 * Generate a handle from an URL or UNC string. UNC paths (e.g.
+	 * \\server\share\folder) are directly passed to the OS in windows, and
+	 * rewritten to URL format (e.g. smb://server/share/folder) on other operating
+	 * systems.
+	 * 
+	 * @param urlString
+	 * @param performVariableReplacement
+	 * @return
+	 * @throws IOException
+	 * @since 3.12
+	 */
+	IVirtualFilesystemHandle of(String urlString, boolean performVariableReplacement) throws IOException;
 
 	IVirtualFilesystemHandle of(File file) throws IOException;
 
@@ -286,7 +302,7 @@ public interface IVirtualFilesystemService {
 	 */
 	public static URI stringToURI(String value) throws URISyntaxException, MalformedURLException {
 
-		value = value.replaceAll("%20", StringUtils.SPACE);
+		value = value.replaceAll("%20", StringUtils.SPACE).replace("%7B", "{").replace("%7D", "}");
 
 		// C:\main.c++ -> file:/C:/main.c++
 		if (value.length() > 2 && value.charAt(1) == ':') {
