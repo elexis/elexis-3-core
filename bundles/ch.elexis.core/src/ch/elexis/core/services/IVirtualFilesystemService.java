@@ -83,7 +83,10 @@ public interface IVirtualFilesystemService {
 		if (userInfo == null) {
 			return url.toString();
 		}
-		String replacement = userInfo.substring(0, userInfo.indexOf(':')) + ":***";
+		String replacement = userInfo;
+		if (userInfo.indexOf(':') > 0) {
+			replacement = userInfo.substring(0, userInfo.indexOf(':')) + ":***";
+		}
 		return urlString.replace(userInfo, replacement);
 	}
 
