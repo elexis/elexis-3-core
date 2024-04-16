@@ -148,7 +148,7 @@ public class TaskTriggerTypeConfigurationComposite extends AbstractTaskDescripto
 			try {
 				String _urlText = urlText.getText();
 				if (StringUtils.isNotBlank(_urlText)) {
-					IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(_urlText);
+					IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(_urlText, false);
 					inputUri = fileHandle.toURL().toURI();
 				}
 			} catch (URISyntaxException | IOException e) {
