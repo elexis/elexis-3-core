@@ -39,6 +39,9 @@ public class FindingsModelService extends AbstractModelService implements IModel
 		this.entityManager.closeEntityManager(entityManager);
 	}
 
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+
 	@Reference
 	private EventAdmin eventAdmin;
 
@@ -162,5 +165,10 @@ public class FindingsModelService extends AbstractModelService implements IModel
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected IModelService getCoreModelService() {
+		return coreModelService;
 	}
 }

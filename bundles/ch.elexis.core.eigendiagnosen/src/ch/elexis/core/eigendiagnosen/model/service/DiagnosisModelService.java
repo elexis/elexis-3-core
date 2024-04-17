@@ -29,6 +29,9 @@ public class DiagnosisModelService extends AbstractModelService implements IMode
 	@Reference(cardinality = ReferenceCardinality.MANDATORY, target = "(id=default)")
 	private IElexisEntityManager entityManager;
 
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+
 	@Override
 	protected EntityManager getEntityManager(boolean managed) {
 		return (EntityManager) entityManager.getEntityManager(managed);
@@ -132,5 +135,10 @@ public class DiagnosisModelService extends AbstractModelService implements IMode
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected IModelService getCoreModelService() {
+		return coreModelService;
 	}
 }
