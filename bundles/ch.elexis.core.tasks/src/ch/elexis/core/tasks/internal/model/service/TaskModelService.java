@@ -22,6 +22,9 @@ import ch.elexis.core.services.IStoreToStringContribution;
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model")
 public class TaskModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {
 
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
+
 	@Reference
 	private IElexisEntityManager entityManager;
 
@@ -126,5 +129,10 @@ public class TaskModelService extends AbstractModelService implements IModelServ
 	@Override
 	public String getTypeForModel(Class<?> interfaze) {
 		return null;
+	}
+
+	@Override
+	protected IModelService getCoreModelService() {
+		return coreModelService;
 	}
 }

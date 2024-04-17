@@ -189,4 +189,9 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 		}
 		return null;
 	}
+
+	@Override
+	protected IModelService getCoreModelService() {
+		return this;
+	}
 }

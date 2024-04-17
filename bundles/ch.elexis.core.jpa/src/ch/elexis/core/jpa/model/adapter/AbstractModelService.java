@@ -59,6 +59,14 @@ public abstract class AbstractModelService implements IModelService {
 
 	protected ExecutorService executor = Executors.newCachedThreadPool();
 
+	/**
+	 * Get the core model service to perform delete of XID. Can return null if model
+	 * does not use XID.
+	 * 
+	 * @return
+	 */
+	protected abstract IModelService getCoreModelService();
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache) {
@@ -423,11 +431,13 @@ public abstract class AbstractModelService implements IModelService {
 	}
 
 	private void deleteXids(Identifiable identifiable) {
-		INamedQuery<IXid> query = getNamedQuery(IXid.class, "objectid");
-		query.executeWithParameters(query.getParameterMap("objectid", identifiable.getId())).forEach(xid -> {
-			xid.setDeleted(true);
-			identifiable.addChanged(xid);
-		});
+		if (getCoreModelService() != null) {
+			INamedQuery<IXid> query = getCoreModelService().getNamedQuery(IXid.class, "objectid");
+			query.executeWithParameters(query.getParameterMap("objectid", identifiable.getId())).forEach(xid -> {
+				xid.setDeleted(true);
+				getCoreModelService().save(xid);
+			});
+		}
 	}
 
 	@Override
