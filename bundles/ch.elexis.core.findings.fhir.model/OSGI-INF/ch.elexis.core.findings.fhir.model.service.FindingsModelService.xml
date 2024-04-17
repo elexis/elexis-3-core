@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" name="ch.elexis.core.findings.fhir.model.service.FindingsModelService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.fhir.model.service.FindingsModelService">
    <property name="service.model.name" value="ch.elexis.core.findings.model"/>
    <service>
       <provide interface="ch.elexis.core.services.IModelService"/>
       <provide interface="ch.elexis.core.services.IStoreToStringContribution"/>
    </service>
+   <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="entityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="entityManager" target="(id=default)"/>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
    <implementation class="ch.elexis.core.findings.fhir.model.service.FindingsModelService"/>
