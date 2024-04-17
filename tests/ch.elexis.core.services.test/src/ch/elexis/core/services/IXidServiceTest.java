@@ -33,5 +33,31 @@ public class IXidServiceTest extends AbstractServiceTest {
 		assertEquals("first", service.findObject("domain", "domainId", IPatient.class).get().getFirstName());
 
 		coreModelService.remove(patient);
+		// remove leaves dangling xid
+		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "objectid");
+		xids = query.executeWithParameters(query.getParameterMap("objectid", patient.getId()));
+		assertEquals(1, xids.size());
+
+		coreModelService.remove(xids.get(0));
+	}
+
+	@Test
+	public void addAndDeleteIncludingXids() {
+		TestDatabaseInitializer.getXidService().localRegisterXIDDomainIfNotExists("domain", "domain",
+				XidConstants.ASSIGNMENT_LOCAL);
+
+		IPatient patient = new IContactBuilder.PatientBuilder(coreModelService, "first", "last", LocalDate.now(),
+				Gender.FEMALE).buildAndSave();
+		service.addXid(patient, "domain", "domainId", true);
+
+		INamedQuery<IXid> query = coreModelService.getNamedQuery(IXid.class, "objectid");
+		List<IXid> xids = query.executeWithParameters(query.getParameterMap("objectid", patient.getId()));
+		assertEquals(1, xids.size());
+
+		coreModelService.delete(patient);
+		
+		query = coreModelService.getNamedQuery(IXid.class, "objectid");
+		xids = query.executeWithParameters(query.getParameterMap("objectid", patient.getId()));
+		assertEquals(0, xids.size());
 	}
 }

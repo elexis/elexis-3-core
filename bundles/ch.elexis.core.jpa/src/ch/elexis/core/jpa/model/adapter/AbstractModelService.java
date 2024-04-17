@@ -44,6 +44,7 @@ import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
@@ -453,10 +454,19 @@ public abstract class AbstractModelService implements IModelService {
 		}
 	}
 
+	private void deleteXids(Identifiable identifiable) {
+		INamedQuery<IXid> query = getNamedQuery(IXid.class, "objectid");
+		query.executeWithParameters(query.getParameterMap("objectid", identifiable.getId())).forEach(xid -> {
+			xid.setDeleted(true);
+			identifiable.addChanged(xid);
+		});
+	}
+
 	@Override
 	public void delete(Deleteable deletable) {
 		if (evaluateRight(deletable.getClass(), Right.DELETE)) {
 			deletable.setDeleted(true);
+			deleteXids((Identifiable) deletable);
 			save((Identifiable) deletable);
 			createDBLog((Identifiable) deletable);
 			postEvent(ElexisEventTopics.EVENT_DELETE, deletable);
@@ -471,6 +481,7 @@ public abstract class AbstractModelService implements IModelService {
 				List<Identifiable> identifiables = new ArrayList<>();
 				deletables.forEach(item -> {
 					item.setDeleted(true);
+					deleteXids((Identifiable) item);
 					identifiables.add((Identifiable) item);
 				});
 				save(identifiables);
