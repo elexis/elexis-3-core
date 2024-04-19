@@ -97,6 +97,7 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 			encounterHelper.createIEncounter(iEncounter).ifPresent(cons -> {
 				iEncounter.setConsultationId(cons.getId());
 				attributeMapper.fhirToElexis(fhirObject, cons);
+				coreModelService.save(cons);
 				AbstractHelper.acquireAndReleaseLock(cons);
 			});
 			findingsService.saveFinding(iEncounter);
