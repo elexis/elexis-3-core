@@ -1,7 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer.helper;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +37,6 @@ public class IEncounterHelper extends AbstractHelper {
 				ICoverage fall = getOrCreateDefaultFall(patient.get());
 				ch.elexis.core.model.IEncounter encounter = new IEncounterBuilder(coreModelService, fall,
 						serviceProvider.get()).buildAndSave();
-				Optional<LocalDateTime> startTime = iEncounter.getStartTime();
-				if (startTime.isPresent()) {
-					encounter.setDate(startTime.get().toLocalDate());
-				} else {
-					encounter.setDate(LocalDate.now());
-				}
 				findingsModelService.save(encounter);
 				ret = Optional.of(encounter);
 			}
@@ -52,7 +44,7 @@ public class IEncounterHelper extends AbstractHelper {
 		return ret;
 	}
 
-	private ICoverage getOrCreateDefaultFall(IPatient patient) {
+	public ICoverage getOrCreateDefaultFall(IPatient patient) {
 		List<ICoverage> coverages = patient.getCoverages();
 		ICoverage defaultCoverage = lookUpDefaultFall(coverages);
 		if (defaultCoverage == null) {

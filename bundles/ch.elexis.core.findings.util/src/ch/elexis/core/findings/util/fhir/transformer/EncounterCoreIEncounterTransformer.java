@@ -3,7 +3,6 @@ package ch.elexis.core.findings.util.fhir.transformer;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Encounter;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -12,52 +11,39 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.findings.IEncounter;
-import ch.elexis.core.findings.IFindingsService;
-import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IEncounterEncounterAttributeMapper;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IModelService;
 
 @Component
-public class EncounterIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
+public class EncounterCoreIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	private IModelService findingsModelService;
-
-	@Reference
-	private IFindingsService findingsService;
-
-	@Reference
-	private IMigratorService migratorService;
-
-	private FindingsContentHelper contentHelper;
-	private IEncounterHelper encounterHelper;
 	private IEncounterEncounterAttributeMapper attributeMapper;
+	private IEncounterHelper encounterHelper;
 
 	@Activate
 	public void activate() {
-		contentHelper = new FindingsContentHelper();
-		encounterHelper = new IEncounterHelper(coreModelService, findingsModelService);
 		attributeMapper = new IEncounterEncounterAttributeMapper();
+		encounterHelper = new IEncounterHelper(coreModelService, null);
 	}
 
 	@Override
 	public Optional<Encounter> getFhirObject(IEncounter localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
-		if (resource.isPresent()) {
-			return Optional.of((Encounter) resource.get());
-		}
-		return Optional.empty();
+		Encounter encounter = new Encounter();
+		attributeMapper.elexisToFhir(localObject, encounter, summaryEnum, includes);
+		return Optional.of(encounter);
+
 	}
 
 	@Override
@@ -65,7 +51,7 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 		if (fhirObject != null && fhirObject.getId() != null) {
 			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
 			if (localId.isPresent()) {
-				return findingsService.findById(localId.get(), IEncounter.class);
+				return coreModelService.load(localId.get(), IEncounter.class);
 			}
 		}
 		return Optional.empty();
@@ -73,13 +59,9 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 
 	@Override
 	public Optional<IEncounter> updateLocalObject(Encounter fhirObject, IEncounter localObject) {
-		Optional<ch.elexis.core.model.IEncounter> behandlung = coreModelService.load(localObject.getConsultationId(),
-				ch.elexis.core.model.IEncounter.class);
-		behandlung.ifPresent(cons -> {
-			attributeMapper.fhirToElexis(fhirObject, cons);
-			migratorService.migrateConsultationsFindings(localObject.getConsultationId(), IEncounter.class);
-		});
-		return Optional.empty();
+			attributeMapper.fhirToElexis(fhirObject, localObject);
+			coreModelService.save(localObject);
+			return Optional.of(localObject);
 	}
 
 	@Override
@@ -90,19 +72,15 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 		Optional<IPatient> patientKontakt = coreModelService.load(encounterHelper.getPatientId(fhirObject).get(),
 				IPatient.class);
 		if (performerKontakt.isPresent() && patientKontakt.isPresent()) {
-			IEncounter iEncounter = findingsService.create(IEncounter.class);
-			contentHelper.setResource(fhirObject, iEncounter);
-			patientKontakt.ifPresent(k -> iEncounter.setPatientId(k.getId()));
-			performerKontakt.ifPresent(k -> iEncounter.setMandatorId(k.getId()));
-			encounterHelper.createIEncounter(iEncounter).ifPresent(cons -> {
-				iEncounter.setConsultationId(cons.getId());
-				attributeMapper.fhirToElexis(fhirObject, cons);
-				AbstractHelper.acquireAndReleaseLock(cons);
-			});
-			findingsService.saveFinding(iEncounter);
+			ICoverage fall = encounterHelper.getOrCreateDefaultFall(patientKontakt.get());
+
+			IEncounter iEncounter = new IEncounterBuilder(coreModelService, fall, performerKontakt.get()).build();
+			attributeMapper.fhirToElexis(fhirObject, iEncounter);
+			coreModelService.save(iEncounter);
+			AbstractHelper.acquireAndReleaseLock(iEncounter);
 			return Optional.of(iEncounter);
 		} else {
-			LoggerFactory.getLogger(EncounterIEncounterTransformer.class)
+			LoggerFactory.getLogger(EncounterCoreIEncounterTransformer.class)
 					.warn("Could not create encounter for mandator [" + performerKontakt + "] patient ["
 							+ patientKontakt + "]");
 		}
