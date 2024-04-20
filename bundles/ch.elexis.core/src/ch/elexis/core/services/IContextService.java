@@ -19,7 +19,7 @@ public interface IContextService {
 	 *
 	 * @return
 	 */
-	public IContext getRootContext();
+	IContext getRootContext();
 
 	/**
 	 * Get the active {@link IUser} from the root context.
@@ -157,6 +157,16 @@ public interface IContextService {
 	 */
 	default public void removeTyped(Class<?> clazz) {
 		getRootContext().removeTyped(clazz);
+	}
+
+	/**
+	 * Set an {@link Object} identified by the name from the context.
+	 * 
+	 * @param name
+	 * @param object
+	 */
+	default public void setNamed(String name, Object object) {
+		getRootContext().setNamed(name, object);
 	}
 
 	/**

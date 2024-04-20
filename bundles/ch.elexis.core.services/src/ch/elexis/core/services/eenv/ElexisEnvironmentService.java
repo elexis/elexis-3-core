@@ -1,6 +1,10 @@
 package ch.elexis.core.services.eenv;
 
+import java.util.Timer;
+
 import org.apache.commons.lang3.StringUtils;
+import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.AccessTokenResponse;
@@ -11,6 +15,7 @@ import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.time.TimeUtil;
 
 // Activated via ElexisEnvironmentServiceActivator
 public class ElexisEnvironmentService implements IElexisEnvironmentService {
@@ -21,7 +26,8 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 	private IContextService contextService;
 	private IConfigService configService;
 
-//	private CompletableFuture<Map<String, Object>> eeStatus;
+	private KeycloakDeployment keycloakDeployment;
+	private Timer refreshAccessTokenTimer;
 
 	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
 			IConfigService configService) {
@@ -30,31 +36,15 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		this.configService = configService;
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
-//		eeStatus = CompletableFuture.supplyAsync(() -> {
-//			// FIXME WHAT IF NOT READY SET??
-//			try (InputStream is = new URL(getBaseUrl() + "/.status.json").openStream()) {
-//				String json = IOUtils.toString(is, "UTF-8");
-//				return new Gson().fromJson(json, Map.class);
-//			} catch (IOException e) {
-//				logger.warn("Could not load status.json", e);
-//				return Collections.emptyMap();
-//			}
-//		});
+
+		keycloakDeployment = KeycloakDeploymentBuilder.build(getKeycloakConfiguration());
+		refreshAccessTokenTimer = new Timer("Refresh EE access-token", true); //$NON-NLS-1$
+		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(keycloakDeployment, contextService),
+				60 * 1000, 60 * 1000);
 	}
 
 	@Override
 	public String getVersion() {
-//		try {
-//			Map eeMap = (Map) eeStatus.get().get("ee");
-//			if (eeMap instanceof Map) {
-//				Map eeMapGit = (Map) eeMap.get("git");
-//				if (eeMapGit instanceof Map) {
-//					return (String) eeMapGit.get("branch");
-//				}
-//			}
-//		} catch (InterruptedException | ExecutionException e) {
-//			logger.warn("", e);
-//		}
 		return "unknown";
 	}
 
@@ -81,11 +71,13 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		try {
 			AuthzClient authzClient = AuthzClient.create(getKeycloakConfiguration());
 			AccessTokenResponse obtainAccessToken = authzClient.obtainAccessToken(username, String.valueOf(password));
-			AccessToken keycloakAccessToken = AccessTokenUtil.load(obtainAccessToken.getToken());
+			AccessToken keycloakAccessToken = AccessTokenUtil.load(obtainAccessToken);
 
 			contextService.getRootContext().setTyped(keycloakAccessToken);
-			logger.info("Loaded access-token for user [{}], valid until [{}]", keycloakAccessToken.getUsername(),
-					keycloakAccessToken.getExpirationTime());
+			logger.info("Loaded access-token for [{}], valid until [{}], refresh until [{}]",
+					keycloakAccessToken.getUsername(),
+					TimeUtil.toLocalDateTime(keycloakAccessToken.getAccessTokenExpiration()),
+					TimeUtil.toLocalDateTime(keycloakAccessToken.refreshTokenExpiration()));
 		} catch (Exception e) {
 			logger.warn("Error obtaining access token", e);
 			return;
