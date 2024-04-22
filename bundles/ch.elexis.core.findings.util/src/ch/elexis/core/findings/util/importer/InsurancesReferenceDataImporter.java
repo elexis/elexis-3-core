@@ -9,6 +9,7 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.StickerServiceHolder;
@@ -22,6 +23,9 @@ public class InsurancesReferenceDataImporter extends FhirBundleReferenceDataImpo
 	private IModelService coreModelService;
 
 	@Reference
+	private IAccessControlService accessControlService;
+
+	@Reference
 	private IStickerService stickerService;
 
 	private ISticker sticker;
@@ -30,8 +34,10 @@ public class InsurancesReferenceDataImporter extends FhirBundleReferenceDataImpo
 	
 	@Activate
 	public void activate() {
-		sticker = getOrCreateInsuranceSticker();
-		readOnlySticker = coreModelService.load(IStickerService.STICKER_ID_READONLY, ISticker.class);
+		accessControlService.doPrivileged(() -> {
+			sticker = getOrCreateInsuranceSticker();
+			readOnlySticker = coreModelService.load(IStickerService.STICKER_ID_READONLY, ISticker.class);
+		});
 	}
 
 	@Override
