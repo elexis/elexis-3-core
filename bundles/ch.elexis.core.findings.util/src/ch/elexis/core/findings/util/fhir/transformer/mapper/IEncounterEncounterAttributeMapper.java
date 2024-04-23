@@ -46,6 +46,12 @@ public class IEncounterEncounterAttributeMapper
 			}
 		}
 
+		accessor.setPrimaryPerformer(target, source.getMandator());
+		if (source.getMandator().getBiller().isPerson() && source.getMandator().getBiller().isMandator()
+				&& !source.getMandator().equals(source.getMandator().getBiller())) {
+			accessor.setAttender(target, source.getMandator().getBiller());			
+		}
+
 		VersionedResource vr = source.getVersionedEntry();
 		if (vr != null) {
 			Samdas samdas = new Samdas(vr.getHead());

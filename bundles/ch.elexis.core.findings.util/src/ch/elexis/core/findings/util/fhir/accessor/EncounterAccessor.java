@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.r4.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.r4.model.Identifier;
@@ -19,6 +21,8 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.ModelUtil;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 
 public class EncounterAccessor extends AbstractFindingsAccessor {
 
@@ -135,5 +139,22 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 		EncounterParticipantComponent participant = new EncounterParticipantComponent();
 		participant.setIndividual(new Reference("Practitioner/" + mandatorId));
 		fhirEncounter.addParticipant(participant);
+	}
+
+	public void setPrimaryPerformer(Encounter target, IMandator mandator) {
+		EncounterParticipantComponent participant = new EncounterParticipantComponent();
+		participant.getTypeFirstRep().addCoding(
+				new Coding("http://hl7.org/fhir/ValueSet/encounter-participant-type", "PPRF", "primary performer"));
+		participant.setIndividual(new Reference("Practitioner/" + mandator.getId()));
+		target.addParticipant(participant);
+	}
+
+	public void setAttender(Encounter target, IContact mandator) {
+		EncounterParticipantComponent participant = new EncounterParticipantComponent();
+		participant.getTypeFirstRep().addCoding(
+				new Coding("http://hl7.org/fhir/ValueSet/encounter-participant-type", "ATND", "attender"));
+		participant.setIndividual(new Reference("Practitioner/" + mandator.getId()));
+		target.addParticipant(participant);
+
 	}
 }

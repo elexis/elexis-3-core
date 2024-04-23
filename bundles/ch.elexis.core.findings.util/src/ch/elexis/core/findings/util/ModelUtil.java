@@ -125,6 +125,13 @@ public class ModelUtil {
 		}
 	}
 
+	public static String getFhirJson(IBaseResource resource) {
+		if (resource != null) {
+			return getJsonParser().encodeResourceToString(resource);
+		}
+		return null;
+	}
+
 	public static void setCodingsToConcept(CodeableConcept codeableConcept, List<ICoding> coding) {
 		codeableConcept.getCoding().clear();
 		for (ICoding iCoding : coding) {
