@@ -182,7 +182,44 @@ public class AppointmentService implements IAppointmentService {
 			String[] splitLimits = intraDayLimits.split("\r*\n\r*");
 			blockTimesMap.put(dayOfWeek, splitLimits);
 		}
-		return blockTimesMap;
+		if (validateBlockTimesMap(blockTimesMap)) {
+			return blockTimesMap;
+		} else {
+			throw new IllegalArgumentException("Invalid block time definition for schedule [" + schedule + "]");
+		}
+	}
+
+	private boolean validateBlockTimesMap(Map<DayOfWeek, String[]> blockTimesMap) {
+		for (DayOfWeek dow : blockTimesMap.keySet()) {
+			String[] values = blockTimesMap.get(dow);
+			if (values == null || values.length == 0) {
+				LoggerFactory.getLogger(getClass()).warn("No block times for " + dow);
+				return false;
+			}
+			for (String string : values) {
+				if (StringUtils.isEmpty(string)) {
+					LoggerFactory.getLogger(getClass()).warn("Empty block time for " + dow);
+					return false;
+				}
+				String[] parts = string.split("-");
+				if(parts == null || parts.length != 2) {
+					LoggerFactory.getLogger(getClass()).warn("Invalid block time " + string + " for " + dow);					
+					return false;
+				}
+				try {
+					Integer low = Integer.parseInt(parts[0]);
+					Integer high = Integer.parseInt(parts[1]);
+					if (low > high) {
+						LoggerFactory.getLogger(getClass()).warn("Invalid block time " + string + " for " + dow);
+						return false;
+					}
+				} catch (NumberFormatException e) {
+					LoggerFactory.getLogger(getClass()).warn("Invalid block time " + string + " for " + dow);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	private void performAssertBlockTimesForSchedule(LocalDate date, String schedule) {
