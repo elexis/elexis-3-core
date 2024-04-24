@@ -50,6 +50,14 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 				+ "1800-2359~#<AMi=A0000-0800\n" + "1800-2359~#<ADi=A0000-0730\n" + "1900-2359~#<AMo=A0000-0800\n"
 				+ "1800-2359~#<ASo=A0000-2359";
 		iConfigService.set("agenda/tagesvorgaben/Greta", blockedTimes);
+
+		iConfigService.set("agenda/tagesvorgaben/Dr. Invalid Block",
+				"FS1~#<ASa=A0000-2359~#<ADo=A0000-0800\n" + "1100-2359~#<AFr=A0000-0800\n" + "1000-1015\n\n" +
+						"1200-1330\n" + "1500-1515\n\n" +
+						"1700-2359~#<AMi=A0000-0800\n" + "1000-1015\n\n" +
+						"1200-1330\n" + "1500-1515\n\n" +
+						"1700-2359~#<ADi=A0000-0800\n" + "1200-1330\n" + "1500-1515\n"
+						+ "1700-2359~#<AMo=A0000-2359~#<ASo=A0000-2359");
 	}
 
 	@Before
@@ -84,6 +92,13 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, wednesday);
 		String[] tuesday = configuredBlockTimes.get(DayOfWeek.TUESDAY);
 		assertArrayEquals(new String[] { "0000-0730", "1900-2359" }, tuesday);
+
+		configuredBlockTimes = appointmentService.getConfiguredBlockTimesBySchedule("Dr. Bakterius");
+		assertEquals(7, configuredBlockTimes.size());
+		String[] monday = configuredBlockTimes.get(DayOfWeek.MONDAY);
+		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, monday);
+		tuesday = configuredBlockTimes.get(DayOfWeek.TUESDAY);
+		assertArrayEquals(new String[] { "0000-0800", "1800-2359" }, tuesday);
 	}
 
 	@Test
@@ -106,6 +121,17 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		assertEquals(LocalDateTime.of(2018, 01, 02, 9, 30), results.get(1).getEndTime());
 		assertEquals(LocalDateTime.of(2018, 01, 02, 18, 0), results.get(2).getStartTime());
 		assertEquals(LocalDateTime.of(2018, 01, 02, 23, 59), results.get(2).getEndTime());
+
+		IllegalArgumentException exception = null;
+		try {
+			appointmentService.assertBlockTimes(LocalDate.of(2025, 02, 24), "Dr. Invalid Block");
+			appointmentService.assertBlockTimes(LocalDate.of(2025, 02, 25), "Dr. Invalid Block");
+			appointmentService.assertBlockTimes(LocalDate.of(2025, 02, 26), "Dr. Invalid Block");
+			appointmentService.assertBlockTimes(LocalDate.of(2025, 02, 27), "Dr. Invalid Block");
+		} catch (IllegalArgumentException e) {
+			exception = e;
+		}
+		assertNotNull(exception);
 	}
 
 	@Test
