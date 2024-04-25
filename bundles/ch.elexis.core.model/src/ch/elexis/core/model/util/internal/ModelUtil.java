@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.Userconfig;
@@ -33,7 +32,6 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
-import ch.elexis.core.utils.CoreUtil;
 
 /**
  * Utility class with core model specific methods
@@ -47,20 +45,6 @@ public class ModelUtil {
 
 	private static final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 	private static DateTimeFormatter defaultDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-	public static String getExternFilePath() {
-		return getAsExternFilePath(getConfig(Preferences.P_TEXT_EXTERN_FILE_PATH, null));
-	}
-
-	private static String getAsExternFilePath(String path) {
-		if (path != null && path.contains("[home]")) {
-			path = path.replace("[home]", CoreUtil.getWritableUserDir().getAbsolutePath());
-			LoggerFactory.getLogger(ModelUtil.class)
-					.warn("Replaced [home] -> [" + CoreUtil.getWritableUserDir().getAbsolutePath()
-							+ "] in extern file path result is [" + path + "]");
-		}
-		return path;
-	}
 
 	/**
 	 * Test if there is a matching {@link Config} entry with a value that can be

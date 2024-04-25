@@ -55,6 +55,12 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	}
 
 	@Override
+	protected void doStore() {
+		// TODO Auto-generated method stub
+		super.doStore();
+	}
+
+	@Override
 	protected String changePressed() {
 		IVirtualFilesystemService virtualFilesystemService = VirtualFilesystemServiceHolder.get();
 		URI inputUri = null;
