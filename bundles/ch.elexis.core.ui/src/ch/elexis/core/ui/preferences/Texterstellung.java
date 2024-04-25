@@ -50,6 +50,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.preferences.PreferencesUtil;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -164,23 +165,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 
 		cvOs.addSelectionChangedListener(event -> {
 			CoreUtil.OS selection = (OS) event.getStructuredSelection().getFirstElement();
-			String preferenceName;
-			switch (selection) {
-			case MAC:
-				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
-				break;
-			case WINDOWS:
-				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
-				break;
-			case LINUX:
-				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
-				break;
-			default:
-				preferenceName = Preferences.P_TEXT_EXTERN_FILE_PATH;
-				break;
-			}
 			storePath.store();
-			storePath.setPreferenceName(preferenceName);
+			storePath.setPreferenceName(PreferencesUtil.getOsSpecificPreferenceName(selection, Preferences.P_TEXT_EXTERN_FILE_PATH));
 			storePath.load();
 		});
 
