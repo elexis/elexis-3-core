@@ -13,13 +13,12 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.preferences.PreferencesUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
-import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.CoreUtil.OS;
 import ch.rgw.tools.MimeTool;
 
 public class DocumentLetterUtil {
@@ -43,7 +42,8 @@ public class DocumentLetterUtil {
 			return null;
 		}
 
-		String path = getOperatingSystemSpecificExternalStoragePath();
+		String path = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
+				ConfigServiceHolder.get());
 		if (path == null) {
 			logger.error("External storage path is [null]");
 			return null;
@@ -142,22 +142,22 @@ public class DocumentLetterUtil {
 		return targetFile;
 	}
 
-	public static String getOperatingSystemSpecificExternalStoragePath() {
-		OS operatingSystem = CoreUtil.getOperatingSystemType();
-		String setting = switch (operatingSystem) {
-		case WINDOWS -> Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
-		case MAC -> Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
-		case LINUX -> Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
-		default -> Preferences.P_TEXT_EXTERN_FILE_PATH;
-		};
-		String path = ConfigServiceHolder.getGlobal(setting, null);
-		if (path == null) {
-			LoggerFactory.getLogger(DocumentLetterUtil.class)
-					.warn("No OS specific path set, reverting to generic setting");
-			path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
-		}
-		return path;
-	}
+//	public static String getOperatingSystemSpecificExternalStoragePath() {
+//		OS operatingSystem = CoreUtil.getOperatingSystemType();
+//		String setting = switch (operatingSystem) {
+//		case WINDOWS -> Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
+//		case MAC -> Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
+//		case LINUX -> Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
+//		default -> Preferences.P_TEXT_EXTERN_FILE_PATH;
+//		};
+//		String path = ConfigServiceHolder.getGlobal(setting, null);
+//		if (path == null) {
+//			LoggerFactory.getLogger(DocumentLetterUtil.class)
+//					.warn("No OS specific path set, reverting to generic setting");
+//			path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+//		}
+//		return path;
+//	}
 
 	/**
 	 * Get the file extension part of the input String.

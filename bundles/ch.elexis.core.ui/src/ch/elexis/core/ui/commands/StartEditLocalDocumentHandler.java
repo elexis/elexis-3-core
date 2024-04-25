@@ -27,6 +27,7 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.util.DocumentLetterUtil;
+import ch.elexis.core.preferences.PreferencesUtil;
 import ch.elexis.core.services.IConflictHandler;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.ILocalDocumentService;
@@ -132,7 +133,8 @@ public class StartEditLocalDocumentHandler extends AbstractHandler implements IH
 	public static void convertDocx2Pdf(Optional<File> file) {
 		for (String format : List.of("pdf", "txt")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String filePath = file.get().getAbsolutePath();
-			String storage = DocumentLetterUtil.getOperatingSystemSpecificExternalStoragePath();
+			String storage = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
+					ConfigServiceHolder.get());
 			String fullCmd = String.format("libreoffice --headless --convert-to %s --outdir %s %s", format, storage, //$NON-NLS-1$
 					filePath);
 			logger.info("Convert external file using"); //$NON-NLS-1$
