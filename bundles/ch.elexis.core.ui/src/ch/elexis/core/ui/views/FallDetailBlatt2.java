@@ -1188,16 +1188,27 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		// *** loop through field list, creating the controls
 		for (String req : fieldList.split(DEFINITIONSDELIMITER)) {
-			// clear new ones are created
-			focusreacts.clear();
-
 			final String[] r = req.split(ARGUMENTSSDELIMITER);
-			if (r.length < 2) { // *** needs at least fieldName and fieldType...
+			if (r.length < 2) {
+				continue;
+			}
+			if ("Covercard".equals(r[0])) {
 				continue;
 			}
 
-			// *** read the saved value from the db
-			String val = f.getInfoString(r[0]);
+			Object rawValue = f.getInfoString(r[0]);
+			String val;
+
+			if (rawValue instanceof String) {
+				val = (String) rawValue;
+			} else if (rawValue != null) {
+				val = rawValue.toString();
+			} else {
+				continue;
+			}
+			if ("VEKAValid".equals(r[0])) {
+				val = formatDateString(val);
+			}
 
 			// *** create label or hyperlink for this field
 			Hyperlink hl = null;
@@ -1236,7 +1247,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 						// String tmp = (String)
 						// textContainer.replaceSQLClause(dummyBrief, "SQL:" +
 						// r[3]);
-						String itemsStr = (String) TextContainer.replaceSQLClause("SQL:" + r[3]); //$NON-NLS-1$
+						String itemsStr = TextContainer.replaceSQLClause("SQL:" + r[3]); //$NON-NLS-1$
 						itemsStr = itemsStr.replaceAll("\r\n", ITEMDELIMITER); //$NON-NLS-1$
 						itemsStr = (itemsStr.replaceAll(StringUtils.LF, ITEMDELIMITER)).replaceAll(StringUtils.CR, // $NON-NLS-1$
 								ITEMDELIMITER);
@@ -1626,4 +1637,12 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			return true;
 		}
 	}
+
+	private String formatDateString(String rawDate) {
+		if (rawDate != null && rawDate.matches("\\d{8}")) {
+			return rawDate.substring(6, 8) + "." + rawDate.substring(4, 6) + "." + rawDate.substring(0, 4);
+		}
+		return rawDate;
+	}
+
 }
