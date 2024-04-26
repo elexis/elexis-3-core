@@ -5020,6 +5020,7 @@ public class Messages extends NLS {
 	public static String Next;
 	public static String TarmedCodeSelectorFactoryDetailsButton;
 	public static String TarmedCodeSelectorFactoryDetailsTitel;
+	public static String Statistics_Info;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
