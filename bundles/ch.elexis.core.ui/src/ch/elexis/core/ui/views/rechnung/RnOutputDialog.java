@@ -14,6 +14,7 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +42,6 @@ import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.ui.icons.ImageSize;
-import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Rechnung;
 
@@ -79,9 +78,14 @@ public class RnOutputDialog extends TitleAreaDialog {
 		final Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		bottom.setLayout(stack);
+		List<String> excludeDescriptions = Arrays.asList("Privatrechnung drucken", "Privatrechnung auf Drucker",
+				"Privatrechnung B. auf Drucker", "PDF Output");
 		for (IRnOutputter ro : lo) {
-			cbLo.add(ro.getDescription());
-			ctls.add((Control) ro.createSettingsControl(bottom));
+			String description = ro.getDescription();
+			if (!excludeDescriptions.contains(description)) {
+				cbLo.add(description);
+				ctls.add((Control) ro.createSettingsControl(bottom));
+			}
 		}
 		cbLo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -192,7 +196,6 @@ public class RnOutputDialog extends TitleAreaDialog {
 			setTitle(Messages.Core_Output_Invoice); // $NON-NLS-1$
 			setMessage(Messages.RnOutputDialog_outputBillMessage); // $NON-NLS-1$
 		}
-		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 
 	@Override
