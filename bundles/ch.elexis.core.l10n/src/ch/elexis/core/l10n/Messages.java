@@ -4978,6 +4978,7 @@ public class Messages extends NLS {
 	public static String DocumentMetaDataDialog_deleteCategoryConfirmText;
 	public static String DocumentMetaDataDialog_deleteCategoryComboConfirmText;
 	public static String DocumentMetaDataDialog_deleteCategoryComboConfirm;
+	public static String Statistics_Info;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
