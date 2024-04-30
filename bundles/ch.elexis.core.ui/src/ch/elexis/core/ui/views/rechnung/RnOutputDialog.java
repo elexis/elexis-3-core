@@ -14,7 +14,6 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -78,14 +77,9 @@ public class RnOutputDialog extends TitleAreaDialog {
 		final Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		bottom.setLayout(stack);
-		List<String> excludeDescriptions = Arrays.asList("Privatrechnung drucken", "Privatrechnung auf Drucker",
-				"Privatrechnung B. auf Drucker", "PDF Output");
 		for (IRnOutputter ro : lo) {
-			String description = ro.getDescription();
-			if (!excludeDescriptions.contains(description)) {
-				cbLo.add(description);
-				ctls.add((Control) ro.createSettingsControl(bottom));
-			}
+			cbLo.add(ro.getDescription());
+			ctls.add((Control) ro.createSettingsControl(bottom));
 		}
 		cbLo.addSelectionListener(new SelectionAdapter() {
 			@Override
