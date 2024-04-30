@@ -1188,6 +1188,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 		// *** loop through field list, creating the controls
 		for (String req : fieldList.split(DEFINITIONSDELIMITER)) {
+			focusreacts.clear();
 			final String[] r = req.split(ARGUMENTSSDELIMITER);
 			if (r.length < 2) {
 				continue;
