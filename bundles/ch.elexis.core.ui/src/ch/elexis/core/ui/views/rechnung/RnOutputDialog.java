@@ -41,8 +41,6 @@ import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.ui.icons.ImageSize;
-import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Rechnung;
 
@@ -192,7 +190,6 @@ public class RnOutputDialog extends TitleAreaDialog {
 			setTitle(Messages.Core_Output_Invoice); // $NON-NLS-1$
 			setMessage(Messages.RnOutputDialog_outputBillMessage); // $NON-NLS-1$
 		}
-		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 	}
 
 	@Override

@@ -21,7 +21,7 @@
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="rsc/elexis2_16.gif" i32="rsc/elexis32_2.gif" i48="rsc/elexis48.gif"/>
+   <windowImages i16="rsc/Elexis_icon16x16.png" i32="rsc/Elexis_icon32x32.png" i48="rsc/Elexis_icon48x48.png" i64="rsc/Elexis_icon64x64.png" i128="rsc/Elexis_icon128x128.png" i256="rsc/Elexis_icon.png"/>
 
    <splash
       location="ch.elexis.core.product" />
