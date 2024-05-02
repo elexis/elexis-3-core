@@ -4974,7 +4974,10 @@ public class Messages extends NLS {
 	public static String Prefs_DefaultMessageRecipient;	
 	public static String Inputfield_empty;
 	public static String Warning;
-	public static String Warning_No_Pea;	
+	public static String Warning_No_Pea;
+	public static String DocumentMetaDataDialog_deleteCategoryConfirmText;
+	public static String DocumentMetaDataDialog_deleteCategoryComboConfirmText;
+	public static String DocumentMetaDataDialog_deleteCategoryComboConfirm;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
