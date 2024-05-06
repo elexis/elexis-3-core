@@ -128,20 +128,22 @@ public class IContactHelper extends AbstractHelper {
 
 	public void mapIdentifiers(List<Identifier> identifiers, IContact target) {
 		for (Identifier identifier : identifiers) {
-			switch (identifier.getSystem()) {
-			case XidConstants.CH_AHV:
-			case FhirChConstants.OID_AHV13_SYSTEM:
-				target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
-				break;
-			case XidConstants.EAN:
-			case FhirChConstants.OID_GLN_SYSTEM:
-				target.addXid(XidConstants.EAN, identifier.getValue(), true);
-				break;
-			case FhirChConstants.BSV_NUMMER_SYSTEM:
-				target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
-				break;
-			default:
-				break;
+			if (StringUtils.isNotBlank(identifier.getValue())) {
+				switch (identifier.getSystem()) {
+				case XidConstants.CH_AHV:
+				case FhirChConstants.OID_AHV13_SYSTEM:
+					target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
+					break;
+				case XidConstants.EAN:
+				case FhirChConstants.OID_GLN_SYSTEM:
+					target.addXid(XidConstants.EAN, identifier.getValue(), true);
+					break;
+				case FhirChConstants.BSV_NUMMER_SYSTEM:
+					target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

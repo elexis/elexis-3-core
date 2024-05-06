@@ -589,7 +589,7 @@
           name="Elexis OpenSource">
        <property
              name="windowImages"
-             value="rsc/elexis2_16.gif,rsc/elexis32_2.gif,rsc/elexis48.gif">
+             value="rsc/Elexis_icon16x16.png,rsc/Elexis_icon32x32.png,rsc/Elexis_icon48x48.png,rsc/Elexis_icon64x64.png,rsc/Elexis_icon128x128.png,rsc/Elexis_icon.png">
        </property>
        <property
              name="aboutText"
