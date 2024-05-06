@@ -11,6 +11,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -42,6 +43,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -130,6 +132,25 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		setTitleImage(Images.lookupImage("tick_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
 	}
 
+	private void setViewerUserInput() {
+		List<Object> inputList = new ArrayList<>();
+		inputList.add(TX_ALL);
+		inputList.addAll(getUsers());
+		lvResponsible.setInput(inputList);
+		lvResponsible.refresh();
+	}
+
+	private void setViewerGroupInput() {
+		lvResponsible.setInput(getUserGroups());
+		lvResponsible.refresh();
+	}
+
+	private List<IUserGroup> getUserGroups() {
+		List<IUserGroup> userGroups = CoreModelServiceHolder.get().getQuery(IUserGroup.class).execute();
+		userGroups.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
+		return userGroups;
+	}
+
 	private List<Anwender> getUsers() {
 		IQuery<IUser> userQuery = CoreModelServiceHolder.get().getQuery(IUser.class);
 		userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.NOT_EQUALS, null);
@@ -180,9 +201,26 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		Label lblResponsible = new Label(compositeResponsible, SWT.NONE);
 		lblResponsible.setText(Messages.EditReminderDialog_assigTo);
 
+		Button groupBtn = new Button(compositeResponsible, SWT.CHECK);
+		groupBtn.setText(" Gruppe");
+		groupBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (groupBtn.getSelection()) {
+					setViewerGroupInput();
+				} else {
+					setViewerUserInput();
+				}
+			}
+		});
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gd.verticalIndent = 4;
+		groupBtn.setLayoutData(gd);
+
 		lvResponsible = new ListViewer(compositeResponsible, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_listResponsible = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_listResponsible.heightHint = 150;
+		gd_listResponsible.verticalIndent = 5;
 		lvResponsible.getList().setLayoutData(gd_listResponsible);
 		lvResponsible.setContentProvider(ArrayContentProvider.getInstance());
 		lvResponsible.setLabelProvider(new LabelProvider() {
@@ -191,6 +229,8 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				if (element instanceof Anwender) {
 					Anwender anw = (Anwender) element;
 					return anw.getLabel();
+				} else if (element instanceof IUserGroup) {
+					return ((IUserGroup) element).getGroupname();
 				}
 				return element.toString();
 			}
@@ -206,34 +246,44 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 					// to pin TX_ALL to the list head
 					return 1;
 				}
-				String label1 = ((Anwender) e1).getLabel();
-				String label2 = ((Anwender) e2).getLabel();
-				return label1.toLowerCase().compareTo(label2.toLowerCase());
+				if (e1 instanceof Anwender && e2 instanceof Anwender) {
+					String label1 = ((Anwender) e1).getLabel();
+					String label2 = ((Anwender) e2).getLabel();
+					return label1.toLowerCase().compareTo(label2.toLowerCase());
+				} else if (e1 instanceof IUserGroup && e2 instanceof IUserGroup) {
+					IUserGroup ug1 = (IUserGroup) e1;
+					IUserGroup ug2 = (IUserGroup) e2;
+					return String.CASE_INSENSITIVE_ORDER.compare(ug1.getGroupname(), ug2.getGroupname());
+				}
+				return 0;
 			}
 		});
 		lvResponsible.addSelectionChangedListener(sc -> {
 			responsibles = ((StructuredSelection) sc.getSelection()).toList();
 
-			List<String> persist = new ArrayList<>();
+			List<String> responisbleIds = new ArrayList<>();
 			for (Object responsible : responsibles) {
 				if (responsible instanceof Anwender) {
-					persist.add(((Anwender) responsible).getId());
+					responisbleIds.add(((Anwender) responsible).getId());
+				} else if (responsible instanceof IUserGroup) {
+					List<IUser> users = ((IUserGroup) responsible).getUsers();
+					for (IUser user : users) {
+						if (user.getAssignedContact() != null) {
+							responisbleIds.add(user.getAssignedContact().getId());
+						}
+					}
 				} else {
-					persist.add(responsible.toString());
+					responisbleIds.add(responsible.toString());
 				}
 			}
 
 			boolean defaultResponsibleSelf = ConfigServiceHolder
 					.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false);
 			if (!defaultResponsibleSelf) {
-				ConfigServiceHolder.setUserAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT, persist);
-
+				ConfigServiceHolder.setUserAsList(Preferences.USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT, responisbleIds);
 			}
 		});
-		List<Object> inputList = new ArrayList<>();
-		inputList.add(TX_ALL);
-		inputList.addAll(getUsers());
-		lvResponsible.setInput(inputList);
+		setViewerUserInput();
 
 		Composite compositeMessage = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeMessage = new GridLayout(1, false);
@@ -575,15 +625,29 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 				due, Integer.toString(actionType.numericValue()));
 
 		StructuredSelection ss = (StructuredSelection) lvResponsible.getSelection();
-		@SuppressWarnings("unchecked")
-		List<Object> selectionList = ss.toList();
-		if (selectionList.contains(TX_ALL)) {
-			reminder.setResponsible(null);
-		} else {
-			reminder.setResponsible(selectionList.stream().map(e -> (Anwender) e).collect(Collectors.toList()));
-		}
+		reminder.setResponsible(getResponsible(ss));
 
 		super.okPressed();
+	}
+
+	private List<Anwender> getResponsible(IStructuredSelection selection) {
+		if (!selection.toList().contains(TX_ALL)) {
+			List<Anwender> ret = new ArrayList<Anwender>();
+			for (Object selected : selection.toList()) {
+				if (selected instanceof Anwender) {
+					ret.add((Anwender) selected);
+				} else if (selected instanceof IUserGroup) {
+					List<IUser> users = ((IUserGroup) selected).getUsers();
+					for (IUser user : users) {
+						if (user.getAssignedContact() != null) {
+							ret.add(Anwender.load(user.getAssignedContact().getId()));
+						}
+					}
+				}
+			}
+			return ret;
+		}
+		return null;
 	}
 
 	/**
