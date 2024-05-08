@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import com.github.sardine.impl.SardineException;
+
 public class ClientTest {
 
 	@Before
@@ -48,6 +50,22 @@ public class ClientTest {
 				fail(e.getMessage());
 			}
 		});
+	}
+
+	@Test
+	public void connectAnon() throws MalformedURLException, IOException {
+		URLConnection directory = new URL("dav://localhost:22808/remote.php/dav/files/admin").openConnection();
+		assertTrue(directory instanceof WebdavFile);
+		// access rights are checked on access
+		boolean exception = false;
+		try {
+			Arrays.asList(((WebdavFile) directory).listFiles(null));
+		} catch (Exception e) {
+			assertTrue(e instanceof SardineException);
+			assertEquals(401, ((SardineException) e).getStatusCode());
+			exception = true;
+		}
+		assertTrue(exception);
 	}
 
 	@Test

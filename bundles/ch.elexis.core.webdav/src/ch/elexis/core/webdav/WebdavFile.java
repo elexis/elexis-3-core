@@ -52,9 +52,7 @@ public class WebdavFile extends URLConnection {
 
 	public WebdavFile(URL url) throws MalformedURLException {
 		super(url);
-		if (url.getUserInfo() != null) {
-			webdav = WebdavPool.INSTANCE.getSardine(url);
-		}
+		webdav = WebdavPool.INSTANCE.getSardine(url);
 	}
 
 	@Override
