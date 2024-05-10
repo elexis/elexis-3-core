@@ -350,13 +350,13 @@ public class TextContainer {
 		int maxLineLength = 70;
 		if ("Patient.Diagnosen".equals(b) || "Patient.FamilienAnamnese".equals(b) || "Patient.PersAnamnese".equals(b)
 				|| "Patient.Risiken".equals(b) || "Patient.Allergien".equals(b) && fieldValue instanceof String) {
-			String formattedText = formatDiagnoses((String) fieldValue, maxLineLength);
+			String formattedText = formatTextField((String) fieldValue, maxLineLength);
 			return formattedText;
 		}
 		return readFromPo(o, q[1], showErrors);
 	}
 
-	private String formatDiagnoses(String diagnosesText, int maxLineLength) {
+	private String formatTextField(String diagnosesText, int maxLineLength) {
 		StringBuilder formattedText = new StringBuilder();
 	    String[] lines = diagnosesText.split("\n");
 		boolean inSideDiagnosis = false;
