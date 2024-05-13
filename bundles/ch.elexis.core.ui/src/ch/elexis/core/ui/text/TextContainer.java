@@ -346,7 +346,52 @@ public class TextContainer {
 				return StringUtils.EMPTY;
 			}
 		}
+		Object fieldValue = o.get(q[1]);
+		int maxLineLength = 70;
+		if ("Patient.Diagnosen".equals(b) || "Patient.FamilienAnamnese".equals(b) || "Patient.PersAnamnese".equals(b)
+				|| "Patient.Risiken".equals(b) || "Patient.Allergien".equals(b) && fieldValue instanceof String) {
+			String formattedText = formatTextField((String) fieldValue, maxLineLength);
+			return formattedText;
+		}
 		return readFromPo(o, q[1], showErrors);
+	}
+
+	private String formatTextField(String diagnosesText, int maxLineLength) {
+		StringBuilder formattedText = new StringBuilder();
+	    String[] lines = diagnosesText.split("\n");
+		boolean inSideDiagnosis = false;
+		boolean newMainDiagnosis = false;
+		int currentIndentationLevel = 0;
+		String tab = "\t";
+	    for (String line : lines) {
+			String trimmedLine = line.trim();
+			if (trimmedLine.matches("^\\d+\\..*")) {
+				if (newMainDiagnosis) {
+					formattedText.append("\n");
+				}
+				currentIndentationLevel = 0;
+				inSideDiagnosis = false;
+				newMainDiagnosis = true;
+			} else if (trimmedLine.matches("^\\-.*[^:]$") && !inSideDiagnosis) {
+				currentIndentationLevel = 1;
+			} else if (trimmedLine.matches(".*:$")) {
+				currentIndentationLevel = 2;
+				inSideDiagnosis = true;
+			} else if (trimmedLine.startsWith("-") && inSideDiagnosis) {
+				currentIndentationLevel = 3;
+			}
+			String indentation = tab.repeat(currentIndentationLevel);
+			while (trimmedLine.length() > maxLineLength) {
+				int breakPoint = trimmedLine.lastIndexOf(' ', maxLineLength);
+				if (breakPoint == -1)
+					breakPoint = maxLineLength;
+				formattedText.append(indentation).append(trimmedLine.substring(0, breakPoint)).append("\n ");
+				trimmedLine = trimmedLine.substring(breakPoint).trim();
+				indentation = tab.repeat(currentIndentationLevel);
+	        }
+			formattedText.append(indentation).append(trimmedLine).append("\n");
+	    }
+	    return formattedText.toString();
 	}
 
 	/**
