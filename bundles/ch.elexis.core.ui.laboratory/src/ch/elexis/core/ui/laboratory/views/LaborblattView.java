@@ -15,8 +15,10 @@ package ch.elexis.core.ui.laboratory.views;
 import static ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement.TT_LABPAPER;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -106,10 +108,76 @@ public class LaborblattView extends ViewPart implements ICallback {
 			}
 		}
 		String[][] fld = usedRows.toArray(new String[0][]);
+
+		// Inspect and modify the lines to mark the pathologic values
+		fld = inspectValues(fld);
+
 		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
 				ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
+	}
+
+	private String[][] inspectValues(String[][] values) {
+		// Iterate over all values
+		for (int rowCounter = 0; rowCounter < values.length; rowCounter++) {
+			// Skip first line as it contains header information
+			if (rowCounter > 0) {
+				String reference = new String();
+				// Loop through all elements of current row
+				for (int columnCounter = 0; columnCounter < values[rowCounter].length; columnCounter++) {
+					String value = new String();
+					// The first column contains the reference data
+					if (columnCounter == 1) {
+						if (!values[rowCounter][columnCounter].isEmpty()) {
+							reference = values[rowCounter][columnCounter];
+						}
+					}
+					// The subsequent columns contain measuring data
+					if (columnCounter > 1 && !values[rowCounter][1].isEmpty()) {
+						if (!values[rowCounter][columnCounter].isEmpty()) {
+							value = values[rowCounter][columnCounter];
+							// Specific measuring data being tested
+							values[rowCounter][columnCounter] = modifyPathologicValues(reference, value);
+						}
+					}
+				}
+			}
+		}
+		return values;
+	}
+
+	private String modifyPathologicValues(String reference, String value) {
+		// Regex to identify floats
+		Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+		boolean pathologic = false;
+		String modifiedValue = new String();
+		// Processing only floats
+		if (!reference.isEmpty() && pattern.matcher(value).matches()) {
+			Float valueFloat = Float.parseFloat(value);
+			// Inspecting values against upper and lower limits
+			if (reference.contains("-")) {
+				List<String> myList = new ArrayList<String>(Arrays.asList(reference.split("-")));
+				String lowerStr = myList.get(0);
+				String upperStr = myList.get(1);
+				Float lower = Float.parseFloat(lowerStr);
+				Float upper = Float.parseFloat(upperStr);
+				pathologic = (valueFloat > upper || valueFloat < lower) ? true : false;
+				// Inspecting vallues against upper limit
+			} else if (reference.contains("<")) {
+				String upperLimit = reference.substring(1);
+				Float upper = Float.parseFloat(upperLimit);
+				pathologic = valueFloat > upper ? true : false;
+				// Inspecting value against lower limit
+			} else if (reference.contains(">")) {
+				String lowerLimit = reference.substring(1);
+				Float lower = Float.parseFloat(lowerLimit);
+				pathologic = valueFloat < lower ? true : false;
+			}
+		}
+		// Add ** if value is pathologic
+		modifiedValue = pathologic ? "**" + value : value;
+		return modifiedValue;
 	}
 
 	private boolean skipColumn(int index, int[] skip) {
