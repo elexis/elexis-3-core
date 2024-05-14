@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pdfbox library
 Bundle-SymbolicName: ch.elexis.core.pdfbox;singleton:=true
-Bundle-Version: 2.0.24.1
+Bundle-Version: 2.0.24.2
 Bundle-Vendor: pdfbox.apache.org
 Automatic-Module-Name: ch.elexis.core.pdfbox
 Bundle-RequiredExecutionEnvironment: JavaSE-17
