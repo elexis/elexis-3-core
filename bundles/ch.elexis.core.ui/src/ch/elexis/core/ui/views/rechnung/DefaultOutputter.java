@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -53,10 +54,13 @@ public class DefaultOutputter implements IRnOutputter {
 	}
 
 	public Object createSettingsControl(Object parent) {
-		Composite parComposite = (Composite) parent;
-		Label lbl = new Label(parComposite, SWT.WRAP);
-		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins); // $NON-NLS-1$
-		return lbl;
+		final Composite compParent = (Composite) parent;
+		Composite ret = new Composite(compParent, SWT.NONE);
+		ret.setLayout(new GridLayout(2, false));
+		Label lbl = new Label(ret, SWT.NONE);
+		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins);
+		lbl.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+		return ret;
 	}
 
 	public Result<Rechnung> doOutput(TYPE type, Collection<Rechnung> rnn, final Properties props) {
@@ -95,5 +99,13 @@ public class DefaultOutputter implements IRnOutputter {
 
 	public void saveComposite() {
 		// Nothing
+	}
+
+	@Override
+	public void customizeDialog(Object rnOutputDialog) {
+		if (rnOutputDialog instanceof RnOutputDialog) {
+			((RnOutputDialog) rnOutputDialog).setOkButtonText(Messages.RechnungsListeView_printAction);
+
+		}
 	}
 }
