@@ -35,11 +35,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.interfaces.IRnOutputter;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Rechnung;
@@ -51,6 +51,10 @@ public class RnOutputDialog extends TitleAreaDialog {
 	private Button bCopy;
 	private final List<Control> ctls = new ArrayList<>();
 	private final StackLayout stack = new StackLayout();
+	private Composite ret;
+
+	private static final String STANDARD_OUTPUTTER_CLASS = "ch.elexis.core.ui.views.rechnung.DefaultOutputter";
+	private static final String RECHNUNG_AUSDRUCKEN_OUTPUTTER_CLASS = "ch.elexis.pdfBills.QrRnOutputter";
 
 	public RnOutputDialog(Shell shell, Collection<Rechnung> rnn) {
 		super(shell);
@@ -66,39 +70,45 @@ public class RnOutputDialog extends TitleAreaDialog {
 			SWTHelper.alert(msg, msg);
 			return null;
 		}
-		Composite ret = new Composite(parent, SWT.NONE);
+		sortOutputters(lo);
+		ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gridData.horizontalIndent = 5;
 		cbLo = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
-		cbLo.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		cbLo.setLayoutData(gridData);
 		bCopy = new Button(ret, SWT.CHECK);
-		bCopy.setText(Messages.RnOutputDialog_markAsCopy); // $NON-NLS-1$
-		bCopy.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		bCopy.setText(Messages.RnOutputDialog_markAsCopy);
+
+		bCopy.setLayoutData(gridData);
 		final Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		bottom.setLayout(stack);
 		for (IRnOutputter ro : lo) {
 			cbLo.add(ro.getDescription());
-			ctls.add((Control) ro.createSettingsControl(bottom));
+			Control control = (Control) ro.createSettingsControl(bottom);
+			GridData controlGridData = new GridData();
+			controlGridData.horizontalIndent = 50;
+			control.setLayoutData(controlGridData);
+			ctls.add(control);
 		}
 		cbLo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int idx = cbLo.getSelectionIndex();
 				if (idx != -1) {
+					setOkButtonEnabled(true);
 					customizeDialog(lo.get(idx));
 					stack.topControl = ctls.get(idx);
 					bottom.layout();
-					CoreHub.localCfg.set(Preferences.RNN_DEFAULTEXPORTMODE, idx);
+					LocalConfigService.set(Preferences.RNN_DEFAULTEXPORTMODE, idx);
 				}
 			}
 		});
-		int lastSelected = CoreHub.localCfg.get(Preferences.RNN_DEFAULTEXPORTMODE, 0);
-		if ((lastSelected < 0) || (lastSelected >= cbLo.getItemCount())) {
-			lastSelected = 0;
-			CoreHub.localCfg.set(Preferences.RNN_DEFAULTEXPORTMODE, 0);
-		}
-		cbLo.select(lastSelected);
+		int defaultIndex = 0;
+		cbLo.select(defaultIndex);
+		LocalConfigService.set(Preferences.RNN_DEFAULTEXPORTMODE, defaultIndex);
 		stack.topControl = ctls.get(cbLo.getSelectionIndex());
 		bottom.layout();
 		return ret;
@@ -120,6 +130,25 @@ public class RnOutputDialog extends TitleAreaDialog {
 	private void resetDialog() {
 		resetOkButtonText();
 		resetCancelButtonText();
+	}
+
+	public void setButtonEnabled(String buttonText, boolean enabled) {
+		for (Control control : additionalButtonParent.getChildren()) {
+			if (control instanceof Button) {
+				Button btn = (Button) control;
+				if (btn.getText().equals(buttonText)) {
+					btn.setEnabled(enabled);
+					return;
+				}
+			}
+		}
+	}
+
+	public void setOkButtonEnabled(boolean enabled) {
+		Button okButton = getButton(IDialogConstants.OK_ID);
+		if (okButton != null) {
+			okButton.setEnabled(enabled);
+		}
 	}
 
 	public void setOkButtonText(String text) {
@@ -156,10 +185,10 @@ public class RnOutputDialog extends TitleAreaDialog {
 	}
 
 	public Button addCustomButton(String text) {
-		Button ret = new Button(additionalButtonParent, SWT.PUSH);
-		ret.setText(text);
-		additionalButtonParent.getParent().requestLayout();
-		return ret;
+	    Button ret = new Button(additionalButtonParent, SWT.PUSH);
+	    ret.setText(text);
+	    additionalButtonParent.getParent().requestLayout();
+	    return ret;
 	}
 
 	public void resetCustomButtons() {
@@ -190,6 +219,10 @@ public class RnOutputDialog extends TitleAreaDialog {
 			setTitle(Messages.Core_Output_Invoice); // $NON-NLS-1$
 			setMessage(Messages.RnOutputDialog_outputBillMessage); // $NON-NLS-1$
 		}
+	}
+
+	public void updateSize() {
+		getShell().setSize(getShell().getSize().x, 430);
 	}
 
 	@Override
@@ -227,4 +260,35 @@ public class RnOutputDialog extends TitleAreaDialog {
 	protected boolean isResizable() {
 		return true;
 	}
+
+	private String normalize(String input) {
+		return input.replace("Ä", "A").replace("Ö", "O").replace("Ü", "U");
+	}
+
+	private void sortOutputters(List<IRnOutputter> outputters) {
+		outputters.sort((o1, o2) -> {
+			String desc1 = normalize(o1.getDescription());
+			String desc2 = normalize(o2.getDescription());
+			if (isStandardOutputter(o1)) {
+				return -1;
+			} else if (isStandardOutputter(o2)) {
+				return 1;
+			} else if (isRechnungAusdruckenOutputter(o1)) {
+
+				return -1;
+			} else if (isRechnungAusdruckenOutputter(o2)) {
+				return 1;
+			}
+			return desc1.compareTo(desc2);
+		});
+	}
+
+	private boolean isStandardOutputter(IRnOutputter outputter) {
+		return outputter.getClass().getName().equals(STANDARD_OUTPUTTER_CLASS);
+	}
+
+	private boolean isRechnungAusdruckenOutputter(IRnOutputter outputter) {
+		return outputter.getClass().getName().equals(RECHNUNG_AUSDRUCKEN_OUTPUTTER_CLASS);
+	}
+
 }
