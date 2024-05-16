@@ -14,13 +14,10 @@ package ch.elexis.core.ui.views.rechnung;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -55,11 +52,6 @@ public class RnOutputDialog extends TitleAreaDialog {
 	private final List<Control> ctls = new ArrayList<>();
 	private final StackLayout stack = new StackLayout();
 	private Composite ret;
-
-	private static final Set<String> OK_BUTTON_DISABLED_CLASSES = new HashSet<>(
-			Arrays.asList("ch.elexis.pdfBills.QrRnOutputter", "ch.elexis.arzttarif.complementary.bill.RnOutputter",
-					"ch.elexis.pdfBills.privat.PrivatQrRnOutputter",
-					"at.medevit.elexis.medidata.box.ui.outputter.MedidataBoxOutputter"));
 
 	private static final String STANDARD_OUTPUTTER_CLASS = "ch.elexis.core.ui.views.rechnung.DefaultOutputter";
 	private static final String RECHNUNG_AUSDRUCKEN_OUTPUTTER_CLASS = "ch.elexis.pdfBills.QrRnOutputter";
@@ -106,14 +98,11 @@ public class RnOutputDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				int idx = cbLo.getSelectionIndex();
 				if (idx != -1) {
-					IRnOutputter selectedOutputter = lo.get(idx);
+					setOkButtonEnabled(true);
 					customizeDialog(lo.get(idx));
 					stack.topControl = ctls.get(idx);
 					bottom.layout();
 					LocalConfigService.set(Preferences.RNN_DEFAULTEXPORTMODE, idx);
-					if (isOkButtonEnabledFor(selectedOutputter)) {
-						setOkButtonEnabled(true);
-					}
 				}
 			}
 		});
@@ -233,7 +222,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 	}
 
 	public void updateSize() {
-		getShell().setSize(getShell().getSize().x, 350);
+		getShell().setSize(getShell().getSize().x, 430);
 	}
 
 	@Override
@@ -302,7 +291,4 @@ public class RnOutputDialog extends TitleAreaDialog {
 		return outputter.getClass().getName().equals(RECHNUNG_AUSDRUCKEN_OUTPUTTER_CLASS);
 	}
 
-	private boolean isOkButtonEnabledFor(IRnOutputter outputter) {
-		return !OK_BUTTON_DISABLED_CLASSES.contains(outputter.getClass().getName());
-	}
 }
