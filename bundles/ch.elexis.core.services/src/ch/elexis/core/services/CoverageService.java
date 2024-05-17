@@ -97,10 +97,12 @@ public class CoverageService implements ICoverageService {
 	@Override
 	public void setRequiredString(ICoverage coverage, String name, String value) {
 		String requirements = BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem());
-		String[] req = requirements.split(";"); //$NON-NLS-1$
-		int idx = StringTool.getIndex(req, name + ":T"); //$NON-NLS-1$
-		if (idx != -1) {
-			coverage.setExtInfo(name, value);
+		if (!StringTool.isNothing(requirements)) {
+			String[] req = requirements.split(";"); //$NON-NLS-1$
+			int idx = StringTool.getIndex(req, name + ":T"); //$NON-NLS-1$
+			if (idx != -1) {
+				coverage.setExtInfo(name, value);
+			}
 		}
 	}
 
