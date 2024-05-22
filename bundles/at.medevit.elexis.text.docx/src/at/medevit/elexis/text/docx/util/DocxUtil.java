@@ -3,8 +3,6 @@ package at.medevit.elexis.text.docx.util;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import org.docx4j.jaxb.Context;
 import org.docx4j.model.structure.PageDimensions;
 import org.docx4j.model.structure.SectionWrapper;
@@ -24,6 +22,8 @@ import org.docx4j.wml.Text;
 import org.eclipse.swt.SWT;
 import org.jvnet.jaxb2_commons.ppp.Child;
 import org.slf4j.LoggerFactory;
+
+import jakarta.xml.bind.JAXBElement;
 
 public class DocxUtil {
 

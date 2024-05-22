@@ -1,18 +1,18 @@
 package at.medevit.elexis.text.docx.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.jaxb.Context;
 import org.docx4j.wml.P;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
 import org.docx4j.wml.Text;
 import org.jvnet.jaxb2_commons.ppp.Child;
+
+import jakarta.xml.bind.JAXBElement;
 
 public class TextUtil {
 

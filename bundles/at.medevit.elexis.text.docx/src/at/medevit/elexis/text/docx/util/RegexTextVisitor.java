@@ -1,13 +1,11 @@
 package at.medevit.elexis.text.docx.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBElement;
-
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.utils.TraversalUtilVisitor;
 import org.docx4j.wml.P;
@@ -18,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.text.ReplaceCallback;
 import ch.elexis.core.model.IImage;
+import jakarta.xml.bind.JAXBElement;
 
 public class RegexTextVisitor extends TraversalUtilVisitor<Text> {
 

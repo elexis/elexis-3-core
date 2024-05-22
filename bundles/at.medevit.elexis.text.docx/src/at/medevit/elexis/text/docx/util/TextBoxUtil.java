@@ -3,8 +3,6 @@ package at.medevit.elexis.text.docx.util;
 import java.util.List;
 import java.util.Optional;
 
-import javax.xml.bind.JAXBElement;
-
 import org.docx4j.TraversalUtil;
 import org.docx4j.UnitsOfMeasurement;
 import org.docx4j.com.microsoft.schemas.office.word.x2010.wordprocessingShape.CTTextboxInfo;
@@ -45,6 +43,8 @@ import org.docx4j.wml.ParaRPr;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
 import org.docx4j.wml.Text;
+
+import jakarta.xml.bind.JAXBElement;
 
 public class TextBoxUtil {
 

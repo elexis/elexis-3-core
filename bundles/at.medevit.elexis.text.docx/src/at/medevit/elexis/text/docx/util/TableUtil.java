@@ -3,8 +3,6 @@ package at.medevit.elexis.text.docx.util;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.docx4j.UnitsOfMeasurement;
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
@@ -26,6 +24,7 @@ import org.docx4j.wml.Text;
 import org.docx4j.wml.Tr;
 
 import ch.elexis.core.ui.text.ITextPlugin;
+import jakarta.xml.bind.JAXBException;
 
 public class TableUtil {
 
