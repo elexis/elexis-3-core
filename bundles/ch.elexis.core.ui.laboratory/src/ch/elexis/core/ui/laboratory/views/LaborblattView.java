@@ -14,6 +14,8 @@ package ch.elexis.core.ui.laboratory.views;
 
 import static ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement.TT_LABPAPER;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,10 +38,12 @@ import org.jdom2.Element;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
+import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 
 public class LaborblattView extends ViewPart implements ICallback {
@@ -68,125 +72,89 @@ public class LaborblattView extends ViewPart implements ICallback {
 
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
 			int[] skipColumnsIndex) {
+
 		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
 			return false;
 		}
 		Tree tree = rows[0].getParent();
+
 		int cols = tree.getColumnCount() - skipColumnsIndex.length;
 		int[] colsizes = new int[cols];
 		float first = 25;
 		float second = 10;
+
 		if (cols > 2) {
 			int rest = Math.round((100f - first - second) / (cols - 2f));
 			for (int i = 2; i < cols; i++) {
 				colsizes[i] = rest;
 			}
 		}
+
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
+		
+		// Final table
+		LinkedList<String[]> itemResults = new LinkedList<>();
 
-		LinkedList<String[]> usedRows = new LinkedList<>();
-		usedRows.add(header);
-		for (int i = 0; i < rows.length; i++) {
-			boolean used = false;
-			String[] row = new String[cols];
-			for (int j = 0, skipped = 0; j < cols + skipped; j++) {
-				if (skipColumn(j, skipColumnsIndex)) {
-					skipped++;
-					continue;
-				}
-				int destIndex = j - skipped;
-				row[destIndex] = rows[i].getText(j);
-				if ((destIndex > 1) && (row[destIndex].length() > 0)) {
-					used = true;
-					// break;
-				}
-			}
-			if (used == true) {
-				usedRows.add(row);
-			}
+		// Add header line
+		itemResults.add(header);
+
+		// Reduced array size because the first two columns do not contain any
+		// laboratory measurements
+		String[] days = new String[header.length - 2];
+
+		// Transform dd.MM.yyyy to yyyyMMdd to query the according labResults
+		for (int numberOfDays = 2; numberOfDays < header.length; numberOfDays++) {
+			days[numberOfDays - 2] = LocalDate.parse(header[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+					.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		}
-		String[][] fld = usedRows.toArray(new String[0][]);
 
-		// Inspect and modify the lines to mark the pathologic values
-		fld = inspectValues(fld);
+		// String to be inserted as intermediate title to identify the measurment's
+		// provenance
+		String provenance = "";
+
+		// Loop to build the final table row by row
+		for (int numberOfRows = 0; numberOfRows < rows.length; numberOfRows++) {
+			String[] itemResult = new String[header.length];
+			// Cast array to LaborItemResults
+			LaborItemResults laborItemResults = (LaborItemResults) rows[numberOfRows].getData();
+			// Build the first two columns (Name of the LabResult/Reference)
+			itemResult[0] = laborItemResults.getLabItem().getKuerzel() + " - ["
+					+ laborItemResults.getLabItem().getUnit() + "]";
+			itemResult[1] = laborItemResults.getFirstResult().getPatient().getGeschlecht().equalsIgnoreCase("m")
+					? laborItemResults.getFirstResult().getRefMale()
+					: laborItemResults.getFirstResult().getRefFemale();
+			int numberOfDays = 2;
+			// Building the columns
+			for (String day : days) {
+				List<LabResult> labResults = laborItemResults.getResult(day);
+				if (labResults != null) {
+					for (LabResult labResult : labResults) {
+						itemResult[numberOfDays] = labResult.getFlags() == 1 ? "**" + labResult.getResult()
+								: labResult.getResult();
+					}
+				} else {
+					itemResult[numberOfDays] = "";
+				}
+				numberOfDays++;
+			}
+			// Insert the provenance if it changes
+			if (!provenance.equalsIgnoreCase(laborItemResults.getFirstResult().getItem().getGroup())) {
+				String[] intermediateTitle = new String[header.length];
+				intermediateTitle[0] = laborItemResults.getFirstResult().getItem().getGroup();
+				provenance = laborItemResults.getFirstResult().getItem().getGroup();
+				itemResults.add(intermediateTitle);
+			}
+			itemResults.add(itemResult);
+		}
+
+		String[][] fld = itemResults.toArray(new String[0][]);
 
 		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
 				ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
-	}
-
-	private String[][] inspectValues(String[][] values) {
-		// Iterate over all values
-		for (int rowCounter = 0; rowCounter < values.length; rowCounter++) {
-			// Skip first line as it contains header information
-			if (rowCounter > 0) {
-				String reference = new String();
-				// Loop through all elements of current row
-				for (int columnCounter = 0; columnCounter < values[rowCounter].length; columnCounter++) {
-					String value = new String();
-					// The first column contains the reference data
-					if (columnCounter == 1) {
-						if (!values[rowCounter][columnCounter].isEmpty()) {
-							reference = values[rowCounter][columnCounter];
-						}
-					}
-					// The subsequent columns contain measuring data
-					if (columnCounter > 1 && !values[rowCounter][1].isEmpty()) {
-						if (!values[rowCounter][columnCounter].isEmpty()) {
-							value = values[rowCounter][columnCounter];
-							// Specific measuring data being tested
-							values[rowCounter][columnCounter] = modifyPathologicValues(reference, value);
-						}
-					}
-				}
-			}
-		}
-		return values;
-	}
-
-	private String modifyPathologicValues(String reference, String value) {
-		// Regex to identify floats
-		Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-		boolean pathologic = false;
-		String modifiedValue = new String();
-		// Processing only floats
-		if (!reference.isEmpty() && pattern.matcher(value).matches()) {
-			Float valueFloat = Float.parseFloat(value);
-			// Inspecting values against upper and lower limits
-			if (reference.contains("-")) {
-				List<String> myList = new ArrayList<String>(Arrays.asList(reference.split("-")));
-				String lowerStr = myList.get(0);
-				String upperStr = myList.get(1);
-				Float lower = Float.parseFloat(lowerStr);
-				Float upper = Float.parseFloat(upperStr);
-				pathologic = (valueFloat > upper || valueFloat < lower) ? true : false;
-				// Inspecting vallues against upper limit
-			} else if (reference.contains("<")) {
-				String upperLimit = reference.substring(1);
-				Float upper = Float.parseFloat(upperLimit);
-				pathologic = valueFloat > upper ? true : false;
-				// Inspecting value against lower limit
-			} else if (reference.contains(">")) {
-				String lowerLimit = reference.substring(1);
-				Float lower = Float.parseFloat(lowerLimit);
-				pathologic = valueFloat < lower ? true : false;
-			}
-		}
-		// Add ** if value is pathologic
-		modifiedValue = pathologic ? "**" + value : value;
-		return modifiedValue;
-	}
-
-	private boolean skipColumn(int index, int[] skip) {
-		for (int i : skip) {
-			if (index == i) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows) {
