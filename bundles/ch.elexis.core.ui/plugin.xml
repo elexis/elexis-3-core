@@ -380,6 +380,22 @@
                tooltip="Konsultation verrechnen und ausgeben">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.elexis.RechnungsDetailView">
+         <command
+               commandId="ch.elexis.core.ui.commands.SendInvoiceAsMail"
+               icon="icon://IMG_MAIL_SEND"
+               label="als E-Mail"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     property="ch.elexis.core.ui.property.invoicemail">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
       <extension
          point="org.eclipse.ui.preferencePages">
@@ -845,6 +861,11 @@
             id="ch.elexis.core.ui.commands.AufPrintList"
             name="Auf Liste Drucken">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.SendInvoiceAsMailHandler"
+            id="ch.elexis.core.ui.commands.SendInvoiceAsMail"
+            name="Send Invoice as E-Mail">
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -1016,7 +1037,7 @@
                class="ch.elexis.core.ui.property.PropertyTester"
                id="ch.elexis.core.ui.propertyTester"
                namespace="ch.elexis.core.ui.property"
-               properties="documenteditlocal, billable"
+               properties="documenteditlocal, billable, invoicemail"
                type="java.lang.Object">
          </propertyTester>
       </extension>

@@ -6,6 +6,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.preferences.PreferencesUtil;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -37,6 +38,16 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 										|| selectedEncounter.get().getInvoice().getState() == InvoiceState.DEPRECIATED);
 					}
 				}
+			}
+		} else if ("invoicemail".equals(property)) { //$NON-NLS-1$
+			Optional<IInvoice> selectedInvoice = ContextServiceHolder.get().getTyped(IInvoice.class);
+			if (selectedInvoice.isPresent()) {
+				InvoiceState invoiceState = selectedInvoice.get().getState();
+				return invoiceState == InvoiceState.OPEN_AND_PRINTED || invoiceState == InvoiceState.PARTIAL_PAYMENT
+						|| invoiceState == InvoiceState.PAID || invoiceState == InvoiceState.DEMAND_NOTE_1_PRINTED
+						|| invoiceState == InvoiceState.DEMAND_NOTE_2_PRINTED
+						|| invoiceState == InvoiceState.DEMAND_NOTE_3_PRINTED
+						|| invoiceState == InvoiceState.STOP_LEGAL_PROCEEDING;
 			}
 		}
 		return false;
