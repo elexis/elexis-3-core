@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -49,6 +50,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private List<? extends IContact> initialInput;
 	private String _message;
 	private String _title;
+	private String _assertOkMessageTemplate;
 	private DialogTrayWithSelectionListener dialogTray;
 
 	/**
@@ -67,6 +69,16 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 	public void setDialogTray(DialogTrayWithSelectionListener dialogTray) {
 		this.dialogTray = dialogTray;
+	}
+
+	/**
+	 * If set, a selection made by the user will have to be re-asserted by the user
+	 * before the Dialog returns with Dialog.OK status.
+	 * 
+	 * @param messageTemplate
+	 */
+	public void setAssertOkTemplateMessage(String messageTemplate) {
+		_assertOkMessageTemplate = messageTemplate;
 	}
 
 	@Override
@@ -88,6 +100,18 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			openTray(dialogTray);
 		}
 		return contents;
+	}
+
+	@Override
+	protected void okPressed() {
+		if (_assertOkMessageTemplate != null && selectedContact != null) {
+			boolean isAssertOk = MessageDialog.openQuestion(getShell(), null,
+					String.format(_assertOkMessageTemplate, selectedContact.getLabel()));
+			if (!isAssertOk) {
+				return;
+			}
+		}
+		super.okPressed();
 	}
 
 	/**
