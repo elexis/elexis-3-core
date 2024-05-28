@@ -138,7 +138,8 @@ public class IContactDetailsDialogTray extends DialogTrayWithSelectionListener {
 		txtEmail.setText("");
 		txtDob.setText("");
 
-		if (selection instanceof IContact contact) {
+		if (selection instanceof IContact) {
+			IContact contact = (IContact) selection;
 			txtFamilyName.setText(StringUtils.trimToEmpty(contact.getDescription1()));
 			txtName.setText(StringUtils.trimToEmpty(contact.getDescription2()));
 			txtStreet.setText(StringUtils.trimToEmpty(contact.getStreet()));
