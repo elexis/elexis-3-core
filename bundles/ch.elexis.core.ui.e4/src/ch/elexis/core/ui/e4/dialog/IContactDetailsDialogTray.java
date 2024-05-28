@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.e4.dialog;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -147,7 +149,8 @@ public class IContactDetailsDialogTray extends DialogTrayWithSelectionListener {
 			txtEmail.setText(StringUtils.trimToEmpty(contact.getEmail()));
 
 			if (contact.isPerson()) {
-				txtDob.setText(TimeUtil.formatSafe(contact.asIPerson().getDateOfBirth()));
+				LocalDateTime dateOfBirth = contact.asIPerson().getDateOfBirth();
+				txtDob.setText(TimeUtil.formatSafe(dateOfBirth != null ? dateOfBirth.toLocalDate() : null));
 			}
 		}
 
