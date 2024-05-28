@@ -311,7 +311,7 @@
       </command>
       <command
             id="ch.elexis.core.ui.medication.ApplyAtcSorting"
-            name="Nach ATC-Code sortieren">
+            name="Nach ATC- Code sortieren">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
