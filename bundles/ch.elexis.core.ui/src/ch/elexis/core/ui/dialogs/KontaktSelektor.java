@@ -13,6 +13,7 @@
 package ch.elexis.core.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -351,8 +352,13 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 							@Override
 							public void widgetSelected(SelectionEvent e) {
 								if (hints == null) {
-									hints = new String[3];
+									hints = new String[HINTSIZE];
+									Arrays.fill(hints, StringUtils.EMPTY);
 									hints[0] = vc.getControlFieldProvider().getValues()[1];
+
+									if (targetClass == Patient.class) {
+										hints[HINT_PATIENT] = StringConstants.ONE;
+									}
 								}
 								KontaktErfassenDialog ked = new KontaktErfassenDialog(parent.getShell(), hints);
 								ked.open();
