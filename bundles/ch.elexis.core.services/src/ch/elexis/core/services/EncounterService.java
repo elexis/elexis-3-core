@@ -41,6 +41,7 @@ import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.VersionedResource;
 
 @Component
 public class EncounterService implements IEncounterService {
@@ -365,5 +366,30 @@ public class EncounterService implements IEncounterService {
 				coreModelService.save(encounter);
 			}
 		}
+	}
+
+	@Override
+	public void addXRef(IEncounter encounter, String provider, String id, int pos, String text) {
+		// fire prerelease triggers save
+		ContextServiceHolder.get().sendEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, encounter);
+
+		VersionedResource vr = encounter.getVersionedEntry();
+		String ntext = vr.getHead();
+		Samdas samdas = new Samdas(ntext);
+		Samdas.Record record = samdas.getRecord();
+		String recText = record.getText();
+		if ((pos == -1) || pos > recText.length()) {
+			pos = recText.length();
+			recText += StringUtils.LF + text;
+		} else {
+			recText = recText.substring(0, pos) + StringUtils.LF + text + recText.substring(pos);
+		}
+		record.setText(recText);
+		// ++pos because \n has been added
+		Samdas.XRef xref = new Samdas.XRef(provider, id, ++pos, text.length());
+		record.add(xref);
+		updateVersionedEntry(encounter, samdas); // XRefs may always be added
+		// update with the added content
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 	}
 }
