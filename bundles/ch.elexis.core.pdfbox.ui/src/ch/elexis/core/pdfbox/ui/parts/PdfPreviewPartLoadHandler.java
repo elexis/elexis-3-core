@@ -1,11 +1,15 @@
 package ch.elexis.core.pdfbox.ui.parts;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +18,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -26,6 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.pdfbox.ui.parts.handlers.PDFLabelMouseListener;
+import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextExtractor;
 import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextHighlighter;
 
 public class PdfPreviewPartLoadHandler {
@@ -34,7 +43,8 @@ public class PdfPreviewPartLoadHandler {
 
 	private final ScrolledComposite scrolledComposite;
 	private final Composite previewComposite;
-
+	private PDFTextExtractor pdfTextExtractor;
+	private PDFLabelMouseListener pDFLabelMouseListener;
 	private float scalingFactor;
 
 	private Label headLabel;
@@ -47,6 +57,11 @@ public class PdfPreviewPartLoadHandler {
 	private String searchText;
 
 	private static int currentPageNo;
+	private Image[] labelBackgrounds;
+	private GC[] gcBackgrounds;
+	private Map<Integer, List<Rectangle>> markedAreasPerPage = new HashMap<>();
+	private Label label;
+
 
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor, Composite previewComposite,
 			ScrolledComposite scrolledComposite) {
@@ -54,6 +69,9 @@ public class PdfPreviewPartLoadHandler {
 		this.previewComposite = previewComposite;
 		this.scrolledComposite = scrolledComposite;
 		this.scalingFactor = scalingFactor != null ? scalingFactor : 1f;
+		this.labelBackgrounds = new Image[0];
+		this.gcBackgrounds = new GC[0];
+		this.previewComposite.setFocus();
 
 		loader.submit(new LoaderRunnable(pdfInputStream));
 	}
@@ -107,6 +125,11 @@ public class PdfPreviewPartLoadHandler {
 						}
 						numberOfPages = pdDocument.getNumberOfPages();
 						images = new Image[numberOfPages];
+						labelBackgrounds = new Image[numberOfPages];
+						gcBackgrounds = new GC[numberOfPages];
+						pdfTextExtractor = new PDFTextExtractor(pdDocument, images, markedAreasPerPage);
+						pDFLabelMouseListener = new PDFLabelMouseListener(markedAreasPerPage, images, labelBackgrounds,
+								gcBackgrounds, pdfTextExtractor);
 					} else if (pdfInputStream == null && pdDocument == null) {
 						return;
 					}
@@ -125,10 +148,39 @@ public class PdfPreviewPartLoadHandler {
 							headLabel.setText(StringUtils.EMPTY);
 							headLabel.setImage(images[j]);
 							headLabel.addDisposeListener(dl -> images[j].dispose());
+							final int pageIndex = j;
+							addMouseListenersToLabel(headLabel, pageIndex, j);
+							previewComposite.addKeyListener(new KeyAdapter() {
+								@Override
+								public void keyPressed(KeyEvent e) {
+									if (e.keyCode == SWT.ESC) {
+										pDFLabelMouseListener.clearSelection(pageIndex);
+										previewComposite.redraw();
+										if (!headLabel.isDisposed()) {
+											headLabel.redraw();
+										}
+									}
+								}
+							});
+							previewComposite.setFocus();
 						} else {
-							Label label = new Label(previewComposite, SWT.None);
+							label = new Label(previewComposite, SWT.None);
 							label.setImage(images[j]);
 							label.addDisposeListener(dl -> images[j].dispose());
+							final int pageIndex = j;
+							addMouseListenersToLabel(label, pageIndex, j);
+							previewComposite.addKeyListener(new KeyAdapter() {
+								@Override
+								public void keyPressed(KeyEvent e) {
+									if (e.keyCode == SWT.ESC) {
+										pDFLabelMouseListener.clearSelection(pageIndex);
+										previewComposite.redraw();
+										if (!label.isDisposed()) {
+											label.redraw();
+										}
+									}
+								}
+							});
 						}
 
 						previewComposite.layout(true, true);
@@ -160,7 +212,14 @@ public class PdfPreviewPartLoadHandler {
 	// Zoom
 	public void changeScalingFactor(Float scalingFactor) {
 		this.scalingFactor = scalingFactor;
-		loader.submit(new LoaderRunnable(null));
+		loader.submit(() -> {
+			Display.getDefault().syncExec(() -> {
+				for (Control control : previewComposite.getChildren()) {
+					control.dispose();
+				}
+			});
+			renderPdfWithHighlights();
+		});
 	}
 
 	public void close() {
@@ -183,7 +242,7 @@ public class PdfPreviewPartLoadHandler {
 	 *
 	 * @param bufferedImage
 	 * @return
-	 * @see https://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet156.java
+	 * @see https://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse/swt/snippets/src/org/eclipse/swt/snippets/Snippet156.java
 	 */
 	private ImageData convertToSWT(BufferedImage bufferedImage) {
 		if (bufferedImage.getColorModel() instanceof DirectColorModel) {
@@ -234,33 +293,47 @@ public class PdfPreviewPartLoadHandler {
 	}
 
 	private void renderPdfWithHighlights() {
-		Display.getDefault().syncExec(() -> {
-			try {
-				if (pdDocument != null) {
-					PDFRenderer renderer = new PDFRenderer(pdDocument);
-					for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
-						if (StringUtils.isNotBlank(searchText)) {
-							PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
-							highlighter.reapplyHighlights();
-						}
-						BufferedImage bufferedImage = renderer.renderImage(i, scalingFactor);
-						ImageData imageData = convertToSWT(bufferedImage);
-						Image image = new Image(Display.getDefault(), imageData);
+		try {
+			if (pdDocument != null) {
+				PDFRenderer renderer = new PDFRenderer(pdDocument);
+				if (StringUtils.isNotBlank(searchText)) {
+					PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
+					highlighter.reapplyHighlights();
+				}
+				numberOfPages = pdDocument.getNumberOfPages();
+				images = new Image[numberOfPages];
+				labelBackgrounds = new Image[numberOfPages];
+				gcBackgrounds = new GC[numberOfPages];
+				pdfTextExtractor = new PDFTextExtractor(pdDocument, images, markedAreasPerPage);
+				pDFLabelMouseListener = new PDFLabelMouseListener(markedAreasPerPage, images, labelBackgrounds,
+						gcBackgrounds, pdfTextExtractor);
+				for (int i = 0; i < numberOfPages; i++) {
+					final int j = i;
+					BufferedImage bufferedImage = renderer.renderImage(i, scalingFactor);
+					ImageData imageData = convertToSWT(bufferedImage);
+					images[j] = new Image(previewComposite.getDisplay(), imageData);
+					Display.getDefault().syncExec(() -> {
 						Label label = new Label(previewComposite, SWT.NONE);
-						label.setImage(image);
+						label.setImage(images[j]);
 						label.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false));
-						label.addDisposeListener(e -> image.dispose());
-					}
+						label.addDisposeListener(e -> images[j].dispose());
+						final int pageIndex = j;
+						addMouseListenersToLabel(label, pageIndex, j);
+					});
+				}
+				Display.getDefault().syncExec(() -> {
 					previewComposite.layout(true);
 					scrolledComposite.layout(true);
 					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-					centerContentHorizontally();
-					centerContentOnPage(currentPageNo);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+					if (StringUtils.isNotBlank(searchText)) {
+						centerContentHorizontally();
+						centerContentOnPage(currentPageNo);
+					}
+				});
 			}
-		});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -316,8 +389,11 @@ public class PdfPreviewPartLoadHandler {
 				for (int i = 0; i < targetPage - 1 && i < children.length; i++) {
 					yOffset += children[i].getSize().y;
 				}
-				int remainingSpace = (scrolledComposite.getClientArea().height - children[targetPage - 1].getSize().y)
-						/ 2;
+				int remainingSpace = 0;
+				if (targetPage - 1 >= 0 && targetPage - 1 < children.length) {
+					remainingSpace = (scrolledComposite.getClientArea().height - children[targetPage - 1].getSize().y)
+							/ 2;
+				}
 				int newVScrollPos = yOffset - remainingSpace;
 				newVScrollPos = Math.max(0, newVScrollPos);
 				scrolledComposite.setOrigin(hScrollPos, newVScrollPos);
@@ -342,5 +418,9 @@ public class PdfPreviewPartLoadHandler {
 			});
 			renderPdfWithHighlights();
 		});
+	}
+
+	private void addMouseListenersToLabel(Label label, int pageIndex, int j) {
+		pDFLabelMouseListener.addMouseListenersToLabel(label, pageIndex, j);
 	}
 }
