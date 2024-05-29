@@ -18,6 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Docker Build Image
-      run: docker pull ghcr.io/elexis/docker-build:${{ github.event.inputs.TARGET }}
+      run: docker pull ghcr.io/elexis/docker-build:${{ worflow_dispatch.inputs.TARGET }}
     - name: Build with Docker
-      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven gitlab.medelexis.ch:4567/elexis/docker-build:${{ github.event.inputs.TARGET }} xvfb-run mvn -V clean verify -B
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ github.event.inputs.TARGET }} xvfb-run mvn -V clean verify -B
