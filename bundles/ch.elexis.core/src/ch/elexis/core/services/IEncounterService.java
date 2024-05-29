@@ -129,4 +129,14 @@ public interface IEncounterService {
 	 */
 	public Result<IEncounter> reBillEncounter(IEncounter encounter);
 
+	/**
+	 * Insert an XREF to the encounters {@link Samdas} text.
+	 * 
+	 * @param encounter
+	 * @param provider  unique String identifying the provider
+	 * @param id        String identifying the item
+	 * @param pos       position of the item as offset relative to the contents
+	 * @param text      text to insert
+	 */
+	void addXRef(IEncounter encounter, String provider, String id, int pos, String text);
 }
