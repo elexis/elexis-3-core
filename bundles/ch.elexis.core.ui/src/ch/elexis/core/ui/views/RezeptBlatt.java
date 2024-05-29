@@ -129,7 +129,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
-		int[] wt = new int[] { 7, 36, 18, 20, 20 };
+		int[] wt = new int[] { 4, 56, 18, 22 };
 		if (replace.equals(Messages.RezeptBlatt_4)) {
 			fields = createRezeptListFields(lines);
 		}
@@ -212,16 +212,15 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	public String[][] createRezeptListFields(List<Prescription> lines) {
 		String[][] fields = new String[lines.size() + 1][];
 
-		fields[0] = new String[5];
+		fields[0] = new String[4];
 		fields[0][0] = StringUtils.EMPTY;
 		fields[0][1] = "Medikament";
 		fields[0][2] = "Einnahme";
-		fields[0][3] = "Anw. Art";
-		fields[0][4] = "Anw. Grund";
+		fields[0][3] = "Bemerkung";
 
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
-			fields[i] = new String[6];
+			fields[i] = new String[4];
 			if (p.getEntryType() != null && p.getEntryType() != EntryType.RECIPE
 					&& p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
@@ -231,7 +230,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
 			fields[i][3] = StringUtils.defaultString(p.getBemerkung());
-			fields[i][4] = StringUtils.defaultString(p.getDisposalComment());
+			// fields[i][4] = StringUtils.defaultString(p.getDisposalComment());
 		}
 		return fields;
 	}
@@ -323,7 +322,6 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		if (mode == false) {
 			save();
 		}
-
 	}
 
 	@Override
