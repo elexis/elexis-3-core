@@ -14,9 +14,13 @@ package ch.elexis.core.ui.laboratory.views;
 
 import static ch.elexis.core.ui.laboratory.LaboratoryTextTemplateRequirement.TT_LABPAPER;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,10 +38,12 @@ import org.jdom2.Element;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.text.ITextPlugin.ICallback;
 import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
+import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 
 public class LaborblattView extends ViewPart implements ICallback {
@@ -66,59 +72,89 @@ public class LaborblattView extends ViewPart implements ICallback {
 
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
 			int[] skipColumnsIndex) {
+
 		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
 			return false;
 		}
 		Tree tree = rows[0].getParent();
+
 		int cols = tree.getColumnCount() - skipColumnsIndex.length;
 		int[] colsizes = new int[cols];
 		float first = 25;
 		float second = 10;
+
 		if (cols > 2) {
 			int rest = Math.round((100f - first - second) / (cols - 2f));
 			for (int i = 2; i < cols; i++) {
 				colsizes[i] = rest;
 			}
 		}
+
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
+		
+		// Final table
+		LinkedList<String[]> itemResults = new LinkedList<>();
 
-		LinkedList<String[]> usedRows = new LinkedList<>();
-		usedRows.add(header);
-		for (int i = 0; i < rows.length; i++) {
-			boolean used = false;
-			String[] row = new String[cols];
-			for (int j = 0, skipped = 0; j < cols + skipped; j++) {
-				if (skipColumn(j, skipColumnsIndex)) {
-					skipped++;
-					continue;
-				}
-				int destIndex = j - skipped;
-				row[destIndex] = rows[i].getText(j);
-				if ((destIndex > 1) && (row[destIndex].length() > 0)) {
-					used = true;
-					// break;
-				}
-			}
-			if (used == true) {
-				usedRows.add(row);
-			}
+		// Add header line
+		itemResults.add(header);
+
+		// Reduced array size because the first two columns do not contain any
+		// laboratory measurements
+		String[] days = new String[header.length - 2];
+
+		// Transform dd.MM.yyyy to yyyyMMdd to query the according labResults
+		for (int numberOfDays = 2; numberOfDays < header.length; numberOfDays++) {
+			days[numberOfDays - 2] = LocalDate.parse(header[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+					.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		}
-		String[][] fld = usedRows.toArray(new String[0][]);
+
+		// String to be inserted as intermediate title to identify the measurment's
+		// provenance
+		String provenance = "";
+
+		// Loop to build the final table row by row
+		for (int numberOfRows = 0; numberOfRows < rows.length; numberOfRows++) {
+			String[] itemResult = new String[header.length];
+			// Cast array to LaborItemResults
+			LaborItemResults laborItemResults = (LaborItemResults) rows[numberOfRows].getData();
+			// Build the first two columns (Name of the LabResult/Reference)
+			itemResult[0] = laborItemResults.getLabItem().getKuerzel() + " - ["
+					+ laborItemResults.getLabItem().getUnit() + "]";
+			itemResult[1] = laborItemResults.getFirstResult().getPatient().getGeschlecht().equalsIgnoreCase("m")
+					? laborItemResults.getFirstResult().getRefMale()
+					: laborItemResults.getFirstResult().getRefFemale();
+			int numberOfDays = 2;
+			// Building the columns
+			for (String day : days) {
+				List<LabResult> labResults = laborItemResults.getResult(day);
+				if (labResults != null) {
+					for (LabResult labResult : labResults) {
+						itemResult[numberOfDays] = labResult.getFlags() == 1 ? "**" + labResult.getResult()
+								: labResult.getResult();
+					}
+				} else {
+					itemResult[numberOfDays] = "";
+				}
+				numberOfDays++;
+			}
+			// Insert the provenance if it changes
+			if (!provenance.equalsIgnoreCase(laborItemResults.getFirstResult().getItem().getGroup())) {
+				String[] intermediateTitle = new String[header.length];
+				intermediateTitle[0] = laborItemResults.getFirstResult().getItem().getGroup();
+				provenance = laborItemResults.getFirstResult().getItem().getGroup();
+				itemResults.add(intermediateTitle);
+			}
+			itemResults.add(itemResult);
+		}
+
+		String[][] fld = itemResults.toArray(new String[0][]);
+
 		boolean ret = text.getPlugin().insertTable("[Laborwerte]", //$NON-NLS-1$
 				ITextPlugin.FIRST_ROW_IS_HEADER, fld, colsizes);
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
-	}
-
-	private boolean skipColumn(int index, int[] skip) {
-		for (int i : skip) {
-			if (index == i) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows) {
