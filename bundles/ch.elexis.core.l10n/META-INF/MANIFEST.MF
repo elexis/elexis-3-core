@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: I18n
 Bundle-SymbolicName: ch.elexis.core.l10n
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: elexis.info
 Export-Package: ch.elexis.core.l10n;version="3.5.0.qualifier"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.osgi.util;version="1.1.0"

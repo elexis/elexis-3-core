@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core UI
 Bundle-SymbolicName: ch.elexis.core.ui;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.Hub
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
@@ -24,7 +24,7 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexpor
  org.eclipse.nebula.widgets.nattable.core,
  org.eclipse.nebula.widgets.nattable.extension.nebula,
  org.eclipse.nebula.widgets.richtext
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
  ch.elexis.core.ui.actions,

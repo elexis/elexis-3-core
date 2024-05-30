@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ch.rgw.utility
 Bundle-SymbolicName: ch.rgw.utility;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: G. Weirich
 Eclipse-BuddyPolicy: registered
 Export-Package: ch.rgw.compress,
@@ -24,5 +24,5 @@ Import-Package: org.apache.commons.codec;version="1.14.0",
  org.jdom2;version="2.0.6",
  org.jdom2.output;version="2.0.6",
  org.slf4j
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: .

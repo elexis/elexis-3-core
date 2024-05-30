@@ -7,10 +7,10 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.tests</artifactId>
-		<version>3.12.0-SNAPSHOT</version>
+		<version>3.13.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.rgw.utility.tests</artifactId>
-	<version>3.12.0-SNAPSHOT</version>
+	<version>3.13.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>

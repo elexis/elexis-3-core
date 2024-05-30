@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.tasks.feature"
       label="Task Service"
-      version="3.12.0.qualifier"
+      version="3.13.0.qualifier"
       provider-name="ch.elexis">
 
    <description url="http://www.example.com/description">

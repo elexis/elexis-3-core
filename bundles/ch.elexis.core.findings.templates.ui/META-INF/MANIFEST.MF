@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Templates UI
 Bundle-SymbolicName: ch.elexis.core.findings.templates.ui;singleton:=true
-Bundle-Version: 3.12.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Version: 3.13.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core.data;bundle-version="3.10.0",
  ch.elexis.core.findings;bundle-version="3.10.0",

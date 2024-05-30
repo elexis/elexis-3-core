@@ -4,7 +4,7 @@ Bundle-Name: OSGI Slf4J Logging Adapter
 Bundle-SymbolicName: ch.elexis.core.logging.osgi
 Bundle-Version: 3.3.0.qualifier
 Bundle-Vendor: elexis.info
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.service.component.annotations,
  org.slf4j;version="1.6.6"
