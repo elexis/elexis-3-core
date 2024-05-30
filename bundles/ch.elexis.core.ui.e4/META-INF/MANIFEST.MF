@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core UI for e4
 Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Export-Package: ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.dialog,
@@ -39,7 +39,7 @@ Require-Bundle: javax.annotation;bundle-version="1.3.5";visibility:=reexport,
  org.eclipse.core.databinding.property;visibility:=reexport,
  org.eclipse.jface.databinding,
  com.ibm.icu
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Service-Component: OSGI-INF/ch.elexis.core.ui.e4.util.CoreUiUtil.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.lock.types,

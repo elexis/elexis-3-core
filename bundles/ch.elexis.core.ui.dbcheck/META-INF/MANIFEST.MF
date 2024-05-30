@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Datenbank Service Tool
 Bundle-SymbolicName: ch.elexis.core.ui.dbcheck;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.dbcheck.Activator
 Bundle-Vendor: medevit.at
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
@@ -14,7 +14,7 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.elexis.core.ui;bundle-version="3.0.0",
  ch.elexis.core.model;bundle-version="1.0.0",
  ch.elexis.core.services;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.dbcheck,
  ch.elexis.core.ui.dbcheck.external

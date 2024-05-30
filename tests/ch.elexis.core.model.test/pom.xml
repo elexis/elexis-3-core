@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.12.0-SNAPSHOT</version>
+    <version>3.13.0-SNAPSHOT</version>
   </parent>
   <artifactId>ch.elexis.core.model.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>

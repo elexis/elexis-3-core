@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Docx
 Bundle-SymbolicName: at.medevit.elexis.text.docx;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: at.medevit.medelexis.text.docx
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core.text.docx;bundle-version="1.0.0",
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core.data;bundle-version="3.10.0",

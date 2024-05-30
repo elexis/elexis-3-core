@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core.findings.templates;singleton:=true
 Automatic-Module-Name: ch.elexis.core.findings.templates
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: ch.elexis.core.findings.templates.model,
  ch.elexis.core.findings.templates.model.impl,
  ch.elexis.core.findings.templates.model.util,
