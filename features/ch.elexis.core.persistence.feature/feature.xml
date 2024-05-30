@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.persistence.feature"
       label="Core JPA Persistence Feature"
-      version="3.12.0.qualifier"
+      version="3.13.0.qualifier"
       provider-name="medevit.at">
 
    <description url="http://www.example.com/description">

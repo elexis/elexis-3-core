@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Services
 Bundle-SymbolicName: ch.elexis.core.services;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.services
 Bundle-ActivationPolicy: lazy
@@ -52,4 +52,4 @@ Import-Package: bsh,
  org.slf4j
 Service-Component: OSGI-INF/*.xml
 Export-Package: ch.elexis.core.services.holder
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

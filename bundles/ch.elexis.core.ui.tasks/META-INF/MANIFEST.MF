@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tasks
 Bundle-SymbolicName: ch.elexis.core.ui.tasks;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-ClassPath: lib/cron-parser-core-3.5.jar,
  lib/joda-time-2.10.10.jar,
  .
@@ -22,7 +22,7 @@ Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  org.quartz
 Automatic-Module-Name: ch.elexis.core.ui.tasks
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Service-Component: OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions.xml,
  OSGI-INF/ch.elexis.core.ui.tasks.internal.TaskModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.tasks.internal.detailcontributors.HL7ImporterIdentifiedRunnableContributor.xml

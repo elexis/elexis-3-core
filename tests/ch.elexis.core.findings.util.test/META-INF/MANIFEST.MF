@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: ch.elexis.core.findings.util.test
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Fragment-Host: ch.elexis.core.findings.util;bundle-version="3.10.0"
-iBundle-RequiredExecutionEnvironment: JavaSE-17
+iBundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: ch.elexis.core.jpa.entities,
  ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.l10n;version="3.5.0.qualifier",

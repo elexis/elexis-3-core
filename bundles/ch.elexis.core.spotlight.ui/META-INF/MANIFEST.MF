@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Spotlight Like Single Line Search UI
 Bundle-SymbolicName: ch.elexis.core.spotlight.ui;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
@@ -13,7 +13,7 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  org.eclipse.jface;bundle-version="3.19.0",
  org.apache.commons.lang3;bundle-version="3.7.0",
  ch.elexis.core.ui.icons;bundle-version="3.3.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: ch.elexis.core.documents,
  ch.elexis.core.pdfbox.ui.parts,
  ch.elexis.core.pdfbox.ui.parts.handlers,
