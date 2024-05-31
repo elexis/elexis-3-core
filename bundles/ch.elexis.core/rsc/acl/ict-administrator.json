@@ -17,7 +17,8 @@
 		"LSTG_CHARGE_FOR_ALL": "x",
 		"EXEC_DBSHAKER": "x",
 		"GALEXIS_SETTINGS": "x",
-		"ACL_VIEW_SELECTION": "x"
+		"ACL_VIEW_SELECTION": "x",
+		"ACL_DBCONNECTION_CONFIG": "x"
 	},
 	"object": {
 		"ch.elexis.core.model.IArticle":"cruvdx",

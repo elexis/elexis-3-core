@@ -71,7 +71,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.ac.ConfigurationScope;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandConstants;
@@ -214,7 +213,7 @@ public class GlobalActions {
 			return;
 		}
 		logger = LoggerFactory.getLogger(this.getClass());
-		cmdService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		cmdService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getService(ICommandService.class);
 		mainWindow = window;
 		help = Hub.plugin.getWorkbench().getHelpSystem();
@@ -402,7 +401,7 @@ public class GlobalActions {
 			}
 		};
 
-		connectWizardAction = new RestrictedAction(EvACE.of(ConfigurationScope.LOCAL, Right.UPDATE, "verbindung/"),
+		connectWizardAction = new RestrictedAction(EvACE.of("ACL_DBCONNECTION_CONFIG"),
 				Messages.GlobalActions_Connection) {
 			{
 				setId("connectWizard"); //$NON-NLS-1$
@@ -414,7 +413,6 @@ public class GlobalActions {
 				WizardDialog wd = new WizardDialog(mainWindow.getShell(), new DBConnectWizard());
 				wd.open();
 			}
-
 		};
 
 		printKontaktEtikette = new Action(Messages.Print_AddressLabel) {
@@ -747,6 +745,7 @@ public class GlobalActions {
 			}
 		};
 		planeRechnungAction = new Action(Messages.GlobalActions_plaBill) {
+			@Override
 			public void run() {
 
 			}
