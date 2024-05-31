@@ -431,12 +431,12 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 
 			updateUsers();
 
-			Object[] assignedUsers = userGroup.getUsers().toArray();
+			Object[] assignedUsers = userGroup != null ? userGroup.getUsers().toArray() : new Object[0];
 			checkboxTableViewerUsers.setCheckedElements(assignedUsers);
 
 			updateRoles();
 
-			Object[] assignedRoles = userGroup.getRoles().toArray();
+			Object[] assignedRoles = userGroup != null ? userGroup.getRoles().toArray() : new Object[0];
 			checkboxTableViewerRoles.setCheckedElements(assignedRoles);
 
 			updateAssociations();
@@ -504,6 +504,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 
 	public class MandantViewerComparator extends ViewerComparator {
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;
@@ -513,6 +514,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 
 	public class UserViewerComparator extends ViewerComparator {
 
+		@Override
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IUser u1 = (IUser) o1;
 			IUser u2 = (IUser) o2;
