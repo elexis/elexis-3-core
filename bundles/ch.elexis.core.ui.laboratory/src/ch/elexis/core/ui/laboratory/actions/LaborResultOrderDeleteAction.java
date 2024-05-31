@@ -10,7 +10,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.interfaces.ILabResult;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
@@ -112,7 +114,7 @@ public class LaborResultOrderDeleteAction extends Action implements IAction {
 
 					}
 				});
-				ElexisEventDispatcher.reload(LabResult.class);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
 			}
 		}
 	}
