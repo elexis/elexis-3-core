@@ -5,8 +5,11 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredViewer;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;
@@ -37,6 +40,7 @@ public class LaborResultSetNonPathologicAction extends Action {
 				public void lockAcquired() {
 					result.setFlag(LabResultConstants.PATHOLOGIC, false);
 					result.setPathologicDescription(new PathologicDescription(Description.PATHO_MANUAL));
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
 				}
 			});
 		}

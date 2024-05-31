@@ -6,6 +6,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.interfaces.ILabResult;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.DateTimeSelectorDialog;
 import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.rgw.tools.TimeTool;
@@ -36,6 +39,7 @@ public class LabOrderSetObservationDateAction extends Action {
 			for (LaborOrderViewerItem labOrderViewerItem : orders) {
 				labOrderViewerItem.setObservationTimeWithResults(date);
 			}
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
 		}
 	}
 }

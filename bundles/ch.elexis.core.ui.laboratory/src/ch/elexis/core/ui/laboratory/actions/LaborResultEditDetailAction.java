@@ -6,8 +6,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.interfaces.ILabResult;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.LaborOrderViewerItem;
 import ch.elexis.core.ui.laboratory.dialogs.EditLabResultDialog;
@@ -53,7 +55,7 @@ public class LaborResultEditDetailAction extends Action {
 						EditLabResultDialog dialog = new EditLabResultDialog(viewer.getControl().getShell(),
 								lockingResult);
 						if (dialog.open() == Window.OK) {
-							ElexisEventDispatcher.reload(LabResult.class);
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
 						}
 					}
 				});
@@ -79,7 +81,7 @@ public class LaborResultEditDetailAction extends Action {
 								lockingResult);
 						if (dialog.open() == Window.OK) {
 							lockingOrder.setState(State.DONE);
-							ElexisEventDispatcher.reload(LabResult.class);
+							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ILabResult.class);
 						}
 					}
 				});
