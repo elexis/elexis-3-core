@@ -108,11 +108,13 @@ public class UserService implements IUserService {
 	@Override
 	public Set<IMandator> getExecutiveDoctorsWorkingFor(IUserGroup group, boolean includeNonActive) {
 		try {
-			if (includeNonActive) {
-				return groupExecutiveDoctorsWorkingForCache.get(group);
-			} else {
-				return groupExecutiveDoctorsWorkingForCache.get(group).stream().filter(IMandator::isActive)
-						.collect(Collectors.toSet());
+			if (group != null) {
+				if (includeNonActive) {
+					return groupExecutiveDoctorsWorkingForCache.get(group);
+				} else {
+					return groupExecutiveDoctorsWorkingForCache.get(group).stream().filter(IMandator::isActive)
+							.collect(Collectors.toSet());
+				}
 			}
 		} catch (ExecutionException e) {
 			LoggerFactory.getLogger(getClass()).error("Error getting executive doctors", e);
