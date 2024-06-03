@@ -43,6 +43,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
@@ -50,6 +51,7 @@ import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchCommandConstants;
@@ -86,6 +88,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
@@ -111,6 +114,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import ch.elexis.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
@@ -686,6 +690,18 @@ public class GlobalActions {
 
 			@Override
 			public void doRun(Fall fall) {
+				if (hasUnbilledConsultations(fall)) {
+					Display display = Display.getDefault();
+					Shell shell = new Shell(display);
+					MessageBox dialog = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
+					dialog.setText(Messages.GlobalActions_CloseCaseDialogTitel);
+					dialog.setMessage(
+							((String) Messages.GlobalActions_CloseCaseDialog).replace("{0}", fall.getLabel()));
+					int response = dialog.open();
+					if (response == SWT.NO) {
+						return;
+					}
+				}
 				DateSelectorDialog dsd = new DateSelectorDialog(UiDesk.getTopShell(), null,
 						Messages.GlobalActions_CloseCase_SelectCloseDate);
 				int retVal = dsd.open();
@@ -734,6 +750,17 @@ public class GlobalActions {
 
 			}
 		};
+	}
+
+	public boolean hasUnbilledConsultations(Fall fall) {
+		Konsultation[] konsultationen = fall.getBehandlungen(false);
+		for (Konsultation kons : konsultationen) {
+			Rechnung rechnung = kons.getRechnung();
+			if (rechnung == null || rechnung.getInvoiceState() == InvoiceState.CANCELLED) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected void printPatient(final Patient patient) {
