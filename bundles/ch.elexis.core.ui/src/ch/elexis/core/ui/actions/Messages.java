@@ -22,6 +22,8 @@ public class Messages {
 	public static String GlobalActions_ChangeMandatorMessage = ch.elexis.core.l10n.Messages.GlobalActions_ChangeMandatorMessage;
 	public static String GlobalActions_Connection = ch.elexis.core.l10n.Messages.GlobalActions_Connection;
 	public static String GlobalActions_CloseCase = ch.elexis.core.l10n.Messages.GlobalActions_CloseCase;
+	public static Object GlobalActions_CloseCaseDialog = ch.elexis.core.l10n.Messages.GlobalActions_CloseCaseDialog;
+	public static String GlobalActions_CloseCaseDialogTitel = ch.elexis.core.l10n.Messages.GlobalActions_CloseCaseDialogTitel;
 	public static String GlobalActions_CloseCase_SelectCloseDate = ch.elexis.core.l10n.Messages.GlobalActions_CloseCase_SelectCloseDate;
 	public static String GlobalActions_Copy = ch.elexis.core.l10n.Messages.GlobalActions_Copy;
 	public static String GlobalActions_CouldntDeleteCaseExplanation = ch.elexis.core.l10n.Messages.GlobalActions_CouldntDeleteCaseExplanation;
@@ -92,5 +94,7 @@ public class Messages {
 	public static String Core_Load_Files_ellipsis = ch.elexis.core.l10n.Messages.Core_Load_Files_ellipsis;
 	public static String ToggleVerrechenbarFavoriteAction_Favorize = ch.elexis.core.l10n.Messages.ToggleVerrechenbarFavoriteAction_Favorize;
 	public static String ToggleVerrechenbarFavoriteAction_DeFavorize = ch.elexis.core.l10n.Messages.ToggleVerrechenbarFavoriteAction_DeFavorize;
+
+
 
 }
