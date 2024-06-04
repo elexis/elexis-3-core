@@ -322,7 +322,6 @@ public class SendMailDialog extends TitleAreaDialog {
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
-						subjectText.setText(StringUtils.EMPTY);
 					}
 					updateLayout();
 				}
@@ -547,8 +546,6 @@ public class SendMailDialog extends TitleAreaDialog {
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
-		} else {
-			attachments.setAttachments(null);
 		}
 	}
 
