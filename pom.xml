@@ -38,9 +38,9 @@
 		<url>http://www.elexis.info</url>
 	</organization>
 	<properties>
-		<elexis.target>2023-09-java17</elexis.target>
+		<elexis.target>2023-09-java21</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>3.0.5</tycho.version>
+		<tycho.version>4.0.8</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<buildplan.plugin.version>1.5</buildplan.plugin.version>
 		<formatter.plugin.version>2.18.0</formatter.plugin.version>
@@ -227,7 +227,7 @@
 						<dependency>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
-							<version>3.0.5</version>
+							<version>${tycho.version}</version>
 						</dependency>
 					</dependencies>
 					<configuration>
