@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.internet.InternetAddress;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
 
 import com.sun.mail.imap.IMAPMessage;
+
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Part;
+import jakarta.mail.internet.InternetAddress;
 
 /**
  * A self-sustainable representation of an IMAP message. It does not need a live

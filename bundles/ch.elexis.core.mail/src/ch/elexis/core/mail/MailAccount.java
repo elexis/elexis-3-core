@@ -2,11 +2,10 @@ package ch.elexis.core.mail;
 
 import java.util.Base64;
 
-import javax.mail.Address;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 import ch.elexis.core.model.IMandator;
+import jakarta.mail.Address;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 
 /**
  * Class representing the configuration of a mail account.
