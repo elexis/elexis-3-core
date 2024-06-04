@@ -49,6 +49,8 @@ public interface IRnOutputter {
 
 	public static final String PROP_OUTPUT_MODIFY_INVOICESTATE = "OutputModifyInvoiceState";
 
+	public static final String PROP_OUTPUT_NOUI = "OutputNoUi";
+
 	/**
 	 * A short textual description for this output (as Label)
 	 */
