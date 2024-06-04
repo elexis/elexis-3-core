@@ -864,7 +864,7 @@
       <command
             defaultHandler="ch.elexis.core.ui.commands.SendInvoiceAsMailHandler"
             id="ch.elexis.core.ui.commands.SendInvoiceAsMail"
-            name="Send Invoice as E-Mail">
+            name="Rechnungskopie per Mail">
       </command>
    </extension>
       <extension
