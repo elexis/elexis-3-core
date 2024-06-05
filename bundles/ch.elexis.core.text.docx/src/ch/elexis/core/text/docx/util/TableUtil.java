@@ -7,6 +7,7 @@ import org.docx4j.UnitsOfMeasurement;
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.parts.relationships.Namespaces;
+import org.docx4j.wml.BooleanDefaultTrue;
 import org.docx4j.wml.CTBorder;
 import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.P;
@@ -22,6 +23,7 @@ import org.docx4j.wml.Tc;
 import org.docx4j.wml.TcPr;
 import org.docx4j.wml.Text;
 import org.docx4j.wml.Tr;
+import org.docx4j.wml.TrPr;
 
 import ch.elexis.core.text.ITextPlugin;
 import jakarta.xml.bind.JAXBException;
@@ -52,6 +54,9 @@ public class TableUtil {
 
 		if (properties == ITextPlugin.FIRST_ROW_IS_HEADER) {
 			Tr headerRow = (Tr) table.getContent().get(0);
+
+			repeatOnEveryPage(headerRow);
+
 			for (int columnIndex = 0; columnIndex < contents[0].length; columnIndex++) {
 				Tc column = (Tc) headerRow.getContent().get(columnIndex);
 				P columnPara = (P) column.getContent().get(0);
@@ -106,6 +111,7 @@ public class TableUtil {
 			// Shouldn't happen
 			e.printStackTrace();
 		}
+
 		tbl.setTblPr(tblPr);
 
 		TblGrid tblGrid = Context.getWmlObjectFactory().createTblGrid();
@@ -200,5 +206,12 @@ public class TableUtil {
 		borders.setInsideH(border);
 		borders.setInsideV(border);
 		table.getTblPr().setTblBorders(borders);
+	}
+
+	private static void repeatOnEveryPage(Tr tr) {
+		BooleanDefaultTrue bdt = Context.getWmlObjectFactory().createBooleanDefaultTrue();
+		TrPr trPr = new TrPr();
+		trPr.getCnfStyleOrDivIdOrGridBefore().add(Context.getWmlObjectFactory().createCTTrPrBaseTblHeader(bdt));
+		tr.setTrPr(trPr);
 	}
 }
