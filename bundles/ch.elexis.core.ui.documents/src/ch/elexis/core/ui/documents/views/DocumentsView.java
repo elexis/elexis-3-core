@@ -278,6 +278,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(4, false));
 
@@ -292,6 +293,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 		tSearch.setMessage(Messages.DocumentView_searchLabel);
 		// Add search listener
 		ModifyListener searchListener = new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				searchTitle = tSearch.getText();
 				refresh();
@@ -356,7 +358,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 			public String getText(Object element) {
 				if (element instanceof IDocument) {
 					IDocument doc = (IDocument) element;
-					return bFlat ? doc.getCategory().getName() : StringUtils.EMPTY;
+					return bFlat && doc.getCategory() != null ? doc.getCategory().getName() : StringUtils.EMPTY;
 				} else if (element instanceof ICategory) {
 					ICategory cat = (ICategory) element;
 					return cat.getName();
@@ -501,7 +503,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 
 					}
 
-					ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					ICommandService commandService = PlatformUI.getWorkbench()
 							.getService(ICommandService.class);
 					Command cmd = commandService.getCommand(DocumentCrudHandler.CMD_NEW_DOCUMENT);
 					if (files != null) {
@@ -713,6 +715,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		if (viewer != null) {
 			viewer.getControl().setFocus();
@@ -726,13 +729,14 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 
 	private void makeActions() {
 		doubleClickAction = new Action() {
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				if (obj instanceof IDocument) {
 					IDocument dh = (IDocument) obj;
 					DocumentStoreServiceHolder.getService().getPersistenceObject(dh).ifPresent(po -> {
-						ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						ICommandService commandService = PlatformUI.getWorkbench()
 								.getService(ICommandService.class);
 						Command command = commandService.getCommand("ch.elexis.core.ui.command.startEditLocalDocument"); //$NON-NLS-1$
 						PlatformUI.getWorkbench().getService(IEclipseContext.class)
@@ -754,6 +758,7 @@ public class DocumentsView extends ViewPart implements IRefreshable {
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
