@@ -299,7 +299,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 
 	@Override
 	public void save() {
-		if (actBrief != null) {
+		if (actBrief != null && text.getPlugin().storeToByteArray() != null) {
 			actBrief.save(text.getPlugin().storeToByteArray(), text.getPlugin().getMimeType());
 		}
 	}

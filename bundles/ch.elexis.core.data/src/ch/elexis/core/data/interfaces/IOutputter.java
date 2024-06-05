@@ -11,6 +11,8 @@
  *******************************************************************************/
 package ch.elexis.core.data.interfaces;
 
+import java.util.Optional;
+
 /**
  * Ach.elexis.exchange to output something
  *
@@ -23,6 +25,17 @@ public interface IOutputter {
 
 	/** human readable description */
 	public String getOutputterDescription();
+
+	/**
+	 * Get a {@link IOutputter} specific description of the outputted
+	 * {@link Object}.
+	 * 
+	 * @param outputted
+	 * @return
+	 */
+	public default Optional<String> getInfo(Object outputted) {
+		return Optional.empty();
+	}
 
 	/**
 	 * Image to symbolize this outputter (should be 16x16 or 24x24 Pixel)

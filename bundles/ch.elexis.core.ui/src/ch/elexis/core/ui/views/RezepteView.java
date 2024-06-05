@@ -34,6 +34,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -45,6 +47,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
@@ -179,7 +182,7 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		SashForm sash = new SashForm(master.getBody(), SWT.NONE);
 		tv = new TableViewer(sash, SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tv.setContentProvider(ArrayContentProvider.getInstance());
-		tv.setLabelProvider(new LabelProvider() {
+		tv.setLabelProvider(new ColumnLabelProvider() {
 
 			@Override
 			public String getText(final Object element) {
@@ -212,7 +215,24 @@ public class RezepteView extends ViewPart implements IRefreshable {
 				return null;
 			}
 
+			@Override
+			public String getToolTipText(Object element) {
+				if (element instanceof IRecipe) {
+					element = Rezept.load(((IRecipe) element).getId());
+				}
+				List<OutputLog> outputs = OutputLog.getOutputs((PersistentObject) element);
+				if (outputs != null && !outputs.isEmpty()) {
+					OutputLog o = outputs.get(0);
+					String outputterID = o.getOutputterID();
+					IOutputter io = OutputLog.getOutputter(outputterID);
+					if (io != null) {
+						return io.getInfo(element).orElse(null);
+					}
+				}
+				return null;
+			}
 		});
+		ColumnViewerToolTipSupport.enableFor(tv, ToolTip.NO_RECREATE);
 		tv.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
