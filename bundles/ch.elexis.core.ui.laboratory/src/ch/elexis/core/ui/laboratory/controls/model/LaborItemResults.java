@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.laboratory.controls.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,4 +53,13 @@ public class LaborItemResults implements Comparable<LaborItemResults> {
 	public int compareTo(LaborItemResults o) {
 		return item.compareTo(o.getItem());
 	}
+
+	public Collection<LabResult> getAllResults() {
+		List<LabResult> allResults = new ArrayList<>();
+		for (List<LabResult> resultList : results.values()) {
+			allResults.addAll(resultList);
+		}
+		return allResults;
+	}
+
 }
