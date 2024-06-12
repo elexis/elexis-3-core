@@ -43,7 +43,6 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator;
 import ch.elexis.core.services.internal.Bundle;
-import ch.elexis.core.services.internal.jws.ContextProvidedBearerTokenRequestFilter;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
@@ -243,7 +242,7 @@ public class ElexisServerService implements IElexisServerService {
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {
 
 			Client client = ClientBuilder.newClient();
-			WebTarget target = client.target(restUrl).register(new ContextProvidedBearerTokenRequestFilter());
+			WebTarget target = client.target(restUrl);
 
 			eventService = WebResourceFactory.newResource(IEventService.class, target);
 
