@@ -33,6 +33,7 @@
 		"ch.elexis.base.ch.arzttarife.tarmedallowance.ITarmedAllowance": "rv",
 		"ch.elexis.base.ch.ebanking.model.IEsrRecord": "rv",
 		"ch.elexis.base.ch.labortarif.ILaborLeistung": "rv",
+		"ch.elexis.buchhaltung.kassenbuch.KassenbuchEintrag": "cruvdx",
 		"ch.elexis.core.model.IArticle": "rv",
 		"ch.elexis.core.model.IArticleDefaultSignature": "rv",
 		"ch.elexis.core.model.IBillingSystemFactor": "rv",
