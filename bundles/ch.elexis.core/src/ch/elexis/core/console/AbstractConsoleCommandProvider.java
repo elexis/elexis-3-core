@@ -1,5 +1,6 @@
 package ch.elexis.core.console;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,6 +26,9 @@ import org.eclipse.osgi.framework.console.CommandInterpreter;
 import org.eclipse.osgi.framework.console.CommandProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * This abstract class eases implementation of console commands. In order to use
@@ -97,32 +102,48 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 		ci.println("--( " + new Date() + " )---[cmd: " + joinedArguments + "]"
 				+ getRelativeFixedLengthSeparator(joinedArguments, 100, "-"));
 
-		try {
-			outcomeMessage = null;
-			Object result = null;
-			if (method.getParameterCount() > 0) {
-				Object[] args = new Object[method.getParameterCount()];
+		outcomeMessage = null;
+		Object args[] = null;
+		CmdAdvisor advisor = method.getDeclaredAnnotation(CmdAdvisor.class);
 
-				Class<?>[] parameterTypes = method.getParameterTypes();
-				for (int j = 0; j < parameterTypes.length; j++) {
-					Class<?> clazz = parameterTypes[j];
-					if (clazz.equals(Iterator.class)) {
-						NoThrowExceptionIterator<String> nullContinueIterator = new NoThrowExceptionIterator<>(
-								Arrays.asList(subArguments).iterator());
-						args[j] = nullContinueIterator;
-					} else if (clazz.equals(List.class)) {
-						args[j] = Arrays.asList(subArguments);
-						result = method.invoke(this, Arrays.asList(subArguments));
-					} else if (clazz.equals(String.class)) {
-						args[j] = subArguments.length > j ? subArguments[j] : null;
-					} else {
-						ci.println("invalid parameter type " + clazz);
-					}
+		if (method.getParameterCount() > 0) {
+			args = new Object[method.getParameterCount()];
+
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			for (int j = 0; j < parameterTypes.length; j++) {
+				Class<?> clazz = parameterTypes[j];
+				if (clazz.equals(Iterator.class)) {
+					NoThrowExceptionIterator<String> nullContinueIterator = new NoThrowExceptionIterator<>(
+							Arrays.asList(subArguments).iterator());
+					args[j] = nullContinueIterator;
+				} else if (clazz.equals(String.class)) {
+					args[j] = subArguments.length > j ? subArguments[j] : null;
+				} else {
+					ci.println("invalid parameter type " + clazz);
 				}
-				result = method.invoke(this, args);
-			} else {
-				result = method.invoke(this);
 			}
+
+		}
+
+		final Method _method = method;
+		final Object[] _args = args;
+
+		if (advisor != null && advisor.executePrivileged()) {
+			Optional<IAccessControlService> service = OsgiServiceUtil.getService(IAccessControlService.class);
+			if (service.isPresent()) {
+				service.get().doPrivileged(() -> performInvoke(_method, _args));
+			} else {
+				ci.println("No IAccessControlService available");
+			}
+		} else {
+			performInvoke(_method, _args);
+		}
+
+	}
+
+	private void performInvoke(Method method, Object[] args) {
+		try {
+			Object result = method.invoke(this, args);
 			if (result instanceof String) {
 				ci.println(result);
 			}
