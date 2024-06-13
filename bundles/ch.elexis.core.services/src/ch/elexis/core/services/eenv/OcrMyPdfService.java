@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -59,26 +60,27 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			throw new IllegalArgumentException("null");
 		}
 
-		String params = (parameters != null) ? parameters : PARAMS;
+		final String params = (parameters != null) ? parameters : PARAMS;
 
 		try (FormDataMultiPart form = new FormDataMultiPart()) {
 			form.bodyPart(new StreamDataBodyPart("file", new ByteArrayInputStream(in), "filename.pdf"));
 			form.field("params", params);
 			InputStream performOcr = remoteOcrMyPdfService.performOcr(form);
 			return IOUtils.toByteArray(performOcr);
-//		} catch (RequestException re) {
-//			if (re.getStatus() == 400 && re.getMessage().contains("already")) {
-//				return in;
-//			} else if (re.getStatus() == 400 && re.getMessage().contains("encrypted")) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
-//			} else if (re.getStatus() == 400 && re.getMessage().contains("dynamic XFA")) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
-//			} else if (re.getStatus() == 400) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
-//			} else if (re.getStatus() == 413) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
-//			}
-//			throw new IllegalStateException("invalid state " + re.getStatus() + ": " + re.getMessage(), re);
+		} catch (ClientErrorException re) {
+			final int status = re.getResponse().getStatus();
+			if (status == 400 && re.getMessage().contains("already")) {
+				return in;
+			} else if (status == 400 && re.getMessage().contains("encrypted")) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
+			} else if (status == 400 && re.getMessage().contains("dynamic XFA")) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
+			} else if (status == 400) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
+			} else if (status == 413) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
+			}
+			throw new IllegalStateException("invalid state " + status + ": " + re.getMessage(), re);
 		}
 
 	}
