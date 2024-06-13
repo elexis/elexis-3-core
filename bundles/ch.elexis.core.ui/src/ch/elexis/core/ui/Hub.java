@@ -152,6 +152,10 @@ public class Hub extends AbstractUIPlugin {
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
 		setWindowText(null);
+
+		if (mandator != null) {
+			CoreHub.actMandant = Mandant.load(mandator.getId());
+		}
 	}
 
 	@Inject
