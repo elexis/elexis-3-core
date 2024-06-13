@@ -144,6 +144,8 @@ location "https://download.elexis.info/elexis/target/2023-09-java17/" {
 	ca.odell.glazedlists
 	org.eclipse.collections
 	
+	org.eclipse.swtchart.feature.feature.group
+	
 	// Chromium
 	com.equo.chromium.feature.feature.group
 	com.equo.chromium.cef.feature.feature.group
