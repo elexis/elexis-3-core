@@ -193,7 +193,6 @@ public class RnOutputDialog extends TitleAreaDialog {
 
 	public void redrawLayout() {
 	    if (ret != null && !ret.isDisposed()) {
-	        ret.layout(true, true);
 	        ret.getParent().layout(true, true);
 	    }
 	}
