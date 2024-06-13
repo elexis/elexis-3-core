@@ -193,6 +193,12 @@ public class RnOutputDialog extends TitleAreaDialog {
 	    return ret;
 	}
 
+	public void redrawLayout() {
+	    if (ret != null && !ret.isDisposed()) {
+	        ret.getParent().layout(true, true);
+	    }
+	}
+
 	public void resetCustomButtons() {
 		for (Control control : additionalButtonParent.getChildren()) {
 			if (control instanceof Button) {
@@ -225,7 +231,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 	}
 
 	public void updateSize() {
-		getShell().setSize(getShell().getSize().x, 430);
+		getShell().setSize(getShell().getSize().x, 360);
 	}
 
 	@Override
