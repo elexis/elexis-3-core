@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -52,7 +53,12 @@ public class AttachmentsUtil {
 				return converted;
 			}
 		}
-		File tmpFile = new File(getAttachmentsFolder(), getFileName(iDocument));
+		String fileName = getFileNameWithTimestamp(iDocument);
+		File tmpFile = new File(getAttachmentsFolder(), fileName);
+		while (tmpFile.exists()) {
+			fileName = getFileNameWithTimestamp(iDocument, true);
+			tmpFile = new File(getAttachmentsFolder(), fileName);
+		}
 		try (FileOutputStream fout = new FileOutputStream(tmpFile)) {
 			Optional<InputStream> content = DocumentStoreServiceHolder.getService().loadContent(iDocument);
 			if (content.isPresent()) {
@@ -66,6 +72,34 @@ public class AttachmentsUtil {
 			return Optional.of(tmpFile);
 		}
 		return Optional.empty();
+	}
+
+	private static String getFileNameWithTimestamp(IDocument iDocument) {
+		return getFileNameWithTimestamp(iDocument, false);
+	}
+
+	private static String getFileNameWithTimestamp(IDocument iDocument, boolean addSecond) {
+		StringBuilder ret = new StringBuilder();
+		ret.append(iDocument.getPatient().getCode()).append("_");
+		ret.append(iDocument.getPatient().getLastName()).append(StringUtils.SPACE);
+		ret.append(iDocument.getPatient().getFirstName()).append("_");
+		String title = iDocument.getTitle();
+		if (iDocument.getExtension() != null && title.endsWith(iDocument.getExtension())) {
+			title = title.substring(0, title.lastIndexOf('.'));
+		}
+		ret.append(title).append("_");
+
+		Date date = new Date();
+		if (addSecond) {
+			date.setTime(date.getTime() + 1000);
+		}
+		ret.append(new SimpleDateFormat("ddMMyyyy_HHmmss").format(date));
+		String extension = iDocument.getExtension();
+		if (extension != null && extension.indexOf('.') != -1) {
+			extension = extension.substring(extension.lastIndexOf('.') + 1);
+		}
+		ret.append(".").append(extension);
+		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9 _\\.\\-]", StringUtils.EMPTY);
 	}
 
 	private static File getTempFile(IImage iImage) {
