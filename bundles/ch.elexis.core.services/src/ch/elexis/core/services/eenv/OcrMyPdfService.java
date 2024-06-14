@@ -69,15 +69,20 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			return IOUtils.toByteArray(performOcr);
 		} catch (ClientErrorException re) {
 			final int status = re.getResponse().getStatus();
-			if (status == 400 && re.getMessage().contains("already")) {
-				return in;
-			} else if (status == 400 && re.getMessage().contains("encrypted")) {
-				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
-			} else if (status == 400 && re.getMessage().contains("dynamic XFA")) {
-				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
-			} else if (status == 400) {
-				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
-			} else if (status == 413) {
+			if (status == 400) {
+				if (re.getMessage().contains("already")) {
+					return in;
+				} else if (re.getMessage().contains("encrypted")) {
+					throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
+				} else if (re.getMessage().contains("dynamic XFA")) {
+					throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
+				}
+				Object entity = re.getResponse().getEntity();
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER,
+						re.getMessage() + " [" + String.valueOf(entity) + "]");
+
+			}
+			if (status == 413) {
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
 			}
 			throw new IllegalStateException("invalid state " + status + ": " + re.getMessage(), re);
