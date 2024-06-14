@@ -4,7 +4,7 @@
 <target name="Elexis IDE 2023-09-java17" sequenceNumber="1718283500">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
+      <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.3.v20240426-1530"/>
       <unit id="org.eclipse.platform.feature.group" version="4.29.0.v20230903-1000"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.2200.v20230717-2134"/>
       <unit id="org.eclipse.rcp.feature.group" version="4.29.0.v20230903-1000"/>
@@ -44,14 +44,14 @@
       <unit id="com.h2database" version="1.4.200"/>
       <unit id="com.mysql.cj" version="8.0.22"/>
       <unit id="org.postgresql.jdbc" version="42.7.0"/>
-      <unit id="org.eclipse.persistence.jpa.feature.group" version="2.7.11.v20220804-52dea2a3c0"/>
+      <unit id="org.eclipse.persistence.jpa.feature.group" version="2.7.15"/>
       <unit id="org.eclipse.gemini.jpa.feature.feature.group" version="1.2.0.202105280757"/>
       <unit id="org.osgi.service.jdbc" version="1.0.1.202109301733"/>
       <unit id="org.osgi.service.jndi" version="1.0.1.202109301733"/>
       <unit id="jakarta.persistence" version="2.2.3"/>
       <unit id="bcprov" version="1.77.0"/>
       <unit id="bcpg" version="1.77.0"/>
-      <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202403150723"/>
+      <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202406011237"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
       <unit id="info.elexis.target.ehealth.connector.ch" version="0.0.0"/>
@@ -153,7 +153,7 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_de" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_fr" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.26.0.v20230220105658"/>
-      <repository location="https://download.elexis.info/elexis/target/2023-09-java17/"/>
+      <repository location="https://download.elexis.info/elexis/target/2023-09-java21/"/>
     </location>
   </locations>
 </target>
