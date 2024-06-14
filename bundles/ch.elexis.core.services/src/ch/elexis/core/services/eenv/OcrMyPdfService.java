@@ -3,6 +3,7 @@ package ch.elexis.core.services.eenv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.ClientErrorException;
@@ -78,8 +79,12 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 					throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
 				}
 				Object entity = re.getResponse().getEntity();
+				String body = String.valueOf(entity);
+				if (entity instanceof InputStream is) {
+					body = IOUtils.toString(is, StandardCharsets.UTF_8);
+				}
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER,
-						re.getMessage() + " [" + String.valueOf(entity) + "]");
+						re.getMessage() + " [" + body + "]");
 
 			}
 			if (status == 413) {
