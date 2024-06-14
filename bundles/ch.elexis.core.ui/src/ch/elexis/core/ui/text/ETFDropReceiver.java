@@ -18,6 +18,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.graphics.Point;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.GenericObjectDropTarget.IReceiver;
@@ -68,7 +69,7 @@ public class ETFDropReceiver implements IReceiver {
 			Point maxOffset = etf.text.getLocationAtOffset(etf.text.getCharCount());
 			int pos = etf.text.getCharCount();
 			if (mapped.y < maxOffset.y) {
-				pos = etf.text.getOffsetAtLocation(new Point(0, mapped.y));
+				pos = etf.text.getOffsetAtPoint(new Point(0, mapped.y));
 			}
 			Object object = list.get(0);
 			IKonsExtension rec = getTargetForObject(object);
@@ -78,8 +79,11 @@ public class ETFDropReceiver implements IReceiver {
 			} else {
 				Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
 				if (actKons != null) {
-					etf.text.insert(getLabel(object));
-					actKons.updateEintrag(etf.getContentsAsXML(), false);
+					if (LocalLockServiceHolder.get().acquireLock(actKons).isOk()) {
+						etf.text.insert(getLabel(object));
+						actKons.updateEintrag(etf.getContentsAsXML(), false);
+						LocalLockServiceHolder.get().releaseLock(actKons);
+					}
 				}
 			}
 		}
