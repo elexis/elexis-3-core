@@ -76,11 +76,7 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.services.test.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED
--Delexis.test.mode=true
--Djcifs.smb.client.signingPreferred=false
--Djcifs.smb.client.signingEnforced=false
--Djcifs.smb.client.ipcSigningEnforced=false</argLine>
+          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED -Delexis.test.mode=true -Djcifs.smb.client.signingPreferred=false -Djcifs.smb.client.signingEnforced=false -Djcifs.smb.client.ipcSigningEnforced=false</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
