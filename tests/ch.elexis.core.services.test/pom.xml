@@ -24,6 +24,11 @@
                 <id>ch.elexis.core.services.test</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
+			  <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.elexis.core.test.context</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.jpa.logging.slf4j</id>
