@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core.tasks;singleton:=true
 Bundle-Version: 3.13.0.qualifier
-Bundle-ClassPath: .,
- lib/c3p0-0.9.5.2.jar,
- lib/cron-utils-9.1.8.jar,
+Bundle-ClassPath: lib/quartz-jobs-2.3.2.jar,
  lib/quartz-2.3.2.jar,
- lib/quartz-jobs-2.3.2.jar
+ lib/cron-utils-9.1.8.jar,
+ lib/c3p0-0.9.5.2.jar,
+ .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.tasks

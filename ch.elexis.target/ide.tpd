@@ -1,8 +1,8 @@
-target "Elexis IDE 2023-09-java17" with source allEnvironments
+target "Elexis IDE 2023-09-java21" with source allEnvironments
 
 
 
-location "https://download.elexis.info/elexis/target/2023-09-java17/" {
+location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	
 	// justj.17
 	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
