@@ -1,7 +1,7 @@
 name: Java CI with Maven
 
 env:
-  TARGET: '2023-09-java17'
+  TARGET: '2023-09-java21'
 
 on:
   push:
