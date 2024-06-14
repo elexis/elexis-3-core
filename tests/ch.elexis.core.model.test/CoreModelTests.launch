@@ -164,7 +164,6 @@
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="info.elexis.server.core.logging@default:false"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
