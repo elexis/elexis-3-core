@@ -170,8 +170,7 @@
         <configuration>
           <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
-          <product>ch.elexis.core.product.product</product>
-          <application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
+       	  <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.importer.div.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
