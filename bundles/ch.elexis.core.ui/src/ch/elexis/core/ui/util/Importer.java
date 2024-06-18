@@ -14,6 +14,7 @@ package ch.elexis.core.ui.util;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -59,7 +60,8 @@ public class Importer extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		ctab = new CTabFolder(parent, SWT.BOTTOM);
-		List<ImporterPage> importers = Extensions.getClasses(ext, "Class"); //$NON-NLS-1$
+		List<IConfigurationElement> extensions = Extensions.getExtensions(ext, null);
+		List<ImporterPage> importers = Extensions.getClasses(extensions, "Class", false); // $NON-NLS-1$
 		for (ImporterPage p : importers) {
 			if (p != null) {
 				List<String> importTypes = p.getObjectClass();
