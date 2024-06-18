@@ -14,7 +14,13 @@ jobs:
     runs-on: [self-hosted, Linux, x64, Docker]
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Docker Build Image
+    - name: pull docker image docker-build:${{ env.TARGET }}
       run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
-    - name: Build with Docker
+    - name: build using docker image docker-build:${{ env.TARGET }}
       run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B
+    - name: upload artifacts
+      run: |
+        eval $(ssh-agent -s)
+        ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
+        rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/${{ env.BRANCH_NAME }}/p2/elexis-3-core/
+        eval $(ssh-agent -k)
