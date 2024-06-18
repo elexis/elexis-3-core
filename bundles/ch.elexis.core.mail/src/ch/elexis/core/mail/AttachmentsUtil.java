@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -89,7 +90,6 @@ public class AttachmentsUtil {
 	private static String getFileName(IDocument iDocument) {
 		StringBuilder ret = new StringBuilder();
 		ret.append(iDocument.getPatient().getCode()).append("_");
-
 		ret.append(iDocument.getPatient().getLastName()).append(StringUtils.SPACE);
 		ret.append(iDocument.getPatient().getFirstName()).append("_");
 		String title = iDocument.getTitle();
@@ -97,13 +97,13 @@ public class AttachmentsUtil {
 			title = title.substring(0, title.lastIndexOf('.'));
 		}
 		ret.append(title).append("_");
-		ret.append(new SimpleDateFormat("ddMMyyyy_HHmmss").format(iDocument.getLastchanged()));
+		ret.append(new SimpleDateFormat("ddMMyyyy").format(iDocument.getLastchanged()));
+		ret.append(new SimpleDateFormat("_HHmmss").format(new Date(iDocument.getLastupdate())));
 		String extension = iDocument.getExtension();
 		if (extension != null && extension.indexOf('.') != -1) {
 			extension = extension.substring(extension.lastIndexOf('.') + 1);
 		}
 		ret.append(".").append(extension);
-
 		return ret.toString().replaceAll("[^a-züäöA-ZÜÄÖ0-9 _\\.\\-]", StringUtils.EMPTY);
 	}
 

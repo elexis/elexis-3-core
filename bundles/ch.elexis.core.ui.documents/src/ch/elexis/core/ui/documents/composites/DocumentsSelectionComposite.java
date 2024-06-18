@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,6 +39,7 @@ public class DocumentsSelectionComposite extends Composite {
 	private TableViewer viewer;
 	private DocumentsTableContentProvider contentProvider;
 	private DocumentsViewerComparator documentsViewerComparator;
+	private String filterText;
 
 	public DocumentsSelectionComposite(Composite parent, int style) {
 		super(parent, style);
@@ -181,10 +184,50 @@ public class DocumentsSelectionComposite extends Composite {
 				return super.getImage(element);
 			};
 		});
+		viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
+		column = viewerColumn.getColumn();
+		column.setText(Messages.Core_Keywords);
+		column.setWidth(250);
+		column.setResizable(true);
+		column.setMoveable(false);
+		column.addSelectionListener(getSelectionAdapter(column, 5));
+		viewerColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					return doc.getKeywords();
+				}
+				return StringUtils.EMPTY;
+			};
+		});
 
 		documentsViewerComparator = new DocumentsViewerComparator();
 		documentsViewerComparator.setBFlat(true);
 		viewer.setComparator(documentsViewerComparator);
+
+		viewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (element instanceof IDocument) {
+					IDocument doc = (IDocument) element;
+					if (filterText == null || filterText.isEmpty()) {
+						return true;
+					}
+					String lowerFilterText = filterText.toLowerCase();
+					return doc.getTitle().toLowerCase().contains(lowerFilterText)
+							|| doc.getKeywords().toLowerCase().contains(lowerFilterText)
+							|| doc.getCategory().getName().toLowerCase().contains(lowerFilterText)
+							|| new TimeTool(doc.getLastchanged()).toString(TimeTool.DATE_GER).contains(lowerFilterText);
+				}
+				return true;
+			}
+		});
+	}
+
+	public void setFilter(String filterText) {
+		this.filterText = filterText;
+		viewer.refresh();
 	}
 
 	private SelectionListener getSelectionAdapter(final TableColumn column, final int index) {
