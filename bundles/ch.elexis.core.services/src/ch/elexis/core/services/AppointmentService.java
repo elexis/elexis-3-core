@@ -337,6 +337,12 @@ public class AppointmentService implements IAppointmentService {
 	}
 
 	@Override
+	public void addArea(String name) {
+		String tt = StringTool.join(getAreas().stream().map(Area::getName).toList(), ",") + "," + name;
+		configService.set(AG_BEREICHE, tt);
+	}
+
+	@Override
 	public List<Area> getAreas() {
 		List<Area> ret = new ArrayList<>();
 		List<String> areas = configService.getAsList(AG_BEREICHE);
