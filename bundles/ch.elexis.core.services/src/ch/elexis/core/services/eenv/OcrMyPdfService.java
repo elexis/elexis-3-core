@@ -78,6 +78,11 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			if (status == 400) {
 				if (body.contains("already")) {
 					return in;
+				} else if (body.contains("TaggedPDFError")) {
+					// This PDF is marked as a Tagged PDF. This often indicates
+					// that the PDF was generated from an office document and does
+					// not need OCR.
+					return in;
 				} else if (body.contains("encrypted")) {
 					throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
 				} else if (body.contains("dynamic XFA")) {
