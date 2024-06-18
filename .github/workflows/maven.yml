@@ -17,4 +17,4 @@ jobs:
     - name: Set up Docker Build Image
       run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
     - name: Build with Docker
-      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V clean verify -B
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B
