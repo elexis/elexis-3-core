@@ -223,4 +223,6 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	List<Area> getAoboAreas();
+
+	public void addArea(String name);
 }
