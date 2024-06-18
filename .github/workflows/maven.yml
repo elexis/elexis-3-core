@@ -2,7 +2,8 @@ name: Build with Docker
 
 env:
   TARGET: '2023-09-java21'
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
 
 on:
   push:
@@ -21,6 +22,6 @@ jobs:
     - name: upload artifacts
       run: |
         eval $(ssh-agent -s)
-        ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
+        ssh-add <(echo "${{ env.DEPLOY_SECRET }}" | base64 -d)
         rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/${{ env.BRANCH_NAME }}/p2/elexis-3-core/
         eval $(ssh-agent -k)
