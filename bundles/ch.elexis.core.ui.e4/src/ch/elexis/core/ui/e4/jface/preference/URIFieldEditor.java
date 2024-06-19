@@ -22,6 +22,8 @@ import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
  */
 public class URIFieldEditor extends StringButtonFieldEditor {
 
+	private String scheme;
+
 	/**
 	 *
 	 * /** Creates a new directory field editor
@@ -74,11 +76,19 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		}
 		VirtualFilesystemUriEditorDialog dialog = new VirtualFilesystemUriEditorDialog(getShell(),
 				virtualFilesystemService, inputUri);
-		int open = dialog.open();
-		if (IDialogConstants.OK_ID == open) {
+		dialog.setFixedScheme(scheme);
+		if (IDialogConstants.OK_ID == dialog.open()) {
 			return dialog.getValue().toString();
 		}
 		return null;
 	}
 
+	/**
+	 * Fix the possible URI scheme to the provided scheme.
+	 * 
+	 * @param scheme
+	 */
+	public void setFixedScheme(String scheme) {
+		this.scheme = scheme;
+	}
 }

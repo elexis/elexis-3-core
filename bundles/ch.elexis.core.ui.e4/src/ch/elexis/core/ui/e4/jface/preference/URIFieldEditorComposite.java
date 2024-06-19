@@ -34,6 +34,8 @@ public class URIFieldEditorComposite extends Composite {
 
 	private ComboViewer osCombo;
 
+	private String scheme;
+
 	public URIFieldEditorComposite(String defaultPreference, Composite parent, int style) {
 		super(parent, style);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -97,5 +99,17 @@ public class URIFieldEditorComposite extends Composite {
 
 	public FieldEditor getFieldEditor() {
 		return storePath;
+	}
+
+	/**
+	 * Fix the possible URI scheme to the provided scheme.
+	 * 
+	 * @param scheme
+	 */
+	public void setFixedScheme(String scheme) {
+		this.scheme = scheme;
+		if (storePath != null) {
+			storePath.setFixedScheme("file");
+		}
 	}
 }
