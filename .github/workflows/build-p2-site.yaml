@@ -1,4 +1,4 @@
-name: Build with Docker
+name: Build P2 Site
 
 env:
   TARGET: '2023-09-java21'
