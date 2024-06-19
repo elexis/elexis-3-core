@@ -24,6 +24,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -53,6 +55,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 
 	private Text txtKeepUnseen;
 	private String daysKeepUnseen;
+	private Text txtAnzahlMonate;
+	private Font histogramFont;
 
 	public LabSettings() {
 		super(GRID);
@@ -112,8 +116,48 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 						MessageFormat.format(Messages.LabSettings_validateMappingsResult, countDeleted));
 			}
 		});
-		// dummy lbl
-		new Label(area, SWT.NONE);
+		Label lblHistogramTitle = new Label(getFieldEditorParent(), SWT.NONE);
+		lblHistogramTitle.setText("Histogramm");
+		FontData[] fontData = lblHistogramTitle.getFont().getFontData();
+		for (FontData fd : fontData) {
+			fd.setHeight(10);
+		}
+		histogramFont = new Font(getFieldEditorParent().getDisplay(), fontData);
+		lblHistogramTitle.setFont(histogramFont);
+		GridData histogramTitleGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
+		histogramTitleGridData.verticalIndent = 40;
+		lblHistogramTitle.setLayoutData(histogramTitleGridData);
+		Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
+		separator.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		Composite histogramComposite = new Composite(getFieldEditorParent(), SWT.NONE);
+		histogramComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		histogramComposite.setLayout(new GridLayout(1, false));
+		BooleanFieldEditor histogramPopupCheckbox = new BooleanFieldEditor(Preferences.LABSETTINGS_HISTOGRAM_POPUP,
+				"Histogramm Popup anzeigen", histogramComposite);
+		addField(histogramPopupCheckbox);
+		Composite monthsComposite = new Composite(histogramComposite, SWT.NONE);
+		monthsComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		monthsComposite.setLayout(new GridLayout(2, false));
+		Label lblAnzahlMonate = new Label(monthsComposite, SWT.NONE);
+		lblAnzahlMonate.setText("Anzahl Monate");
+		txtAnzahlMonate = new Text(monthsComposite, SWT.BORDER);
+		txtAnzahlMonate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		txtAnzahlMonate.setText(ConfigServiceHolder.getUser(Preferences.LABSETTINGS_ANZAHL_MONATE, "12"));
+		txtAnzahlMonate.addModifyListener(event -> {
+			ConfigServiceHolder.setUser(Preferences.LABSETTINGS_ANZAHL_MONATE, txtAnzahlMonate.getText());
+		});
+	}
+
+	@Override
+	public void dispose() {
+		disposeResources();
+		super.dispose();
+	}
+
+	private void disposeResources() {
+		if (histogramFont != null && !histogramFont.isDisposed()) {
+			histogramFont.dispose();
+		}
 	}
 
 	public void init(final IWorkbench workbench) {
@@ -145,6 +189,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		if (isValidNumber(txtKeepUnseen.getText())) {
 			ConfigServiceHolder.setGlobal(Preferences.LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS, txtKeepUnseen.getText());
 		}
+		disposeResources();
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_ANZAHL_MONATE, txtAnzahlMonate.getText());
 		return super.performOk();
 	}
 

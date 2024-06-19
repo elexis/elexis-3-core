@@ -5027,6 +5027,10 @@ public class Messages extends NLS {
 	public static String GlobalActions_CloseCaseDialogTitel;
 	public static Object GlobalActions_CloseCaseDialog;
 	public static String Article_Medic_Label;
+	public static String Error_StartDateAfterEndDate;
+	public static String Error_EndDateInFuture;
+	public static String Button_UpdateCharts;
+	public static String Checkbox_ShowLegend;	
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

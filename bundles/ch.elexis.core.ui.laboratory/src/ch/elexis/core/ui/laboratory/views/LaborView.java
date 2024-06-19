@@ -43,6 +43,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.jdom2.Document;
@@ -62,10 +63,12 @@ import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.Hub;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.laboratory.controls.LaborChartComposite;
 import ch.elexis.core.ui.laboratory.controls.LaborOrdersComposite;
 import ch.elexis.core.ui.laboratory.controls.LaborResultsComposite;
 import ch.elexis.core.ui.laboratory.dialogs.LaborVerordnungDialog;
@@ -103,20 +106,25 @@ public class LaborView extends ViewPart implements IRefreshable {
 	private CTabFolder tabFolder;
 	private LaborResultsComposite resultsComposite;
 	private LaborOrdersComposite ordersComposite;
-
+	private LaborChartComposite laborChartComposite;
+	protected boolean isCompareMode;
 	private Action fwdAction, backAction, printAction, importAction, xmlAction, newAction, newColumnAction,
-			refreshAction, expandAllAction, collapseAllAction;
+			refreshAction, expandAllAction, collapseAllAction, selectAction;
 	private ViewMenus menu;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
-
+	private List<TreeItem> selectedItems = new ArrayList<>();
 	@Inject
 	void activePatient(@Optional IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
 			resultsComposite.selectPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			resetCheckboxes();
 		}, tabFolder);
 		CoreUiUtil.runAsyncIfActive(() -> {
 			ordersComposite.selectPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+		}, tabFolder);
+		CoreUiUtil.runAsyncIfActive(() -> {
+			laborChartComposite.selectPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
 		}, tabFolder);
 	}
 
@@ -124,7 +132,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 	@Optional
 	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
 		if (resultsComposite != null && !resultsComposite.isDisposed() && ordersComposite != null
-				&& !ordersComposite.isDisposed()) {
+				&& !ordersComposite.isDisposed() && laborChartComposite != null && !laborChartComposite.isDisposed()) {
 			if (ILabItem.class.equals(clazz)) {
 				Display.getDefault().asyncExec(() -> {
 					resultsComposite.reload();
@@ -151,7 +159,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 
 		final CTabItem resultsTabItem = new CTabItem(tabFolder, SWT.NULL);
 		resultsTabItem.setText("Resultate");
-		resultsComposite = new LaborResultsComposite(tabFolder, SWT.NONE);
+		resultsComposite = new LaborResultsComposite(tabFolder, SWT.NONE, this);
 		resultsTabItem.setControl(resultsComposite);
 
 		final CTabItem ordersTabItem = new CTabItem(tabFolder, SWT.NULL);
@@ -159,17 +167,35 @@ public class LaborView extends ViewPart implements IRefreshable {
 		ordersComposite = new LaborOrdersComposite(tabFolder, SWT.NONE);
 		ordersTabItem.setControl(ordersComposite);
 
+		final CTabItem chartTabItem = new CTabItem(tabFolder, SWT.NULL);
+		chartTabItem.setText("Histogramm");
+		chartTabItem.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
+		laborChartComposite = new LaborChartComposite(tabFolder, SWT.NONE, this);
+		laborChartComposite.setLayout(new FillLayout());
+		chartTabItem.setControl(laborChartComposite);
+		chartTabItem.setData("enabled", false);
+		chartTabItem.getControl().setEnabled(false);
+
 		tabFolder.setSelection(0);
+
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				resultsComposite.reload();
-				ordersComposite.reload();
+				if (tabFolder.getSelection() == chartTabItem) {
+					if (Boolean.TRUE.equals(chartTabItem.getData("enabled"))) {
+						laborChartComposite.updateCharts(laborChartComposite.getChartsComposite());
+					} else {
+						tabFolder.setSelection(0);
+					}
+				} else {
+					resultsComposite.reload();
+					ordersComposite.reload();
+				}
 			}
 		});
 		makeActions();
 		menu = new ViewMenus(getViewSite());
-		menu.createMenu(newAction, backAction, fwdAction, printAction, importAction, xmlAction);
+		menu.createMenu(newAction, backAction, fwdAction, printAction, importAction, xmlAction, selectAction);
 		// Orders
 		final LaborOrderPulldownMenuCreator menuCreator = new LaborOrderPulldownMenuCreator(parent.getShell());
 		if (menuCreator.getSelected() != null) {
@@ -196,6 +222,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 		if (!importers.isEmpty()) {
 			tm.add(new Separator());
 		}
+		tm.add(selectAction);
 		tm.add(refreshAction);
 		tm.add(newColumnAction);
 		tm.add(newAction);
@@ -303,6 +330,36 @@ public class LaborView extends ViewPart implements IRefreshable {
 				}
 			}
 		};
+		selectAction = new Action("Ausgewählte Werte vergleichen") {
+			@Override
+			public void run() {
+				isCompareMode = !isCompareMode;
+				CTabItem chartTabItem = tabFolder.getItem(2); // Annahme: Der Diagramm-Tab ist der dritte Tab
+				if (isCompareMode) {
+					setText("Ausgewählte Werte vergleichen");
+					setImageDescriptor(Images.IMG_CHART_CURVE.getImageDescriptor());
+
+					resultsComposite.showCheckboxes(true);
+					chartTabItem.setData("enabled", true);
+					chartTabItem.getControl().setEnabled(true);
+					chartTabItem.setText("Histogramm");
+					chartTabItem.setForeground(UiDesk.getColor(UiDesk.COL_BLACK));
+					laborChartComposite.updateCharts(laborChartComposite.getChartsComposite());
+				} else {
+					setText("Vergleichen");
+					setImageDescriptor(Images.IMG_CHART_CURVE.getImageDescriptor());
+
+					resultsComposite.showCheckboxes(false);
+					chartTabItem.setData("enabled", false);
+					chartTabItem.getControl().setEnabled(false);
+					chartTabItem.setText("Histogramm");
+					chartTabItem.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
+				}
+				resultsComposite.getViewer().refresh();
+			}
+		};
+
+
 		newColumnAction = new Action(Messages.Core_prescribe_Laboratory) {
 			@Override
 			public void run() {
@@ -365,6 +422,7 @@ public class LaborView extends ViewPart implements IRefreshable {
 		printAction.setImageDescriptor(Images.IMG_PRINTER.getImageDescriptor());
 		xmlAction.setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
 		refreshAction.setImageDescriptor(Images.IMG_REFRESH.getImageDescriptor());
+		selectAction.setImageDescriptor(Images.IMG_CHART_CURVE.getImageDescriptor());
 	}
 
 	public Document makeXML() {
@@ -491,4 +549,19 @@ public class LaborView extends ViewPart implements IRefreshable {
 
 		}
 	}
+
+	public void setSelectedItems(List<TreeItem> items) {
+		this.selectedItems = new ArrayList<>(items);
+	}
+
+	public List<TreeItem> getSelectedItems() {
+		return selectedItems;
+	}
+
+	private void resetCheckboxes() {
+		if (resultsComposite != null) {
+			resultsComposite.resetCheckboxes();
+		}
+	}
+
 }
