@@ -202,10 +202,13 @@ public class Preferences {
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
 
 	// Labsettings
+
+	public static final String LABSETTINGS_ANZAHL_MONATE = "anzahlMonate"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_KEEP_UNSEEN_LAB_RESULTS = "lab/keepUnseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LABNEW_HEARTRATE = "lab/heartrate_unseen"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_LOCAL_REFVALUES = "lab/localRefValues"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY = "lab/showMandantOnly"; //$NON-NLS-1$
+	public static final String LABSETTINGS_HISTOGRAM_POPUP = "histogramPopupCheckbox"; //$NON-NLS-1$
 	public static final String LABSETTINGS_PREFIX_CFG_EVAL = "lab/eval/"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_ABSOLUT = LABSETTINGS_PREFIX_CFG_EVAL + "tAbsolut/"; //$NON-NLS-1$
 	public static final String LABSETTINGS_CFG_EVAL_PREFIX_TYPE_TEXT = LABSETTINGS_PREFIX_CFG_EVAL + "tText/"; //$NON-NLS-1$

@@ -23,4 +23,8 @@ public class Messages {
 	public static String LaborMappingComposite_labelMappings = ch.elexis.core.l10n.Messages.LaborMappingComposite_labelMappings;
 	public static String Core_Select_Laboratory = ch.elexis.core.l10n.Messages.Core_Select_Laboratory;
 	public static String Core_Laboratory_Selection = ch.elexis.core.l10n.Messages.Core_Laboratory_Selection;
+	public static String Error_StartDateAfterEndDate = ch.elexis.core.l10n.Messages.Error_StartDateAfterEndDate;
+	public static String Error_EndDateInFuture = ch.elexis.core.l10n.Messages.Error_EndDateInFuture;
+	public static String Button_UpdateCharts = ch.elexis.core.l10n.Messages.Button_UpdateCharts;
+	public static String Checkbox_ShowLegend = ch.elexis.core.l10n.Messages.Checkbox_ShowLegend;
 }
