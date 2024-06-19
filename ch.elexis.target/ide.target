@@ -3,7 +3,7 @@
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
 <target name="Elexis IDE 2023-09-java17" sequenceNumber="1718283500">
   <locations>
-    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
       <unit id="org.eclipse.platform.feature.group" version="4.29.0.v20230903-1000"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.2200.v20230717-2134"/>
