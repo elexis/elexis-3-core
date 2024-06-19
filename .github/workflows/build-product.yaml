@@ -5,21 +5,20 @@ env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
   build:
     runs-on: [self-hosted, Linux, x64, Docker]
     steps:
-    - uses: actions/checkout@v4
-    - name: pull docker image docker-build:${{ env.TARGET }}
-      run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
-    - name: build using docker image docker-build:${{ env.TARGET }}
-      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
-    - name: upload artifacts
-      run: |
-        eval $(ssh-agent -s)
-        ssh-add <(echo "${{ env.DEPLOY_SECRET }}" | base64 -d)
-	rsync -aiv --no-recursive -e ssh ch.elexis.core.p2site/target/products/* deploy@download.medelexis.ch:download.elexis.info/elexis/${{ env.BRANCH_NAME }}/products/
-        eval $(ssh-agent -k)
+      - uses: actions/checkout@v4
+      - name: pull docker image docker-build:${{ env.TARGET }}
+        run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
+      - name: build using docker image docker-build:${{ env.TARGET }}
+        run: docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
+      - name: upload artifacts
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add <(echo "${{ env.DEPLOY_SECRET }}" | base64 -d)
+          rsync -aiv --no-recursive -e ssh ch.elexis.core.p2site/target/products/* deploy@download.medelexis.ch:download.elexis.info/elexis/${{ env.BRANCH_NAME }}/products/
+          eval $(ssh-agent -k)
