@@ -46,6 +46,13 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
 	private Button browseButton;
 
+	private Label lblScheme;
+	private Label lblHost;
+	private Label lblPort;
+	private Label lblPath;
+	private Label lblUser;
+	private Label lblPassword;
+
 	private Text txtHost;
 	private Text txtPort;
 	private Text txtUser;
@@ -54,6 +61,8 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	private Text txtUri;
 	private Combo comboScheme;
 	private boolean passwortPhase = false;
+
+	private String fixedScheme;
 
 	/**
 	 * Create the dialog.
@@ -85,7 +94,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Label lblScheme = new Label(container, SWT.NONE);
+		lblScheme = new Label(container, SWT.NONE);
 		lblScheme.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblScheme.setText("Scheme");
 
@@ -106,35 +115,35 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			updateButtonState();
 		});
 
-		Label lblHost = new Label(container, SWT.NONE);
+		lblHost = new Label(container, SWT.NONE);
 		lblHost.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblHost.setText("Host");
 
 		txtHost = new Text(container, SWT.BORDER);
 		txtHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblPort = new Label(container, SWT.NONE);
+		lblPort = new Label(container, SWT.NONE);
 		lblPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPort.setText("Port");
 
 		txtPort = new Text(container, SWT.BORDER);
 		txtPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblPath = new Label(container, SWT.NONE);
+		lblPath = new Label(container, SWT.NONE);
 		lblPath.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPath.setText("Path");
 
 		txtPath = new Text(container, SWT.BORDER);
 		txtPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label txtPath = new Label(container, SWT.NONE);
-		txtPath.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		txtPath.setText("User");
+		lblUser = new Label(container, SWT.NONE);
+		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblUser.setText("User");
 
 		txtUser = new Text(container, SWT.BORDER);
 		txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblPassword = new Label(container, SWT.NONE);
+		lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPassword.setText("Password");
 
@@ -171,11 +180,62 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		txtUri = new Text(container, SWT.BORDER);
 		txtUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		updateUi();
+
 		return area;
 	}
 
+	private void updateUi() {
+		if (StringUtils.isNotBlank(fixedScheme)) {
+			hide(lblScheme);
+			hide(comboScheme);
+			if (fixedScheme.equals("file")) {
+				hide(lblHost);
+				hide(txtHost);
+				hide(lblPort);
+				hide(txtPort);
+				hide(lblUser);
+				hide(txtUser);
+				hide(lblPassword);
+				hide(txtPassword);
+			}
+		} else {
+			show(lblScheme);
+			show(comboScheme);
+			show(lblHost);
+			show(txtHost);
+			show(lblHost);
+			show(txtHost);
+			show(lblPort);
+			show(txtPort);
+			show(lblUser);
+			show(txtUser);
+			show(lblPassword);
+			show(txtPassword);
+		}
+		this.getShell().layout(true, true);
+	}
+
+	private void hide(Control control) {
+		if (control.getLayoutData() instanceof GridData) {
+			((GridData) control.getLayoutData()).exclude = true;
+		}
+		control.setVisible(false);
+	}
+
+	private void show(Control control) {
+		if (control.getLayoutData() instanceof GridData) {
+			((GridData) control.getLayoutData()).exclude = false;
+		}
+		control.setVisible(true);
+	}
+
 	private void updateButtonState() {
-		browseButton.setEnabled("file".equals(comboScheme.getText()));
+		if (fixedScheme == null) {
+			browseButton.setEnabled("file".equals(comboScheme.getText()));
+		} else {
+			browseButton.setEnabled("file".equals(fixedScheme));
+		}
 	}
 
 	/**
@@ -439,5 +499,15 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			changeSupport.firePropertyChange(propertyName, oldValue, newValue);
 		}
 
+	}
+
+	/**
+	 * The dialog shows only the provided scheme. Possible values are "smb", "file",
+	 * "davs", "dav".
+	 * 
+	 * @param scheme
+	 */
+	public void setFixedScheme(String scheme) {
+		this.fixedScheme = scheme;
 	}
 }

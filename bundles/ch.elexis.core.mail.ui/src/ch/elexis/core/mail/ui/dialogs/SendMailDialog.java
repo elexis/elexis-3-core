@@ -38,6 +38,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -346,6 +348,18 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			lbl.setText("Dokument zum anhängen doppelklicken");
 
+			Text searchField = new Text(container, SWT.BORDER);
+			searchField.setMessage("Suche...");
+			searchField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+
+			searchField.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					String searchText = searchField.getText();
+					attachmentsSelection.setFilter(searchText);
+				}
+			});
+
 			attachmentsSelection = new DocumentsSelectionComposite(container, SWT.NONE);
 			attachmentsSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 			attachmentsSelection.setPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
@@ -358,6 +372,7 @@ public class SendMailDialog extends TitleAreaDialog {
 					}
 				}
 			});
+	
 
 			if (!doSend) {
 				lbl.setVisible(false);
@@ -472,7 +487,7 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button outboxBtn = createButton(parent, -1, "in Outbox ablegen", false);
+		Button outboxBtn = createButton(parent, -1, "Outbox", false);
 		super.createButtonsForButtonBar(parent);
 		if (getButton(IDialogConstants.OK_ID) != null) {
 			Button okButton = getButton(IDialogConstants.OK_ID);

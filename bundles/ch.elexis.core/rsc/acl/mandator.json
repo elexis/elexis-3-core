@@ -3,6 +3,7 @@
 		"mandator"
 	],
 	"system-command": {
-		"ch.medelexis.application.imp.abo.change": "x"
+		"ch.medelexis.application.imp.abo.change": "x",
+		"LSTG_CHARGE_FOR_ALL": "x"
 	}
 }

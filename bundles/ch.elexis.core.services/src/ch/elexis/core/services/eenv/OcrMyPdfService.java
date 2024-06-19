@@ -3,8 +3,10 @@ package ch.elexis.core.services.eenv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -59,26 +61,39 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 			throw new IllegalArgumentException("null");
 		}
 
-		String params = (parameters != null) ? parameters : PARAMS;
+		final String params = (parameters != null) ? parameters : PARAMS;
 
 		try (FormDataMultiPart form = new FormDataMultiPart()) {
 			form.bodyPart(new StreamDataBodyPart("file", new ByteArrayInputStream(in), "filename.pdf"));
 			form.field("params", params);
 			InputStream performOcr = remoteOcrMyPdfService.performOcr(form);
 			return IOUtils.toByteArray(performOcr);
-//		} catch (RequestException re) {
-//			if (re.getStatus() == 400 && re.getMessage().contains("already")) {
-//				return in;
-//			} else if (re.getStatus() == 400 && re.getMessage().contains("encrypted")) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
-//			} else if (re.getStatus() == 400 && re.getMessage().contains("dynamic XFA")) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
-//			} else if (re.getStatus() == 400) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage());
-//			} else if (re.getStatus() == 413) {
-//				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
-//			}
-//			throw new IllegalStateException("invalid state " + re.getStatus() + ": " + re.getMessage(), re);
+		} catch (ClientErrorException re) {
+			final int status = re.getResponse().getStatus();
+			Object entity = re.getResponse().getEntity();
+			String body = String.valueOf(entity);
+			if (entity instanceof InputStream is) {
+				body = IOUtils.toString(is, StandardCharsets.UTF_8);
+			}
+			if (status == 400) {
+				if (body.contains("already")) {
+					return in;
+				} else if (body.contains("TaggedPDFError")) {
+					// This PDF is marked as a Tagged PDF. This often indicates
+					// that the PDF was generated from an office document and does
+					// not need OCR.
+					return in;
+				} else if (body.contains("encrypted")) {
+					throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
+				} else if (body.contains("dynamic XFA")) {
+					throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
+				}
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage() + " [" + body + "]");
+			}
+			if (status == 413) {
+				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, "(HTTP 413) PDF is too large.");
+			}
+			throw new IllegalStateException("invalid state " + status + ": " + re.getMessage(), re);
 		}
 
 	}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis IDE 2023-09-java17" sequenceNumber="1710339544">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Elexis IDE 2023-09-java17" sequenceNumber="1718283500">
   <locations>
     <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
@@ -50,7 +51,7 @@
       <unit id="jakarta.persistence" version="2.2.3"/>
       <unit id="bcprov" version="1.77.0"/>
       <unit id="bcpg" version="1.77.0"/>
-      <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202403131512"/>
+      <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202403150723"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
       <unit id="info.elexis.target.ehealth.connector.ch" version="0.0.0"/>
@@ -108,6 +109,7 @@
       <unit id="org.eclipse.nebula.widgets.richtext" version="1.5.1.202303072132"/>
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
+      <unit id="org.eclipse.swtchart.feature.feature.group" version="0.14.0.202301260747"/>
       <unit id="com.equo.chromium.feature.feature.group" version="88.0.6.202205201430"/>
       <unit id="com.equo.chromium.cef.feature.feature.group" version="88.0.6.202205201415"/>
       <unit id="info.elexis.target.jetty.additions.feature.group" version="10.0.18"/>
@@ -153,10 +155,5 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.26.0.v20230220105658"/>
       <repository location="https://download.elexis.info/elexis/target/2023-09-java17/"/>
     </location>
-	  <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		  <repository location="https://download.eclipse.org/swtchart/releases/0.14.0/repository"/>
-		  <unit id="org.eclipse.swtchart.feature.feature.group" version="0.14.0.202301260747"/>
-		  <unit id="org.eclipse.swtchart.feature.source.feature.group" version="0.14.0.202301260747"/>
-	  </location>
   </locations>
 </target>

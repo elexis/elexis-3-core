@@ -105,7 +105,7 @@
 		"ch.elexis.icpc.model.internal.IcpcCode": "cruvdx",
 		"ch.elexis.icpc.model.internal.IcpcEncounter": "cruvdx",
 		"ch.elexis.icpc.model.internal.IcpcEpisode": "cruvdx",
-		"ch.elexis.omnivore.model.IDocumentHandle": "cruvdx",
+		"ch.elexis.omnivore.model.IDocumentHandle": "cruvdxie",
 		"ch.elexis.privatrechnung.model.IPrivatLeistung": "cruvdxie",
 		"at.medevit.elexis.loinc.model.LoincCode": "i"
 	}
