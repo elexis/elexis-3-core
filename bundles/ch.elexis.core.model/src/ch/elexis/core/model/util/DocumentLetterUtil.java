@@ -60,7 +60,8 @@ public class DocumentLetterUtil {
 		try {
 			// optimistic - we assume the external storage path exists and validate on the
 			// target of the resulting doc path only
-			if (document instanceof IDocumentLetter documentLetter) {
+			if (document instanceof IDocumentLetter) {
+				IDocumentLetter documentLetter = (IDocumentLetter) document;
 				if (documentLetter.getPatient() != null) {
 					return getDocumentLetterFilePath(externalStoragePath, documentLetter);
 				}
@@ -144,12 +145,21 @@ public class DocumentLetterUtil {
 
 	public static String getOperatingSystemSpecificExternalStoragePath() {
 		OS operatingSystem = CoreUtil.getOperatingSystemType();
-		String setting = switch (operatingSystem) {
-		case WINDOWS -> Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
-		case MAC -> Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
-		case LINUX -> Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
-		default -> Preferences.P_TEXT_EXTERN_FILE_PATH;
-		};
+		String setting;
+		switch (operatingSystem) {
+		case WINDOWS:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
+			break;
+		case MAC:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
+			break;
+		case LINUX:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
+			break;
+		default:
+			setting = Preferences.P_TEXT_EXTERN_FILE_PATH;
+			break;
+		}
 		String path = ConfigServiceHolder.getGlobal(setting, null);
 		if (path == null) {
 			LoggerFactory.getLogger(DocumentLetterUtil.class)
