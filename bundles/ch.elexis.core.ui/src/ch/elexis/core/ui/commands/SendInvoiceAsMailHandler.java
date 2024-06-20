@@ -57,6 +57,7 @@ public class SendInvoiceAsMailHandler extends AbstractHandler {
 
 				Properties outputProps = new Properties();
 				outputProps.put(IRnOutputter.PROP_OUTPUT_NOUI, Boolean.toString(true));
+				outputProps.put(IRnOutputter.PROP_OUTPUT_NOPRINT, Boolean.toString(true));
 				outputProps.put(IRnOutputter.PROP_OUTPUT_MODIFY_INVOICESTATE, Boolean.toString(false));
 				outputProps.put(IRnOutputter.PROP_OUTPUT_WITH_ESR, Boolean.toString(true));
 				outputProps.put(IRnOutputter.PROP_OUTPUT_WITH_RECLAIM, Boolean.toString(true));

@@ -51,6 +51,8 @@ public interface IRnOutputter {
 
 	public static final String PROP_OUTPUT_NOUI = "OutputNoUi";
 
+	public static final String PROP_OUTPUT_NOPRINT = "OutputNoPrint";
+
 	/**
 	 * A short textual description for this output (as Label)
 	 */
