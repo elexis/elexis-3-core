@@ -101,9 +101,6 @@ public class Preferences {
 	public static final String P_TEXT_EDIT_LOCAL = "briefe/Textmodul_Edit_Local"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE = "briefe/Textmodul_Extern_File"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE_PATH = "briefe/Textmodul_Extern_File_Path"; //$NON-NLS-1$
-	public static final String P_TEXT_EXTERN_FILE_PATH_WINDOWS = "briefe/Textmodul_Extern_File_Path_WINDOWS"; //$NON-NLS-1$
-	public static final String P_TEXT_EXTERN_FILE_PATH_MAC = "briefe/Textmodul_Extern_File_Path_MAC"; //$NON-NLS-1$
-	public static final String P_TEXT_EXTERN_FILE_PATH_LINUX = "briefe/Textmodul_Extern_File_Path_LINUX"; //$NON-NLS-1$
 
 	// Gruppen und Rechte
 	public static final String ACC_GROUPS = "groupNames"; //$NON-NLS-1$

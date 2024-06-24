@@ -7,7 +7,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.BriefExternUtil;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.InvoiceState;
-import ch.elexis.core.model.util.DocumentLetterUtil;
+import ch.elexis.core.preferences.PreferencesUtil;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 
@@ -22,7 +22,8 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 		if ("documenteditlocal".equals(property)) { //$NON-NLS-1$
 			// no local copy / local edit if brief extern
 			if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false) && BriefExternUtil
-					.isValidExternPath(DocumentLetterUtil.getOperatingSystemSpecificExternalStoragePath(), false)) {
+					.isValidExternPath(PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
+							ConfigServiceHolder.get()), false)) {
 				return false;
 			}
 			return CoreHub.localCfg.get(Preferences.P_TEXT_EDIT_LOCAL, false);

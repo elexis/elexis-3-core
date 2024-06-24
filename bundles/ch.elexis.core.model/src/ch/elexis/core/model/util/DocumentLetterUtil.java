@@ -13,12 +13,12 @@ import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.preferences.PreferencesUtil;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
-import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.CoreUtil.OS;
 import ch.rgw.tools.MimeTool;
 
 public class DocumentLetterUtil {
@@ -34,116 +34,140 @@ public class DocumentLetterUtil {
 	 * @return
 	 */
 	public static @Nullable IVirtualFilesystemHandle getExternalHandleIfApplicable(IDocument document) {
-		if (document != null) {
-			try {
-				if (document instanceof IDocumentLetter) {
-					IDocumentLetter documentLetter = (IDocumentLetter) document;
-					if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
-						String path = getOperatingSystemSpecificExternalStoragePath();
-						if (path != null) {
-							if (documentLetter.getPatient() != null) {
-								return getDocumentLetterFilePath(path, documentLetter);
-							} else if (documentLetter.isTemplate()) {
-								IDocumentTemplate documentTemplate = CoreModelServiceHolder.get()
-										.load(documentLetter.getId(), IDocumentTemplate.class).orElse(null);
-								if (documentTemplate != null) {
-									// make sure properties are correct if not yet saved to db
-									documentTemplate.setTitle(documentLetter.getTitle());
-									documentTemplate.setMimeType(documentLetter.getMimeType());
-									return getDocumentTemplateFilePath(path, documentTemplate);
-								}
-							} else {
-								logger.warn("No patient for [{}]", documentLetter.getId());
-							}
-
-						} else {
-							logger.warn("Brief external storage activate with null path");
-						}
-					}
-				} else if (document instanceof IDocumentTemplate) {
-					if (ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
-						String path = getOperatingSystemSpecificExternalStoragePath();
-						if (path != null) {
-							return getDocumentTemplateFilePath(path, (IDocumentTemplate) document);
-						}
-					}
-				}
-			} catch (IOException e) {
-				logger.warn("Error loading letter [{}]", document.getId(), e);
-			}
+		if (document == null) {
+			return null;
 		}
-		return null;
-	}
 
-	private static IVirtualFilesystemHandle getDocumentLetterFilePath(String path, IDocumentLetter documentLetter)
-			throws IOException {
-		IVirtualFilesystemHandle basePath = VirtualFilesystemServiceHolder.get().of(path);
-		if (basePath.exists() && basePath.canRead() && basePath.canWrite()) {
-			IVirtualFilesystemHandle patientSubDir = basePath.subDir(documentLetter.getPatient().getPatientNr());
-			patientSubDir = patientSubDir.mkdir(); // assert existence
-			IVirtualFilesystemHandle filePath = patientSubDir
-					.subFile(documentLetter.getId() + "." + evaluateFileExtension(documentLetter.getMimeType()));
-			return filePath;
-		} else {
-			logger.warn("Base external storage path [{}] does not exist or is not read/writable", basePath);
+		if (!ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
+			return null;
 		}
-		return null;
-	}
 
-	private static IVirtualFilesystemHandle getDocumentTemplateFilePath(String externalStoragePath,
-			IDocumentTemplate documentTemplate) throws IOException {
-		IVirtualFilesystemHandle basePath = VirtualFilesystemServiceHolder.get().of(externalStoragePath);
-		if (basePath.exists() && basePath.canRead() && basePath.canWrite()) {
-			IVirtualFilesystemHandle templatesSubDir = basePath.subDir("templates");
-			templatesSubDir = templatesSubDir.mkdir(); // assert existence
-			IVirtualFilesystemHandle typedTemplatesSubDir = null;
-			if (BriefConstants.SYS_TEMPLATE.equals(documentTemplate.getTemplateTyp())) {
-				typedTemplatesSubDir = templatesSubDir.subDir("system");
-				typedTemplatesSubDir = typedTemplatesSubDir.mkdir(); // assert existence
-			} else {
-				typedTemplatesSubDir = templatesSubDir.subDir("custom");
-				typedTemplatesSubDir = typedTemplatesSubDir.mkdir(); // assert existence
-			}
-			IVirtualFilesystemHandle templatesFileSubDir = typedTemplatesSubDir;
-			if (documentTemplate.getMandator() != null) {
-				templatesFileSubDir = typedTemplatesSubDir.subDir(documentTemplate.getMandator().getLabel());
-				templatesFileSubDir = templatesFileSubDir.mkdir(); // assert existence
-			}
-			IVirtualFilesystemHandle filePath = templatesFileSubDir.subFile(documentTemplate.getId() + "_"
-					+ documentTemplate.getTitle() + "." + evaluateFileExtension(documentTemplate.getMimeType()));
-
-			return filePath;
-		} else {
-			logger.warn("Base external storage path [{}] does not exist or is not read/writable", basePath);
-		}
-		return null;
-	}
-
-	public static String getOperatingSystemSpecificExternalStoragePath() {
-		OS operatingSystem = CoreUtil.getOperatingSystemType();
-		String setting;
-		switch (operatingSystem) {
-		case WINDOWS:
-			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
-			break;
-		case MAC:
-			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
-			break;
-		case LINUX:
-			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
-			break;
-		default:
-			setting = Preferences.P_TEXT_EXTERN_FILE_PATH;
-			break;
-		}
-		String path = ConfigServiceHolder.getGlobal(setting, null);
+		String path = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
+				ConfigServiceHolder.get());
 		if (path == null) {
-			LoggerFactory.getLogger(DocumentLetterUtil.class)
-					.warn("No OS specific path set, reverting to generic setting");
-			path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+			logger.error("External storage path is [null]");
+			return null;
 		}
-		return path;
+
+		IVirtualFilesystemHandle externalStoragePath;
+		try {
+			externalStoragePath = VirtualFilesystemServiceHolder.get().of(path);
+		} catch (IOException e) {
+			logger.error("Invalid external storage path [{}]", path, e.getMessage());
+			return null;
+		}
+
+		try {
+			// optimistic - we assume the external storage path exists and validate on the
+			// target of the resulting doc path only
+			if (document instanceof IDocumentLetter) {
+				IDocumentLetter documentLetter = (IDocumentLetter) document;
+				if (documentLetter.getPatient() != null) {
+					return getDocumentLetterFilePath(externalStoragePath, documentLetter);
+				}
+				if (documentLetter.isTemplate()) {
+					IDocumentTemplate documentTemplate = CoreModelServiceHolder.get()
+							.load(documentLetter.getId(), IDocumentTemplate.class).orElseThrow();
+					// make sure properties are correct if not yet saved to db
+					documentTemplate.setTitle(documentLetter.getTitle());
+					documentTemplate.setMimeType(documentLetter.getMimeType());
+					return getDocumentTemplateFilePath(externalStoragePath, documentTemplate);
+				}
+				logger.warn("No patient set in IDocumentLetter and is no template [{}]", documentLetter.getId());
+			} else if (document instanceof IDocumentTemplate) {
+				return getDocumentTemplateFilePath(externalStoragePath, (IDocumentTemplate) document);
+			}
+		} catch (IOException e) {
+			logger.warn("Error loading letter [{}]", document.getId(), e);
+		}
+		return null;
 	}
+
+	private static IVirtualFilesystemHandle getDocumentLetterFilePath(IVirtualFilesystemHandle externalStoragePath,
+			IDocumentLetter documentLetter) throws IOException {
+
+		IVirtualFilesystemHandle patientSubDir = externalStoragePath.subDir(documentLetter.getPatient().getPatientNr());
+		if (!patientSubDir.exists()) {
+			if (!(externalStoragePath.canRead() && externalStoragePath.canWrite())) {
+				logger.error("External storage path [{}] does not exist or is not read/writable", externalStoragePath);
+				return null;
+			}
+			logger.info("mkdir [{}]",
+					IVirtualFilesystemService.hidePasswordInUrlString(patientSubDir.toURL().toString()));
+			patientSubDir.mkdir();
+		}
+
+		IVirtualFilesystemHandle filePath = patientSubDir
+				.subFile(documentLetter.getId() + "." + evaluateFileExtension(documentLetter.getMimeType()));
+		return filePath;
+	}
+
+	private static IVirtualFilesystemHandle getDocumentTemplateFilePath(IVirtualFilesystemHandle externalStoragePath,
+			IDocumentTemplate documentTemplate) throws IOException {
+
+		IVirtualFilesystemHandle templatesSubDir = externalStoragePath.subDir("templates");
+		String _templatesSubDir = BriefConstants.SYS_TEMPLATE.equals(documentTemplate.getTemplateTyp()) ? "system"
+				: "custom";
+		IVirtualFilesystemHandle typedTemplatesSubDir = templatesSubDir.subDir(_templatesSubDir);
+		IVirtualFilesystemHandle mandatorTypedTemplatesSubDir = null;
+		if (documentTemplate.getMandator() != null) {
+			mandatorTypedTemplatesSubDir = typedTemplatesSubDir.subDir(documentTemplate.getMandator().getLabel());
+		}
+
+		IVirtualFilesystemHandle targetDirectory = mandatorTypedTemplatesSubDir != null ? mandatorTypedTemplatesSubDir
+				: typedTemplatesSubDir;
+		if (!targetDirectory.canRead()) {
+			if (!(externalStoragePath.canRead() && externalStoragePath.canWrite())) {
+				logger.error("External storage path [{}] does not exist or is not read/writable", externalStoragePath);
+				return null;
+			}
+			if (!templatesSubDir.exists()) {
+				logger.info("mkdir [{}]",
+						IVirtualFilesystemService.hidePasswordInUrlString(templatesSubDir.toURL().toString()));
+				templatesSubDir.mkdir();
+			}
+			if (!typedTemplatesSubDir.exists()) {
+				logger.info("mkdir [{}]",
+						IVirtualFilesystemService.hidePasswordInUrlString(typedTemplatesSubDir.toURL().toString()));
+				typedTemplatesSubDir.mkdir();
+			}
+			if (mandatorTypedTemplatesSubDir != null && !mandatorTypedTemplatesSubDir.exists()) {
+				logger.info("mkdir [{}]", IVirtualFilesystemService
+						.hidePasswordInUrlString(mandatorTypedTemplatesSubDir.toURL().toString()));
+				mandatorTypedTemplatesSubDir.mkdir();
+			}
+		}
+
+		IVirtualFilesystemHandle targetFile = targetDirectory.subFile(documentTemplate.getId() + "_"
+				+ documentTemplate.getTitle() + "." + evaluateFileExtension(documentTemplate.getMimeType()));
+		return targetFile;
+	}
+
+//	public static String getOperatingSystemSpecificExternalStoragePath() {
+//		OS operatingSystem = CoreUtil.getOperatingSystemType();
+//		String setting;
+//		switch (operatingSystem) {
+//		case WINDOWS:
+//			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_WINDOWS;
+//			break;
+//		case MAC:
+//			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_MAC;
+//			break;
+//		case LINUX:
+//			setting = Preferences.P_TEXT_EXTERN_FILE_PATH_LINUX;
+//			break;
+//		default:
+//			setting = Preferences.P_TEXT_EXTERN_FILE_PATH;
+//			break;
+//		}
+//		String path = ConfigServiceHolder.getGlobal(setting, null);
+//		if (path == null) {
+//			LoggerFactory.getLogger(DocumentLetterUtil.class)
+//					.warn("No OS specific path set, reverting to generic setting");
+//			path = ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE_PATH, null);
+//		}
+//		return path;
+//	}
 
 	/**
 	 * Get the file extension part of the input String.
