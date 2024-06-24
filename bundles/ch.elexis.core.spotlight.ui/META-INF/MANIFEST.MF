@@ -20,6 +20,7 @@ Import-Package: ch.elexis.core.documents,
  javax.inject;version="1.0.0",
  org.apache.pdfbox.pdmodel,
  org.eclipse.e4.ui.services,
+ org.eclipse.persistence.exceptions;version="[2.7.0,3.0.0]",
  org.slf4j;version="1.6.6"
 Automatic-Module-Name: ch.elexis.core.spotlight.ui
 Bundle-ActivationPolicy: lazy

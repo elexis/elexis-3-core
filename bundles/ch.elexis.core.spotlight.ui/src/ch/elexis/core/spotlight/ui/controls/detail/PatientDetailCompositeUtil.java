@@ -3,9 +3,11 @@ package ch.elexis.core.spotlight.ui.controls.detail;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -95,10 +97,15 @@ public class PatientDetailCompositeUtil {
 
 	String getFormattedPatientBalance(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
-			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class, IAccountTransaction.class,
-					true, "balance.patient");
-			List<Number> balanceResult = namedQuery
-					.executeWithParameters(namedQuery.getParameterMap("patient", patient));
+			List<Number> balanceResult = Collections.emptyList();
+			try {
+				INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class, IAccountTransaction.class,
+						true, "balance.patient");
+				balanceResult = namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
+			} catch (DatabaseException sqle) {
+				// #26327 workaround for non-postgres-support in Elexis < 3.13
+				sqle.printStackTrace();
+			}
 			if (!balanceResult.isEmpty()) {
 				int _balance = balanceResult.get(0).intValue();
 				return "CHF " + new Money(_balance);
@@ -106,7 +113,7 @@ public class PatientDetailCompositeUtil {
 		}
 		return "-";
 	}
-
+	
 	String getFormattedFixedMedication(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
 			List<IPrescription> fixedMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION));
