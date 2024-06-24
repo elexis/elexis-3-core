@@ -493,7 +493,7 @@ public class BestellView extends ViewPart {
 								continue;
 							}
 						}
-						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, actOrder);
+						OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, actOrder, false);
 					} else {
 						LoggerFactory.getLogger(getClass()).warn("Could not resolve article " + stockEntry.getLabel() //$NON-NLS-1$
 								+ " of stock entry " + stockEntry.getId()); //$NON-NLS-1$

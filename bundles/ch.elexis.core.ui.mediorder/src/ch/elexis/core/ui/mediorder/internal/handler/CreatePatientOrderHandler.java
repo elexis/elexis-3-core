@@ -79,7 +79,7 @@ public class CreatePatientOrderHandler {
 
 		for (IStockEntry stockEntry : stockEntries) {
 			if (stockEntry.getArticle() != null) {
-				orderService.addRefillForStockEntryToOrder(stockEntry, order);
+				orderService.addRefillForStockEntryToOrder(stockEntry, order, true);
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Could not resolve article [{}] of stock entry [{}]", //$NON-NLS-1$
 						stockEntry.getLabel(), stockEntry.getId());

@@ -51,7 +51,7 @@ public class Test_OrderService extends AbstractPersistentObjectTest {
 	@Test
 	public void testAddRefillForStockEntryToOrderAndFindOpenOrder() {
 		Bestellung b = new Bestellung("TestBestellung", CoreHub.getLoggedInContact());
-		OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, b.toIOrder());
+		OrderServiceHolder.get().addRefillForStockEntryToOrder(stockEntry, b.toIOrder(), false);
 		assertEquals(1, b.getEntries().size());
 		assertEquals(5, b.getEntries().get(0).getCount());
 

@@ -14,9 +14,11 @@ public interface IOrderService {
 	 *
 	 * @param ise
 	 * @param order
+	 * @param useMinimumStockAsMax
 	 * @return {@link IOrderEntry} or <code>null</code> if the order is not valid
 	 *         (e.g. would require to order <= 0 pieces)
 	 * @since 3.6 return null on invalid order amount
 	 */
-	public @Nullable IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order);
+	public @Nullable IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order,
+			boolean useMinimumStockAsMax);
 }

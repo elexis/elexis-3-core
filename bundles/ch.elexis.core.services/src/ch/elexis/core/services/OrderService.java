@@ -36,10 +36,10 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order) {
+	public IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order, boolean useMinimumStockAsMax) {
 		int current = ise.getCurrentStock();
 		int max = ise.getMaximumStock();
-		if (max == 0) {
+		if (!useMinimumStockAsMax && max == 0) {
 			max = ise.getMinimumStock();
 		}
 		int toOrder = max - current;
