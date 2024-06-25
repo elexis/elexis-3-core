@@ -1619,6 +1619,63 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
         </createIndex>
     </changeSet>
     
+    <changeSet author="thomas" id="agntermine_priority">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="AGNTERMINE" />
+				<not>
+					<columnExists tableName="AGNTERMINE"
+						columnName="PRIORITY" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="AGNTERMINE">
+			<column name="PRIORITY" type="CHAR(1)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="thomas" id="agntermine_casetype">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="AGNTERMINE" />
+				<not>
+					<columnExists tableName="AGNTERMINE"
+						columnName="CASETYPE" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="AGNTERMINE">
+			<column name="CASETYPE" type="CHAR(1)"/>
+		</addColumn>
+	</changeSet>		
+	<changeSet author="thomas" id="agntermine_insurancetype">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="AGNTERMINE" />
+				<not>
+					<columnExists tableName="AGNTERMINE"
+						columnName="INSURANCETYPE" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="AGNTERMINE">
+			<column name="INSURANCETYPE" type="CHAR(1)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="thomas" id="agntermine_treatmentreason">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="AGNTERMINE" />
+				<not>
+					<columnExists tableName="AGNTERMINE"
+						columnName="TREATMENTREASON" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="AGNTERMINE">
+			<column name="TREATMENTREASON" type="CHAR(1)"/>
+		</addColumn>
+	</changeSet>
+    
     <changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_DATA">
     	<preConditions onFail="MARK_RAN">
 			<not>
