@@ -118,6 +118,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ExportAllEncounters">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.XidsFromExtInfo">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>

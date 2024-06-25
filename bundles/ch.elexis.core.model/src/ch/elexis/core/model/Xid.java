@@ -38,8 +38,18 @@ public class Xid extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entitie
 		// load using storeToString
 		String storeToString = getEntity().getType() + IStoreToStringContribution.DOUBLECOLON + getEntity().getObject();
 		Optional<Identifiable> loadedObject = StoreToStringServiceHolder.get().loadFromString(storeToString);
-		if (loadedObject.isPresent() && clazz.isAssignableFrom(loadedObject.get().getClass())) {
-			return (T) loadedObject.get();
+		if (loadedObject.isPresent()) {
+			if (clazz.isAssignableFrom(loadedObject.get().getClass())) {
+				return (T) loadedObject.get();
+			} else {
+				// try loading as provided type
+				String type = StoreToStringServiceHolder.get().getTypeForModel(clazz);
+				loadedObject = StoreToStringServiceHolder.get()
+						.loadFromString(type + IStoreToStringContribution.DOUBLECOLON + getEntity().getObject());
+				if (clazz.isAssignableFrom(loadedObject.get().getClass())) {
+					return (T) loadedObject.get();
+				}
+			}
 		}
 		return null;
 	}
