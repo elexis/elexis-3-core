@@ -539,6 +539,25 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 	}
 
 	@Override
+	public IVirtualFilesystemHandle mkdirs() throws IOException {
+		File file = URIUtil.toFile(uri);
+		if (file != null) {
+			file.mkdirs();
+			return this;
+		}
+		URLConnection connection = uri.toURL().openConnection();
+		if (connection instanceof SmbFile) {
+			try (SmbFile smbFile = (SmbFile) connection) {
+				if (!smbFile.exists()) {
+					smbFile.mkdirs();
+				}
+				return this;
+			}
+		}
+		throw new IOException(ERROR_MESSAGE_CAN_NOT_HANDLE);
+	}
+
+	@Override
 	public URI getURI() {
 		return uri;
 	}

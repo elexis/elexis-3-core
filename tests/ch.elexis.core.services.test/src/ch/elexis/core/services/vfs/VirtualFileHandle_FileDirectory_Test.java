@@ -183,9 +183,12 @@ public class VirtualFileHandle_FileDirectory_Test extends AbstractVirtualFileHan
 		testHandle.subFile("/bla/foo.txt");
 	}
 
-	public void testMkdir() throws IOException {
-		// TODO behavior?
-		testHandle.mkdir();
+	@Test
+	public void testMkdirs() throws IOException {
+		IVirtualFilesystemHandle subMkdirs = service.of(testDirectory).subDir("parent1").subDir("parent2")
+				.subDir("parent3").mkdirs();
+		assertTrue(subMkdirs.exists());
+		service.of(testDirectory).subDir("parent1").delete();
 	}
 
 	@Test(expected = IOException.class)

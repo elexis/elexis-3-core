@@ -172,4 +172,10 @@ public class TransientVirtualFilesystemHandle implements IVirtualFilesystemHandl
 		return null;
 	}
 
+	@Override
+	public IVirtualFilesystemHandle mkdirs() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

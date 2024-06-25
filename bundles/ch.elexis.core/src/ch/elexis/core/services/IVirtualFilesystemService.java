@@ -287,6 +287,18 @@ public interface IVirtualFilesystemService {
 		 */
 		IVirtualFilesystemHandle mkdir() throws IOException;
 
+		/**
+		 * Creates the directory named by this abstract pathname, including any
+		 * necessary but nonexistent parent directories. Note that if this operation
+		 * fails it may have succeeded in creating some of the necessary parent
+		 * directories.
+		 * 
+		 * @return its own handle
+		 * @throws IOException
+		 * @since 3.12
+		 */
+		IVirtualFilesystemHandle mkdirs() throws IOException;
+
 	}
 
 	@FunctionalInterface
