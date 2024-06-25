@@ -147,4 +147,12 @@ public class VirtualFileHandle_SmbDirectory_Test {
 		assertEquals(2, listHandles.length);
 	}
 
+	@Test
+	public void testMkdirs() throws IOException {
+		IVirtualFilesystemHandle subMkdirs = service.of(PREFIX_AUTH_SAMBA).subDir("parent1").subDir("parent2")
+				.subDir("parent3").mkdirs();
+		assertTrue(subMkdirs.exists());
+		service.of(PREFIX_AUTH_SAMBA).subDir("parent1").delete();
+	}
+
 }
