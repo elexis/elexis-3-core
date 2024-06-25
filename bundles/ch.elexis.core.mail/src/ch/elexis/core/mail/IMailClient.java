@@ -3,11 +3,10 @@ package ch.elexis.core.mail;
 import java.util.List;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-
 import com.sun.mail.imap.IMAPMessage;
 
 import ch.elexis.core.jdt.Nullable;
+import jakarta.mail.MessagingException;
 
 /**
  * Interface to the email functionality of Elexis. Configure and access

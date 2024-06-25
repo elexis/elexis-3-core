@@ -1,7 +1,7 @@
 name: Build Product
 
 env:
-  TARGET: '2023-09-java17'
+  TARGET: '2023-09-java21'
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
 

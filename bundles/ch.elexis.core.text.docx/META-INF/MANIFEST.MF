@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Docx
 Bundle-SymbolicName: ch.elexis.core.text.docx
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Export-Package: ch.elexis.core.text.docx,
  org.docx4j,
  org.docx4j.openpackaging.exceptions,
@@ -34,5 +34,5 @@ Bundle-ClassPath: lib/docx4j-JAXB-ReferenceImpl-11.4.9.jar,
  lib/commons-compress-1.26.1.jar,
  lib/commons-io-2.16.1.jar,
  .
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy

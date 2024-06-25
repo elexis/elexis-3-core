@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eigendiagnosen
 Bundle-SymbolicName: ch.elexis.core.eigendiagnosen;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
