@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<<<<<<< Upstream, based on origin/master
-<target name="Elexis IDE 2023-09-java17" sequenceNumber="1718283500">
-=======
-<target name="Elexis IDE 2023-09-java21" sequenceNumber="1718700037">
->>>>>>> b615e2d update target
+<target name="Elexis IDE 2023-09-java21" sequenceNumber="1719298898">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.3.v20240426-1530"/>
