@@ -150,6 +150,7 @@ public class VirtualFileHandle_SmbDirectory_Test {
 
 	@Test
 	public void testMkdirs() throws IOException {
+		assumeTrue(serviceIsReachable());
 		IVirtualFilesystemHandle subMkdirs = service.of(PREFIX_AUTH_SAMBA).subDir("parent1").subDir("parent2")
 				.subDir("parent3").mkdirs();
 		assertTrue(subMkdirs.exists());
