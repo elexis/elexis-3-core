@@ -70,6 +70,8 @@ public abstract class AbstractModelService implements IModelService {
 
 	protected ExecutorService executor = Executors.newCachedThreadPool();
 
+	private List<String> blockEventTopics;
+
 	/**
 	 * Get the core model service to perform delete of XID. Can return null if model
 	 * does not use XID.
@@ -531,6 +533,9 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public void postEvent(String topic, Object object) {
 		if (getEventAdmin() != null) {
+			if (blockEventTopics != null && blockEventTopics.contains(topic)) {
+				return;
+			}
 			Map<String, Object> properties = new HashMap<>();
 			properties.put(ElexisEventTopics.ECLIPSE_E4_DATA, object);
 			Event event = new Event(topic, properties);
@@ -740,5 +745,10 @@ public abstract class AbstractModelService implements IModelService {
 
 		String tableName = (t == null) ? entityType.getName().toUpperCase() : t.name();
 		return tableName;
+	}
+
+	@Override
+	public synchronized void setBlockEventTopics(List<String> blockEventTopics) {
+		this.blockEventTopics = blockEventTopics;
 	}
 }

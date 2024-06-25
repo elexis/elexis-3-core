@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
@@ -399,4 +400,14 @@ public interface IModelService {
 	 * @return
 	 */
 	public <T> long getHighestLastUpdate(Class<T> clazz);
+
+	/**
+	 * Set a list of {@link ElexisEventTopics} to be blocked. These events will not
+	 * be posted or sent, until method is called with null as block event topics.
+	 * This can be used for importers where events lead to unwanted side effects.
+	 * <b>USE WITH CARE</b>
+	 *
+	 * @param blockEventTypes
+	 */
+	public void setBlockEventTopics(List<String> blockEventTopics);
 }
