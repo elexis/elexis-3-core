@@ -10,7 +10,7 @@ Export-Package: ch.rgw.compress,
  ch.rgw.tools,
  ch.rgw.tools.net,
  org.apache.commons.compress.bzip2
-Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
+Require-Bundle: ch.elexis.core.l10n;bundle-version="3.13.0",
  com.mysql.cj;bundle-version="8.0.22",
  com.h2database;bundle-version="1.4.200",
  org.postgresql.jdbc;bundle-version="42.2.19"
