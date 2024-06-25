@@ -15,8 +15,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.20.100";visibility:=r
  org.eclipse.emf.ecore;bundle-version="2.23.0";visibility:=reexport,
  ch.elexis.core;visibility:=reexport,
  org.apache.commons.lang3;bundle-version="3.12.0";visibility:=reexport,
- ch.rgw.utility;bundle-version="3.9.100",
- ch.elexis.core.l10n;bundle-version="3.10.0"
+ ch.rgw.utility;bundle-version="3.13.0",
+ ch.elexis.core.l10n;bundle-version="3.13.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ac,
  ch.elexis.core.common,
