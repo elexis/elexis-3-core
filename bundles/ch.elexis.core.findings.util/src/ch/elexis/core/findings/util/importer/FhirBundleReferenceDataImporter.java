@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,6 +32,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IXidService;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=fhirbundle", service = IReferenceDataImporter.class)
@@ -92,7 +94,15 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 		List<Identifier> identifiers = getIdentifiersReflective(fhirObject);
 		for (Identifier identifier : identifiers) {
 			String localSystem = toLocalSystem(identifier.getSystem());
-			return xidService.findObject(localSystem, identifier.getValue(), clazz);
+			List<T> found = xidService.findObjects(localSystem, identifier.getValue(), clazz);
+			if (!found.isEmpty()) {
+				if (found.size() > 1) {
+					LoggerFactory.getLogger(getClass()).warn("Found ["
+							+ found.stream().map(f -> ((Identifiable) f).getId()).collect(Collectors.joining(","))
+							+ "] for [" + localSystem + "|" + identifier.getValue() + "] using first.");
+				}
+				return Optional.of(found.get(0));
+			}
 		}
 		return Optional.empty();
 	}
