@@ -6,6 +6,7 @@
    </service>
    <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="fhirBundleImporter" interface="ch.elexis.core.interfaces.IReferenceDataImporter" name="fhirBundleImporter" target="(referenceDataId=fhirbundle)"/>
    <reference cardinality="1..1" field="stickerService" interface="ch.elexis.core.services.IStickerService" name="stickerService"/>
    <implementation class="ch.elexis.core.findings.util.importer.InsurancesReferenceDataImporter"/>
 </scr:component>

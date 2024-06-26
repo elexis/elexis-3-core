@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,19 +32,23 @@ import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IXidService;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=fhirbundle", service = IReferenceDataImporter.class)
 public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImporter {
 
 	@Reference
-	private IFhirTransformerRegistry transformerRegistry;
+	protected IFhirTransformerRegistry transformerRegistry;
 
 	@Reference
-	private IXidService xidService;
+	protected IXidService xidService;
 
 	@Override
 	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion) {
+		return performImport(ipm, input, newVersion, null);
+	}
+
+	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion,
+			Consumer<Object> updateLocalObjectConsumer) {
 		if(input != null) {
 			try {
 				String jsonString = IOUtils.toString(input, "UTF-8");
@@ -68,13 +73,10 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 							LoggerFactory.getLogger(getClass())
 									.warn("Unknown entry resource type [" + entryResource + "]");
 						}
-						if (localObject.isPresent()) {
-							updateLocalObject(localObject.get());
+						if (localObject.isPresent() && updateLocalObjectConsumer != null) {
+							updateLocalObjectConsumer.accept(localObject.get());
 						}
 					}
-				}
-				if (newVersion != null && getVersionConfigString() != null) {
-					ConfigServiceHolder.get().set(getVersionConfigString(), newVersion);
 				}
 				return Status.OK_STATUS;
 			} catch (IOException e) {
@@ -84,20 +86,6 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 			LoggerFactory.getLogger(getClass()).warn("No input to import");
 		}
 		return Status.CANCEL_STATUS;
-	}
-
-	/**
-	 * Sub classes can do additional modifications to imported local object.
-	 * 
-	 * @param object
-	 * 
-	 */
-	protected void updateLocalObject(Object object) {
-		// default to nothing, override in sub classes
-	}
-
-	protected String getVersionConfigString() {
-		return null;
 	}
 
 	private <T> Optional<T> getLocalObjectByIdentifiers(Resource fhirObject, Class<T> clazz) {
@@ -143,9 +131,7 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 
 	@Override
 	public int getCurrentVersion() {
-		if (getVersionConfigString() != null) {
-			return ConfigServiceHolder.get().get(getVersionConfigString(), 0);
-		}
-		return 0;
+		return -1;
 	}
+
 }
