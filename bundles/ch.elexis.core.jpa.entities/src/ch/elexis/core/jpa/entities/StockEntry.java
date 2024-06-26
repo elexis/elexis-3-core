@@ -62,6 +62,38 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	String articleId;
 
 	/**
+	 * @formatter:off
+	 * Stock rules
+	 * 
+	 * Elexis stocks
+	 * Basically, a MIN value is required, otherwise no order will be processed
+	 * 
+	 * MIN CUR MAX
+	 * 1	0	1	article will be ordered
+	 * 1	0	0	article will be ordered
+	 * 1	1	0	min value is in stock
+	 * 1	1	1	min and max value is in stock
+	 * 
+	 * 
+	 * Patient stock
+	 * MIN: requested amount
+	 * CUR: amount in stock
+	 * MAX: approved amount
+	 * 
+	 * If there is no requested, the warehouse is not displayed in Elexis
+	 * 
+	 * MIN CUR MAX
+	 * 0	0	0	default stock
+	 * 1	0	1	requested and approved -> order will be done 
+	 * 1	0	0	requested but not approved
+	 * 1	1	0	requested and in stock
+	 * 1	1	1	order can be charged and closed
+	 * 
+	 * @formatter:on
+	 */
+
+
+	/**
 	 * The minimum number of items packages on stock. If lower than {@link #curr} we
 	 * consider the stockage of this item to be critical.
 	 */
