@@ -7,10 +7,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -303,4 +307,25 @@ public class CoreUtil {
 	public static final boolean isLinux() {
 		return osType == OS.LINUX;
 	}
+
+	/**
+	 * The default database connection product name
+	 * 
+	 * @return "H2, "MySQL", "PostgreSQL" or "unknown"
+	 * @since 3.10
+	 */
+	public static String getDatabaseProductName() {
+		Optional<DataSource> defaultDataSource = OsgiServiceUtil.getService(DataSource.class, "(id=default)");
+		if (defaultDataSource.isPresent()) {
+			try {
+				Connection connection = defaultDataSource.get().getConnection();
+				return connection.getMetaData().getDatabaseProductName();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			OsgiServiceUtil.ungetService(DataSource.class);
+		}
+		return "unknown";
+	}
+
 }
