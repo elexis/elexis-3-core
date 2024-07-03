@@ -5030,6 +5030,7 @@ public class Messages extends NLS {
 	public static String Error_EndDateInFuture;
 	public static String Button_UpdateCharts;
 	public static String Checkbox_ShowLegend;
+	public static String Article_Medic_Label;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
