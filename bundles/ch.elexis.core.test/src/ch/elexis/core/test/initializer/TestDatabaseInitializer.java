@@ -275,7 +275,7 @@ public class TestDatabaseInitializer {
 		return patient;
 	}
 
-	private void addAHVNumber(IPatient kontakt, int index) {
+	public static void addAHVNumber(IPatient kontakt, int index) {
 		String country = "756";
 		String number = String.format("%09d", index);
 		StringBuilder ahvBuilder = new StringBuilder(country + number);
@@ -284,7 +284,7 @@ public class TestDatabaseInitializer {
 		kontakt.addXid(XidConstants.DOMAIN_AHV, ahvBuilder.toString(), true);
 	}
 
-	private String getAHVCheckNumber(String string) {
+	private static String getAHVCheckNumber(String string) {
 		int sum = 0;
 		for (int i = 0; i < string.length(); i++) {
 			// reverse order
