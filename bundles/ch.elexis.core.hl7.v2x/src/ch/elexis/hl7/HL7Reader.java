@@ -84,7 +84,7 @@ public abstract class HL7Reader {
 			pat = null;
 			logger.warn(sb.toString());
 
-			resolvePatient(firstName, lastName, birthDate, patid);
+			resolvePatient(patid, firstName, lastName, birthDate);
 		}
 	}
 
