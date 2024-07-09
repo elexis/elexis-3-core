@@ -30,7 +30,8 @@ Import-Package: ch.elexis.core.model.tasks,
  javax.inject;version="1.0.0",
  org.apache.commons.io;version="2.5.0",
  org.apache.commons.lang3;version="3.7.0"
-Service-Component: OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml,
- OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml,
- OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml
+Service-Component: OSGI-INF/ch.elexis.core.mail.ui.archive.OmnivoreDocumentStoreServiceHolder.xml,
+ OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml,
+ OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml,
+ OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml
 Export-Package: ch.elexis.core.mail.ui.client

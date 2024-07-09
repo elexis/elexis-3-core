@@ -28,8 +28,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.PreferenceConstants;
+import ch.elexis.core.mail.ui.archive.ArchiveUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
+import ch.elexis.core.model.ICategory;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.ui.documents.composites.CategorySelectionEditComposite;
 
 public class Preference extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -38,6 +41,10 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 	private MailAccountComposite accountComposite;
 	private ComboViewer accountsViewer;
 	private Button testButton, defaultBtn;
+
+	private Button archiveButton;
+
+	private CategorySelectionEditComposite archiveCategorySelection;
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -130,6 +137,47 @@ public class Preference extends PreferencePage implements IWorkbenchPreferencePa
 		accountsToolMgr.add(new SaveAccountAction(accountComposite, this));
 		accountsToolMgr.add(new RemoveAccountAction(accountComposite, this));
 		accountsToolMgr.update(true);
+
+		Label separator = new Label(parentComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		gd.heightHint = 10;
+		separator.setLayoutData(gd);
+
+		archiveButton = new Button(parentComposite, SWT.CHECK);
+		archiveButton.setText("E-Mail Anhänge archivieren");
+		archiveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ConfigServiceHolder.get().set(ArchiveUtil.PREF_MAIL_ARCHIVE_ENABLED, archiveButton.getSelection());
+				archiveCategorySelection.setEnabled(archiveButton.getSelection());
+			}
+		});
+		archiveButton.setSelection(ConfigServiceHolder.get().get(ArchiveUtil.PREF_MAIL_ARCHIVE_ENABLED, false));
+		archiveButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+
+		Label categoryLabel = new Label(parentComposite, SWT.NONE);
+		categoryLabel.setText("Archiv Kategorie");
+
+		archiveCategorySelection = new CategorySelectionEditComposite(parentComposite, SWT.NONE,
+				"ch.elexis.data.store.omnivore",
+				true);
+		archiveCategorySelection.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		archiveCategorySelection
+				.setEnabled(ConfigServiceHolder.get().get(ArchiveUtil.PREF_MAIL_ARCHIVE_ENABLED, false));
+		archiveCategorySelection.addSelectionChangeListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				ICategory category = archiveCategorySelection.getSelection();
+				if (category != null) {
+					ConfigServiceHolder.get().set(ArchiveUtil.PREF_MAIL_ARCHIVE_DOCUMENT_CATEGORY, category.getName());
+				} else {
+					ConfigServiceHolder.get().set(ArchiveUtil.PREF_MAIL_ARCHIVE_DOCUMENT_CATEGORY, null);
+				}
+			}
+		});
+		archiveCategorySelection.setCategoryByName(ConfigServiceHolder.get()
+				.get(ArchiveUtil.PREF_MAIL_ARCHIVE_DOCUMENT_CATEGORY, ArchiveUtil.DEFAULT_CATEGORY));
 
 		return parentComposite;
 	}

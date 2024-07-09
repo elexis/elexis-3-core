@@ -9,7 +9,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.TaskUtil;
+import ch.elexis.core.mail.ui.archive.ArchiveUtil;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.tasks.model.ITask;
@@ -19,7 +21,7 @@ public class SendMailTaskWithProgress {
 
 	private ITask task;
 
-	public ITask execute(Shell activeShell, ITaskDescriptor taskDescriptor) {
+	public ITask execute(Shell activeShell, ITaskDescriptor taskDescriptor, MailMessage message) {
 		try {
 			new ProgressMonitorDialog(activeShell).run(true, false, new IRunnableWithProgress() {
 
@@ -31,6 +33,7 @@ public class SendMailTaskWithProgress {
 						if (task.isSucceeded()) {
 							OutboxUtil.getOrCreateElement(taskDescriptor, true);
 							EncounterUtil.addMailToEncounter(taskDescriptor);
+							ArchiveUtil.archiveAttachments(message.getAttachments());
 						}
 						monitor.done();
 					} catch (TaskException e) {

@@ -52,7 +52,8 @@ public class SendMailTaskHandler extends AbstractHandler implements IHandler {
 
 					ITaskDescriptor descriptor = TaskUtil.configureTaskDescriptor(taskDescriptor.get(),
 							sendMailDialog.getAccount().getId(), sendMessage);
-					ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event), descriptor);
+					ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event), descriptor,
+							message);
 					return Boolean.valueOf(task.getState() == TaskState.COMPLETED);
 				}
 			}
