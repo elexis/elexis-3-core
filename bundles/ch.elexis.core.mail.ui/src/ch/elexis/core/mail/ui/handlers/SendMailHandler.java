@@ -110,7 +110,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			if (doSend && taskDescriptor.isPresent()) {
 				ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor", null);
 				ITask task = new SendMailTaskWithProgress().execute(HandlerUtil.getActiveShell(event),
-						taskDescriptor.get());
+						taskDescriptor.get(), message);
 				return task.getState() == TaskState.COMPLETED;
 			} else if (!doSend) {
 				ContextServiceHolder.get().getRootContext().setNamed("sendMailDialog.taskDescriptor",
