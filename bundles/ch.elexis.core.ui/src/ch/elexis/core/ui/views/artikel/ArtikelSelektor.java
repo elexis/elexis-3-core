@@ -197,7 +197,7 @@ public class ArtikelSelektor extends ViewPart {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
-			loaded = StockServiceHolder.get().getAllStockEntries();
+			loaded = StockServiceHolder.get().getAllStockEntries(false);
 			loaded.sort(compareArticleLabel());
 
 			if (monitor.isCanceled()) {
