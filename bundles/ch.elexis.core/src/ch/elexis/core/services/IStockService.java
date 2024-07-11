@@ -220,7 +220,7 @@ public interface IStockService {
 	 */
 	public List<IStock> getAllStocks(boolean includeCommissioningSystems, boolean includePatientStocks);
 
-	public List<IStockEntry> getAllStockEntries();
+	public List<IStockEntry> getAllStockEntries(boolean includePatientStockEntries);
 
 	public IStock getDefaultStock();
 

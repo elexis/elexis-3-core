@@ -230,8 +230,18 @@ public class StockService implements IStockService {
 	}
 
 	@Override
-	public List<IStockEntry> getAllStockEntries() {
-		return CoreModelServiceHolder.get().getQuery(IStockEntry.class).execute();
+	public List<IStockEntry> getAllStockEntries(boolean includePatientStockEntries) {
+		IQuery<IStock> stockQuery = CoreModelServiceHolder.get().getQuery(IStock.class);
+		stockQuery.and("ID", COMPARATOR.LIKE, "PatientStock-%");
+		List<IStock> lStock = stockQuery.execute();
+
+		 IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
+			if (!includePatientStockEntries) {
+				for (IStock stock : lStock) {
+					query.and(ModelPackage.Literals.ISTOCK_ENTRY__STOCK, COMPARATOR.NOT_EQUALS, stock);
+				}
+			}
+		    return query.execute();
 	}
 
 	@Override
@@ -275,7 +285,7 @@ public class StockService implements IStockService {
 			query.and("driverConfig", COMPARATOR.EQUALS, null);
 		}
 		if (!includePatientStocks) {
-			query.and("id", COMPARATOR.NOT_EQUALS, "PatientStock-%");
+			query.and("id", COMPARATOR.NOT_LIKE, "PatientStock-%");
 		}
 		query.orderBy("PRIORITY", ORDER.ASC);
 		return query.execute();

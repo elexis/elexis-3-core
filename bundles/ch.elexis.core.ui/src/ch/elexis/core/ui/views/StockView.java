@@ -712,7 +712,7 @@ public class StockView extends ViewPart implements IRefreshable {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Stock loading ...", IProgressMonitor.UNKNOWN);
-			loaded = StockServiceHolder.get().getAllStockEntries();
+			loaded = StockServiceHolder.get().getAllStockEntries(false);
 			if (filterOrderOnly) {
 				loaded = loaded.parallelStream().filter(se -> selectOrderOnly(se)).collect(Collectors.toList());
 			}
