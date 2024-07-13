@@ -38,7 +38,7 @@ Explanation of the used options
 -   -DskipTests: Skip unit tests (Use it only if you want to speed up
     the build)
 -   -Dmaterialize-products: Building products is optional, as it takes
--   some time. This includes building products.
+    some time. This includes building products.
 -   ---quiet: Used for travis builds to generate Quiet output - only
     show errors. Without it the log would bee too long and make the
     travis-build fail.
