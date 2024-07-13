@@ -24,7 +24,7 @@ Then you should be able to generate the application and p2 update site using the
 
 
 `git clone https://github.com/elexis/elexis-3-core`\
-`mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests`
+`mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests -Dmaterialize-products`
 
 Explanation of the used options
 
@@ -37,6 +37,8 @@ Explanation of the used options
     artefacts
 -   -DskipTests: Skip unit tests (Use it only if you want to speed up
     the build)
+-   -Dmaterialize-products: Building products is optional, as it takes
+-   some time. This includes building products.
 -   ---quiet: Used for travis builds to generate Quiet output - only
     show errors. Without it the log would bee too long and make the
     travis-build fail.
