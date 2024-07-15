@@ -483,6 +483,12 @@
       <eParameters name="encounter" eType="#//IEncounter"/>
       <eParameters name="amount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     </eOperations>
+    <eOperations name="verify">
+      <eGenericType eClassifier="ecore:EClass types.ecore#//Result">
+        <eTypeArguments eClassifier="#//IBilled"/>
+      </eGenericType>
+      <eParameters name="encounter" eType="#//IEncounter"/>
+    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillableOptifier" abstract="true" interface="true">
     <eTypeParameters name="T">

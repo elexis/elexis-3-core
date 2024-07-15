@@ -6450,6 +6450,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
+		op = addEOperation(iBillableVerifierEClass, null, "verify", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getIEncounter(), "encounter", 0, 1, IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(theTypesPackage.getResult());
+		g2 = createEGenericType(this.getIBilled());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		initEClass(iBillableOptifierEClass, IBillableOptifier.class, "IBillableOptifier", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		op = addEOperation(iBillableOptifierEClass, null, "add", 0, 1, IS_UNIQUE, IS_ORDERED);
