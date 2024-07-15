@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IBillable;
+import ch.elexis.core.model.IBillableVerifier;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.ICodeElement;
@@ -42,6 +44,7 @@ import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import ch.rgw.tools.Result.msg;
 import ch.rgw.tools.VersionedResource;
 
 @Component
@@ -381,5 +384,43 @@ public class EncounterService implements IEncounterService {
 		updateVersionedEntry(encounter, samdas); // XRefs may always be added
 		// update with the added content
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Result<IEncounter> setEncounterDate(IEncounter encounter, LocalDate newDate) {
+		Result<IEncounter> ret = new Result<IEncounter>(encounter);
+		IBillableVerifier verifier = null;
+		// get an optifier for the tarmed code system
+		for (IBilled billed : encounter.getBilled()) {
+			IBillable billable = billed.getBillable();
+			// TODO there should be a central codeSystemName registry
+			if ("Tarmed".equals(billable.getCodeSystemName())) {
+				verifier = billable.getVerifier();
+				break;
+			}
+		}
+		if (verifier != null) {
+			encounter.setDate(newDate);
+			CoreModelServiceHolder.get().save(encounter);
+			Result<IBilled> result = verifier.verify(encounter);
+			if (!result.isOK()) {
+				// change back to fallback
+				List<Result<IBilled>.msg> messages = result.getMessages();
+				for (msg msg : messages) {
+					if (msg.getObject() instanceof IBilled) {
+						IBilled billed = (IBilled) msg.getObject();
+						IBillable billable = billed.getBillable();
+						if (billable != null) {
+							encounter.removeBilled(billed);
+							String message = "Achtung: durch die Änderung wurde die Position " + billable.getCode()
+									+ " automatisch entfernt.\nLimitation: " + msg.getText();
+							ret.addMessage(SEVERITY.WARNING, message, encounter);
+						}
+					}
+				}
+			}
+		}
+		return ret;
 	}
 }
