@@ -315,6 +315,9 @@
         <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/encounter"/>
         <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verifyAdd/amount"/>
       </genOperations>
+      <genOperations ecoreOperation="model.ecore#//IBillableVerifier/verify">
+        <genParameters ecoreParameter="model.ecore#//IBillableVerifier/verify/encounter"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IBillableOptifier">
       <genTypeParameters ecoreTypeParameter="model.ecore#//IBillableOptifier/T"/>
