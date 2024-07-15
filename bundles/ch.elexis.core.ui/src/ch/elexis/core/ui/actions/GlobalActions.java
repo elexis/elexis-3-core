@@ -74,6 +74,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandConstants;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
@@ -138,7 +139,7 @@ public class GlobalActions {
 	public static IAction printRoeBlatt;
 	public static IAction openFallaction, closeFallAction, filterAction, makeBillAction, planeRechnungAction;
 	public static RestrictedAction delKonsAction, delFallAction, reopenFallAction;
-	public static LockedAction<Konsultation> moveBehandlungAction, redateAction;
+	public static LockedRestrictedAction<IEncounter> moveBehandlungAction, redateAction;
 	public static IAction neuerFallAction;
 
 	public static MenuManager perspectiveMenu, viewMenu;
@@ -583,49 +584,51 @@ public class GlobalActions {
 				}
 			}
 		};
-		moveBehandlungAction = new LockedAction<>(Messages.GlobalActions_AssignCase) {
+		moveBehandlungAction = new LockedRestrictedAction<IEncounter>(EvACE.of(IEncounter.class, Right.UPDATE),
+				Messages.GlobalActions_AssignCase) {
 			@Override
-			public Konsultation getTargetedObject() {
-				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			public IEncounter getTargetedObject() {
+				return ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null);
 			}
 
 			@Override
-			public void doRun(Konsultation element) {
+			public void doRun(IEncounter element) {
 				// TODO do we need to lock the fall?
 				SelectFallDialog dlg = new SelectFallDialog(mainWindow.getShell());
 				if (dlg.open() == Dialog.OK) {
 					Fall f = dlg.result;
 					if (f != null) {
-						Result<IEncounter> result = EncounterServiceHolder.get().transferToCoverage(
-								NoPoUtil.loadAsIdentifiable(element, IEncounter.class).get(),
-								NoPoUtil.loadAsIdentifiable(f, ICoverage.class).get(), false);
+						ICoverage coverage = NoPoUtil.loadAsIdentifiable(f, ICoverage.class).get();
+						Result<IEncounter> result = EncounterServiceHolder.get().transferToCoverage(element, coverage,
+								false);
 						if (!result.isOK()) {
-							SWTHelper.alert("Error", result.toString());
+							SWTHelper.alert("Warnung", result.toString());
 						}
-						ElexisEventDispatcher.fireSelectionEvent(f);
+						ContextServiceHolder.get().setActiveCoverage(coverage);
 					}
 				}
 			}
 		};
-		redateAction = new LockedAction<>(Messages.GlobalActions_Redate) {
+		redateAction = new LockedRestrictedAction<IEncounter>(EvACE.of(IEncounter.class, Right.UPDATE),
+				Messages.GlobalActions_Redate) {
 
 			@Override
-			public Konsultation getTargetedObject() {
-				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			public IEncounter getTargetedObject() {
+				return ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null);
 			}
 
 			@Override
-			public void doRun(Konsultation element) {
+			public void doRun(IEncounter element) {
 				DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell());
 				if (dlg.open() == Dialog.OK) {
 					TimeTool date = dlg.getSelectedDate();
-					element.setDatum(date.toString(TimeTool.DATE_GER), false);
-
+					Result<IEncounter> result = EncounterServiceHolder.get().setEncounterDate(element,
+							date.toLocalDate());
+					if (!result.isOK()) {
+						SWTHelper.alert("Warnung", result.toString());
+					}
 					// notify listeners about change
-					ElexisEventDispatcher.getInstance()
-							.fire(new ElexisEvent(element, Konsultation.class, ElexisEvent.EVENT_UPDATE));
-
-					ElexisEventDispatcher.fireSelectionEvent(element);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 				}
 			}
 		};

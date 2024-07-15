@@ -1,5 +1,6 @@
 package ch.elexis.core.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,16 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
 public interface IEncounterService {
+
+	/**
+	 * Set the date of the {@link IEncounter} to the provided new date. Check if the
+	 * existing {@link IBilled} are valid on that date. If any is invalid the date
+	 * is not set, and the returned Result contains additional information.
+	 * 
+	 * @param encounter
+	 * @return
+	 */
+	public Result<IEncounter> setEncounterDate(IEncounter encounter, LocalDate newDate);
 
 	/**
 	 * Test if the {@link IEncounter} is editable in the current context.
