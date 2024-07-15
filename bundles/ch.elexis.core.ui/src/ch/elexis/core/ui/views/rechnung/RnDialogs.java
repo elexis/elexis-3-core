@@ -589,7 +589,11 @@ public class RnDialogs {
 			return reopen;
 		}
 
-		public List<IRnOutputter> getExporters() {
+		public List<IRnOutputter> getSelectedExporters() {
+			return selectedRnOutputters;
+		}
+
+		private List<IRnOutputter> getExporters() {
 			if (selectedRnOutputters == null) {
 				selectedRnOutputters = new ArrayList<>();
 				for (Button exporter : exporters) {

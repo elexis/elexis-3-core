@@ -175,7 +175,7 @@ public class InvoiceActions {
 					StornoDialog stornoDialog = new RnDialogs.StornoDialog(UiDesk.getTopShell(), actRn);
 					dialogResult = stornoDialog.open();
 					dialogReopen = stornoDialog.getReopen();
-					dialogExporters = stornoDialog.getExporters();
+					dialogExporters = stornoDialog.getSelectedExporters();
 				} else if (dialogResult == Dialog.OK) {
 					if (Rechnung.isStorno(actRn) || Rechnung.hasStornoBeforeDate(actRn, new TimeTool())) {
 						SWTHelper.alert(Messages.RnActions_stornoAction,
@@ -183,9 +183,11 @@ public class InvoiceActions {
 					} else {
 						NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).ifPresent(invoice -> {
 							InvoiceServiceHolder.get().cancel(invoice, dialogReopen);
-							for (IRnOutputter iro : dialogExporters) {
-								iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] { actRn }),
-										new Properties());
+							if (dialogExporters != null) {
+								for (IRnOutputter iro : dialogExporters) {
+									iro.doOutput(IRnOutputter.TYPE.STORNO, Arrays.asList(new Rechnung[] { actRn }),
+											new Properties());
+								}
 							}
 						});
 					}
