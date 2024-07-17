@@ -4,7 +4,6 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -105,12 +104,6 @@ public class MedicationTableComposite extends Composite {
 		for (IViewContribution ivc : _tableViewerColumnContributions) {
 			Composite ret = ivc.initComposite(this);
 			ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-			try {
-				Method method = ivc.getClass().getMethod("addNewColumn", TableViewer.class);
-				method.invoke(ivc, viewer);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
