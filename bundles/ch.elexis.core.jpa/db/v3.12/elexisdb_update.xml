@@ -142,5 +142,19 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
 ]]>
 	    </sql>
 	</changeSet>
+	
+	<changeSet author="pdenzler" id="mediorder_sticker">
+	<insert tableName="ETIKETTEN">
+		<column name="ID" value="activate_mediorder" />
+		<column name="LASTUPDATE" valueComputed="${timestamp}" />
+		<column name="IMAGE" value="NULL" />
+		<column name="DELETED" value="0" />
+		<column name="IMPORTANCE" value="1000" />
+		<column name="NAME"
+			value="Medikamentenbestellung aktiviert" />
+		<column name="FOREGROUND" value="000000" />
+		<column name="BACKGROUND" value="ffffff" />
+	</insert>
+</changeSet>
 
 </databaseChangeLog>

@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.medication.views;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
+
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -25,9 +29,12 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
+import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 
 public class MedicationTableComposite extends Composite {
 
@@ -37,6 +44,11 @@ public class MedicationTableComposite extends Composite {
 
 	private MedicationComposite medicationComposite;
 	private List<IPrescription> pendingInput;
+
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> tableViewerColumnContributions = Extensions.getClasses(VIEWCONTRIBUTION,
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, "ch.medelexis.MedicationCompositeContribution");
+
 
 	public MedicationTableComposite(Composite parent, int style) {
 		super(parent, style);
@@ -86,6 +98,13 @@ public class MedicationTableComposite extends Composite {
 			}
 
 		});
+
+		List<IViewContribution> _tableViewerColumnContributions = ViewContributionHelper
+				.getFilteredAndPositionSortedContributions(tableViewerColumnContributions, 0);
+		for (IViewContribution ivc : _tableViewerColumnContributions) {
+			Composite ret = ivc.initComposite(this);
+			ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		}
 
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
 		MedicationViewerHelper.createArticleColumn(viewer, layout, 1);
