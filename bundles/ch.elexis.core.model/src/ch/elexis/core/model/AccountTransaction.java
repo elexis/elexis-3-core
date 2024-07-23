@@ -77,13 +77,13 @@ public class AccountTransaction extends AbstractIdDeleteModelAdapter<ch.elexis.c
 
 	@Override
 	public Money getAmount() {
-		return ch.elexis.core.model.util.ModelUtil.getMoneyForCentString(getEntity().getAmount()).orElse(null);
+		return new Money(getEntity().getAmount());
 	}
 
 	@Override
 	public void setAmount(Money value) {
 		if (value != null) {
-			getEntityMarkDirty().setAmount(value.getCentsAsString());
+			getEntityMarkDirty().setAmount(value.getCents());
 		} else {
 			getEntityMarkDirty().setAmount(null);
 		}

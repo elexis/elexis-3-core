@@ -24,7 +24,6 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.tools.Money;
 
 public class PatientDetailCompositeUtil {
@@ -98,11 +97,9 @@ public class PatientDetailCompositeUtil {
 	String getFormattedPatientBalance(IModelService coreModelService, IPatient patient) {
 		if (patient != null) {
 			List<Number> balanceResult = Collections.emptyList();
-			if (!"PostgreSQL".equalsIgnoreCase(CoreUtil.getDatabaseProductName())) {
-				INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class, IAccountTransaction.class,
-						true, "balance.patient");
-				balanceResult = namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
-			}
+			INamedQuery<Number> namedQuery = coreModelService.getNamedQuery(Number.class, IAccountTransaction.class,
+					true, "balance.patient");
+			balanceResult = namedQuery.executeWithParameters(namedQuery.getParameterMap("patient", patient));
 			if (!balanceResult.isEmpty()) {
 				int _balance = balanceResult.get(0).intValue();
 				return "CHF " + new Money(_balance);

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="thomas"
+		id="manual_changetype_konto_betrag" dbms="mysql, mariadb, h2">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="KONTO" />
+				<columnExists tableName="KONTO" columnName="BETRAG" />
+			</and>
+		</preConditions>
+		<sql>
+<![CDATA[
+ALTER TABLE konto ADD BetragInt int not null default 0;
+
+UPDATE konto SET BetragInt = CAST(COALESCE(Betrag, '0') AS SIGNED);
+
+ALTER TABLE konto RENAME COLUMN Betrag TO BetragOld;
+
+ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
+]]>
+		</sql>
+	</changeSet>
+
+	<changeSet author="thomas"
+		id="manual_changetype_konto_betrag" dbms="postgresql">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="KONTO" />
+				<columnExists tableName="KONTO" columnName="BETRAG" />
+			</and>
+		</preConditions>
+		<sql>
+<![CDATA[
+ALTER TABLE konto ADD BetragInt INTEGER not null default 0;
+
+UPDATE konto SET BetragInt = CAST(COALESCE(Betrag, '0') AS INTEGER);
+
+ALTER TABLE konto RENAME COLUMN Betrag TO BetragOld;
+
+ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
+]]>
+		</sql>
+	</changeSet>
+
+</databaseChangeLog>

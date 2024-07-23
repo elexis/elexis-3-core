@@ -24,7 +24,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "AccountTransaction.invoice", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.invoice = :invoice")
 @NamedQuery(name = "AccountTransaction.patient", query = "SELECT at FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
-@NamedQuery(name = "AccountTransaction.balance.patient", query = "SELECT SUM(CAST(at.amount AS SIGNED)) FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
+@NamedQuery(name = "AccountTransaction.balance.patient", query = "SELECT SUM(at.amount) FROM AccountTransaction at WHERE at.deleted = false AND at.patient = :patient")
 public class AccountTransaction extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
@@ -51,8 +51,8 @@ public class AccountTransaction extends AbstractEntityWithId implements EntityWi
 	@JoinColumn(name = "zahlungsid")
 	private Zahlung zahlung;
 
-	@Column(length = 8, name = "betrag")
-	protected String amount;
+	@Column(name = "betrag")
+	protected Integer amount;
 
 	@Column(name = "datum", length = 8)
 	protected LocalDate date;
@@ -87,11 +87,11 @@ public class AccountTransaction extends AbstractEntityWithId implements EntityWi
 		this.zahlung = zahlung;
 	}
 
-	public String getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 

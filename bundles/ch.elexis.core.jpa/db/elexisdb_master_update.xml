@@ -20,4 +20,5 @@
     <include file="/db/v3.10/elexisdb_update.xml"/>
     <include file="/db/v3.11/elexisdb_update.xml"/>
     <include file="/db/v3.12/elexisdb_update.xml"/>
+    <include file="/db/v3.13/elexisdb_update.xml"/>
 </databaseChangeLog>
