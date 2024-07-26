@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.IdentifierSystem;
+import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
@@ -181,8 +182,7 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 
 		Narrative narrative = new Narrative();
 		narrative.setStatus(NarrativeStatus.GENERATED);
-		narrative.setDivAsString(textBuilder.toString());
-		fhirObject.setText(narrative);
+		ModelUtil.setNarrativeFromString(narrative, textBuilder.toString());
 
 		Extension elexisEntryType = new Extension();
 		elexisEntryType.setUrl(EXTENSION_PRESCRIPTION_ENTRYTYPE_URL);
