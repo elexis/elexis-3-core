@@ -2616,6 +2616,7 @@ public class Messages extends NLS {
 	public static String LabOrderAction_infoMessageLabOrderFinshed;
 	public static String LabOrderAction_infoTitleLabOrderFinshed;
 	public static String LabOrderAction_nameAction;
+	public static String LaborOrderAction_LG1NameAction;
 	public static String LabOrderAction_receivingApplication;
 	public static String LabOrderAction_receivingFacility;
 	public static String LabOrderImport_AllFiles;
