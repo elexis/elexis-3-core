@@ -26,7 +26,12 @@ import ch.elexis.core.types.LabItemTyp;
 public class ILabResultHelper extends AbstractHelper {
 
 	public Type getEffectiveDateTime(ILabResult localObject) {
-		return new DateTimeType(getDate(localObject.getObservationTime()));
+		if (localObject.getObservationTime() != null) {
+			return new DateTimeType(getDate(localObject.getObservationTime()));
+		} else if (localObject.getDate() != null) {
+			return new DateTimeType(getDate(localObject.getDate()));
+		}
+		return null;
 	}
 
 	public Type getResult(ILabResult localObject) {
