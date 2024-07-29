@@ -712,7 +712,6 @@ public class BillingUtil {
 				acquireLock(locks, verrechnet, false);
 				int tp = leistungDTO.getTp();
 				int tpOld = verrechnet.getPoints();
-				verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 				if (tpOld != tp) {
 					verrechnet.setPoints(tp);
 					log.debug("invoice correction: price changed to [{}] for leistung id [{}]",
@@ -733,7 +732,6 @@ public class BillingUtil {
 				IStatus ret = BillingServiceHolder.get().changeAmountValidated(verrechnet, leistungDTO.getCount());
 				log.debug("invoice correction: changed count from leistung id [{}]", leistungDTO.getId());
 				if (ret.isOK()) {
-					verrechnet.setSecondaryScale((int) (leistungDTO.getScale2() * 100));
 					CoreModelServiceHolder.get().save(verrechnet);
 				} else {
 					addToOutput(output, ret.getMessage());
@@ -831,7 +829,6 @@ public class BillingUtil {
 								log.debug("invoice correction: count changed from [{}] to {[]} - for leistung id [{}]",
 										itemLeistung.getId());
 								if (ret.isOK()) {
-									verrechnet.setSecondaryScale((int) (itemLeistung.getScale2() * 100));
 									CoreModelServiceHolder.get().save(verrechnet);
 								} else {
 									verrechnet = null;
