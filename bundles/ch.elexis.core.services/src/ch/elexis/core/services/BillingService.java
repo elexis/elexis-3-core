@@ -322,8 +322,24 @@ public class BillingService implements IBillingService {
 		double difference = newAmount - oldAmount;
 		if (difference > 0) {
 			IBillable billable = billed.getBillable();
-			for (int i = 0; i < difference; i++) {
+			double fractions = difference % 1;
+			int differenceInt = (int) difference;
+			for (int i = 0; i < differenceInt; i++) {
 				Result<IBilled> result = bill(billable, encounter, 1.0);
+				if (bAllowOverrideStrict) {
+					if (ret.isOK() && !result.isOK()) {
+						String message = result.getMessages().stream().map(m -> m.getText())
+								.collect(Collectors.joining(", "));
+						ret = new Status(Status.WARNING, "ch.elexis.core.services", message);
+					}
+				} else if (!result.isOK()) {
+					String message = result.getMessages().stream().map(m -> m.getText())
+							.collect(Collectors.joining(", "));
+					return new Status(Status.ERROR, "ch.elexis.core.services", message);
+				}
+			}
+			if (fractions > 0.0) {
+				Result<IBilled> result = bill(billable, encounter, fractions);
 				if (bAllowOverrideStrict) {
 					if (ret.isOK() && !result.isOK()) {
 						String message = result.getMessages().stream().map(m -> m.getText())
