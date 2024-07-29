@@ -20,7 +20,7 @@ public class LeistungDTO {
 	private final String id;
 	private String code;
 	private final String text;
-	private int count;
+	private double count;
 	private IBillable iVerrechenbar;
 	private long lastUpdate;
 	private IBilled verrechnet;
@@ -28,7 +28,6 @@ public class LeistungDTO {
 	private int tp = 0;
 	private double tpw = 1.0;
 	private double scale1 = 1.0;
-	private double scale2 = 1.0;
 
 	public LeistungDTO(Verrechnet verrechnet) throws ElexisException {
 
@@ -54,7 +53,7 @@ public class LeistungDTO {
 		this.text = verrechnet.getText();
 		this.tp = this.verrechnet.getPoints();
 		this.tpw = this.verrechnet.getFactor();
-		this.count = verrechnet.getZahl();
+		this.count = this.verrechnet.getAmount();
 		this.iVerrechenbar = this.verrechnet.getBillable();
 	}
 
@@ -66,7 +65,6 @@ public class LeistungDTO {
 		this.tp = -1;
 		this.tpw = 1.0;
 		this.scale1 = 1.0;
-		this.scale2 = 1.0;
 		this.count = 1;
 		this.iVerrechenbar = iVerrechenbar;
 	}
@@ -80,7 +78,6 @@ public class LeistungDTO {
 				tp = result.get().getPoints();
 				tpw = result.get().getFactor();
 				scale1 = result.get().getPrimaryScaleFactor();
-				scale2 = result.get().getSecondaryScaleFactor();
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Adding billable failed [" + result.getMessages() + "]");
 				showResult.accept(result);
@@ -89,7 +86,6 @@ public class LeistungDTO {
 		} else {
 			tpw = getFactor();
 			scale1 = verrechnet.getPrimaryScaleFactor();
-			scale2 = verrechnet.getSecondaryScaleFactor();
 		}
 		return true;
 	}
@@ -107,14 +103,6 @@ public class LeistungDTO {
 
 	public void setTp(int tp) {
 		this.tp = tp;
-	}
-
-	public void setScale2(double scale2) {
-		this.scale2 = scale2;
-	}
-
-	public double getScale2() {
-		return scale2;
 	}
 
 	public IBilled getVerrechnet() {
@@ -142,14 +130,14 @@ public class LeistungDTO {
 	}
 
 	public Money getPrice() {
-		return new Money((int) (Math.round(tp * tpw) * scale1 * scale2 * count));
+		return new Money((int) (Math.round(tp * tpw) * scale1 * count));
 	}
 
-	public void setCount(int count) {
+	public void setCount(double count) {
 		this.count = count;
 	}
 
-	public int getCount() {
+	public double getCount() {
 		return count;
 	}
 
