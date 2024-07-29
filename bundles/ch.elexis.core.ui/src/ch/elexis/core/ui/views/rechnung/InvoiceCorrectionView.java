@@ -1434,11 +1434,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 					val = val.substring(0, val.length() - 1);
 					double percent = Double.parseDouble(val);
 					double scaleFactor = 1.0 + (percent / 100.0);
-					leistungDTO.setScale2(scaleFactor);
-					customPrice = leistungDTO.getPrice();
+					customPrice = leistungDTO.getPrice().multiply(scaleFactor);
 				} else {
 					customPrice = new Money(val);
-					leistungDTO.setScale2(Double.valueOf(1));
 				}
 				if (customPrice != null) {
 					leistungDTO.setTp(customPrice.getCents());
@@ -1454,7 +1452,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	}
 
 	private boolean changeQuantityDialog(LeistungDTO leistungDTO) {
-		String p = Integer.toString(leistungDTO.getCount());
+		String p = Double.toString(leistungDTO.getCount());
 		InputDialog dlg = new InputDialog(UiDesk.getTopShell(), Messages.VerrechnungsDisplay_changeNumberCaption, // $NON-NLS-1$
 				Messages.VerrechnungsDisplay_changeNumberBody, // $NON-NLS-1$
 				p, null);
@@ -1462,27 +1460,23 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 			try {
 				String val = dlg.getValue();
 				if (!StringTool.isNothing(val)) {
-					int changeAnzahl;
-					double secondaryScaleFactor = 1.0;
+					double changeAnzahl = 1.0;
 					String text = leistungDTO.getIVerrechenbar().getText();
 
 					if (val.indexOf(StringConstants.SLASH) > 0) {
-						changeAnzahl = 1;
 						String[] frac = val.split(StringConstants.SLASH);
-						secondaryScaleFactor = Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
+						changeAnzahl = Double.parseDouble(frac[0]) / Double.parseDouble(frac[1]);
 						text = leistungDTO.getIVerrechenbar().getText() + " (" + val //$NON-NLS-1$
 								+ Messages.VerrechnungsDisplay_Orininalpackungen;
 					} else if (val.indexOf('.') > 0) {
-						changeAnzahl = 1;
-						secondaryScaleFactor = Double.parseDouble(val);
-						text = leistungDTO.getIVerrechenbar().getText() + " (" + Double.toString(secondaryScaleFactor) //$NON-NLS-1$
+						changeAnzahl = Double.parseDouble(val);
+						text = leistungDTO.getIVerrechenbar().getText() + " (" + Double.toString(changeAnzahl) //$NON-NLS-1$
 								+ ")"; //$NON-NLS-1$
 					} else {
-						changeAnzahl = Integer.parseInt(dlg.getValue());
+						changeAnzahl = Double.parseDouble(val);
 					}
 
 					leistungDTO.setCount(changeAnzahl);
-					leistungDTO.setScale2(secondaryScaleFactor);
 					return true;
 				}
 			} catch (NumberFormatException ne) {
@@ -1499,7 +1493,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		if (object != null && LocalLockServiceHolder.get().isLocked(object)) {
 			LocalLockServiceHolder.get().releaseLock(object);
 		}
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		commandService.refreshElements(commandId, null);
 	}
 
