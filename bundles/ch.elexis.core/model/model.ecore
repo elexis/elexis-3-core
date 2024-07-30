@@ -723,7 +723,7 @@
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IRole" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//WithAssignableId">
+      eSuperTypes="#//Identifiable #//WithAssignableId #//WithExtInfo">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="systemRole" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRights" upperBound="-1"
         eType="#//IRight" changeable="false"/>
@@ -1273,5 +1273,18 @@
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="responsible" eType="#//IContact"
         changeable="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IVaccination" abstract="true" interface="true"
+      eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
+        eType="#//IPatient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="article" eType="#//IArticle"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articleName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articleGtin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articleAtc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lotNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateOfAdministration" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ingredientsAtc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="performer" eType="#//IContact"/>
   </eClassifiers>
 </ecore:EPackage>

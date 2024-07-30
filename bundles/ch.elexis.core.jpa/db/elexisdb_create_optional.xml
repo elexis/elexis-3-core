@@ -2825,4 +2825,49 @@ WHERE kontakt.id IN (
 		</createIndex>
 	</changeSet>
 
+	<changeSet author="thomas"
+		id="manual_table_AT_MEDEVIT_ELEXIS_IMPFPLAN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="AT_MEDEVIT_ELEXIS_IMPFPLAN" />
+			</not>
+		</preConditions>
+		<createTable
+			tableName="AT_MEDEVIT_ELEXIS_IMPFPLAN">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_PK_AT_MEDEVIT_ELEXIS_IMPFPLAN" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column name="DELETED" type="CHAR(1)" defaultValue="0"  />
+			
+			<column name="PATIENT_ID" type="VARCHAR(25)" />
+			<column name="ARTIKEL_REF" type="VARCHAR(255)" />
+			<column name="BUSINESSNAME" type="VARCHAR(255)" />
+			<column name="EAN" type="VARCHAR(13)" />
+			<column name="ATCCODE" type="VARCHAR(20)" />
+			<column name="LOTNR" type="VARCHAR(255)" />
+			<column name="DATEOFADMINISTRATION" type="CHAR(8)"/>
+			<column name="ADMINISTRATOR" type="VARCHAR(255)" />
+			<column name="VACCAGAINST" type="VARCHAR(255)" />
+			<column name="EXTINFO" type="${blob_type}" />			
+		</createTable>
+		<insert tableName="AT_MEDEVIT_ELEXIS_IMPFPLAN">
+       		<column name="ID" value="VERSION"/>
+       		<column name="PATIENT_ID" value="1.0.0"/>
+       		<column name="DATEOFADMINISTRATION" value="19700101"/>
+    	</insert>
+	</changeSet>
+	<changeSet author="marco" id="manual_idxPatient_AT_MEDEVIT_ELEXIS_IMPFPLAN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="AT_MEDEVIT_ELEXIS_IMPFPLAN" indexName="idxImpfplanPatientId" />
+			</not>
+		</preConditions>
+		<createIndex indexName="idxImpfplanPatientId" tableName="AT_MEDEVIT_ELEXIS_IMPFPLAN">
+			<column name="PATIENT_ID" />
+		</createIndex>
+	</changeSet>
+	
 </databaseChangeLog>

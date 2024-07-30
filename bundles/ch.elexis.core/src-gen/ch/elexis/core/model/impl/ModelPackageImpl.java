@@ -86,6 +86,7 @@ import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.IVaccination;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelFactory;
@@ -597,6 +598,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iReminderResponsibleLinkEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iVaccinationEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -5228,6 +5236,106 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIVaccination() {
+		return iVaccinationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIVaccination_Patient() {
+		return (EReference)iVaccinationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIVaccination_Article() {
+		return (EReference)iVaccinationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_ArticleName() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_ArticleGtin() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_ArticleAtc() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_LotNumber() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_DateOfAdministration() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIVaccination_IngredientsAtc() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIVaccination_Performer() {
+		return (EReference)iVaccinationEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5777,6 +5885,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iReminderResponsibleLinkEClass = createEClass(IREMINDER_RESPONSIBLE_LINK);
 		createEReference(iReminderResponsibleLinkEClass, IREMINDER_RESPONSIBLE_LINK__REMINDER);
 		createEReference(iReminderResponsibleLinkEClass, IREMINDER_RESPONSIBLE_LINK__RESPONSIBLE);
+
+		iVaccinationEClass = createEClass(IVACCINATION);
+		createEReference(iVaccinationEClass, IVACCINATION__PATIENT);
+		createEReference(iVaccinationEClass, IVACCINATION__ARTICLE);
+		createEAttribute(iVaccinationEClass, IVACCINATION__ARTICLE_NAME);
+		createEAttribute(iVaccinationEClass, IVACCINATION__ARTICLE_GTIN);
+		createEAttribute(iVaccinationEClass, IVACCINATION__ARTICLE_ATC);
+		createEAttribute(iVaccinationEClass, IVACCINATION__LOT_NUMBER);
+		createEAttribute(iVaccinationEClass, IVACCINATION__DATE_OF_ADMINISTRATION);
+		createEAttribute(iVaccinationEClass, IVACCINATION__INGREDIENTS_ATC);
+		createEReference(iVaccinationEClass, IVACCINATION__PERFORMER);
 	}
 
 	/**
@@ -5883,6 +6002,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPeriodEClass.getESuperTypes().add(this.getDeleteable());
 		iRoleEClass.getESuperTypes().add(this.getIdentifiable());
 		iRoleEClass.getESuperTypes().add(this.getWithAssignableId());
+		iRoleEClass.getESuperTypes().add(this.getWithExtInfo());
 		iBlobEClass.getESuperTypes().add(this.getIdentifiable());
 		iBlobEClass.getESuperTypes().add(this.getDeleteable());
 		iBlobEClass.getESuperTypes().add(this.getWithAssignableId());
@@ -5941,6 +6061,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iReminderEClass.getESuperTypes().add(this.getWithExtInfo());
 		iReminderResponsibleLinkEClass.getESuperTypes().add(this.getIdentifiable());
 		iReminderResponsibleLinkEClass.getESuperTypes().add(this.getDeleteable());
+		iVaccinationEClass.getESuperTypes().add(this.getIdentifiable());
+		iVaccinationEClass.getESuperTypes().add(this.getDeleteable());
+		iVaccinationEClass.getESuperTypes().add(this.getWithExtInfo());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -6857,6 +6980,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEClass(iReminderResponsibleLinkEClass, IReminderResponsibleLink.class, "IReminderResponsibleLink", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIReminderResponsibleLink_Reminder(), this.getIReminder(), null, "reminder", null, 0, 1, IReminderResponsibleLink.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIReminderResponsibleLink_Responsible(), this.getIContact(), null, "responsible", null, 0, 1, IReminderResponsibleLink.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iVaccinationEClass, IVaccination.class, "IVaccination", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIVaccination_Patient(), this.getIPatient(), null, "patient", null, 1, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIVaccination_Article(), this.getIArticle(), null, "article", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_ArticleName(), ecorePackage.getEString(), "articleName", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_ArticleGtin(), ecorePackage.getEString(), "articleGtin", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_ArticleAtc(), ecorePackage.getEString(), "articleAtc", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_LotNumber(), ecorePackage.getEString(), "lotNumber", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_DateOfAdministration(), theTypesPackage.getLocalDate(), "dateOfAdministration", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_IngredientsAtc(), ecorePackage.getEString(), "ingredientsAtc", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIVaccination_Performer(), this.getIContact(), null, "performer", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

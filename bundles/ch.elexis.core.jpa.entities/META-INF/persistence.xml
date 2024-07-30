@@ -113,6 +113,7 @@
 		<class>ch.elexis.core.jpa.entities.User</class>
 		<class>ch.elexis.core.jpa.entities.UserGroup</class>
 		<class>ch.elexis.core.jpa.entities.Userconfig</class>
+		<class>ch.elexis.core.jpa.entities.Vaccination</class>
 		<class>ch.elexis.core.jpa.entities.Verrechnet</class>
 		<class>ch.elexis.core.jpa.entities.VerrechnetCopy</class>
 		<class>ch.elexis.core.jpa.entities.VKPreis</class>
