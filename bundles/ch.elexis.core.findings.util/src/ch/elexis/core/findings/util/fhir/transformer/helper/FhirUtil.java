@@ -3,6 +3,8 @@ package ch.elexis.core.findings.util.fhir.transformer.helper;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -139,6 +141,25 @@ public class FhirUtil {
 	}
 
 	/**
+	 * Get the codes of all {@link Coding}s in the {@link CodeableConcept} matching
+	 * the system.
+	 * 
+	 * @param system
+	 * @param list
+	 * @return
+	 */
+	public static List<String> getCodesFromConceptList(String system, List<CodeableConcept> list) {
+		if (list != null && !list.isEmpty()) {
+			List<String> ret = new ArrayList<String>();
+			for (CodeableConcept concept : list) {
+				ret.addAll(getCodesFromCodingList(system, concept.getCoding()));
+			}
+			return ret;
+		}
+		return Collections.emptyList();
+	}
+
+	/**
 	 * Get the code String of the first {@link Coding} in the list with matching
 	 * system.
 	 * 
@@ -155,5 +176,25 @@ public class FhirUtil {
 			}
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * Get the codes of all {@link Coding}s matching the system.
+	 * 
+	 * @param system
+	 * @param list
+	 * @return
+	 */
+	public static List<String> getCodesFromCodingList(String system, List<Coding> list) {
+		if (list != null && !list.isEmpty()) {
+			List<String> ret = new ArrayList<String>();
+			for (Coding coding : list) {
+				if (coding.getSystem().equals(system) && coding.getCode() != null) {
+					ret.add(coding.getCode());
+				}
+			}
+			return ret;
+		}
+		return Collections.emptyList();
 	}
 }
