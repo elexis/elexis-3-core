@@ -1270,6 +1270,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IVaccination" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithExtInfo">
+    <eOperations name="getPerformerLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="setPerformerLabel">
+      <eParameters name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" lowerBound="1"
         eType="#//IPatient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="article" eType="#//IArticle"/>

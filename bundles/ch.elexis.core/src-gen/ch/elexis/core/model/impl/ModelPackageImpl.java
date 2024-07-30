@@ -6997,6 +6997,11 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIVaccination_Performer(), this.getIContact(), null, "performer", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIVaccination_Side(), ecorePackage.getEString(), "side", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		addEOperation(iVaccinationEClass, ecorePackage.getEString(), "getPerformerLabel", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iVaccinationEClass, null, "setPerformerLabel", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "label", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		// Create resource
 		createResource(eNS_URI);
 
