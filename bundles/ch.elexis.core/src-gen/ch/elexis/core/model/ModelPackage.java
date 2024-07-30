@@ -8077,6 +8077,124 @@ public interface ModelPackage extends EPackage {
 	int IREMINDER_RESPONSIBLE_LINK_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 3;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IVaccination <em>IVaccination</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IVaccination
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVaccination()
+	 * @generated
+	 */
+	int IVACCINATION = 71;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Patient</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__PATIENT = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Article</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__ARTICLE = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Article Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__ARTICLE_NAME = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Article Gtin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__ARTICLE_GTIN = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Article Atc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__ARTICLE_ATC = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Lot Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__LOT_NUMBER = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Date Of Administration</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__DATE_OF_ADMINISTRATION = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Ingredients Atc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__INGREDIENTS_ATC = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Performer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__PERFORMER = IDENTIFIABLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The number of structural features of the '<em>IVaccination</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12825,6 +12943,115 @@ public interface ModelPackage extends EPackage {
 	EReference getIReminderResponsibleLink_Responsible();
 
 	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IVaccination <em>IVaccination</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IVaccination</em>'.
+	 * @see ch.elexis.core.model.IVaccination
+	 * @generated
+	 */
+	EClass getIVaccination();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IVaccination#getPatient <em>Patient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Patient</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getPatient()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EReference getIVaccination_Patient();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IVaccination#getArticle <em>Article</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Article</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getArticle()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EReference getIVaccination_Article();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getArticleName <em>Article Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Article Name</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getArticleName()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_ArticleName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getArticleGtin <em>Article Gtin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Article Gtin</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getArticleGtin()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_ArticleGtin();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getArticleAtc <em>Article Atc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Article Atc</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getArticleAtc()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_ArticleAtc();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getLotNumber <em>Lot Number</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lot Number</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getLotNumber()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_LotNumber();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getDateOfAdministration <em>Date Of Administration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date Of Administration</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getDateOfAdministration()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_DateOfAdministration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getIngredientsAtc <em>Ingredients Atc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ingredients Atc</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getIngredientsAtc()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_IngredientsAtc();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IVaccination#getPerformer <em>Performer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Performer</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getPerformer()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EReference getIVaccination_Performer();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16686,6 +16913,88 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IREMINDER_RESPONSIBLE_LINK__RESPONSIBLE = eINSTANCE.getIReminderResponsibleLink_Responsible();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IVaccination <em>IVaccination</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IVaccination
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVaccination()
+		 * @generated
+		 */
+		EClass IVACCINATION = eINSTANCE.getIVaccination();
+
+		/**
+		 * The meta object literal for the '<em><b>Patient</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVACCINATION__PATIENT = eINSTANCE.getIVaccination_Patient();
+
+		/**
+		 * The meta object literal for the '<em><b>Article</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVACCINATION__ARTICLE = eINSTANCE.getIVaccination_Article();
+
+		/**
+		 * The meta object literal for the '<em><b>Article Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__ARTICLE_NAME = eINSTANCE.getIVaccination_ArticleName();
+
+		/**
+		 * The meta object literal for the '<em><b>Article Gtin</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__ARTICLE_GTIN = eINSTANCE.getIVaccination_ArticleGtin();
+
+		/**
+		 * The meta object literal for the '<em><b>Article Atc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__ARTICLE_ATC = eINSTANCE.getIVaccination_ArticleAtc();
+
+		/**
+		 * The meta object literal for the '<em><b>Lot Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__LOT_NUMBER = eINSTANCE.getIVaccination_LotNumber();
+
+		/**
+		 * The meta object literal for the '<em><b>Date Of Administration</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__DATE_OF_ADMINISTRATION = eINSTANCE.getIVaccination_DateOfAdministration();
+
+		/**
+		 * The meta object literal for the '<em><b>Ingredients Atc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__INGREDIENTS_ATC = eINSTANCE.getIVaccination_IngredientsAtc();
+
+		/**
+		 * The meta object literal for the '<em><b>Performer</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IVACCINATION__PERFORMER = eINSTANCE.getIVaccination_Performer();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.

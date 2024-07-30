@@ -360,6 +360,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIReminderResponsibleLinkAdapter();
 			}
 			@Override
+			public Adapter caseIVaccination(IVaccination object) {
+				return createIVaccinationAdapter();
+			}
+			@Override
 			public <T> Adapter caseComparable(Comparable<T> object) {
 				return createComparableAdapter();
 			}
@@ -1360,6 +1364,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIReminderResponsibleLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IVaccination <em>IVaccination</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IVaccination
+	 * @generated
+	 */
+	public Adapter createIVaccinationAdapter() {
 		return null;
 	}
 

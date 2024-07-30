@@ -424,6 +424,7 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIRole(iRole);
 				if (result == null) result = caseIdentifiable(iRole);
 				if (result == null) result = caseWithAssignableId(iRole);
+				if (result == null) result = caseWithExtInfo(iRole);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -667,6 +668,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				T1 result = caseIReminderResponsibleLink(iReminderResponsibleLink);
 				if (result == null) result = caseIdentifiable(iReminderResponsibleLink);
 				if (result == null) result = caseDeleteable(iReminderResponsibleLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ModelPackage.IVACCINATION: {
+				IVaccination iVaccination = (IVaccination)theEObject;
+				T1 result = caseIVaccination(iVaccination);
+				if (result == null) result = caseIdentifiable(iVaccination);
+				if (result == null) result = caseDeleteable(iVaccination);
+				if (result == null) result = caseWithExtInfo(iVaccination);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1721,6 +1731,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIReminderResponsibleLink(IReminderResponsibleLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IVaccination</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IVaccination</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIVaccination(IVaccination object) {
 		return null;
 	}
 

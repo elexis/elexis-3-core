@@ -88,6 +88,7 @@ import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.IVaccination;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Invoice;
@@ -110,6 +111,7 @@ import ch.elexis.core.model.Role;
 import ch.elexis.core.model.SickCertificate;
 import ch.elexis.core.model.TextTemplate;
 import ch.elexis.core.model.UserConfig;
+import ch.elexis.core.model.Vaccination;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 
 public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
@@ -216,6 +218,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(new MappingEntry(IPrescription.class, Prescription.class,
 				ch.elexis.core.jpa.entities.Prescription.class));
 		addMapping(new MappingEntry(IRecipe.class, Recipe.class, ch.elexis.core.jpa.entities.Rezept.class));
+		addMapping(new MappingEntry(IVaccination.class, Vaccination.class,
+				ch.elexis.core.jpa.entities.Vaccination.class));
 
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
 		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
