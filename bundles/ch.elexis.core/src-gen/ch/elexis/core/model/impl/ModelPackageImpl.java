@@ -5336,6 +5336,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIVaccination_Side() {
+		return (EAttribute)iVaccinationEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ModelFactory getModelFactory() {
 		return (ModelFactory)getEFactoryInstance();
 	}
@@ -5896,6 +5906,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iVaccinationEClass, IVACCINATION__DATE_OF_ADMINISTRATION);
 		createEAttribute(iVaccinationEClass, IVACCINATION__INGREDIENTS_ATC);
 		createEReference(iVaccinationEClass, IVACCINATION__PERFORMER);
+		createEAttribute(iVaccinationEClass, IVACCINATION__SIDE);
 	}
 
 	/**
@@ -6984,6 +6995,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIVaccination_DateOfAdministration(), theTypesPackage.getLocalDate(), "dateOfAdministration", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIVaccination_IngredientsAtc(), ecorePackage.getEString(), "ingredientsAtc", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIVaccination_Performer(), this.getIContact(), null, "performer", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIVaccination_Side(), ecorePackage.getEString(), "side", null, 0, 1, IVaccination.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

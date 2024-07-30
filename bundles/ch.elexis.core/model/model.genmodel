@@ -789,6 +789,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IVaccination/dateOfAdministration"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IVaccination/ingredientsAtc"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IVaccination/performer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IVaccination/side"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
