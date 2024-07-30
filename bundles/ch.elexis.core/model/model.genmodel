@@ -793,6 +793,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IVaccination/ingredientsAtc"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IVaccination/performer"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IVaccination/side"/>
+      <genOperations ecoreOperation="model.ecore#//IVaccination/getPerformerLabel"/>
+      <genOperations ecoreOperation="model.ecore#//IVaccination/setPerformerLabel">
+        <genParameters ecoreParameter="model.ecore#//IVaccination/setPerformerLabel/label"/>
+      </genOperations>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

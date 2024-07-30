@@ -163,4 +163,18 @@ public class Vaccination extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa
 			return getArticleName();
 		}
 	}
+
+	@Override
+	public String getPerformerLabel() {
+		IContact localPerformer = getPerformer();
+		if (localPerformer != null) {
+			return localPerformer.getLabel();
+		}
+		return getEntity().getPerformer();
+	}
+
+	@Override
+	public void setPerformerLabel(String label) {
+		getEntityMarkDirty().setPerformer(label);
+	}
 }

@@ -11,7 +11,6 @@
 package ch.elexis.core.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * <!-- begin-user-doc -->
@@ -258,5 +257,21 @@ public interface IVaccination extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setSide(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	String getPerformerLabel();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setPerformerLabel(String label);
 
 } // IVaccination
