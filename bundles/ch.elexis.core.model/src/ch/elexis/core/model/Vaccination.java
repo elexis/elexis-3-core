@@ -12,6 +12,8 @@ import ch.elexis.core.model.util.internal.ModelUtil;
 public class Vaccination extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Vaccination>
 		implements IdentifiableWithXid, IVaccination {
 
+	private static final String SIDE = "Side"; //$NON-NLS-1$
+
 	public Vaccination(ch.elexis.core.jpa.entities.Vaccination entity) {
 		super(entity);
 	}
@@ -121,6 +123,16 @@ public class Vaccination extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa
 		} else {
 			getEntityMarkDirty().setPerformer(null);
 		}
+	}
+
+	@Override
+	public String getSide() {
+		return (String) getExtInfo(SIDE);
+	}
+
+	@Override
+	public void setSide(String value) {
+		setExtInfo(SIDE, value);
 	}
 
 	@Override

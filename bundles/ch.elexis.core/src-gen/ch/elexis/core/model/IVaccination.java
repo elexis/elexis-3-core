@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
  *   <li>{@link ch.elexis.core.model.IVaccination#getDateOfAdministration <em>Date Of Administration</em>}</li>
  *   <li>{@link ch.elexis.core.model.IVaccination#getIngredientsAtc <em>Ingredients Atc</em>}</li>
  *   <li>{@link ch.elexis.core.model.IVaccination#getPerformer <em>Performer</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IVaccination#getSide <em>Side</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIVaccination()
@@ -235,5 +236,27 @@ public interface IVaccination extends Identifiable, Deleteable, WithExtInfo {
 	 * @generated
 	 */
 	void setPerformer(IContact value);
+
+	/**
+	 * Returns the value of the '<em><b>Side</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Side</em>' attribute.
+	 * @see #setSide(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIVaccination_Side()
+	 * @model
+	 * @generated
+	 */
+	String getSide();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IVaccination#getSide <em>Side</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Side</em>' attribute.
+	 * @see #getSide()
+	 * @generated
+	 */
+	void setSide(String value);
 
 } // IVaccination

@@ -8186,13 +8186,22 @@ public interface ModelPackage extends EPackage {
 	int IVACCINATION__PERFORMER = IDENTIFIABLE_FEATURE_COUNT + 9;
 
 	/**
+	 * The feature id for the '<em><b>Side</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IVACCINATION__SIDE = IDENTIFIABLE_FEATURE_COUNT + 10;
+
+	/**
 	 * The number of structural features of the '<em>IVaccination</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IVACCINATION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 10;
+	int IVACCINATION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.Identifiable <em>Identifiable</em>}'.
@@ -13052,6 +13061,17 @@ public interface ModelPackage extends EPackage {
 	EReference getIVaccination_Performer();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IVaccination#getSide <em>Side</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Side</em>'.
+	 * @see ch.elexis.core.model.IVaccination#getSide()
+	 * @see #getIVaccination()
+	 * @generated
+	 */
+	EAttribute getIVaccination_Side();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16995,6 +17015,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IVACCINATION__PERFORMER = eINSTANCE.getIVaccination_Performer();
+
+		/**
+		 * The meta object literal for the '<em><b>Side</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IVACCINATION__SIDE = eINSTANCE.getIVaccination_Side();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
