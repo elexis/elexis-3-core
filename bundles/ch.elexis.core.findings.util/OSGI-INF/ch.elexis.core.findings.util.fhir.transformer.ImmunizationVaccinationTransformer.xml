@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.util.fhir.transformer.ImmunizationVaccinationTransformer">
+   <service>
+      <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
+   </service>
+   <reference cardinality="1..1" field="codeElemetService" interface="ch.elexis.core.services.ICodeElementService" name="codeElemetService"/>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <implementation class="ch.elexis.core.findings.util.fhir.transformer.ImmunizationVaccinationTransformer"/>
+</scr:component>
