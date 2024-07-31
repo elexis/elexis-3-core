@@ -2,7 +2,6 @@ package ch.elexis.core.ui.mediorder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -237,12 +236,12 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewerDetails.setContentProvider(ArrayContentProvider.getInstance());
 		selectedDetailStock.addChangeListener(sel -> {
 			IStock stock = selectedDetailStock.getValue();
-			if (stock != null) {
-				List<IStockEntry> lStocks = stock.getStockEntries();
-				tableViewerDetails.setInput(lStocks);
-			} else {
-				tableViewerDetails.setInput(null);
-			}
+			//Represents inactive PEA order
+			List<IStockEntry> lFilteredStocks = (stock != null)
+					? stock.getStockEntries().stream().filter(s -> s.getMaximumStock() != 0 || s.getMinimumStock() != 0)
+							.toList()
+					: null;
+			tableViewerDetails.setInput(lFilteredStocks);
 		});
 		tableViewerDetails.setComparator(medicationComparator);
 		tableViewerDetails.addDoubleClickListener((DoubleClickEvent event) -> {
@@ -534,16 +533,13 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	private List<IStock> getPatientStocksWithStockEntry() {
-		List<IStock> lStockWithEntry = new ArrayList<>();
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-
-		List<IStock> lStock = query.execute();
-		for (IStock stock : lStock) {
-			if (!stock.getStockEntries().isEmpty())
-				lStockWithEntry.add(stock);
-		}
-		return lStockWithEntry;
+		// Represents inactive PEA order
+		return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
+				.filter(stock -> stock.getStockEntries().stream()
+						.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
+				.toList();
 	}
 
 	@SuppressWarnings("unchecked")
