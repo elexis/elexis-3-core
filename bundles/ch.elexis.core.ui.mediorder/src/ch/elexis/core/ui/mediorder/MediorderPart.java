@@ -237,6 +237,7 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewerDetails.setContentProvider(ArrayContentProvider.getInstance());
 		selectedDetailStock.addChangeListener(sel -> {
 			IStock stock = selectedDetailStock.getValue();
+			//Represents inactive PEA order
 			List<IStockEntry> lFilteredStocks = (stock != null)
 					? stock.getStockEntries().stream().filter(s -> s.getMaximumStock() != 0 || s.getMinimumStock() != 0)
 							.collect(Collectors.toList())
@@ -535,7 +536,7 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-
+		// Represents inactive PEA order
 		return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
 				.filter(stock -> stock.getStockEntries().stream()
 						.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
