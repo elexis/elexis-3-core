@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -240,7 +239,7 @@ public class MediorderPart implements IRefreshablePart {
 			//Represents inactive PEA order
 			List<IStockEntry> lFilteredStocks = (stock != null)
 					? stock.getStockEntries().stream().filter(s -> s.getMaximumStock() != 0 || s.getMinimumStock() != 0)
-							.collect(Collectors.toList())
+							.toList()
 					: null;
 			tableViewerDetails.setInput(lFilteredStocks);
 		});
@@ -540,7 +539,7 @@ public class MediorderPart implements IRefreshablePart {
 		return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
 				.filter(stock -> stock.getStockEntries().stream()
 						.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@SuppressWarnings("unchecked")
