@@ -129,7 +129,7 @@ public class TransientLabResult {
 		setFieldsAndInterpret(labResult);
 
 		// pathologic check takes place in labResult if it is numeric
-		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
+		if (isNumeric()) {
 			flags = labResult.isPathologic() ? LabResultConstants.PATHOLOGIC : 0;
 		} else {
 			if (flags != null) {
@@ -158,7 +158,7 @@ public class TransientLabResult {
 
 		setFieldsAndInterpret(labResult);
 
-		if (flags != null) {
+		if (flags != null && !isNormalAndNumeric()) {
 			// if the pathologic flag is already set during import
 			// keep it
 			labResult.setPathologic(flags > 0 ? true : false);
@@ -167,7 +167,7 @@ public class TransientLabResult {
 
 			// if not, at last for numeric values keep the evaluation done in
 			// setFieldsAndInterpret
-			if (!(LabItemTyp.NUMERIC == labItem.getTyp())) {
+			if (!isNumeric()) {
 				labResult.setPathologicDescription(
 						new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
@@ -186,6 +186,14 @@ public class TransientLabResult {
 		}
 		CoreModelServiceHolder.get().save(labResult);
 		return labResult;
+	}
+
+	private boolean isNumeric() {
+		return LabItemTyp.NUMERIC == labItem.getTyp();
+	}
+
+	private boolean isNormalAndNumeric() {
+		return "n".equalsIgnoreCase(rawAbnormalFlags) && LabItemTyp.NUMERIC == labItem.getTyp();
 	}
 
 	public String getLabel() {
