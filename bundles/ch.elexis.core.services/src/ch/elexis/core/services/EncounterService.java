@@ -389,6 +389,10 @@ public class EncounterService implements IEncounterService {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Result<IEncounter> setEncounterDate(IEncounter encounter, LocalDate newDate) {
+		// modify the date
+		encounter.setDate(newDate);
+		CoreModelServiceHolder.get().save(encounter);
+
 		Result<IEncounter> ret = new Result<IEncounter>(encounter);
 		IBillableVerifier verifier = null;
 		// get an optifier for the tarmed code system
@@ -401,11 +405,9 @@ public class EncounterService implements IEncounterService {
 			}
 		}
 		if (verifier != null) {
-			encounter.setDate(newDate);
-			CoreModelServiceHolder.get().save(encounter);
 			Result<IBilled> result = verifier.verify(encounter);
 			if (!result.isOK()) {
-				// change back to fallback
+				// remove invalid billed on new date
 				List<Result<IBilled>.msg> messages = result.getMessages();
 				for (msg msg : messages) {
 					if (msg.getObject() instanceof IBilled) {

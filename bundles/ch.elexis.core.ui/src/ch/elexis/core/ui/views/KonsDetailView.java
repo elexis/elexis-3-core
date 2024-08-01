@@ -88,7 +88,6 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.dialogs.AssignStickerDialog;
-import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
@@ -384,15 +383,12 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		hlDate = tk.createHyperlink(cDesc, NO_CONS_SELECTED, SWT.NONE);
 		hlDate.setFont(emFont);
 		hlDate.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				Konsultation kons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-
-				DateSelectorDialog dsd = new DateSelectorDialog(getSite().getShell());
-				if (dsd.open() == Dialog.OK) {
-					TimeTool date = dsd.getSelectedDate();
-					kons.setDateTime(date.toLocalDateTime(), false);
+				GlobalActions.redateAction.reflectRight();
+				if (GlobalActions.redateAction.isEnabled()) {
+					GlobalActions.redateAction.doRun();
 				}
-				ElexisEventDispatcher.fireSelectionEvent(kons);
 			}
 		});
 

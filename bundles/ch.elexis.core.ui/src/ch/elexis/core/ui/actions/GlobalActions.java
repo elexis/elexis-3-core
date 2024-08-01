@@ -619,7 +619,8 @@ public class GlobalActions {
 
 			@Override
 			public void doRun(IEncounter element) {
-				DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell());
+				DateSelectorDialog dlg = new DateSelectorDialog(mainWindow.getShell(), new TimeTool(element.getDate()),
+						null);
 				if (dlg.open() == Dialog.OK) {
 					TimeTool date = dlg.getSelectedDate();
 					Result<IEncounter> result = EncounterServiceHolder.get().setEncounterDate(element,
