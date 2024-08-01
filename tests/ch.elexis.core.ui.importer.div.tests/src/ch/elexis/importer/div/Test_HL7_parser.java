@@ -455,4 +455,25 @@ public class Test_HL7_parser {
 		assertTrue(noteExists);
 	}
 
+	@Test
+	public void testHL7PathologicNumericIsNormal() throws IOException {
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+		parseOneHL7file(hlp, new File(workDir.toString(), "numericisnormal.hl7"), false, true);
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(2, qrr.size());
+		for (LabResult labResult : qrr) {
+			// test pathologic info is from item reference value
+			assertEquals(Description.PATHO_REF_ITEM, labResult.getPathologicDescription().getDescription());
+			// test Natrium is not pathologic
+			if ("07090".equals(labResult.getItem().getKuerzel())) {
+				assertEquals(0, labResult.getFlags());
+			}
+			// test Kalium is pathologic
+			if ("07100".equals(labResult.getItem().getKuerzel())) {
+				assertEquals(1, labResult.getFlags());
+			}
+		}
+	}
 }
