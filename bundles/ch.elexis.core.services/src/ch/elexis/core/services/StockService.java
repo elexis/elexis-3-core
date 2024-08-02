@@ -360,7 +360,11 @@ public class StockService implements IStockService {
 	public IStockEntry storeArticleInStock(IStock stock, String article) {
 		IStockEntry stockEntry = findStockEntryForArticleInStock(stock, article);
 		if (stockEntry != null) {
-			stockEntry.setCurrentStock(stockEntry.getCurrentStock() + 1);
+			if (stock.getId().contains("PatientStock-")) {
+				stockEntry.setCurrentStock(0);
+			} else {
+				stockEntry.setCurrentStock(stockEntry.getCurrentStock() + 1);
+			}
 		} else {
 			IArticle loadArticle = loadArticle(article);
 			if (loadArticle == null) {
