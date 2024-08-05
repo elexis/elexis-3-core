@@ -1,40 +1,44 @@
 {
-	"resourceType": "Coverage",
-	"id": "UVG6830bbadb4b09980f3d84b",
-	"text": {
-		"div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">UVG: Unfall - Label_UVG(28.01.2022-offen)</div>"
-	},
-	"identifier": [
-		{
-			"system": "www.elexis.info/objid",
-			"value": "UVG6830bbadb4b09980f3d84b"
-		}
-	],
-	"status": "active",
-	"type": {
-		"coding": [
-			{
-				"system": "www.elexis.info/coverage/type",
-				"code": "UVG"
-			},
-			{
-				"system": "www.elexis.info/coverage/reason",
-				"code": "Unfall"
-			},
-			{
-				"system": "www.elexis.info/coverage/uvg/accidentdate",
-				"code": "2022-01-27T00:00:00"
-			}
-		]
-	},
-	"policyHolder": {
-		"reference": "Patient/c8c506aa2e1a4626b296d0ef0"
-	},
-	"beneficiary": {
-		"reference": "Patient/c8c506aa2e1a4626b296d0ef0"
-	},
-	"dependent": "0190222222",
-	"period": {
-		"start": "2022-01-28T00:00:00+01:00"
-	}
+    "resourceType": "Coverage",
+    "id": "UVG6830bbadb4b09980f3d84b",
+    "meta": {
+        "lastUpdated": "1970-01-01T01:00:00.000+01:00"
+    },
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">UVG: Unfall - Label_UVG(28.01.2022-offen)</div>"
+    },
+    "identifier": [
+        {
+            "system": "www.elexis.info/objid",
+            "value": "UVG6830bbadb4b09980f3d84b"
+        }
+    ],
+    "status": "active",
+    "type": {
+        "coding": [
+            {
+                "system": "www.elexis.info/coverage/type",
+                "code": "UVG"
+            },
+            {
+                "system": "www.elexis.info/coverage/reason",
+                "code": "Unfall"
+            },
+            {
+                "system": "www.elexis.info/coverage/uvg/accidentdate",
+                "code": "2022-01-27T00:00:00"
+            }
+        ]
+    },
+    "policyHolder": {
+        "reference": "Patient/c8c506aa2e1a4626b296d0ef0"
+    },
+    "beneficiary": {
+        "reference": "Patient/c8c506aa2e1a4626b296d0ef0"
+    },
+    "dependent": "0190222222",
+    "period": {
+        "start": "2022-01-28T00:00:00+01:00"
+    }
 }
