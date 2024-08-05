@@ -84,8 +84,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			}
 			boolean result = evaluateACE(user.get(), userAclMap.get(user.get()), evaluatableAce);
 			if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION && !result) {
-				String message = "(ACL " + System.currentTimeMillis() + ") User has no right ["
-						+ evaluatableAce.toString() + "]";
+				String message = "(ACL " + System.currentTimeMillis() + ") User [" + user.get().getId()
+						+ "]  has no right [" + evaluatableAce.toString() + "]";
 				logger.info("", new Throwable(message));
 			}
 			return result;
