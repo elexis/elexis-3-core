@@ -99,6 +99,7 @@
 		"ch.elexis.core.model.IUser": "cruvdx",
 		"ch.elexis.core.model.IUserConfig": "cruvxz",
 		"ch.elexis.core.model.IUserGroup": "cruvdx",
+		"ch.elexis.core.model.IVaccination": "cruvdx",
 		"ch.elexis.core.model.IXid": "cruvdx",
 		"ch.elexis.core.tasks.model.ITask": "cruvdx",
 		"ch.elexis.core.tasks.model.ITaskDescriptor": "cruvdx",
