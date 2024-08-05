@@ -66,6 +66,7 @@
 		"ch.elexis.core.model.IUser": "rv",
 		"ch.elexis.core.model.IUserConfig": "cruv",
 		"ch.elexis.core.model.IUserGroup": "rv",
+		"ch.elexis.core.model.IVaccination": "rv",
 		"ch.elexis.core.model.IXid": "rv",
 		"ch.elexis.core.tasks.model.ITask": "rv",
 		"ch.elexis.core.tasks.model.ITaskDescriptor": "rv",
