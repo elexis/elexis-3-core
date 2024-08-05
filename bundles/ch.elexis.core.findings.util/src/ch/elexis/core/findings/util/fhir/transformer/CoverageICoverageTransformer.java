@@ -1,26 +1,20 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coverage;
-import org.hl7.fhir.r4.model.Coverage.CoverageStatus;
-import org.hl7.fhir.r4.model.Period;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ca.uhn.fhir.rest.server.exceptions.PreconditionFailedException;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
-import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.ICoverageHelper;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.ICoverageCoverageAttributeMapper;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
@@ -31,76 +25,28 @@ import ch.elexis.core.services.IModelService;
 public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, ICoverage> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	private IModelService coreModelService;
 
-	private ICoverageHelper coverageHelper;
+	private ICoverageCoverageAttributeMapper attributeMapper;
 
 	@Activate
 	public void activate() {
-		coverageHelper = new ICoverageHelper();
+		attributeMapper = new ICoverageCoverageAttributeMapper(coreModelService);
 	}
 
 	@Override
 	public Optional<Coverage> getFhirObject(ICoverage localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Coverage coverage = new Coverage();
-
-		coverage.setId(new IdDt("Coverage", localObject.getId()));
-		coverage.addIdentifier(getElexisObjectIdentifier(localObject));
-
-		// Bezeichnung
-		coverageHelper.setNarrative(coverage, coverageHelper.getFallText(localObject));
-
-		CodeableConcept type = new CodeableConcept();
-
-		// Abrechnungsmethode
-		coverageHelper.getType(localObject).ifPresent(coding -> {
-			type.addCoding(coding);
-		});
-
-		// Versicherungsgrund
-		coverageHelper.getReason(localObject).ifPresent(coding -> {
-			type.addCoding(coding);
-		});
-
-		// Unfalldatum
-		coverageHelper.getAccidentDate(localObject).ifPresent(coding -> {
-			type.addCoding(coding);
-		});
-
-		coverage.setType(type);
-
-		// Versicherungsnummer (KVG)
-		coverageHelper.getInsuranceNumber(localObject).ifPresent(identifier -> {
-			coverage.addIdentifier(identifier);
-		});
-
-		// Startdatum, Enddatum
-		coverage.setPeriod(coverageHelper.getPeriod(localObject));
-
-		// Rechnunsempfaenger
-		coverage.setPolicyHolder(coverageHelper.getPolicyHolderReference(localObject));
-
-		// Kostenträger
-		coverage.setPayor(Collections.singletonList(coverageHelper.getPayor(localObject)));
-
-		// Patient
-		coverage.setBeneficiary(coverageHelper.getBeneficiaryReference(localObject));
-
-		// FallNummer (IVG), UnfallNummer (UVG)
-		coverage.setDependent(coverageHelper.getDependent(localObject));
-
-		// active
-		coverage.setStatus(localObject.isOpen() ? CoverageStatus.ACTIVE : CoverageStatus.CANCELLED);
-
+		attributeMapper.elexisToFhir(localObject, coverage, summaryEnum, includes);
 		return Optional.of(coverage);
 	}
 
 	@Override
 	public Optional<ICoverage> getLocalObject(Coverage fhirObject) {
 		if (fhirObject != null && fhirObject.getId() != null) {
-			Optional<ICoverage> existing = modelService.load(fhirObject.getId(), ICoverage.class);
-			if (existing.isPresent()) {
-				return Optional.of(existing.get());
+			Optional<String> localId = FhirUtil.getLocalId(fhirObject.getId());
+			if (localId.isPresent()) {
+				return coreModelService.load(localId.get(), ICoverage.class);
 			}
 		}
 		return Optional.empty();
@@ -108,46 +54,33 @@ public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, 
 
 	@Override
 	public Optional<ICoverage> updateLocalObject(Coverage fhirObject, ICoverage localObject) {
-		throw new UnsupportedOperationException();
+		attributeMapper.fhirToElexis(fhirObject, localObject);
+		coreModelService.save(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override
 	public Optional<ICoverage> createLocalObject(Coverage fhirObject) {
 		if (!fhirObject.hasBeneficiary()) {
-			return Optional.empty();
+			throw new PreconditionFailedException("Beneficiary missing");
 		}
 
-		Optional<IPatient> patient = modelService.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(),
-				IPatient.class);
+		Optional<IPatient> patient = coreModelService
+				.load(fhirObject.getBeneficiary().getReferenceElement().getIdPart(), IPatient.class);
 		if (patient.isEmpty()) {
-			throw new IFhirTransformerException("WARNING", "Invalid patient", 412);
-		}
-		Optional<String> type = coverageHelper.getType(fhirObject);
-		if (patient.isPresent() && type.isPresent()) {
-			ICoverage elexisObject = new ICoverageBuilder(modelService, patient.get(), "online created",
-					FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
-			String dependent = fhirObject.getDependent();
-			if (dependent != null) {
-				coverageHelper.setDependent(elexisObject, dependent);
-			}
-			Period period = fhirObject.getPeriod();
-			if (period != null && period.getStart() != null) {
-				coverageHelper.setPeriod(elexisObject, fhirObject.getPeriod());
-			} else {
-				elexisObject.setDateFrom(LocalDate.now());
-			}
-
-			coverageHelper.setInsuranceNumber(fhirObject, elexisObject);
-
-			modelService.save(elexisObject);
-			AbstractHelper.acquireAndReleaseLock(elexisObject);
-			return Optional.of(elexisObject);
+			throw new PreconditionFailedException("Invalid patient");
 		}
 
-		LoggerFactory.getLogger(CoverageICoverageTransformer.class)
-				.warn("Could not create fall for patinet [" + patient + "] type [" + type + "]");
-		return Optional.empty();
+		Optional<String> type = new ICoverageHelper().getType(fhirObject);
+		if (type.isEmpty()) {
+			throw new PreconditionFailedException("BillingSystem missing");
+		}
 
+		ICoverage create = new ICoverageBuilder(coreModelService, patient.get(), "online created",
+				FallConstants.TYPE_DISEASE, type.get()).buildAndSave();
+		attributeMapper.fhirToElexis(fhirObject, create);
+		coreModelService.save(create);
+		return Optional.of(create);
 	}
 
 	@Override

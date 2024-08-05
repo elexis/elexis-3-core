@@ -20,6 +20,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.TimeTool;
 
 public class ICoverageHelper extends AbstractHelper {
@@ -63,6 +64,16 @@ public class ICoverageHelper extends AbstractHelper {
 		return null;
 	}
 
+	public Optional<IContact> getPolicyHolderByReference(IModelService coreModelService, Reference source) {
+		if (source != null) {
+			Optional<String> localId = FhirUtil.getLocalId(source.getId());
+			if (localId.isPresent()) {
+				return coreModelService.load(localId.get(), IContact.class);
+			}
+		}
+		return Optional.empty();
+	}
+
 	public Reference getPayor(ICoverage fall) {
 		IContact kostenTr = fall.getCostBearer();
 		if (kostenTr != null) {
@@ -71,6 +82,16 @@ public class ICoverageHelper extends AbstractHelper {
 			return new Reference(new IdDt(contactType, kostenTr.getId()));
 		}
 		return null;
+	}
+
+	public Optional<IContact> getPayorByReference(IModelService coreModelService, Reference payorFirstRep) {
+		if (payorFirstRep != null) {
+			Optional<String> localId = FhirUtil.getLocalId(payorFirstRep.getId());
+			if (localId.isPresent()) {
+				return coreModelService.load(localId.get(), IContact.class);
+			}
+		}
+		return Optional.empty();
 	}
 
 	public Period getPeriod(ICoverage coverage) {
@@ -89,6 +110,11 @@ public class ICoverageHelper extends AbstractHelper {
 	public void setPeriod(ICoverage coverage, Period period) {
 		if (period.getStart() != null) {
 			coverage.setDateFrom(getLocalDateTime(period.getStart()).toLocalDate());
+		}
+		if (period.getEnd() != null) {
+			coverage.setDateTo(getLocalDateTime(period.getEnd()).toLocalDate());
+		} else {
+			coverage.setDateTo(null);
 		}
 	}
 
