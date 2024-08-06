@@ -33,7 +33,7 @@ public class FaelleLabelProvider extends StyledCellLabelProvider {
 	public String getToolTipText(Object element) {
 		if (element instanceof ICoverage) {
 			ICoverage fall = (ICoverage) element;
-			return new TimeTool(fall.getLastupdate()).toString(TimeTool.FULL_GER);
+			return "Letzte Änderung: " + new TimeTool(fall.getLastupdate()).toString(TimeTool.FULL_GER);
 		}
 		return null;
 	}
