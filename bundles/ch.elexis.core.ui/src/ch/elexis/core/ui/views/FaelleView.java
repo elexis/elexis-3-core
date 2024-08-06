@@ -28,6 +28,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IFilter;
@@ -183,6 +184,7 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		setPartName(Messages.Core_Cases); // $NON-NLS-1$
 		parent.setLayout(new GridLayout());
 		tv = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		ColumnViewerToolTipSupport.enableFor(tv);
 		tv.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		tv.setContentProvider(new FaelleContentProvider());
 		tv.setLabelProvider(new FaelleLabelProvider());
