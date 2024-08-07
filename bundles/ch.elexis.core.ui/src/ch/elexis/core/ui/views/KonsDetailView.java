@@ -301,8 +301,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 						.load(encounter.getId(), IEncounter.class, false, true).get();
 				long db_lastupdate = db_encounter.getLastupdate();
 				if (db_lastupdate > actEncounter.getLastupdate()) {
-					CoreOperationAdvisorHolder.get().openInformation("Konsultation wurde aktualisiert",
-							"Die Konsultation wurde zwischenzeitlich aktualisiert.\nAktuelle Version wird geladen.");
+					log.info("[{}] reloading Encounter as changed in db", encounter.getId());
 					text.setDirty(false);
 					LocalLockServiceHolder.get().releaseLock(encounter);
 					setKons(encounter);
