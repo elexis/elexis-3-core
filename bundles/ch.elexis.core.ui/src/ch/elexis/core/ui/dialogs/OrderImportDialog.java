@@ -396,27 +396,32 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		/* Amount on stock */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Lager");
-		column.getColumn().setWidth(60);
+		column.getColumn().setText("Lagerbestand");
+		column.getColumn().setWidth(110);
 		column.setLabelProvider(new StockLabelProvider());
 
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Pharmacode"); //$NON-NLS-1$
-		column.getColumn().setWidth(80);
+		column.getColumn().setWidth(70);
 		column.setLabelProvider(new PharamcodeLabelProvider());
 
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("EAN"); //$NON-NLS-1$
-		column.getColumn().setWidth(110);
+		column.getColumn().setWidth(70);
 		column.setLabelProvider(new EANLabelProvider());
 
 		/* Description */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Beschreibung");
-		column.getColumn().setWidth(300);
+		column.getColumn().setWidth(200);
 		column.setLabelProvider(new DescriptionLabelProvider());
+
+		column = new TableViewerColumn(viewer, SWT.LEFT);
+		column.getColumn().setText("Lager");
+		column.getColumn().setWidth(100);
+		column.setLabelProvider(new StockNameLabelProvider());
 
 	}
 
@@ -745,6 +750,17 @@ public class OrderImportDialog extends TitleAreaDialog {
 			}
 
 			return text;
+		}
+	}
+
+	private class StockNameLabelProvider extends BaseLabelProvider {
+		public String getText(Object element) {
+			if (element instanceof OrderElement) {
+				OrderElement orderElement = (OrderElement) element;
+				IStock stock = orderElement.getStockEntry().getStock();
+				return stock.getId().contains("PatientStock-") ? stock.getDescription() : stock.getCode();
+			}
+			return null;
 		}
 	}
 

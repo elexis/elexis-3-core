@@ -183,7 +183,7 @@ public class BestellView extends ViewPart {
 		});
 		TableViewerColumn tvc3 = new TableViewerColumn(tv, SWT.LEFT);
 		tvc3.getColumn().setText("Lager"); //$NON-NLS-1$
-		tvc3.getColumn().setWidth(50);
+		tvc3.getColumn().setWidth(150);
 
 		tv.setContentProvider(new BestellungContentProvider());
 		blp = new BestellungLabelProvider();
@@ -363,7 +363,8 @@ public class BestellView extends ViewPart {
 				return (k != null) ? k.getLabel() : Messages.Core_Unknown;
 			case 3:
 				IStock s = entry.getStock();
-				return (s != null) ? s.getCode() : StringConstants.EMPTY;
+				return (s != null) ? (s.getId().contains("PatientStock-") ? s.getDescription() : s.getCode())
+						: StringConstants.EMPTY;
 			default:
 				return "?"; //$NON-NLS-1$
 			}
