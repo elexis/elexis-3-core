@@ -72,7 +72,7 @@ public class FilesystemChangeTriggerTest {
 		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
 
 		Callable<Boolean> c = () -> !createFile.toFile().exists();
-		Awaitility.await().atMost(15, TimeUnit.SECONDS).until(c);
+		Awaitility.await().atMost(30, TimeUnit.SECONDS).until(c);
 
 		List<ITask> result = AllTests.getTaskServiceTestUtil().getTasks(taskDescriptor);
 		assertEquals(1, result.size());

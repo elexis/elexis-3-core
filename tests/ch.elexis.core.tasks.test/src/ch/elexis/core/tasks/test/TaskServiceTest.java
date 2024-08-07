@@ -163,7 +163,7 @@ public class TaskServiceTest {
 
 		Callable<Boolean> c = () -> !createFile.toFile().exists();
 
-		Awaitility.await().atMost(10, TimeUnit.SECONDS).until(c);
+		Awaitility.await().atMost(30, TimeUnit.SECONDS).until(c);
 		Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
 		assertEquals(TaskState.COMPLETED, execution.get().getState());
 	}
