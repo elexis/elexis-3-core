@@ -7,6 +7,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.FaelleView;
+import ch.elexis.core.ui.views.Messages;
 import ch.rgw.tools.TimeTool;
 
 /**
@@ -33,7 +34,8 @@ public class FaelleLabelProvider extends StyledCellLabelProvider {
 	public String getToolTipText(Object element) {
 		if (element instanceof ICoverage) {
 			ICoverage fall = (ICoverage) element;
-			return "Letzte Änderung: " + new TimeTool(fall.getLastupdate()).toString(TimeTool.FULL_GER);
+			return Messages.FaelleView_LastUpdated + " "
+					+ new TimeTool(fall.getLastupdate()).toString(TimeTool.FULL_GER);
 		}
 		return null;
 	}
