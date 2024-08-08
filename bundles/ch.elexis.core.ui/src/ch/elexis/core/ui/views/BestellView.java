@@ -35,7 +35,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -52,7 +54,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPage;
@@ -125,16 +126,17 @@ public class BestellView extends ViewPart {
 		parent.setLayout(new FillLayout());
 		form = tk.createForm(parent);
 		Composite body = form.getBody();
-		body.setLayout(new GridLayout());
 		Table table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		body.setLayout(tcLayout);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(false);
 		tv = new TableViewer(table);
 
 		TableViewerColumn tvcNumber = new TableViewerColumn(tv, SWT.CENTER);
 		tvcNumber.getColumn().setText(Messages.Core_Number);
-		tvcNumber.getColumn().setWidth(40);
+		tcLayout.setColumnData(tvcNumber.getColumn(), new ColumnPixelData(40, true, true));
 		ReflectiveEditingSupport poes = new ReflectiveEditingSupport(tv,
 				ModelPackage.Literals.IORDER_ENTRY__AMOUNT.getName());
 		poes.setModelService(CoreModelServiceHolder.get());
@@ -142,11 +144,11 @@ public class BestellView extends ViewPart {
 
 		TableViewerColumn tvcArticle = new TableViewerColumn(tv, SWT.LEFT);
 		tvcArticle.getColumn().setText(Messages.Core_Article);
-		tvcArticle.getColumn().setWidth(280);
+		tcLayout.setColumnData(tvcArticle.getColumn(), new ColumnPixelData(280, true, true));
 
 		TableViewerColumn tvcDealer = new TableViewerColumn(tv, SWT.LEFT);
 		tvcDealer.getColumn().setText(Messages.Core_Article_provider);
-		tvcDealer.getColumn().setWidth(250);
+		tcLayout.setColumnData(tvcDealer.getColumn(), new ColumnPixelData(250, true, true));
 		tvcDealer.setEditingSupport(new EditingSupport(tv) {
 
 			@Override
@@ -181,9 +183,9 @@ public class BestellView extends ViewPart {
 				return (be != null);
 			}
 		});
-		TableViewerColumn tvc3 = new TableViewerColumn(tv, SWT.LEFT);
-		tvc3.getColumn().setText("Lager"); //$NON-NLS-1$
-		tvc3.getColumn().setWidth(150);
+		TableViewerColumn tvcStock = new TableViewerColumn(tv, SWT.LEFT);
+		tvcStock.getColumn().setText("Lager"); //$NON-NLS-1$
+		tcLayout.setColumnData(tvcStock.getColumn(), new ColumnPixelData(150, true, true));
 
 		tv.setContentProvider(new BestellungContentProvider());
 		blp = new BestellungLabelProvider();

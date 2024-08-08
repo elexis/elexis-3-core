@@ -24,9 +24,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -119,6 +121,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 	private Font boldFont;
 
 	private int actionMode;
+
+	private TableColumnLayout tcLayout;
 
 	/**
 	 * @wbp.parser.constructor
@@ -225,6 +229,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		viewer = new TableViewer(tableArea, SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		tcLayout = new TableColumnLayout();
+		tableArea.setLayout(tcLayout);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
@@ -321,7 +327,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		/* OK (checkbox column) */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("OK");
-		column.getColumn().setWidth(50);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(50, true, true));
 		column.setLabelProvider(new CheckboxLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
 			public boolean canEdit(Object element) {
@@ -356,7 +362,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		/* Amount delivered */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Geliefert");
-		column.getColumn().setWidth(60);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(60, true, true));
 		column.setLabelProvider(new AmountLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
 			public boolean canEdit(Object element) {
@@ -397,30 +403,30 @@ public class OrderImportDialog extends TitleAreaDialog {
 		/* Amount on stock */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Lagerbestand");
-		column.getColumn().setWidth(110);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(110, true, true));
 		column.setLabelProvider(new StockLabelProvider());
 
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Pharmacode"); //$NON-NLS-1$
-		column.getColumn().setWidth(70);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
 		column.setLabelProvider(new PharamcodeLabelProvider());
 
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("EAN"); //$NON-NLS-1$
-		column.getColumn().setWidth(70);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
 		column.setLabelProvider(new EANLabelProvider());
 
 		/* Description */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Beschreibung");
-		column.getColumn().setWidth(200);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(200, true, true));
 		column.setLabelProvider(new DescriptionLabelProvider());
 
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText("Lager");
-		column.getColumn().setWidth(100);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(100, true, true));
 		column.setLabelProvider(new StockNameLabelProvider());
 
 	}
