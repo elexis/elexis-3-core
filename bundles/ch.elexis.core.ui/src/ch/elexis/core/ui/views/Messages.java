@@ -150,6 +150,7 @@ public class Messages {
 	public static String FaelleView_FilterConsultations = ch.elexis.core.l10n.Messages.FaelleView_FilterConsultations;
 	public static String FaelleView_ShowOnlyConsOfThisCase = ch.elexis.core.l10n.Messages.FaelleView_ShowOnlyConsOfThisCase;
 	public static String FaelleView_ShowOnlyOpenCase = ch.elexis.core.l10n.Messages.FaelleView_ShowOnlyOpenCase;
+	public static String FaelleView_LastUpdated = ch.elexis.core.l10n.Messages.FaelleView_LastUpdated;
 	public static String Core_Cases = ch.elexis.core.l10n.Messages.Core_Cases;
 	public static String Core_Description = ch.elexis.core.l10n.Messages.Core_Description;
 	public static String FallDetailBlatt2_ApplyData = ch.elexis.core.l10n.Messages.FallDetailBlatt2_ApplyData;
