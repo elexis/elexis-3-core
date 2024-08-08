@@ -184,7 +184,7 @@ public class BestellView extends ViewPart {
 			}
 		});
 		TableViewerColumn tvcStock = new TableViewerColumn(tv, SWT.LEFT);
-		tvcStock.getColumn().setText("Lager"); //$NON-NLS-1$
+		tvcStock.getColumn().setText(Messages.Core_Stock);
 		tcLayout.setColumnData(tvcStock.getColumn(), new ColumnPixelData(150, true, true));
 
 		tv.setContentProvider(new BestellungContentProvider());

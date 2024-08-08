@@ -480,6 +480,8 @@ public class Messages extends NLS {
 	public static String BestellView_loadEarlierOrder;
 	public static String BestellView_saveOrder;
 	public static String BestellView_transmitOrder;
+	public static String BestellView_inventory;
+	public static String BestellView_delivered;
 	public static String BezugsKonktat_FormalerReference;
 	public static String BezugsKontakt_ContactDoesntExist;
 	public static String Bezugskontakt_ConfirmDelete;

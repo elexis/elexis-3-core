@@ -326,7 +326,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		/* OK (checkbox column) */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("OK");
+		column.getColumn().setText(Messages.Core_ok);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(50, true, true));
 		column.setLabelProvider(new CheckboxLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
@@ -361,7 +361,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		/* Amount delivered */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Geliefert");
+		column.getColumn().setText(Messages.BestellView_delivered);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(60, true, true));
 		column.setLabelProvider(new AmountLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
@@ -402,30 +402,30 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		/* Amount on stock */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Lagerbestand");
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(110, true, true));
+		column.getColumn().setText(Messages.BestellView_inventory);
+		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(60, true, true));
 		column.setLabelProvider(new StockLabelProvider());
 
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Pharmacode"); //$NON-NLS-1$
+		column.getColumn().setText(Messages.Core_Phamacode);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
 		column.setLabelProvider(new PharamcodeLabelProvider());
 
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("EAN"); //$NON-NLS-1$
+		column.getColumn().setText(Messages.Core_EAN);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
 		column.setLabelProvider(new EANLabelProvider());
 
 		/* Description */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Beschreibung");
+		column.getColumn().setText(Messages.UI_description);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(200, true, true));
 		column.setLabelProvider(new DescriptionLabelProvider());
 
 		column = new TableViewerColumn(viewer, SWT.LEFT);
-		column.getColumn().setText("Lager");
+		column.getColumn().setText(Messages.Core_Stock);
 		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(100, true, true));
 		column.setLabelProvider(new StockNameLabelProvider());
 
