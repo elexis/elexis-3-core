@@ -592,6 +592,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 		private final String field;
 		private Control control;
+		private String originalValue;
 
 		public Focusreact(final Control control, final String field) {
 			this.field = field;
@@ -599,12 +600,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		}
 
 		@Override
-		public void focusGained(final FocusEvent e) { /* nichts */
+		public void focusGained(final FocusEvent e) {
+			this.originalValue = getValue(control);
 		}
 
 		@Override
 		public void focusLost(final FocusEvent e) {
-			save();
+			if (!getValue(control).equals(originalValue)) {
+				save();
+			}
 		}
 
 		public void save() {

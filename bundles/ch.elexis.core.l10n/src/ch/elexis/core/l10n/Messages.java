@@ -1815,6 +1815,7 @@ public class Messages extends NLS {
 	public static String FaelleView_FilterConsultations;
 	public static String FaelleView_ShowOnlyConsOfThisCase;
 	public static String FaelleView_ShowOnlyOpenCase;
+	public static String FaelleView_LastUpdated;
 	public static String FakturaJournalDetail_Beschreibung;
 	public static String FakturaJournalDetail_Name;
 	public static String FakturaJournalDetail_Rechnungsempfaenger;
