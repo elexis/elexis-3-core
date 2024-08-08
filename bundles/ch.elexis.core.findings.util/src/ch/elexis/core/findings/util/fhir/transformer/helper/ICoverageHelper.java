@@ -66,7 +66,8 @@ public class ICoverageHelper extends AbstractHelper {
 
 	public Optional<IContact> getPolicyHolderByReference(IModelService coreModelService, Reference source) {
 		if (source != null) {
-			Optional<String> localId = FhirUtil.getLocalId(source.getId());
+			String id = source.getId() != null ? source.getId() : source.getReference();
+			Optional<String> localId = FhirUtil.getLocalId(id);
 			if (localId.isPresent()) {
 				return coreModelService.load(localId.get(), IContact.class);
 			}
