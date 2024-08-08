@@ -212,16 +212,6 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho.version}</version>
-					<configuration>
-						<!--<compilerArguments>
-							<inlineJSR />
-							<enableJavadoc />
-						</compilerArguments>-->
-						<compilerArgs>
-							<arg>-inlineJSR</arg>
-							<arg>-enableJavadoc</arg>
-						</compilerArgs>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
