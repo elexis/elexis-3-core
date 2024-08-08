@@ -1,6 +1,7 @@
 package ch.elexis.core.tasks.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -146,7 +147,6 @@ public class TaskServiceTest {
 	 */
 	@Test
 	public void triggerCron() throws TaskException, IOException {
-
 		IIdentifiedRunnable rwcDeleteFile = taskService
 				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		Path createFile = Files.createTempFile(tempDirectory, "test", "txt");
@@ -161,11 +161,15 @@ public class TaskServiceTest {
 		taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.CRON.SCHEMA, "0/5 * * * * ?");
 		taskService.setActive(taskDescriptor, true);
 
-		Callable<Boolean> c = () -> !createFile.toFile().exists();
-
-		Awaitility.await().atMost(30, TimeUnit.SECONDS).until(c);
-		Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
-		assertEquals(TaskState.COMPLETED, execution.get().getState());
+		Callable<Boolean> c = () -> {
+			Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
+			if (execution.isPresent()) {
+				return TaskState.COMPLETED == execution.get().getState();
+			}
+			return false;
+		};
+		Awaitility.with().pollInterval(100, TimeUnit.MILLISECONDS).await().atMost(10, TimeUnit.SECONDS).until(c);
+		assertFalse(createFile.toFile().exists());
 	}
 
 	/**
