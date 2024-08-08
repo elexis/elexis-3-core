@@ -285,4 +285,12 @@ public class Messages {
 	public static String DailyOrderMandantOnlyFollowing = ch.elexis.core.l10n.Messages.DailyOrderMandantOnlyFollowing;
 	public static String DailyOrderMandantNone = ch.elexis.core.l10n.Messages.DailyOrderMandantNone;
 
+	public static String Core_ok = ch.elexis.core.l10n.Messages.Core_Ok;
+	public static String BestellView_delivered = ch.elexis.core.l10n.Messages.BestellView_delivered;
+	public static String BestellView_inventory = ch.elexis.core.l10n.Messages.BestellView_inventory;
+	public static String Core_Phamacode = ch.elexis.core.l10n.Messages.Core_Phamacode;
+	public static String Core_EAN = ch.elexis.core.l10n.Messages.Core_EAN;
+	public static String UI_description = ch.elexis.core.l10n.Messages.UI_description;
+	public static String Core_Stock = ch.elexis.core.l10n.Messages.Core_Stock;
+
 }
