@@ -4,6 +4,6 @@ Bundle-Name: Default_configuration
 Bundle-SymbolicName: ch.elexis.core.logging.default_configuration
 Bundle-Version: 3.2.0.qualifier
 Fragment-Host: ch.qos.logback.classic
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: rsc/
 Bundle-Vendor: elexis.ch

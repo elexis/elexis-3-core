@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipselink Jpa Logging Slf4j
 Bundle-SymbolicName: ch.elexis.core.jpa.logging.slf4j
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Fragment-Host: org.eclipse.persistence.jpa;bundle-version="2.7.1"
 Automatic-Module-Name: ch.elexis.core.jpa.logging.slf4j
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.slf4j

@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,6 +22,7 @@ import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import jakarta.mail.MessagingException;
 
 public class MailClientTest {
 

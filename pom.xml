@@ -23,7 +23,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.elexis.core</groupId>
 	<artifactId>elexis-3-core</artifactId>
-	<version>3.12.0-SNAPSHOT</version>
+	<version>3.13.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
 	<description>Elexis 3 Core Project</description>
@@ -38,9 +38,9 @@
 		<url>http://www.elexis.info</url>
 	</organization>
 	<properties>
-		<elexis.target>2023-09-java17</elexis.target>
+		<elexis.target>2023-09-java21</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>3.0.5</tycho.version>
+		<tycho.version>4.0.8</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<buildplan.plugin.version>1.5</buildplan.plugin.version>
 		<formatter.plugin.version>2.18.0</formatter.plugin.version>
@@ -212,12 +212,6 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho.version}</version>
-					<configuration>
-						<compilerArguments>
-							<inlineJSR />
-							<enableJavadoc />
-						</compilerArguments>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
@@ -227,7 +221,7 @@
 						<dependency>
 							<groupId>org.eclipse.tycho</groupId>
 							<artifactId>tycho-buildtimestamp-jgit</artifactId>
-							<version>3.0.5</version>
+							<version>${tycho.version}</version>
 						</dependency>
 					</dependencies>
 					<configuration>

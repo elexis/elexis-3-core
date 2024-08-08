@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Contains WS Test interface
 Bundle-SymbolicName: ch.elexis.core.services.test.ws
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
 Automatic-Module-Name: ch.elexis.core.services.test.ws
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: com.wstutorial.ws
 Import-Package: javax.jws,
  javax.xml.bind,
