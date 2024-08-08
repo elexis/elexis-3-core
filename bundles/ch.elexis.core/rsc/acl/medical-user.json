@@ -84,7 +84,7 @@
 		"ch.elexis.core.model.IPatient": "cruvdxie",
 		"ch.elexis.core.model.IPayment": "cruvdx",
 		"ch.elexis.core.model.IPerson": "cruvdx",
-		"ch.elexis.core.model.IPrescription": "cruvdxie",
+		"ch.elexis.core.model.IPrescription": "cruvdxzie",
 		"ch.elexis.core.model.IRecipe": "cruvdx",
 		"ch.elexis.core.model.IRelatedContact": "cruvdx",
 		"ch.elexis.core.model.IReminder": "cruvdxie",
