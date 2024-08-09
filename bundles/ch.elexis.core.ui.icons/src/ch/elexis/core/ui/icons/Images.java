@@ -188,6 +188,8 @@ public enum Images {
 	/** clear input field */
 	IMG_CLEAR,
 	/** Perspective Konsultation */
+	IMG_PAGE_EXCEL,
+	/** an excel document */
 	IMG_PERSPECTIVE_KONS,
 	/** Perspective Contacts */
 	IMG_PERSPECTIVE_CONTACTS,

@@ -306,7 +306,7 @@ public class InvoiceActions {
 		exportListAction = new Action(Messages.RnActions_exportListAction) {
 			{
 				setToolTipText(Messages.RnActions_exportListTooltip);
-				setImageDescriptor(Images.IMG_EXPORT.getImageDescriptor());
+				setImageDescriptor(Images.IMG_PAGE_EXCEL.getImageDescriptor());
 			}
 
 			@Override
