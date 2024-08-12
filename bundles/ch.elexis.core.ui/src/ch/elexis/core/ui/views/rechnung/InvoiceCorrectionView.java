@@ -85,8 +85,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
@@ -99,8 +97,10 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosis;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
@@ -152,6 +152,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	private static final Logger log = LoggerFactory.getLogger(InvoiceCorrectionView.class);
 
 	private boolean unlocked;
+
+	@Inject
+	private IContextService contextService;
 
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
@@ -221,8 +224,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 
 	private void adaptForUser(IUser user) {
 		if (actualInvoice != null) {
-			ElexisEventDispatcher.getInstance()
-					.fire(new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+			contextService.postEvent(ElexisEventTopics.EVENT_UPDATE,
+					NoPoUtil.loadAsIdentifiable(actualInvoice, IInvoice.class));
 		} else {
 			reload(null);
 		}
@@ -271,9 +274,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 		parent.setLayout(new GridLayout(1, false));
 		invoiceComposite = new InvoiceComposite(parent);
 		invoiceComposite.createComponents(invoiceCorrectionDTO);
-		Rechnung selected = (Rechnung) ElexisEventDispatcher.getSelected(Rechnung.class);
-		if (selected != null) {
-			reload(selected);
+		java.util.Optional<IInvoice> selected = contextService.getTyped(IInvoice.class);
+		if (selected.isPresent()) {
+			reload((Rechnung) NoPoUtil.loadAsPersistentObject(selected.get()));
 		}
 	}
 
@@ -473,7 +476,7 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 	private void openInvoiceNr(String invoiceNr) {
 		Rechnung r = Rechnung.getFromNr(invoiceNr);
 		if (r != null) {
-			ElexisEventDispatcher.fireSelectionEvent(r);
+			contextService.setTyped(NoPoUtil.loadAsIdentifiable(r, IInvoice.class));
 		} else {
 			MessageDialog.openError(UiDesk.getDisplay().getActiveShell(), "Fehler", "Die Rechnung mit der Nummer: "
 					+ invoiceNr + " konnte nicht geöffnet werden.\nBitte versuchen Sie diesn manuell zu öffnen.");
@@ -612,9 +615,9 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 
 						if ((boolean) e.data) {
 							Konsultation originKons = Konsultation.load(konsultationDTO.getId());
-							ElexisEventDispatcher.fireSelectionEvent(originKons);
+							contextService.setTyped(NoPoUtil.loadAsIdentifiable(originKons, IEncounter.class));
 						} else {
-							ElexisEventDispatcher.clearSelection(Konsultation.class);
+							contextService.removeTyped(IEncounter.class);
 						}
 					}
 				});
@@ -1281,8 +1284,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 							openInvoiceNr(invoiceCorrectionDTO.getNewInvoiceNumber());
 						} else {
 							// reloads the current invoice nr
-							ElexisEventDispatcher.getInstance().fire(
-									new ElexisEvent(actualInvoice, actualInvoice.getClass(), ElexisEvent.EVENT_RELOAD));
+							contextService.postEvent(ElexisEventTopics.EVENT_UPDATE,
+									NoPoUtil.loadAsIdentifiable(actualInvoice, IInvoice.class));
 						}
 					}
 				}
