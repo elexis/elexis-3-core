@@ -292,7 +292,7 @@ public class LaborResultsComposite extends Composite {
 	}
 
 	private List<LabResult> getSelectedResults(ViewerCell cell) {
-		if (cell != null && cell.getColumnIndex() > 2) {
+		if (cell != null && cell.getColumnIndex() > 3) {
 			TreeViewerColumn column = resultColumns.get(cell.getColumnIndex() - 4);
 			TimeTool time = (TimeTool) column.getColumn().getData(COLUMN_DATE_KEY);
 			if ((time != null) && (cell.getElement() instanceof LaborItemResults)) {
