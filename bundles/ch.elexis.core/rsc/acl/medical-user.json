@@ -18,7 +18,7 @@
 		"ACL_VIEW_SELECTION": "x"
 	},
 	"object": {
-		"at.medevit.ch.artikelstamm.IArtikelstammItem": "cruvd",
+		"at.medevit.ch.artikelstamm.IArtikelstammItem": "cruvdie",
 		"at.medevit.elexis.inbox.model.IInboxElement": "cruvdx",
 		"at.medevit.elexis.outbox.model.IOutboxElement": "cruvdx",
 		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung": "cruvdxie",
