@@ -8,9 +8,11 @@ package ch.elexis.core.ui.propertypage;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -18,6 +20,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,7 +34,9 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -161,6 +167,21 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 
+		textEmail.addVerifyListener(new VerifyListener() {
+
+			@Override
+			public void verifyText(VerifyEvent e) {
+				var lSticker = StickerServiceHolder.get().getStickers(pat);
+				if (lSticker.stream().anyMatch(sticker -> sticker.getId().equals("activate_mediorder"))) {
+						if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+								Messages.Mediorder_changeEmail_text)) {
+							e.doit = false;
+						}
+					textEmail.removeVerifyListener(this);
+				}
+			}
+		});
+		
 		return comp;
 	}
 
@@ -193,7 +214,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		if (bd != null) {
 			pat.setDateOfBirth(LocalDateTime.ofInstant(bd.toInstant(), ZoneId.systemDefault()));
 		}
-
+		
 		pat.setLastName(textNachname.getText());
 		pat.setFirstName(textVorname.getText());
 		pat.setEmail(textEmail.getText());

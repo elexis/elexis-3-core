@@ -2988,6 +2988,7 @@ public class Messages extends NLS {
 	public static String MedicsPreferencePage_documentCategoryName;
 	public static String MedicsPreferencePage_labelUploadDirimed;
 	public static String Medics_Page_Cannot_be_displayed;
+	public static String Mediorder_changeEmail_text;
 	public static String MediportClientSetsPrefPage_btn_PartnerinfoAnzeigen;
 	public static String MediportClientSetsPrefPage_default_paramName;
 	public static String MediportClientSetsPrefPage_error_msg_PartnerdateiOeffnen;
