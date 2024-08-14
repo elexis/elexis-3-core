@@ -4,11 +4,10 @@ env:
   TARGET: '2023-09-java21'
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
+  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:${{ env.TARGET }}
 
 on:
   push:
-     branches:
-        - 3.13
   workflow_dispatch:
 
 jobs:
@@ -16,10 +15,10 @@ jobs:
     runs-on: [self-hosted, Linux, x64, Docker]
     steps:
     - uses: actions/checkout@v4
-    - name: pull docker image docker-build:${{ env.TARGET }}
-      run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
-    - name: build using docker image docker-build:${{ env.TARGET }}
-      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B
+    - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
+    - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V -T 1C clean verify -B
     - name: upload artifacts
       run: |
         eval $(ssh-agent -s)
@@ -30,6 +29,6 @@ jobs:
       run: |
         curl -X POST \
         -H "Accept: application/vnd.github.v3+json" \
-        -H "Authorization: token ${{ secrets.TRIGGER_WORKFLOW_TOKEN }}" \
+        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
         https://api.github.com/repos/elexis/elexis-3-base/actions/workflows/build-p2-site.yaml/dispatches \
         -d '{"ref":"${{ env.BRANCH_NAME }}"}'
