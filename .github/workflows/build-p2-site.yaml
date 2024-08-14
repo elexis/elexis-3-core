@@ -1,10 +1,9 @@
 name: Build P2 Site
 
 env:
-  TARGET: '2023-09-java21'
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
-  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:${{ env.TARGET }}
+  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:2023-09-java21
 
 on:
   push:
