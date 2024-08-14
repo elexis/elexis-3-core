@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Base Plugin for Elexis (Business) Tests
 Bundle-SymbolicName: ch.elexis.core.test
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.ch
 Automatic-Module-Name: ch.elexis.core.test
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.7.100",
  ch.elexis.core;bundle-version="3.7.0",
  ch.elexis.core.l10n;bundle-version="3.8.0"

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core Laboratory
 Bundle-SymbolicName: ch.elexis.core.ui.laboratory;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.laboratory.Activator
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
@@ -18,7 +18,7 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  org.jfree.jcommon;bundle-version="1.0.24",
  org.hamcrest;bundle-version="2.2.0",
  org.eclipse.swt
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.jpa.entities,
  ch.elexis.core.services.holder,

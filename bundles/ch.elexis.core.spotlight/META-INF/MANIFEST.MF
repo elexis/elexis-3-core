@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Spotlight Like Single Line Search
 Bundle-SymbolicName: ch.elexis.core.spotlight
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
 Automatic-Module-Name: ch.elexis.core.spotlight
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: ch.elexis.core.spotlight
 Import-Package: org.apache.commons.lang3;version="3.12.0"
 Bundle-ActivationPolicy: lazy

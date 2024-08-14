@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Serial
 Bundle-SymbolicName: ch.elexis.core.serial
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.serial
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: lib/jSerialComm-2.7.0.jar,
  .
 Import-Package: ch.elexis.core.utils,

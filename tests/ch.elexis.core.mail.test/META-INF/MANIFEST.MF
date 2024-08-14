@@ -3,15 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mail Test
 Bundle-SymbolicName: ch.elexis.core.mail.test
 Bundle-Vendor: ch.elexis 
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Fragment-Host: ch.elexis.core.mail
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.junit,
- ch.elexis.core.model;bundle-version="3.9.0",
+ ch.elexis.core.model;bundle-version="3.13.0",
  org.apache.felix.scr;bundle-version="2.2.6",
  org.eclipse.equinox.event;bundle-version="1.6.200",
  ch.elexis.core.test.context;bundle-version="3.12.0"
 Bundle-ClassPath: lib/dumbster1.6.jar,
- lib/greenmail-1.6.2.jar,
- lib/greenmail-junit4-1.6.2.jar,
+ lib/greenmail-2.0.1.jar,
+ lib/greenmail-junit4-2.0.1.jar,
  .

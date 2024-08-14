@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.12.0-SNAPSHOT</version>
+    <version>3.13.0-SNAPSHOT</version>
   </parent>
   <artifactId>ch.elexis.core.hl7.v2x.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -31,7 +31,7 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.logback.rocketchat</id>
+                <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -41,17 +41,17 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.logging.default_configuration</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>org.eclipse.persistence.oracle</id>
+                <id>ch.elexis.core.test.logging</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.qos.logback.slf4j</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>org.eclipse.jetty.osgi.alpn.fragment</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -135,6 +135,16 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.objectweb.asm.util</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>com.google.guava</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -160,6 +170,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.felix.gogo.command</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.jdbc</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -170,12 +185,22 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.text</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.osgi-resource-locator</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.filesystem</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.felix.gogo.shell</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -195,7 +220,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.felix.gogo.runtime</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.geronimo.specs.geronimo-jta_1.1_spec</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.equinox.console</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -210,6 +245,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -220,7 +260,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.slf4j.apis.jcl</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.jvnet.mimepull</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.glassfish.jersey.ext.jersey-proxy-client</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -236,6 +286,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.core.jersey-client</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.google.guava.failureaccess</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -265,7 +320,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.keycloak.keycloak-adapter-spi</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.media.jersey-media-multipart</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.pde.junit.runtime</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -276,6 +341,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.gemini.jpa</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -305,7 +375,22 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.jdt.junit4.runtime</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.google.gson</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.runtime</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-annotations</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -340,6 +425,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.hamcrest.library</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.core.jersey-common</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -370,6 +460,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.objectweb.asm.tree</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.osgi</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -385,12 +480,22 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.jdt.junit.runtime</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>ch.qos.logback.classic</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>javax.activation</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -415,6 +520,16 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.objectweb.asm</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.hamcrest</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.event</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -430,12 +545,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.eclipsesource.jaxrs.consumer</artifactId>
+              <artifactId>org.glassfish.hk2.external.jakarta.inject</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.osgi.util.position</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.objectweb.asm.tree.analysis</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -465,6 +585,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.objectweb.asm.commons</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.provisioning</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -476,11 +601,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-io</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

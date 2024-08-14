@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Import für verschiedene Dateien
 Bundle-SymbolicName: ch.elexis.core.ui.importer.div;singleton:=true
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-ClassPath: .,
  lib/rxtx-api-2.2-stabilize-SNAPSHOT.jar,
@@ -36,7 +36,7 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.elexis.core.ui.icons;bundle-version="3.0.0",
  ch.elexis.core.hl7.v2x;bundle-version="3.0.0",
  ch.elexis.core.importer.div;visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.ui.importer.div.services.LabImportUtilHolder.xml,
  OSGI-INF/ch.elexis.core.ui.importer.div.services.ModelServiceHolder.xml

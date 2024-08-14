@@ -6,6 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: elexis.ch
 Fragment-Host: ch.qos.logback.classic
 Automatic-Module-Name: ch.elexis.core.test.logging
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: rsc/,
  .

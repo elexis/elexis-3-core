@@ -1,9 +1,9 @@
 name: Build Product
 
 env:
-  TARGET: '2023-09-java17'
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
+  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:2023-09-java21
 
 on: workflow_dispatch
 
@@ -12,10 +12,10 @@ jobs:
     runs-on: [self-hosted, Linux, x64, Docker]
     steps:
       - uses: actions/checkout@v4
-      - name: pull docker image docker-build:${{ env.TARGET }}
-        run: docker pull ghcr.io/elexis/docker-build:${{ env.TARGET }}
-      - name: build using docker image docker-build:${{ env.TARGET }}
-        run: docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ghcr.io/elexis/docker-build:${{ env.TARGET }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
+      - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
+        run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
+      - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
+        run: docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
       - name: upload artifacts
         run: |
           eval $(ssh-agent -s)

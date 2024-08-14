@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Findings FHIR Model
 Bundle-SymbolicName: ch.elexis.core.findings.fhir.model
-Bundle-Version: 3.12.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.findings.fhir.model
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.findings;bundle-version="3.10.0",
  ch.elexis.core.jpa;bundle-version="3.10.0",
