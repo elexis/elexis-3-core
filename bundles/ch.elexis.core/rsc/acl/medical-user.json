@@ -54,7 +54,7 @@
 		"ch.elexis.core.model.IBilled": "cruvdx",
 		"ch.elexis.core.model.IBillingSystemFactor": "cruvdx",
 		"ch.elexis.core.model.IBlob": "cruvdx",
-		"ch.elexis.core.model.IBlobSecondary": "cruvdx",
+		"ch.elexis.core.model.IBlobSecondary": "cruvdxz",
 		"ch.elexis.core.model.ICodeElementBlock": "cruvdxie",
 		"ch.elexis.core.model.IConfig": "cruvxz",
 		"ch.elexis.core.model.IContact": "cruvdxie",
