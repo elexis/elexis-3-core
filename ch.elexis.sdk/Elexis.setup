@@ -306,8 +306,8 @@
     <setupTask
         xsi:type="git:GitCloneTask"
         id="medelexis.git.clone"
-        remoteURI="git@gitlab.medelexis.ch:medelexis/medelexis-3.git"
-        pushURI="git@gitlab.medelexis.ch:medelexis/medelexis-3.git">
+        remoteURI="gitlab.medelexis.ch:medelexis/medelexis-3"
+        pushURI="">
       <description>Medelexis 3 plug-ins</description>
     </setupTask>
     <setupTask
@@ -330,8 +330,8 @@
       <setupTask
           xsi:type="git:GitCloneTask"
           id="medelexis.application.git.clone"
-          remoteURI="git@gitlab.medelexis.ch:medelexis-core/medelexis-3-application.git"
-          pushURI="git@gitlab.medelexis.ch:medelexis-core/medelexis-3-application.git">
+          remoteURI="gitlab.medelexis.ch:medelexis-core/medelexis-3-application"
+          pushURI="">
         <description>Medelexis 3 application</description>
       </setupTask>
       <setupTask
