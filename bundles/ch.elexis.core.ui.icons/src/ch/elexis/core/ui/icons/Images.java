@@ -205,6 +205,8 @@ public enum Images {
 	IMG_PERSPECTIVE_BBS,
 	/** Perspective orders */
 	IMG_PERSPECTIVE_ORDERS,
+	/** a document of type excel */
+	IMG_DOCUMENT_EXCEL,
 	/** a document of type pdf */
 	IMG_DOCUMENT_PDF,
 	/** a document of type text */
