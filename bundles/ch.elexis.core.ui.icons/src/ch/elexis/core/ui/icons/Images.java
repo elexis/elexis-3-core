@@ -118,6 +118,8 @@ public enum Images {
 	IMG_BULLET_YELLOW,
 	/** grey bullet */
 	IMG_BULLET_GREY,
+	/** blue bullet */
+	IMG_BULLET_BLUE,
 	/** ok */
 	IMG_OK,
 	/** tick */
