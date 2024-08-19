@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
+
 <product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.13.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
@@ -84,8 +85,8 @@
    </configurations>
 
    <repositories>
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-base" enabled="true" />
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-core" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-base" name="" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-core" name="" enabled="true" />
    </repositories>
 
    <preferencesInfo>
@@ -93,7 +94,6 @@
    </preferencesInfo>
 
    <cssInfo>
-      <file path="platform:/plugin/ch.elexis.core.product/rsc/elexis.css"/>
    </cssInfo>
 
 </product>
