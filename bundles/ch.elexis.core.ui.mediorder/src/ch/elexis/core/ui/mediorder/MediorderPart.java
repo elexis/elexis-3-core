@@ -3,6 +3,7 @@ package ch.elexis.core.ui.mediorder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,14 +35,17 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
@@ -95,6 +99,8 @@ public class MediorderPart implements IRefreshablePart {
 	private final DateTimeFormatter dateFormatter;
 
 	private WritableValue<IStock> selectedDetailStock;
+	
+	private Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -118,13 +124,15 @@ public class MediorderPart implements IRefreshablePart {
 
 	@PostConstruct
 	public void postConstruct(Composite parent, EMenuService menuService) {
-		parent.setLayout(new GridLayout(1, false));
+		parent.setLayout(new FillLayout());
 
 		stockComparator = new StockComparator();
 		medicationComparator = new MedicationComparator();
 
-		createPatientorderListViewer(parent);
-		createPatientorderDetailViewer(parent);
+		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		sashForm.setSashWidth(5);
+		createPatientorderListViewer(sashForm);
+		createPatientorderDetailViewer(sashForm);
 		addDragAndDrop();
 
 		menuService.registerContextMenu(tableViewer.getTable(), "ch.elexis.core.ui.mediorder.popupmenu.viewer"); //$NON-NLS-1$
@@ -150,6 +158,38 @@ public class MediorderPart implements IRefreshablePart {
 			selectedDetailStock.setValue((IStock) selection.getFirstElement());
 		});
 
+		// order status
+		TableViewerColumn tvcOrderState = new TableViewerColumn(tableViewer, SWT.NONE);
+		tvcOrderState.setLabelProvider(new ColumnLabelProvider() {
+
+			@Override
+			public Image getImage(Object element) {
+				IStock stock = (IStock) element;
+				int number = getImageForStock(stock);
+				return switch (number) {
+				case 1 -> Images.IMG_BULLET_GREEN.getImage();
+				case 2 -> Images.IMG_BULLET_YELLOW.getImage();
+				case 3 -> Images.IMG_BULLET_BLUE.getImage();
+				default -> null;
+				};
+			}
+
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+		});
+
+		TableColumn tblclmntvcOrderState = tvcOrderState.getColumn();
+		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnPixelData(20, true, true));
+		tblclmntvcOrderState.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				stockComparator.setColumn(0);
+				refresh();
+			}
+		});
+
 		// patient number
 		TableViewerColumn tvcPatientNumber = new TableViewerColumn(tableViewer, SWT.NONE);
 		tvcPatientNumber.setLabelProvider(new ColumnLabelProvider() {
@@ -161,11 +201,11 @@ public class MediorderPart implements IRefreshablePart {
 		});
 		TableColumn tblclmntvcPatientNumber = tvcPatientNumber.getColumn();
 		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(70, true, true));
-		tblclmntvcPatientNumber.setText("Patient-Nr");
+		tblclmntvcPatientNumber.setText(Messages.Core_Patient_Number);
 		tblclmntvcPatientNumber.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stockComparator.setColumn(0);
+				stockComparator.setColumn(1);
 				refresh();
 			}
 		});
@@ -176,11 +216,11 @@ public class MediorderPart implements IRefreshablePart {
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getLastName()));
 		TableColumn tblclmntvcPatientLastName = tvcPatientLastName.getColumn();
 		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(110, true, true));
-		tblclmntvcPatientLastName.setText("Name");
+		tblclmntvcPatientLastName.setText(Messages.Core_Name);
 		tblclmntvcPatientLastName.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stockComparator.setColumn(1);
+				stockComparator.setColumn(2);
 				refresh();
 			}
 		});
@@ -191,11 +231,11 @@ public class MediorderPart implements IRefreshablePart {
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getFirstName()));
 		TableColumn tblclmntvcPatientFirstName = tvcPatientFirstName.getColumn();
 		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(110, true, true));
-		tblclmntvcPatientFirstName.setText("Vorname");
+		tblclmntvcPatientFirstName.setText(Messages.Core_Firstname);
 		tblclmntvcPatientFirstName.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stockComparator.setColumn(2);
+				stockComparator.setColumn(3);
 				refresh();
 			}
 		});
@@ -212,11 +252,11 @@ public class MediorderPart implements IRefreshablePart {
 		});
 		TableColumn tblclmntvcPatientBirthdate = tvcPatientBirthdate.getColumn();
 		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(90, true, true));
-		tblclmntvcPatientBirthdate.setText("Geburtsdatum");
+		tblclmntvcPatientBirthdate.setText(Messages.Core_Enter_Birthdate);
 		tblclmntvcPatientBirthdate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				stockComparator.setColumn(3);
+				stockComparator.setColumn(4);
 				refresh();
 			}
 		});
@@ -263,13 +303,23 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 
+		// MediorderEntryState
+		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(130, true, true));
+		tblclmntvcMedicationOrdered.setText(Messages.Mediorder_Order_status);
+		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
+		tblclmntvcMedicationOrdered.setToolTipText(Messages.Mediorder_Order_status_Tooltip);
+		tvcMediorderEntryState.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryStateLabel));
+
 		// medication details
 		TableViewerColumn tvcMedication = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		tvcMedication.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IStockEntry) e).getArticle().getLabel()));
 		TableColumn tblclmntvcMedication = tvcMedication.getColumn();
 		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(180, true, true));
-		tblclmntvcMedication.setText("Medikament");
+		tblclmntvcMedication.setText(Messages.Core_Article);
 		tblclmntvcMedication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -292,48 +342,16 @@ public class MediorderPart implements IRefreshablePart {
 			return "";
 		}));
 		TableColumn tblclmntvcMedicationDosage = tvcMedicationDosage.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(60, true, true));
-		tblclmntvcMedicationDosage.setText("Dosis");
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(80, true, true));
+		tblclmntvcMedicationDosage.setText(Messages.Core_Dosage);
 
-		// medication allowed amount for ordering
-		TableViewerColumn tvcMedicationClearance = new TableViewerColumn(tableViewerDetails, SWT.NONE);
-		tvcMedicationClearance.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
-			IStockEntry entry = (IStockEntry) element;
-			return String.valueOf(entry.getMaximumStock());
-		}));
-		tvcMedicationClearance.setEditingSupport(new EditingSupport(tableViewerDetails) {
-
-			@Override
-			protected CellEditor getCellEditor(Object element) {
-				return new TextCellEditor(tableViewerDetails.getTable());
-			}
-
-			@Override
-			protected boolean canEdit(Object element) {
-				return true;
-			}
-
-			@Override
-			protected Object getValue(Object element) {
-				IStockEntry entry = (IStockEntry) element;
-				return String.valueOf(entry.getMaximumStock());
-			}
-
-			@Override
-			protected void setValue(Object element, Object value) {
-				IStockEntry entry = (IStockEntry) element;
-				String amount = (String) value;
-				entry.setMaximumStock(Integer.parseInt(amount));
-				coreModelService.save(entry);
-				tableViewerDetails.refresh(true);
-			}
-
-		});
-		TableColumn tblclmntvcMedicationClearance = tvcMedicationClearance.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnPixelData(60, true, true));
-		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
-		tblclmntvcMedicationClearance.setText("Freigabe");
-		tblclmntvcMedicationClearance.setToolTipText("Anzahl zur Anforderung freigegeben");
+		// medication no days consumption per dosage
+		TableViewerColumn tvcMediorderEntryOutreach = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		tvcMediorderEntryOutreach.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
+		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(120, true, true));
+		tblclmntvcMedicationAmountDay.setText(Messages.Mediorder_sufficient_for);
 
 		// medication designated amount for ordering
 		TableViewerColumn tvcMedicationAmount = new TableViewerColumn(tableViewerDetails, SWT.NONE);
@@ -366,32 +384,56 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMinimumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
+				updateStockImageState(entry.getStock());
 			}
 
 		});
 		TableColumn tblclmntvcMedicationAmount = tvcMedicationAmount.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnPixelData(70, true, true));
-		tblclmntvcMedicationAmount.setText("Angefordert");
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnPixelData(110, true, true));
+		tblclmntvcMedicationAmount.setText(Messages.Mediorder_requested);
 		tblclmntvcMedicationAmount.setImage(Images.IMG_ACHTUNG.getImage());
-		tblclmntvcMedicationAmount.setToolTipText("Anzahl angefordert");
+		tblclmntvcMedicationAmount.setToolTipText(Messages.Mediorder_requested_Tooltip);
 
-		// medication no days consumption per dosage
-		TableViewerColumn tvcMediorderEntryOutreach = new TableViewerColumn(tableViewerDetails, SWT.NONE);
-		tvcMediorderEntryOutreach.setLabelProvider(
-				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
-		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(90, true, true));
-		tblclmntvcMedicationAmountDay.setText("Verbrauchsdauer");
+		// medication allowed amount for ordering
+		TableViewerColumn tvcMedicationClearance = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		tvcMedicationClearance.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
+			IStockEntry entry = (IStockEntry) element;
+			return String.valueOf(entry.getMaximumStock());
+		}));
+		tvcMedicationClearance.setEditingSupport(new EditingSupport(tableViewerDetails) {
 
-		// MediorderEntryState
-		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
-		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(130, true, true));
-		tblclmntvcMedicationOrdered.setText("Bestellt");
-		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
-		tblclmntvcMedicationOrdered.setToolTipText("Anzahl bestellt");
-		tvcMediorderEntryState.setLabelProvider(
-				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryStateLabel));
+			@Override
+			protected CellEditor getCellEditor(Object element) {
+				return new TextCellEditor(tableViewerDetails.getTable());
+			}
+
+			@Override
+			protected boolean canEdit(Object element) {
+				return true;
+			}
+
+			@Override
+			protected Object getValue(Object element) {
+				IStockEntry entry = (IStockEntry) element;
+				return String.valueOf(entry.getMaximumStock());
+			}
+
+			@Override
+			protected void setValue(Object element, Object value) {
+				IStockEntry entry = (IStockEntry) element;
+				String amount = (String) value;
+				entry.setMaximumStock(Integer.parseInt(amount));
+				coreModelService.save(entry);
+				tableViewerDetails.refresh(true);
+				updateStockImageState(entry.getStock());
+			}
+
+		});
+		TableColumn tblclmntvcMedicationClearance = tvcMedicationClearance.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnPixelData(110, true, true));
+		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
+		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
+		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
 	}
 
 	/**
@@ -442,31 +484,38 @@ public class MediorderPart implements IRefreshablePart {
 			IStock ts1 = (IStock) o1;
 			IStock ts2 = (IStock) o2;
 
+			int number1 = getImageForStock(ts1);
+			int number2 = getImageForStock(ts2);
+
 			switch (propertyIndex) {
 			case 0 -> {
+				return Objects.compare(number1, number2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
+			}
+			case 1 -> {
 				Integer patientNr1 = Integer.valueOf(ts1.getId().substring(13));
 				Integer patientNr2 = Integer.valueOf(ts2.getId().substring(13));
 				return Objects.compare(patientNr1, patientNr2, Comparator.nullsFirst(Comparator.naturalOrder()))
 						* direction;
 			}
-			case 1 -> {
+			case 2 -> {
 				String patientName1 = ts1.getOwner().getLastName();
 				String patientName2 = ts2.getOwner().getLastName();
 				return Objects.compare(patientName1, patientName2, Comparator.nullsFirst(Comparator.naturalOrder()))
 						* direction;
 			}
-			case 2 -> {
+			case 3 -> {
 				String patientFirstName1 = ts1.getOwner().getFirstName();
 				String patientFirstName2 = ts2.getOwner().getFirstName();
 				return Objects.compare(patientFirstName1, patientFirstName2,
 						Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			}
-			case 3 -> {
+			case 4 -> {
 				LocalDateTime birthDate1 = ts1.getOwner().getDateOfBirth();
 				return birthDate1.compareTo(ts2.getOwner().getDateOfBirth()) * direction;
 			}
 			}
-
+			
 			return super.compare(viewer, o1, o2);
 
 		}
@@ -530,6 +579,7 @@ public class MediorderPart implements IRefreshablePart {
 			stockEntry.setMaximumStock(1);
 		}
 		coreModelService.save(stockEntry);
+		updateStockImageState(stock);
 	}
 
 	private List<IStock> getPatientStocksWithStockEntry() {
@@ -549,6 +599,31 @@ public class MediorderPart implements IRefreshablePart {
 
 	public IStock getSelectedStock() {
 		return selectedDetailStock.getValue();
+	}
+	
+	private void updateStockImageState(IStock stock) {
+		int state = calculateStockState(stock);
+		imageStockStates.put(stock, state);
+		tableViewer.refresh();
+	}
+
+	private int calculateStockState(IStock stock) {
+		int number = 0;
+		for (IStockEntry entry : stock.getStockEntries()) {
+
+			MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
+			number = switch (entryState) {
+			case IN_STOCK -> 1;
+			case ORDERED, PARTIALLY_ORDERED, PARTIALLY_IN_STOCK -> 2;
+			case AWAITING_REQUEST, REQUESTED, PARTIALLY_REQUESTED, INVALID -> 3;
+			default -> number;
+			};
+		}
+		return number;
+	}
+
+	private int getImageForStock(IStock stock) {
+		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
 	}
 
 }
