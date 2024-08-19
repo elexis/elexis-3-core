@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String ACL_ACCESS_DENIED;
 	public static String ACTION_EXPORT_DESCRIPTION;
 	public static String ACTION_EXPORT_TITLE;
+	public static String ACTION_EXPORT_SUCCESS;
 	public static String ACTION_NEWSTAT_DESCRIPTION;
 	public static String ACTION_NEWSTAT_ERROR_COULDNT_INIT_VIEW;
 	public static String ACTION_NEWSTAT_ERROR_COULDNT_UPDATE_PROVIDER;
@@ -1530,8 +1531,10 @@ public class Messages extends NLS {
 	public static String ERROR_DATE_DIFFERENCE;
 	public static String ERROR_DATE_FORMAT;
 	public static String ERROR_END_DATE_VALID;
+	public static String ERROR_EXPORT_DATA_NOT_EXIST;
 	public static String ERROR_FIELDS_NOT_VALID;
 	public static String ERROR_FIELDS_NOT_VALID_TITLE;
+	public static String ERROR_SELECT_DATA;
 	public static String ERROR_SET_END_DATE;
 	public static String ERROR_SET_START_DATE;
 	public static String ERROR_START_DATE_VALID;
