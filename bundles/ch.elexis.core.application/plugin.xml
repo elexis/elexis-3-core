@@ -607,10 +607,6 @@
         name="rendererFactoryUri"
         value="bundleclass://ch.elexis.core.ui/ch.elexis.core.ui.renderer.ElexisRendererFactory">
       </property>
-       <property
-             name="applicationCSS"
-             value="platform:/plugin/ch.elexis.core.product/rsc/elexis.css">
-       </property>
     </product>
  </extension>
  <extension
