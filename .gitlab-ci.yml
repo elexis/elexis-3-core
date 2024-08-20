@@ -48,7 +48,7 @@ build_product:
   tags:
   - docker-host
   script:
-  - docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "/home/maven/m2-$CI_COMMIT_REF_NAME":/root/.m2 -w /usr/src/mymaven ${DOCKER_BUILD_IMAGE} mvn -V install -pl :ch.elexis.core.p2site -Dmaterialize-products 
+  - docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "/home/maven/m2-$CI_COMMIT_REF_NAME":/root/.m2 -w /usr/src/mymaven ${DOCKER_BUILD_IMAGE} xvfb-run mvn -V clean verify -B -Dmaterialize-products 
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$SSH_PRIVATE_KEY_ED25519_BASE64" | base64 -d)
   - rsync -aiv --no-recursive -e ssh ch.elexis.core.p2site/target/products/* deploy@download.medelexis.ch:download.elexis.info/elexis/$CI_COMMIT_REF_NAME/products/
