@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -47,6 +49,11 @@ import ch.rgw.tools.StringTool;
 
 public class PatListeContentProvider extends CommonViewerContentProvider implements ILazyContentProvider {
 	private static final int QUERY_LIMIT = 500;
+
+	// @formatter:off
+	private final static String sortByNumQuery = "SELECT * FROM kontakt "
+			+ "WHERE (DELETED = 0 AND istPerson = 1) AND istPatient = 1 " 
+			+ "ORDER BY PatientNr+0 ASC";
 
 	Object[] pats;
 	boolean bValid = false;
@@ -92,37 +99,40 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	 * @since 3.2
 	 */
 	public void syncRefresh() {
-		@SuppressWarnings("unchecked")
-		IQuery<IPatient> patientQuery = (IQuery<IPatient>) getBaseQuery();
-		// TODO implement as precondition?
-		patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
+		List<IPatient> lPats;
+		if (!firstOrder.equals("code")) {
+			@SuppressWarnings("unchecked")
+			IQuery<IPatient> patientQuery = (IQuery<IPatient>) getBaseQuery();
+			// TODO implement as precondition?
+			patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
 
-		commonViewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
-		getQueryFilters().forEach(filter -> filter.apply(patientQuery));
-		String[] actualOrder;
-		int idx = StringTool.getIndex(orderFields, firstOrder);
-		if ((idx == -1) || (idx == 0)) {
-			actualOrder = orderFields;
-		} else {
-			actualOrder = new String[orderFields.length];
-			int n = 0;
-			int begin = idx;
-			do {
-				actualOrder[n++] = orderFields[idx++];
-				if (idx >= orderFields.length) {
-					idx = 0;
-				}
-			} while (idx != begin);
-		}
-		if (actualOrder != null && actualOrder.length > 0) {
-			for (String order : actualOrder) {
-				patientQuery.orderBy(order, ORDER.ASC);
+			commonViewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
+			getQueryFilters().forEach(filter -> filter.apply(patientQuery));
+			String[] actualOrder;
+			int idx = StringTool.getIndex(orderFields, firstOrder);
+			if ((idx == -1) || (idx == 0)) {
+				actualOrder = orderFields;
+			} else {
+				actualOrder = new String[orderFields.length];
+				int n = 0;
+				int begin = idx;
+				do {
+					actualOrder[n++] = orderFields[idx++];
+					if (idx >= orderFields.length) {
+						idx = 0;
+					}
+				} while (idx != begin);
 			}
+			if (actualOrder != null && actualOrder.length > 0) {
+				for (String order : actualOrder) {
+					patientQuery.orderBy(order, ORDER.ASC);
+				}
+			}
+			lPats = patientQuery.execute();
+		} else {
+			lPats = getNumSortedList();
 		}
-		List<IPatient> lPats = patientQuery.execute();
-		if (!ignoreLimit) {
-			commonViewer.setLimitReached(lPats.size() == QUERY_LIMIT, QUERY_LIMIT);
-		}
+
 		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
@@ -133,6 +143,8 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 					tv.setItemCount(pats.length);
 					bValid = true;
 					tv.refresh();
+					commonViewer.resetScrollbarPosition(tv, ignoreLimit);
+					commonViewer.setLimitReached(pats.length == QUERY_LIMIT, QUERY_LIMIT);
 				}
 				bUpdating = false;
 			}
@@ -229,6 +241,21 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 				tv.replace(StringConstants.DASH, index);
 			}
 		}
+	}
+
+	
+	/**
+	 * Execute query to fetch and return a numerically sorted list
+	 * 
+	 * @return
+	 */
+	private List<IPatient> getNumSortedList() {
+		String query = sortByNumQuery;
+		if (!ignoreLimit) {
+			query = sortByNumQuery + " LIMIT " + QUERY_LIMIT;
+		}
+		Stream<IPatient> patientQuery = CoreModelServiceHolder.get().executeNativeQuery(query, IPatient.class);
+		return patientQuery.collect(Collectors.toList());
 	}
 
 	public void invalidate() {
