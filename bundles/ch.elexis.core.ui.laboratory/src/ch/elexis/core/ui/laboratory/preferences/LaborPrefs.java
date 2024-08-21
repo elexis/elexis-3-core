@@ -15,16 +15,17 @@ package ch.elexis.core.ui.laboratory.preferences;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -58,8 +59,14 @@ import org.eclipse.ui.handlers.IHandlerService;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.ILabMapping;
+import ch.elexis.core.model.ILabResult;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.commands.CreateImportMappingUi;
 import ch.elexis.core.ui.laboratory.commands.CreateLabItemUi;
@@ -68,10 +75,6 @@ import ch.elexis.core.ui.laboratory.commands.CreateMergeLabItemUi;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
 import ch.elexis.core.ui.laboratory.dialogs.LabItemViewerFilter;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.LabItem;
-import ch.elexis.data.LabMapping;
-import ch.elexis.data.LabResult;
-import ch.elexis.data.Query;
 
 public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -92,6 +95,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		super(Messages.LaborPrefs_labTitle);
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		noDefaultAndApplyButton();
 
@@ -116,7 +120,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		TableColumnLayout tableColumnLayout = new TableColumnLayout();
 		tableComposite.setLayout(tableColumnLayout);
 
-		tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		table = tableViewer.getTable();
 		tableViewer.setLabelProvider(labListLabelProvider);
 		tableViewer.addFilter(viewerFilter);
@@ -138,29 +142,19 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		tableViewer.setContentProvider(new IStructuredContentProvider() {
-
-			public Object[] getElements(Object inputElement) {
-				return LabItem.getLabItems().toArray();
-			}
-
-			public void dispose() {
-			}
-
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			}
-
-		});
+		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
 
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = tableViewer.getStructuredSelection();
 				Object o = sel.getFirstElement();
-				if (o instanceof LabItem) {
-					LabItem li = (LabItem) o;
-					EditLabItemUi.executeWithParams(li);
-					tableViewer.refresh(li);
+				if (o instanceof ILabItem) {
+					ILabItem li = (ILabItem) o;
+					EditLabItemUi.executeWithParams(NoPoUtil.loadAsPersistentObject(li));
+					CoreModelServiceHolder.get().refresh(li, true);
+					tableViewer.refresh();
 				}
 			}
 
@@ -168,13 +162,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		tableViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				LabItem li1 = (LabItem) e1;
-				LabItem li2 = (LabItem) e2;
+				ILabItem li1 = (ILabItem) e1;
+				ILabItem li2 = (ILabItem) e2;
 				String s1 = StringUtils.EMPTY, s2 = StringUtils.EMPTY; // $NON-NLS-1$
 				switch (sortC) {
 				case 1:
-					s1 = li1.getKuerzel();
-					s2 = li2.getKuerzel();
+					s1 = li1.getCode();
+					s2 = li2.getCode();
 					break;
 				case 3:
 					s1 = li1.getTyp().toString();
@@ -191,12 +185,12 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				int res = s1.compareToIgnoreCase(s2);
 				if (res == 0) {
 					try {
-						Integer no1 = Integer.parseInt(li1.getPrio());
-						Integer no2 = Integer.parseInt(li2.getPrio());
+						Integer no1 = Integer.parseInt(li1.getPriority());
+						Integer no2 = Integer.parseInt(li2.getPriority());
 
 						return no1.compareTo(no2);
 					} catch (NumberFormatException nfe) {
-						return li1.getPrio().compareToIgnoreCase(li2.getPrio());
+						return li1.getPriority().compareToIgnoreCase(li2.getPriority());
 					}
 				}
 				return res;
@@ -210,39 +204,39 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			@Override
 			public void dragSetData(DragSourceEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-				LabItem labItem = (LabItem) selection.getFirstElement();
+				ILabItem labItem = (ILabItem) selection.getFirstElement();
 				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data = labItem.getKuerzel() + "," + labItem.getName() + "," + labItem.getId(); //$NON-NLS-1$ //$NON-NLS-2$
+					event.data = labItem.getCode() + "," + labItem.getName() + "," + labItem.getId(); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		});
 
-		tableViewer.setInput(this);
+		reload();
 		return tableComposite;
+	}
+
+	private void reload() {
+		CompletableFuture.runAsync(() -> {
+			List<ILabItem> allLabItems = CoreModelServiceHolder.get().getQuery(ILabItem.class).execute();
+			Display.getDefault().asyncExec(() -> {
+				tableViewer.setInput(allLabItems);
+			});
+		});
 	}
 
 	static class LabListLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
-			LabItem li = (LabItem) element;
-
-			String[] values = li.get(true, LabItem.TITLE, LabItem.SHORTNAME, LabItem.LOINCCODE, LabItem.UNIT,
-					LabItem.REF_MALE, LabItem.REF_FEMALE_OR_TEXT, LabItem.GROUP, LabItem.PRIO);
-			String name = values[0];
-			String kuerzel = values[1];
-			String loinccode = values[2];
-			String einheit = values[3];
-			String refM = values[4];
-			String refF = values[5].split("##")[0]; //$NON-NLS-1$
-			String groupPrio = values[6] + " - " + values[7]; //$NON-NLS-1$
+			ILabItem li = (ILabItem) element;
 
 			switch (columnIndex) {
 			case 0:
-				return name;
+				return li.getName();
 			case 1:
-				return kuerzel;
+				return li.getCode();
 			case 2:
-				return loinccode;
+				return li.getLoincCode();
 			case 3:
 				LabItemTyp typ = li.getTyp();
 				if (typ == LabItemTyp.NUMERIC) {
@@ -256,13 +250,13 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				}
 				return Messages.Core_Absolute;
 			case 4:
-				return einheit;
+				return li.getUnit();
 			case 5:
-				return refM;
+				return li.getReferenceMale();
 			case 6:
-				return refF;
+				return li.getReferenceFemale();
 			case 7:
-				return groupPrio; // $NON-NLS-1$
+				return li.getGroup() + " - " + li.getPriority(); // $NON-NLS-1$
 			default:
 				return "?col?"; //$NON-NLS-1$
 			}
@@ -276,7 +270,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 
 		@Override
 		public Color getBackground(Object element) {
-			LabItem li = (LabItem) element;
+			ILabItem li = (ILabItem) element;
 			if (li.isVisible()) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 			} else {
@@ -295,7 +289,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					IHandlerService handlerService = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow().getService(IHandlerService.class);
 
 					handlerService.executeCommand(CreateMappingFrom2_1_7.COMMANDID, null);
@@ -315,7 +309,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						// execute the command
-						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+						IHandlerService handlerService = PlatformUI.getWorkbench()
 								.getActiveWorkbenchWindow().getService(IHandlerService.class);
 
 						handlerService.executeCommand(CreateMergeLabItemUi.COMMANDID, null);
@@ -335,7 +329,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					IHandlerService handlerService = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow().getService(IHandlerService.class);
 
 					handlerService.executeCommand(CreateImportMappingUi.COMMANDID, null);
@@ -353,7 +347,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					// execute the command
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					IHandlerService handlerService = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow().getService(IHandlerService.class);
 
 					handlerService.executeCommand(CreateLabItemUi.COMMANDID, null);
@@ -367,16 +361,17 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelItem = new Button(parent, SWT.PUSH);
 		bDelItem.setText(Messages.LaborPrefs_deleteItem);
 		bDelItem.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) tableViewer.getSelection();
 				Object o = sel.getFirstElement();
-				if (o instanceof LabItem) {
-					LabItem li = (LabItem) o;
+				if (o instanceof ILabItem) {
+					ILabItem li = (ILabItem) o;
 					if (MessageDialog.openQuestion(getShell(), Messages.LaborPrefs_deleteItem,
 							MessageFormat.format(Messages.LaborPrefs_deleteReallyItem, li.getLabel()))) {
 						if (deleteResults(li)) {
 							deleteMappings(li);
-							li.delete();
+							CoreModelServiceHolder.get().delete(li);
 							tableViewer.remove(li);
 						} else {
 							MessageDialog.openWarning(getShell(), Messages.LaborPrefs_deleteItem,
@@ -390,16 +385,16 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		Button bDelAllItems = new Button(parent, SWT.PUSH);
 		bDelAllItems.setText(Messages.LaborPrefs_deleteAllItems);
 		bDelAllItems.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (SWTHelper.askYesNo(Messages.LaborPrefs_deleteReallyAllItems,
 						Messages.LaborPrefs_deleteAllExplain)) {
-					Query<LabItem> qbli = new Query<>(LabItem.class);
-					List<LabItem> items = qbli.execute();
+					List<ILabItem> items = CoreModelServiceHolder.get().getQuery(ILabItem.class).execute();
 					boolean success = true;
-					for (LabItem li : items) {
+					for (ILabItem li : items) {
 						if (deleteResults(li)) {
 							deleteMappings(li);
-							li.delete();
+							CoreModelServiceHolder.get().delete(li);
 						} else {
 							success = false;
 						}
@@ -417,15 +412,14 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		}
 	}
 
-	private boolean deleteResults(LabItem li) {
+	private boolean deleteResults(ILabItem li) {
 		boolean ret = true;
-		Query<LabResult> qbe = new Query<>(LabResult.class);
-		qbe.add(LabResult.ITEM_ID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		List<LabResult> list = qbe.execute();
-		for (LabResult po : list) {
-			if (LocalLockServiceHolder.get().acquireLock(po).isOk()) {
-				po.delete();
-				LocalLockServiceHolder.get().releaseLock(po);
+		List<ILabResult> list = CoreModelServiceHolder.get().getQuery(ILabResult.class)
+				.and(ModelPackage.Literals.ILAB_RESULT__ITEM, COMPARATOR.EQUALS, li).execute();
+		for (ILabResult lr : list) {
+			if (LocalLockServiceHolder.get().acquireLock(lr).isOk()) {
+				CoreModelServiceHolder.get().delete(lr);
+				LocalLockServiceHolder.get().releaseLock(lr);
 			} else {
 				ret = false;
 			}
@@ -433,15 +427,15 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 		return ret;
 	}
 
-	private void deleteMappings(LabItem li) {
-		Query<LabMapping> qbe = new Query<>(LabMapping.class);
-		qbe.add(LabMapping.FLD_LABITEMID, "=", li.getId()); //$NON-NLS-1$ //$NON-NLS-2$
-		List<LabMapping> list = qbe.execute();
-		for (LabMapping po : list) {
-			po.delete();
+	private void deleteMappings(ILabItem li) {
+		List<ILabMapping> list = CoreModelServiceHolder.get().getQuery(ILabMapping.class)
+				.and(ModelPackage.Literals.ILAB_MAPPING__ITEM, COMPARATOR.EQUALS, li).execute();
+		for (ILabMapping lm : list) {
+			CoreModelServiceHolder.get().delete(lm);
 		}
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 		// Nothing to initialize
 	}

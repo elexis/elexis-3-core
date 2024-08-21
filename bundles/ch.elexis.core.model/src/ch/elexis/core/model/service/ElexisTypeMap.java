@@ -17,6 +17,7 @@ import ch.elexis.core.jpa.entities.FreeTextDiagnosis;
 import ch.elexis.core.jpa.entities.Heap;
 import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.LabItem;
 import ch.elexis.core.jpa.entities.LabResult;
 import ch.elexis.core.jpa.entities.Labor2009Tarif;
 import ch.elexis.core.jpa.entities.Leistungsblock;
@@ -67,6 +68,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_KONTAKT = "ch.elexis.data.Kontakt";
 	public static final String TYPE_LABORATORY = "ch.elexis.data.Labor";
 	public static final String TYPE_LABOR2009TARIF = "ch.elexis.labortarif2009.data.Labor2009Tarif";
+	public static final String TYPE_LABITEM = "ch.elexis.data.LabItem";
 	public static final String TYPE_LABRESULT = "ch.elexis.data.LabResult";
 	public static final String TYPE_ORGANISATION = "ch.elexis.data.Organisation";
 	public static final String TYPE_PATIENT = "ch.elexis.data.Patient";
@@ -108,6 +110,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Fall.class, TYPE_FALL);
 		stsToClassMap.put(TYPE_LABOR2009TARIF, Labor2009Tarif.class);
 		classToStsMap.put(Labor2009Tarif.class, TYPE_LABOR2009TARIF);
+		stsToClassMap.put(TYPE_LABITEM, LabItem.class);
+		classToStsMap.put(LabItem.class, TYPE_LABITEM);
 		stsToClassMap.put(TYPE_LABRESULT, LabResult.class);
 		classToStsMap.put(LabResult.class, TYPE_LABRESULT);
 		stsToClassMap.put(TYPE_KONSULTATION, Behandlung.class);
