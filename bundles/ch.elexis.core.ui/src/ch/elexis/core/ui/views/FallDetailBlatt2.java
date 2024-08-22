@@ -481,6 +481,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			public void widgetSelected(SelectionEvent e) {
 				boolean b = btnNoElectronicDelivery.getSelection();
 				getSelectedFall().setInfoString(FallConstants.FLD_EXT_NO_ELECTRONIC_DELIVERY, b ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+				fireSelectedFallUpdateEvent();
 			};
 		});
 		btnNoElectronicDelivery.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -699,9 +700,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	 */
 	@SuppressWarnings("unchecked")
 	public void setFall(final IFall f) {
-		if (actFall != null) {
-			save();
-		}
 		// *** dispose of currently displayed fields
 		actFall = f;
 		for (Control c : lReqs) {
