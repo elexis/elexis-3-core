@@ -18,7 +18,9 @@ import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.e4.dialog.StatusDialog;
+import ch.elexis.core.ui.mediorder.MediorderEntryState;
 import ch.elexis.core.ui.mediorder.MediorderPart;
+import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 
 public class BillAndCloseMediorderEntryHandler extends AbstractBillAndCloseMediorderHandler {
 
@@ -37,9 +39,13 @@ public class BillAndCloseMediorderEntryHandler extends AbstractBillAndCloseMedio
 			IBillingService billingService) {
 
 		MediorderPart mediOrderPart = (MediorderPart) part.getObject();
-		List<IStockEntry> selectedStockEntries = mediOrderPart.getSelectedStockEntries();
+		List<IStockEntry> readyToBillStockEntries = mediOrderPart.getSelectedStockEntries().stream().filter(entry -> {
+			MediorderEntryState state = MediorderPartUtil.determineState(entry);
+			return state == MediorderEntryState.IN_STOCK || state == MediorderEntryState.PARTIALLY_IN_STOCK;
+		}).toList();
+
 		IStatus status = billAndClose(coreModelService, contextService, coverageService, billingService,
-				selectedStockEntries);
+				readyToBillStockEntries);
 		StatusDialog.show(status, false);
 
 		mediOrderPart.refresh();
