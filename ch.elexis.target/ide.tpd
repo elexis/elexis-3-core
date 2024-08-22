@@ -147,6 +147,7 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	// Chromium
 	com.equo.chromium.feature.feature.group
 	com.equo.chromium.cef.feature.feature.group
+	com.equo.chromium.cef.arm.feature.feature.group
 	
 	// additional jetty bundles for server
 	info.elexis.target.jetty.additions.feature.group
