@@ -82,9 +82,9 @@ For details consult [deven.sh](https://devenv.sh/). Resuming [getting started](h
     # install direnv, eg. debian sudo apt install direnv
     direnv allow
 
-Now you should be able to use maven e.g via
+Now you can test (build, running unit tests, building products) using the `devenv test` command.
 
-    mvn -V clean verify  -Dtycho.localArtifacts=ignore -Dmaterialize-products
+Or use use any maven command e.g `mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests` to just compile all code.
 
 ### Eclipse IDE-Preferences
 
