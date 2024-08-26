@@ -435,4 +435,12 @@ public interface ILabItem extends Identifiable, Deleteable {
 	 */
 	String getVariableName();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isNoReferenceValueItem();
+
 } // ILabItem

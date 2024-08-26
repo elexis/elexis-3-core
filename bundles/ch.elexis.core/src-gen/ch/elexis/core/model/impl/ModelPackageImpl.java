@@ -6293,6 +6293,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		addEOperation(iLabItemEClass, ecorePackage.getEString(), "getVariableName", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		addEOperation(iLabItemEClass, ecorePackage.getEBoolean(), "isNoReferenceValueItem", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(iLabResultEClass, ILabResult.class, "ILabResult", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getILabResult_Result(), ecorePackage.getEString(), "result", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getILabResult_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, ILabResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

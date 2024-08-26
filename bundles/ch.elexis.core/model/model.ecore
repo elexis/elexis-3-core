@@ -252,6 +252,7 @@
         <details key="documentation" value="the variable name of this LabItem as used in LabItems of type formula for cross-reference"/>
       </eAnnotations>
     </eOperations>
+    <eOperations name="isNoReferenceValueItem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typ" eType="ecore:EDataType types.ecore#//LabItemTyp"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceMale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceFemale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

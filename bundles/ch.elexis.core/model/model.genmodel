@@ -183,6 +183,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabItem/export"/>
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference model.ecore#//ILabItem/mappings"/>
       <genOperations ecoreOperation="model.ecore#//ILabItem/getVariableName"/>
+      <genOperations ecoreOperation="model.ecore#//ILabItem/isNoReferenceValueItem"/>
     </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//ILabResult">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//ILabResult/result"/>

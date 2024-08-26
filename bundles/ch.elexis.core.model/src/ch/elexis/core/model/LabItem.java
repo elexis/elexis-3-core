@@ -168,6 +168,12 @@ public class LabItem extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 	}
 
 	@Override
+	public boolean isNoReferenceValueItem() {
+		return LabItemConstants.REFVAL_INCONCLUSIVE.equals(getReferenceMale())
+				&& LabItemConstants.REFVAL_INCONCLUSIVE.equals(getReferenceFemale());
+	}
+
+	@Override
 	public List<ILabMapping> getMappings() {
 		CoreModelServiceHolder.get().refresh(this);
 		return getEntity().getMappings().parallelStream().filter(f -> !f.isDeleted())
