@@ -6,11 +6,14 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
 	<changeSet author="thomas"
-		id="manual_changetype_konto_betrag" dbms="mysql, mariadb, h2">
+		id="manual_changetype_konto_betrag" dbms="mysql, mariadb">
 		<preConditions onFail="MARK_RAN">
 			<and>
 				<tableExists tableName="KONTO" />
 				<columnExists tableName="KONTO" columnName="BETRAG" />
+				<not>
+					<columnExists tableName="KONTO" columnName="BETRAGOLD" />
+				</not>
 			</and>
 		</preConditions>
 		<sql>
@@ -19,19 +22,22 @@ ALTER TABLE konto ADD BetragInt int not null default 0;
 
 UPDATE konto SET BetragInt = CAST(COALESCE(Betrag, '0') AS SIGNED);
 
-ALTER TABLE konto RENAME COLUMN Betrag TO BetragOld;
+ALTER TABLE konto CHANGE COLUMN Betrag BetragOld CHAR(8);
 
-ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
+ALTER TABLE konto CHANGE COLUMN BetragInt Betrag INT;
 ]]>
 		</sql>
 	</changeSet>
 
 	<changeSet author="thomas"
-		id="manual_changetype_konto_betrag" dbms="postgresql">
+		id="manual_changetype_konto_betrag" dbms="postgresql, h2">
 		<preConditions onFail="MARK_RAN">
 			<and>
 				<tableExists tableName="KONTO" />
 				<columnExists tableName="KONTO" columnName="BETRAG" />
+				<not>
+					<columnExists tableName="KONTO" columnName="BETRAGOLD" />
+				</not>
 			</and>
 		</preConditions>
 		<sql>
