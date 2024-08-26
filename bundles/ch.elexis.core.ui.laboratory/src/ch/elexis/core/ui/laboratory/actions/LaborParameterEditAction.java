@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import ch.elexis.admin.Messages;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.laboratory.commands.EditLabItemUi;
@@ -28,7 +29,7 @@ public class LaborParameterEditAction extends RestrictedAction {
 	public void doRun() {
 		if (currentSelection != null && currentSelection.size() == 1) {
 			LabItem labItem = (LabItem) currentSelection.get(0).getItem();
-			EditLabItemUi.executeWithParams(labItem);
+			EditLabItemUi.executeWithParams(NoPoUtil.loadAsIdentifiable(labItem, ILabItem.class).orElse(null));
 		}
 
 	}

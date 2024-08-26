@@ -99,4 +99,35 @@ public class LabResultConstants {
 		}
 		return false;
 	}
+
+	public static boolean isValidNumericRefValue(String value) {
+		List<String> refs = parseRefString(value);
+		for (String string : refs) {
+			try {
+				if (string.trim().startsWith("<") || string.trim().startsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$
+					Double.parseDouble(string.substring(1).trim());
+				} else {
+					String[] range = string.split("\\s*-\\s*"); //$NON-NLS-1$
+					if (range.length == 2) {
+						Double.parseDouble(range[0]);
+						Double.parseDouble(range[1]);
+					} else {
+						return false;
+					}
+				}
+			} catch (NumberFormatException nfe) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidAbsoluteRefValue(String value) {
+		for (String string : VALID_ABS_VALUES) {
+			if (value.trim().equals(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

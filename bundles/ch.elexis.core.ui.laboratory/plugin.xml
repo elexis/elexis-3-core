@@ -50,8 +50,7 @@
          <commandParameter
                id="ch.elexis.labitem.edit.selected"
                name="Selected LabItem"
-               optional="true"
-               typeId="ch.elexis.PersistentObjectType">
+               optional="true">
          </commandParameter>
       </command>
       <command

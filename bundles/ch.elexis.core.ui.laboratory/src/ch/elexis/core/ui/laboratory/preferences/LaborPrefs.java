@@ -59,7 +59,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabResult;
@@ -152,7 +151,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				Object o = sel.getFirstElement();
 				if (o instanceof ILabItem) {
 					ILabItem li = (ILabItem) o;
-					EditLabItemUi.executeWithParams(NoPoUtil.loadAsPersistentObject(li));
+					EditLabItemUi.executeWithParams(li);
 					CoreModelServiceHolder.get().refresh(li, true);
 					tableViewer.refresh();
 				}

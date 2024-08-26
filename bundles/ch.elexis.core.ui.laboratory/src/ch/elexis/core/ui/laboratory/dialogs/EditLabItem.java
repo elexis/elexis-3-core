@@ -28,21 +28,20 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
+import ch.elexis.core.model.ILabItem;
+import ch.elexis.core.model.LabItemConstants;
+import ch.elexis.core.model.builder.ILabItemBuilder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.laboratory.controls.LaborMappingComposite;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.WidgetFactory;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.data.Kontakt;
-import ch.elexis.data.LabItem;
-import ch.elexis.data.Labor;
 import ch.elexis.scripting.ScriptEditor;
 import ch.rgw.tools.StringTool;
 
@@ -55,26 +54,20 @@ public class EditLabItem extends TitleAreaDialog {
 	Button alph, numeric, abs, formula, document, visible;
 	String formel;
 	org.eclipse.swt.widgets.List labors;
-	Labor actLabor;
-	LabItem actLabItem;
+	ILabItem actLabItem;
 	ArrayList<String> groups;
 	ArrayList<String> exportTags;
 
 	private Text loincCode;
 	private Button loincCodeSelection;
-	Label originLaboratory;
-	Button originLaboratorySelection;
 	Button noRefValues;
 
-	public EditLabItem(Shell parentShell, LabItem act) {
+	public EditLabItem(Shell parentShell, ILabItem act) {
 		super(parentShell);
 
 		groups = new ArrayList<>();
 		exportTags = new ArrayList<>();
 		actLabItem = act;
-		if (act != null) {
-			actLabor = (actLabItem != null) ? actLabItem.getLabor() : null;
-		}
 	}
 
 	@Override
@@ -164,10 +157,10 @@ public class EditLabItem extends TitleAreaDialog {
 		iUnit.setTextLimit(25);
 		WidgetFactory.createLabel(ret, Messages.Core_Group);
 
-		List<LabItem> labItems = LabItem.getLabItems();
+		List<ILabItem> labItems = CoreModelServiceHolder.get().getQuery(ILabItem.class).execute();
 		groups.clear();
 		exportTags.clear();
-		for (LabItem li : (List<LabItem>) labItems) {
+		for (ILabItem li : labItems) {
 			if (li.getExport() != null && li.getExport().length() > 0 && !exportTags.contains(li.getExport())) {
 				exportTags.add(li.getExport());
 			}
@@ -187,28 +180,6 @@ public class EditLabItem extends TitleAreaDialog {
 		iPrio.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		iPrio.setToolTipText(Messages.Core_Sequence_inside_group);
 		iPrio.setTextLimit(3);
-
-		WidgetFactory.createLabel(ret, Messages.EditLabItem_OriginLaboratoryLabel);
-		originLaboratory = new Label(ret, SWT.None);
-		originLaboratory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		originLaboratory.setText((actLabor != null) ? actLabor.getLabel() : StringUtils.EMPTY);
-		originLaboratorySelection = new Button(ret, SWT.PUSH);
-		originLaboratorySelection.setText("..."); //$NON-NLS-1$
-		originLaboratorySelection.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				KontaktSelektor ksl = new KontaktSelektor(getShell(), Labor.class,
-						Messages.Laboratory_Please_Select_Origin,
-						Messages.Laboratory_Please_Select_Origin, false);
-				if (ksl.open() == Dialog.OK) {
-					actLabor = (Labor) ksl.getSelection();
-					originLaboratory.setText(actLabor.getLabel());
-				} else {
-					actLabor = null;
-					originLaboratory.setText(StringUtils.EMPTY);
-				}
-			}
-		});
 
 		WidgetFactory.createLabel(ret, "LOINC"); //$NON-NLS-1$
 		loincCode = new Text(ret, SWT.BORDER);
@@ -245,7 +216,7 @@ public class EditLabItem extends TitleAreaDialog {
 		cExportTag.setItems(exportTags.toArray(new String[0]));
 
 		if (actLabItem != null) {
-			iKuerzel.setText(actLabItem.getKuerzel());
+			iKuerzel.setText(actLabItem.getCode());
 			iTitel.setText(actLabItem.getName());
 			if (actLabItem.getTyp() == LabItemTyp.NUMERIC) {
 				numeric.setSelection(true);
@@ -259,16 +230,16 @@ public class EditLabItem extends TitleAreaDialog {
 			} else {
 				formula.setSelection(true);
 			}
-			iUnit.setText(actLabItem.getEinheit());
-			iRef.setText(actLabItem.get(LabItem.REF_MALE));
-			iRfF.setText(actLabItem.getRefW());
-			cGroup.setText(actLabItem.getGroup());
-			iPrio.setText(actLabItem.getPrio());
+			loincCode.setText(StringUtils.defaultString(actLabItem.getLoincCode()));
+			iRef.setText(StringUtils.defaultString(actLabItem.getReferenceMale()));
+			iRfF.setText(StringUtils.defaultString(actLabItem.getReferenceFemale()));
+			iUnit.setText(StringUtils.defaultString(actLabItem.getUnit()));
+			cGroup.setText(StringUtils.defaultString(actLabItem.getGroup()));
+			iPrio.setText(StringUtils.defaultString(actLabItem.getPriority()));
 			iComma.setText(Integer.toString(actLabItem.getDigits()));
 			visible.setSelection(actLabItem.isVisible());
-			loincCode.setText(actLabItem.getLoincCode());
-			cExportTag.setText(actLabItem.getExport());
-			formel = actLabItem.getFormula();
+			cExportTag.setText(StringUtils.defaultString(actLabItem.getExport()));
+			formel = StringUtils.defaultString(actLabItem.getFormula());
 		}
 		return ret;
 	}
@@ -306,31 +277,27 @@ public class EditLabItem extends TitleAreaDialog {
 		String refValMale = iRef.getText();
 		String refValFemale = iRfF.getText();
 		if (noRefValues.getSelection()) {
-			refValMale = LabItem.REFVAL_INCONCLUSIVE;
-			refValFemale = LabItem.REFVAL_INCONCLUSIVE;
+			refValMale = LabItemConstants.REFVAL_INCONCLUSIVE;
+			refValFemale = LabItemConstants.REFVAL_INCONCLUSIVE;
 		}
 
 		if (actLabItem == null) {
-			actLabItem = new LabItem(iKuerzel.getText(), iTitel.getText(), (Kontakt) null, refValMale, refValFemale,
-					iUnit.getText(), typ, cGroup.getText(), iPrio.getText());
+			actLabItem = new ILabItemBuilder(CoreModelServiceHolder.get(), iKuerzel.getText(), iTitel.getText(),
+					refValMale, refValFemale, iUnit.getText(), typ, cGroup.getText(), 0).build();
+			actLabItem.setPriority(iPrio.getText());
+			actLabItem.setExport(cExportTag.getText());
+			CoreModelServiceHolder.get().save(actLabItem);
 			mapping.persistTransientLabMappings(actLabItem);
 		} else {
-			String t = "0"; //$NON-NLS-1$
-			if (typ == LabItemTyp.TEXT) {
-				t = "1"; //$NON-NLS-1$
-			} else if (typ == LabItemTyp.ABSOLUTE) {
-				t = "2"; //$NON-NLS-1$
-			} else if (typ == LabItemTyp.FORMULA) {
-				t = "3"; //$NON-NLS-1$
-			} else if (typ == LabItemTyp.DOCUMENT) {
-				t = "4"; //$NON-NLS-1$
-			}
-			actLabItem.set(
-					new String[] { LabItem.SHORTNAME, LabItem.TITLE, LabItem.LAB_ID, LabItem.REF_MALE,
-							LabItem.REF_FEMALE_OR_TEXT, LabItem.UNIT, LabItem.TYPE, LabItem.GROUP, LabItem.PRIO,
-							LabItem.EXPORT },
-					iKuerzel.getText(), iTitel.getText(), (actLabor != null) ? actLabor.getId() : null, refValMale,
-					refValFemale, iUnit.getText(), t, cGroup.getText(), iPrio.getText(), cExportTag.getText());
+			actLabItem.setCode(iKuerzel.getText());
+			actLabItem.setName(iTitel.getText());
+			actLabItem.setReferenceMale(refValMale);
+			actLabItem.setReferenceFemale(refValFemale);
+			actLabItem.setUnit(iUnit.getText());
+			actLabItem.setTyp(typ);
+			actLabItem.setGroup(cGroup.getText());
+			actLabItem.setPriority(iPrio.getText());
+			actLabItem.setExport(cExportTag.getText());
 		}
 		actLabItem.setLoincCode(loincCode.getText());
 
@@ -344,6 +311,7 @@ public class EditLabItem extends TitleAreaDialog {
 		if (!StringTool.isNothing(formel)) {
 			actLabItem.setFormula(formel);
 		}
+		CoreModelServiceHolder.get().save(actLabItem);
 		super.okPressed();
 	}
 

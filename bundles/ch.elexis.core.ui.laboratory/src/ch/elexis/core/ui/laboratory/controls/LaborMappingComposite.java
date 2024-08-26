@@ -24,20 +24,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 
+import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.LabItem;
 import ch.elexis.data.LabMapping;
 import ch.elexis.data.Labor;
 
 public class LaborMappingComposite extends Composite {
 
 	protected TableViewer viewer;
-	protected LabItem labItem;
+	protected ILabItem labItem;
 
-	@SuppressWarnings("unchecked")
-	protected List<LabMapping> content = Collections.EMPTY_LIST;
+	protected List<LabMapping> content = Collections.emptyList();
 
 	protected List<TransientLabMapping> transientContent = new ArrayList<>();
 
@@ -47,13 +46,12 @@ public class LaborMappingComposite extends Composite {
 		createContent();
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setLabItem(LabItem labItem) {
+	public void setLabItem(ILabItem labItem) {
 		this.labItem = labItem;
 		refreshContent();
 	}
 
-	public void persistTransientLabMappings(LabItem labItem) {
+	public void persistTransientLabMappings(ILabItem labItem) {
 		for (TransientLabMapping transientMapping : transientContent) {
 			transientMapping.persist(labItem);
 		}
@@ -64,7 +62,7 @@ public class LaborMappingComposite extends Composite {
 			content = LabMapping.getByLabItemId(labItem.getId());
 			viewer.setInput(content);
 		} else {
-			content = Collections.EMPTY_LIST;
+			content = Collections.emptyList();
 			viewer.setInput(transientContent);
 		}
 	}
@@ -91,7 +89,7 @@ public class LaborMappingComposite extends Composite {
 				if (selektor.open() == Dialog.OK) {
 					Labor labor = (Labor) selektor.getSelection();
 					if (labItem != null) {
-						LabMapping mapping = new LabMapping(labor.getId(), labItem.getKuerzel(), labItem.getId(),
+						LabMapping mapping = new LabMapping(labor.getId(), labItem.getCode(), labItem.getId(),
 								false); // $NON-NLS-1$
 						refreshContent();
 					} else {
@@ -141,6 +139,7 @@ public class LaborMappingComposite extends Composite {
 		column.getColumn().setText(Messages.Core_Laboratory);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getOrigin().getLabel(true);
@@ -156,6 +155,7 @@ public class LaborMappingComposite extends Composite {
 		column.getColumn().setText(Messages.Core_Short_Label);
 		column.setLabelProvider(new ColumnLabelProvider() {
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof LabMapping) {
 					return ((LabMapping) element).getItemName();
@@ -218,7 +218,7 @@ public class LaborMappingComposite extends Composite {
 			// TODO Auto-generated constructor stub
 		}
 
-		public void persist(LabItem labItem) {
+		public void persist(ILabItem labItem) {
 			new LabMapping(originId, itemName, labItem.getId(), charge);
 		}
 
