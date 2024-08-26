@@ -353,7 +353,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 				} catch (Exception ex) {
 					throw new RuntimeException(CreateLabItemUi.COMMANDID, ex);
 				}
-				tableViewer.refresh();
+				reload();
 			}
 		});
 		((GridLayout) parent.getLayout()).numColumns++;
