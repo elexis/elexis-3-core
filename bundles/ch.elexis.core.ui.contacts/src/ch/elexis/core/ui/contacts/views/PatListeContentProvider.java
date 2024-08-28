@@ -35,10 +35,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -51,10 +48,15 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	private static final int QUERY_LIMIT = 500;
 
 	// @formatter:off
-	private final static String sortByNumQuery = "SELECT * FROM kontakt "
-			+ "WHERE (DELETED = 0 AND istPerson = 1) AND istPatient = 1 " 
-			+ "ORDER BY PatientNr+0 ASC";
-
+	private final static String BASEQUERY = "SELECT * FROM Kontakt "
+			+ "WHERE (DELETED = 0 AND istPerson = 1) AND istPatient = 1";
+	private static final String[] FILTER_FIELDS = {"PatientNr", "Bezeichnung1", "Bezeichnung2", "Geburtsdatum"};
+	private static final String ORDER_BY_CLAUSE = " ORDER BY %s ASC";
+	private static final String CAST_DECIMAL_TEMPLATE = "CAST(%s AS DECIMAL)";
+	private static final String LIMIT_TEMPLATE = " LIMIT %s";
+	private static final String LIKE_TEMPLATE = " AND %s LIKE '%s'";
+	private static final String IS_TEMPLATE = " AND %s = '%s'";
+	
 	Object[] pats;
 	boolean bValid = false;
 	boolean bUpdating = false;
@@ -100,39 +102,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	 */
 	public void syncRefresh() {
 		List<IPatient> lPats;
-		if (!firstOrder.equals("code")) {
-			@SuppressWarnings("unchecked")
-			IQuery<IPatient> patientQuery = (IQuery<IPatient>) getBaseQuery();
-			// TODO implement as precondition?
-			patientQuery.and(ModelPackage.Literals.ICONTACT__PATIENT, COMPARATOR.EQUALS, true);
-
-			commonViewer.getConfigurer().getControlFieldProvider().setQuery(patientQuery);
-			getQueryFilters().forEach(filter -> filter.apply(patientQuery));
-			String[] actualOrder;
-			int idx = StringTool.getIndex(orderFields, firstOrder);
-			if ((idx == -1) || (idx == 0)) {
-				actualOrder = orderFields;
-			} else {
-				actualOrder = new String[orderFields.length];
-				int n = 0;
-				int begin = idx;
-				do {
-					actualOrder[n++] = orderFields[idx++];
-					if (idx >= orderFields.length) {
-						idx = 0;
-					}
-				} while (idx != begin);
-			}
-			if (actualOrder != null && actualOrder.length > 0) {
-				for (String order : actualOrder) {
-					patientQuery.orderBy(order, ORDER.ASC);
-				}
-			}
-			lPats = patientQuery.execute();
-		} else {
-			lPats = getNumSortedList();
-		}
-
+		lPats = (List<IPatient>) getPatientsList();
 		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
@@ -242,20 +212,91 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 			}
 		}
 	}
-
 	
 	/**
-	 * Execute query to fetch and return a numerically sorted list
+	 * TODO: pls fix hardcoding % idk man
+	 * <p>
+	 * Builds an sql query string which also applies filters based on input values.
+	 * Executes the query and returns the results.
+	 * </p>
+	 * @return list of IPatients
 	 * 
-	 * @return
+	 * @author mdedic
+	 * @since 3.13
 	 */
-	private List<IPatient> getNumSortedList() {
-		String query = sortByNumQuery;
-		if (!ignoreLimit) {
-			query = sortByNumQuery + " LIMIT " + QUERY_LIMIT;
+	private List<IPatient> getPatientsList() {
+		String query = BASEQUERY;
+		String[] filters = commonViewer.getConfigurer().getControlFieldProvider().getValues();
+		    
+		for (int i = 0; i < filters.length; i++) {
+		    String string = filters[i];
+		    if(string.length() > 0 && !string.isBlank()) {
+		    	// if its dob filter, format it
+		    	if(i == 3) {
+		    		string = string.replaceAll("[^\\d]", "");
+		    		string = stringToDate(string);
+		    		string = "%" + string;
+		    	}
+		    	// append filter to the query
+		    	// very bad hardcoded string ...
+		    	// if 0 (=patientnr), then get the exact record instead of like
+		    	if(i == 0) {
+		    		query += String.format(IS_TEMPLATE, FILTER_FIELDS[i] , string);
+		    	} else {
+		    		query += String.format(LIKE_TEMPLATE, FILTER_FIELDS[i] , string + "%");
+				}
+			}
 		}
+		// find out which sort order was selected, then append order by to the query
+		// if its code aka patientnr, then cast as decimal to it.
+		if(firstOrder.equals(orderFields[0])) {
+			String casted = String.format(CAST_DECIMAL_TEMPLATE, FILTER_FIELDS[0]);
+			query += String.format(ORDER_BY_CLAUSE, casted);
+		} else {
+			for (int i = 1; i < FILTER_FIELDS.length; i++) {
+				if(firstOrder.equals(orderFields[i])) {
+					query += String.format(ORDER_BY_CLAUSE, FILTER_FIELDS[i]);
+				}
+			}
+		}
+		// mehr als 500 anzeigen
+		if (!ignoreLimit) {
+			query += String.format(LIMIT_TEMPLATE, QUERY_LIMIT);
+		}
+		System.out.println(query);
 		Stream<IPatient> patientQuery = CoreModelServiceHolder.get().executeNativeQuery(query, IPatient.class);
 		return patientQuery.collect(Collectors.toList());
+	}
+
+	/**
+	 * Converts a date string to a fitting format for the database.
+	 * This method also assumes the input is ddMMyyyy.
+	 * db is yyyyMMdd so this method just formats ddMMyyyy so it works.
+	 * 
+	 * @param string
+	 * @return string formatted for the database
+	 * 
+	 * @author mdedic
+	 * @since 3.13
+	 */
+	private String stringToDate(String string) {
+		if(string.length()>2) {
+			StringBuilder sb = new StringBuilder(string.substring(0, 2));
+			String mm = string.substring(2);
+			mm = mm.substring(0, Math.min(mm.length(), 2));
+			mm+="%";
+			if(string.length() == 4) {
+				return string;
+			}
+			sb.insert(0, mm);
+			if(string.length()>4) {
+				String yy = string.substring(4);
+				yy+="%";
+				sb.insert(0, yy);
+			}
+			string = sb.toString();
+		}
+		return string;
 	}
 
 	public void invalidate() {
