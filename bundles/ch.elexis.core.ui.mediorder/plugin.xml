@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<extension
+		point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="ch.elexis.core.ui.mediorder.stockPropertyTester"
+			namespace="ch.elexis.core.ui.mediorder"
+			properties="popupCondition"
+			type="java.lang.Object"
+			class="ch.elexis.core.ui.mediorder.StockReadyContributionItem">
+		</propertyTester>
+	</extension>
+	<extension
+		point="org.eclipse.core.expressions.definitions">
+		<definition
+			id="ch.elexis.core.ui.mediorder.stockConditionExpression">
+			<with
+				variable="org.eclipse.ui.selection">
+				<equals value="true" />
+			</with>
+		</definition>
+	</extension>
+	
+	<extension
+		point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="ch.elexis.core.ui.mediorder.stockEntryPropertyTester"
+			namespace="ch.elexis.core.ui.mediorder"
+			properties="popupCondition"
+			type="java.lang.Object"
+			class="ch.elexis.core.ui.mediorder.StockEntryReadyContributionItem">
+		</propertyTester>
+	</extension>
+	<extension
+		point="org.eclipse.core.expressions.definitions">
+		<definition
+			id="ch.elexis.core.ui.mediorder.stockEntryConditionExpression">
+			<with
+				variable="org.eclipse.ui.selection">
+				<equals value="true" />
+			</with>
+		</definition>
+	</extension>
+</plugin>

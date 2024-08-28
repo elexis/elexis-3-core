@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_vnhVYA98EeqCRvaXdJ-ZfQ">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_vnhVYA98EeqCRvaXdJ-ZfQ">
   <imports xsi:type="commands:Command" xmi:id="_hobvwIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.command.part.refresh"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yKaBgA9_EeqCRvaXdJ-ZfQ" featurename="descriptors" parentElementId="xpath:/">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_o6GgsK_JEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.partdescriptor.mediorderView" label="Patientenbestellung" iconURI="icon://IMG_PILLS" tooltip="Verwaltung von Patienten-Medikament-Bestellungen" category="General" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.MediorderPart">
       <tags>View</tags>
       <menus xsi:type="menu:PopupMenu" xmi:id="_13SIcLRhEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.popupmenu.viewer">
-        <children xsi:type="menu:DirectMenuItem" xmi:id="_OIZtgLRjEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.billandclosemediorder" label="Verrechnen und Schliessen" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderHandler"/>
+        <children xsi:type="menu:DirectMenuItem" xmi:id="_OIZtgLRjEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.billandclosemediorder" label="Verrechnen und Schliessen" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderHandler">
+          <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_GeJMkF_CEe-bCYaCdqEbDQ" coreExpressionId="ch.elexis.core.ui.mediorder.stockConditionExpression"/>
+        </children>
+        <children xsi:type="menu:DynamicMenuContribution" xmi:id="_bbysMF-3Ee-bCYaCdqEbDQ" elementId="ch.elexis.core.ui.mediorder.dynamicmenucontribution.0" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.StockReadyContributionItem"/>
       </menus>
       <menus xsi:type="menu:PopupMenu" xmi:id="_wevZoLRlEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.popupmenu.viewerdetails">
         <children xsi:type="menu:DirectMenuItem" xmi:id="_orBwQLRmEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.showpatientorder" label="Bestellung anzeigen" iconURI="icon://IMG_PERSPECTIVE_ORDERS" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.ShowPatientOrderHandler"/>
-        <children xsi:type="menu:DirectMenuItem" xmi:id="_DhJkgLRvEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.billmediorderentry" label="Verrechnen und Schliessen" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderEntryHandler"/>
+        <children xsi:type="menu:DirectMenuItem" xmi:id="_DhJkgLRvEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.billmediorderentry" label="Verrechnen und Schliessen" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderEntryHandler">
+          <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_dDvokGBTEe-HlscZxWs7ig" coreExpressionId="ch.elexis.core.ui.mediorder.stockEntryConditionExpression"/>
+        </children>
         <children xsi:type="menu:DirectMenuItem" xmi:id="_WjBBALRxEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.removeentry" label="Eintrag entfernen" iconURI="icon://IMG_DELETE" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.RemoveMediorderEntryHandler"/>
+        <children xsi:type="menu:DynamicMenuContribution" xmi:id="_cjeswGBWEe-HlscZxWs7ig" elementId="ch.elexis.core.ui.mediorder.dynamicmenucontribution.1" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.StockEntryReadyContributionItem"/>
       </menus>
       <toolbar xmi:id="_rywI0K_JEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.toolbar.0">
         <children xsi:type="menu:HandledToolItem" xmi:id="_Gj6eMK_KEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.refresh" label="" iconURI="icon://IMG_REFRESH" tooltip="" command="_hobvwIGhEeuh_oRSm2ExFw"/>
@@ -20,8 +26,16 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Si4A0A-EEeqCRvaXdJ-ZfQ" featurename="commands" parentElementId="xpath:/">
     <elements xsi:type="commands:Command" xmi:id="_TiC5sLFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.command.createPatientOrder" commandName="Patientenbestellung erstellen" commandIconURI=""/>
+    <elements xsi:type="commands:Command" xmi:id="_rXHqAF_DEe-bCYaCdqEbDQ" elementId="ch.elexis.core.ui.mediorder.command.billAndCloseOrder" commandName="Verrechnen und Schliessen">
+      <parameters xmi:id="_MjonUF_GEe-bCYaCdqEbDQ" elementId="ch.elexis.core.ui.mediorder.commandparameter.billAndCloseOrder" name="billAndCloseOrder" optional="false"/>
+    </elements>
+    <elements xsi:type="commands:Command" xmi:id="_zCkPUGBeEe-HlscZxWs7ig" elementId="ch.elexis.core.ui.mediorder.command.billAndCloseOrderEntry" commandName="Verrechnen und Schliessen">
+      <parameters xmi:id="_5ozjgGBeEe-HlscZxWs7ig" elementId="ch.elexis.core.ui.mediorder.commandparameter.billAndCloseOrderEntry" name="billAndCloseOrderEntry" optional="false"/>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Y0r4ALFYEe6KJvcCRQJoEQ" featurename="handlers" parentElementId="xpath:/">
     <elements xsi:type="commands:Handler" xmi:id="_bZ0uQLFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.handler.createPatientOrder" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.CreatePatientOrderHandler" command="_TiC5sLFYEe6KJvcCRQJoEQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_72XDoF_DEe-bCYaCdqEbDQ" elementId="ch.elexis.core.ui.mediorder.handler.billAndCloseOrder" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderHandler" command="_rXHqAF_DEe-bCYaCdqEbDQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="__ABf0GBeEe-HlscZxWs7ig" elementId="ch.elexis.core.ui.mediorder.handler.billAndCloseOrderEntry" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderEntryHandler" command="_zCkPUGBeEe-HlscZxWs7ig"/>
   </fragments>
 </fragment:ModelFragments>

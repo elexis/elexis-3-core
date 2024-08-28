@@ -116,6 +116,9 @@ public class MediorderPart implements IRefreshablePart {
 	public void refresh(Map<Object, Object> filterParameters) {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
 		tableViewer.setInput(getPatientStocksWithStockEntry());
+		if (firstElement != null) {
+			updateStockImageState((IStock) firstElement);
+		}
 		tableViewer.refresh(true);
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
@@ -499,14 +502,14 @@ public class MediorderPart implements IRefreshablePart {
 						* direction;
 			}
 			case 2 -> {
-				String patientName1 = ts1.getOwner().getLastName();
-				String patientName2 = ts2.getOwner().getLastName();
+				String patientName1 = ts1.getOwner().getLastName().toLowerCase();
+				String patientName2 = ts2.getOwner().getLastName().toLowerCase();
 				return Objects.compare(patientName1, patientName2, Comparator.nullsFirst(Comparator.naturalOrder()))
 						* direction;
 			}
 			case 3 -> {
-				String patientFirstName1 = ts1.getOwner().getFirstName();
-				String patientFirstName2 = ts2.getOwner().getFirstName();
+				String patientFirstName1 = ts1.getOwner().getFirstName().toLowerCase();
+				String patientFirstName2 = ts2.getOwner().getFirstName().toLowerCase();
 				return Objects.compare(patientFirstName1, patientFirstName2,
 						Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			}
