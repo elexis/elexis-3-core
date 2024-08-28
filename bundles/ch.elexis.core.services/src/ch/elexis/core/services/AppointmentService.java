@@ -88,9 +88,12 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public IAppointment clone(IAppointment appointment) {
+		String contactOrSubjectId = appointment.getContact() != null ? appointment.getContact().getId()
+				: appointment.getSubjectOrPatient();
+
 		return new IAppointmentBuilder(coreModelService, appointment.getSchedule(), appointment.getStartTime(),
 				appointment.getEndTime(), appointment.getType(), appointment.getState(), appointment.getPriority(),
-				appointment.getSubjectOrPatient()).buildAndSave();
+				contactOrSubjectId).buildAndSave();
 	}
 
 	@Activate
