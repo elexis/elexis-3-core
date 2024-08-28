@@ -5047,6 +5047,29 @@ public class Messages extends NLS {
 	public static String LaborResultsComposite_selectionLimitErrorMessage;
 	public static String LaborResultsComposite_selectionLimitErrorTitle;
 	public static String Texterstellung_DiagnoseExportAlternativeFormat;
+	public static String Appointment_TrminLinks;
+	public static String CombinedAppointments_Titel;
+	public static String CombinedAppointments_ToolTipText;
+	public static String AddCombiTerminErstellen;
+	public static String AddCombiTerminBearbeiten;
+	public static String AddCombiTerminErstellenDescription;
+	public static String AddCombiTerminBearbeitenDescription;
+	public static String AppointmentLinkOptionsDialogDescription;
+	public static Object AppointmentLinkOptionsDialogTitel;
+	public static String AppointmentLinkOptionsDialogMove;
+	public static String AppointmentLinkOptionsDialogCopy;
+	public static String AppointmentLinkOptionsDialogDelete;
+	public static String AppointmentLinkOptionsDialogAllButton;
+	public static String AppointmentLinkOptionsDialogMainAppointmentButton;
+	public static String AppointmentLinkOptionsDialogKeepButton;
+	public static String DeleteHandlerLinkedAppointmentWarning;
+	public static String AddCombiTerminDialogRange;
+	public static String AddCombiTerminDialogMinute;
+	public static String AddCombiTerminDialogTimeOffset;
+	public static String AddCombiTerminDialogBefore;
+	public static String AddCombiTerminDialogAfter;
+	public static String CombinedAppointmentsWhen;
+	public static String CombinedAppointmentsSpacing;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
