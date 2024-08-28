@@ -5068,6 +5068,21 @@ public class Messages extends NLS {
 	public static String AddCombiTerminDialogAfter;
 	public static String CombinedAppointmentsWhen;
 	public static String CombinedAppointmentsSpacing;
+	public static String PreferencesServer_selectDevice;
+	public static String PreferencesServer_deleteButton;
+	public static String PreferencesServer_exportDirectory;
+	public static String PreferencesServer_browseButton;
+	public static String PreferencesServer_addNewDevice;
+	public static String PreferencesServer_storeFSGlobal;
+	public static String PreferencesServer_omnivoreDirStructure;
+	public static String PreferencesServer_addNewDirectory;
+	public static String PreferencesServer_newDirectory;
+	public static String PreferencesServer_renameDirectoryTooltip;
+	public static String PreferencesServer_deleteDirectory;
+	public static String PreferencesServer_documentsInCategory;
+	public static String PreferencesServer_deleteCategory;
+	public static String PreferencesServer_enterNewNameForDirectory;
+	public static String PreferencesServer_renameDirectory;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
