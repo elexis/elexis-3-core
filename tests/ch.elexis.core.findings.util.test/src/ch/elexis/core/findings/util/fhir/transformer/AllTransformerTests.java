@@ -1,5 +1,7 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+import static org.junit.Assert.fail;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -28,27 +30,37 @@ public class AllTransformerTests {
 		AllTransformerTests.transformerRegistry = transformerRegistry;
 	}
 
-//	@BeforeClass
-//	public static void beforeClass() throws InterruptedException{
-//
-//		for (int i = 0; i < 10; i++) {
-//			if (coreModelService == null) {
-//				System.out.println("Waiting for services");
-//				Thread.sleep(1000);
-//			} else {
-//				continue;
-//			}
-//		}
-//		if (coreModelService == null) {
-//			fail();
-//		}
-//	}
-
 	public static IFhirTransformerRegistry getTransformerRegistry() {
+		int timeout = 5000;
+		while (transformerRegistry == null) {
+			try {
+				Thread.sleep(100);
+				timeout -= 100;
+				if (timeout == 0) {
+					fail("Timeout wait for transformer registry");
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return transformerRegistry;
 	}
 
 	public static IModelService getCoreModelService() {
+		int timeout = 5000;
+		while (coreModelService == null) {
+			try {
+				Thread.sleep(100);
+				timeout -= 100;
+				if (timeout == 0) {
+					fail("Timeout wait for core model serivce");
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return coreModelService;
 	}
 
