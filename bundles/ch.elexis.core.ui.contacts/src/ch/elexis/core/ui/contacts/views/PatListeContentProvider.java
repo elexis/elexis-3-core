@@ -120,9 +120,6 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 			}
 		}
 		List<IPatient> lPats = patientQuery.execute();
-		if (!ignoreLimit) {
-			commonViewer.setLimitReached(lPats.size() == QUERY_LIMIT, QUERY_LIMIT);
-		}
 		pats = lPats.toArray(new Object[lPats.size()]);
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
@@ -133,6 +130,8 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 					tv.setItemCount(pats.length);
 					bValid = true;
 					tv.refresh();
+					commonViewer.resetScrollbarPosition(tv, ignoreLimit);
+					commonViewer.setLimitReached(pats.length == QUERY_LIMIT, QUERY_LIMIT);
 				}
 				bUpdating = false;
 			}
