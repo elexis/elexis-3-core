@@ -83,6 +83,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Label lblCalcEndDate;
 	private DateTime dateStart;
 
+	public static final String MEDICATION_SETTINGS_DEFAULT_SYMPTOMS = "medicationSettingsDefaultSymptoms";
+	public static final String MEDICATION_SETTINGS_SYMPTOM_DURATION = "medicationSettingsSymptomDuration";
+
 	private List<SavingTargetToModelStrategy> targetToModelStrategies;
 
 	private boolean createDefault = false;
@@ -291,10 +294,19 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (getParent() != null) {
 				getParent().layout();
 			}
-			txtEnddate.setText(StringUtils.EMPTY);
+			if (visible && isSymptomaticEnabled()) {
+				int defaultDays = ConfigServiceHolder.getUser(MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
+				txtEnddate.setText(String.valueOf(defaultDays));
+			} else {
+				txtEnddate.setText(StringUtils.EMPTY);
+			}
 		}
 	}
 
+	private boolean isSymptomaticEnabled() {
+		return ConfigServiceHolder.getUser(MEDICATION_SETTINGS_DEFAULT_SYMPTOMS, false);
+	}
+	
 	public void setToolbarVisible(boolean value) {
 		ToolBar toolbar = toolbarManager.getControl();
 		if (toolbar != null && !toolbar.isDisposed()) {

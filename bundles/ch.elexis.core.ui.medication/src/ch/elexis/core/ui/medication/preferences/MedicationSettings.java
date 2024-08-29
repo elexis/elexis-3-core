@@ -2,6 +2,7 @@ package ch.elexis.core.ui.medication.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -20,6 +21,8 @@ import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 public class MedicationSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private BooleanFieldEditor sortingFieldEditor;
+	private BooleanFieldEditor predefinedSymptomDaysFieldEditor;
+	private IntegerFieldEditor symptomDurationFieldEditor;
 
 	public MedicationSettings() {
 		super(GRID);
@@ -31,29 +34,38 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_ALWAYS_SHOW_SIGNATURE_DIALOG,
-				"Signatur Dialog auch bei vorhandener Std. Signatur anzeigen", getFieldEditorParent()));
-
+				ch.elexis.core.l10n.Messages.MedicationSettings_ShowSignatureDialog, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_SIGNATURE_STD_DISPENSATION,
-				"Bei Signatur Dialog Abgabe vorselektieren", getFieldEditorParent()));
-
+				ch.elexis.core.l10n.Messages.MedicationSettings_PreselectSignatureDispensation,
+				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(CreatePrescriptionHelper.MEDICATION_SETTINGS_DISPENSE_ARTIKELSTAMM_CONVERT,
-				"Beim dispensieren auf Artikelstamm prüfen, und konvertieren", getFieldEditorParent()));
-
+				ch.elexis.core.l10n.Messages.MedicationSettings_CheckAndConvertItemMaster, getFieldEditorParent()));
 		sortingFieldEditor = new BooleanFieldEditor(MedicationUiTester.MEDICATION_SETTINGS_SHOW_CUSTOM_SORT,
-				"Persönliche Sortierung anzeigen", getFieldEditorParent());
+				ch.elexis.core.l10n.Messages.MedicationSettings_ShowCustomSorting, getFieldEditorParent());
 		addField(sortingFieldEditor);
 		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
 				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
-
+		predefinedSymptomDaysFieldEditor = new BooleanFieldEditor(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS,
+				ch.elexis.core.l10n.Messages.MedicationSettings_EnablePredefinedSymptomDays, getFieldEditorParent());
+		addField(predefinedSymptomDaysFieldEditor);
+		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
+		symptomDurationFieldEditor = new IntegerFieldEditor(Preferences.MEDICATION_SETTINGS_SYMPTOM_DURATION,
+				ch.elexis.core.l10n.Messages.MedicationSettings_NumberOfStopDays, getFieldEditorParent(), 3);
+		symptomDurationFieldEditor.setEnabled(
+				getPreferenceStore().getBoolean(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS),
+				getFieldEditorParent());
+		addField(symptomDurationFieldEditor);
 		addField(new MultilineFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT,
-				"Eine Bemerkung auf dem eMediplan anzeigen", getFieldEditorParent()));
+				ch.elexis.core.l10n.Messages.MedicationSettings_ShowCommentOnEMediplan, getFieldEditorParent()));
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
-
-		// make sure custom sorting is disabled
+		if (event.getSource() == predefinedSymptomDaysFieldEditor) {
+			boolean enabled = (Boolean) event.getNewValue();
+			symptomDurationFieldEditor.setEnabled(enabled, getFieldEditorParent());
+		}
 		if (event.getSource() == sortingFieldEditor) {
 			MedicationView view = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.findView(MedicationView.PART_ID);
