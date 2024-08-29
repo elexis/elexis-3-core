@@ -30,10 +30,9 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		List<LabResult> results = composite.getSelectedResults();
-		if (results != null) {
-			for (LabResult labResult : results) {
-				openDisplayDialog(labResult);
-			}
+		if (results != null && !results.isEmpty()) {
+			LabResult firstResult = results.get(0);
+			openDisplayDialog(firstResult);
 		}
 	}
 
