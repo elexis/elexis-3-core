@@ -342,6 +342,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				IFall fall = getSelectedFall();
 				if (fall != null) {
 					fall.set(Fall.FLD_BEZEICHNUNG, newval);
+					form.setText(actFall.getLabel());
 					fireSelectedFallUpdateEvent();
 				}
 				super.focusLost(e);
@@ -363,6 +364,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				if (actFall != null) {
 					actFall.setGrund(selected);
 					updateGestationWeek13();
+					form.setText(actFall.getLabel());
 					fireSelectedFallUpdateEvent();
 				}
 			}
