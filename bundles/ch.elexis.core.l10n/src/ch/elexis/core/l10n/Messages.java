@@ -5034,6 +5034,13 @@ public class Messages extends NLS {
 	public static String Error_EndDateInFuture;
 	public static String Button_UpdateCharts;
 	public static String Checkbox_ShowLegend;	
+	public static String MedicationSettings_ShowSignatureDialog;
+	public static String MedicationSettings_PreselectSignatureDispensation;
+	public static String MedicationSettings_CheckAndConvertItemMaster;
+	public static String MedicationSettings_ShowCustomSorting;
+	public static String MedicationSettings_EnablePredefinedSymptomDays;
+	public static String MedicationSettings_NumberOfStopDays;
+	public static String MedicationSettings_ShowCommentOnEMediplan;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

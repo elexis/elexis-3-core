@@ -237,6 +237,8 @@ public class Preferences {
 
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT = "medication/settings/emediplanHeaderComment";
+	public static final String MEDICATION_SETTINGS_DEFAULT_SYMPTOMS = "medicationSettingsDefaultSymptoms";
+	public static final String MEDICATION_SETTINGS_SYMPTOM_DURATION = "medicationSettingsSymptomDuration";
 
 	// Agenda
 	public static final String AG_BEREICHE = "agenda/bereiche"; //$NON-NLS-1$
