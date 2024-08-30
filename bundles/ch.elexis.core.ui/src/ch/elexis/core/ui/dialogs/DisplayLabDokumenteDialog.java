@@ -21,6 +21,7 @@ import java.util.Date;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -39,6 +40,7 @@ import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
+
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -130,8 +132,12 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 				int counter = 0;
 				for (IOpaqueDocument document : documentList) {
 					String fileExtension = null;
+					String mimeType = document.getMimeType();
+					if ("pdf".equalsIgnoreCase(mimeType)) { //$NON-NLS-1$
+						mimeType = "application/pdf"; //$NON-NLS-1$
+					}
 					try {
-						MimeType docMimeType = new MimeType(document.getMimeType());
+						MimeType docMimeType = new MimeType(mimeType);
 						fileExtension = MimeTool.getExtension(docMimeType.toString());
 					} catch (MimeTypeParseException mpe) {
 						fileExtension = FileTool.getExtension(document.getMimeType());
