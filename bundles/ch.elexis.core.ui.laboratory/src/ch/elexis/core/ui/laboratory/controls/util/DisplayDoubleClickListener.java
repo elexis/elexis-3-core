@@ -32,7 +32,13 @@ public class DisplayDoubleClickListener implements IDoubleClickListener {
 		List<LabResult> results = composite.getSelectedResults();
 		if (results != null && !results.isEmpty()) {
 			LabResult firstResult = results.get(0);
-			openDisplayDialog(firstResult);
+			if (firstResult.getItem().getTyp().equals(LabItemTyp.DOCUMENT)) {
+				openDisplayDialog(firstResult);
+			} else {
+				for (LabResult labResult : results) {
+					openDisplayDialog(labResult);
+				}
+			}
 		}
 	}
 
