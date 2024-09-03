@@ -160,6 +160,15 @@ public interface IQuery<T> {
 	IQuery<T> orderBy(String fieldOrderBy, ORDER order);
 
 	/**
+	 * Add an order by to the query. The field to order by turns into a number.
+	 * 
+	 * @param fieldOrderBy
+	 * @param order
+	 * @param field
+	 */
+	IQuery<T> orderByAsNumber(String fieldOrderBy, ORDER order, String field);
+
+	/**
 	 * Add an order by to the query.
 	 *
 	 * @param fieldOrderBy

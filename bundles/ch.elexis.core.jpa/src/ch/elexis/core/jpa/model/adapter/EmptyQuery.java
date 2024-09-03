@@ -81,6 +81,11 @@ public class EmptyQuery<T> implements IQuery<T> {
 	}
 
 	@Override
+	public IQuery<T> orderByAsNumber(String fieldOrderBy, ORDER order, String field) {
+		return this;
+	}
+
+	@Override
 	public IQuery<T> orderBy(EStructuralFeature feature, ORDER order) {
 		return this;
 	}

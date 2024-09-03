@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -235,6 +236,29 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
 		if (attribute.isPresent()) {
 			orderBy(attribute.get(), order);
+		} else {
+			// feature could not be resolved, mapping?
+			throw new IllegalStateException(
+					"Could not resolve attribute [" + fieldOrderBy + "] of entity [" + entityClazz + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		return this;
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public IQuery<T> orderByAsNumber(String fieldOrderBy, ORDER order, String field) {
+		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
+		if (attribute.isPresent()) {
+			if (fieldOrderBy.equals(field)) {
+				Expression<String> function = criteriaBuilder.function("LPAD", String.class,
+						rootQuery.get(attribute.get()), criteriaBuilder.literal(10), criteriaBuilder.literal('0'));
+				Order orderBy = criteriaBuilder.asc(function);
+	            criteriaQuery.orderBy(orderBy);
+	            orderByList.add(orderBy);
+			} else {
+				// normal orderBy
+				orderBy(attribute.get(), order);
+			}
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
