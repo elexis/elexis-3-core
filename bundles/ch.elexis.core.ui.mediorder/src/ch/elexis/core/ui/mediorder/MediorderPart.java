@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -50,10 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.osgi.framework.Bundle;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
@@ -103,9 +99,6 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	IMedicationService medicationService;
 
-	@Inject
-	private EventAdmin eventAdmin;
-
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 
@@ -117,8 +110,6 @@ public class MediorderPart implements IRefreshablePart {
 	
 	private Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	
-	private IStock lastSelectedStock = null;
-
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> tableViewerColumnContributions = Extensions.getClasses(VIEWCONTRIBUTION,
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, "ch.medelexis.MediorderQuestionnaireContribution");
@@ -141,8 +132,6 @@ public class MediorderPart implements IRefreshablePart {
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 		}
-
-		lastSelectedStock = (IStock) firstElement;
 	}
 
 	@PostConstruct
@@ -176,19 +165,6 @@ public class MediorderPart implements IRefreshablePart {
 		table.setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setComparator(stockComparator);
-		tableViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
-			IStructuredSelection selection = event.getStructuredSelection();
-			IStock selectedStock = (IStock) selection.getFirstElement();
-
-			if (selectedStock != null && !selectedStock.equals(lastSelectedStock)) {
-				lastSelectedStock = selectedStock;
-				selectedDetailStock.setValue(selectedStock);
-				Map<String, Object> properties = Map.of("selectedStock", selection.getFirstElement());
-				Event eventHandler = new Event(ElexisEventTopics.MEDIORDER_CHANGE_PATIENT, properties);
-				eventAdmin.postEvent(eventHandler);
-			}
-		});
-
 		// order status
 		TableViewerColumn tvcOrderState = new TableViewerColumn(tableViewer, SWT.NONE);
 		tvcOrderState.setLabelProvider(new ColumnLabelProvider() {
