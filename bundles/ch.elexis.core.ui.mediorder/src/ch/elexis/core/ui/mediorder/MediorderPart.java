@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.mediorder;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -13,6 +17,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
@@ -44,7 +49,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.osgi.framework.Bundle;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
@@ -63,6 +73,8 @@ import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
+import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 
 public class MediorderPart implements IRefreshablePart {
 
@@ -91,6 +103,9 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	IMedicationService medicationService;
 
+	@Inject
+	private EventAdmin eventAdmin;
+
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 
@@ -101,6 +116,12 @@ public class MediorderPart implements IRefreshablePart {
 	private WritableValue<IStock> selectedDetailStock;
 	
 	private Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
+	
+	private IStock lastSelectedStock = null;
+
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> tableViewerColumnContributions = Extensions.getClasses(VIEWCONTRIBUTION,
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, "ch.medelexis.MediorderQuestionnaireContribution");
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -120,6 +141,8 @@ public class MediorderPart implements IRefreshablePart {
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 		}
+
+		lastSelectedStock = (IStock) firstElement;
 	}
 
 	@PostConstruct
@@ -155,7 +178,15 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewer.setComparator(stockComparator);
 		tableViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
 			IStructuredSelection selection = event.getStructuredSelection();
-			selectedDetailStock.setValue((IStock) selection.getFirstElement());
+			IStock selectedStock = (IStock) selection.getFirstElement();
+
+			if (selectedStock != null && !selectedStock.equals(lastSelectedStock)) {
+				lastSelectedStock = selectedStock;
+				selectedDetailStock.setValue(selectedStock);
+				Map<String, Object> properties = Map.of("selectedStock", selection.getFirstElement());
+				Event eventHandler = new Event(ElexisEventTopics.MEDIORDER_CHANGE_PATIENT, properties);
+				eventAdmin.postEvent(eventHandler);
+			}
 		});
 
 		// order status
@@ -167,6 +198,7 @@ public class MediorderPart implements IRefreshablePart {
 				IStock stock = (IStock) element;
 				int number = getImageForStock(stock);
 				return switch (number) {
+				case 0 -> Images.IMG_BULLET_GREY.getImage();
 				case 1 -> Images.IMG_BULLET_GREEN.getImage();
 				case 2 -> Images.IMG_BULLET_YELLOW.getImage();
 				case 3 -> Images.IMG_BULLET_BLUE.getImage();
@@ -261,6 +293,13 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 
+		cStockTable.setData("tableViewer", tableViewer);
+		List<IViewContribution> _tableViewerColumnContributions = ViewContributionHelper
+				.getFilteredAndPositionSortedContributions(tableViewerColumnContributions, 0);
+		for (IViewContribution ivc : _tableViewerColumnContributions) {
+			Composite ret = ivc.initComposite(cStockTable);
+			ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		}
 	}
 
 	private void createPatientorderDetailViewer(Composite parent) {
@@ -585,11 +624,17 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-		// Represents inactive PEA order
-		return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
-				.filter(stock -> stock.getStockEntries().stream()
-						.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
-				.toList();
+
+		Bundle bundle = Platform.getBundle("ch.medelexis.pea.mediorder");
+		if (bundle != null) {
+			return query.execute();
+		} else {
+			// Represents inactive PEA order
+			return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
+					.filter(stock -> stock.getStockEntries().stream()
+							.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
+					.toList();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -610,7 +655,7 @@ public class MediorderPart implements IRefreshablePart {
 	private int calculateStockState(IStock stock) {
 		int number = 0;
 		for (IStockEntry entry : stock.getStockEntries()) {
-
+			
 			MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
 			number = switch (entryState) {
 			case IN_STOCK -> 1;
@@ -626,4 +671,7 @@ public class MediorderPart implements IRefreshablePart {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
 	}
 
+	public TableViewer getPatientTableViewer() {
+		return tableViewer;
+	}
 }
