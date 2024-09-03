@@ -17,7 +17,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
@@ -48,7 +47,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.osgi.framework.Bundle;
 
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
@@ -600,17 +598,7 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-
-		Bundle bundle = Platform.getBundle("ch.medelexis.pea.mediorder");
-		if (bundle != null) {
-			return query.execute();
-		} else {
-			// Represents inactive PEA order
-			return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
-					.filter(stock -> stock.getStockEntries().stream()
-							.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
-					.toList();
-		}
+		return query.execute();
 	}
 
 	@SuppressWarnings("unchecked")
