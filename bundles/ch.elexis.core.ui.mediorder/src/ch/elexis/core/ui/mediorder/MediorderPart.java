@@ -166,6 +166,7 @@ public class MediorderPart implements IRefreshablePart {
 				IStock stock = (IStock) element;
 				int number = getImageForStock(stock);
 				return switch (number) {
+				// Represent an inactive order in PEA
 				case 0 -> Images.IMG_BULLET_GREY.getImage();
 				case 1 -> Images.IMG_BULLET_GREEN.getImage();
 				case 2 -> Images.IMG_BULLET_YELLOW.getImage();
