@@ -1,9 +1,5 @@
 package ch.elexis.core.ui.mediorder;
 
-import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
-import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
-import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -48,7 +44,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
@@ -68,7 +63,6 @@ import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
-import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 
 public class MediorderPart implements IRefreshablePart {
 
@@ -97,6 +91,9 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	IMedicationService medicationService;
 
+	@Inject
+	private IViewContribution contribution;
+
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 
@@ -108,9 +105,6 @@ public class MediorderPart implements IRefreshablePart {
 	
 	private Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	
-	@SuppressWarnings("unchecked")
-	private final List<IViewContribution> tableViewerColumnContributions = Extensions.getClasses(VIEWCONTRIBUTION,
-			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, "ch.medelexis.MediorderQuestionnaireContribution");
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -268,12 +262,7 @@ public class MediorderPart implements IRefreshablePart {
 		});
 
 		cStockTable.setData("tableViewer", tableViewer);
-		List<IViewContribution> _tableViewerColumnContributions = ViewContributionHelper
-				.getFilteredAndPositionSortedContributions(tableViewerColumnContributions, 0);
-		for (IViewContribution ivc : _tableViewerColumnContributions) {
-			Composite ret = ivc.initComposite(cStockTable);
-			ret.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		}
+		contribution.initComposite(cStockTable);
 	}
 
 	private void createPatientorderDetailViewer(Composite parent) {
@@ -633,9 +622,5 @@ public class MediorderPart implements IRefreshablePart {
 
 	private int getImageForStock(IStock stock) {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
-	}
-
-	public TableViewer getPatientTableViewer() {
-		return tableViewer;
 	}
 }
