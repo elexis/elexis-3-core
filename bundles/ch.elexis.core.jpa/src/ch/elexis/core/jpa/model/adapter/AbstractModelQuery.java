@@ -250,7 +250,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
 		if (attribute.isPresent()) {
 			if (fieldOrderBy.equals(field)) {
-				Expression<String> function = criteriaBuilder.function("LPAD", String.class,
+				Expression<String> function = criteriaBuilder.function("LPAD", String.class, //$NON-NLS-1$
 						rootQuery.get(attribute.get()), criteriaBuilder.literal(10), criteriaBuilder.literal('0'));
 				Order orderBy = criteriaBuilder.asc(function);
 				criteriaQuery.orderBy(orderBy);
