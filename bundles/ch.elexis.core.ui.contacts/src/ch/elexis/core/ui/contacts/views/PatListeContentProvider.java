@@ -116,7 +116,11 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 		}
 		if (actualOrder != null && actualOrder.length > 0) {
 			for (String order : actualOrder) {
-				patientQuery.orderBy(order, ORDER.ASC);
+				if (order.equalsIgnoreCase("code")) { //$NON-NLS-1$
+					patientQuery.orderByLeftPadded(order, ORDER.ASC);
+				} else {
+					patientQuery.orderBy(order, ORDER.ASC);
+				}
 			}
 		}
 		List<IPatient> lPats = patientQuery.execute();
