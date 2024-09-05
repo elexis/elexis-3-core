@@ -160,6 +160,17 @@ public interface IQuery<T> {
 	IQuery<T> orderBy(String fieldOrderBy, ORDER order);
 
 	/**
+	 * Add an order by to the query. The field to order by left padded with 0's.
+	 * </br>
+	 * Useful when the field to order by is a string and the field needs to be
+	 * sorted numerically.
+	 * 
+	 * @param fieldOrderBy
+	 * @param order
+	 */
+	IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order);
+
+	/**
 	 * Add an order by to the query.
 	 *
 	 * @param fieldOrderBy
