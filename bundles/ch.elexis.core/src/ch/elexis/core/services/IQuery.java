@@ -167,9 +167,8 @@ public interface IQuery<T> {
 	 * 
 	 * @param fieldOrderBy
 	 * @param order
-	 * @param field
 	 */
-	IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order, String field);
+	IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order);
 
 	/**
 	 * Add an order by to the query.

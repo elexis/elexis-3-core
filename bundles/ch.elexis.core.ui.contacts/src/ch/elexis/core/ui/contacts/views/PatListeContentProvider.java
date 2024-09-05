@@ -116,8 +116,8 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 		}
 		if (actualOrder != null && actualOrder.length > 0) {
 			for (String order : actualOrder) {
-				if (firstOrder.equals("code")) { //$NON-NLS-1$
-					patientQuery.orderByLeftPadded(order, ORDER.ASC, firstOrder);
+				if (order.equalsIgnoreCase("code")) { //$NON-NLS-1$
+					patientQuery.orderByLeftPadded(order, ORDER.ASC);
 				} else {
 					patientQuery.orderBy(order, ORDER.ASC);
 				}

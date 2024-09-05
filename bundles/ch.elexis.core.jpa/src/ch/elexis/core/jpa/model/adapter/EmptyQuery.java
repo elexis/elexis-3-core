@@ -81,7 +81,7 @@ public class EmptyQuery<T> implements IQuery<T> {
 	}
 
 	@Override
-	public IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order, String field) {
+	public IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order) {
 		return this;
 	}
 

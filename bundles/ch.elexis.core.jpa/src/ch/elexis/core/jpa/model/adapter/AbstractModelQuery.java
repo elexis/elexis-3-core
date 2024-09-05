@@ -246,19 +246,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order, String field) {
+	public IQuery<T> orderByLeftPadded(String fieldOrderBy, ORDER order) {
 		Optional<SingularAttribute> attribute = predicateHandler.resolveAttribute(entityClazz.getName(), fieldOrderBy);
 		if (attribute.isPresent()) {
-			if (fieldOrderBy.equals(field)) {
-				Expression<String> function = criteriaBuilder.function("LPAD", String.class, //$NON-NLS-1$
-						rootQuery.get(attribute.get()), criteriaBuilder.literal(10), criteriaBuilder.literal('0'));
-				Order orderBy = criteriaBuilder.asc(function);
-				criteriaQuery.orderBy(orderBy);
-				orderByList.add(orderBy);
-			} else {
-				// normal orderBy
-				orderBy(attribute.get(), order);
-			}
+			Expression<String> function = criteriaBuilder.function("LPAD", String.class, //$NON-NLS-1$
+					rootQuery.get(attribute.get()), criteriaBuilder.literal(10), criteriaBuilder.literal('0'));
+			Order orderBy = criteriaBuilder.asc(function);
+			criteriaQuery.orderBy(orderBy);
+			orderByList.add(orderBy);
 		} else {
 			// feature could not be resolved, mapping?
 			throw new IllegalStateException(
