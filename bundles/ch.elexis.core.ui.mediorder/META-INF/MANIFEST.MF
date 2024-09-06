@@ -11,5 +11,6 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.12.0",
  ch.elexis.core.ui.icons;bundle-version="3.12.0"
 Model-Fragment: fragment.e4xmi
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.ui.mediorder
 Bundle-ActivationPolicy: lazy
