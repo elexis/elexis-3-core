@@ -128,8 +128,10 @@ public class MediorderPart implements IRefreshablePart {
 
 	@Inject
 	@Optional
-	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOADY_MEDIORDER_PART) Class<?> clazz) {
-		refresh();
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IStock.class.equals(clazz)) {
+			refresh();
+		}
 	}
 
 	@Override
