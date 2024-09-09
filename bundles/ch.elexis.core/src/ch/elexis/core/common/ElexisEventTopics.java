@@ -128,5 +128,5 @@ public class ElexisEventTopics {
 	 */
 	public static final String STOCK_COMMISSIONING_PROPKEY_STOCK_ID = "stockId";
 
-	public static final String EVENT_RELOADY_MEDIORDER_PART = "reloadMediorderPart";
+	public static final String EVENT_RELOAD_MEDIORDER_PART = "reloadMediorderPart";
 }
