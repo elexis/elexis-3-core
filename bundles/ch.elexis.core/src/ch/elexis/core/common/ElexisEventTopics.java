@@ -127,4 +127,6 @@ public class ElexisEventTopics {
 	 * The ID of the stock the request is targeted to
 	 */
 	public static final String STOCK_COMMISSIONING_PROPKEY_STOCK_ID = "stockId";
+
+	public static final String EVENT_RELOADY_MEDIORDER_PART = "reloadMediorderPart";
 }
