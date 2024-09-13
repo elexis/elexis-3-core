@@ -42,6 +42,9 @@ public class MediorderPartUtil {
 		int currentStock = stockEntry.getCurrentStock();
 
 		MediorderEntryState state = MediorderEntryState.INVALID;
+		if (maximumStock == 0 && minimumStock == 0 && currentStock == 0) {
+			state = MediorderEntryState.ENABLED_FOR_PEA;
+		}
 		if (maximumStock > 0 && minimumStock > 0 && currentStock > 0) {
 			state = currentStock == minimumStock ? MediorderEntryState.IN_STOCK
 					: MediorderEntryState.PARTIALLY_IN_STOCK;
@@ -66,5 +69,5 @@ public class MediorderPartUtil {
 		state.setStockEntry(stockEntry);
 		return state;
 	}
-
+	
 }

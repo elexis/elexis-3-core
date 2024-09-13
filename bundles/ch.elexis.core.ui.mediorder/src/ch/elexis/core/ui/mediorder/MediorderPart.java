@@ -18,6 +18,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -51,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.osgi.framework.Bundle;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -141,6 +143,7 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewer.refresh(true);
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
+			updateStockImageState((IStock) firstElement);
 		}
 	}
 
@@ -430,6 +433,7 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMinimumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
+				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -471,6 +475,7 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMaximumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
+				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -630,7 +635,17 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-		return query.execute();
+
+		Bundle bundle = Platform.getBundle("ch.medelexis.pea.mediorder");
+		if (bundle != null) {
+			return query.execute();
+		} else {
+			// Represents inactive PEA order
+			return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
+					.filter(stock -> stock.getStockEntries().stream()
+							.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
+					.toList();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -649,21 +664,51 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	private int calculateStockState(IStock stock) {
-		int number = 0;
-		for (IStockEntry entry : stock.getStockEntries()) {
+		boolean allEnabledForPea = true;
+		boolean hasInStock = false;
+		boolean hasPartiallyInStock = false;
+		boolean hasOtherStatus = false;
 
+		for (IStockEntry entry : stock.getStockEntries()) {
 			MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
-			number = switch (entryState) {
-			case IN_STOCK -> 1;
-			case ORDERED, PARTIALLY_ORDERED, PARTIALLY_IN_STOCK -> 2;
-			case AWAITING_REQUEST, REQUESTED, PARTIALLY_REQUESTED, INVALID -> 3;
-			default -> number;
-			};
+
+			switch (entryState) {
+			case ENABLED_FOR_PEA -> {
+			}
+			case IN_STOCK -> hasInStock = true;
+			case PARTIALLY_IN_STOCK -> {
+				hasPartiallyInStock = true;
+				allEnabledForPea = false;
+			}
+			case ORDERED, PARTIALLY_ORDERED, INVALID -> {
+				allEnabledForPea = false;
+				hasOtherStatus = true;
+			}
+			default -> {
+				allEnabledForPea = false;
+				hasOtherStatus = true;
+			}
+			}
 		}
-		return number;
+
+		if (hasPartiallyInStock)
+			return 2;
+		if (hasInStock && allEnabledForPea)
+			return 1;
+		if (hasInStock && hasOtherStatus)
+			return 2;
+		if (allEnabledForPea)
+			return 0;
+		return 3;
 	}
 
 	private int getImageForStock(IStock stock) {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
+	}
+
+	public void removeStockEntry(IStockEntry entry) {
+		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
+			coreModelService.remove(entry);
+		}
 	}
 }
