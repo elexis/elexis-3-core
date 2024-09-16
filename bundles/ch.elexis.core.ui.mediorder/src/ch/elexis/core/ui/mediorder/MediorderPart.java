@@ -18,7 +18,6 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -52,7 +51,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.osgi.framework.Bundle;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -635,17 +633,7 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-
-		Bundle bundle = Platform.getBundle("ch.medelexis.pea.mediorder");
-		if (bundle != null) {
-			return query.execute();
-		} else {
-			// Represents inactive PEA order
-			return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
-					.filter(stock -> stock.getStockEntries().stream()
-							.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
-					.toList();
-		}
+		return query.execute();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -708,7 +696,8 @@ public class MediorderPart implements IRefreshablePart {
 
 	public void removeStockEntry(IStockEntry entry) {
 		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
-			coreModelService.remove(entry);
+			MediorderPartUtil.removeStockEntry(entry, coreModelService);
+			refresh();
 		}
 	}
 }

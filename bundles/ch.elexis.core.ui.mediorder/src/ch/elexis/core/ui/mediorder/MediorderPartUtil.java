@@ -5,7 +5,9 @@ import java.util.List;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 
@@ -70,4 +72,12 @@ public class MediorderPartUtil {
 		return state;
 	}
 	
+	public static void removeStockEntry(IStockEntry entry, IModelService coreModelService) {
+		coreModelService.remove(entry);
+		IStock stock = entry.getStock();
+		if (stock.getStockEntries().isEmpty()) {
+			coreModelService.remove(stock);
+		}
+	}
+
 }

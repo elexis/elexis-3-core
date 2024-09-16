@@ -12,6 +12,7 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.mediorder.MediorderPart;
+import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 
 public class RemoveMediorderEntryHandler {
 
@@ -23,7 +24,7 @@ public class RemoveMediorderEntryHandler {
 	public void execute(MPart part, ESelectionService selectionService) {
 		MediorderPart mediOrderPart = (MediorderPart) part.getObject();
 		List<IStockEntry> selectedStockEntries = mediOrderPart.getSelectedStockEntries();
-		selectedStockEntries.forEach(coreModelService::remove);
+		selectedStockEntries.forEach(entry -> MediorderPartUtil.removeStockEntry(entry, coreModelService));
 		mediOrderPart.refresh();
 	}
 
