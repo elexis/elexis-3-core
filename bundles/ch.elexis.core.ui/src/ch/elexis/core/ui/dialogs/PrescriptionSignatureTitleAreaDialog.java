@@ -11,8 +11,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
 
 public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
@@ -23,7 +25,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	private IArticleDefaultSignature signature;
 	private boolean medicationTypeFix;
 	private boolean performLookup;
-
+	private boolean isFromBillingDialog;
 	/**
 	 * Create the dialog.
 	 *
@@ -34,6 +36,12 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		this.article = article;
 	}
 
+	public PrescriptionSignatureTitleAreaDialog(Shell parentShell, IArticle article, boolean isFromBillingDialog) {
+		super(parentShell);
+		this.article = article;
+		this.isFromBillingDialog = isFromBillingDialog;
+	}
+	
 	/**
 	 * Create contents of the dialog.
 	 *
@@ -74,6 +82,15 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		if (medicationTypeFix) {
 			adsc.setMedicationTypeFix();
 		}
+		if (isFromBillingDialog) {
+			adsc.setMedicationTypeDischarge();
+			boolean defaultSymptomsSetting = ConfigServiceHolder
+					.getUser(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS, false);
+			if (!defaultSymptomsSetting) {
+				setDefaultValues();
+			}
+		}
+
 		return area;
 	}
 
@@ -125,4 +142,10 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	public IArticleDefaultSignature getSignature() {
 		return adsc.getSignature();
 	}
+
+	public void setDefaultValues() {
+		adsc.setEndDateDays(0);
+		adsc.setFocusOnMorning();
+	}
+
 }

@@ -22,4 +22,5 @@ public class Messages {
 	public static String Core_Select_Laboratory = ch.elexis.core.l10n.Messages.Core_Select_Laboratory;
 
 	public static String StockDetailComposite_availableInStock = ch.elexis.core.l10n.Messages.StockDetailComposite_availableInStock;
+	public static String ArticleDefaultSignatureComposite_Discharge = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_Discharge;
 }

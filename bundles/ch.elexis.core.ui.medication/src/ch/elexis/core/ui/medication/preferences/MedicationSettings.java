@@ -45,6 +45,9 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 		addField(sortingFieldEditor);
 		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
 				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
+		addField(new BooleanFieldEditor(Preferences.MEDICATION_SETTINGS_SHOW_DIALOG_ON_BILLING,
+				ch.elexis.core.l10n.Messages.Medication_SettingsShowDialogOnBilling,
+				getFieldEditorParent()));
 		predefinedSymptomDaysFieldEditor = new BooleanFieldEditor(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS,
 				ch.elexis.core.l10n.Messages.MedicationSettings_EnablePredefinedSymptomDays, getFieldEditorParent());
 		addField(predefinedSymptomDaysFieldEditor);

@@ -236,5 +236,13 @@ public interface IPatient extends IPerson {
 	 * @generated
 	 */
 	List<IPrescription> getMedication(List<EntryType> filterType);
-
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model type="ch.elexis.core.types.List&lt;ch.elexis.core.model.IPrescription&gt;" many="false" filterTypeDataType="ch.elexis.core.types.EntryType" filterTypeMany="true"
+	 * @generated
+	 */
+	List<IPrescription> getMedicationAll(List<EntryType> filterType);
+	
 } // IPatient

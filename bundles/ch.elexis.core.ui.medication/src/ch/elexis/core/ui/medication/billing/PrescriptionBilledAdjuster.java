@@ -59,10 +59,10 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 								if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
 									LocalDateTime prescriptionDate = prescription.getDateFrom();
 									LocalDateTime billedDate = getBilledDateTime(billed);
-									if (prescriptionDate.toLocalDate().equals(billedDate.toLocalDate())) {
-										dispensationExists = true;
-										break;
-									}
+//									if (prescriptionDate.toLocalDate().equals(billedDate.toLocalDate())) {
+//										dispensationExists = true;
+//										break;
+//									}
 								}
 							}
 						}
@@ -98,7 +98,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 		prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, billed.getId());
 		billed.setExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID, prescription.getId());
 		prescription.setEntryType(EntryType.SELF_DISPENSED);
-		prescription.setDateTo(LocalDateTime.now());
+		prescription.setDateFrom(billed.getEncounter().getDate().atStartOfDay());
 		CoreModelServiceHolder.get().save(prescription);
 		return prescription;
 	}

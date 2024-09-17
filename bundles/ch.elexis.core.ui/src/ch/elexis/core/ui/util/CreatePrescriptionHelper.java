@@ -30,6 +30,7 @@ import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
+import ch.elexis.core.ui.processor.ArticleProcessor;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
@@ -43,7 +44,7 @@ public class CreatePrescriptionHelper {
 
 	private IArticle article;
 	private Shell parentShell;
-
+	private ArticleProcessor articleProcessor;
 	private boolean medicationTypeFix = false;
 
 	public CreatePrescriptionHelper(IArticle article, Shell parentShell) {
@@ -85,7 +86,7 @@ public class CreatePrescriptionHelper {
 		return Optional.of(dialog.getSignature());
 	}
 
-	public void createPrescriptionFromSignature(IArticleDefaultSignature signature) {
+	public IPrescription createPrescriptionFromSignature(IArticleDefaultSignature signature) {
 		// create medication entry
 		IPrescription prescription = new IPrescriptionBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
 				article, ContextServiceHolder.get().getActivePatient().get(), signature.getSignatureAsDosisString())
@@ -97,23 +98,28 @@ public class CreatePrescriptionHelper {
 			prescription.setDateTo(signature.getEndDate().atTime(23, 59, 59));
 			prescription.setStopReason("Stop geplant");
 		}
+
+		// Braucht es nicht mehr, da es über ArticelProcessor erstellt wird
 		// create dispensation entry
-		if (signature.getDisposalType() != EntryType.RECIPE) {
-			EntryType disposalType = signature.getDisposalType();
-			if (disposalType == EntryType.SELF_DISPENSED) {
-				selfDispense(prescription);
-			}
-		}
+//		if (signature.getDisposalType() != EntryType.RECIPE) {
+//			EntryType disposalType = signature.getDisposalType();
+//			if (disposalType == EntryType.SELF_DISPENSED) {
+//				selfDispense(prescription);
+//			}
+//		}
+
 		if (signature.getStartDate() != null) {
 			prescription.setDateFrom(signature.getStartDate().atStartOfDay());
 		}
 		CoreModelServiceHolder.get().save(prescription);
+		return prescription;
 	}
 
 	public void selfDispense(IPrescription prescription) {
 		// add article to consultation
 		Optional<IEncounter> encounter = ContextServiceHolder.get().getTyped(IEncounter.class);
 		if (encounter.isPresent()) {
+			articleProcessor = new ArticleProcessor(encounter.get());
 			boolean isToday = encounter.get().getDate().equals(LocalDate.now());
 			if (isToday) {
 				IArticle dispensationArticle = prescription.getArticle();
@@ -139,6 +145,8 @@ public class CreatePrescriptionHelper {
 				}
 				Result<IBilled> result = BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
 				if (result.isOK()) {
+					IBilled billed = result.get();
+					articleProcessor.updatePrescriptionsWithDosage(billed);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter.get());
 					// work is done
 					return;

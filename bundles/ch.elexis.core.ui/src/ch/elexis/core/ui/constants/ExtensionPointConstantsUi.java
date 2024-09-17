@@ -40,4 +40,9 @@ public class ExtensionPointConstantsUi {
 	public static final String RECHNUNGSDETAIL = "ch.elexis.core.ui.Rechnungsdetail"; //$NON-NLS-1$
 	public static final String TEXT_TEMPLATE_REQUIREMENT = "ch.elexis.core.ui.TextTemplateRequirement"; //$NON-NLS-1$
 	public static final String ACCESSCONTROL = "ch.elexis.core.ui.AccessControl"; //$NON-NLS-1$
+	public static final String PAYLOAD_ARTICLE = "article"; //$NON-NLS-1$
+	public static final String PAYLOAD_SIGNATURE = "signature"; //$NON-NLS-1$
+	public static final String PAYLOAD_BILLED = "billed"; //$NON-NLS-1$
+	public static final String PAYLOAD_ACTION = "action"; //$NON-NLS-1$
+	public static final String ACTION_REFRESH_MEDICATION = "refreshMedication"; //$NON-NLS-1$
 }
