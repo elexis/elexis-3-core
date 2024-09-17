@@ -323,12 +323,12 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewerDetails.setContentProvider(ArrayContentProvider.getInstance());
 		selectedDetailStock.addChangeListener(sel -> {
 			IStock stock = selectedDetailStock.getValue();
-			// Represents inactive PEA order
-			List<IStockEntry> lFilteredStocks = (stock != null)
-					? stock.getStockEntries().stream().filter(s -> s.getMaximumStock() != 0 || s.getMinimumStock() != 0)
-							.toList()
-					: null;
-			tableViewerDetails.setInput(lFilteredStocks);
+			if (stock != null) {
+				List<IStockEntry> lStocks = stock.getStockEntries();
+				tableViewerDetails.setInput(lStocks);
+			} else {
+				tableViewerDetails.setInput(null);
+			}
 		});
 		tableViewerDetails.setComparator(medicationComparator);
 		tableViewerDetails.addDoubleClickListener((DoubleClickEvent event) -> {
@@ -431,7 +431,6 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMinimumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
-				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -473,7 +472,6 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMaximumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
-				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -692,12 +690,5 @@ public class MediorderPart implements IRefreshablePart {
 
 	private int getImageForStock(IStock stock) {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
-	}
-
-	public void removeStockEntry(IStockEntry entry) {
-		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
-			MediorderPartUtil.removeStockEntry(entry, coreModelService);
-			refresh();
-		}
 	}
 }
