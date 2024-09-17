@@ -30,11 +30,12 @@ import org.eclipse.swt.widgets.Control;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
@@ -44,7 +45,6 @@ import ch.elexis.data.DBConnection;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Fall.Tiers;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Mandant;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.JdbcLink;
@@ -290,7 +290,7 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 	private QueryBuilder determinePreparedStatementConditionals() {
 		QueryBuilder queryBuilder = QueryBuilder.create();
 		if (AccessControlServiceHolder.get().evaluate(EvACE.of(IInvoice.class, Right.READ).and(Right.VIEW)) == false) {
-			Mandant selectedMandator = ElexisEventDispatcher.getSelectedMandator();
+			IMandator selectedMandator = ContextServiceHolder.getActiveMandatorOrNull();
 			if (selectedMandator != null) {
 				queryBuilder.build(SQL_CONDITION_INVOICE_MANDANT, selectedMandator.getId());
 			}
