@@ -2,7 +2,9 @@ package ch.elexis.core.ui.text;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -122,26 +124,30 @@ public class TextTemplateComposite extends Composite {
 
 	private class ReplacementProposalProvider implements IContentProposalProvider {
 
-		@Override
-		public IContentProposal[] getProposals(String contents, int position) {
-			contents = contents.toLowerCase();
-			List<IContentProposal> proposals = new ArrayList<>();
-			for (ITextPlaceholderResolver resolver : replacementService.getResolvers()) {
-				List<PlaceholderAttribute> attributes = resolver.getSupportedAttributes();
-				for (PlaceholderAttribute attribute : attributes) {
-					String proposalText = attribute.getTypeName() + "." + attribute.getAttributeName(); //$NON-NLS-1$
-					if (proposalText.toLowerCase().contains(contents)) {
-						proposals.add(new ContentProposal(proposalText));
-					}
-				}
-			}
-			proposals.sort(new Comparator<IContentProposal>() {
-				@Override
-				public int compare(IContentProposal arg0, IContentProposal arg1) {
-					return arg0.getLabel().compareTo(arg1.getLabel());
-				}
-			});
-			return proposals.toArray(new IContentProposal[proposals.size()]);
-		}
+	    @Override
+	    public IContentProposal[] getProposals(String contents, int position) {
+	        contents = contents.toLowerCase();
+	        Set<String> proposalTexts = new HashSet<>();
+	        for (ITextPlaceholderResolver resolver : replacementService.getResolvers()) {
+	            List<PlaceholderAttribute> attributes = resolver.getSupportedAttributes();
+	            for (PlaceholderAttribute attribute : attributes) {
+	                String proposalText = attribute.getTypeName() + "." + attribute.getAttributeName(); //$NON-NLS-1$
+	                if (proposalText.toLowerCase().contains(contents)) {
+	                    proposalTexts.add(proposalText);
+	                }
+	            }
+	        }
+	        List<IContentProposal> proposals = new ArrayList<>();
+	        for (String text : proposalTexts) {
+	            proposals.add(new ContentProposal(text));
+	        }
+	        proposals.sort(new Comparator<IContentProposal>() {
+	            @Override
+	            public int compare(IContentProposal arg0, IContentProposal arg1) {
+	                return arg0.getLabel().compareTo(arg1.getLabel());
+	            }
+	        });
+	        return proposals.toArray(new IContentProposal[proposals.size()]);
+	    }
 	}
 }
