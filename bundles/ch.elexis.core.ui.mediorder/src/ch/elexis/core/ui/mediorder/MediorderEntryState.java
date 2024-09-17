@@ -39,7 +39,7 @@ public enum MediorderEntryState implements ILocalizedEnum {
 		case PARTIALLY_ORDERED -> orderEntry.getAmount() + " Stk. bestellt";
 		case IN_STOCK -> "Auf Lager";
 		case PARTIALLY_IN_STOCK -> stockEntry.getCurrentStock() + " Stk. auf Lager";
-		case ENABLED_FOR_PEA -> "";
+		case ENABLED_FOR_PEA -> "Für PEA freigegeben";
 		default -> throw new IllegalArgumentException("Unexpected value: " + this);
 		};
 	}

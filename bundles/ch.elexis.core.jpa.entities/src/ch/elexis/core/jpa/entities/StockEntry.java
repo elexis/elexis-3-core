@@ -96,6 +96,14 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	@JoinColumn(name = "PROVIDER", insertable = false)
 	Kontakt provider;
 
+	/**
+	 * defines an article which is enabled for ordering via PEA
+	 */
+	@Column
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	boolean mediorder = false;
+
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -195,5 +203,13 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public boolean isMediorder() {
+		return mediorder;
+	}
+
+	public void setMediorder(boolean value) {
+		this.mediorder = value;
 	}
 }

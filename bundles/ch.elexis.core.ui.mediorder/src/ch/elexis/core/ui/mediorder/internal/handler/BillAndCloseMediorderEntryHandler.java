@@ -39,7 +39,7 @@ public class BillAndCloseMediorderEntryHandler extends AbstractBillAndCloseMedio
 		MediorderPart mediOrderPart = (MediorderPart) part.getObject();
 		List<IStockEntry> selectedStockEntries = mediOrderPart.getSelectedStockEntries();
 		IStatus status = billAndClose(coreModelService, contextService, coverageService, billingService,
-				selectedStockEntries);
+				selectedStockEntries, true);
 		StatusDialog.show(status, false);
 
 		mediOrderPart.refresh();
