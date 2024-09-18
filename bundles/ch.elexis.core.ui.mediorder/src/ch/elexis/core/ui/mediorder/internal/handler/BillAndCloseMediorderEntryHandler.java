@@ -18,6 +18,7 @@ import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.e4.dialog.StatusDialog;
+import ch.elexis.core.ui.mediorder.AbstractBillAndCloseMediorderHandler;
 import ch.elexis.core.ui.mediorder.MediorderPart;
 
 public class BillAndCloseMediorderEntryHandler extends AbstractBillAndCloseMediorderHandler {

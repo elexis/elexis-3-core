@@ -122,14 +122,4 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 			return getEntity().getArticleType() + "[" + getEntity().getArticleId() + "]";
 		}
 	}
-
-	@Override
-	public boolean getMediorder() {
-		return getEntity().isMediorder();
-	}
-
-	@Override
-	public void setMediorder(boolean Value) {
-		getEntityMarkDirty().setMediorder(Value);
-	}
 }

@@ -909,15 +909,6 @@ public class OrderImportDialog extends TitleAreaDialog {
 		public Long getLastupdate() {
 			return null;
 		}
-
-		@Override
-		public boolean getMediorder() {
-			return false;
-		}
-
-		@Override
-		public void setMediorder(boolean Value) {
-		}
 	}
 
 	private static class TransientOrderEntry implements IOrderEntry {

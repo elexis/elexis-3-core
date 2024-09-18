@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.mediorder.internal.handler;
+package ch.elexis.core.ui.mediorder;
 
 import java.util.List;
 
@@ -61,15 +61,15 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 			int minimumStock = stockEntry.getMinimumStock();
 			boolean isBalanced = currentStock == maximumStock && maximumStock == minimumStock;
 
-			if (removeStockEntry && isBalanced) {
-				coreModelService.remove(stockEntry);
-			} else if (stockEntry.getMediorder()) {
-				stockEntry.setMinimumStock(0);
-				stockEntry.setCurrentStock(0);
-				stockEntry.setMaximumStock(0);
-				coreModelService.save(stockEntry);
-			} else if (isBalanced) {
-				coreModelService.remove(stockEntry);
+			if (isBalanced) {
+				if (removeStockEntry) {
+					coreModelService.remove(stockEntry);
+				} else {
+					stockEntry.setMinimumStock(0);
+					stockEntry.setCurrentStock(0);
+					stockEntry.setMaximumStock(0);
+					coreModelService.save(stockEntry);
+				}
 			}
 		}
 

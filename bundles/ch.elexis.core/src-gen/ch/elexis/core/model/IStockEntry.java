@@ -216,9 +216,4 @@ public interface IStockEntry extends Identifiable, Deleteable {
 	 */
 	void setProvider(IContact value);
 
-	boolean getMediorder();
-
-	void setMediorder(boolean Value);
-
-
 } // IStockEntry
