@@ -37,7 +37,9 @@ import org.eclipse.swtchart.LineStyle;
 import org.eclipse.swtchart.Range;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.laboratory.controls.model.LaborItemResults;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
@@ -57,14 +59,16 @@ public class LaborChartPopupManager {
 	public void createChartPopup(TreeItem item, MouseEvent e, TreeViewer viewer, Patient actPatient) {
 		this.actPatient = actPatient;
 		Shell parentShell = viewer.getControl().getShell();
-		if (chartPopup != null && !chartPopup.isDisposed()) {
-			chartPopup.dispose();
+		LaborItemResults laborItemResults = (LaborItemResults) item.getData();
+		ILabItem labItem = laborItemResults.getLabItem();
+		if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
+			return;
 		}
+		disposeResources();
 		chartPopup = new Shell(parentShell, SWT.NO_TRIM | SWT.TOOL);
 		setupChartPopupLayout();
 		chart = new Chart(chartPopup, SWT.NONE);
 		setupChartLayout(chart);
-		LaborItemResults laborItemResults = (LaborItemResults) item.getData();
 		List<LabResult> labResults = new ArrayList<>(laborItemResults.getAllResults());
 		List<LabResult> lastSevenResults = getLastYearResults(labResults);
 		configureChart(chart, lastSevenResults);
@@ -75,6 +79,7 @@ public class LaborChartPopupManager {
 		chartPopup.open();
 		addDisposeListener();
 	}
+
 
 	public Chart createChart(Composite parent, List<LabResult> labResults, Patient patient) {
 		this.actPatient = patient;
@@ -217,7 +222,7 @@ public class LaborChartPopupManager {
 	    Date oneYearAgo = calendar.getTime();
 		List<LabResult> filteredResults = new ArrayList<>();
 	    for (LabResult result : labResults) {
-	        if (result.getObservationTime().getTime().after(oneYearAgo)) {
+			if (result.getObservationTime().getTime().after(oneYearAgo)) {
 	            filteredResults.add(result);
 	        }
 	    }
@@ -233,11 +238,17 @@ public class LaborChartPopupManager {
 				xSeriesList.add(date);
 				String resultValue = result.getResult();
 				String specialValue = getSpecialValue(resultValue);
-				double yValue;
-				if (specialValue.isEmpty()) {
-					yValue = Double.parseDouble(resultValue);
-				} else {
-					yValue = Double.parseDouble(resultValue.replaceAll("[^0-9.]", "").trim());
+				double yValue = 0.0;
+
+				if (resultValue != null && !resultValue.isEmpty()) {
+					if (specialValue.isEmpty()) {
+						yValue = Double.parseDouble(resultValue);
+					} else {
+						String cleanedValue = resultValue.replaceAll("[^0-9.]", "").trim();
+						if (!cleanedValue.isEmpty()) {
+							yValue = Double.parseDouble(cleanedValue);
+						}
+					}
 				}
 				ySeriesList.add(yValue);
 				specialValuesList.add(specialValue);

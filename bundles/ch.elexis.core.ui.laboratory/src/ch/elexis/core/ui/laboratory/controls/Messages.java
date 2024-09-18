@@ -27,4 +27,8 @@ public class Messages {
 	public static String Error_EndDateInFuture = ch.elexis.core.l10n.Messages.Error_EndDateInFuture;
 	public static String Button_UpdateCharts = ch.elexis.core.l10n.Messages.Button_UpdateCharts;
 	public static String Checkbox_ShowLegend = ch.elexis.core.l10n.Messages.Checkbox_ShowLegend;
+	public static String LaborResultsComposite_documentSelectionErrorMessage = ch.elexis.core.l10n.Messages.LaborResultsComposite_documentSelectionErrorMessage;
+	public static String LaborResultsComposite_documentSelectionErrorTitle = ch.elexis.core.l10n.Messages.LaborResultsComposite_documentSelectionErrorTitle;
+	public static String LaborResultsComposite_selectionLimitErrorMessage = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorMessage;
+	public static String LaborResultsComposite_selectionLimitErrorTitle = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorTitle;
 }

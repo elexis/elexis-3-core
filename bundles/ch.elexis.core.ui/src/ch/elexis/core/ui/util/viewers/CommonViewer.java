@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -524,17 +525,38 @@ public class CommonViewer implements ISelectionChangedListener, IDoubleClickList
 	public void setLimitReached(boolean value, int limit) {
 		showDisableLimit = value;
 		Display.getDefault().asyncExec(() -> {
-			if (value) {
+			if (disableLimitBtn == null) {
 				addLimitButton(limit);
-				if (scrolledToBottom || isNoScroll()) {
-					showDisableLimitButton();
-				}
+			}
+			if (value && isNoScroll()) {
+				showDisableLimitButton();
 			} else {
 				hideDisableLimitButton();
 			}
 		});
 	}
 
+	/**
+	 * Resets the scrollbar position.
+	 * 
+	 * @param tv
+	 * @param limit
+	 */
+	public void resetScrollbarPosition(TableViewer tv, boolean limit) {
+		Table table = (Table) tv.getControl();
+		ScrollBar scrollbar = table.getVerticalBar();
+		int position = scrollbar.getSelection() + scrollbar.getThumb();
+		if (!limit && position > scrollbar.getMinimum()) {
+			table.setSelection(0);
+		}
+	}
+
+	/**
+	 * Returns whether the current position in the list or rather scrollbar has
+	 * reached the bottom.
+	 * 
+	 * @return
+	 */
 	private boolean isNoScroll() {
 		if (viewer.getControl() instanceof Table && !viewer.getControl().isDisposed()) {
 			// test if table elements do not reach bottom

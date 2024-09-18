@@ -2,23 +2,31 @@ package ch.elexis.core.ui.mediorder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -27,7 +35,6 @@ import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -44,7 +51,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
@@ -60,9 +69,11 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
 
 public class MediorderPart implements IRefreshablePart {
 
@@ -89,6 +100,9 @@ public class MediorderPart implements IRefreshablePart {
 	IModelService coreModelService;
 
 	@Inject
+	ESelectionService selectionService;
+
+	@Inject
 	IMedicationService medicationService;
 
 	private TableViewer tableViewer;
@@ -99,7 +113,7 @@ public class MediorderPart implements IRefreshablePart {
 	private final DateTimeFormatter dateFormatter;
 
 	private WritableValue<IStock> selectedDetailStock;
-	
+
 	private Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 
 	public MediorderPart() {
@@ -110,6 +124,14 @@ public class MediorderPart implements IRefreshablePart {
 	@Focus
 	public void setFocus() {
 		tableViewer.getTable().setFocus();
+	}
+
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IStock.class.equals(clazz)) {
+			refresh();
+		}
 	}
 
 	@Override
@@ -123,7 +145,7 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	@PostConstruct
-	public void postConstruct(Composite parent, EMenuService menuService) {
+	public void postConstruct(Composite parent, EMenuService menuService, IExtensionRegistry extensionRegistry) {
 		parent.setLayout(new FillLayout());
 
 		stockComparator = new StockComparator();
@@ -131,7 +153,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setSashWidth(5);
-		createPatientorderListViewer(sashForm);
+		createPatientorderListViewer(extensionRegistry, sashForm);
 		createPatientorderDetailViewer(sashForm);
 		addDragAndDrop();
 
@@ -140,21 +162,25 @@ public class MediorderPart implements IRefreshablePart {
 				"ch.elexis.core.ui.mediorder.popupmenu.viewerdetails"); //$NON-NLS-1$
 
 		tableViewer.setInput(getPatientStocksWithStockEntry());
+
+		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
+
 	}
 
-	private void createPatientorderListViewer(Composite parent) {
+	private void createPatientorderListViewer(IExtensionRegistry extensionRegistry, Composite parent) {
 		Composite cStockTable = new Composite(parent, SWT.NONE);
 		cStockTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		cStockTable.setLayout(tcLayout);
 
-		tableViewer = new TableViewer(cStockTable, SWT.FULL_SELECTION | SWT.NONE);
+		tableViewer = new TableViewer(cStockTable, SWT.FULL_SELECTION | SWT.SINGLE | SWT.NONE);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewer.setComparator(stockComparator);
-		tableViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
-			IStructuredSelection selection = event.getStructuredSelection();
+
+		tableViewer.addSelectionChangedListener(event -> {
+			IStructuredSelection selection = tableViewer.getStructuredSelection();
 			selectedDetailStock.setValue((IStock) selection.getFirstElement());
 		});
 
@@ -167,6 +193,8 @@ public class MediorderPart implements IRefreshablePart {
 				IStock stock = (IStock) element;
 				int number = getImageForStock(stock);
 				return switch (number) {
+				// Represent an inactive order in PEA
+				case 0 -> Images.IMG_BULLET_GREY.getImage();
 				case 1 -> Images.IMG_BULLET_GREEN.getImage();
 				case 2 -> Images.IMG_BULLET_YELLOW.getImage();
 				case 3 -> Images.IMG_BULLET_BLUE.getImage();
@@ -261,6 +289,24 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 
+		cStockTable.setData("tableViewer", tableViewer);
+
+		IConfigurationElement[] configurationElementsFor = extensionRegistry
+				.getConfigurationElementsFor(ExtensionPointConstantsUi.VIEWCONTRIBUTION);
+		List<IConfigurationElement> filteredExtensions = Arrays.asList(configurationElementsFor).stream()
+				.filter(p -> MediorderPart.class.getName()
+						.equalsIgnoreCase(p.getAttribute(ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID)))
+				.collect(Collectors.toList());
+		filteredExtensions.forEach(e -> {
+			try {
+				IViewContribution contribution = (IViewContribution) e
+						.createExecutableExtension(ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS);
+				contribution.initComposite(cStockTable);
+			} catch (CoreException e1) {
+				LoggerFactory.getLogger(getClass()).error("Error", e1);
+			}
+		});
+
 	}
 
 	private void createPatientorderDetailViewer(Composite parent) {
@@ -276,7 +322,7 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewerDetails.setContentProvider(ArrayContentProvider.getInstance());
 		selectedDetailStock.addChangeListener(sel -> {
 			IStock stock = selectedDetailStock.getValue();
-			//Represents inactive PEA order
+			// Represents inactive PEA order
 			List<IStockEntry> lFilteredStocks = (stock != null)
 					? stock.getStockEntries().stream().filter(s -> s.getMaximumStock() != 0 || s.getMinimumStock() != 0)
 							.toList()
@@ -489,8 +535,7 @@ public class MediorderPart implements IRefreshablePart {
 
 			switch (propertyIndex) {
 			case 0 -> {
-				return Objects.compare(number1, number2, Comparator.nullsFirst(Comparator.naturalOrder()))
-						* direction;
+				return Objects.compare(number1, number2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			}
 			case 1 -> {
 				Integer patientNr1 = Integer.valueOf(ts1.getId().substring(13));
@@ -515,7 +560,7 @@ public class MediorderPart implements IRefreshablePart {
 				return birthDate1.compareTo(ts2.getOwner().getDateOfBirth()) * direction;
 			}
 			}
-			
+
 			return super.compare(viewer, o1, o2);
 
 		}
@@ -585,11 +630,7 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getPatientStocksWithStockEntry() {
 		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
 		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-		// Represents inactive PEA order
-		return query.execute().stream().filter(stock -> !stock.getStockEntries().isEmpty())
-				.filter(stock -> stock.getStockEntries().stream()
-						.anyMatch(entry -> entry.getMaximumStock() != 0 || entry.getMinimumStock() != 0))
-				.toList();
+		return query.execute();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -600,7 +641,7 @@ public class MediorderPart implements IRefreshablePart {
 	public IStock getSelectedStock() {
 		return selectedDetailStock.getValue();
 	}
-	
+
 	private void updateStockImageState(IStock stock) {
 		int state = calculateStockState(stock);
 		imageStockStates.put(stock, state);
@@ -625,5 +666,4 @@ public class MediorderPart implements IRefreshablePart {
 	private int getImageForStock(IStock stock) {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
 	}
-
 }

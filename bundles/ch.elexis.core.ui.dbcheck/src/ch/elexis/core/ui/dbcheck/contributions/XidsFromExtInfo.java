@@ -1,23 +1,35 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import static ch.elexis.core.constants.XidConstants.DOMAIN_EAN;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import ch.elexis.core.constants.XidConstants;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 
 public class XidsFromExtInfo extends ExternalMaintenance {
 
+	private ISticker insuranceSticker;
+
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
+		insuranceSticker = CoreModelServiceHolder.get().load("managedinsurance", ISticker.class).orElse(null);
+
 		StringBuilder sb = new StringBuilder();
 		int withExtInfoEan = 0;
 		int createdEanXid = 0;
@@ -67,7 +79,91 @@ public class XidsFromExtInfo extends ExternalMaintenance {
 				sb.append(conflictSb.toString());
 			}
 		}
+
+		if (insuranceSticker != null) {
+			int coverageNoRefOrOrg = 0;
+			int coverageNoEanContact = 0;
+			int coverageNoManagedContact = 0;
+			int coverageManagedContact = 0;
+			int coverageChangedToManagedContact = 0;
+			IQuery<ICoverage> coverageQuery = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+			try (IQueryCursor<ICoverage> allCoverages = coverageQuery.executeAsCursor()) {
+				while (allCoverages.hasNext()) {
+					ICoverage coverage = allCoverages.next();
+
+					if (coverage.getCostBearer() != null && coverage.getCostBearer().isOrganization()) {
+						Optional<String> ean = getEAN(coverage.getCostBearer());
+						if (ean.isPresent()) {
+							if (!StickerServiceHolder.get().hasSticker(coverage.getCostBearer(), insuranceSticker)) {
+								Optional<IOrganization> managedInsurance = getManagedInsuranceWithEan(ean.get());
+								if (managedInsurance.isPresent()) {
+									coverage.setCostBearer(managedInsurance.get());
+									coverageChangedToManagedContact++;
+								} else {
+									coverageNoManagedContact++;
+								}
+							} else {
+								coverageManagedContact++;
+							}
+						} else {
+							coverageNoEanContact++;
+						}
+					} else {
+						coverageNoRefOrOrg++;
+					}
+					if (coverage.getGuarantor() != null && coverage.getGuarantor().isOrganization()) {
+						Optional<String> ean = getEAN(coverage.getGuarantor());
+						if (ean.isPresent()) {
+							if (!StickerServiceHolder.get().hasSticker(coverage.getGuarantor(), insuranceSticker)) {
+								Optional<IOrganization> managedInsurance = getManagedInsuranceWithEan(ean.get());
+								if (managedInsurance.isPresent()) {
+									coverage.setGuarantor(managedInsurance.get());
+									coverageChangedToManagedContact++;
+								} else {
+									coverageNoManagedContact++;
+								}
+							} else {
+								coverageManagedContact++;
+							}
+						} else {
+							coverageNoEanContact++;
+						}
+					} else {
+						coverageNoRefOrOrg++;
+					}
+				}
+			}
+			sb.append("\nCoverage managedinsurance:");
+			sb.append("\nReferences missing or no org:" + coverageNoRefOrOrg);
+			sb.append("\nReferences to org no ean:" + coverageNoEanContact);
+			sb.append("\nReferences to managedinsurances:" + coverageManagedContact);
+			sb.append("\nReferences to not managedinsurances:" + coverageNoManagedContact);
+			sb.append("\nChanged References managedinsurances:" + coverageChangedToManagedContact);
+		} else {
+			sb.append("\nNo managedinsurance sticker\n");
+		}
+
 		return sb.toString();
+	}
+
+	private Optional<IOrganization> getManagedInsuranceWithEan(String ean) {
+		List<IOrganization> found = XidServiceHolder.get().findObjects(DOMAIN_EAN, ean, IOrganization.class);
+		if (found != null && !found.isEmpty()) {
+			for (IOrganization iOrganization : found) {
+				if (StickerServiceHolder.get().hasSticker(iOrganization, insuranceSticker)) {
+					return Optional.of(iOrganization);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	private Optional<String> getEAN(IContact contact) {
+		IXid xid = contact.getXid(DOMAIN_EAN);
+		if (xid != null && StringUtils.isNotBlank(xid.getDomainId())) {
+			return Optional.of(xid.getDomainId());
+		}
+		return Optional.empty();
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.interfaces.ILabItem;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.laboratory.actions.LaborParameterEditAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
@@ -130,12 +131,24 @@ public class LaborResultsComposite extends Composite {
 		viewer.getTree().addListener(SWT.Selection, event -> {
 			if (event.detail == SWT.CHECK) {
 				TreeItem item = (TreeItem) event.item;
+				LaborItemResults laborItemResults = (LaborItemResults) item.getData();
+				ILabItem labItem = laborItemResults.getLabItem();
+				if (labItem.getTyp().equals(LabItemTyp.DOCUMENT)) {
+					item.setChecked(false);
+					MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					messageBox.setMessage(
+							Messages.LaborResultsComposite_documentSelectionErrorMessage);
+					messageBox.setText(Messages.LaborResultsComposite_documentSelectionErrorTitle);
+					messageBox.open();
+					return;
+				}
+
 				if (item.getChecked()) {
 					if (selectedItems.size() >= 5) {
 						item.setChecked(false);
 						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-						messageBox.setMessage("Sie können maximal 5 Elemente auswählen.");
-						messageBox.setText("Auswahlgrenze erreicht");
+						messageBox.setMessage(Messages.LaborResultsComposite_selectionLimitErrorMessage);
+						messageBox.setText(Messages.LaborResultsComposite_selectionLimitErrorTitle);
 						messageBox.open();
 					} else {
 						selectedItems.add(item);

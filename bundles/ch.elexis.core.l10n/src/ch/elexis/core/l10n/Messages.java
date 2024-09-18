@@ -1150,6 +1150,7 @@ public class Messages extends NLS {
 	public static String Core_the_description;
 	public static String Core_today;
 	public static String Core_undefined;
+	public static String Core_loading;
 	public static String Corr_No;
 	public static String CreateChart;
 	public static String CreateLicenseJob_Creating;
@@ -2994,6 +2995,17 @@ public class Messages extends NLS {
 	public static String Mediorder_requested_Tooltip;
 	public static String Mediorder_approved;
 	public static String Mediorder_approved_Tooltip;
+	public static String Mediorder_unequal;
+	public static String Mediorder_comparison;
+	public static String Mediorder_comparison_Tooltip;
+	public static String Mediorder_updateArticle;
+	public static String Mediorder_updateArticle_successful;
+	public static String Mediorder_updateArticle_error;
+	public static String Mediorder_activate_patient_order;
+	public static String Mediroder_missing_email;
+	public static String Mediorder_missing_email_message;
+	public static String Mediorder_signed_decleration_of_consent;
+	public static String Mediorder_signed_decleration_of_consent_message;
 	public static String MedicsPreferencePage_defaultMedicsUrl;
 	public static String MedicsPreferencePage_documentCategoryName;
 	public static String MedicsPreferencePage_labelUploadDirimed;
@@ -5083,6 +5095,17 @@ public class Messages extends NLS {
 	public static String PreferencesServer_deleteCategory;
 	public static String PreferencesServer_enterNewNameForDirectory;
 	public static String PreferencesServer_renameDirectory;
+	public static String MedicationSettings_ShowSignatureDialog;
+	public static String MedicationSettings_PreselectSignatureDispensation;
+	public static String MedicationSettings_CheckAndConvertItemMaster;
+	public static String MedicationSettings_ShowCustomSorting;
+	public static String MedicationSettings_EnablePredefinedSymptomDays;
+	public static String MedicationSettings_NumberOfStopDays;
+	public static String MedicationSettings_ShowCommentOnEMediplan;
+	public static String LaborResultsComposite_documentSelectionErrorMessage;
+	public static String LaborResultsComposite_documentSelectionErrorTitle;
+	public static String LaborResultsComposite_selectionLimitErrorMessage;
+	public static String LaborResultsComposite_selectionLimitErrorTitle;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
