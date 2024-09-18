@@ -431,6 +431,7 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMinimumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
+				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -472,6 +473,7 @@ public class MediorderPart implements IRefreshablePart {
 				entry.setMaximumStock(Integer.parseInt(amount));
 				coreModelService.save(entry);
 				tableViewerDetails.refresh(true);
+				removeStockEntry(entry);
 				updateStockImageState(entry.getStock());
 			}
 
@@ -659,7 +661,7 @@ public class MediorderPart implements IRefreshablePart {
 			MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
 
 			switch (entryState) {
-			case ENABLED_FOR_PEA -> {
+			case AWAITING_REQUEST -> {
 			}
 			case IN_STOCK -> hasInStock = true;
 			case PARTIALLY_IN_STOCK -> {
@@ -690,5 +692,16 @@ public class MediorderPart implements IRefreshablePart {
 
 	private int getImageForStock(IStock stock) {
 		return imageStockStates.computeIfAbsent(stock, this::calculateStockState);
+	}
+
+	public void removeStockEntry(IStockEntry entry) {
+		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
+			coreModelService.remove(entry);
+			IStock stock = entry.getStock();
+			if (stock.getStockEntries().isEmpty()) {
+				coreModelService.remove(stock);
+			}
+			refresh();
+		}
 	}
 }
