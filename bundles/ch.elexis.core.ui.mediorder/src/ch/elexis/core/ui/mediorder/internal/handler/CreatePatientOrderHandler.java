@@ -10,6 +10,7 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.extensions.Service;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -18,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IStock;
@@ -41,6 +43,9 @@ public class CreatePatientOrderHandler {
 
 	@Inject
 	IContextService contextService;
+
+	@Inject
+	IEventBroker eventBroker;
 
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, IConfigService configService,
@@ -79,12 +84,15 @@ public class CreatePatientOrderHandler {
 
 		for (IStockEntry stockEntry : stockEntries) {
 			if (stockEntry.getArticle() != null) {
+				if (stockEntry.getMaximumStock() != 0) {
 				orderService.addRefillForStockEntryToOrder(stockEntry, order);
+				}
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Could not resolve article [{}] of stock entry [{}]", //$NON-NLS-1$
 						stockEntry.getLabel(), stockEntry.getId());
 			}
 		}
+		eventBroker.post(ElexisEventTopics.EVENT_RELOAD, IStock.class);
 
 		MPart orderPart = partService.findPart("ch.elexis.BestellenView");
 		if (orderPart == null) {
