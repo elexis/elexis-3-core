@@ -2995,8 +2995,10 @@ public class Messages extends NLS {
 	public static String Mediorder_requested_Tooltip;
 	public static String Mediorder_approved;
 	public static String Mediorder_approved_Tooltip;
-	public static String Mediorder_unequal;
-	public static String Mediorder_comparison;
+	public static String Mediorder_Questionnaire_active_and_up_to_date;
+	public static String Mediorder_Questionnaire_active_not_up_to_date;
+	public static String Mediorder_Questionnaire_inactive;
+	public static String Mediorder_Questionnaire_status;
 	public static String Mediorder_comparison_Tooltip;
 	public static String Mediorder_updateArticle;
 	public static String Mediorder_updateArticle_successful;
