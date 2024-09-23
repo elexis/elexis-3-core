@@ -32,7 +32,10 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -42,7 +45,9 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -64,6 +69,9 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	public static final String ALWAYS_OPEN = Messages.UserSettings2_AlwaysOpen;
 
 	private ConfigServicePreferenceStore prefs = new ConfigServicePreferenceStore(Scope.USER);
+	private ConfigServicePreferenceStore globalPrefs = new ConfigServicePreferenceStore(Scope.GLOBAL);
+
+	private boolean extraBool;
 
 	private static final String[] patlistFocusFields = { Patient.FLD_PATID, Patient.FLD_NAME, Patient.FLD_FIRSTNAME,
 			Patient.BIRTHDATE, };
@@ -77,6 +85,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWFIRSTNAME, true);
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWDOB, true);
 		prefs.setDefault(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true);
+		prefs.setDefault(Patientenblatt2.CFG_GLOBALFIELDS, false);
 	}
 
 	@Override
@@ -103,9 +112,34 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 				getFieldEditorParent()));
 		new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL)
 				.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
-		new Label(getFieldEditorParent(), SWT.NONE).setText(Messages.UserSettings2_AddidtionalFields);
-		addField(new MultilineFieldEditor(Patientenblatt2.CFG_EXTRAFIELDS, StringTool.leer, 5, SWT.NONE, true,
-				getFieldEditorParent()));
+		Composite container = new Composite(getFieldEditorParent(), SWT.NONE);
+		container.setLayout(new GridLayout(2, false));
+		new Label(container, SWT.NONE).setText(Messages.UserSettings2_AddidtionalFields);
+		extraBool = globalPrefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS);
+		Button checkBox = new Button(container, SWT.CHECK);
+		checkBox.setText("globale Felder"); //$NON-NLS-1$
+		checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		checkBox.setSelection(extraBool);
+		MultilineFieldEditor zusatzFeldEditor = new MultilineFieldEditor(Patientenblatt2.CFG_EXTRAFIELDS,
+				StringTool.leer, 5, SWT.NONE, true, getFieldEditorParent());
+		setZusatzFeldStore(zusatzFeldEditor);
+		addField(zusatzFeldEditor);
+		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				extraBool = checkBox.getSelection();
+				globalPrefs.setValue(Patientenblatt2.CFG_GLOBALFIELDS, extraBool);
+				setZusatzFeldStore(zusatzFeldEditor);
+				if (zusatzFeldEditor.getPreferenceStore().equals(globalPrefs)
+						&& globalPrefs.getString(Patientenblatt2.CFG_EXTRAFIELDS).isEmpty()) {
+					String globalFields = getAllExtraFields();
+					zusatzFeldEditor.getTextControl(getFieldEditorParent()).setText(globalFields.replace(",", "\r\n")); //$NON-NLS-1$ //$NON-NLS-2$
+				} else {
+					zusatzFeldEditor.getTextControl(getFieldEditorParent()).setText(zusatzFeldEditor
+							.getPreferenceStore().getString(Patientenblatt2.CFG_EXTRAFIELDS).replace(",", "\r\n")); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		});
 		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
 		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER, "Sticker für verstorbene",
 				getStickerComboItems(), getFieldEditorParent());
@@ -165,6 +199,25 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 				.isNotBlank(ConfigServiceHolder.getGlobal(Preferences.CFG_DECEASED_STICKER, StringUtils.EMPTY)));
 	}
 
+	private String getAllExtraFields() {
+		IQuery<IUserConfig> ret = CoreModelServiceHolder.get().getQuery(IUserConfig.class);
+		ret.and("Param", COMPARATOR.EQUALS, Patientenblatt2.CFG_EXTRAFIELDS); //$NON-NLS-1$
+		List<IUserConfig> list = ret.execute();
+		StringBuilder sb = new StringBuilder(list.get(0).getValue());
+		for (int i = 1; i < list.size(); i++) {
+			sb.append("," + list.get(i).getValue()); //$NON-NLS-1$
+		}
+		return sb.toString();
+	}
+
+	private void setZusatzFeldStore(MultilineFieldEditor zusatzFeldEditor) {
+		if (globalPrefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS)) {
+			zusatzFeldEditor.setPreferenceStore(globalPrefs);
+		} else {
+			zusatzFeldEditor.setPreferenceStore(prefs);
+		}
+	}
+
 	private String[] getStickerComboItems() {
 		List<Sticker> stickers = Sticker.getStickersForClass(Patient.class);
 		List<String> stickerNames = stickers.stream().map(s -> s.getLabel()).collect(Collectors.toList());
@@ -190,6 +243,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	@Override
 	public boolean performOk() {
 		SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
+		SWTHelper.reloadViewPart(UiResourceConstants.PatientDetailView2_ID);
 		return super.performOk();
 	}
 }
