@@ -2988,6 +2988,8 @@ public class Messages extends NLS {
 	public static String Medication_SelfDispensed;
 	public static String Medication_SymptomaticMedication;
 	public static String Medication_headerComment;
+	public static String Mediorder_inactive_patient_stock;
+	public static String Mediorder_no_activated_articles;
 	public static String Mediorder_Order_status;
 	public static String Mediorder_Order_status_Tooltip;
 	public static String Mediorder_sufficient_for;
