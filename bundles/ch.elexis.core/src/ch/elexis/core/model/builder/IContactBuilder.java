@@ -28,6 +28,14 @@ public class IContactBuilder {
 			object.setGender(sex);
 		}
 
+		public PersonBuilder(IModelService modelService, String firstName, String lastName, Gender sex) {
+			super(modelService);
+			object = modelService.create(IPerson.class);
+			object.setDescription1(lastName);
+			object.setDescription2(firstName);
+			object.setGender(sex);
+		}
+
 		public PersonBuilder mandator() {
 			object.setMandator(true);
 			return this;
