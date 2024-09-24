@@ -71,7 +71,20 @@ public class MedicationView extends ViewPart implements IRefreshable {
 
 	@Inject
 	@Optional
-	public void handleArticleDrop(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Map<String, Object> eventPayload) {
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IPrescription.class.equals(clazz)) {
+			if (CoreUiUtil.isActiveControl(tpc)) {
+				Display.getDefault().asyncExec(() -> {
+					refresh();
+				});
+			}
+		}
+	}
+
+	@Inject
+	@Optional
+	public void processBilledArticleEvent(
+			@UIEventTopic(ElexisEventTopics.EVENT_ARTICLE_PROCESSED) Map<String, Object> eventPayload) {
 		if (eventPayload != null) {
 			IArticle article = (IArticle) eventPayload.get(ExtensionPointConstantsUi.PAYLOAD_ARTICLE);
 			IArticleDefaultSignature signature = (IArticleDefaultSignature) eventPayload
@@ -92,14 +105,6 @@ public class MedicationView extends ViewPart implements IRefreshable {
 					});
 				});
 			}
-		}
-		if (eventPayload != null && ExtensionPointConstantsUi.ACTION_REFRESH_MEDICATION
-				.equals(eventPayload.get(ExtensionPointConstantsUi.PAYLOAD_ACTION))) {
-			Display.getDefault().asyncExec(() -> {
-				ContextServiceHolder.get().getActivePatient().ifPresent(patient -> {
-					updateUi(patient, true);
-				});
-			});
 		}
 	}
 

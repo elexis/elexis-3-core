@@ -99,14 +99,13 @@ public class CreatePrescriptionHelper {
 			prescription.setStopReason("Stop geplant");
 		}
 
-		// Braucht es nicht mehr, da es über ArticelProcessor erstellt wird
 		// create dispensation entry
-//		if (signature.getDisposalType() != EntryType.RECIPE) {
-//			EntryType disposalType = signature.getDisposalType();
-//			if (disposalType == EntryType.SELF_DISPENSED) {
-//				selfDispense(prescription);
-//			}
-//		}
+		if (signature.getDisposalType() != EntryType.RECIPE) {
+			EntryType disposalType = signature.getDisposalType();
+			if (disposalType == EntryType.SELF_DISPENSED) {
+				selfDispense(prescription);
+			}
+		}
 
 		if (signature.getStartDate() != null) {
 			prescription.setDateFrom(signature.getStartDate().atStartOfDay());

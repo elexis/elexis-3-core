@@ -68,6 +68,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -782,7 +783,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					if (object instanceof IPrescription) {
 						object = ((IPrescription) object).getArticle();
 					}
-
 					if (object instanceof IArticle) {
 						articleProcessor.processArticle((IArticle) object);
 					} else if (object instanceof ICodeElementBlock) {
@@ -1214,17 +1214,17 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		} else {
 			deleteMedications = true;
 		}
-		if (deleteMedications) {
-			handleLinkedMedication(billed, prescriptions, CoreModelServiceHolder.get()::delete);
-		}
+		boolean lockDeleteMedication = deleteMedications;
 		AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
 			@Override
 			public void lockAcquired() {
+				if (lockDeleteMedication) {
+					handleLinkedMedication(billed, prescriptions, CoreModelServiceHolder.get()::delete);
+				}
 				BillingServiceHolder.get().removeBilled(billed, actEncounter);
 			}
 		});
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD,
-				Map.of(ExtensionPointConstantsUi.PAYLOAD_ACTION, ExtensionPointConstantsUi.ACTION_REFRESH_MEDICATION));
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 	}
 
 	private void handleLinkedMedication(IBilled billed, List<IPrescription> prescriptions,

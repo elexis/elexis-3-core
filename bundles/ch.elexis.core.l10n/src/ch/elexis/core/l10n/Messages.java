@@ -5098,6 +5098,8 @@ public class Messages extends NLS {
 	public static String VerrechnungsDisplay_deleteMedicationOnlyBilling;
 	public static String VerrechnungsDisplay_deleteMedicationCancel;
 	public static String ArticleDefaultSignatureComposite_Discharge;
+	public static String ArticleProcessorBilledWarningContext;
+	public static String ArticleProcessorBilledFail;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

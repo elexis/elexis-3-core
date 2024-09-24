@@ -113,19 +113,6 @@ public class Patient extends Person implements IPatient {
 	}
 
 	@Override
-	public List<IPrescription> getMedicationAll(List<EntryType> filterType) {
-		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
-		query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, this);
-		query.and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.EQUALS, false);
-		List<IPrescription> iPrescriptions = query.execute();
-		if (filterType != null && !filterType.isEmpty()) {
-			return iPrescriptions.stream().filter(p -> filterType.contains(p.getEntryType()))
-					.collect(Collectors.toList());
-		}
-		return iPrescriptions;
-	}
-
-	@Override
 	public IContact getFamilyDoctor() {
 		String doctorId = (String) getExtInfo(PatientConstants.FLD_EXTINFO_STAMMARZT);
 		if (doctorId != null) {

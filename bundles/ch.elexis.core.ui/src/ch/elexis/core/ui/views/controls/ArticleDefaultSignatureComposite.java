@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.prescription.EntryType;
@@ -324,6 +325,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			if (visible && isSymptomaticEnabled()) {
 				int defaultDays = ConfigServiceHolder.getUser(MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
 				txtEnddate.setText(String.valueOf(defaultDays));
+			} else {
+				boolean defaultSymptomsSetting = ConfigServiceHolder
+						.getUser(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS, false);
+				if (!defaultSymptomsSetting) {
+					txtEnddate.setText("0");
+				} else {
+					txtEnddate.setText(StringUtils.EMPTY);
+				}
 			}
 		}
 	}

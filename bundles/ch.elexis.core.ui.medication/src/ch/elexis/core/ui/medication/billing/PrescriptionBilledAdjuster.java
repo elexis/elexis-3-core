@@ -49,23 +49,8 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 						query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patientOpt.get());
 						query.and("artikel", COMPARATOR.EQUALS, articleStoreToString.get()); //$NON-NLS-1$
 						query.orderBy(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, ORDER.DESC);
-						List<IPrescription> existingPrescriptions = query.execute();
-
 						// create new dispensation
 						boolean dispensationExists = false;
-						if (!existingPrescriptions.isEmpty()) {
-							// only create new dispensation if no dispensation on the same day
-							for (IPrescription prescription : existingPrescriptions) {
-								if (prescription.getEntryType() == EntryType.SELF_DISPENSED) {
-									LocalDateTime prescriptionDate = prescription.getDateFrom();
-									LocalDateTime billedDate = getBilledDateTime(billed);
-//									if (prescriptionDate.toLocalDate().equals(billedDate.toLocalDate())) {
-//										dispensationExists = true;
-//										break;
-//									}
-								}
-							}
-						}
 						if (!dispensationExists) {
 							createDispensationPrescription(article, patientOpt.get(), billed);
 							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
@@ -85,11 +70,6 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 			}
 		}
 		return Optional.empty();
-	}
-
-	private LocalDateTime getBilledDateTime(IBilled billed) {
-		IEncounter encounter = billed.getEncounter();
-		return encounter.getTimeStamp();
 	}
 
 	private IPrescription createDispensationPrescription(IArticle article, IPatient patient, IBilled billed) {
