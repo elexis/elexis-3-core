@@ -40,6 +40,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -53,6 +54,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -91,11 +93,13 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -246,6 +250,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
 	private Button increasedTreatmentBtn;
+	ArrayList<InputData> fields;
 
 	void recreateUserpanel() {
 		// cUserfields.setRedraw(false);
@@ -253,8 +258,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ipp.dispose();
 			ipp = null;
 		}
-
-		ArrayList<InputData> fields = new ArrayList<>(20);
+		
+		fields = new ArrayList<>(20);
 		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
@@ -918,6 +923,26 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		refreshUi();
 
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(p));
+
+		if (ipp != null) {
+			fields.get(9).getWidget().getControl().addKeyListener(new KeyAdapter() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (actPatient != null) {
+						List<ISticker> lSticker = StickerServiceHolder.get().getStickers(actPatient.toIPatient());
+						if (lSticker.stream().anyMatch(sticker -> sticker.getId().equals("activate_mediorder"))) {
+							if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+									Messages.Mediorder_changeEmail_text)) {
+								e.doit = false;
+							}
+							fields.get(9).getWidget().getControl().removeKeyListener(this);
+						}
+					}
+				}
+			});
+		}
+
 	}
 
 	public void refreshUi() {
