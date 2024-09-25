@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.admin.Messages;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -54,8 +53,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 	private BooleanFieldEditor famAnamneseStructFieldEditor;
 
 	private BooleanFieldEditor allergyIntoleranceStructFieldEditor;
-
-	private BooleanFieldEditor diagnoseExportWordFormatEditor;
 
 	private BooleanFieldEditor rowsAreDatesFieldEditor;
 
@@ -116,10 +113,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				IMigratorService.ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED, "Allergien strukturiert anzeigen",
 				getFieldEditorParent());
 		addField(allergyIntoleranceStructFieldEditor);
-
-		diagnoseExportWordFormatEditor = new BooleanFieldEditor(IMigratorService.DIAGNOSE_EXPORT_WORD_FORMAT,
-				"Diagnosen im Word formatieren", getFieldEditorParent());
-		addField(diagnoseExportWordFormatEditor);
 
 		getControl().setEnabled(FindingsServiceComponent.getService() != null);
 

@@ -73,6 +73,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.XRefExtensionConstants;
@@ -82,8 +83,6 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
-import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
-import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.core.ui.preferences.TextTemplatePreferences;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
@@ -134,8 +133,6 @@ public class TextContainer {
 	public static Connection queryConn = null;
 
 	private List<String> dontShowErrorFor;
-
-	ConfigServicePreferenceStore preferenceStore = new ConfigServicePreferenceStore(Scope.GLOBAL);
 
 	/**
 	 * Der Konstruktor sucht nach dem in den Settings definierten Textplugin Wenn er
@@ -354,17 +351,24 @@ public class TextContainer {
 		}
 		Object fieldValue = o.get(q[1]);
 		int maxLineLength = 70;
-		boolean isWordFormatEnabled = preferenceStore.getBoolean(DIAGNOSE_EXPORT_WORD_FORMAT);
-
-		if (isWordFormatEnabled && ("Patient.Diagnosen".equals(b) || "Patient.FamilienAnamnese".equals(b)
-				|| "Patient.PersAnamnese".equals(b) || "Patient.Risiken".equals(b)
-				|| "Patient.Allergien".equals(b) && fieldValue instanceof String)) {
-			String formattedText = formatTextField((String) fieldValue, maxLineLength);
-			return formattedText;
+		
+		if (isWordFormatEnabled() && isRelevantPatientField(b) && fieldValue instanceof String) {
+		    String formattedText = formatTextField((String) fieldValue, maxLineLength);
+		    return formattedText;
 		}
 		return readFromPo(o, q[1], showErrors);
 	}
 
+	private boolean isWordFormatEnabled() {
+		return Boolean.parseBoolean(LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, null));
+	}
+
+	private boolean isRelevantPatientField(String fieldName) {
+	    return "Patient.Diagnosen".equals(fieldName) || "Patient.FamilienAnamnese".equals(fieldName)
+	            || "Patient.PersAnamnese".equals(fieldName) || "Patient.Risiken".equals(fieldName)
+	            || "Patient.Allergien".equals(fieldName);
+	}
+	
 	private String formatTextField(String diagnosesText, int maxLineLength) {
 		StringBuilder formattedText = new StringBuilder();
 	    String[] lines = diagnosesText.split("\n");

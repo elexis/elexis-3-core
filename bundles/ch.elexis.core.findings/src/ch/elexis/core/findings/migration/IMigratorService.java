@@ -32,13 +32,6 @@ public interface IMigratorService {
 	public static final String ALLERGYINTOLERANCE_SETTINGS_USE_STRUCTURED = "allergyintolerance/settings/useStructured";
 
 	/**
-	 * Preference if diagnoses should be exported in Word format, saved in global
-	 * config.
-	 */
-
-	public static final String DIAGNOSE_EXPORT_WORD_FORMAT = "diagnose/settings/exportWordFormat";
-
-	/**
 	 * Migrate older information of the patient to the its new {@link IFinding}
 	 * representation.
 	 *

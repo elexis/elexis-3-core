@@ -5106,6 +5106,7 @@ public class Messages extends NLS {
 	public static String LaborResultsComposite_documentSelectionErrorTitle;
 	public static String LaborResultsComposite_selectionLimitErrorMessage;
 	public static String LaborResultsComposite_selectionLimitErrorTitle;
+	public static String Texterstellung_DiagnoseExportAlternativeFormat;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
