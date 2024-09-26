@@ -115,7 +115,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		Composite container = new Composite(getFieldEditorParent(), SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		new Label(container, SWT.NONE).setText(Messages.UserSettings2_AddidtionalFields);
-		extraBool = globalPrefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS);
+		extraBool = prefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS);
 		Button checkBox = new Button(container, SWT.CHECK);
 		checkBox.setText("globale Felder"); //$NON-NLS-1$
 		checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -128,7 +128,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				extraBool = checkBox.getSelection();
-				globalPrefs.setValue(Patientenblatt2.CFG_GLOBALFIELDS, extraBool);
+				prefs.setValue(Patientenblatt2.CFG_GLOBALFIELDS, extraBool);
 				setZusatzFeldStore(zusatzFeldEditor);
 				if (zusatzFeldEditor.getPreferenceStore().equals(globalPrefs)
 						&& globalPrefs.getString(Patientenblatt2.CFG_EXTRAFIELDS).isEmpty()) {
@@ -211,7 +211,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 	}
 
 	private void setZusatzFeldStore(MultilineFieldEditor zusatzFeldEditor) {
-		if (globalPrefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS)) {
+		if (prefs.getBoolean(Patientenblatt2.CFG_GLOBALFIELDS)) {
 			zusatzFeldEditor.setPreferenceStore(globalPrefs);
 		} else {
 			zusatzFeldEditor.setPreferenceStore(prefs);
