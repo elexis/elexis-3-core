@@ -153,6 +153,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
+	public final static String CFG_GLOBALFIELDS = "views/patientenblatt/extrafelder/global"; //$NON-NLS-1$
 	public final static String SPLITTER = "#!>"; //$NON-NLS-1$
 
 	@SuppressWarnings("unchecked")
@@ -469,9 +470,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						}
 					}
 				}));
-
-		String[] userfields = ConfigServiceHolder.getUser(CFG_EXTRAFIELDS, StringConstants.EMPTY)
-				.split(StringConstants.COMMA);
+		String[] userfields;
+		if (ConfigServiceHolder.getGlobal(CFG_GLOBALFIELDS, false)) {
+			userfields = ConfigServiceHolder.getGlobal(CFG_EXTRAFIELDS, StringConstants.EMPTY)
+					.split(StringConstants.COMMA);
+		} else {
+			userfields = ConfigServiceHolder.getUser(CFG_EXTRAFIELDS, StringConstants.EMPTY)
+					.split(StringConstants.COMMA);
+		}
 		for (String extfield : userfields) {
 			if (!StringTool.isNothing(extfield)) {
 				fields.add(new InputData(extfield, Patient.FLD_EXTINFO, InputData.Typ.STRING, extfield));
