@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.medication.views;
 
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,20 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IArticleDefaultSignature;
-import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.medication.PreferenceConstants;
-import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.views.IRefreshable;
 
 public class MedicationView extends ViewPart implements IRefreshable {
@@ -75,34 +68,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		if (IPrescription.class.equals(clazz)) {
 			if (CoreUiUtil.isActiveControl(tpc)) {
 				Display.getDefault().asyncExec(() -> {
-					refresh();
-				});
-			}
-		}
-	}
-
-	@Inject
-	@Optional
-	public void processBilledArticleEvent(
-			@UIEventTopic(ElexisEventTopics.EVENT_ARTICLE_PROCESSED) Map<String, Object> eventPayload) {
-		if (eventPayload != null) {
-			IArticle article = (IArticle) eventPayload.get(ExtensionPointConstantsUi.PAYLOAD_ARTICLE);
-			IArticleDefaultSignature signature = (IArticleDefaultSignature) eventPayload
-					.get(ExtensionPointConstantsUi.PAYLOAD_SIGNATURE);
-			IBilled billed = (IBilled) eventPayload.get(ExtensionPointConstantsUi.PAYLOAD_BILLED);
-			if (article != null && signature != null) {
-				CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(article,
-						getSite().getShell());
-				IPrescription prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
-				if (prescription != null && billed != null) {
-					prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
-							billed.getId().toString());
-					CoreModelServiceHolder.get().save(prescription);
-				}
-				Display.getDefault().asyncExec(() -> {
-					ContextServiceHolder.get().getActivePatient().ifPresent(patient -> {
-						updateUi(patient, true);
-					});
+					updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), true);
 				});
 			}
 		}

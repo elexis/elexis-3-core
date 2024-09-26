@@ -44,17 +44,8 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 					Optional<IPatient> patientOpt = getPatient(billed);
 					Optional<String> articleStoreToString = StoreToStringServiceHolder.get().storeToString(article);
 					if (patientOpt.isPresent() && articleStoreToString.isPresent()) {
-						// lookup existing prescriptions
-						IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
-						query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patientOpt.get());
-						query.and("artikel", COMPARATOR.EQUALS, articleStoreToString.get()); //$NON-NLS-1$
-						query.orderBy(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, ORDER.DESC);
-						// create new dispensation
-						boolean dispensationExists = false;
-						if (!dispensationExists) {
 							createDispensationPrescription(article, patientOpt.get(), billed);
 							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
-						}
 					}
 				}
 			}

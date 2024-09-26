@@ -128,14 +128,4 @@ public class ElexisEventTopics {
 	 */
 	public static final String STOCK_COMMISSIONING_PROPKEY_STOCK_ID = "stockId";
 
-	/**
-	 * Event triggered when an article has been processed (e.g., billed or updated
-	 * in a prescription).
-	 * 
-	 * This event can be used to update the UI or perform additional actions related
-	 * to the processed article. The event payload contains details about the
-	 * article, the associated billing, and the prescription signature.
-	 */
-	public static final String EVENT_ARTICLE_PROCESSED = BASE_MODEL + "article/processed";
-
 }

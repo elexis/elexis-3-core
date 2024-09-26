@@ -119,7 +119,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
-import ch.elexis.core.ui.processor.ArticleProcessor;
+import ch.elexis.core.ui.processor.BillingProcessor;
 import ch.elexis.core.ui.util.CoreCommandUiUtil;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -159,7 +159,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
-	private ArticleProcessor articleProcessor;
+	private BillingProcessor articleProcessor;
 
 	@Optional
 	@Inject
@@ -777,7 +777,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e) {
 			if (actEncounter != null && accept(list)) {
-				articleProcessor = new ArticleProcessor(actEncounter);
+				articleProcessor = new BillingProcessor(actEncounter);
 				for (Object object : list) {
 					// map prescription to article
 					if (object instanceof IPrescription) {
@@ -981,8 +981,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				IStructuredSelection selection = viewer.getStructuredSelection();
-				List<IPrescription> prescriptions = ArticleProcessor
-						.getRecentPatientPrescriptions(actEncounter.getPatient());
+				List<IPrescription> prescriptions = BillingProcessor
+						.getRecentPatientPrescriptions(actEncounter.getPatient(),
+								actEncounter.getDate().atStartOfDay());
 
 				for (Object selected : selection.toList()) {
 					if (selected instanceof IBilled) {
@@ -1003,11 +1004,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				List<IBilled> allBilled = actEncounter.getBilled();
-				List<IPrescription> prescriptions = ArticleProcessor
-						.getRecentPatientPrescriptions(actEncounter.getPatient());
+				List<IPrescription> prescriptions = BillingProcessor
+						.getRecentPatientPrescriptions(actEncounter.getPatient(),
+								actEncounter.getDate().atStartOfDay());
 
 				for (IBilled billed : allBilled) {
-					removeBilledItem(billed, prescriptions, false); // Keine Prüfung auf Dialog, direkt löschen
+					removeBilledItem(billed, prescriptions, false);
 				}
 				setEncounter(actEncounter);
 			}

@@ -30,7 +30,7 @@ import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
-import ch.elexis.core.ui.processor.ArticleProcessor;
+import ch.elexis.core.ui.processor.BillingProcessor;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
 
@@ -44,7 +44,7 @@ public class CreatePrescriptionHelper {
 
 	private IArticle article;
 	private Shell parentShell;
-	private ArticleProcessor articleProcessor;
+	private BillingProcessor articleProcessor;
 	private boolean medicationTypeFix = false;
 
 	public CreatePrescriptionHelper(IArticle article, Shell parentShell) {
@@ -118,7 +118,7 @@ public class CreatePrescriptionHelper {
 		// add article to consultation
 		Optional<IEncounter> encounter = ContextServiceHolder.get().getTyped(IEncounter.class);
 		if (encounter.isPresent()) {
-			articleProcessor = new ArticleProcessor(encounter.get());
+			articleProcessor = new BillingProcessor(encounter.get());
 			boolean isToday = encounter.get().getDate().equals(LocalDate.now());
 			if (isToday) {
 				IArticle dispensationArticle = prescription.getArticle();

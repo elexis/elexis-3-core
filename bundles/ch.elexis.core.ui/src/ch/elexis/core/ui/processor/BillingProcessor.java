@@ -1,10 +1,11 @@
 package ch.elexis.core.ui.processor;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -35,16 +36,16 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Messages;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.ResultDialog;
+import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.rgw.tools.Result;
 
-public class ArticleProcessor {
+public class BillingProcessor {
 
 	private final IEncounter actEncounter;
 
-	public ArticleProcessor(IEncounter actEncounter) {
+	public BillingProcessor(IEncounter actEncounter) {
 		this.actEncounter = actEncounter;
 	}
 
@@ -53,7 +54,8 @@ public class ArticleProcessor {
 			billArticleDirectly(selectedArticle);
 			return;
 		}
-		List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient());
+		List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
+				actEncounter.getDate().atStartOfDay());
 		boolean medicationExistsType = fixOrReserveWithArticleExists(prescriptions, selectedArticle);
 		boolean showDialog = ConfigServiceHolder.getUser(Preferences.MEDICATION_SETTINGS_SHOW_DIALOG_ON_BILLING, false);
 		if (showDialog && !medicationExistsType) {
@@ -87,14 +89,25 @@ public class ArticleProcessor {
 		dialog.setFromBillingDialog(true);
 	    if (dialog.open() == Dialog.OK) {
 	        IArticleDefaultSignature signature = dialog.getSignature();
-	        List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient());
+			List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
+					actEncounter.getDate().atStartOfDay());
 	        boolean medicationExists = checkIfMedicationExists(prescriptions, selectedArticle, signature);
 	        Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
 	        if (billResult.isOK()) {
 	            IBilled billed = billResult.get();
+				updatePrescriptionWithBilledId(billed, signature);
 	            CoreModelServiceHolder.get().save(actEncounter);
 	            if (!medicationExists) {
-	                postReloadEvent(selectedArticle, billed, signature);
+					updatePrescriptionWithBilledId(billed, signature);
+					CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
+							Display.getDefault().getActiveShell());
+					IPrescription prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
+					if (prescription != null && billed != null) {
+						prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
+								billed.getId().toString());
+						CoreModelServiceHolder.get().save(prescription);
+						postRefreshMedicationEvent();
+					}
 	            }
 	        } else {
 	            ResultDialog.show(billResult);
@@ -114,27 +127,17 @@ public class ArticleProcessor {
 		});
 	}
 
-	private void postReloadEvent(IArticle selectedArticle, IBilled billed, IArticleDefaultSignature signature) {
-		updatePrescriptionWithBilledId(billed, signature);
-		if (!signature.getMedicationType().equals(EntryType.SELF_DISPENSED)) {
-			Display.getDefault().asyncExec(() -> {
-				Map<String, Object> payload = Map.of(ExtensionPointConstantsUi.PAYLOAD_ARTICLE, selectedArticle,
-						ExtensionPointConstantsUi.PAYLOAD_SIGNATURE, signature,
-						ExtensionPointConstantsUi.PAYLOAD_BILLED, billed);
-				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_ARTICLE_PROCESSED, payload);
-			});
-		}
-		postRefreshMedicationEvent();
-	}
-
 	private void updatePrescriptionWithBilledId(IBilled billed, IArticleDefaultSignature signature) {
-		getRecentPatientPrescriptions(actEncounter.getPatient()).stream().filter(prescription -> {
+		getRecentPatientPrescriptions(actEncounter.getPatient(), actEncounter.getDate().atStartOfDay()).stream()
+				.filter(prescription -> {
 			Object extInfo = prescription.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
 			return extInfo != null && billed.getId().equals(extInfo.toString());
 		}).findFirst().ifPresent(prescription -> {
 			prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 			prescription.setRemark(signature.getComment());
 			prescription.setDateFrom(billed.getEncounter().getDate().atStartOfDay());
+					prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
+							billed.getId().toString());
 			CoreModelServiceHolder.get().save(prescription);
 		});
 	}
@@ -147,7 +150,8 @@ public class ArticleProcessor {
 	}
 
 	public void updatePrescriptionsWithDosage(IBilled billed) {
-	    List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient());
+		List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
+				actEncounter.getDate().atStartOfDay());
 	    List<IPrescription> reversedPrescriptions = new ArrayList<>(prescriptions);
 	    Collections.reverse(reversedPrescriptions);
 	    Optional<IPrescription> lastPrescriptionWithDosage = reversedPrescriptions.stream()
@@ -178,12 +182,9 @@ public class ArticleProcessor {
 	            && dosage != null && !dosage.isEmpty();
 	}
 
-	public static List<IPrescription> getRecentPatientPrescriptions(IPatient patient) {
-		return ContextServiceHolder.get().getTyped(IEncounter.class).map(IEncounter::getPatient)
-				.map(p -> getMedicationAll(patient,
-						Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
-								EntryType.SYMPTOMATIC_MEDICATION, EntryType.SELF_DISPENSED)))
-				.orElse(Collections.emptyList());
+	public static List<IPrescription> getRecentPatientPrescriptions(IPatient patient, LocalDateTime referenceDate) {
+		return getMedicationAll(patient, Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+				EntryType.SYMPTOMATIC_MEDICATION, EntryType.SELF_DISPENSED), referenceDate);
 	}
 
 	public void processCodeElementBlock(ICodeElementBlock block) {
@@ -257,9 +258,12 @@ public class ArticleProcessor {
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 	}
 
-	public static List<IPrescription> getMedicationAll(IPatient patient, List<EntryType> filterType) {
+	public static List<IPrescription> getMedicationAll(IPatient patient, List<EntryType> filterType,
+			LocalDateTime referenceDate) {
+		LocalDateTime startDate = referenceDate.minus(3, ChronoUnit.MONTHS);
 		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
 		query.and(ModelPackage.Literals.IPRESCRIPTION__PATIENT, COMPARATOR.EQUALS, patient);
+		query.and(ModelPackage.Literals.IPRESCRIPTION__DATE_FROM, COMPARATOR.GREATER_OR_EQUAL, startDate);
 		List<IPrescription> iPrescriptions = query.execute();
 		if (filterType != null && !filterType.isEmpty()) {
 			return iPrescriptions.stream().filter(p -> filterType.contains(p.getEntryType()))
