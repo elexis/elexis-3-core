@@ -471,7 +471,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}));
 		String[] userfields;
-		if (ConfigServiceHolder.getGlobal(CFG_GLOBALFIELDS, false)) {
+		if (ConfigServiceHolder.getUser(CFG_GLOBALFIELDS, false)) {
 			userfields = ConfigServiceHolder.getGlobal(CFG_EXTRAFIELDS, StringConstants.EMPTY)
 					.split(StringConstants.COMMA);
 		} else {
