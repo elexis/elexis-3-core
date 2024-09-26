@@ -73,6 +73,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.XRefExtensionConstants;
@@ -126,6 +127,8 @@ public class TextContainer {
 	public static final String DISALLOWED_SQLEXPRESSIONS = "DROP,UPDATE,CREATE,INSERT"; //$NON-NLS-1$
 	// public static final String MATCH_SCRIPT = "\\["+Script.SCRIPT_MARKER+".+\\]";
 	public static final String MATCH_SCRIPT = "\\[" + Script.SCRIPT_MARKER + "[^\\[]+\\]"; //$NON-NLS-1$ //$NON-NLS-2$
+
+	public static final String DIAGNOSE_EXPORT_WORD_FORMAT = "diagnose/settings/exportWordFormat"; //$NON-NLS-1$
 
 	public static Connection queryConn = null;
 
@@ -348,14 +351,24 @@ public class TextContainer {
 		}
 		Object fieldValue = o.get(q[1]);
 		int maxLineLength = 70;
-		if ("Patient.Diagnosen".equals(b) || "Patient.FamilienAnamnese".equals(b) || "Patient.PersAnamnese".equals(b)
-				|| "Patient.Risiken".equals(b) || "Patient.Allergien".equals(b) && fieldValue instanceof String) {
-			String formattedText = formatTextField((String) fieldValue, maxLineLength);
-			return formattedText;
+		
+		if (isWordFormatEnabled() && isRelevantPatientField(b) && fieldValue instanceof String) {
+		    String formattedText = formatTextField((String) fieldValue, maxLineLength);
+		    return formattedText;
 		}
 		return readFromPo(o, q[1], showErrors);
 	}
 
+	private boolean isWordFormatEnabled() {
+		return Boolean.parseBoolean(LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, null));
+	}
+
+	private boolean isRelevantPatientField(String fieldName) {
+	    return "Patient.Diagnosen".equals(fieldName) || "Patient.FamilienAnamnese".equals(fieldName)
+	            || "Patient.PersAnamnese".equals(fieldName) || "Patient.Risiken".equals(fieldName)
+	            || "Patient.Allergien".equals(fieldName);
+	}
+	
 	private String formatTextField(String diagnosesText, int maxLineLength) {
 		StringBuilder formattedText = new StringBuilder();
 	    String[] lines = diagnosesText.split("\n");

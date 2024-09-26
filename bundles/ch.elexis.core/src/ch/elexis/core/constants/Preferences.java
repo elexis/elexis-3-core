@@ -101,6 +101,7 @@ public class Preferences {
 	public static final String P_TEXT_EDIT_LOCAL = "briefe/Textmodul_Edit_Local"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE = "briefe/Textmodul_Extern_File"; //$NON-NLS-1$
 	public static final String P_TEXT_EXTERN_FILE_PATH = "briefe/Textmodul_Extern_File_Path"; //$NON-NLS-1$
+	public static final String P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT = "diagnose/settings/exportWordFormat";
 
 	// Gruppen und Rechte
 	public static final String ACC_GROUPS = "groupNames"; //$NON-NLS-1$
