@@ -203,11 +203,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		IQuery<IUserConfig> ret = CoreModelServiceHolder.get().getQuery(IUserConfig.class);
 		ret.and("Param", COMPARATOR.EQUALS, Patientenblatt2.CFG_EXTRAFIELDS); //$NON-NLS-1$
 		List<IUserConfig> list = ret.execute();
-		StringBuilder sb = new StringBuilder(list.get(0).getValue());
-		for (int i = 1; i < list.size(); i++) {
-			sb.append("," + list.get(i).getValue()); //$NON-NLS-1$
-		}
-		return sb.toString();
+		return list.stream().map(uc -> uc.getValue()).collect(Collectors.joining(",")); //$NON-NLS-1$
 	}
 
 	private void setZusatzFeldStore(MultilineFieldEditor zusatzFeldEditor) {
