@@ -17,7 +17,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -90,7 +92,6 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IDiagnosis;
@@ -110,6 +111,7 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -117,6 +119,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockDeniedNoActionLockHandler;
+import ch.elexis.core.ui.processor.BillingProcessor;
 import ch.elexis.core.ui.util.CoreCommandUiUtil;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -154,8 +157,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVE = Messages.VerrechnungsDisplay_removeElements;
 	private static final String CHTEXT = Messages.VerrechnungsDisplay_changeText;
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
-	private boolean isDescriptionSortedAscending = true;
+
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
+	private BillingProcessor billingProcessor;
 
 	@Optional
 	@Inject
@@ -773,67 +777,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e) {
 			if (actEncounter != null && accept(list)) {
+				billingProcessor = new BillingProcessor(actEncounter);
 				for (Object object : list) {
 					// map prescription to article
 					if (object instanceof IPrescription) {
 						object = ((IPrescription) object).getArticle();
 					}
-
-					if (object instanceof PersistentObject) {
-						addPersistentObject((PersistentObject) object);
-					} else if (object instanceof IBillable) {
-						IBillable billable = (IBillable) object;
-						Result<?> billResult = BillingServiceHolder.get().bill(billable, actEncounter, 1.0);
-						if (!billResult.isOK()) {
-							ResultDialog.show(billResult);
-						} else {
-							// refresh with sorted billed list
-							CoreModelServiceHolder.get().refresh(actEncounter, true);
-						}
+					if (object instanceof IArticle) {
+						billingProcessor.processArticle((IArticle) object);
 					} else if (object instanceof ICodeElementBlock) {
-						ICodeElementBlock block = (ICodeElementBlock) object;
-						List<ICodeElement> elements = block.getElements();
-						StringJoiner notOkResults = new StringJoiner(StringUtils.LF);
-						for (ICodeElement element : elements) {
-							if (element instanceof IBillable) {
-								Result<?> billResult = BillingServiceHolder.get().bill((IBillable) element,
-										actEncounter, 1.0);
-								if (!billResult.isOK()) {
-									String message = element.getCode() + " - " //$NON-NLS-1$
-											+ ResultDialog.getResultMessage(billResult);
-									if (!notOkResults.toString().contains(message)) {
-										notOkResults.add(message);
-									}
-								}
-							} else if (element instanceof IDiagnosis) {
-								actEncounter.addDiagnosis((IDiagnosis) element);
-								CoreModelServiceHolder.get().save(actEncounter);
-							}
-						}
-						if (!notOkResults.toString().isEmpty()) {
-							Display.getDefault().asyncExec(() -> {
-								MessageDialog.openWarning(getShell(), Messages.Core_Warning, notOkResults.toString());
-							});
-						}
-						// refresh with sorted billed list
-						CoreModelServiceHolder.get().refresh(actEncounter, true);
-
-						List<ICodeElement> diff = block.getDiffToReferences(elements);
-						if (!diff.isEmpty()) {
-							StringBuilder sb = new StringBuilder();
-							diff.forEach(r -> {
-								if (sb.length() > 0) {
-									sb.append(StringUtils.LF);
-								}
-								sb.append(r);
-							});
-							MessageDialog.openWarning(getShell(), "Warnung",
-									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-											+ sb.toString());
-						}
-					} else if (object instanceof IDiagnosis) {
-						actEncounter.addDiagnosis((IDiagnosis) object);
-						CoreModelServiceHolder.get().save(actEncounter);
+						billingProcessor.processCodeElementBlock((ICodeElementBlock) object);
+					} else {
+						billingProcessor.processOtherObject(object);
 					}
 				}
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, actEncounter);
@@ -1026,15 +981,14 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				IStructuredSelection selection = viewer.getStructuredSelection();
+				List<IPrescription> prescriptions = BillingProcessor
+						.getRecentPatientPrescriptions(actEncounter.getPatient(),
+								actEncounter.getDate().atStartOfDay());
+
 				for (Object selected : selection.toList()) {
 					if (selected instanceof IBilled) {
 						IBilled billed = (IBilled) selected;
-						AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-							@Override
-							public void lockAcquired() {
-								BillingServiceHolder.get().removeBilled(billed, actEncounter);
-							}
-						});
+						removeBilledItem(billed, prescriptions, true);
 					}
 				}
 				setEncounter(actEncounter);
@@ -1050,13 +1004,12 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					return;
 				}
 				List<IBilled> allBilled = actEncounter.getBilled();
+				List<IPrescription> prescriptions = BillingProcessor
+						.getRecentPatientPrescriptions(actEncounter.getPatient(),
+								actEncounter.getDate().atStartOfDay());
+
 				for (IBilled billed : allBilled) {
-					AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
-						@Override
-						public void lockAcquired() {
-							actEncounter.removeBilled(billed);
-						}
-					});
+					removeBilledItem(billed, prescriptions, false);
 				}
 				setEncounter(actEncounter);
 			}
@@ -1240,4 +1193,58 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			table.getMenu().setEnabled(AccessControlServiceHolder.get().evaluate(EvACEs.LSTG_VERRECHNEN));
 		}
 	}
+
+	private void removeBilledItem(IBilled billed, List<IPrescription> prescriptions, boolean checkMedication) {
+		boolean deleteMedications = false;
+		if (checkMedication) {
+			if (isMedicationLinked(billed, prescriptions)) {
+				MessageDialog dialog = new MessageDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.VerrechnungsDisplay_deleteMedicationTitle, null,
+						Messages.VerrechnungsDisplay_deleteMedicationMessage, MessageDialog.QUESTION,
+						new String[] { Messages.VerrechnungsDisplay_deleteMedicationAll,
+								Messages.VerrechnungsDisplay_deleteMedicationOnlyBilling,
+								Messages.VerrechnungsDisplay_deleteMedicationCancel },
+						0);
+				int result = dialog.open();
+				if (result == 2) {
+					return;
+				} else if (result == 0) {
+					deleteMedications = true;
+				}
+			}
+		} else {
+			deleteMedications = true;
+		}
+		boolean lockDeleteMedication = deleteMedications;
+		AcquireLockUi.aquireAndRun(billed, new LockDeniedNoActionLockHandler() {
+			@Override
+			public void lockAcquired() {
+				if (lockDeleteMedication) {
+					handleLinkedMedication(billed, prescriptions, CoreModelServiceHolder.get()::delete);
+				}
+				BillingServiceHolder.get().removeBilled(billed, actEncounter);
+			}
+		});
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
+	}
+
+	private void handleLinkedMedication(IBilled billed, List<IPrescription> prescriptions,
+			Consumer<IPrescription> action) {
+		prescriptions.stream().filter(prescription -> {
+			Object extInfoObj = prescription
+					.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
+			return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
+		}).forEach(action);
+	}
+
+	private boolean isMedicationLinked(IBilled billed, List<IPrescription> prescriptions) {
+		return prescriptions.stream().anyMatch(prescription -> {
+			Object extInfoObj = prescription
+					.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
+			return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
+		});
+	}
+
+
 }
