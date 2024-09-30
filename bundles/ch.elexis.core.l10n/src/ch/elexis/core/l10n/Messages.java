@@ -2988,6 +2988,8 @@ public class Messages extends NLS {
 	public static String Medication_SelfDispensed;
 	public static String Medication_SymptomaticMedication;
 	public static String Medication_headerComment;
+	public static String Mediorder_inactive_patient_stock;
+	public static String Mediorder_no_activated_articles;
 	public static String Mediorder_Order_status;
 	public static String Mediorder_Order_status_Tooltip;
 	public static String Mediorder_sufficient_for;
@@ -2995,8 +2997,10 @@ public class Messages extends NLS {
 	public static String Mediorder_requested_Tooltip;
 	public static String Mediorder_approved;
 	public static String Mediorder_approved_Tooltip;
-	public static String Mediorder_unequal;
-	public static String Mediorder_comparison;
+	public static String Mediorder_Questionnaire_active_and_up_to_date;
+	public static String Mediorder_Questionnaire_active_not_up_to_date;
+	public static String Mediorder_Questionnaire_inactive;
+	public static String Mediorder_Questionnaire_status;
 	public static String Mediorder_comparison_Tooltip;
 	public static String Mediorder_updateArticle;
 	public static String Mediorder_updateArticle_successful;
@@ -5080,6 +5084,21 @@ public class Messages extends NLS {
 	public static String AddCombiTerminDialogAfter;
 	public static String CombinedAppointmentsWhen;
 	public static String CombinedAppointmentsSpacing;
+	public static String PreferencesServer_selectDevice;
+	public static String PreferencesServer_deleteButton;
+	public static String PreferencesServer_exportDirectory;
+	public static String PreferencesServer_browseButton;
+	public static String PreferencesServer_addNewDevice;
+	public static String PreferencesServer_storeFSGlobal;
+	public static String PreferencesServer_omnivoreDirStructure;
+	public static String PreferencesServer_addNewDirectory;
+	public static String PreferencesServer_newDirectory;
+	public static String PreferencesServer_renameDirectoryTooltip;
+	public static String PreferencesServer_deleteDirectory;
+	public static String PreferencesServer_documentsInCategory;
+	public static String PreferencesServer_deleteCategory;
+	public static String PreferencesServer_enterNewNameForDirectory;
+	public static String PreferencesServer_renameDirectory;
 	public static String MedicationSettings_ShowSignatureDialog;
 	public static String MedicationSettings_PreselectSignatureDispensation;
 	public static String MedicationSettings_CheckAndConvertItemMaster;
@@ -5100,6 +5119,7 @@ public class Messages extends NLS {
 	public static String ArticleDefaultSignatureComposite_Discharge;
 	public static String ArticleProcessorBilledWarningContext;
 	public static String ArticleProcessorBilledFail;
+	public static String Texterstellung_DiagnoseExportAlternativeFormat;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

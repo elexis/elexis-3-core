@@ -30,6 +30,7 @@ import ch.elexis.core.jpa.entities.StockEntry;
 import ch.elexis.core.jpa.entities.TarmedLeistung;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.entities.User;
+import ch.elexis.core.jpa.entities.Vaccination;
 import ch.elexis.core.jpa.entities.Verrechnet;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IOrganization;
@@ -92,6 +93,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_STICKER = "ch.elexis.data.Sticker";
 	public static final String TYPE_REZEPT = "ch.elexis.data.Rezept";
 	public static final String TYPE_NAMEDBLOB = "ch.elexis.data.NamedBlob";
+	public static final String TYPE_VACCINATION = "at.medevit.elexis.impfplan.model.po.Vaccination";
 
 	static {
 		stsToClassMap = new HashMap<>();
@@ -150,6 +152,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(Rezept.class, TYPE_REZEPT);
 		stsToClassMap.put(TYPE_NAMEDBLOB, Heap.class);
 		classToStsMap.put(Heap.class, TYPE_NAMEDBLOB);
+		stsToClassMap.put(TYPE_VACCINATION, Vaccination.class);
+		classToStsMap.put(Vaccination.class, TYPE_VACCINATION);
 
 		stsToClassMap.put(UserGroup.class.getName(), ch.elexis.core.jpa.entities.UserGroup.class);
 		classToStsMap.put(ch.elexis.core.jpa.entities.UserGroup.class, UserGroup.class.getName());

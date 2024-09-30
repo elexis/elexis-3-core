@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.mediorder.internal.handler;
+package ch.elexis.core.ui.mediorder;
 
 import java.util.List;
 
@@ -24,7 +24,8 @@ import ch.rgw.tools.VersionedResource;
 public abstract class AbstractBillAndCloseMediorderHandler {
 
 	protected IStatus billAndClose(IModelService coreModelService, IContextService contextService,
-			ICoverageService coverageService, IBillingService billingService, List<IStockEntry> stockEntries) {
+			ICoverageService coverageService, IBillingService billingService, List<IStockEntry> stockEntries,
+			boolean removeStockEntry) {
 
 		if (stockEntries.isEmpty()) {
 			return Status.OK_STATUS;
@@ -50,22 +51,31 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		for (IStockEntry stockEntry : stockEntries) {
 			IArticle article = stockEntry.getArticle();
 			Result<IBilled> result = billingService.bill(article, billingEncounter, stockEntry.getCurrentStock());
-			if (result.isOK()) {
-				int currentStock = stockEntry.getCurrentStock();
-				int maximumStock = stockEntry.getMaximumStock();
-				int minimumStock = stockEntry.getMinimumStock();
-				if (currentStock == maximumStock && maximumStock == minimumStock) {
-					// balanced, we can remove
-					coreModelService.remove(stockEntry);
-				}
-			} else {
+
+			if (!result.isOK()) {
 				return Status.error(result.getCombinedMessages());
+			}
+
+			int currentStock = stockEntry.getCurrentStock();
+			int maximumStock = stockEntry.getMaximumStock();
+			int minimumStock = stockEntry.getMinimumStock();
+			boolean isBalanced = currentStock == maximumStock && maximumStock == minimumStock;
+
+			if (isBalanced) {
+				if (removeStockEntry) {
+					coreModelService.remove(stockEntry);
+				} else {
+					stockEntry.setMinimumStock(0);
+					stockEntry.setCurrentStock(0);
+					stockEntry.setMaximumStock(0);
+					coreModelService.save(stockEntry);
+				}
 			}
 		}
 
-		if (stock.getStockEntries().isEmpty()) {
+		if (stock.getStockEntries().isEmpty() && removeStockEntry) {
 			coreModelService.remove(stock);
-		}
+	}
 
 		return Status.OK_STATUS;
 	}

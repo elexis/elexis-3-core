@@ -20,6 +20,7 @@ import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.ui.e4.dialog.StatusDialog;
+import ch.elexis.core.ui.mediorder.AbstractBillAndCloseMediorderHandler;
 import ch.elexis.core.ui.mediorder.MediorderPart;
 
 public class BillAndCloseMediorderHandler extends AbstractBillAndCloseMediorderHandler {
@@ -42,7 +43,8 @@ public class BillAndCloseMediorderHandler extends AbstractBillAndCloseMediorderH
 		IStock selectedStock = mediOrderPart.getSelectedStock();
 		List<IStockEntry> stockEntries = selectedStock.getStockEntries();
 
-		IStatus status = billAndClose(coreModelService, contextService, coverageService, billingService, stockEntries);
+		IStatus status = billAndClose(coreModelService, contextService, coverageService, billingService, stockEntries,
+				true);
 		StatusDialog.show(status, false);
 
 		mediOrderPart.refresh();
