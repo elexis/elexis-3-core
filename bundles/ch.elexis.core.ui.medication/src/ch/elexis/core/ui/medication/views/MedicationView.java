@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -57,6 +58,18 @@ public class MedicationView extends ViewPart implements IRefreshable {
 			// only update with info of selected patient
 			if (patient != null && patient.equals(ContextServiceHolder.get().getActivePatient().orElse(null))) {
 				updateUi(patient, false);				
+			}
+		}
+	}
+
+	@Inject
+	@Optional
+	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IPrescription.class.equals(clazz)) {
+			if (CoreUiUtil.isActiveControl(tpc)) {
+				Display.getDefault().asyncExec(() -> {
+					updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), true);
+				});
 			}
 		}
 	}

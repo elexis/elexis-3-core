@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.prescription.EntryType;
@@ -62,6 +63,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Button btnSymtomatic;
 	private Button btnReserve;
 	private Button btnFix;
+	private Button btnDischarge;
 
 	private Composite disposalType;
 	private Button btnNoDisposal;
@@ -89,6 +91,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private List<SavingTargetToModelStrategy> targetToModelStrategies;
 
 	private boolean createDefault = false;
+
 
 	/**
 	 * Create the composite.
@@ -206,7 +209,32 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnFix = new Button(medicationType, SWT.RADIO);
 		btnFix.setText(Messages.ArticleDefaultSignatureComposite_fix);
 		btnFix.addSelectionListener(new SavingSelectionAdapter());
+		btnDischarge = new Button(medicationType, SWT.RADIO);
+		btnDischarge.setText(Messages.ArticleDefaultSignatureComposite_Discharge);
+		btnDischarge.addSelectionListener(new SavingSelectionAdapter());
+		btnDischarge.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (btnDischarge.getSelection()) {
+					setStartVisible(false);
+					compositeMedicationTypeDetail.setVisible(false);
+					GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
+					data.exclude = true;
+					btnNoDisposal.setSelection(false);
+					btnNoDisposal.setEnabled(false);
+					btnDispensation.setSelection(true);
 
+				} else {
+					setStartVisible(true);
+					compositeMedicationTypeDetail.setVisible(true);
+					btnNoDisposal.setEnabled(true);
+					GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
+					data.exclude = false;
+				}
+				getParent().layout();
+			}
+		});
+		
 		createMedicationTypeDetails(this);
 
 		disposalType = new Composite(this, SWT.NONE);
@@ -298,7 +326,13 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				int defaultDays = ConfigServiceHolder.getUser(MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
 				txtEnddate.setText(String.valueOf(defaultDays));
 			} else {
-				txtEnddate.setText(StringUtils.EMPTY);
+				boolean defaultSymptomsSetting = ConfigServiceHolder
+						.getUser(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS, false);
+				if (!defaultSymptomsSetting) {
+					txtEnddate.setText("0");
+				} else {
+					txtEnddate.setText(StringUtils.EMPTY);
+				}
 			}
 		}
 	}
@@ -337,6 +371,19 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		btnReserve.setSelection(false);
 		medicationType.getParent().layout();
 		updateMedicationTypeDetails();
+	}
+
+	public void setMedicationTypeDischarge() {
+		btnDischarge.setSelection(true);
+		medicationType.setVisible(true);
+		btnFix.setSelection(false);
+		btnSymtomatic.setSelection(false);
+		btnReserve.setSelection(false);
+		btnDispensation.setSelection(true);
+		btnNoDisposal.setSelection(false);
+		btnNoDisposal.setEnabled(false);
+		setStartVisible(false);
+		compositeMedicationTypeDetail.setVisible(false);
 	}
 
 	public DataBindingContext initDataBindings(DataBindingContext dbc) {
@@ -484,6 +531,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			} else if (btnFix.getSelection()) {
 				signature.setMedicationType(EntryType.FIXED_MEDICATION);
 			}
+			else if (btnDischarge.getSelection()) {
+				signature.setMedicationType(EntryType.SELF_DISPENSED);
+			}
 			if (btnNoDisposal.getSelection()) {
 				signature.setDisposalType(EntryType.RECIPE);
 			} else if (btnDispensation.getSelection()) {
@@ -536,6 +586,8 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				btnReserve.setSelection(true);
 			} else if (modelMedicationType == EntryType.SYMPTOMATIC_MEDICATION) {
 				btnSymtomatic.setSelection(true);
+			} else if (btnDischarge.getSelection()) {
+				signature.setMedicationType(EntryType.SELF_DISPENSED);
 			} else {
 				// default
 				btnSymtomatic.setSelection(true);
@@ -714,5 +766,14 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			}
 			return ret;
 		}
+	}
+
+	public void setEndDateDays(int day) {
+		txtEnddate.setText(String.valueOf(day));
+
+	}
+
+	public void setFocusOnMorning() {
+		txtSignatureMorning.setFocus();
 	}
 }

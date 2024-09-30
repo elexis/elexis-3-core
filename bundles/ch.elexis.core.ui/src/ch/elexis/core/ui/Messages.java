@@ -20,5 +20,7 @@ public class Messages {
 	public static String Hub_title_configuration = ch.elexis.core.l10n.Messages.Hub_title_configuration;
 	public static String Core_Not_logged_in = ch.elexis.core.l10n.Messages.Core_Not_logged_in;
 	public static String Core_Please_Enter_Name_and_Password = ch.elexis.core.l10n.Messages.Core_Please_Enter_Name_and_Password;
+	public static String ArticleProcessorBilledWarningContext = ch.elexis.core.l10n.Messages.ArticleProcessorBilledWarningContext;
+	public static String ArticleProcessorBilledFail = ch.elexis.core.l10n.Messages.ArticleProcessorBilledFail;
 
 };

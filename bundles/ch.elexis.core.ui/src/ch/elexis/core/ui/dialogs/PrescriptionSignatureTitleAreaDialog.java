@@ -11,8 +11,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
 
 public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
@@ -23,7 +25,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 	private IArticleDefaultSignature signature;
 	private boolean medicationTypeFix;
 	private boolean performLookup;
-
+	private boolean isFromBillingDialog;
 	/**
 	 * Create the dialog.
 	 *
@@ -33,7 +35,7 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		super(parentShell);
 		this.article = article;
 	}
-
+	
 	/**
 	 * Create contents of the dialog.
 	 *
@@ -74,6 +76,10 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 		if (medicationTypeFix) {
 			adsc.setMedicationTypeFix();
 		}
+		if (isFromBillingDialog) {
+			adsc.setMedicationTypeDischarge();
+		}
+
 		return area;
 	}
 
@@ -100,6 +106,10 @@ public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {
 
 	public void setMedicationTypeFix(boolean value) {
 		this.medicationTypeFix = value;
+	}
+
+	public void setFromBillingDialog(boolean value) {
+		this.isFromBillingDialog = value;
 	}
 
 	/**
