@@ -159,7 +159,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 	private static final String REMOVEALL = Messages.VerrechnungsDisplay_removeAll;
 
 	static Logger logger = LoggerFactory.getLogger(VerrechnungsDisplay.class);
-	private BillingProcessor articleProcessor;
+	private BillingProcessor billingProcessor;
 
 	@Optional
 	@Inject
@@ -777,18 +777,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e) {
 			if (actEncounter != null && accept(list)) {
-				articleProcessor = new BillingProcessor(actEncounter);
+				billingProcessor = new BillingProcessor(actEncounter);
 				for (Object object : list) {
 					// map prescription to article
 					if (object instanceof IPrescription) {
 						object = ((IPrescription) object).getArticle();
 					}
 					if (object instanceof IArticle) {
-						articleProcessor.processArticle((IArticle) object);
+						billingProcessor.processArticle((IArticle) object);
 					} else if (object instanceof ICodeElementBlock) {
-						articleProcessor.processCodeElementBlock((ICodeElementBlock) object);
+						billingProcessor.processCodeElementBlock((ICodeElementBlock) object);
 					} else {
-						articleProcessor.processOtherObject(object);
+						billingProcessor.processOtherObject(object);
 					}
 				}
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, actEncounter);

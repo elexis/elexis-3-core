@@ -236,5 +236,5 @@ public interface IPatient extends IPerson {
 	 * @generated
 	 */
 	List<IPrescription> getMedication(List<EntryType> filterType);
-	
+
 } // IPatient

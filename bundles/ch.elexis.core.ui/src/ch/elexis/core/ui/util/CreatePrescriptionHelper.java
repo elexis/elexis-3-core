@@ -44,7 +44,7 @@ public class CreatePrescriptionHelper {
 
 	private IArticle article;
 	private Shell parentShell;
-	private BillingProcessor articleProcessor;
+	private BillingProcessor billingProcessor;
 	private boolean medicationTypeFix = false;
 
 	public CreatePrescriptionHelper(IArticle article, Shell parentShell) {
@@ -118,7 +118,7 @@ public class CreatePrescriptionHelper {
 		// add article to consultation
 		Optional<IEncounter> encounter = ContextServiceHolder.get().getTyped(IEncounter.class);
 		if (encounter.isPresent()) {
-			articleProcessor = new BillingProcessor(encounter.get());
+			billingProcessor = new BillingProcessor(encounter.get());
 			boolean isToday = encounter.get().getDate().equals(LocalDate.now());
 			if (isToday) {
 				IArticle dispensationArticle = prescription.getArticle();
@@ -145,7 +145,7 @@ public class CreatePrescriptionHelper {
 				Result<IBilled> result = BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
 				if (result.isOK()) {
 					IBilled billed = result.get();
-					articleProcessor.updatePrescriptionsWithDosage(billed);
+					billingProcessor.updatePrescriptionsWithDosage(billed);
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter.get());
 					// work is done
 					return;
