@@ -214,8 +214,8 @@ public class MedicationService implements IMedicationService {
 		ret.setDisposalComment(prescription.getDisposalComment());
 		ret.setEntryType(prescription.getEntryType());
 		ret.setRemark(prescription.getRemark());
-		String extInfoValue = prescription.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID)
-				.toString();
+		String extInfoValue = (String) prescription
+				.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
 		if (extInfoValue != null && !extInfoValue.isEmpty()) {
 			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, extInfoValue);
 		}
