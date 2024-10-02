@@ -10,7 +10,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
@@ -179,7 +179,9 @@ public class LaborResultsComposite extends Composite {
 
 		viewer.setContentProvider(contentProvider);
 
-		focusCell = new TreeViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
+		focusCell = new TreeViewerFocusCellManager(viewer, new FocusCellHighlighter(viewer) {
+
+		});
 		viewer.addDoubleClickListener(new DisplayDoubleClickListener(this));
 
 		final MenuManager mgr = new MenuManager();
