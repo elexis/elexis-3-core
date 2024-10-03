@@ -69,7 +69,7 @@
 		"ch.elexis.core.model.IEncounter": "cruvdx:self",
 		"ch.elexis.core.model.IFreeTextDiagnosis": "cruvdx",
 		"ch.elexis.core.model.IImage": "cruvdx",
-		"ch.elexis.core.model.IInvoice": "cruvdx:self",
+		"ch.elexis.core.model.IInvoice": "cruvdx:aobo",
 		"ch.elexis.core.model.IInvoiceBilled": "cruvdx",
 		"ch.elexis.core.model.ILabItem": "cruvdx",
 		"ch.elexis.core.model.ILabMapping": "cruvdx",
