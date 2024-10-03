@@ -94,8 +94,7 @@ public interface IDocumentStore {
 	public IDocument saveDocument(IDocument document) throws ElexisException;
 
 	/**
-	 * Save changes to the meta information and the content of the document. If an
-	 * {@link InputStream} is given it will be closed.
+	 * Save changes to the meta information and the content of the document.
 	 *
 	 * @param document
 	 * @param content
