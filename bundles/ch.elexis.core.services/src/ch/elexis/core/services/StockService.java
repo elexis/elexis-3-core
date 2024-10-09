@@ -455,4 +455,19 @@ public class StockService implements IStockService {
 		}
 	}
 
+	@Override
+	public IStock getOrCreatePatientStock(IPatient patient) {
+		return getPatientStock(patient).orElseGet(() -> {
+			setEnablePatientStock(patient, true);
+			return getPatientStock(patient).orElse(null);
+		});
+	}
+
+	@Override
+	public void removePatientStock(IStock patientStock) {
+		patientStock.getStockEntries().forEach(entry -> unstoreArticleFromStock(patientStock,
+				storeToStringService.storeToString(entry.getArticle()).get()));
+		coreModelService.remove(patientStock);
+	}
+
 }
