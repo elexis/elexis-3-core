@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.ICoverage;
@@ -14,6 +15,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
@@ -26,7 +28,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 	protected IStatus billAndClose(IModelService coreModelService, IContextService contextService,
 			ICoverageService coverageService, IBillingService billingService, List<IStockEntry> stockEntries,
 			boolean removeStockEntry) {
-
+		
 		if (stockEntries.isEmpty()) {
 			return Status.OK_STATUS;
 		}
@@ -34,27 +36,35 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		IStock stock = stockEntries.get(0).getStock();
 		IPerson person = stock.getOwner();
 		if (!person.isPatient()) {
-			return Status.error("Not a patient stock");
+			return Status.error(Messages.Mediorder_inactive_patient_stock);
 		}
 
 		IPatient patient = person.asIPatient();
 		ICoverage coverage = coverageService.getLatestOpenCoverage(patient)
-				.orElse(coverageService.createDefaultCoverage(patient));
+				.orElseGet(() -> coverageService.createDefaultCoverage(patient));
 
 		IEncounter billingEncounter = new IEncounterBuilder(coreModelService, coverage,
 				contextService.getActiveMandator().get()).build();
 		VersionedResource vr = VersionedResource.load(null);
-		vr.update("Verrechnung Patientenbestellung", contextService.getActiveUser().get().getId());
-		billingEncounter.setVersionedEntry(vr);
-		coreModelService.save(billingEncounter);
+		vr.update(Messages.Mediorder_Billing_Text,
+				contextService.getActiveUser().get().getId());
 
 		for (IStockEntry stockEntry : stockEntries) {
 			IArticle article = stockEntry.getArticle();
 			Result<IBilled> result = billingService.bill(article, billingEncounter, stockEntry.getCurrentStock());
-
+			
 			if (!result.isOK()) {
-				return Status.error(result.getCombinedMessages());
+				continue;
 			}
+
+			BillingLaw law = result.get().getEncounter().getCoverage().getBillingSystem().getLaw();
+			if (law.equals(BillingLaw.ORG) || law.equals(BillingLaw.privat)) {
+				IEncounter newbillingEncounter = result.get().getEncounter();
+				newbillingEncounter.setVersionedEntry(vr);
+				coreModelService.save(newbillingEncounter);
+			}
+			billingEncounter.setVersionedEntry(vr);
+			coreModelService.save(billingEncounter);
 
 			int currentStock = stockEntry.getCurrentStock();
 			int maximumStock = stockEntry.getMaximumStock();
