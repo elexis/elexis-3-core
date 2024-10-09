@@ -249,4 +249,24 @@ public interface IStockService {
 	 * @since 3.12
 	 */
 	public Optional<IStock> getPatientStock(IPatient patient);
+
+	/**
+	 * 
+	 * Retrieves the patient stock if it exists. If the patient is activated for
+	 * mediorder PEA but does not yet have a patient stock, a new patient stock is
+	 * created. Otherwise, the method returns {@code null}.
+	 * 
+	 * @param patient must not be {@code null}
+	 * @return the patient's stock if already existed, newly created patient stock,
+	 *         or {@code null}
+	 */
+	public IStock getOrCreatePatientStock(IPatient patient);
+
+	/**
+	 * Removes the stock for a given patient along with all associated stock
+	 * entries.
+	 * 
+	 * @param patientStock
+	 */
+	public void removePatientStock(IStock patientStock);
 }
