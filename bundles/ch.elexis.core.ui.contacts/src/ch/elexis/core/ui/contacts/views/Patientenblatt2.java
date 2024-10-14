@@ -161,7 +161,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
-	public final static String CFG_GLOBALFIELDS = "views/patientenblatt/extrafelder/alle"; //$NON-NLS-1$
+	public final static String CFG_GLOBALFIELDS = "views/patientenblatt/extrafelder/global"; //$NON-NLS-1$
 	public final static String SPLITTER = "#!>"; //$NON-NLS-1$
 
 	@SuppressWarnings("unchecked")
