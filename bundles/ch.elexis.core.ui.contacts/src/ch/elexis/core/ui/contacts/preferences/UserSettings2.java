@@ -147,7 +147,7 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		Composite fwc = new Composite(getFieldEditorParent(), SWT.NONE);
 		fwc.setLayout(new GridLayout(2, true));
 		addField(new BooleanFieldEditor(Preferences.USR_PATDETAIL_FIXEDWIDTH_STATE,
-				"Feste Breite in Patientendetail-Felder nutzen", fwc));
+				"Feste Mindestbreite in Patientendetail-Felder nutzen", fwc));
 		addField(new IntegerFieldEditor(Preferences.USR_PATDETAIL_FIXEDWIDTH, "Breite: ", fwc));
 		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
 		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER, "Sticker für verstorbene",
