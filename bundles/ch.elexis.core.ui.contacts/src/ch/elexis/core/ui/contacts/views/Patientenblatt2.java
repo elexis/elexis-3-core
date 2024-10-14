@@ -1578,7 +1578,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					List<String> list = new ArrayList<String>();
 					list.add(Messages.Core_RegularPhysiscion);
 					if (ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false)) {
-						fieldWidth += ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 0);
+						fieldWidth += ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 100);
 					} else if (list.contains(field.getLabel()) && field.getText() != null
 							&& !field.getText().isBlank()) {
 						fieldWidth += field.getText().length() * 6;
