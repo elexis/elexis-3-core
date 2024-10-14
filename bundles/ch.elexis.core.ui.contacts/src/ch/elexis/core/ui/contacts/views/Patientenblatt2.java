@@ -855,8 +855,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				public void keyPressed(KeyEvent e) {
 				}
 			});
-			ec.get(i).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			((GridData) ec.get(i).getLayoutData()).grabExcessHorizontalSpace = true;
 			ec.get(i).setClient(txExpandable.get(i));
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
