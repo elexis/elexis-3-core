@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -86,6 +87,8 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		prefs.setDefault(Preferences.USR_PATLIST_SHOWDOB, true);
 		prefs.setDefault(Preferences.USR_SUPPRESS_INTERACTION_CHECK, true);
 		prefs.setDefault(Patientenblatt2.CFG_GLOBALFIELDS, false);
+		prefs.setDefault(Preferences.USR_PATDETAIL_MINWIDTH, 100);
+		prefs.setDefault(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false);
 	}
 
 	@Override
@@ -140,6 +143,12 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 				}
 			}
 		});
+		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
+		Composite fwc = new Composite(getFieldEditorParent(), SWT.NONE);
+		fwc.setLayout(new GridLayout(2, true));
+		addField(new BooleanFieldEditor(Preferences.USR_PATDETAIL_MINWIDTH_STATE,
+				"Feste Mindestbreite in Patientendetail-Felder nutzen", fwc));
+		addField(new IntegerFieldEditor(Preferences.USR_PATDETAIL_MINWIDTH, "Breite: ", fwc));
 		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
 		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER, "Sticker für verstorbene",
 				getStickerComboItems(), getFieldEditorParent());

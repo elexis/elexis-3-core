@@ -61,8 +61,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -72,16 +76,20 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.interfaces.IPersistentObject;
@@ -497,6 +505,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		refresh();
 		if (actPatient != null) {
 			setPatient(actPatient);
+		} else {
+			setupFields(ipp.getAutoForm().getChildren());
 		}
 		layout(true);
 	}
@@ -518,6 +528,21 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				updateExpandableLayoutWidth();
 			}
 		});
+
+		int[] eventTypes = { SWT.Selection, SWT.Hide };
+		for (int eventType : eventTypes) {
+			form.getHorizontalBar().addListener(eventType, new Listener() {
+				@Override
+				public void handleEvent(Event e) {
+					switch (e.type) {
+					case SWT.Selection:
+					case SWT.Hide:
+						updateExpandableLayoutWidth();
+						break;
+					}
+				}
+			});
+		}
 
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
 
@@ -828,7 +853,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				public void keyPressed(KeyEvent e) {
 				}
 			});
-
+			ec.get(i).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			((GridData) ec.get(i).getLayoutData()).grabExcessHorizontalSpace = true;
 			ec.get(i).setClient(txExpandable.get(i));
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
@@ -922,6 +948,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		actPatient = p;
 
 		refreshUi();
+		setupFields(ipp.getAutoForm().getChildren());
 
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(p));
 	}
@@ -1518,17 +1545,92 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		};
 	}
 
-	private void updateExpandableLayoutWidth() {
-		if (ec != null && form != null && !form.isDisposed()) {
-			for (ExpandableComposite expandable : ec) {
-				if (expandable.getLayoutData() instanceof GridData) {
-					if (Patientenblatt2.this.getClientArea().width > 50) {
-						((GridData) expandable.getLayoutData()).widthHint = Patientenblatt2.this.getClientArea().width;
+	/**
+	 * Sets the width of fields in the input panel based on either configured
+	 * preferences or field content.<br>
+	 * This method iterates through controls, identifies LabeledInputField
+	 * instances, and adjusts their layout data accordingly.<br>
+	 * The field width is determined by:
+	 * <ul>
+	 * <li>User-configured fixed width (if enabled in preferences)</li>
+	 * <li>Text Content length specific fields like</li>
+	 * <li>Label length for other fields</li>
+	 * </ul>
+	 * 
+	 * Also sets up the combo fields in the input panel to ignore mousewheel events
+	 * 
+	 * @param controls
+	 * 
+	 * @author mdedic
+	 * @since 3.13
+	 */
+	private void setupFields(Control[] controls) {
+		for (Control ctrl : controls) {
+			if (ctrl instanceof LabeledInputField) {
+				LabeledInputField field = (LabeledInputField) ctrl;
+				if (field != null) {
+					ColumnLayoutData data = new ColumnLayoutData();
+					if (field.getLayoutData() instanceof ColumnLayoutData) {
+						data = (ColumnLayoutData) field.getLayoutData();
+					}
+					int fieldWidth = 15;
+					List<String> list = new ArrayList<String>();
+					list.add(Messages.Core_RegularPhysiscion);
+					if (ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false)) {
+						fieldWidth += ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 0);
+					} else if (list.contains(field.getLabel()) && field.getText() != null
+							&& !field.getText().isBlank()) {
+						fieldWidth += field.getText().length() * 6;
 					} else {
-						((GridData) expandable.getLayoutData()).widthHint = SWT.DEFAULT;
+						fieldWidth += field.getLabel().length() * 5;
+					}
+
+					data.widthHint = fieldWidth;
+					field.setLayoutData(data);
+
+					if (field.getControl() instanceof Combo) {
+						Combo combo = (Combo) field.getControl();
+						combo.addListener(SWT.MouseWheel, event -> {
+							event.doit = false;
+						});
 					}
 				}
 			}
+		}
+		refresh();
+	}
+
+	/**
+	 * Dynamically sets the width of ExpandableComposite's based on the available
+	 * client area.<br>
+	 * This method adjusts the LayoutData of each ExpandableComposite to either fill
+	 * the space or if the horizontal ScrollBar is visible, maintain a calculated
+	 * fixed width.
+	 */
+	private void updateExpandableLayoutWidth() {
+		if (ec != null && form != null && !form.isDisposed()) {
+			int clientAreaWidth = Patientenblatt2.this.getClientArea().width;
+			int barPos = form.getHorizontalBar().getSelection();
+			boolean shouldFixWidth = clientAreaWidth > 50 && form.getHorizontalBar().getVisible();
+
+			Control[] body = form.getBody().getChildren();
+			for (Control control : body) {
+				if (control instanceof ExpandableComposite) {
+					if (control.getLayoutData() instanceof GridData) {
+						GridData gridData = (GridData) control.getLayoutData();
+						if (shouldFixWidth) {
+							gridData.grabExcessHorizontalSpace = false;
+							gridData.horizontalAlignment = SWT.DEFAULT;
+							gridData.widthHint = clientAreaWidth - 40 + barPos;
+						} else {
+							gridData.grabExcessHorizontalSpace = true;
+							gridData.horizontalAlignment = SWT.FILL;
+							gridData.widthHint = SWT.DEFAULT;
+						}
+					}
+				}
+			}
+			((TableWrapData) stickerComposite.getLayoutData()).maxWidth = clientAreaWidth + barPos;
 			form.getBody().layout(true);
 		}
 	}
