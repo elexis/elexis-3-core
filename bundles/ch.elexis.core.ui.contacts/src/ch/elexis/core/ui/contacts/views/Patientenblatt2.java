@@ -76,7 +76,6 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -545,6 +544,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
+		TableWrapData stickerCompData = (TableWrapData) stickerComposite.getLayoutData();
+		stickerCompData.maxWidth = SWT.DEFAULT;
+		stickerCompData.align = SWT.FILL;
 
 		cUserfields = new Composite(form.getBody(), SWT.NONE);
 		cUserfields.setLayout(new GridLayout());
@@ -1611,7 +1613,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (ec != null && form != null && !form.isDisposed()) {
 			int clientAreaWidth = Patientenblatt2.this.getClientArea().width;
 			int barPos = form.getHorizontalBar().getSelection();
-			boolean shouldFixWidth = clientAreaWidth > 50 && form.getHorizontalBar().getVisible();
+			boolean shouldFixWidth = clientAreaWidth > 50 && form.getHorizontalBar().isVisible();
 
 			Control[] body = form.getBody().getChildren();
 			for (Control control : body) {
@@ -1630,7 +1632,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}
 			}
-			((TableWrapData) stickerComposite.getLayoutData()).maxWidth = clientAreaWidth + barPos;
 			form.getBody().layout(true);
 		}
 	}
