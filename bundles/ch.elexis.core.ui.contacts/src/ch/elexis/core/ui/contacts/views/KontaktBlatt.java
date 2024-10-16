@@ -24,9 +24,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -35,6 +37,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
+import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -176,6 +180,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			} else {
 				setEnabled(false);
 			}
+			updateFieldsView();
 		}, form);
 	}
 
@@ -222,6 +227,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
+		((ColumnLayout) afDetails.getLayout()).minNumColumns = 5;
+		updateFieldsView();
+		setToolTipTextListeners();
 
 		mandantListener = new Listener() {
 
@@ -277,6 +285,106 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		setUnlocked(false);
 
 		CoreUiUtil.injectServicesWithContext(this);
+	}
+
+	/**
+	 * Updates the view of the fields within the {@code afDetails} form.
+	 * <p>
+	 * This method performs two main actions:
+	 * <ul>
+	 * <li>It sets the text of the {@link LabeledInputField} associated with
+	 * MediportSupport if the field text is empty.</li>
+	 * <li>It adjusts the width of the {@link ColumnLayoutData} for each
+	 * {@link LabeledInputField} based on the length of its label.</li>
+	 * </ul>
+	 * After these updates, the method refreshes the tooltip text for each field and
+	 * lays out the controls in the container.
+	 * </p>
+	 * 
+	 * @author mdedic
+	 * @since 3.13
+	 */
+	private void updateFieldsView() {
+		if (afDetails != null && !afDetails.isDisposed()) {
+			Control[] controls = afDetails.getChildren();
+			for (Control control : controls) {
+				if (control instanceof LabeledInputField) {
+					LabeledInputField field = (LabeledInputField) control;
+					// set default text if empty
+					if (field.getControl() instanceof Button && field.getText().isEmpty()) {
+						field.setText(Messages.KontaktBlatt_MediportSupport);
+					}
+					ColumnLayoutData data = new ColumnLayoutData();
+					if (field.getLayoutData() != null) {
+						data = (ColumnLayoutData) field.getLayoutData();
+					}
+					int width = 15;
+					width += field.getLabel().length() * 5;
+					data.widthHint = width;
+					((GridData) field.getControl().getLayoutData()).minimumWidth = width;
+					field.setLayoutData(data);
+
+				}
+			}
+			updateToolTipText();
+			afDetails.layout();
+		}
+	}
+
+	/**
+	 * Adds listeners to the {@link LabeledInputField} components to update the
+	 * tooltip text when the content in the input field has been modified. The
+	 * listener is triggered by the KeyUp event.
+	 * <p>
+	 * This method ensures that no multiple listeners are attached to the same
+	 * control.
+	 * </p>
+	 * 
+	 * @author mdedic
+	 * @since 3.13
+	 */
+	private void setToolTipTextListeners() {
+		if (afDetails != null && !afDetails.isDisposed()) {
+			Control[] children = afDetails.getChildren();
+			for (Control child : children) {
+				if (child instanceof LabeledInputField) {
+					LabeledInputField field = (LabeledInputField) child;
+					if (field.getControl().getListeners(SWT.KeyUp).length == 0) {
+						field.getControl().addListener(SWT.KeyUp, new Listener() {
+							public void handleEvent(Event e) {
+								updateToolTipText();
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates the tooltip text of all the {@link LabeledInputField} components
+	 * within the afDetails form. The tooltip text is set to the current text
+	 * content of the input field.
+	 * 
+	 * <p>
+	 * The method iterates through all children of the {@code afDetails} control,
+	 * finds instances of {@link LabeledInputField}, and sets their tooltip text to
+	 * the content of the input field.
+	 * </p>
+	 * 
+	 * @author mdedic
+	 * @since 3.13
+	 */
+	private void updateToolTipText() {
+		if (afDetails != null && !afDetails.isDisposed()) {
+			Control[] children = afDetails.getChildren();
+			for (Control child : children) {
+				if (child instanceof LabeledInputField) {
+					LabeledInputField field = (LabeledInputField) child;
+					field.getControl().setToolTipText(field.getText());
+				}
+			}
+		}
 	}
 
 	private List<Kontakt> queryContact() {
@@ -341,6 +449,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			} else {
 				actKontakt.set(type, "0"); //$NON-NLS-1$
 			}
+			updateFieldsView();
 		}
 
 		void select(String... fields) {
@@ -414,6 +523,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			}
 			lbAnschrift.setText(actKontakt.getPostAnschrift(false));
 		}
+		updateFieldsView();
 		form.reflow(true);
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(kontakt));
 
