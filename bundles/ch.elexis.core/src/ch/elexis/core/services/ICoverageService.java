@@ -6,6 +6,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ch.BillingLaw;
 
 public interface ICoverageService {
 
@@ -104,4 +105,15 @@ public interface ICoverageService {
 	 * @return
 	 */
 	ICoverage createDefaultCoverage(IPatient patient);
+
+	/**
+	 * Search for the first {@link ICoverage} in state {@link ICoverage#isOpen()} of
+	 * the {@link IPatient} with a matching law.
+	 *
+	 * @param patient
+	 * @param law
+	 * @return
+	 * @since 3.12
+	 */
+	Optional<ICoverage> getCoverageWithLaw(IPatient patient, BillingLaw... laws);
 }
