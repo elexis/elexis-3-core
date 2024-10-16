@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
+import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
@@ -285,5 +287,19 @@ public class CoverageService implements ICoverageService {
 	public ICoverage createDefaultCoverage(IPatient patient) {
 		return new ICoverageBuilder(CoreModelServiceHolder.get(), patient, getDefaultCoverageLabel(),
 				getDefaultCoverageReason(), getDefaultCoverageLaw()).buildAndSave();
+	}
+
+	@Override
+	public Optional<ICoverage> getCoverageWithLaw(IPatient patient, BillingLaw... laws) {
+		ICoverage bestMatch = null;
+
+		for (ICoverage coverage : patient.getCoverages()) {
+			if (coverage.isOpen()) {
+				if (Arrays.asList(laws).contains(coverage.getBillingSystem().getLaw())) {
+					bestMatch = coverage;
+				}
+			}
+		}
+		return Optional.ofNullable(bestMatch);
 	}
 }

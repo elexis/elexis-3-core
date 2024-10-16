@@ -17,7 +17,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -25,10 +24,6 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
@@ -120,7 +115,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 	}
 
 	private Optional<ICoverage> getOrCreateCoverage(IPatient patient, BillingLaw law) {
-		Optional<ICoverage> coverage = getCoverage(patient, law);
+		Optional<ICoverage> coverage = coverageService.getCoverageWithLaw(patient, law);
 		if (coverage.isEmpty()) {
 			coverage = Optional
 					.of(new ICoverageBuilder(coreModelService, patient, coverageService.getDefaultCoverageLabel(),
@@ -163,14 +158,5 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 			}
 		}
 		return Status.OK_STATUS;
-	}
-
-	private Optional<ICoverage> getCoverage(IPatient patient, BillingLaw law) {
-		IQuery<ICoverage> query = CoreModelServiceHolder.get().getQuery(ICoverage.class);
-		query.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
-		query.and(ModelPackage.Literals.ICOVERAGE__DATE_TO, COMPARATOR.EQUALS, null);
-		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
-		List<ICoverage> coverages = query.execute();
-		return coverages.stream().filter(coverage -> law.equals(coverage.getBillingSystem().getLaw())).findFirst();
 	}
 }
