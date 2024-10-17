@@ -316,6 +316,10 @@ public class LabeledInputField extends Composite {
 		return ctl;
 	}
 
+	public Typ getInputFieldType() {
+		return inputFieldType;
+	}
+
 	public StructuredViewer getViewer() {
 		return viewer;
 	}
