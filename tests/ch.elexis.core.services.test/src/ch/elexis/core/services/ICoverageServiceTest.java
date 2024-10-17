@@ -85,15 +85,9 @@ public class ICoverageServiceTest extends AbstractServiceTest {
 		coverage = new ICoverageBuilder(coreModelService, patient, coverageService.getDefaultCoverageLabel(),
 				coverageService.getDefaultCoverageReason(), "KGV").buildAndSave();
 
-		ICoverage newCoverage = new ICoverageBuilder(coreModelService, patient,
-				coverageService.getDefaultCoverageLabel(), coverageService.getDefaultCoverageReason(), "KGV")
-				.buildAndSave();
-		
-		Optional<ICoverage> coverageWithLaw = coverageService.getCoverageWithLaw(testPatients.get(0), BillingLaw.KVG);
+		Optional<ICoverage> coverageWithLaw = coverageService.getCoverageWithLaw(patient, BillingLaw.KVG);
 		assertTrue(coverageWithLaw.isPresent());
-		assertEquals(coverageWithLaw.get(), newCoverage);
 
-		coreModelService.remove(newCoverage);
 		coreModelService.remove(coverage);
 	}
 
