@@ -355,9 +355,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	/**
-	 * Updates the tooltip text of a {@link LabeledInputField} component within the
-	 * afDetails form. The tooltip text is set to the current text content of the
-	 * input field.
+	 * Updates the tooltip text of all the {@link LabeledInputField} components
+	 * within the afDetails form. The tooltip text is set to the current text
+	 * content of the input field.
 	 * 
 	 * <p>
 	 * The method iterates through all children of the {@code afDetails} control,
