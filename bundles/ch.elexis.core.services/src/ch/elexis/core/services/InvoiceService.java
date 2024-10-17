@@ -271,7 +271,7 @@ public class InvoiceService implements IInvoiceService {
 			if (!demandAmount.isZero()) {
 				amount.addMoney(demandAmount);
 			}
-			addPayment(invoice, amount, "Storno");
+			addPayment(invoice, amount, "Storno", false);
 			if (reopen) {
 				ret = removeEncounters(invoice);
 
@@ -366,23 +366,25 @@ public class InvoiceService implements IInvoiceService {
 	}
 
 	@Override
-	public IPayment addPayment(IInvoice invoice, Money amount, String remark) {
+	public IPayment addPayment(IInvoice invoice, Money amount, String remark, boolean modifyState) {
 		Money oldOpen = invoice.getOpenAmount();
 		InvoiceState oldInvoiceState = invoice.getState();
 
 		IPayment payment = new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, remark).buildAndSave();
 		new IAccountTransactionBuilder(CoreModelServiceHolder.get(), payment).buildAndSave();
 
-		Money newOffen = invoice.getOpenAmount();
-		if (newOffen.isNeglectable()) {
-			invoice.setState(InvoiceState.PAID);
-		} else if (newOffen.isNegative()) {
-			invoice.setState(InvoiceState.EXCESSIVE_PAYMENT);
-		} else if (newOffen.getCents() < oldOpen.getCents()) {
-			invoice.setState(InvoiceState.PARTIAL_PAYMENT);
-		}
-		if (invoice.getState() != oldInvoiceState) {
-			CoreModelServiceHolder.get().save(invoice);
+		if (modifyState) {
+			Money newOffen = invoice.getOpenAmount();
+			if (newOffen.isNeglectable()) {
+				invoice.setState(InvoiceState.PAID);
+			} else if (newOffen.isNegative()) {
+				invoice.setState(InvoiceState.EXCESSIVE_PAYMENT);
+			} else if (newOffen.getCents() < oldOpen.getCents()) {
+				invoice.setState(InvoiceState.PARTIAL_PAYMENT);
+			}
+			if (invoice.getState() != oldInvoiceState) {
+				CoreModelServiceHolder.get().save(invoice);
+			}
 		}
 		return payment;
 	}

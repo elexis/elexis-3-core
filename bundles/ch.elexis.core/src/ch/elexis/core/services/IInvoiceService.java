@@ -82,13 +82,28 @@ public interface IInvoiceService {
 	 * The state of the {@link IInvoice} is updated. For example if there is nothing
 	 * left to pay, the invoice state is set to {@link InvoiceState#PAID}.
 	 * 
-	 *
 	 * @param invoice
 	 * @param amount
 	 * @param remark
 	 * @return
 	 */
-	public IPayment addPayment(IInvoice invoice, Money amount, String remark);
+	public default IPayment addPayment(IInvoice invoice, Money amount, String remark) {
+		return addPayment(invoice, amount, remark, true);
+	}
+
+	/**
+	 * Add a {@link IPayment} to the {@link IInvoice}. Also creates a
+	 * {@link IAccountTransaction} for the {@link IPayment}. </br>
+	 * The state of the {@link IInvoice} is updated according to the modifyState
+	 * parameter.
+	 * 
+	 * @param invoice
+	 * @param amount
+	 * @param remark
+	 * @param modiyState
+	 * @return
+	 */
+	public IPayment addPayment(IInvoice invoice, Money amount, String remark, boolean modifyState);
 
 	/**
 	 * Get the an {@link IAccountTransaction} matching the {@link IPayment}.
