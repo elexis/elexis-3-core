@@ -21,10 +21,11 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -32,6 +33,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -115,7 +117,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.KontaktBlatt_Phone1, Kontakt.FLD_PHONE1, Typ.STRING, null, 30),
 			new InputData(Messages.KontaktBlatt_Phone2, Kontakt.FLD_PHONE2, Typ.STRING, null, 30),
 			new InputData(Messages.Core_Fax, Kontakt.FLD_FAX, Typ.STRING, null, 30),
-			new InputData(Messages.KontaktBlatt_MediportSupport, Patient.FLD_GROUP, Typ.CHECKBOX, null),
+			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Mail2, Kontakt.FLD_E_MAIL2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
@@ -281,6 +283,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		lbAnschrift = tk.createLabel(cAnschrift, StringConstants.EMPTY, SWT.WRAP);
 		lbAnschrift.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		setOrganisationFieldsVisible(false);
+		def[14].getWidget().setVisible(false); // field is only added for UI presentation reasons
 		def[19].getWidget().setVisible(false); // field is only added for UI presentation reasons
 		setUnlocked(false);
 
@@ -314,14 +317,12 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (field.getControl() instanceof Button && field.getText().isEmpty()) {
 						field.setText(Messages.KontaktBlatt_MediportSupport);
 					}
-					ColumnLayoutData data = new ColumnLayoutData();
-					if (field.getLayoutData() != null) {
-						data = (ColumnLayoutData) field.getLayoutData();
+					ColumnLayoutData data = (ColumnLayoutData) field.getLayoutData();
+					if (data == null) {
+						data = new ColumnLayoutData();
 					}
-					int width = 15;
-					width += field.getLabel().length() * 5;
+					int width = field.getLabelComponent().getText().length() * 7;
 					data.widthHint = width;
-					((GridData) field.getControl().getLayoutData()).minimumWidth = width;
 					field.setLayoutData(data);
 
 				}
@@ -349,9 +350,10 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			for (Control child : children) {
 				if (child instanceof LabeledInputField) {
 					LabeledInputField field = (LabeledInputField) child;
-					if (field.getControl().getListeners(SWT.KeyUp).length == 0) {
-						field.getControl().addListener(SWT.KeyUp, new Listener() {
-							public void handleEvent(Event e) {
+					if (field.getInputFieldType() == LabeledInputField.Typ.TEXT) {
+						((Text) field.getControl()).addModifyListener(new ModifyListener() {
+							@Override
+							public void modifyText(ModifyEvent e) {
 								updateToolTipText();
 							}
 						});
@@ -470,7 +472,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private void setOrganisationFieldsVisible(boolean visible) {
 		def[4].getWidget().setVisible(visible);
 		def[9].getWidget().setVisible(visible);
-		def[14].getWidget().setVisible(visible);
 	}
 
 	public void activation(boolean mode) {
