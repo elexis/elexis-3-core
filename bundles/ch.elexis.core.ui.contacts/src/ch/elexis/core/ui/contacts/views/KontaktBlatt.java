@@ -25,6 +25,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -314,8 +315,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					if (data == null) {
 						data = new ColumnLayoutData();
 					}
-					int width = field.getLabelComponent().getText().length() * 7;
-					data.widthHint = width;
+					Point labelSize = CoreUiUtil.getStringExtent(field.getLabelComponent(),
+							field.getLabelComponent().getText());
+					data.widthHint = labelSize.x;
 					field.setLayoutData(data);
 				}
 			}
