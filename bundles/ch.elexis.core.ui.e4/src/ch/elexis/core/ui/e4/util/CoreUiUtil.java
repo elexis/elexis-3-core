@@ -20,8 +20,11 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Drawable;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -244,6 +247,21 @@ public class CoreUiUtil implements EventHandler {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Returns the width and height of the given string when rendered in the given
+	 * drawable context.
+	 * 
+	 * @param d    the drawable context (usually a control or composite)
+	 * @param text the text whose extent is to be measured
+	 * @return the extent (width and height) of the string
+	 */
+	public static Point getStringExtent(Drawable d, String text) {
+		GC gc = new GC(d);
+		Point extent = gc.stringExtent(text);
+		gc.dispose();
+		return extent;
 	}
 
 	public static Composite createForm(Composite parent, ISticker iSticker) {
