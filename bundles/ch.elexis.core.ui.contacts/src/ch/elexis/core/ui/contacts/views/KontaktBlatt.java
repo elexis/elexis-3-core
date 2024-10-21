@@ -311,14 +311,18 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			for (Control control : controls) {
 				if (control instanceof LabeledInputField) {
 					LabeledInputField field = (LabeledInputField) control;
-					ColumnLayoutData data = (ColumnLayoutData) field.getLayoutData();
-					if (data == null) {
-						data = new ColumnLayoutData();
+					ColumnLayoutData colData = (ColumnLayoutData) field.getLayoutData();
+					if (colData == null) {
+						colData = new ColumnLayoutData();
 					}
-					Point labelSize = CoreUiUtil.getStringExtent(field.getLabelComponent(),
-							field.getLabelComponent().getText());
-					data.widthHint = labelSize.x;
-					field.setLayoutData(data);
+					Point labelSize = CoreUiUtil.getStringExtent(field, field.getLabelComponent().getText());
+					int extraWidth = 0;
+					if (field.getLayout() instanceof GridLayout) {
+						extraWidth = ((GridLayout) field.getLayout()).marginWidth
+								+ ((GridLayout) field.getLayout()).horizontalSpacing;
+					}
+					colData.widthHint = labelSize.x + extraWidth;
+					field.setLayoutData(colData);
 				}
 			}
 			updateToolTipText();
