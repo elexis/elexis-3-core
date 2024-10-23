@@ -22,7 +22,7 @@ public class IContactServiceTest extends AbstractServiceTest {
 				LocalDate.of(1947, 7, 30), Gender.MALE).buildAndSave();
 
 		List<IPerson> findPersonDuplicates = contactService.findPersonDuplicates(LocalDate.of(1947, 7, 30), Gender.MALE,
-				"Schwarzenegger", null, false);
+				"Schwarzenegger", "Arnld", false);
 		assertEquals(1, findPersonDuplicates.size());
 
 		coreModelService.remove(testPerson);
