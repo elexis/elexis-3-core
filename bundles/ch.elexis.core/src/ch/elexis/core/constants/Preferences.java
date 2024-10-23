@@ -149,6 +149,8 @@ public class Preferences {
 	public static final String USR_PLAF = "anwender/plaf"; //$NON-NLS-1$
 	public static final String USR_DEFAULTFONT = "anwender/stdfont"; //$NON-NLS-1$
 	public static final String USR_SMALLFONT = "anwender/smallfont"; //$NON-NLS-1$
+	public static final String USR_PATDETAIL_MINWIDTH = "view/patdetail/minwidth"; //$NON-NLS-1$
+	public static final String USR_PATDETAIL_MINWIDTH_STATE = USR_PATDETAIL_MINWIDTH + "/state"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWPATNR = "anwender/patlist/zeigenr"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWNAME = "anwender/patlist/zeigename"; //$NON-NLS-1$
 	public static final String USR_PATLIST_SHOWFIRSTNAME = "anwender/patlist/zeigevorname"; //$NON-NLS-1$
