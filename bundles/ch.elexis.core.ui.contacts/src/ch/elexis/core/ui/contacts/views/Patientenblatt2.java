@@ -531,20 +531,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 
-		int[] eventTypes = { SWT.Selection, SWT.Hide };
-		for (int eventType : eventTypes) {
-			form.getHorizontalBar().addListener(eventType, new Listener() {
-				@Override
-				public void handleEvent(Event e) {
-					switch (e.type) {
-					case SWT.Selection:
-					case SWT.Hide:
-						updateExpandableLayoutWidth();
-						break;
-					}
-				}
-			});
-		}
+		form.getHorizontalBar().addListener(SWT.Selection, (e) -> updateExpandableLayoutWidth());
+		form.getHorizontalBar().addListener(SWT.Hide, (e) -> updateExpandableLayoutWidth());
+
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
 
 		cUserfields = new Composite(form.getBody(), SWT.NONE);
@@ -1586,10 +1575,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						});
 					}
 				}
+				updateToolTipText(field);
 			}
 		}
 		setupStickerCompositeWidth(fieldWidth);
-		updateToolTipText();
 		refresh();
 	}
 
@@ -1628,7 +1617,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						((Text) field.getControl()).addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
-								updateToolTipText();
+								updateToolTipText(field);
 							}
 						});
 					}
@@ -1638,27 +1627,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	/**
-	 * Updates the tooltip text of all the {@link LabeledInputField} components
-	 * within the form. The tooltip is set to display the current text content of
-	 * the input field.
+	 * Updates the {@code ToolTipText} of the {@link LabeledInputField} component
+	 * within the form. The ToolTip is set to display the Text content of the
+	 * {@link LabeledInputField}.
 	 * 
-	 * <p>
-	 * The method iterates through all fields of the {@code ipp} form, finds
-	 * instances of {@link LabeledInputField}, and sets their tooltip text to the
-	 * content of the input field.
-	 * </p>
-	 * 
+	 * @param editor {@link LabeledInputField} to update the {@code ToolTipText}
+	 *               of.
 	 */
-	private void updateToolTipText() {
+	private void updateToolTipText(LabeledInputField editor) {
 		if (ipp.getAutoForm() != null && !ipp.getAutoForm().isDisposed()) {
-			Control[] children = ipp.getAutoForm().getChildren();
-			for (Control child : children) {
-				if (child instanceof LabeledInputField) {
-					LabeledInputField field = (LabeledInputField) child;
-					if (!field.getLabelComponent().getText().equals(Messages.Core_RegularPhysiscion)) {
-						field.getControl().setToolTipText(field.getText());
-					}
-				}
+			if (!editor.getLabelComponent().getText().equals(Messages.Core_RegularPhysiscion)) {
+				editor.getControl().setToolTipText(editor.getText());
 			}
 		}
 	}
