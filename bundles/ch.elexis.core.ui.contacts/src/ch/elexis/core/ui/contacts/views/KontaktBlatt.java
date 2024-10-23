@@ -323,9 +323,10 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					}
 					colData.widthHint = labelSize.x + extraWidth;
 					field.setLayoutData(colData);
+					updateToolTipText(field);
 				}
 			}
-			updateToolTipText();
+
 			afDetails.layout();
 		}
 	}
@@ -351,7 +352,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 						((Text) field.getControl()).addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
-								updateToolTipText();
+								updateToolTipText(field);
 							}
 						});
 					}
@@ -361,28 +362,15 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	/**
-	 * Updates the tooltip text of all the {@link LabeledInputField} components
-	 * within the afDetails form. The tooltip text is set to the current text
-	 * content of the input field.
+	 * Updates the {@code ToolTipText} of the {@link LabeledInputField} component
+	 * within the form. The ToolTip is set to display the Text content of the
+	 * {@link LabeledInputField}.
 	 * 
-	 * <p>
-	 * The method iterates through all children of the {@code afDetails} control,
-	 * finds instances of {@link LabeledInputField}, and sets their tooltip text to
-	 * the content of the input field.
-	 * </p>
-	 * 
-	 * @author mdedic
-	 * @since 3.13
+	 * @param editor {@link LabeledInputField} to update the {@code ToolTipText} of.
 	 */
-	private void updateToolTipText() {
+	private void updateToolTipText(LabeledInputField editor) {
 		if (afDetails != null && !afDetails.isDisposed()) {
-			Control[] children = afDetails.getChildren();
-			for (Control child : children) {
-				if (child instanceof LabeledInputField) {
-					LabeledInputField field = (LabeledInputField) child;
-					field.getControl().setToolTipText(field.getText());
-				}
-			}
+			editor.getControl().setToolTipText(editor.getText());
 		}
 	}
 
