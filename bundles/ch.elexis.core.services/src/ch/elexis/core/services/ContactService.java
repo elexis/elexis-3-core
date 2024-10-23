@@ -39,7 +39,7 @@ public class ContactService implements IContactService {
 			if (StringUtils.isNotBlank(lastName)) {
 				lastNameDistance = LevenshteinDistance.getDefaultInstance().apply(person.getLastName(), lastName);
 			}
-			if (firstNameDistance < 4 || lastNameDistance < 4) {
+			if (firstNameDistance < 4 && lastNameDistance < 4) {
 				candidates.add(person);
 			}
 			// Cologne?
