@@ -17,6 +17,7 @@ package ch.elexis.data;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,10 +34,12 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.Money;
@@ -83,6 +86,7 @@ public class Rechnung extends PersistentObject {
 	public static final String OUTPUT = "Ausgegeben";
 	public static final String REMARKS = "Bemerkungen";
 	public static final String INVOICE_CORRECTION = "Rechnungskorrektur";
+	public static final String MANDATOR = "Mandator";
 
 	static {
 		addMapping(TABLENAME, BILL_NUMBER, CASE_ID, MANDATOR_ID, "RnDatum=S:D:RnDatum", BILL_STATE,
@@ -597,9 +601,13 @@ public class Rechnung extends PersistentObject {
 	 * @param state as defined by {@link InvoiceState#numericValue()}
 	 */
 	public void setStatus(final InvoiceState state) {
-		set(BILL_STATE, Integer.toString(state.getState()));
+		set(BILL_STATE, String.valueOf(state.getState()));
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
-		addTrace(STATUS_CHANGED, Integer.toString(state.getState()));
+		Optional<IContact> activeUser = ContextServiceHolder.get().getActiveUserContact();
+		addTrace(STATUS_CHANGED, String.valueOf(state.getState()));
+		String userDescription = activeUser
+				.map(user -> String.format("%s %s", user.getDescription1(), user.getDescription2())).orElseThrow();
+		addTrace(MANDATOR, userDescription);
 	}
 
 	/**
