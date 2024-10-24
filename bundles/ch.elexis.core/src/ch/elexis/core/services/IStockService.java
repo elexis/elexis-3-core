@@ -263,6 +263,13 @@ public interface IStockService {
 	public IStock getOrCreatePatientStock(IPatient patient);
 
 	/**
+	 * Get a list of all patient stocks
+	 * 
+	 * @return
+	 */
+	public List<IStock> getAllPatientStock();
+
+	/**
 	 * Removes the stock for a given patient along with all associated stock
 	 * entries.
 	 * 

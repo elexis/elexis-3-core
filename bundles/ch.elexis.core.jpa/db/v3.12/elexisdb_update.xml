@@ -159,7 +159,7 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
 
 <changeSet author="pdenzler" id="mediorder_sticker_update_name">
         <update tableName="ETIKETTEN">
-            <column name="NAME" value="Patientenbestellung über PEA aktiviert" />
+            <column name="NAME" value="Medikamentenbestellung über PEA aktiviert" />
             <where>ID='activate_mediorder'</where>
         </update>
     </changeSet>
