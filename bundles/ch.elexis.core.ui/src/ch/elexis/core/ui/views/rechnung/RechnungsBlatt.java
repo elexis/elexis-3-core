@@ -20,8 +20,10 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
 
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -824,13 +826,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						+ ((adressat != null) ? adressat.getLabel() : StringUtils.EMPTY));
 				form.setText(actRn.getLabel());
 				List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
-				for (String s : trace) {
-					String[] stm = s.split("\\s*:\\s"); //$NON-NLS-1$
-					StringBuilder sb = new StringBuilder();
-					sb.append(stm[0]).append(" : ").append( //$NON-NLS-1$
-							InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText());
-					lbJournal.add(sb.toString());
-				}
+				List<String> mandatorTrace = actRn.getTrace(Rechnung.MANDATOR);
+				List<String> combinedTrace = combineAndSortTrace(trace, mandatorTrace);
+				combinedTrace.forEach(lbJournal::add);
+
 				if (journalSelection != null && journalSelection.length > 0) {
 					for (int i = 0; i < lbJournal.getItemCount(); i++) {
 						for (String selection : journalSelection) {
@@ -890,4 +889,30 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 		}
 	}
 
+	private List<String> combineAndSortTrace(List<String> trace, List<String> mandatorTrace) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
+		return trace.stream().map(statusEntry -> {
+			String[] stm = statusEntry.split("\\s*:\\s", 2);
+			String statusText = stm[0] + " : " + InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText();
+			String mandatorLabel = mandatorTrace.stream().filter(m -> m.contains(stm[0])).findFirst().map(m -> {
+				mandatorTrace.remove(m);
+				if (m.contains(":")) {
+					String[] parts = m.split(":");
+					return parts.length > 1 ? parts[parts.length - 1].trim() : "";
+				}
+				return "";
+			}).orElse("");
+
+			return mandatorLabel.isEmpty() ? statusText : statusText + " / " + mandatorLabel;
+		}).sorted((entry1, entry2) -> {
+			try {
+				Date date1 = dateFormat.parse(entry1.split(" : ")[0]);
+				Date date2 = dateFormat.parse(entry2.split(" : ")[0]);
+				return date1.compareTo(date2);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}).collect(Collectors.toList());
+	}
 }
