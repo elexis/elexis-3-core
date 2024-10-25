@@ -79,7 +79,7 @@ public class CreatePatientOrderHandler {
 
 		IOrder order = coreModelService.create(IOrder.class);
 		order.setTimestamp(LocalDateTime.now());
-		order.setName("Medikamentenbestellung");
+		order.setName("Patientenbestellung");
 		coreModelService.save(order);
 
 		for (IStockEntry stockEntry : stockEntries) {

@@ -464,13 +464,6 @@ public class StockService implements IStockService {
 	}
 
 	@Override
-	public List<IStock> getAllPatientStock() {
-		IQuery<IStock> query = coreModelService.getQuery(IStock.class);
-		query.and("id", COMPARATOR.LIKE, "PatientStock-%");
-		return query.execute();
-	}
-
-	@Override
 	public void removePatientStock(IStock patientStock) {
 		patientStock.getStockEntries().forEach(entry -> unstoreArticleFromStock(patientStock,
 				storeToStringService.storeToString(entry.getArticle()).get()));
