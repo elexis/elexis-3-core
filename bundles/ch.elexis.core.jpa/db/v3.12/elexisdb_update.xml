@@ -164,6 +164,13 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
         </update>
     </changeSet>
 
+<changeSet author="pdenzler" id="mediorder_sticker_update_name_v2">
+    <update tableName="ETIKETTEN">
+        <column name="NAME" value="Medikamentenbestellung über PEA aktiv" />
+        <where>ID='activate_mediorder'</where>
+    </update>
+</changeSet>
+
 <changeSet author="pdenzler" id="mediorder_sticker_objclass">
 	<insert tableName="ETIKETTEN_OBJCLASS_LINK">
 		<column name="OBJCLASS" value="ch.elexis.data.Patient" />
