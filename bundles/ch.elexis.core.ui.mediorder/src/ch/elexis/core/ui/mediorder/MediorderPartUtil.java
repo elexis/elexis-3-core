@@ -1,6 +1,9 @@
 package ch.elexis.core.ui.mediorder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
@@ -10,6 +13,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
 
 public class MediorderPartUtil {
 
@@ -112,7 +116,7 @@ public class MediorderPartUtil {
 		state.setStockEntry(stockEntry);
 		return state;
 	}
-	
+
 	public static void removeStockEntry(IStockEntry entry, IModelService coreModelService) {
 		coreModelService.remove(entry);
 		IStock stock = entry.getStock();
@@ -121,4 +125,95 @@ public class MediorderPartUtil {
 		}
 	}
 
+	/**
+	 * Calculates the overall state of the order based on the status of individual
+	 * {@link IStockEntry} objects in the provided {@link IStock}. The stock state
+	 * is derived from the {@link MediorderEntryState} of each entry, and the method
+	 * returns one of the following status codes:
+	 * 
+	 * <ul>
+	 * <li>0 - ENABLED_FOR_PEA: All stock entries have the state
+	 * {@code AWAITING_REQUEST}.</li>
+	 * <li>1 - READY: All stock entries are in the state {@code IN_STOCK}</li>
+	 * <li>2 - PARTIALLY_READY: Some stock entries are in the state
+	 * {@code IN_STOCK}, while others may have different statuses.</li>
+	 * <li>3 - IN_PROGRESS: Changes are still required, as not all entries are
+	 * ready.</li>
+	 * </ul>
+	 * 
+	 * @param
+	 * @return
+	 */
+	public static int calculateStockState(IStock stock) {
+		boolean allEnabledForPea = true;
+		boolean hasInStock = false;
+		boolean hasPartiallyInStock = false;
+		boolean hasOtherStatus = false;
+
+		for (IStockEntry entry : stock.getStockEntries()) {
+			MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
+
+			switch (entryState) {
+			case AWAITING_REQUEST -> {
+			}
+			case IN_STOCK -> hasInStock = true;
+			case PARTIALLY_IN_STOCK -> {
+				hasPartiallyInStock = true;
+				allEnabledForPea = false;
+			}
+			case ORDERED, PARTIALLY_ORDERED, INVALID -> {
+				allEnabledForPea = false;
+				hasOtherStatus = true;
+			}
+			default -> {
+				allEnabledForPea = false;
+				hasOtherStatus = true;
+			}
+			}
+		}
+
+		if (hasPartiallyInStock)
+			return 2;
+		if (hasInStock && allEnabledForPea)
+			return 1;
+		if (hasInStock && hasOtherStatus)
+			return 2;
+		if (allEnabledForPea)
+			return 0;
+		return 3;
+	}
+
+	public static void updateStockImageState(Map<IStock, Integer> imageStockStates, IStock stock) {
+		int state = MediorderPartUtil.calculateStockState(stock);
+		imageStockStates.put(stock, state);
+	}
+
+	public static int getImageForStock(Map<IStock, Integer> imageStockStates, IStock stock) {
+		return imageStockStates.computeIfAbsent(stock, MediorderPartUtil::calculateStockState);
+	}
+
+	/**
+	 * Filters the list of all available patient stocks based on the current filter
+	 * value. The filtering process is performed by calculating the stock state for
+	 * each {@link IStock} and comparing it to the current filter value.
+	 * 
+	 * @return
+	 */
+	public static List<IStock> calculateFilteredStocks(Integer filterValue) {
+		Map<IStock, Integer> map = new HashMap<IStock, Integer>();
+
+		List<IStock> stocks = StockServiceHolder.get().getAllPatientStock();
+		for (IStock stock : stocks) {
+			calculateStockState(stock);
+			map.computeIfAbsent(stock, MediorderPartUtil::calculateStockState);
+		}
+
+		List<IStock> list = new ArrayList<IStock>();
+		for (Map.Entry<IStock, Integer> values : map.entrySet()) {
+			if (values.getValue().equals(filterValue)) {
+				list.add(values.getKey());
+			}
+		}
+		return list;
+	}
 }
