@@ -106,8 +106,15 @@ public class LaborblattView extends ViewPart implements ICallback {
 
 		// Transform dd.MM.yyyy to yyyyMMdd to query the according labResults
 		for (int numberOfDays = 2; numberOfDays < header.length; numberOfDays++) {
-			days[numberOfDays - 2] = LocalDate.parse(header[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-					.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			if (!header[numberOfDays].isBlank()) {
+				// Skip Labor Neu (dd.mm.yyyy)
+				if (header[numberOfDays]
+						.matches("^\\s*(3[01]|[12][0-9]|0?[1-9])\\.(1[012]|0?[1-9])\\.((?:19|20)\\d{2})\\s*$")) {
+					days[numberOfDays - 2] = LocalDate
+							.parse(header[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+							.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				}
+			}
 		}
 
 		// String to be inserted as intermediate title to identify the measurment's
