@@ -4,13 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Named;
+
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import ch.elexis.core.l10n.Messages;
@@ -23,7 +26,8 @@ import ch.elexis.core.ui.mediorder.MediorderStockState;
 public class FilterByOrderStatusHandler {
 
 	@Execute
-	public Object execute(MPart part, MHandledToolItem item) throws org.eclipse.core.commands.ExecutionException {
+	public Object execute(MPart part, MHandledToolItem item, @Named(IServiceConstants.ACTIVE_SHELL) Shell shell)
+			throws org.eclipse.core.commands.ExecutionException {
 		MediorderPart mediorderPart = (MediorderPart) part.getObject();
 		ToolItem widget = (ToolItem) item.getWidget();
 
@@ -33,8 +37,7 @@ public class FilterByOrderStatusHandler {
 			mediorderPart.setFilterActive(false);
 			mediorderPart.refresh();
 		} else {
-			ListDialog selectFilterDialog = new ListDialog(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+			ListDialog selectFilterDialog = new ListDialog(shell);
 			selectFilterDialog.setContentProvider(ArrayContentProvider.getInstance());
 			selectFilterDialog.setInput(stockStateMap.keySet().toArray());
 			selectFilterDialog.setTitle(Messages.Core_Filter);
