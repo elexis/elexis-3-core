@@ -1613,7 +1613,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			for (Control child : children) {
 				if (child instanceof LabeledInputField) {
 					LabeledInputField field = (LabeledInputField) child;
-					if (field.getInputFieldType() == LabeledInputField.Typ.TEXT) {
+					if (field.getInputFieldType() != LabeledInputField.Typ.COMBO_VIEWER
+							&& !field.getLabelComponent().getText().equalsIgnoreCase(Messages.Core_RegularPhysiscion)) {
 						((Text) field.getControl()).addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
@@ -1636,7 +1637,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	 */
 	private void updateToolTipText(LabeledInputField editor) {
 		if (ipp.getAutoForm() != null && !ipp.getAutoForm().isDisposed()) {
-			if (!editor.getLabelComponent().getText().equals(Messages.Core_RegularPhysiscion)) {
+			if (editor.getInputFieldType() != LabeledInputField.Typ.COMBO_VIEWER
+					&& !editor.getLabelComponent().getText().equalsIgnoreCase(Messages.Core_RegularPhysiscion)) {
 				editor.getControl().setToolTipText(editor.getText());
 			}
 		}
