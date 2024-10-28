@@ -70,8 +70,17 @@ public class LaborblattView extends ViewPart implements ICallback {
 		return createLaborblatt(pat, header, rows, null);
 	}
 
-	public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
+    public boolean createLaborblatt(final Patient pat, final String[] header, final TreeItem[] rows,
 			int[] skipColumnsIndex) {
+		String[] cleanedHeader;
+
+		// If the first header column is empty
+		if (StringUtils.isBlank(header[0])) {
+			cleanedHeader = new String[header.length - 1];
+			System.arraycopy(header, 1, cleanedHeader, 0, cleanedHeader.length);
+		} else {
+			cleanedHeader = header;
+		}
 
 		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
@@ -93,21 +102,27 @@ public class LaborblattView extends ViewPart implements ICallback {
 
 		colsizes[0] = Math.round(first);
 		colsizes[1] = Math.round(second);
-		
+
 		// Final table
 		LinkedList<String[]> itemResults = new LinkedList<>();
 
 		// Add header line
-		itemResults.add(header);
+		itemResults.add(cleanedHeader);
 
 		// Reduced array size because the first two columns do not contain any
 		// laboratory measurements
-		String[] days = new String[header.length - 2];
+		String[] days = new String[cleanedHeader.length - 2];
 
 		// Transform dd.MM.yyyy to yyyyMMdd to query the according labResults
-		for (int numberOfDays = 2; numberOfDays < header.length; numberOfDays++) {
-			days[numberOfDays - 2] = LocalDate.parse(header[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-					.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		for (int numberOfDays = 2; numberOfDays < cleanedHeader.length; numberOfDays++) {
+			if (StringUtils.isNotBlank(cleanedHeader[numberOfDays])) {
+				// Skip Labor Neu (dd.mm.yyyy)
+				if (Character.isDigit(cleanedHeader[numberOfDays].charAt(0))) {
+					days[numberOfDays - 2] = LocalDate
+							.parse(cleanedHeader[numberOfDays], DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+							.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				}
+			}
 		}
 
 		// String to be inserted as intermediate title to identify the measurment's
@@ -116,7 +131,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 
 		// Loop to build the final table row by row
 		for (int numberOfRows = 0; numberOfRows < rows.length; numberOfRows++) {
-			String[] itemResult = new String[header.length];
+			String[] itemResult = new String[cleanedHeader.length];
 			// Cast array to LaborItemResults
 			LaborItemResults laborItemResults = (LaborItemResults) rows[numberOfRows].getData();
 			// Build the first two columns (Name of the LabResult/Reference)
@@ -141,7 +156,7 @@ public class LaborblattView extends ViewPart implements ICallback {
 			}
 			// Insert the provenance if it changes
 			if (!provenance.equalsIgnoreCase(laborItemResults.getFirstResult().getItem().getGroup())) {
-				String[] intermediateTitle = new String[header.length];
+				String[] intermediateTitle = new String[cleanedHeader.length];
 				intermediateTitle[0] = laborItemResults.getFirstResult().getItem().getGroup();
 				provenance = laborItemResults.getFirstResult().getItem().getGroup();
 				itemResults.add(intermediateTitle);
@@ -156,7 +171,6 @@ public class LaborblattView extends ViewPart implements ICallback {
 		text.saveBrief(br, Brief.LABOR);
 		return ret;
 	}
-
 	public boolean createLaborblatt(final Patient pat, final String[] header, final TableItem[] rows) {
 		Brief br = text.createFromTemplateName(text.getAktuelleKons(), TT_LABPAPER, Brief.LABOR, pat, null);
 		if (br == null) {
