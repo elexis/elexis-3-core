@@ -86,6 +86,7 @@ public class LabeledInputField extends Composite {
 	StructuredViewer viewer;
 	FormToolkit tk = UiDesk.getToolkit();
 	Typ inputFieldType;
+	boolean fixedTooltip;
 
 	/**
 	 * simply creates a LabeledInputField of Type LabeledInputField.Typ.TEXT}
@@ -324,6 +325,14 @@ public class LabeledInputField extends Composite {
 		return viewer;
 	}
 
+	public boolean isFixedTooltip() {
+		return fixedTooltip;
+	}
+
+	public void setFixedTooltip(boolean bool) {
+		fixedTooltip = bool;
+	}
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		if (ctl != null && !ctl.isDisposed()) {
@@ -550,6 +559,7 @@ public class LabeledInputField extends Composite {
 		public void setTooltipText(String label) {
 			if (mine != null && mine.ctl != null) {
 				mine.ctl.setToolTipText(label);
+				mine.fixedTooltip = true;
 			}
 		}
 	}
