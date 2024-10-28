@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -57,6 +58,11 @@ public class PeaElement extends AbstractEntityWithId implements EntityWithDelete
 	@Basic(fetch = FetchType.LAZY)
 	@Lob
 	protected String data;
+
+	@Transient
+	public boolean isTargeted() {
+		return subjectId != null && !subjectId.isEmpty();
+	}
 
 	@Override
 	public String getId() {
