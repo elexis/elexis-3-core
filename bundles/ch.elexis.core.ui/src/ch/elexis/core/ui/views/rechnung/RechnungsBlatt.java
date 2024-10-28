@@ -892,25 +892,33 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	private List<String> combineAndSortTrace(List<String> trace, List<String> mandatorTrace) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
 		return trace.stream().map(statusEntry -> {
+			// Split the status entry into a timestamp and a status code.
 			String[] stm = statusEntry.split("\\s*:\\s", 2);
-			String statusText = stm[0] + " : " + InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText();
-			String mandatorLabel = mandatorTrace.stream().filter(m -> m.contains(stm[0])).findFirst().map(m -> {
-				mandatorTrace.remove(m);
-				if (m.contains(":")) {
-					String[] parts = m.split(":");
-					return parts.length > 1 ? parts[parts.length - 1].trim() : "";
-				}
-				return "";
-			}).orElse("");
-
+			String timestampString = stm[0]; // Extract the timestamp part.
+			String statusText = timestampString + " : "
+					+ InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText();
+			// Find the corresponding mandator entry that matches the timestamp.
+			String mandatorLabel = mandatorTrace.stream().filter(m -> m.contains(timestampString)).findFirst()
+					.map(m -> {
+						// Remove the matched mandator entry from the list to avoid reuse.
+						mandatorTrace.remove(m);
+						// Extract the label text from the mandator entry if it contains a colon.
+						if (m.contains(":")) {
+							String[] parts = m.split(":");
+							return parts.length > 1 ? parts[parts.length - 1].trim() : "";
+						}
+						return "";
+					}).orElse("");
+			// Return the status text with or without the mandator label.
 			return mandatorLabel.isEmpty() ? statusText : statusText + " / " + mandatorLabel;
 		}).sorted((entry1, entry2) -> {
 			try {
+				// Parse the dates from the entries for sorting.
 				Date date1 = dateFormat.parse(entry1.split(" : ")[0]);
 				Date date2 = dateFormat.parse(entry2.split(" : ")[0]);
 				return date1.compareTo(date2);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LoggerFactory.getLogger(getClass()).error("Error parsing dates for sorting: {}", e.getMessage(), e);
 				return 0;
 			}
 		}).collect(Collectors.toList());

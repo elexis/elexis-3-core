@@ -603,11 +603,12 @@ public class Rechnung extends PersistentObject {
 	public void setStatus(final InvoiceState state) {
 		set(BILL_STATE, String.valueOf(state.getState()));
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
-		Optional<IContact> activeUser = ContextServiceHolder.get().getActiveUserContact();
 		addTrace(STATUS_CHANGED, String.valueOf(state.getState()));
-		String userDescription = activeUser
-				.map(user -> String.format("%s %s", user.getDescription1(), user.getDescription2())).orElseThrow();
-		addTrace(MANDATOR, userDescription);
+		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
+			String userDescription = String.format("%s %s", activeUserContact.getDescription1(),
+					activeUserContact.getDescription2());
+			addTrace(MANDATOR, userDescription);
+		});
 	}
 
 	/**

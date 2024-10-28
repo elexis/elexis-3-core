@@ -9,4 +9,5 @@ public class InvoiceConstants {
 	public static final String OUTPUT = "Ausgegeben";
 	public static final String REMARKS = "Bemerkungen";
 	public static final String INVOICE_CORRECTION = "Rechnungskorrektur";
+	public static final String MANDATOR = "Mandator";
 }
