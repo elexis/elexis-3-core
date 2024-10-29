@@ -124,7 +124,7 @@ public class MediorderPart implements IRefreshablePart {
 
 	public Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	private List<IStock> filteredStocks = new ArrayList<>();
-	private Integer currentFilterValue;
+	private List<Integer> currentFilterValue;
 	private boolean filterActive = false;
 
 	public MediorderPart() {
@@ -166,7 +166,7 @@ public class MediorderPart implements IRefreshablePart {
 	public void refresh(Map<Object, Object> filterParameters) {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
 		tableViewer.setInput(filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
-				: stockService.getAllPatientStock());
+				: getStocksExcludingAwaitingRequests());
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 			MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) firstElement);
@@ -194,7 +194,7 @@ public class MediorderPart implements IRefreshablePart {
 		menuService.registerContextMenu(tableViewerDetails.getTable(),
 				"ch.elexis.core.ui.mediorder.popupmenu.viewerdetails"); //$NON-NLS-1$
 
-		tableViewer.setInput(stockService.getAllPatientStock());
+		tableViewer.setInput(getStocksExcludingAwaitingRequests());
 
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
 	}
@@ -700,6 +700,19 @@ public class MediorderPart implements IRefreshablePart {
 		MediorderPartUtil.updateStockImageState(imageStockStates, stock);
 	}
 
+	/**
+	 * Retrieves a list of patient stocks that doesn't contain stockEntries with the
+	 * status {@link MediorderEntryState#AWAITING_REQUEST}
+	 * 
+	 * @return
+	 */
+	private List<IStock> getStocksExcludingAwaitingRequests() {
+		return stockService.getAllPatientStock().stream().filter(stock -> !stock.getStockEntries().isEmpty())
+				.filter(stock -> stock.getStockEntries().stream().noneMatch(
+						entry -> MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(entry))))
+				.toList();
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<IStockEntry> getSelectedStockEntries() {
 		return tableViewerDetails.getStructuredSelection().toList();
@@ -736,11 +749,11 @@ public class MediorderPart implements IRefreshablePart {
 		return filteredStocks;
 	}
 
-	public void setCurrentFilterValue(Integer value) {
+	public void setCurrentFilterValue(List<Integer> value) {
 		this.currentFilterValue = value;
 	}
 
-	public Integer getCurrentFilterValue() {
+	public List<Integer> getCurrentFilterValue() {
 		return this.currentFilterValue;
 	}
 }
