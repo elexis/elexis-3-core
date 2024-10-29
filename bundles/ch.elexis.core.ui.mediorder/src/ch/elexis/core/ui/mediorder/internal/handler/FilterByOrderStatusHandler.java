@@ -1,5 +1,8 @@
 package ch.elexis.core.ui.mediorder.internal.handler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +17,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.dialogs.ListDialog;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IStock;
@@ -37,26 +40,28 @@ public class FilterByOrderStatusHandler {
 			mediorderPart.setFilterActive(false);
 			mediorderPart.refresh();
 		} else {
-			ListDialog selectFilterDialog = new ListDialog(shell);
-			selectFilterDialog.setContentProvider(ArrayContentProvider.getInstance());
-			selectFilterDialog.setInput(stockStateMap.keySet().toArray());
-			selectFilterDialog.setTitle(Messages.Core_Filter);
-			selectFilterDialog.setMessage(Messages.Mediorder_filter_by_status);
-			selectFilterDialog.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element) {
-					Integer key = (Integer) element;
-					return stockStateMap.getOrDefault(key, null);
-				}
-			});
 
-			if (selectFilterDialog.open() == ListDialog.OK) {
-				Object[] selection = selectFilterDialog.getResult();
-				Integer value = (Integer) selection[0];
+			List<Integer> reversedKeys = new ArrayList<>(stockStateMap.keySet());
+			Collections.reverse(reversedKeys);
 
-				mediorderPart.setCurrentFilterValue(value);
+			ListSelectionDialog dialog = ListSelectionDialog.of(reversedKeys.toArray())
+					.contentProvider(ArrayContentProvider.getInstance()).labelProvider(new LabelProvider() {
+						@Override
+						public String getText(Object element) {
+							Integer key = (Integer) element;
+							return stockStateMap.getOrDefault(key, null);
+						}
+					})
+					.message(Messages.Mediorder_filter_by_status).create(shell);
+			dialog.setTitle(Messages.Core_Filter);
+
+			if (dialog.open() == ListSelectionDialog.OK) {
+				List<Integer> selections = Arrays.stream(dialog.getResult()).filter(obj -> obj instanceof Integer)
+						.map(obj -> (Integer) obj).toList();
+
+				mediorderPart.setCurrentFilterValue(selections);
 				mediorderPart.setFilterActive(true);
-				mediorderPart.setFilteredStocks(filterPatientStock(value));
+				mediorderPart.setFilteredStocks(filterPatientStock(selections));
 				mediorderPart.refresh();
 			} else {
 				widget.setSelection(false);
@@ -74,12 +79,12 @@ public class FilterByOrderStatusHandler {
 		return map;
 	}
 
-	private List<IStock> filterPatientStock(Integer value) {
+	private List<IStock> filterPatientStock(List<Integer> values) {
 		List<IStock> stocks = StockServiceHolder.get().getAllPatientStock();
 		return stocks.stream().filter(stock -> {
 			Integer state = MediorderPartUtil.calculateStockState(stock);
-			return state != null && state.equals(value);
+			return state != null && values.contains(state);
 		}).toList();
-
+		
 	}
 }

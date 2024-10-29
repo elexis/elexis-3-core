@@ -194,26 +194,25 @@ public class MediorderPartUtil {
 
 	/**
 	 * Filters the list of all available patient stocks based on the current filter
-	 * value. The filtering process is performed by calculating the stock state for
-	 * each {@link IStock} and comparing it to the current filter value.
+	 * values. The filtering process is performed by calculating the stock state for
+	 * each {@link IStock} and comparing it to the current filter values.
 	 * 
 	 * @return
 	 */
-	public static List<IStock> calculateFilteredStocks(Integer filterValue) {
-		Map<IStock, Integer> map = new HashMap<IStock, Integer>();
+	public static List<IStock> calculateFilteredStocks(List<Integer> filterValues) {
+		Map<IStock, Integer> map = new HashMap<>();
 
 		List<IStock> stocks = StockServiceHolder.get().getAllPatientStock();
 		for (IStock stock : stocks) {
-			calculateStockState(stock);
 			map.computeIfAbsent(stock, MediorderPartUtil::calculateStockState);
 		}
 
-		List<IStock> list = new ArrayList<IStock>();
-		for (Map.Entry<IStock, Integer> values : map.entrySet()) {
-			if (values.getValue().equals(filterValue)) {
-				list.add(values.getKey());
+		List<IStock> filteredList = new ArrayList<>();
+		for (Map.Entry<IStock, Integer> entry : map.entrySet()) {
+			if (entry.getValue() != null && filterValues.contains(entry.getValue())) {
+				filteredList.add(entry.getKey());
 			}
 		}
-		return list;
+		return filteredList;
 	}
 }
