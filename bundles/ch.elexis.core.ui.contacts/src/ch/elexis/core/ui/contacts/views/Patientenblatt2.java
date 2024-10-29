@@ -377,9 +377,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							String label = stammarzt.getLabel()
 									+ ((telephoneLabel.length() > 0) ? " (" + telephoneLabel + ")" : StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
 							ltf.setTooltipText(label);
-							if (!ltf.getWidget().isFixedTooltip()) {
-								ltf.getWidget().setFixedTooltip(true);
-							}
 						} else {
 							ltf.setTooltipText(null);
 						}
@@ -501,10 +498,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				new InputData(Messages.Core_Mobilephone, Patient.MOBILE, InputData.Typ.STRING, null, 30));
 
 		ipp = new InputPanel(cUserfields, COLUMNCOUNT, COLUMNCOUNT, fields.toArray(new InputData[0]));
-		LabeledInputField comboField = (LabeledInputField) ipp.getAutoForm().getChildren()[3];
-		comboField.setFixedTooltip(true);
-		comboField = (LabeledInputField) ipp.getAutoForm().getChildren()[4];
-		comboField.setFixedTooltip(true);
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
 		// cUserfields.setRedraw(true);
@@ -1620,7 +1613,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			for (Control child : children) {
 				if (child instanceof LabeledInputField) {
 					LabeledInputField field = (LabeledInputField) child;
-					if (!field.isFixedTooltip()) {
+					if (!field.isFixedTooltip() && field.getControl() instanceof Text) {
 						((Text) field.getControl()).addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
@@ -1643,7 +1636,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	 */
 	private void updateToolTipText(LabeledInputField editor) {
 		if (ipp.getAutoForm() != null && !ipp.getAutoForm().isDisposed()) {
-			if (!editor.isFixedTooltip()) {
+			if (!editor.isFixedTooltip() && editor.getControl() instanceof Text) {
 				editor.getControl().setToolTipText(editor.getText());
 			}
 		}

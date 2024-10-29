@@ -329,10 +329,6 @@ public class LabeledInputField extends Composite {
 		return fixedTooltip;
 	}
 
-	public void setFixedTooltip(boolean bool) {
-		fixedTooltip = bool;
-	}
-
 	@Override
 	public void setEnabled(boolean enabled) {
 		if (ctl != null && !ctl.isDisposed()) {
