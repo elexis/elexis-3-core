@@ -55,14 +55,21 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -72,6 +79,7 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -82,6 +90,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.interfaces.IPersistentObject;
@@ -497,6 +506,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		refresh();
 		if (actPatient != null) {
 			setPatient(actPatient);
+		} else {
+			setupFieldWidthsAndListeners(ipp.getAutoForm().getChildren());
+			setToolTipTextListeners();
 		}
 		layout(true);
 	}
@@ -518,6 +530,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				updateExpandableLayoutWidth();
 			}
 		});
+
+		form.getHorizontalBar().addListener(SWT.Selection, (e) -> updateExpandableLayoutWidth());
+		form.getHorizontalBar().addListener(SWT.Hide, (e) -> updateExpandableLayoutWidth());
 
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
 
@@ -987,6 +1002,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		dmd.reload();
 
 		updateExpandableLayoutWidth();
+		setupFieldWidthsAndListeners(ipp.getAutoForm().getChildren());
 		refresh();
 	}
 
@@ -1518,14 +1534,141 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		};
 	}
 
+	/**
+	 * Adjusts the width of fields in the input panel based on user preferences or
+	 * field label length. Iterates through controls, identifies
+	 * {@code LabeledInputField} instances, and adjusts their layout data. The width
+	 * is determined by either a user-configured width or label length. Also
+	 * disables mouse wheel scrolling for combo boxes and calls
+	 * setupStickerCompositeWidth to configure the width of the sticker components.
+	 *
+	 * @param controls array of {@code Control} elements to configure
+	 */
+	private void setupFieldWidthsAndListeners(Control[] controls) {
+		int fieldWidth = 0;
+		for (Control ctrl : controls) {
+			if (ctrl instanceof LabeledInputField) {
+				LabeledInputField field = (LabeledInputField) ctrl;
+				if (field != null) {
+					ColumnLayoutData data = (ColumnLayoutData) field.getLayoutData();
+					if (data == null) {
+						data = new ColumnLayoutData();
+					}
+					if (ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false)) {
+						fieldWidth = ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 100);
+					} else {
+						Point labelSize = CoreUiUtil.getStringExtent(field, field.getLabelComponent().getText());
+						int extraWidth = 0;
+						if (field.getLayout() instanceof GridLayout) {
+							extraWidth = ((GridLayout) field.getLayout()).marginWidth
+									+ ((GridLayout) field.getLayout()).horizontalSpacing;
+						}
+						fieldWidth = labelSize.x + extraWidth;
+					}
+					data.widthHint = fieldWidth;
+					field.setLayoutData(data);
+
+					if (field.getControl() instanceof Combo) {
+						Combo combo = (Combo) field.getControl();
+						combo.addListener(SWT.MouseWheel, event -> {
+							event.doit = false;
+						});
+					}
+				}
+				updateToolTipText(field);
+			}
+		}
+		setupStickerCompositeWidth(fieldWidth);
+		refresh();
+	}
+
+	/**
+	 * Configures the width of stickerComposite's child components. Ensures the
+	 * overall view can be minimized correctly by setting the width hint.
+	 *
+	 * @param width the width to set for each child composite
+	 */
+	private void setupStickerCompositeWidth(int width) {
+		for (Control stickerCtrl : stickerComposite.getChildren()) {
+			if (stickerCtrl instanceof Composite) {
+				Composite sticker = (Composite) stickerCtrl;
+				ColumnLayoutData data = (ColumnLayoutData) sticker.getLayoutData();
+				data.widthHint = width;
+				sticker.setLayoutData(data);
+			}
+		}
+	}
+
+	/**
+	 * Adds listeners to the {@link LabeledInputField} components to update the
+	 * tooltip text when the content in the input field has been modified.
+	 * <p>
+	 * This method only adds a Listener if the {@link LabeledInputField} type is of
+	 * TEXT.
+	 * </p>
+	 */
+	private void setToolTipTextListeners() {
+		if (ipp.getAutoForm() != null && !ipp.getAutoForm().isDisposed()) {
+			Control[] children = ipp.getAutoForm().getChildren();
+			for (Control child : children) {
+				if (child instanceof LabeledInputField) {
+					LabeledInputField field = (LabeledInputField) child;
+					if (!field.isFixedTooltip() && field.getControl() instanceof Text) {
+						((Text) field.getControl()).addModifyListener(new ModifyListener() {
+							@Override
+							public void modifyText(ModifyEvent e) {
+								updateToolTipText(field);
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates the {@code ToolTipText} of the {@link LabeledInputField} component
+	 * within the form. The ToolTip is set to display the Text content of the
+	 * {@link LabeledInputField}.
+	 * 
+	 * @param editor {@link LabeledInputField} to update the {@code ToolTipText}
+	 *               of.
+	 */
+	private void updateToolTipText(LabeledInputField editor) {
+		if (ipp.getAutoForm() != null && !ipp.getAutoForm().isDisposed()) {
+			if (!editor.isFixedTooltip() && editor.getControl() instanceof Text) {
+				editor.getControl().setToolTipText(editor.getText());
+			}
+		}
+	}
+
+	/**
+	 * Dynamically adjusts the width of {@link ExpandableComposite}'s based on the
+	 * available client area.<br>
+	 * This method adjusts the LayoutData of each {@link ExpandableComposite} to
+	 * either fill the space or if the horizontal ScrollBar is visible, maintain a
+	 * calculated fixed width.
+	 */
 	private void updateExpandableLayoutWidth() {
 		if (ec != null && form != null && !form.isDisposed()) {
-			for (ExpandableComposite expandable : ec) {
-				if (expandable.getLayoutData() instanceof GridData) {
-					if (Patientenblatt2.this.getClientArea().width > 50) {
-						((GridData) expandable.getLayoutData()).widthHint = Patientenblatt2.this.getClientArea().width;
-					} else {
-						((GridData) expandable.getLayoutData()).widthHint = SWT.DEFAULT;
+			int clientAreaWidth = Patientenblatt2.this.getClientArea().width;
+			int barPos = form.getHorizontalBar().getSelection();
+			boolean shouldFixWidth = clientAreaWidth > 50 && form.getHorizontalBar().isVisible();
+
+			Control[] body = form.getBody().getChildren();
+			for (Control control : body) {
+				if (control instanceof ExpandableComposite) {
+					if (control.getLayoutData() instanceof GridData) {
+						GridData gridData = (GridData) control.getLayoutData();
+						if (shouldFixWidth) {
+							gridData.grabExcessHorizontalSpace = false;
+							gridData.horizontalAlignment = SWT.DEFAULT;
+							gridData.widthHint = clientAreaWidth - 40 + barPos;
+						} else {
+							gridData.grabExcessHorizontalSpace = true;
+							gridData.horizontalAlignment = SWT.FILL;
+							gridData.widthHint = SWT.DEFAULT;
+						}
 					}
 				}
 			}
