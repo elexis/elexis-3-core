@@ -68,8 +68,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
@@ -79,6 +77,7 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -535,6 +534,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		form.getHorizontalBar().addListener(SWT.Hide, (e) -> updateExpandableLayoutWidth());
 
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
+		((ColumnLayout) stickerComposite.getLayout()).maxNumColumns = 2;
 
 		cUserfields = new Composite(form.getBody(), SWT.NONE);
 		cUserfields.setLayout(new GridLayout());
@@ -610,7 +610,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		hHA.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 		inpAdresse = tk.createFormText(cPersonalien, false);
 		inpAdresse.setText("---\n", false, false); //$NON-NLS-1$
-		inpAdresse.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		GridData inpData = SWTHelper.getFillGridData(1, true, 1, false);
+		inpData.widthHint = CoreUiUtil.getStringExtent(hHA, hHA.getText()).x;
+		inpAdresse.setLayoutData(inpData);
 
 		IExpansionListener ecExpansionListener = new ExpansionAdapter() {
 			@Override
@@ -1578,25 +1580,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				updateToolTipText(field);
 			}
 		}
-		setupStickerCompositeWidth(fieldWidth);
 		refresh();
-	}
-
-	/**
-	 * Configures the width of stickerComposite's child components. Ensures the
-	 * overall view can be minimized correctly by setting the width hint.
-	 *
-	 * @param width the width to set for each child composite
-	 */
-	private void setupStickerCompositeWidth(int width) {
-		for (Control stickerCtrl : stickerComposite.getChildren()) {
-			if (stickerCtrl instanceof Composite) {
-				Composite sticker = (Composite) stickerCtrl;
-				ColumnLayoutData data = (ColumnLayoutData) sticker.getLayoutData();
-				data.widthHint = width;
-				sticker.setLayoutData(data);
-			}
-		}
 	}
 
 	/**

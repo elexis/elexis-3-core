@@ -148,7 +148,9 @@ public class UserSettings2 extends FieldEditorPreferencePage implements IWorkben
 		fwc.setLayout(new GridLayout(2, true));
 		addField(new BooleanFieldEditor(Preferences.USR_PATDETAIL_MINWIDTH_STATE,
 				"Feste Mindestbreite in Patientendetail-Felder nutzen", fwc));
-		addField(new IntegerFieldEditor(Preferences.USR_PATDETAIL_MINWIDTH, "Breite: ", fwc));
+		IntegerFieldEditor minwidthField = new IntegerFieldEditor(Preferences.USR_PATDETAIL_MINWIDTH, "Breite: ", fwc);
+		minwidthField.setValidRange(80, 500);
+		addField(minwidthField);
 		new Label(getFieldEditorParent(), SWT.NONE).setText(StringUtils.EMPTY);
 		ComboFieldEditor editor = new ComboFieldEditor(Preferences.CFG_DECEASED_STICKER, "Sticker für verstorbene",
 				getStickerComboItems(), getFieldEditorParent());
