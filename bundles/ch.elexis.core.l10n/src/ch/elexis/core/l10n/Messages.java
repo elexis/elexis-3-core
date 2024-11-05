@@ -5124,6 +5124,13 @@ public class Messages extends NLS {
 	public static String ArticleProcessorBilledWarningContext;
 	public static String ArticleProcessorBilledFail;
 	public static String Texterstellung_DiagnoseExportAlternativeFormat;
+	public static String AppointmentHistory_Move_From;
+	public static String AppointmentHistory_Move_To;
+	public static String AppointmentHistory_Copy_From;
+	public static String AppointmentHistory_Copied_To;
+	public static String AppointmentHistory_Duration_Changed_From;
+	public static String AppointmentHistory_Edited_On_By;
+	public static String AppointmentHistory_Deleted_On_By;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

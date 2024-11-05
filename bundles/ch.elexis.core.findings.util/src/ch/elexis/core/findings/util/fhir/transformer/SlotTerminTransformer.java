@@ -1,5 +1,7 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,8 +14,10 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IAppointmentSlotAttributeMapper;
 import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.services.IAppointmentHistoryManagerService;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
 
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment")
 public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointment> {
@@ -26,6 +30,8 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 	private IAppointmentService appointmentService;
 
 	private IAppointmentSlotAttributeMapper attributeMapper;
+
+	private static IAppointmentHistoryManagerService historyService;
 
 	@Activate
 	private void activate() {
@@ -50,8 +56,16 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 
 	@Override
 	public Optional<IAppointment> updateLocalObject(Slot fhirObject, IAppointment localObject) {
-		// TODO lock
+		historyService = AppointmentHistoryServiceHolder.get();
+		String originalArea = localObject.getSchedule();
+		LocalDateTime oldStartTime = localObject.getStartTime();
+		LocalDateTime newStartTime = fhirObject.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+				.withSecond(0).withNano(0);
 		attributeMapper.fhirToElexis(fhirObject, localObject);
+		String newArea = localObject.getSchedule();
+		if (!originalArea.equals(newArea)) {
+			historyService.logAppointmentMove(localObject, oldStartTime, newStartTime, originalArea, newArea);
+		}
 		coreModelService.save(localObject);
 		return Optional.of(localObject);
 	}
