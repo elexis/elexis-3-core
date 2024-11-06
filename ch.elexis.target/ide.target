@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2023-09-java21" sequenceNumber="1724304326">
+<target name="Elexis IDE 2023-09-java21" sequenceNumber="1730808494">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -154,6 +154,7 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_de" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_fr" version="4.26.0.v20230220105658"/>
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.26.0.v20230220105658"/>
+      <unit id="com.googlecode.libphonenumber" version="8.13.49"/>
       <repository location="https://download.elexis.info/elexis/target/2023-09-java21/"/>
     </location>
   </locations>

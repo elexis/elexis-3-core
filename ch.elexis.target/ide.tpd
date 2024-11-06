@@ -195,4 +195,6 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	org.eclipse.e4.ui.workbench.swt.nl_de
 	org.eclipse.e4.ui.workbench.swt.nl_fr
 	org.eclipse.e4.ui.workbench.swt.nl_it
+	
+	com.googlecode.libphonenumber
 }
