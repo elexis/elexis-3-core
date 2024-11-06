@@ -17,11 +17,11 @@ public class IContactServiceTest extends AbstractServiceTest {
 	private IContactService contactService = OsgiServiceUtil.getService(IContactService.class).get();
 
 	@Test
-	public void findPersonDuplicate() {
+	public void findPersonFuzzy() {
 		IPerson testPerson = new IContactBuilder.PersonBuilder(coreModelService, "Arnold", "Schwoarzenegger",
 				LocalDate.of(1947, 7, 30), Gender.MALE).buildAndSave();
 
-		List<IPerson> findPersonDuplicates = contactService.findPersonDuplicates(LocalDate.of(1947, 7, 30), Gender.MALE,
+		List<IPerson> findPersonDuplicates = contactService.findPersonFuzzy(LocalDate.of(1947, 7, 30), Gender.MALE,
 				"Schwarzenegger", "Arnld", false);
 		assertEquals(1, findPersonDuplicates.size());
 
