@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -71,12 +71,16 @@ public class FilesystemChangeTriggerTest {
 		Path createFile = Files.createTempFile(tempDirectory, "test", ".txt");
 		System.out.println(LocalDateTime.now() + " created " + createFile.toString());
 
-		Callable<Boolean> c = () -> !createFile.toFile().exists();
-		Awaitility.await().atMost(30, TimeUnit.SECONDS).until(c);
+		Callable<Boolean> c = () -> {
+			Optional<ITask> execution = taskService.findLatestExecution(taskDescriptor);
+			if (execution.isPresent()) {
+				return TaskState.COMPLETED == execution.get().getState();
+			}
+			return false;
+		};
 
-		List<ITask> result = AllTests.getTaskServiceTestUtil().getTasks(taskDescriptor);
-		assertEquals(1, result.size());
-		assertEquals(TaskState.COMPLETED, result.get(0).getState());
+		Awaitility.with().pollInterval(100, TimeUnit.MILLISECONDS).await().atMost(10, TimeUnit.SECONDS).until(c);
+		assertFalse(createFile.toFile().exists());
 
 		taskService.setActive(taskDescriptor, false);
 		assertFalse(taskService.getIncurredTasks().contains(taskDescriptor));
@@ -94,8 +98,7 @@ public class FilesystemChangeTriggerTest {
 		taskDescriptor.setOwner(AllTests.getOwner());
 		taskDescriptor.setRunContext(new HashMap<>());
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
-		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
-				createFile.toString());
+		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL, createFile.toString());
 		System.out.println(createFile.toString());
 		taskDescriptor.setTriggerParameter(TaskTriggerTypeParameter.FILESYSTEM_CHANGE.FILE_EXTENSION_FILTER, "pdf");
 		taskService.saveTaskDescriptor(taskDescriptor);
@@ -103,11 +106,6 @@ public class FilesystemChangeTriggerTest {
 		assertEquals(0, AllTests.getTaskServiceTestUtil().getTasks(taskDescriptor).size());
 
 		taskService.setActive(taskDescriptor, true);
-	}
-
-	@Test
-	public void handleActivateDeactivate() {
-
 	}
 
 }
