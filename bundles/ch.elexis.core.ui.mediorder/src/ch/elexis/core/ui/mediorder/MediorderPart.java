@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -110,6 +111,9 @@ public class MediorderPart implements IRefreshablePart {
 
 	@Inject
 	IMedicationService medicationService;
+	
+	@Inject
+	MPart part;
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
@@ -126,6 +130,9 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> filteredStocks = new ArrayList<>();
 	private List<Integer> currentFilterValue;
 	private boolean filterActive = false;
+	
+	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
+	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -173,11 +180,16 @@ public class MediorderPart implements IRefreshablePart {
 		}
 		tableViewer.refresh(true);
 	}
-
+	
+	@PreDestroy
+	public void onClose() {
+	    saveFilterStatus(currentFilterValue);
+	}
+	
 	@PostConstruct
 	public void postConstruct(Composite parent, EMenuService menuService, IExtensionRegistry extensionRegistry) {
 		parent.setLayout(new GridLayout(1, false));
-
+		
 		stockComparator = new StockComparator();
 		medicationComparator = new MedicationComparator();
 
@@ -195,6 +207,8 @@ public class MediorderPart implements IRefreshablePart {
 				"ch.elexis.core.ui.mediorder.popupmenu.viewerdetails"); //$NON-NLS-1$
 
 		tableViewer.setInput(getStocksExcludingAwaitingRequests());
+		applySavedFilter();
+		refresh();
 
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
 	}
@@ -732,7 +746,27 @@ public class MediorderPart implements IRefreshablePart {
 			refresh();
 		}
 	}
-
+	
+	public void saveFilterStatus(List<Integer> currentFilterValue) {
+	    String filterValue = currentFilterValue.stream()
+	                           .map(String::valueOf)
+	                           .collect(Collectors.joining(","));
+	    
+	    part.getPersistedState().put(CURRENT_FILTER_VALUE, filterValue);
+	    part.getPersistedState().put(IS_FILTER_ACTIVE, String.valueOf(filterActive));
+	}
+	
+	public void applySavedFilter() {
+		 filterActive = Boolean.parseBoolean(part.getPersistedState().getOrDefault(IS_FILTER_ACTIVE, "false"));
+		
+		 String filterValue = part.getPersistedState().get(CURRENT_FILTER_VALUE);
+		 if (filterValue != null && !filterValue.isEmpty() && filterActive) {
+		        currentFilterValue = Arrays.stream(filterValue.split(","))
+		                                   .map(Integer::parseInt)
+		                                   .collect(Collectors.toList());
+		    }
+	}
+	
 	public void setFilterActive(boolean active) {
 		this.filterActive = active;
 	}
