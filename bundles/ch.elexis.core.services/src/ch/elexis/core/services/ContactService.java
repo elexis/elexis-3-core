@@ -21,15 +21,15 @@ public class ContactService implements IContactService {
 	private IModelService coreModelService;
 
 	@Override
-	public List<IPerson> findPersonDuplicates(LocalDate dateOfBirth, Gender gender, String lastName, String firstName,
-			boolean includeDeleted) {
+	public List<IPerson> findPersonFuzzy(LocalDate dateOfBirth, Gender gender, String lastName, String firstName,
+			int maxDistance, boolean includeDeleted) {
 
 		IQuery<IPerson> query = coreModelService.getQuery(IPerson.class, includeDeleted);
 		query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS, dateOfBirth);
 		query.and(ModelPackage.Literals.IPERSON__GENDER, COMPARATOR.EQUALS, gender);
-		List<IPerson> execute = query.execute();
-		List<IPerson> candidates = new ArrayList<>();
-		execute.forEach(person -> {
+		List<IPerson> foundWithDateAndGender = query.execute();
+		List<IPerson> found = new ArrayList<>();
+		foundWithDateAndGender.forEach(person -> {
 			// Levenshtein
 			Integer firstNameDistance = Integer.MAX_VALUE;
 			Integer lastNameDistance = Integer.MAX_VALUE;
@@ -39,13 +39,13 @@ public class ContactService implements IContactService {
 			if (StringUtils.isNotBlank(lastName)) {
 				lastNameDistance = LevenshteinDistance.getDefaultInstance().apply(person.getLastName(), lastName);
 			}
-			if (firstNameDistance < 4 && lastNameDistance < 4) {
-				candidates.add(person);
+			if (firstNameDistance < maxDistance && lastNameDistance < maxDistance) {
+				found.add(person);
 			}
 			// Cologne?
 		});
 
-		return candidates;
+		return found;
 	}
 
 }
