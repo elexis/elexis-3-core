@@ -20,8 +20,10 @@ import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EX
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES;
 import static ch.elexis.core.ui.constants.UiPreferenceConstants.USERSETTINGS2_EXPANDABLE_COMPOSITES_STATES;
 
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -824,13 +826,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						+ ((adressat != null) ? adressat.getLabel() : StringUtils.EMPTY));
 				form.setText(actRn.getLabel());
 				List<String> trace = actRn.getTrace(Rechnung.STATUS_CHANGED);
-				for (String s : trace) {
-					String[] stm = s.split("\\s*:\\s"); //$NON-NLS-1$
-					StringBuilder sb = new StringBuilder();
-					sb.append(stm[0]).append(" : ").append( //$NON-NLS-1$
-							InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText());
-					lbJournal.add(sb.toString());
-				}
+				List<String> mandatorTrace = actRn.getTrace(Rechnung.MANDATOR);
+				List<String> combinedTrace = combineAndSortTrace(trace, mandatorTrace);
+				combinedTrace.forEach(lbJournal::add);
+
 				if (journalSelection != null && journalSelection.length > 0) {
 					for (int i = 0; i < lbJournal.getItemCount(); i++) {
 						for (String selection : journalSelection) {
@@ -888,6 +887,41 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 
 			form.reflow(true);
 		}
+	}
+
+	private List<String> combineAndSortTrace(List<String> trace, List<String> mandatorTrace) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss"); //$NON-NLS-1$
+		return trace.stream().map(statusEntry -> {
+			// Split the status entry into a timestamp and a status code.
+			String[] stm = statusEntry.split("\\s*:\\s", 2); //$NON-NLS-1$
+			String timestampString = stm[0]; // Extract the timestamp part.
+			String statusText = timestampString + " : " //$NON-NLS-1$
+					+ InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText();
+			// Find the corresponding mandator entry that matches the timestamp.
+			String mandatorLabel = mandatorTrace.stream().filter(m -> m.contains(timestampString)).findFirst()
+					.map(m -> {
+						// Remove the matched mandator entry from the list to avoid reuse.
+						mandatorTrace.remove(m);
+						// Extract the label text from the mandator entry if it contains a colon.
+						if (m.contains(":")) { //$NON-NLS-1$
+							String[] parts = m.split(":"); //$NON-NLS-1$
+							return parts.length > 1 ? parts[parts.length - 1].trim() : ""; //$NON-NLS-1$
+						}
+						return ""; //$NON-NLS-1$
+					}).orElse(""); //$NON-NLS-1$
+			// Return the status text with or without the mandator label.
+			return mandatorLabel.isEmpty() ? statusText : statusText + " / " + mandatorLabel; //$NON-NLS-1$
+		}).sorted((entry1, entry2) -> {
+			try {
+				// Parse the dates from the entries for sorting.
+				Date date1 = dateFormat.parse(entry1.split(" : ")[0]); //$NON-NLS-1$
+				Date date2 = dateFormat.parse(entry2.split(" : ")[0]); //$NON-NLS-1$
+				return date1.compareTo(date2);
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).error("Error parsing dates for sorting: {}", e.getMessage(), e); //$NON-NLS-1$
+				return 0;
+			}
+		}).collect(Collectors.toList());
 	}
 
 }

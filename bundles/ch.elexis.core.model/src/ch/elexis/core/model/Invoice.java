@@ -18,6 +18,7 @@ import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
@@ -54,6 +55,11 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		setStateDate(LocalDate.now());
 		getEntityMarkDirty().setState(value);
 		addTrace(InvoiceConstants.STATUS_CHANGED, Integer.toString(value.numericValue()));
+		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
+			String userDescription = String.format("%s %s", activeUserContact.getDescription1(), //$NON-NLS-1$
+					activeUserContact.getDescription2());
+			addTrace(InvoiceConstants.MANDATOR, userDescription);
+		});
 	}
 
 	@Override
