@@ -1,6 +1,5 @@
 package ch.elexis.core.console;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -45,6 +44,8 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 
 	private static Map<String, Method> methods = new HashMap<>();
 	private static LinkedHashMap<String, String> commandsHelp = new LinkedHashMap<>();
+	private static boolean privileged_exec_mode = false;
+
 	private String[] arguments;
 	protected CommandInterpreter ci;
 
@@ -69,6 +70,14 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 			return arguments[i];
 		}
 		return null;
+	}
+
+	public static boolean isPrivilegedMode() {
+		return privileged_exec_mode;
+	}
+
+	protected void enablePrivilegedExecMode(boolean enablePrivilegedExecMode) {
+		AbstractConsoleCommandProvider.privileged_exec_mode = enablePrivilegedExecMode;
 	}
 
 	public void executeCommand(String root, CommandInterpreter ci) {
@@ -128,7 +137,7 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 		final Method _method = method;
 		final Object[] _args = args;
 
-		if (advisor != null && advisor.executePrivileged()) {
+		if (privileged_exec_mode || (advisor != null && advisor.executePrivileged())) {
 			Optional<IAccessControlService> service = OsgiServiceUtil.getService(IAccessControlService.class);
 			if (service.isPresent()) {
 				service.get().doPrivileged(() -> performInvoke(_method, _args));
@@ -302,9 +311,9 @@ public abstract class AbstractConsoleCommandProvider implements CommandProvider,
 			if (annotation != null) {
 				sb.append(StringUtils.SPACE);
 				if (annotation.required()) {
-					sb.append(annotation.description().toUpperCase());
+					sb.append(annotation.description().toUpperCase().replaceAll(" ", "_"));
 				} else {
-					sb.append("[" + annotation.description().toUpperCase() + "]");
+					sb.append("[" + annotation.description().toUpperCase().replaceAll(" ", "_") + "]");
 				}
 			}
 		}
