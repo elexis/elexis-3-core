@@ -56,7 +56,7 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 		getEntityMarkDirty().setState(value);
 		addTrace(InvoiceConstants.STATUS_CHANGED, Integer.toString(value.numericValue()));
 		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
-			String userDescription = String.format("%s %s", activeUserContact.getDescription1(),
+			String userDescription = String.format("%s %s", activeUserContact.getDescription1(), //$NON-NLS-1$
 					activeUserContact.getDescription2());
 			addTrace(InvoiceConstants.MANDATOR, userDescription);
 		});

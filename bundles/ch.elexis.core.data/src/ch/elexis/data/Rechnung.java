@@ -605,7 +605,7 @@ public class Rechnung extends PersistentObject {
 		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
 		addTrace(STATUS_CHANGED, String.valueOf(state.getState()));
 		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
-			String userDescription = String.format("%s %s", activeUserContact.getDescription1(),
+			String userDescription = String.format("%s %s", activeUserContact.getDescription1(), //$NON-NLS-1$
 					activeUserContact.getDescription2());
 			addTrace(MANDATOR, userDescription);
 		});

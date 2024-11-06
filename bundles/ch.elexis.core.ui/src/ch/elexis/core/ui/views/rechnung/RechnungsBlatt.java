@@ -890,12 +890,12 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	}
 
 	private List<String> combineAndSortTrace(List<String> trace, List<String> mandatorTrace) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss"); //$NON-NLS-1$
 		return trace.stream().map(statusEntry -> {
 			// Split the status entry into a timestamp and a status code.
-			String[] stm = statusEntry.split("\\s*:\\s", 2);
+			String[] stm = statusEntry.split("\\s*:\\s", 2); //$NON-NLS-1$
 			String timestampString = stm[0]; // Extract the timestamp part.
-			String statusText = timestampString + " : "
+			String statusText = timestampString + " : " //$NON-NLS-1$
 					+ InvoiceState.fromState(Integer.parseInt(stm[1])).getLocaleText();
 			// Find the corresponding mandator entry that matches the timestamp.
 			String mandatorLabel = mandatorTrace.stream().filter(m -> m.contains(timestampString)).findFirst()
@@ -903,24 +903,25 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						// Remove the matched mandator entry from the list to avoid reuse.
 						mandatorTrace.remove(m);
 						// Extract the label text from the mandator entry if it contains a colon.
-						if (m.contains(":")) {
-							String[] parts = m.split(":");
-							return parts.length > 1 ? parts[parts.length - 1].trim() : "";
+						if (m.contains(":")) { //$NON-NLS-1$
+							String[] parts = m.split(":"); //$NON-NLS-1$
+							return parts.length > 1 ? parts[parts.length - 1].trim() : ""; //$NON-NLS-1$
 						}
-						return "";
-					}).orElse("");
+						return ""; //$NON-NLS-1$
+					}).orElse(""); //$NON-NLS-1$
 			// Return the status text with or without the mandator label.
-			return mandatorLabel.isEmpty() ? statusText : statusText + " / " + mandatorLabel;
+			return mandatorLabel.isEmpty() ? statusText : statusText + " / " + mandatorLabel; //$NON-NLS-1$
 		}).sorted((entry1, entry2) -> {
 			try {
 				// Parse the dates from the entries for sorting.
-				Date date1 = dateFormat.parse(entry1.split(" : ")[0]);
-				Date date2 = dateFormat.parse(entry2.split(" : ")[0]);
+				Date date1 = dateFormat.parse(entry1.split(" : ")[0]); //$NON-NLS-1$
+				Date date2 = dateFormat.parse(entry2.split(" : ")[0]); //$NON-NLS-1$
 				return date1.compareTo(date2);
 			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).error("Error parsing dates for sorting: {}", e.getMessage(), e);
+				LoggerFactory.getLogger(getClass()).error("Error parsing dates for sorting: {}", e.getMessage(), e); //$NON-NLS-1$
 				return 0;
 			}
 		}).collect(Collectors.toList());
 	}
+
 }
