@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +21,7 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -59,6 +59,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -111,9 +113,6 @@ public class MediorderPart implements IRefreshablePart {
 
 	@Inject
 	IMedicationService medicationService;
-	
-	@Inject
-	MPart part;
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
@@ -130,7 +129,9 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> filteredStocks = new ArrayList<>();
 	private List<Integer> currentFilterValue;
 	private boolean filterActive = false;
-	
+
+	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
+
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 
@@ -180,16 +181,11 @@ public class MediorderPart implements IRefreshablePart {
 		}
 		tableViewer.refresh(true);
 	}
-	
-	@PreDestroy
-	public void onClose() {
-	    saveFilterStatus(currentFilterValue);
-	}
-	
+
 	@PostConstruct
 	public void postConstruct(Composite parent, EMenuService menuService, IExtensionRegistry extensionRegistry) {
 		parent.setLayout(new GridLayout(1, false));
-		
+
 		stockComparator = new StockComparator();
 		medicationComparator = new MedicationComparator();
 
@@ -746,29 +742,34 @@ public class MediorderPart implements IRefreshablePart {
 			refresh();
 		}
 	}
-	
-	public void saveFilterStatus(List<Integer> currentFilterValue) {
-	    String filterValue = currentFilterValue.stream()
-	                           .map(String::valueOf)
-	                           .collect(Collectors.joining(","));
-	    
-	    part.getPersistedState().put(CURRENT_FILTER_VALUE, filterValue);
-	    part.getPersistedState().put(IS_FILTER_ACTIVE, String.valueOf(filterActive));
+
+	public void saveFilterStatus() {
+		String filterValue = currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
+
+		if (filterValue != null && !filterValue.isEmpty()) {
+			preferences.put(CURRENT_FILTER_VALUE, filterValue);
+			preferences.putBoolean(IS_FILTER_ACTIVE, filterActive);
+			try {
+				preferences.flush();
+			} catch (BackingStoreException e) {
+				LoggerFactory.getLogger(getClass()).error("Error saving filter values ", e);
+			}
+		}
 	}
-	
+
 	public void applySavedFilter() {
-		 filterActive = Boolean.parseBoolean(part.getPersistedState().getOrDefault(IS_FILTER_ACTIVE, "false"));
-		
-		 String filterValue = part.getPersistedState().get(CURRENT_FILTER_VALUE);
-		 if (filterValue != null && !filterValue.isEmpty() && filterActive) {
-		        currentFilterValue = Arrays.stream(filterValue.split(","))
-		                                   .map(Integer::parseInt)
-		                                   .collect(Collectors.toList());
-		    }
+		filterActive = preferences.getBoolean(IS_FILTER_ACTIVE, false);
+
+		String filterValue = preferences.get(CURRENT_FILTER_VALUE, "");
+		if (!filterValue.isEmpty() && filterActive) {
+			currentFilterValue = Arrays.stream(filterValue.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+		}
 	}
-	
+
 	public void setFilterActive(boolean active) {
 		this.filterActive = active;
+		saveFilterStatus();
 	}
 
 	public boolean isFilterActive() {
@@ -785,6 +786,7 @@ public class MediorderPart implements IRefreshablePart {
 
 	public void setCurrentFilterValue(List<Integer> value) {
 		this.currentFilterValue = value;
+		saveFilterStatus();
 	}
 
 	public List<Integer> getCurrentFilterValue() {
