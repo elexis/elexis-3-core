@@ -97,6 +97,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 				if (xid != null) {
 					return xid.getDomainId();
 				}
+			case Spezialität:
+				return (String) mandator.getExtInfo("Spezialität");
 			default:
 				break;
 			}
@@ -117,7 +119,7 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 	private enum MandantAttribute implements ILocalizedEnum {
 		Name("Nachname des Mandanten"), Vorname("Vorname des Mandanten"), Titel("Titel des Mandanten"),
 		Anrede("Anrede des Mandanten"), TarmedSpezialität("Tarmed Spezialität des Mandanten"), EAN("EAN des Mandanten"),
-		KSK("KSK des Mandanten");
+		KSK("KSK des Mandanten"), Spezialität("Spezialität des Mandanten");
 
 		final String description;
 
