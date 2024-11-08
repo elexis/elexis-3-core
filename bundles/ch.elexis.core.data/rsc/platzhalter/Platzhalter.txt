@@ -57,6 +57,8 @@ Mandant.Strasse
 Mandant.E-Mail
 Mandant.Fax
 Mandant.Telefon1
+Mandant.Spezialität
+Mandant.TarmedSpezialität
 Mandant:mw:Er/Sie='Er' oder 'Sie' je nach Geschlecht
 Mandant:mw:Herr/Frau='Herr' oder 'Frau' je nach Geschlecht
 
