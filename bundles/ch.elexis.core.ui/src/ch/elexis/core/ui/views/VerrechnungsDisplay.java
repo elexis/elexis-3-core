@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -1155,11 +1156,19 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					} else {
 						changeAnzahl = Integer.parseInt(dlg.getValue());
 					}
-
+					double oldAnzahl = billed.getAmount();
+					double difference = changeAnzahl - oldAnzahl;
 					IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
 					if (!status.isOK()) {
 						StatusDialog.show(status);
 					}
+					if (difference < 0) {
+						int itemsToRemove = (int) (-difference);
+						List<IPrescription> prescriptions = BillingProcessor.getRecentPatientPrescriptions(
+								actEncounter.getPatient(), actEncounter.getDate().atStartOfDay());
+						handleLinkedPrescriptionRemover(billed, prescriptions, itemsToRemove);
+					}
+
 					// refresh with changed amount
 					CoreModelServiceHolder.get().refresh(billed);
 					billed.setText(text);
@@ -1170,6 +1179,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 				SWTHelper.showError(Messages.VerrechnungsDisplay_invalidEntryCaption, // $NON-NLS-1$
 						Messages.VerrechnungsDisplay_invalidEntryBody); // $NON-NLS-1$
 			}
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 		}
 	}
 
@@ -1236,6 +1246,18 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
 			return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
 		}).forEach(action);
+	}
+
+	private void handleLinkedPrescriptionRemover(IBilled billed, List<IPrescription> prescriptions, int itemsToRemove) {
+	    prescriptions.stream()
+	        .filter(prescription -> {
+	            Object extInfoObj = prescription
+	                .getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
+					return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
+	        })
+				.limit(itemsToRemove).forEach(prescription -> {
+					CoreModelServiceHolder.get().delete(prescription);
+				});
 	}
 
 	private boolean isMedicationLinked(IBilled billed, List<IPrescription> prescriptions) {
