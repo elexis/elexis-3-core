@@ -27,10 +27,11 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.ui.processor.BillingProcessor;
 
 @Component
 public class PrescriptionBilledAdjuster implements IBilledAdjuster {
-
+	private BillingProcessor billingProcessor;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	@Override
@@ -39,6 +40,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 			@Override
 			public void run() {
 				IBillable billable = billed.getBillable();
+				billingProcessor = new BillingProcessor(billed.getEncounter());
 				if (billable instanceof IArticle) {
 					IArticle article = (IArticle) billable;
 					Optional<IPatient> patientOpt = getPatient(billed);
@@ -48,6 +50,7 @@ public class PrescriptionBilledAdjuster implements IBilledAdjuster {
 							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 					}
 				}
+				billingProcessor.updatePrescriptionsWithDosage(billed);
 			}
 		});
 	}

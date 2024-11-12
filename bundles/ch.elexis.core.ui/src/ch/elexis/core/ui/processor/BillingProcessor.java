@@ -86,33 +86,50 @@ public class BillingProcessor {
 	    PrescriptionSignatureTitleAreaDialog dialog = new PrescriptionSignatureTitleAreaDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), selectedArticle);
 	    dialog.lookup();
-		dialog.setFromBillingDialog(true);
-	    if (dialog.open() == Dialog.OK) {
-	        IArticleDefaultSignature signature = dialog.getSignature();
-			List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
-					actEncounter.getDate().atStartOfDay());
-	        boolean medicationExists = checkIfMedicationExists(prescriptions, selectedArticle, signature);
-	        Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
-	        if (billResult.isOK()) {
-	            IBilled billed = billResult.get();
-				updatePrescriptionWithBilledId(billed, signature);
-	            CoreModelServiceHolder.get().save(actEncounter);
-	            if (!medicationExists) {
+	    dialog.setFromBillingDialog(true);
+		if (dialog.open() != Dialog.OK) {
+			return;
+		}
+		IArticleDefaultSignature signature = dialog.getSignature();
+		List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
+				actEncounter.getDate().atStartOfDay());
+		boolean medicationExists = checkIfMedicationExists(prescriptions, selectedArticle, signature);
+		if (medicationExists) {
+			return;
+		}
+		EntryType disposalType = signature.getDisposalType();
+		IPrescription prescription = null;
+		if (disposalType != EntryType.SELF_DISPENSED) {
+			Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
+			if (billResult.isOK()) {
+				IBilled billed = billResult.get();
+				CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
+						Display.getDefault().getActiveShell());
+				prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
+				if (prescription != null) {
+					prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
+							billed.getId().toString());
+					prescription.setDosageInstruction(signature.getSignatureAsDosisString());
+					prescription.setRemark(signature.getComment());
+					CoreModelServiceHolder.get().save(prescription);
 					updatePrescriptionWithBilledId(billed, signature);
-					CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
-							Display.getDefault().getActiveShell());
-					IPrescription prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
-					if (prescription != null && billed != null) {
-						prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
-								billed.getId().toString());
-						CoreModelServiceHolder.get().save(prescription);
-						postRefreshMedicationEvent();
-					}
 	            }
-	        } else {
-	            ResultDialog.show(billResult);
+			} else {
+				ResultDialog.show(billResult);
+				return;
+			}
+		} else {
+			CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
+					Display.getDefault().getActiveShell());
+			prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
+			if (prescription != null) {
+				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
+				prescription.setRemark(signature.getComment());
+				CoreModelServiceHolder.get().save(prescription);
 	        }
 	    }
+		CoreModelServiceHolder.get().save(actEncounter);
+		postRefreshMedicationEvent();
 	}
 
 	private boolean checkIfMedicationExists(List<IPrescription> prescriptions, IArticle selectedArticle,
@@ -168,7 +185,7 @@ public class BillingProcessor {
 	                    || !dosageInstruction.equals(lastPrescription.getDosageInstruction());
 	        })
 	        .forEach(prescription -> {
-	            prescription.setDosageInstruction(lastPrescription.getDosageInstruction());
+					prescription.setDosageInstruction(lastPrescription.getDosageInstruction());
 	            prescription.setRemark(lastPrescription.getRemark());
 	            prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
 	            CoreModelServiceHolder.get().save(prescription);
@@ -183,7 +200,7 @@ public class BillingProcessor {
 	}
 
 	public static List<IPrescription> getRecentPatientPrescriptions(IPatient patient, LocalDateTime referenceDate) {
-		return getMedicationAll(patient, Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+		return getMedicationRecent(patient, Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
 				EntryType.SYMPTOMATIC_MEDICATION, EntryType.SELF_DISPENSED), referenceDate);
 	}
 
@@ -258,7 +275,7 @@ public class BillingProcessor {
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 	}
 
-	public static List<IPrescription> getMedicationAll(IPatient patient, List<EntryType> filterType,
+	public static List<IPrescription> getMedicationRecent(IPatient patient, List<EntryType> filterType,
 			LocalDateTime referenceDate) {
 		LocalDateTime startDate = referenceDate.minus(3, ChronoUnit.MONTHS);
 		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);
