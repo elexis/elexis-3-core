@@ -142,18 +142,32 @@ public class CreatePrescriptionHelper {
 						dispensationArticle = item.get();
 					}
 				}
-				Result<IBilled> result = BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
-				if (result.isOK()) {
-					IBilled billed = result.get();
-					billingProcessor.updatePrescriptionsWithDosage(billed);
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter.get());
-					// work is done
+
+				if (!isArticleAlreadyBilled(dispensationArticle, encounter.get())) {
+					Result<IBilled> result = BillingServiceHolder.get().bill(dispensationArticle, encounter.get(), 1);
+					if (result.isOK()) {
+						IBilled billed = result.get();
+						prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
+								billed.getId().toString());
+						CoreModelServiceHolder.get().save(prescription);
+						billingProcessor.updatePrescriptionsWithDosage(billed);
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter.get());
+						return;
+					} else {
+						MessageDialog.openError(parentShell, "Fehler bei der Verrechnung", result.toString());
+					}
+				} else {
 					return;
 				}
 			}
 		}
 		MessageDialog.openWarning(parentShell, Messages.CreatePrescriptionHelper_WarninigNoConsTitle,
 				Messages.CreatePrescriptionHelper_WarninigNoConsText);
+	}
+
+	private boolean isArticleAlreadyBilled(IArticle article, IEncounter encounter) {
+		return encounter.getBilled().stream().anyMatch(billed -> billed.getBillable() instanceof IArticle
+				&& ((IArticle) billed.getBillable()).getId().equals(article.getId()));
 	}
 
 	private boolean shouldUpdateToArtikelstamm() {
