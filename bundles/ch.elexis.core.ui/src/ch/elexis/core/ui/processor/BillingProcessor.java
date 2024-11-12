@@ -200,7 +200,7 @@ public class BillingProcessor {
 	}
 
 	public static List<IPrescription> getRecentPatientPrescriptions(IPatient patient, LocalDateTime referenceDate) {
-		return getMedicationAll(patient, Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
+		return getMedicationRecent(patient, Arrays.asList(EntryType.FIXED_MEDICATION, EntryType.RESERVE_MEDICATION,
 				EntryType.SYMPTOMATIC_MEDICATION, EntryType.SELF_DISPENSED), referenceDate);
 	}
 
@@ -275,7 +275,7 @@ public class BillingProcessor {
 		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 	}
 
-	public static List<IPrescription> getMedicationAll(IPatient patient, List<EntryType> filterType,
+	public static List<IPrescription> getMedicationRecent(IPatient patient, List<EntryType> filterType,
 			LocalDateTime referenceDate) {
 		LocalDateTime startDate = referenceDate.minus(3, ChronoUnit.MONTHS);
 		IQuery<IPrescription> query = CoreModelServiceHolder.get().getQuery(IPrescription.class);

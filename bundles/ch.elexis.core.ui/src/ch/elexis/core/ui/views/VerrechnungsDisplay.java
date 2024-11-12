@@ -1164,8 +1164,9 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					}
 					if (difference < 0) {
 						int itemsToRemove = (int) (-difference);
-						List<IPrescription> prescriptions = BillingProcessor.getRecentPatientPrescriptions(
-								actEncounter.getPatient(), actEncounter.getDate().atStartOfDay());
+						List<IPrescription> prescriptions = BillingProcessor.getMedicationRecent(
+								actEncounter.getPatient(), Collections.singletonList(EntryType.SELF_DISPENSED),
+								actEncounter.getDate().atStartOfDay());
 						handleLinkedPrescriptionRemover(billed, prescriptions, itemsToRemove);
 					}
 
@@ -1248,14 +1249,27 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 		}).forEach(action);
 	}
 
+	/**
+	 * Removes up to a specified number of prescriptions linked to a billed item.
+	 *
+	 * @param billed        The billed item whose linked prescriptions are to be
+	 *                      removed.
+	 * @param prescriptions The list of prescriptions to search.
+	 * @param itemsToRemove The maximum number of prescriptions to remove.
+	 */
 	private void handleLinkedPrescriptionRemover(IBilled billed, List<IPrescription> prescriptions, int itemsToRemove) {
-	    prescriptions.stream()
-	        .filter(prescription -> {
-	            Object extInfoObj = prescription
-	                .getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
+		prescriptions.stream()
+				// Filter prescriptions linked to the billed item
+				.filter(prescription -> {
+					Object extInfoObj = prescription
+							.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
+					// Check if extInfo exists and IDs match
 					return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
-	        })
-				.limit(itemsToRemove).forEach(prescription -> {
+				})
+				// Limit to the specified number of prescriptions to remove
+				.limit(itemsToRemove)
+				// Delete each filtered prescription
+				.forEach(prescription -> {
 					CoreModelServiceHolder.get().delete(prescription);
 				});
 	}
@@ -1267,6 +1281,4 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			return extInfoObj != null && billed.getId().equals(extInfoObj.toString());
 		});
 	}
-
-
 }
