@@ -3014,6 +3014,15 @@ public class Messages extends NLS {
 	public static String Mediorder_missing_email_message;
 	public static String Mediorder_signed_decleration_of_consent;
 	public static String Mediorder_signed_decleration_of_consent_message;
+	public static String Mediorder_pdf_title;
+	public static String Mediorder_pdf_description;
+	public static String Mediorder_pdf_description_;
+	public static String Mediorder_pdf_instruction_title;
+	public static String Mediorder_pdf_instruction_qr_code;
+	public static String Mediorder_pdf_instruction_password;
+	public static String Mediorder_pdf_instruction_select_articles;
+	public static String Mediorder_pdf_instruction_send_order;
+	public static String Mediorder_pdf_instruction_information;
 	public static String MedicsPreferencePage_defaultMedicsUrl;
 	public static String MedicsPreferencePage_documentCategoryName;
 	public static String MedicsPreferencePage_labelUploadDirimed;
