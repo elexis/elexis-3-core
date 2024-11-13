@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ILazyContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.part.ViewPart;
@@ -133,6 +134,8 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 				if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
 					tv.setItemCount(pats.length);
 					bValid = true;
+					// remove selection as preserve selection leads to invalid selection events
+					tv.setSelection(new StructuredSelection());
 					tv.refresh();
 					commonViewer.resetScrollbarPosition(tv, ignoreLimit);
 					commonViewer.setLimitReached(pats.length == QUERY_LIMIT, QUERY_LIMIT);
@@ -165,7 +168,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 		job.setPriority(Job.SHORT);
 		job.setUser(false);
 		bUpdating = true;
-		IWorkbenchSiteProgressService siteService = (IWorkbenchSiteProgressService) site.getSite()
+		IWorkbenchSiteProgressService siteService = site.getSite()
 				.getAdapter(IWorkbenchSiteProgressService.class);
 		siteService.schedule(job, 0, true);
 
