@@ -307,13 +307,6 @@
             name="%view.name.2">
       </view>
       <view
-            category="ch.elexis.datenKategorie"
-            class="ch.elexis.core.ui.views.MediVerlaufView"
-            id="ch.elexis.medverlaufview"
-            inject="true"
-            name="%view.name.3">
-      </view>
-      <view
             category="ch.elexis.messungenKategorie"
             class="ch.elexis.core.ui.laboratory.views.LabNotSeenView"
             fastViewWidthRatio="0.4"
