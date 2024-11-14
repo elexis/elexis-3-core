@@ -31,6 +31,7 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IXid;
+import ch.elexis.core.services.IXidService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.VersionInfo;
@@ -323,7 +324,9 @@ public class Xid extends PersistentObject implements IXid {
 	 * @param domain  the domain to register
 	 * @param quality the quality an ID of that domain will have
 	 * @return true on success, false if that domain could not be registered
+	 * @deprecated use {@link IXidService} instead
 	 */
+	@Deprecated
 	public static boolean localRegisterXIDDomain(final String domain, String simpleName, final int quality) {
 		if (domains.containsKey(domain)) {
 			log.log("XID Domain " + domain + " bereits registriert", Log.ERRORS);
@@ -351,7 +354,9 @@ public class Xid extends PersistentObject implements IXid {
 	 * @param simpleName short name for the domain
 	 * @param quality    the wuality of an ID of that domain will have
 	 * @return true on success
+	 * @deprecated use {@link IXidService} instead
 	 */
+	@Deprecated
 	public static boolean localRegisterXIDDomainIfNotExists(final String domain, String simpleName, final int quality) {
 		if (domains.get(domain) != null) {
 			return true;
