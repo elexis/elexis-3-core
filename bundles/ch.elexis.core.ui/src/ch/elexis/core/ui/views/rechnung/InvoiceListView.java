@@ -106,6 +106,19 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		}
 	};
 
+	private Action mandantFilterAction = new Action(Messages.Core_Select_Mandator) {
+		{
+			setToolTipText(Messages.Core_Select_Mandator);
+			setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
+		}
+
+		@Override
+		public void run() {
+			MandantSelectorDialog dialog = new MandantSelectorDialog(getSite().getShell());
+			dialog.open();
+		}
+	};
+
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
 		if (invoiceListContentProvider != null) {
@@ -345,6 +358,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList, getViewSite());
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(reloadViewAction);
+		tbm.add(mandantFilterAction);
 		tbm.add(invoiceActions.mahnWizardAction);
 		tbm.add(invoiceActions.exportListAction);
 		tbm.add(invoiceListContentProvider.rnFilterAction);
