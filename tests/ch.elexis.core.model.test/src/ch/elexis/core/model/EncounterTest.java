@@ -199,6 +199,7 @@ public class EncounterTest extends AbstractTest {
 		}
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
+		coreModelService.refresh(encounter, true);
 		assertEquals(100, encounter.getBilled().size());
 		assertTrue(encounter.getLastupdate() > 0);
 		for (IBilled billed : encounter.getBilled()) {
