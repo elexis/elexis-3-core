@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.ui.importer.div.importers.XidInitialization">
+   <reference cardinality="1..1" field="xidService" interface="ch.elexis.core.services.IXidService" name="xidService"/>
+   <implementation class="ch.elexis.core.ui.importer.div.importers.XidInitialization"/>
+</scr:component>

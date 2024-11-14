@@ -13,9 +13,9 @@
 
 package ch.elexis.core.ui.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +45,10 @@ import ch.rgw.tools.TimeTool;
 public class Presets {
 	// we'll use these local XID's to reference the external data
 	private final static String IMPORT_XID = "elexis.ch/importPresets"; //$NON-NLS-1$
-	private final static String KONTAKTID = IMPORT_XID + "/KID"; //$NON-NLS-1$
+	public final static String KONTAKTID = IMPORT_XID + "/KID"; //$NON-NLS-1$
 	private static Logger log = LoggerFactory.getLogger(Presets.class);
 	public static final String INSURANCE = Messages.Core_Costbearer;
 	public static final String INSURANCE_NUMBER = Messages.Core_Insurance_Number;
-
-	static {
-		Xid.localRegisterXIDDomainIfNotExists(KONTAKTID, Messages.Presets_PreviousID, Xid.ASSIGNMENT_LOCAL);
-	}
 
 	/*
 	 * 0 A ID 1 B IstPerson Natürliche Person oder Organisation 2 C IstPatient 3 D

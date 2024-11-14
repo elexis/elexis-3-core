@@ -116,13 +116,15 @@ public class XidService implements IXidService {
 	}
 
 	private void storeDomains() {
-		StringBuilder sb = new StringBuilder();
-		for (String k : domains.keySet()) {
-			XidDomain xd = domains.get(k);
-			sb.append(k).append("#").append(xd.getQuality()).append("#").append(xd.getSimpleName()).append("#")
-					.append(xd.getDisplayOptions()).append(";");
-		}
-		configService.set("LocalXIDDomains", sb.toString());
+		accessControlService.doPrivileged(() -> {
+			StringBuilder sb = new StringBuilder();
+			for (String k : domains.keySet()) {
+				XidDomain xd = domains.get(k);
+				sb.append(k).append("#").append(xd.getQuality()).append("#").append(xd.getSimpleName()).append("#")
+						.append(xd.getDisplayOptions()).append(";");
+			}
+			configService.set("LocalXIDDomains", sb.toString());
+		});
 	}
 
 	@Override
