@@ -702,15 +702,15 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	/**
-	 * Retrieves a list of patient stocks that doesn't contain stockEntries with the
-	 * status {@link MediorderEntryState#AWAITING_REQUEST}
+	 * Retrieves a list of patient stocks that do not only have stockEntries with
+	 * the status {@link MediorderEntryState#AWAITING_REQUEST}
 	 * 
 	 * @return
 	 */
 	private List<IStock> getStocksExcludingAwaitingRequests() {
 		return stockService.getAllPatientStock().stream().filter(stock -> !stock.getStockEntries().isEmpty())
-				.filter(stock -> stock.getStockEntries().stream().noneMatch(
-						entry -> MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(entry))))
+				.filter(stock -> stock.getStockEntries().stream().anyMatch(
+						entry -> !MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(entry))))
 				.toList();
 	}
 
