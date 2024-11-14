@@ -77,7 +77,7 @@ public class InvoiceListSqlQuery {
 				.isAoboOrSelf(EvACE.of(IInvoice.class, Right.READ));
 		if (aoboOrSelf.isPresent()) {
 			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
-				String list = ConfigServiceHolder.get().getActiveUserContact("rechnungsliste/mandantenfiltered",
+				String list = ConfigServiceHolder.get().getActiveUserContact("rechnungsliste/mandantenfiltered", //$NON-NLS-1$
 						StringUtils.EMPTY);
 				if (!list.isBlank()) {
 					return " AND (r.MandantID IN (" //$NON-NLS-1$
