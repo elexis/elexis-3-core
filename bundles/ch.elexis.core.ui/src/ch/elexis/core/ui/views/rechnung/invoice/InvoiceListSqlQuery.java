@@ -81,8 +81,8 @@ public class InvoiceListSqlQuery {
 						StringUtils.EMPTY);
 				if (!list.isBlank()) {
 					return " AND (r.MandantID IN (" //$NON-NLS-1$
-							+ Arrays.stream(list.split(",")).map(s -> "'" + s.trim() + "'")
-									.collect(Collectors.joining(","))
+							+ Arrays.stream(list.split(",")).map(s -> "'" + s.trim() + "'") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									.collect(Collectors.joining(",")) //$NON-NLS-1$
 							+ ") OR r.MandantID is null)"; //$NON-NLS-1$
 
 				}
