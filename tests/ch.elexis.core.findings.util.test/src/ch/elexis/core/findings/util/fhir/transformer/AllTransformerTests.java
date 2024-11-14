@@ -9,11 +9,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
-import ch.elexis.core.services.IAppointmentService;
-import ch.elexis.core.services.IConfigService;
-import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.utils.OsgiServiceUtil;
+
 
 @Component
 @RunWith(Suite.class)
@@ -67,16 +64,5 @@ public class AllTransformerTests {
 			}
 		}
 		return coreModelService;
-	}
-
-	public static IElexisEntityManager getElexisEntityManager() {
-		return OsgiServiceUtil.getService(IElexisEntityManager.class).get();
-	}
-	public static IAppointmentService getAppointmentService() {
-	    return OsgiServiceUtil.getService(IAppointmentService.class).get();
-	}
-
-	public static IConfigService getConfigService() {
-	    return OsgiServiceUtil.getService(IConfigService.class).get();
 	}
 }

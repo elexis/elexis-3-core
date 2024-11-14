@@ -97,7 +97,7 @@ public class AppointmentHistoryManagerService implements IAppointmentHistoryMana
 	@Override
 	public void logAppointmentDurationChange(IAppointment appointment, LocalDateTime oldEndTime,
 			LocalDateTime newEndTime) {
-		String entry = Messages.AppointmentHistory_Duration_Changed_From + " " + formatDateTime(oldEndTime)
+		String entry = Messages.AppointmentHistory_Duration_Changed_From + " " + formatDateTime(oldEndTime) + " "
 				+ Messages.AppointmentHistory_Move_To + " "
 				+ formatDateTime(newEndTime);
 		addHistoryEntry(appointment, entry);
