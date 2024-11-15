@@ -25,7 +25,7 @@ public class TaskModelService extends AbstractModelService implements IModelServ
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
-	@Reference
+	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
 
 	@Reference
