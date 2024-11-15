@@ -6,7 +6,7 @@
       <provide interface="ch.elexis.core.services.IStoreToStringContribution"/>
    </service>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
-   <reference cardinality="1..1" field="entityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="entityManager"/>
+   <reference cardinality="1..1" field="entityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="entityManager" target="(id=default)"/>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
    <implementation class="ch.elexis.core.tasks.internal.model.service.TaskModelService"/>
 </scr:component>
