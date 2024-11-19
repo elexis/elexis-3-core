@@ -95,7 +95,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		Optional<ICoverage> coverage = coverageService.getLatestOpenCoverage(patient);
 		if (isObligatory) {
 			if (coverage.isEmpty() || !coverage.get().getBillingSystem().getLaw().equals(BillingLaw.KVG)) {
-				coverage = Optional.of(coverageService.createDefaultCoverage(patient));
+				coverage = getOrCreateCoverage(patient, BillingLaw.KVG);
 			}
 		} else {
 			if (coverage.isEmpty() || !(coverage.get().getBillingSystem().getLaw().equals(BillingLaw.ORG)
@@ -119,7 +119,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		if (coverage.isEmpty()) {
 			coverage = Optional
 					.of(new ICoverageBuilder(coreModelService, patient, coverageService.getDefaultCoverageLabel(),
-							coverageService.getDefaultCoverageReason(), BillingLaw.privat.toString()).buildAndSave());
+							coverageService.getDefaultCoverageReason(), law.toString()).buildAndSave());
 		}
 		return coverage;
 	}
