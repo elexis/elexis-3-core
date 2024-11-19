@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -155,11 +153,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private TableViewer generalViewer;
 	private HeaderComposite myHeader;
 	private TableViewer myViewer;
-	private Map<String, HeaderComposite> groupHeaders = new HashMap<>();
-	private Map<String, TableViewer> groupViewers = new HashMap<>();
 
-	private int lastY;
-	private int newY;
+	record GroupComponent(String id, HeaderComposite header, TableViewer viewer) {
+	}
+
+	private List<GroupComponent> groupComponents = new ArrayList<>();
 
 	private List<IUserGroup> userGroups = getUserGroups();
 
@@ -547,8 +545,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			groupHeader.setText(group.getId() + "-Pendenzen");
 			TableViewer groupViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 			setupViewer(groupViewer, 3);
-			groupHeaders.put(group.getId(), groupHeader);
-			groupViewers.put(group.getId(), groupViewer);
+			groupComponents.add(new GroupComponent(group.getId(), groupHeader, groupViewer));
 		}
 
 		viewerSelectionComposite.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -596,8 +593,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
 		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
 		myViewer.getTable().setMenu(menuManager.createContextMenu(myViewer.getTable()));
-		for (TableViewer v : groupViewers.values()) {
-			v.getTable().setMenu(menuManager.createContextMenu(v.getTable()));
+		for (GroupComponent group : groupComponents) {
+			group.viewer().getTable().setMenu(menuManager.createContextMenu(group.viewer().getTable()));
 		}
 		
 		getSite().getPage().addPartListener(udpateOnVisible);
@@ -636,11 +633,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		hideControl(generalViewer.getTable());
 		hideControl(myHeader);
 		hideControl(myViewer.getTable());
-		for (HeaderComposite c : groupHeaders.values()) {
-			hideControl(c);
-		}
-		for (TableViewer v : groupViewers.values()) {
-			hideControl(v.getTable());
+		for (GroupComponent group : groupComponents) {
+			hideControl(group.header());
+			hideControl(group.viewer().getTable());
 		}
 		if (selection != null && !selection.isEmpty()) {
 			for (Object selected : selection.toList()) {
@@ -658,10 +653,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 						showControl(myHeader);
 						showControl(myViewer.getTable());
 					} else if (!userGroups.isEmpty()) {
-						for(IUserGroup group : userGroups) {
-							if((SELECTIONCOMP_GROUPREMINDERS_PREFIX+group.getId()).equals(selected)) {
-									showControl(groupHeaders.get(group.getId()));
-									showControl(groupViewers.get(group.getId()).getTable());
+						for (GroupComponent group : groupComponents) {
+							if ((SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id()).equals(selected)) {
+								showControl(group.header());
+								showControl(group.viewer().getTable());
 							}
 						}
 					}
@@ -706,10 +701,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		if (myViewer.getTable().isVisible()) {
 			myViewer.refresh(false);
 		}
-		for (IUserGroup group : userGroups) {
-			TableViewer v = groupViewers.get(group.getId());
-			if(v.getTable().isVisible()){
-				v.refresh(false);
+		for (GroupComponent group : groupComponents) {
+			if (group.viewer().getTable().isVisible()) {
+				group.viewer().refresh(false);
 			}
 		}
 	}
@@ -753,10 +747,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 	
 	private void groupRemindersRefresh() {
-		for (IUserGroup group : userGroups) {
-			TableViewer viewer = groupViewers.get(group.getId());
-			if (viewer.getTable().isVisible()) {
-				refreshGroupRemindersInput(group.getId());
+		for (GroupComponent group : groupComponents) {
+			if (group.viewer().getTable().isVisible()) {
+				refreshGroupRemindersInput(group);
 			}
 		}
 	}
@@ -872,11 +865,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
-	private void refreshGroupRemindersInput(String id) {
+	private void refreshGroupRemindersInput(GroupComponent group) {
 		// TODO
-		if (groupViewers.get(id).getTable().isVisible()) {
+		if (group.viewer().getTable().isVisible()) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
-					.supplyAsync(new GroupRemindersSupplier(id)
+					.supplyAsync(new GroupRemindersSupplier(group.id())
 							.showAll(showAllReminders
 									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
 							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
@@ -885,14 +878,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 							.showAssignedToMeAction(assignedToMe));
 			currentLoader.thenRunAsync(() -> {
 				Display.getDefault().asyncExec(() -> {
-					TableViewer viewer = groupViewers.get(id);
-					if (viewer != null && !viewer.getTable().isDisposed()) {
+					if (group.viewer() != null && !group.viewer().getTable().isDisposed()) {
 						List<IReminder> input;
 						try {
 							input = currentLoader.get();
-							viewer.setInput(input);
-							viewerSelectionComposite.setCount(SELECTIONCOMP_GROUPREMINDERS_PREFIX + id,
-									viewer.getTable().getItemCount());
+							group.viewer().setInput(input);
+							viewerSelectionComposite.setCount(SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id(),
+									group.viewer().getTable().getItemCount());
 						} catch (InterruptedException | ExecutionException e) {
 							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 						}
@@ -2180,7 +2172,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private class TableViewerResizer {
 		private static int lastY = 0;
 		private static int newY = 0;
-		private static int tolerance = 5;
+		private static int tolerance = 15;
 		private static int minHeight = 25;
 
 		public static void enableResizing(TableViewer tableViewer) {
@@ -2281,8 +2273,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		generalPatientViewer.setSelection(clear);
 		generalViewer.setSelection(clear);
 		myViewer.setSelection(clear);
-		for (IUserGroup group : userGroups) {
-			groupViewers.get(group.getId()).setSelection(clear);
+		for (GroupComponent group : groupComponents) {
+			group.viewer().setSelection(clear);
 		}
 	}
 
