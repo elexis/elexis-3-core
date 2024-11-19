@@ -2202,7 +2202,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 				@Override
 				public void mouseUp(MouseEvent e) {
-					if (lastY != 0) {
+					if (lastY != 0 && lastY != newY) {
 						int deltaY = newY - lastY;
 						GridData gd = (GridData) table.getLayoutData();
 						if (deltaY != 0) {
