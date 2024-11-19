@@ -71,6 +71,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMedicationService;
 import ch.elexis.core.services.IModelService;
@@ -441,7 +442,8 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMedicationDosage.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
 			IStockEntry entry = (IStockEntry) element;
 			IPatient patient = entry.getStock().getOwner().asIPatient();
-			List<IPrescription> lMedication = patient.getMedication(null);
+			List<IPrescription> lMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+					EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
 			for (IPrescription prescription : lMedication) {
 				if (prescription.getArticle().equals(entry.getArticle())) {
 					return prescription.getDosageInstruction();
