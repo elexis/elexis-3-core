@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.mediorder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
@@ -21,7 +23,8 @@ public class MediorderPartUtil {
 		if (object instanceof IStockEntry stockEntry) {
 			Double resultDays = null;
 			IPatient patient = stockEntry.getStock().getOwner().asIPatient();
-			List<IPrescription> lMedication = patient.getMedication(null);
+			List<IPrescription> lMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+					EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
 			for (IPrescription prescription : lMedication) {
 				if (prescription.getArticle().equals(stockEntry.getArticle())) {
 					float dailyDosageAsFloat = MedicationServiceHolder.get().getDailyDosageAsFloat(prescription);
