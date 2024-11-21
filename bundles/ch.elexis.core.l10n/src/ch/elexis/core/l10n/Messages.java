@@ -3006,8 +3006,7 @@ public class Messages extends NLS {
 	public static String Mediorder_filter_by_status;
 	public static String Mediorder_Billing_Text;
 	public static String Mediorder_Questionnaire_active_and_up_to_date;
-	public static String Mediorder_Questionnaire_active_not_up_to_date;
-	public static String Mediorder_Questionnaire_inactive;
+	public static String Mediorder_Questionnaire_update_pending;
 	public static String Mediorder_Questionnaire_status;
 	public static String Mediorder_comparison_Tooltip;
 	public static String Mediorder_updateArticle;
