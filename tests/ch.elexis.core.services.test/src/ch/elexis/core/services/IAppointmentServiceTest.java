@@ -196,8 +196,12 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		// delete series, all
 		appointmentService.delete(appointments.get(3), true);
 		assertTrue(series.getAppointments().isEmpty());
+		// delete notification is done via post event, try reload first
+		coreModelService.refresh(appointments.get(2), true);
 		assertTrue(appointments.get(2).isDeleted());
+		coreModelService.refresh(appointments.get(3), true);
 		assertTrue(appointments.get(3).isDeleted());
+		coreModelService.refresh(appointments.get(4), true);
 		assertTrue(appointments.get(4).isDeleted());
 	}
 
