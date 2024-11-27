@@ -199,7 +199,12 @@ public class EncounterTest extends AbstractTest {
 		}
 		executor.shutdown();
 		executor.awaitTermination(5, TimeUnit.SECONDS);
-		coreModelService.refresh(encounter, true);
+		// test if size will be correct after max 5 seconds
+		int retryCount = 50;
+		while (encounter.getBilled().size() < 100 && --retryCount > 0) {
+			Thread.sleep(100);
+			coreModelService.refresh(encounter, true);
+		}
 		assertEquals(100, encounter.getBilled().size());
 		assertTrue(encounter.getLastupdate() > 0);
 		for (IBilled billed : encounter.getBilled()) {
