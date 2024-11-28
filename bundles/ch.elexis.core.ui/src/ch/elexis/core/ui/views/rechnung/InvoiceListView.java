@@ -79,7 +79,7 @@ import ch.rgw.tools.Money;
 public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
 
-	private static final String CFG_MANDATORFILTER = "rechnungsliste/mandantenfiltered";
+	private static final String CFG_MANDATORFILTER = "rechnungsliste/mandantenfiltered"; //$NON-NLS-1$
 
 	private TableViewer tableViewerInvoiceList;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
