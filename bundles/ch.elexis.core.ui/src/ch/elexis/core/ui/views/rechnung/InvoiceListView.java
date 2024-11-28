@@ -58,6 +58,7 @@ import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.dialog.MandantSelectorDialog;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
@@ -114,7 +115,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 
 		@Override
 		public void run() {
-			MandantSelectorDialog dialog = new MandantSelectorDialog(getSite().getShell());
+			MandantSelectorDialog dialog = new MandantSelectorDialog(getSite().getShell(), true, false, true, true);
 			dialog.open();
 		}
 	};
