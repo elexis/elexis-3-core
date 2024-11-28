@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -17,44 +19,37 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.data.Mandant;
 
 public class MandantSelectorDialog extends TitleAreaDialog {
-	private List<Mandant> mandantsList;
+	private List<IMandator> mandatorsList;
 	private ListViewer uiList;
-	private Mandant selMandant;
+	private IMandator selMandator;
 
-	private List<Mandant> selMandants;
+	private List<IMandator> selMandators;
+	private String idList;
 	private boolean multi;
 	private boolean noEmpty;
 	private boolean nonActive;
-	private boolean saveFilter;
 
-	private static final String CFG_MANDATORFILTER = "rechnungsliste/mandantenfiltered";
-
-	public MandantSelectorDialog(Shell parentShell, boolean multi, boolean noEmpty, boolean nonActive,
-			boolean saveFilter) {
+	public MandantSelectorDialog(Shell parentShell, boolean multi, boolean noEmpty, boolean nonActive, String idList) {
 		super(parentShell);
 		this.multi = multi;
 		this.noEmpty = noEmpty;
 		this.nonActive = nonActive;
-		this.saveFilter = saveFilter;
-		selMandant = (Mandant) NoPoUtil.loadAsPersistentObject(
-				(Identifiable) ContextServiceHolder.get().getActiveUser().get().getAssignedContact(), Mandant.class);
+		this.idList = idList;
+		selMandator = ContextServiceHolder.getActiveMandatorOrNull();
 	}
 
 	public MandantSelectorDialog(Shell parentShell, boolean multi) {
-		this(parentShell, multi, true, false, false);
+		this(parentShell, multi, true, false, null);
+	}
+
+	public MandantSelectorDialog(Shell parentShell, String idList) {
+		this(parentShell, true, false, true, idList);
 	}
 
 	@Override
@@ -86,95 +81,83 @@ public class MandantSelectorDialog extends TitleAreaDialog {
 			setMessage("Bitte wählen Sie einen Mandanten");
 			uiList = new ListViewer(parent, SWT.BORDER | SWT.SINGLE);
 		}
+		mandatorsList = getMandators();
+
+		uiList.setContentProvider(ArrayContentProvider.getInstance());
+		uiList.setInput(mandatorsList);
 		uiList.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		mandantsList = getMandantors();
-
-		for (Mandant m : mandantsList) {
-			StringBuilder label = new StringBuilder(m.getLabel());
-			if (!m.getKuerzel().isBlank()) {
-				label.append(" (" + m.getKuerzel() + ")");
+		uiList.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((IMandator) element).getLabel();
 			}
-			uiList.add(label.toString());
-		}
-		String idList = ConfigServiceHolder.get().get(ContextServiceHolder.get().getActiveUserContact().get(),
-				CFG_MANDATORFILTER, StringUtils.EMPTY);
-		for (String id : Arrays.stream(idList.split(",")).toList()) {
-			for (int i = 0; i < mandantsList.size(); i++) {
-				if (id.equalsIgnoreCase(mandantsList.get(i).getId())) {
-					uiList.getList().select(i);
-				}
-			}
-		}
+		});
+
+		setSelected(idList);
+
 		return uiList.getList();
 	}
 
 	@Override
 	protected void okPressed() {
-		int idx = uiList.getList().getSelectionIndex();
-		if (idx > -1) {
-			selMandant = mandantsList.get(idx);
+		Object[] selectedMandators = uiList.getStructuredSelection().toArray();
+		selMandators = new ArrayList<IMandator>();
+
+		if (selectedMandators.length > 0) {
+			for (Object element : selectedMandators) {
+				if (element instanceof IMandator) {
+					selMandators.add((IMandator) element);
+				}
+			}
 		}
 
-		int[] idxs = uiList.getList().getSelectionIndices();
-		selMandants = new ArrayList<Mandant>();
-		if (idxs != null && idxs.length > 0) {
-			for (int i : idxs) {
-				selMandants.add(mandantsList.get(i));
-			}
-		}
-		if (saveFilter) {
-			List<String> idList = new ArrayList<String>();
-			for (Mandant m : selMandants) {
-				idList.add(m.getId());
-			}
-			String r = String.join(",", idList);
-			ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(), CFG_MANDATORFILTER,
-					r);
+		if (!multi && !selMandators.isEmpty()) {
+			selMandator = selMandators.get(0);
 		}
 
 		super.okPressed();
 	}
 
-	public Mandant getSelectedMandant() {
-		return selMandant;
+	public IMandator getSelectedMandator() {
+		return selMandator;
 	}
 	
-	public List<Mandant> getSelectedMandants() {
-		return selMandants;
+	public List<IMandator> getSelectedMandators() {
+		return selMandators;
 	}
 
-	private List<Mandant> getMandantors() {
-		IQuery<IUser> userQuery = CoreModelServiceHolder.get().getQuery(IUser.class);
-		userQuery.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.NOT_EQUALS, null);
-		List<IUser> users = userQuery.execute();
+	private List<IMandator> getMandators() {
+		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
+		List<IMandator> mandators = query.execute();
 
-		List<Mandant> mandantsList = users.stream()
-				.filter(u -> (nonActive || isActive(u)) && isMandator(u))
-				.map(u -> Mandant.load(u.getAssignedContact().getId())).collect(Collectors.toList());
-		mandantsList.sort(Comparator.comparing(Mandant::getLabel));
+		List<IMandator> list = mandators.stream().filter(m -> (nonActive || isActive(m)) && isMandator(m)).map(m -> m)
+				.collect(Collectors.toList());
+		list.sort(Comparator.comparing(IMandator::getLabel));
 
-		return mandantsList;
+		return list;
 	}
 
-	private boolean isMandator(IUser user) {
-		return user.getAssignedContact() != null && user.getAssignedContact().isMandator();
+	public void setSelected(String idList) {
+		if (idList.isBlank()) {
+			return;
+		}
+
+		Map<String, IMandator> mandatorMap = mandatorsList.stream().collect(Collectors.toMap(IMandator::getId, m -> m));
+
+		Arrays.stream(idList.split(",")) //$NON-NLS-1$
+				.map(String::trim).filter(mandatorMap::containsKey).forEach(id -> {
+					IMandator mandator = mandatorMap.get(id);
+					int index = mandatorsList.indexOf(mandator);
+					if (index != -1)
+						uiList.getList().select(index);
+				});
 	}
 
-	private boolean isActive(IUser user) {
-		if (user == null || user.getAssignedContact() == null) {
-			return false;
-		}
-		if (!user.isActive()) {
-			return false;
-		}
-		if (user.getAssignedContact() != null && user.getAssignedContact().isMandator()) {
-			IMandator mandator = CoreModelServiceHolder.get().load(user.getAssignedContact().getId(), IMandator.class)
-					.orElse(null);
-			if (mandator != null && !mandator.isActive()) {
-				return false;
-			}
-		}
-		return true;
+	private boolean isMandator(IMandator mandator) {
+		return mandator != null && mandator.isMandator();
+	}
+
+	private boolean isActive(IMandator mandator) {
+		return mandator != null && mandator.isActive();
 	}
 }
