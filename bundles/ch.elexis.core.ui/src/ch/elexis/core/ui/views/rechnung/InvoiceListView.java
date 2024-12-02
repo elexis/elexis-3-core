@@ -14,12 +14,14 @@ import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_
 import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_INVOICETOTAL;
 import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_FLD_OPENAMOUNT;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -55,9 +57,11 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.dialog.MandantSelectorDialog;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
@@ -74,6 +78,8 @@ import ch.rgw.tools.Money;
 
 public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
+
+	private static final String CFG_MANDATORFILTER = "rechnungsliste/mandantenfiltered"; //$NON-NLS-1$
 
 	private TableViewer tableViewerInvoiceList;
 	private InvoiceListHeaderComposite invoiceListHeaderComposite;
@@ -103,6 +109,37 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		@Override
 		public void run() {
 			refresh();
+		}
+	};
+
+	private Action mandantFilterAction = new Action(Messages.Core_Select_Mandator) {
+		{
+			setToolTipText(Messages.Core_Select_Mandator);
+			setImageDescriptor(Images.IMG_PERSON.getImageDescriptor());
+		}
+
+		@Override
+		public void run() {
+			String idList = ConfigServiceHolder.get().get(ContextServiceHolder.get().getActiveUserContact().get(),
+					CFG_MANDATORFILTER, StringUtils.EMPTY);
+			MandantSelectorDialog dialog = new MandantSelectorDialog(getSite().getShell(), idList);
+
+			dialog.open();
+			applyMandatorsFilter(dialog);
+		}
+
+		private void applyMandatorsFilter(MandantSelectorDialog dialog) {
+			List<IMandator> selMandators = dialog.getSelectedMandators();
+			List<String> idList = new ArrayList<String>();
+			
+			if (selMandators != null) {
+				for (IMandator m : selMandators) {
+					idList.add(m.getId());
+				}
+				String r = String.join(",", idList); //$NON-NLS-1$
+				ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+						CFG_MANDATORFILTER, r);
+			}
 		}
 	};
 
@@ -345,6 +382,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList, getViewSite());
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(reloadViewAction);
+		tbm.add(mandantFilterAction);
 		tbm.add(invoiceActions.mahnWizardAction);
 		tbm.add(invoiceActions.exportListAction);
 		tbm.add(invoiceListContentProvider.rnFilterAction);
