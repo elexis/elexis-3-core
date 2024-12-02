@@ -131,6 +131,7 @@ public class Messages {
 	public static String Core_Invoice_Reminder_1 = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder_1;
 	public static String Core_Invoice_Reminder_2 = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder_2;
 	public static String Core_Invoice_Reminder_3 = ch.elexis.core.l10n.Messages.Core_Invoice_Reminder_3;
+	public static String Core_Select_Mandator = ch.elexis.core.l10n.Messages.Core_Select_Mandator;
 	public static String RechnungsListeView_sum = ch.elexis.core.l10n.Messages.RechnungsListeView_sum;
 	public static String Invoice_amount_due = ch.elexis.core.l10n.Messages.Invoice_amount_due;
 	public static String RechnungsListeView_selectRnSteller = ch.elexis.core.l10n.Messages.RechnungsListeView_selectRnSteller;
