@@ -35,7 +35,7 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -303,7 +303,7 @@ public class MediorderPart implements IRefreshablePart {
 		});
 
 		TableColumn tblclmntvcOrderState = tvcOrderState.getColumn();
-		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnPixelData(20, true, true));
+		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnWeightData(0, 20, true));
 		tblclmntvcOrderState.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -322,7 +322,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientNumber = tvcPatientNumber.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(100, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnWeightData(10, 70, true));
 		tblclmntvcPatientNumber.setText(Messages.Core_Patient_Number);
 		tblclmntvcPatientNumber.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -337,7 +337,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientLastName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getLastName()));
 		TableColumn tblclmntvcPatientLastName = tvcPatientLastName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(200, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnWeightData(30, 200, true));
 		tblclmntvcPatientLastName.setText(Messages.Core_Name);
 		tblclmntvcPatientLastName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -352,7 +352,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientFirstName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getFirstName()));
 		TableColumn tblclmntvcPatientFirstName = tvcPatientFirstName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(200, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnWeightData(30, 200, true));
 		tblclmntvcPatientFirstName.setText(Messages.Core_Firstname);
 		tblclmntvcPatientFirstName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -373,7 +373,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientBirthdate = tvcPatientBirthdate.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(100, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnWeightData(10, 90, true));
 		tblclmntvcPatientBirthdate.setText(Messages.Core_Enter_Birthdate);
 		tblclmntvcPatientBirthdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -452,7 +452,7 @@ public class MediorderPart implements IRefreshablePart {
 		// MediorderEntryState
 		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(120, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnWeightData(10, 120, true));
 		tblclmntvcMedicationOrdered.setText(Messages.Mediorder_Order_status);
 		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
 		tblclmntvcMedicationOrdered.setToolTipText(Messages.Mediorder_Order_status_Tooltip);
@@ -464,7 +464,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMedication.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IStockEntry) e).getArticle().getLabel()));
 		TableColumn tblclmntvcMedication = tvcMedication.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(200, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnWeightData(30, 400, true));
 		tblclmntvcMedication.setText(Messages.Core_Article);
 		tblclmntvcMedication.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -489,7 +489,7 @@ public class MediorderPart implements IRefreshablePart {
 			return "";
 		}));
 		TableColumn tblclmntvcMedicationDosage = tvcMedicationDosage.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(80, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnWeightData(10, 70, true));
 		tblclmntvcMedicationDosage.setText(Messages.Core_Dosage);
 
 		// medication no days consumption per dosage
@@ -497,7 +497,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderEntryOutreach.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
 		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(110, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnWeightData(10, 100, true));
 		tblclmntvcMedicationAmountDay.setText(Messages.Mediorder_sufficient_for);
 
 		// medication designated amount for ordering
@@ -538,7 +538,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationAmount = tvcMedicationAmount.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnPixelData(110, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnWeightData(10, 110, true));
 		tblclmntvcMedicationAmount.setText(Messages.Mediorder_requested);
 		tblclmntvcMedicationAmount.setImage(Images.IMG_ACHTUNG.getImage());
 		tblclmntvcMedicationAmount.setToolTipText(Messages.Mediorder_requested_Tooltip);
@@ -580,14 +580,14 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationClearance = tvcMedicationClearance.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnPixelData(110, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnWeightData(10, 110, true));
 		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
 		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
 		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
 
 		TableViewerColumn tvcOrderDate = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcOrderDate = tvcOrderDate.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnPixelData(110, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnWeightData(10, 80, true));
 		tblclmntvcOrderDate.setText(Messages.Mediorder_order_date);
 		tblclmntvcOrderDate.setToolTipText(Messages.Mediorder_order_date_Tooltip);
 		tvcOrderDate.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
@@ -648,7 +648,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderOrderDate.setLabelProvider(ColumnLabelProvider
 				.createTextProvider(e -> ((IOrderEntry) e).getOrder().getTimestamp().format(dateFormatter)));
 		TableColumn tblclmntvcMedicationDosage = tvcMediorderOrderDate.getColumn();
-		tcLayout_cHistory.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(120, true, true));
+		tcLayout_cHistory.setColumnData(tblclmntvcMedicationDosage, new ColumnWeightData(10, 70, true));
 		tblclmntvcMedicationDosage.setText(Messages.Core_Date);
 		tblclmntvcMedicationDosage.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -660,7 +660,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		TableViewerColumn tvcMediorderArticle = new TableViewerColumn(tableViewerHistory, SWT.NONE);
 		TableColumn tblclmntvcMedicationArticle = tvcMediorderArticle.getColumn();
-		tcLayout_cHistory.setColumnData(tblclmntvcMedicationArticle, new ColumnPixelData(400, true, true));
+		tcLayout_cHistory.setColumnData(tblclmntvcMedicationArticle, new ColumnWeightData(30, 400, true));
 		tblclmntvcMedicationArticle.setText(Messages.Core_Article);
 		tvcMediorderArticle.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IOrderEntry) e).getArticle().getLabel()));
@@ -676,7 +676,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderAmount.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> (String.valueOf(((IOrderEntry) e).getAmount()))));
 		TableColumn tblclmntvcMediorderAmount = tvcMediorderAmount.getColumn();
-		tcLayout_cHistory.setColumnData(tblclmntvcMediorderAmount, new ColumnPixelData(100, true, true));
+		tcLayout_cHistory.setColumnData(tblclmntvcMediorderAmount, new ColumnWeightData(10, 50, true));
 		tblclmntvcMediorderAmount.setText(Messages.Core_Count);
 		tblclmntvcMediorderAmount.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -797,49 +797,6 @@ public class MediorderPart implements IRefreshablePart {
 				String articleName1 = stockEntry1.getArticle().getName();
 				String articleName2 = stockEntry2.getArticle().getName();
 				return Objects.compare(articleName1, articleName2, Comparator.nullsFirst(Comparator.naturalOrder()))
-						* direction;
-			}
-
-			return super.compare(viewer, o1, o2);
-		}
-	}
-
-	public class MedicationHistoryComparator extends ViewerComparator {
-		private int propertyIndex;
-		private int direction;
-
-		public MedicationHistoryComparator() {
-			this.propertyIndex = 0;
-			this.direction = -1;
-		}
-
-		public void setColumn(int column) {
-			if (column == this.propertyIndex) {
-				direction *= -1;
-			}
-			this.propertyIndex = column;
-		}
-
-		@Override
-		public int compare(Viewer viewer, Object o1, Object o2) {
-			IOrderEntry orderEntry1 = (IOrderEntry) o1;
-			IOrderEntry orderEntry2 = (IOrderEntry) o2;
-
-			switch (propertyIndex) {
-			case 0:
-				String articleName1 = orderEntry1.getArticle().getName();
-				String articleName2 = orderEntry2.getArticle().getName();
-				return Objects.compare(articleName1, articleName2, Comparator.nullsFirst(Comparator.naturalOrder()))
-						* direction;
-			case 1:
-				String orderAmount1 = String.valueOf(orderEntry1.getAmount());
-				String orderAmount2 = String.valueOf(orderEntry2.getAmount());
-				return Objects.compare(orderAmount1, orderAmount2, Comparator.nullsFirst(Comparator.naturalOrder()))
-						* direction;
-			case 2:
-				String orderDate1 = orderEntry1.getOrder().getTimestamp().format(dateFormatter);
-				String orderDate2 = orderEntry2.getOrder().getTimestamp().format(dateFormatter);
-				return Objects.compare(orderDate1, orderDate2, Comparator.nullsFirst(Comparator.naturalOrder()))
 						* direction;
 			}
 
