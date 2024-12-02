@@ -1,16 +1,14 @@
 package ch.elexis.core.ui.e4.dialog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,14 +18,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.model.IMandator;
-import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class MandantSelectorDialog extends TitleAreaDialog {
 	private List<IMandator> mandatorsList;
 	private ListViewer uiList;
-	private IMandator selMandator;
 
 	private List<IMandator> selMandators;
 	private String idList;
@@ -41,7 +37,6 @@ public class MandantSelectorDialog extends TitleAreaDialog {
 		this.noEmpty = noEmpty;
 		this.nonActive = nonActive;
 		this.idList = idList;
-		selMandator = ContextServiceHolder.getActiveMandatorOrNull();
 	}
 
 	public MandantSelectorDialog(Shell parentShell, boolean multi) {
@@ -98,28 +93,21 @@ public class MandantSelectorDialog extends TitleAreaDialog {
 		return uiList.getList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void okPressed() {
-		Object[] selectedMandators = uiList.getStructuredSelection().toArray();
-		selMandators = new ArrayList<IMandator>();
-
-		if (selectedMandators.length > 0) {
-			for (Object element : selectedMandators) {
-				if (element instanceof IMandator) {
-					selMandators.add((IMandator) element);
-				}
-			}
-		}
-
-		if (!multi && !selMandators.isEmpty()) {
-			selMandator = selMandators.get(0);
-		}
-
+		selMandators = (List<IMandator>) uiList.getStructuredSelection().toList();
 		super.okPressed();
 	}
 
 	public IMandator getSelectedMandator() {
-		return selMandator;
+		if (selMandators.isEmpty()) {
+			if (noEmpty) {
+				return ContextServiceHolder.getActiveMandatorOrNull();
+			}
+			return null;
+		}
+		return selMandators.get(0);
 	}
 	
 	public List<IMandator> getSelectedMandators() {
@@ -127,8 +115,7 @@ public class MandantSelectorDialog extends TitleAreaDialog {
 	}
 
 	private List<IMandator> getMandators() {
-		IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
-		List<IMandator> mandators = query.execute();
+		List<IMandator> mandators = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
 
 		List<IMandator> list = mandators.stream().filter(m -> (nonActive || isActive(m)) && isMandator(m)).map(m -> m)
 				.collect(Collectors.toList());
@@ -138,19 +125,12 @@ public class MandantSelectorDialog extends TitleAreaDialog {
 	}
 
 	public void setSelected(String idList) {
-		if (idList.isBlank()) {
+		if (idList == null || idList.isBlank()) {
 			return;
 		}
-
-		Map<String, IMandator> mandatorMap = mandatorsList.stream().collect(Collectors.toMap(IMandator::getId, m -> m));
-
-		Arrays.stream(idList.split(",")) //$NON-NLS-1$
-				.map(String::trim).filter(mandatorMap::containsKey).forEach(id -> {
-					IMandator mandator = mandatorMap.get(id);
-					int index = mandatorsList.indexOf(mandator);
-					if (index != -1)
-						uiList.getList().select(index);
-				});
+		uiList.setSelection(
+				new StructuredSelection(
+						mandatorsList.stream().filter(m -> idList.contains(m.getId())).toList()));
 	}
 
 	private boolean isMandator(IMandator mandator) {
