@@ -153,25 +153,12 @@ public class MandantSelectionContributionItem {
 		item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setToolTipText("Aktuell ausgewählter Mandant bzw. Mandantenauswahl");
 
-		menuItems = new MenuItem[mandants.length];
-
-		for (int i = 0; i < mandants.length; i++) {
-			final IMandator m = mandants[i];
-			menuItems[i] = new MenuItem(menu, SWT.RADIO);
-			menuItems[i].setText(m.getLabel());
-			menuItems[i].setImage(getBoxSWTColorImage(UiMandant.getColorForIMandator(m)));
-			menuItems[i].setData(m.getId());
-			menuItems[i].addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					ContextServiceHolder.get().setActiveMandator(m);
-				}
-			});
-			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {
-				IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
-				menuItems[i].setSelection(activeMandator != null && activeMandator.equals(m));
-			}
+		List<MenuItem> menuItemList = new ArrayList<>();
+		for (IMandator m : mandants) {
+			MenuItem item = buildMenuItem(m);
+			menuItemList.add(item);
 		}
+		menuItems = menuItemList.toArray(new MenuItem[0]);
 
 		item.addListener(SWT.Selection, selectionListener);
 
