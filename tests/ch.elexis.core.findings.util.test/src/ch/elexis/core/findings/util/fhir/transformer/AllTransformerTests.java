@@ -9,9 +9,11 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.services.IModelService;
 
+
 @Component
 @RunWith(Suite.class)
-@SuiteClasses({ CoverageICoverageTransformerTest.class, OrganizationIOrganizationTransformerTest.class })
+@SuiteClasses({ CoverageICoverageTransformerTest.class, OrganizationIOrganizationTransformerTest.class,
+		AppointmentTerminTransformerTest.class, SlotTerminTransformerTest.class })
 public class AllTransformerTests {
 
 	private static IFhirTransformerRegistry transformerRegistry;
@@ -51,5 +53,4 @@ public class AllTransformerTests {
 	public static IModelService getCoreModelService() {
 		return coreModelService;
 	}
-
 }
