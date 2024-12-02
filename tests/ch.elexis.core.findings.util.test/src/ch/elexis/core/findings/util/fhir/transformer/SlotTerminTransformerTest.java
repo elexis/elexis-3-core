@@ -1,18 +1,21 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
-import org.hl7.fhir.r4.model.Slot;
+
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Slot;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IAppointmentService;
@@ -71,8 +74,9 @@ public class SlotTerminTransformerTest {
 		IAppointment updatedAppointment = result.get();
 		assertEquals(newScheduleName, updatedAppointment.getSchedule());
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-		String expectedHistoryEntry = "Verschoben von " + LocalDateTime.now().withHour(15).format(formatter)
-				+ " (Initial Bereich) auf " + LocalDateTime.now().withHour(17).format(formatter) + " ("
+		String expectedHistoryEntry = Messages.AppointmentHistory_Move_From + " "
+				+ LocalDateTime.now().withHour(15).format(formatter) + " (Initial Bereich) "
+				+ Messages.AppointmentHistory_Move_To + " " + LocalDateTime.now().withHour(17).format(formatter) + " ("
 				+ newScheduleName + ") [Unbekannt]";
 		assertTrue(updatedAppointment.getStateHistory().contains(expectedHistoryEntry));
 	}

@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.rgw.tools.StringTool;
-import ch.elexis.core.l10n.Messages;
 
 @Component
 public class AppointmentHistoryManagerService implements IAppointmentHistoryManagerService {
@@ -131,7 +131,7 @@ public class AppointmentHistoryManagerService implements IAppointmentHistoryMana
 	private String getCurrentUser() {
 		return contextService != null && contextService.getActiveUser().isPresent()
 				? contextService.getActiveUser().get().getLabel()
-				: "Unbekannt";
+				: Messages.UNKNOWN;
 	}
 
 	private String formatDateTime(LocalDateTime dateTime) {

@@ -1,7 +1,8 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,13 +14,13 @@ import org.hl7.fhir.r4.model.Appointment;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.model.IAppointment;
-import ch.elexis.core.model.builder.IAppointmentBuilder;
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.test.util.TestUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IAppointment;
+import ch.elexis.core.model.builder.IAppointmentBuilder;
+import ch.elexis.core.test.util.TestUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class AppointmentTerminTransformerTest {
 
@@ -65,7 +66,8 @@ public class AppointmentTerminTransformerTest {
 		assertTrue(result.isPresent());
 		IAppointment updatedAppointment = result.get();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-		String expectedHistoryEntry = "Dauer geändert von " + LocalDate.now().atTime(16, 0).format(formatter) + " auf "
+		String expectedHistoryEntry = Messages.AppointmentHistory_Duration_Changed_From + " "
+				+ LocalDate.now().atTime(16, 0).format(formatter) + " " + Messages.AppointmentHistory_Move_To + " "
 				+ LocalDate.now().atTime(18, 0).format(formatter) + " [Unbekannt]";
 		assertTrue(updatedAppointment.getStateHistory().contains(expectedHistoryEntry));
 	}
@@ -80,7 +82,8 @@ public class AppointmentTerminTransformerTest {
 		assertTrue(result.isPresent());
 		IAppointment updatedAppointment = result.get();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-		String expectedHistoryEntry = "Dauer geändert von " + LocalDate.now().atTime(16, 0).format(formatter) + " auf "
+		String expectedHistoryEntry = Messages.AppointmentHistory_Duration_Changed_From + " "
+				+ LocalDate.now().atTime(16, 0).format(formatter) + " " + Messages.AppointmentHistory_Move_To + " "
 				+ LocalDate.now().atTime(17, 0).format(formatter) + " [Unbekannt]";
 		assertTrue(updatedAppointment.getStateHistory().contains(expectedHistoryEntry));
 	}
@@ -95,8 +98,8 @@ public class AppointmentTerminTransformerTest {
 		assertTrue(result.isPresent());
 		IAppointment updatedAppointment = result.get();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-		String expectedHistoryEntry = "Termin bearbeitet am " + LocalDateTime.now().format(formatter)
-				+ " durch [Unbekannt]";
+		String expectedHistoryEntry = MessageFormat.format(Messages.AppointmentHistory_Edited_On_By,
+				LocalDateTime.now().format(formatter));
 		assertTrue(updatedAppointment.getStateHistory().contains(expectedHistoryEntry));
 	}
 }
