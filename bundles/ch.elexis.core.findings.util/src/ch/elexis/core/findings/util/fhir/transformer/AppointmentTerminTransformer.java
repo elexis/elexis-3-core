@@ -1,5 +1,8 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
+
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,6 +18,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
 
 @Component
 public class AppointmentTerminTransformer implements IFhirTransformer<Appointment, IAppointment> {
@@ -68,10 +72,16 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 
 	@Override
 	public Optional<IAppointment> updateLocalObject(Appointment fhirObject, IAppointment localObject) {
-
+		String originalReason = localObject.getReason();
+		LocalDateTime originalEndTime = localObject.getEndTime();
 		attributeMapper.fhirToElexis(fhirObject, localObject);
-		// TODO more
-
+		if (!originalEndTime.equals(localObject.getEndTime())) {
+			AppointmentHistoryServiceHolder.get().logAppointmentDurationChange(localObject, originalEndTime,
+					localObject.getEndTime());
+			}
+		if (!originalReason.equals(fhirObject.getDescription())) {
+			AppointmentHistoryServiceHolder.get().logAppointmentEdit(localObject);
+		}
 		coreModelService.save(localObject);
 		return Optional.of(localObject);
 	}
