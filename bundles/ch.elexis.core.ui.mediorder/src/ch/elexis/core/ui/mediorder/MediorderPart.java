@@ -47,15 +47,19 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -117,12 +121,20 @@ public class MediorderPart implements IRefreshablePart {
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
+	private TableViewer tableViewerHistory;
+
+	private Composite cDetails_table;
+	private Composite cHistory_table;
+	private StackLayout stackLayout;
+	private Composite viewComposite;
 
 	private StockComparator stockComparator;
 	private MedicationComparator medicationComparator;
+	private MedicationHistoryComparator medicationHistoryComparator;
 	private final DateTimeFormatter dateFormatter;
 
 	private MediorderStockFilter searchFilter;
+	private MediorderHistoryFilter orderHistoryFilter;
 	private WritableValue<IStock> selectedDetailStock;
 	private IPatient actPatient;
 
@@ -130,11 +142,13 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> filteredStocks = new ArrayList<>();
 	private List<Integer> currentFilterValue;
 	private boolean filterActive = false;
+	private boolean isDetailsViewActive = true;
 
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
+	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -189,6 +203,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		stockComparator = new StockComparator();
 		medicationComparator = new MedicationComparator();
+		medicationHistoryComparator = new MedicationHistoryComparator();
 
 		createSearchBar(parent);
 
@@ -196,7 +211,16 @@ public class MediorderPart implements IRefreshablePart {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		sashForm.setSashWidth(5);
 		createPatientorderListViewer(extensionRegistry, sashForm);
-		createPatientorderDetailViewer(sashForm);
+
+		viewComposite = new Composite(sashForm, SWT.NONE);
+		stackLayout = new StackLayout();
+		viewComposite.setLayout(stackLayout);
+
+		createPatientorderDetailViewer(viewComposite);
+		createPatientorderHistory(viewComposite);
+
+		stackLayout.topControl = cDetails_table;
+		viewComposite.layout();
 		addDragAndDrop();
 
 		menuService.registerContextMenu(tableViewer.getTable(), "ch.elexis.core.ui.mediorder.popupmenu.viewer"); //$NON-NLS-1$
@@ -208,6 +232,14 @@ public class MediorderPart implements IRefreshablePart {
 		refresh();
 
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
+	}
+
+	public boolean toggleViews() {
+		isDetailsViewActive = !isDetailsViewActive;
+		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
+		viewComposite.layout();
+		saveFilterStatus();
+		return isDetailsViewActive;
 	}
 
 	private void createSearchBar(Composite parent) {
@@ -290,7 +322,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientNumber = tvcPatientNumber.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(70, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(100, true, true));
 		tblclmntvcPatientNumber.setText(Messages.Core_Patient_Number);
 		tblclmntvcPatientNumber.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -305,7 +337,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientLastName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getLastName()));
 		TableColumn tblclmntvcPatientLastName = tvcPatientLastName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(110, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(200, true, true));
 		tblclmntvcPatientLastName.setText(Messages.Core_Name);
 		tblclmntvcPatientLastName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -320,7 +352,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientFirstName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getFirstName()));
 		TableColumn tblclmntvcPatientFirstName = tvcPatientFirstName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(110, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(200, true, true));
 		tblclmntvcPatientFirstName.setText(Messages.Core_Firstname);
 		tblclmntvcPatientFirstName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -341,7 +373,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientBirthdate = tvcPatientBirthdate.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(90, true, true));
+		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(100, true, true));
 		tblclmntvcPatientBirthdate.setText(Messages.Core_Enter_Birthdate);
 		tblclmntvcPatientBirthdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -373,12 +405,18 @@ public class MediorderPart implements IRefreshablePart {
 
 	private void createPatientorderDetailViewer(Composite parent) {
 		// PatientDetails
-		Composite cDetails_table = new Composite(parent, SWT.NONE);
+		cDetails_table = new Composite(parent, SWT.NONE);
 		cDetails_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		TableColumnLayout tcLayout_cDetails = new TableColumnLayout();
-		cDetails_table.setLayout(tcLayout_cDetails);
+		cDetails_table.setLayout(new GridLayout(1, false));
 
-		tableViewerDetails = new TableViewer(cDetails_table, SWT.FULL_SELECTION | SWT.MULTI);
+		setCompositeTitle(cDetails_table, Messages.Mediorder_details);
+
+		Composite tableComposite = new Composite(cDetails_table, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		TableColumnLayout tcLayout_cDetails = new TableColumnLayout();
+		tableComposite.setLayout(tcLayout_cDetails);
+
+		tableViewerDetails = new TableViewer(tableComposite, SWT.FULL_SELECTION | SWT.MULTI);
 		Table tableDetails = tableViewerDetails.getTable();
 		tableDetails.setHeaderVisible(true);
 		tableViewerDetails.setContentProvider(ArrayContentProvider.getInstance());
@@ -414,7 +452,7 @@ public class MediorderPart implements IRefreshablePart {
 		// MediorderEntryState
 		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(130, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(120, true, true));
 		tblclmntvcMedicationOrdered.setText(Messages.Mediorder_Order_status);
 		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
 		tblclmntvcMedicationOrdered.setToolTipText(Messages.Mediorder_Order_status_Tooltip);
@@ -426,7 +464,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMedication.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IStockEntry) e).getArticle().getLabel()));
 		TableColumn tblclmntvcMedication = tvcMedication.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(180, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(200, true, true));
 		tblclmntvcMedication.setText(Messages.Core_Article);
 		tblclmntvcMedication.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -459,7 +497,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderEntryOutreach.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
 		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(120, true, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(110, true, true));
 		tblclmntvcMedicationAmountDay.setText(Messages.Mediorder_sufficient_for);
 
 		// medication designated amount for ordering
@@ -565,6 +603,88 @@ public class MediorderPart implements IRefreshablePart {
 			}
 			return null;
 		}));
+	}
+
+	private void createPatientorderHistory(Composite parent) {
+		cHistory_table = new Composite(parent, SWT.NONE);
+		cHistory_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cHistory_table.setLayout(new GridLayout(1, false));
+
+		setCompositeTitle(cHistory_table, Messages.Mediorder_history);
+
+		Composite searchComposite = new Composite(cHistory_table, SWT.NONE);
+		searchComposite.setLayout(new GridLayout(2, false));
+		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		Text txtSearch = new Text(searchComposite, SWT.BORDER | SWT.SEARCH);
+		txtSearch.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		txtSearch.setMessage(Messages.Core_DoSearch);
+		txtSearch.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent ke) {
+				orderHistoryFilter.setSearchTerm(txtSearch.getText());
+				tableViewerHistory.refresh();
+			}
+		});
+
+		Composite tableComposite = new Composite(cHistory_table, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		TableColumnLayout tcLayout_cHistory = new TableColumnLayout();
+		tableComposite.setLayout(tcLayout_cHistory);
+
+		tableViewerHistory = new TableViewer(tableComposite, SWT.FULL_SELECTION | SWT.MULTI);
+		Table tableHistory = tableViewerHistory.getTable();
+		tableHistory.setHeaderVisible(true);
+		tableViewerHistory.setContentProvider(ArrayContentProvider.getInstance());
+		tableViewerHistory.setComparator(medicationHistoryComparator);
+		selectedDetailStock.addChangeListener(sel -> {
+			tableViewerHistory.setInput(java.util.Optional.ofNullable(selectedDetailStock.getValue())
+					.map(orderService::findOrderEntryForStock).orElse(null));
+		});
+
+		orderHistoryFilter = new MediorderHistoryFilter();
+		tableViewerHistory.addFilter(orderHistoryFilter);
+
+		TableViewerColumn tvcMediorderOrderDate = new TableViewerColumn(tableViewerHistory, SWT.NONE);
+		tvcMediorderOrderDate.setLabelProvider(ColumnLabelProvider
+				.createTextProvider(e -> ((IOrderEntry) e).getOrder().getTimestamp().format(dateFormatter)));
+		TableColumn tblclmntvcMedicationDosage = tvcMediorderOrderDate.getColumn();
+		tcLayout_cHistory.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(120, true, true));
+		tblclmntvcMedicationDosage.setText(Messages.Core_Date);
+		tblclmntvcMedicationDosage.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				medicationHistoryComparator.setColumn(2);
+				refresh();
+			}
+		});
+
+		TableViewerColumn tvcMediorderArticle = new TableViewerColumn(tableViewerHistory, SWT.NONE);
+		TableColumn tblclmntvcMedicationArticle = tvcMediorderArticle.getColumn();
+		tcLayout_cHistory.setColumnData(tblclmntvcMedicationArticle, new ColumnPixelData(400, true, true));
+		tblclmntvcMedicationArticle.setText(Messages.Core_Article);
+		tvcMediorderArticle.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(e -> ((IOrderEntry) e).getArticle().getLabel()));
+		tblclmntvcMedicationArticle.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				medicationHistoryComparator.setColumn(0);
+				refresh();
+			}
+		});
+
+		TableViewerColumn tvcMediorderAmount = new TableViewerColumn(tableViewerHistory, SWT.NONE);
+		tvcMediorderAmount.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(e -> (String.valueOf(((IOrderEntry) e).getAmount()))));
+		TableColumn tblclmntvcMediorderAmount = tvcMediorderAmount.getColumn();
+		tcLayout_cHistory.setColumnData(tblclmntvcMediorderAmount, new ColumnPixelData(100, true, true));
+		tblclmntvcMediorderAmount.setText(Messages.Core_Count);
+		tblclmntvcMediorderAmount.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				medicationHistoryComparator.setColumn(1);
+				refresh();
+			}
+		});
 	}
 
 	/**
@@ -684,6 +804,49 @@ public class MediorderPart implements IRefreshablePart {
 		}
 	}
 
+	public class MedicationHistoryComparator extends ViewerComparator {
+		private int propertyIndex;
+		private int direction;
+
+		public MedicationHistoryComparator() {
+			this.propertyIndex = 0;
+			this.direction = -1;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				direction *= -1;
+			}
+			this.propertyIndex = column;
+		}
+
+		@Override
+		public int compare(Viewer viewer, Object o1, Object o2) {
+			IOrderEntry orderEntry1 = (IOrderEntry) o1;
+			IOrderEntry orderEntry2 = (IOrderEntry) o2;
+
+			switch (propertyIndex) {
+			case 0:
+				String articleName1 = orderEntry1.getArticle().getName();
+				String articleName2 = orderEntry2.getArticle().getName();
+				return Objects.compare(articleName1, articleName2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
+			case 1:
+				String orderAmount1 = String.valueOf(orderEntry1.getAmount());
+				String orderAmount2 = String.valueOf(orderEntry2.getAmount());
+				return Objects.compare(orderAmount1, orderAmount2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
+			case 2:
+				String orderDate1 = orderEntry1.getOrder().getTimestamp().format(dateFormatter);
+				String orderDate2 = orderEntry2.getOrder().getTimestamp().format(dateFormatter);
+				return Objects.compare(orderDate1, orderDate2, Comparator.nullsFirst(Comparator.naturalOrder()))
+						* direction;
+			}
+
+			return super.compare(viewer, o1, o2);
+		}
+	}
+
 	private void addMedicationOrderEntryToStock(IStock stock, IArticle article) {
 		if (StringUtils.isBlank(article.getGtin())) {
 			// TODO inform user not possible
@@ -745,17 +908,30 @@ public class MediorderPart implements IRefreshablePart {
 		}
 	}
 
-	public void saveFilterStatus() {
-		String filterValue = currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
+	private void setCompositeTitle(Composite composite, String title) {
+		Label titleLabel = new Label(composite, SWT.NONE);
+		titleLabel.setText(title);
+		titleLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-		if (filterValue != null && !filterValue.isEmpty()) {
-			preferences.put(CURRENT_FILTER_VALUE, filterValue);
-			preferences.putBoolean(IS_FILTER_ACTIVE, filterActive);
-			try {
-				preferences.flush();
-			} catch (BackingStoreException e) {
-				LoggerFactory.getLogger(getClass()).error("Error saving filter values ", e);
-			}
+		FontData fontData = titleLabel.getFont().getFontData()[0];
+		Font boldFont = new Font(composite.getDisplay(),
+				new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
+		titleLabel.setFont(boldFont);
+	}
+
+	public void saveFilterStatus() {
+		String filterValue = (currentFilterValue == null || currentFilterValue.isEmpty()) ? ""
+				: currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
+		boolean isFilterActive = filterValue.isEmpty() ? false : filterActive;
+
+		preferences.put(CURRENT_FILTER_VALUE, filterValue);
+		preferences.putBoolean(IS_FILTER_ACTIVE, isFilterActive);
+		preferences.putBoolean(LAST_ACTIVE_TABLEVIEWER, isDetailsViewActive);
+
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			LoggerFactory.getLogger(getClass()).error("Error saving filter values", e);
 		}
 	}
 
@@ -767,6 +943,10 @@ public class MediorderPart implements IRefreshablePart {
 			currentFilterValue = Arrays.stream(filterValue.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
 		}
+
+		stackLayout.topControl = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true) ? cDetails_table
+				: cHistory_table;
+		viewComposite.layout();
 	}
 
 	public void setFilterActive(boolean active) {
