@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.services.OrderService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.services.OrderService">
    <service>
       <provide interface="ch.elexis.core.services.IOrderService"/>
    </service>
-   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
    <implementation class="ch.elexis.core.services.OrderService"/>
 </scr:component>
