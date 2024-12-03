@@ -984,26 +984,26 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	}
 
 	private void checkUserGroups() {
-		List<CheckboxTableViewer> tableViewers = new ArrayList<CheckboxTableViewer>();
-		tableViewers.add(checkboxTableViewerAssociation);
-		tableViewers.add(checkboxTableViewerRoles);
+		List<CheckboxTableViewer> tableViewers = List.of(checkboxTableViewerAssociation, checkboxTableViewerRoles);
+		boolean hasUserGroups = !userGroups.isEmpty();
 
-		for (CheckboxTableViewer tableViewer : tableViewers) {
+		tableViewers.forEach(tableViewer -> {
 			Table table = tableViewer.getTable();
-			if (userGroups.isEmpty()) {
-				setMessage(null, WARNING);
-				table.getParent().setEnabled(true);
-				table.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-				table.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-			} else {
+
+			if (hasUserGroups) {
 				setMessage("Der Benutzer ist in Gruppe(n) "
 						+ userGroups.stream().map(ug -> ug.getGroupname()).collect(Collectors.joining(","))
 						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.", WARNING);
 				table.getParent().setEnabled(false);
 				table.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
 				table.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
+			} else {
+				setMessage(null, WARNING);
+				table.getParent().setEnabled(true);
+				table.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+				table.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 			}
-		}
+		});
 	}
 
 	private void updateRoles() {
