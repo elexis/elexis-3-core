@@ -26,7 +26,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 		IUserServiceTest.class, IMessageServiceTest.class, IVirtualFilesystemServiceTest.class, IXidServiceTest.class,
 		IMedicationServiceTest.class, ITextReplacementServiceTest.class, IEncounterServiceTest.class,
 		IInvoiceServiceTest.class, ICoverageServiceTest.class, IContactServiceTest.class,
-		IDocumentServiceTest.class, IStockServiceTest.class })
+		IDocumentServiceTest.class, IStockServiceTest.class, IOrderServiceTest.class })
 public class AllServiceTests {
 
 	private static IModelService modelService;
