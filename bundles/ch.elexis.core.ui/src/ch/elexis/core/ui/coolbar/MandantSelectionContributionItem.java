@@ -11,6 +11,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.coolbar;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,10 +115,8 @@ public class MandantSelectionContributionItem {
 		}
 		List<String> workingForIds = UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).stream()
 				.map(a -> a.getId()).collect(Collectors.toList());
-		for (int i = 0; i < menuItems.length; i++) {
-			String id = (String) menuItems[i].getData();
-			menuItems[i].setEnabled(workingForIds.contains(id));
-		}
+
+		rebuildMenuItems(workingForIds);
 	}
 
 	public MandantSelectionContributionItem() {
@@ -154,25 +153,12 @@ public class MandantSelectionContributionItem {
 		item = new ToolItem(toolbar, SWT.DROP_DOWN);
 		item.setToolTipText("Aktuell ausgewählter Mandant bzw. Mandantenauswahl");
 
-		menuItems = new MenuItem[mandants.length];
-
-		for (int i = 0; i < mandants.length; i++) {
-			final IMandator m = mandants[i];
-			menuItems[i] = new MenuItem(menu, SWT.RADIO);
-			menuItems[i].setText(m.getLabel());
-			menuItems[i].setImage(getBoxSWTColorImage(UiMandant.getColorForIMandator(m)));
-			menuItems[i].setData(m.getId());
-			menuItems[i].addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					ContextServiceHolder.get().setActiveMandator(m);
-				}
-			});
-			if (ContextServiceHolder.getActiveMandatorOrNull() != null) {
-				IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
-				menuItems[i].setSelection(activeMandator != null && activeMandator.equals(m));
-			}
+		List<MenuItem> menuItemList = new ArrayList<>();
+		for (IMandator m : mandants) {
+			MenuItem item = buildMenuItem(m);
+			menuItemList.add(item);
 		}
+		menuItems = menuItemList.toArray(new MenuItem[0]);
 
 		item.addListener(SWT.Selection, selectionListener);
 
@@ -186,6 +172,52 @@ public class MandantSelectionContributionItem {
 
 		toolbar.pack();
 		return toolbar;
+	}
+
+	private void rebuildMenuItems(List<String> workingForIds) {
+		if (menuItems != null && menuItems.length > 0) {
+			for (int i = 0; i < menuItems.length; i++) {
+				if (menuItems[i] != null) {
+					menuItems[i].dispose();
+				}
+			}
+		}
+		if (menu != null && !menu.isDisposed()) {
+			menu.dispose();
+		}
+
+		menu = new Menu(fParent);
+		List<MenuItem> menuItemList = new ArrayList<>();
+
+		for (IMandator m : mandants) {
+			if (workingForIds.contains(m.getId())) {
+				MenuItem item = buildMenuItem(m);
+				menuItemList.add(item);
+			}
+		}
+		menuItems = menuItemList.toArray(new MenuItem[0]);
+	}
+
+	private MenuItem buildMenuItem(IMandator m) {
+		MenuItem menuItem = new MenuItem(menu, SWT.RADIO);
+		menuItem.setText(m.getLabel());
+		Image img = getBoxSWTColorImage(UiMandant.getColorForIMandator(m));
+		if (img != null && !img.isDisposed()) {
+			menuItem.setImage(img);
+		}
+		menuItem.setData(m.getId());
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ContextServiceHolder.get().setActiveMandator(m);
+			}
+		});
+
+		IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+		if (activeMandator != null) {
+			menuItem.setSelection(activeMandator.equals(m));
+		}
+		return menuItem;
 	}
 
 	private final Listener selectionListener = new Listener() {
