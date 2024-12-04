@@ -3,6 +3,7 @@ package ch.elexis.core.ui.preferences;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -936,15 +937,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 			setErrorMessage(null);
 
-			userGroups = UserServiceHolder.get().getUserGroups(user);
-			if (userGroups.isEmpty()) {
-				setMessage(null, WARNING);
-			} else {
-				setMessage("Der Benutzer ist in Gruppe(n) "
-						+ userGroups.stream().map(ug -> ug.getGroupname()).collect(Collectors.joining(","))
-						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.", WARNING);
-			}
-
 			IContact anw = user.getAssignedContact();
 			wvUserContact.setValue(anw);
 			String text = (anw != null) ? anw.getLabel() : "Nicht gesetzt";
@@ -958,6 +950,9 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			checkboxTableViewerRoles.setCheckedElements(assignedRoles);
 
 			updateAssociations();
+
+			userGroups = UserServiceHolder.get().getUserGroups(user);
+			checkUserGroups();
 
 			if (anw != null) {
 				Optional<IMandator> mandator = CoreModelServiceHolder.get().load(anw.getId(), IMandator.class);
@@ -986,6 +981,29 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			}
 		}
 
+	}
+
+	private void checkUserGroups() {
+		List<CheckboxTableViewer> tableViewers = List.of(checkboxTableViewerAssociation, checkboxTableViewerRoles);
+		boolean hasUserGroups = !userGroups.isEmpty();
+
+		tableViewers.forEach(tableViewer -> {
+			Table table = tableViewer.getTable();
+
+			if (hasUserGroups) {
+				setMessage("Der Benutzer ist in Gruppe(n) "
+						+ userGroups.stream().map(ug -> ug.getGroupname()).collect(Collectors.joining(","))
+						+ ". Es werden die Mandanten und Rollen der Gruppe verwendet.", WARNING);
+				table.getParent().setEnabled(false);
+				table.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_TEXT_DISABLED_BACKGROUND));
+				table.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
+			} else {
+				setMessage(null, WARNING);
+				table.getParent().setEnabled(true);
+				table.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+				table.setForeground(table.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+			}
+		});
 	}
 
 	private void updateRoles() {
