@@ -16,17 +16,20 @@
         <children xsi:type="menu:HandledToolItem" xmi:id="_Gj6eMK_KEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.refresh" label="" iconURI="icon://IMG_REFRESH" tooltip="" command="_hobvwIGhEeuh_oRSm2ExFw"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_NOLH4LFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.createpatientorder" label="%create_patient_order" iconURI="icon://IMG_PERSPECTIVE_ORDERS" tooltip="%create_patient_order_tooltip" command="_TiC5sLFYEe6KJvcCRQJoEQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_LV0ekIoyEe-ZpOLCafes2w" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.filter" label="%filter_status" iconURI="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/filter_ps.png" type="Check" command="_GvjooIozEe-ZpOLCafes2w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_-9q-IKwHEe-AXaYRU8EY8w" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.medikamentenverlauf" label="%mediorder_history_part" iconURI="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/book_open.png" tooltip="%mediorder_history_part_tooltip" type="Check" command="_C2kiUKwIEe-AXaYRU8EY8w"/>
       </toolbar>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Si4A0A-EEeqCRvaXdJ-ZfQ" featurename="commands" parentElementId="xpath:/">
-    <elements xsi:type="commands:Command" xmi:id="_TiC5sLFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.command.createPatientOrder" commandName="%create_patient_order" commandIconURI=""/>
+    <elements xsi:type="commands:Command" xmi:id="_TiC5sLFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.command.createPatientOrder" commandName="%create_patient_order"/>
     <elements xsi:type="commands:Command" xmi:id="_GvjooIozEe-ZpOLCafes2w" elementId="ch.elexis.core.ui.mediorder.command.filter" commandName="%filter_status">
       <persistedState key="State" value="org.eclipse.ui.commands.toggleState"/>
     </elements>
+    <elements xsi:type="commands:Command" xmi:id="_C2kiUKwIEe-AXaYRU8EY8w" elementId="ch.elexis.core.ui.mediorder.command.patientorderhistory" commandName="patient order history"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_Y0r4ALFYEe6KJvcCRQJoEQ" featurename="handlers" parentElementId="xpath:/">
     <elements xsi:type="commands:Handler" xmi:id="_bZ0uQLFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.handler.createPatientOrder" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.CreatePatientOrderHandler" command="_TiC5sLFYEe6KJvcCRQJoEQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_NUtXsIozEe-ZpOLCafes2w" elementId="ch.elexis.core.ui.mediorder.handler.filter" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.FilterByOrderStatusHandler" command="_GvjooIozEe-ZpOLCafes2w"/>
+    <elements xsi:type="commands:Handler" xmi:id="_I2SCAKwIEe-AXaYRU8EY8w" elementId="ch.elexis.core.ui.mediorder.handler.patientorderhistory" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.ShowPatientOrderHistoryHandler" command="_C2kiUKwIEe-AXaYRU8EY8w"/>
   </fragments>
 </fragment:ModelFragments>
