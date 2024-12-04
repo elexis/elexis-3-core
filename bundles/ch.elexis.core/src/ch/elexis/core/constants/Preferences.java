@@ -144,6 +144,7 @@ public class Preferences {
 	public static final String USR_REMINDER_SELECTED_RESPONSIBLES_DEFAULT = "reminder/defaultSelectedResponsibles"; //$NON-NLS-1$
 	public static final String USR_REMINDER_DEFAULT_RESPONSIBLE_SELF = "reminder/defaultResponsibleSelf"; //$NON-NLS-1$
 	public static final String USR_REMINDER_VIEWER_SELECTION = "reminder/viewerSelection"; //$NON-NLS-1$
+	public static final String USR_REMINDER_USE_GLOBAL_FILTERS = "reminder/useGlobalFilters"; //$NON-NLS-1$
 	public static final String USR_SORT_BY_DUE_DATE = "reminder/sortByDueDate"; //$NON-NLS-1$
 	public static final String USR_MFU_LIST_SIZE = "mfulist/size"; //$NON-NLS-1$
 	public static final String USR_PLAF = "anwender/plaf"; //$NON-NLS-1$
