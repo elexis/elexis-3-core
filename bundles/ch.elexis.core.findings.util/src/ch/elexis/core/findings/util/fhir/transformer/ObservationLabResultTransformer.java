@@ -30,33 +30,36 @@ public class ObservationLabResultTransformer implements IFhirTransformer<Observa
 
 	@Override
 	public Optional<Observation> getFhirObject(ILabResult localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		Observation observation = new Observation();
+		if (localObject.getItem() != null) {
+			Observation observation = new Observation();
 
-		observation.setId(new IdDt("Observation", localObject.getId()));
-		observation.addIdentifier(getElexisObjectIdentifier(localObject));
+			observation.setId(new IdDt("Observation", localObject.getId()));
+			observation.addIdentifier(getElexisObjectIdentifier(localObject));
 
-		CodeableConcept observationCode = new CodeableConcept();
-		observationCode.setCoding(Collections.singletonList(new Coding(ObservationCategory.LABORATORY.getSystem(),
-				ObservationCategory.LABORATORY.toCode(), ObservationCategory.LABORATORY.getDisplay())));
-		observation.addCategory(observationCode);
+			CodeableConcept observationCode = new CodeableConcept();
+			observationCode.setCoding(Collections.singletonList(new Coding(ObservationCategory.LABORATORY.getSystem(),
+					ObservationCategory.LABORATORY.toCode(), ObservationCategory.LABORATORY.getDisplay())));
+			observation.addCategory(observationCode);
 
-		observation.setStatus(labResultHelper.getStatus(localObject));
+			observation.setStatus(labResultHelper.getStatus(localObject));
 
-		observation.setSubject(labResultHelper.getReference("Patient", localObject.getPatient()));
+			observation.setSubject(labResultHelper.getReference("Patient", localObject.getPatient()));
 
-		observation.setEffective(labResultHelper.getEffectiveDateTime(localObject));
+			observation.setEffective(labResultHelper.getEffectiveDateTime(localObject));
 
-		observation.setValue(labResultHelper.getResult(localObject));
+			observation.setValue(labResultHelper.getResult(localObject));
 
-		observation.setReferenceRange(labResultHelper.getReferenceComponents(localObject));
+			observation.setReferenceRange(labResultHelper.getReferenceComponents(localObject));
 
-		observation.setInterpretation(labResultHelper.getInterpretationConcept(localObject));
+			observation.setInterpretation(labResultHelper.getInterpretationConcept(localObject));
 
-		observation.setCode(labResultHelper.getCodeableConcept(localObject));
+			observation.setCode(labResultHelper.getCodeableConcept(localObject));
 
-		observation.setNote(labResultHelper.getNote(localObject));
+			observation.setNote(labResultHelper.getNote(localObject));
 
-		return Optional.of(observation);
+			return Optional.of(observation);
+		}
+		return Optional.empty();
 	}
 
 	@Override
