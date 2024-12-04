@@ -182,7 +182,7 @@ public class MandantSelectionContributionItem {
 				}
 			}
 		}
-		if (menu != null && menu.isDisposed()) {
+		if (menu != null && !menu.isDisposed()) {
 			menu.dispose();
 		}
 
@@ -215,7 +215,7 @@ public class MandantSelectionContributionItem {
 
 		IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
 		if (activeMandator != null) {
-			menuItem.setSelection(activeMandator != null && activeMandator.equals(m));
+			menuItem.setSelection(activeMandator.equals(m));
 		}
 		return menuItem;
 	}
