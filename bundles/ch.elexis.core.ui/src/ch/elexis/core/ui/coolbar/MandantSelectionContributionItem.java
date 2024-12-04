@@ -67,7 +67,7 @@ public class MandantSelectionContributionItem {
 
 	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
-		if (fParent != null && !fParent.isDisposed()) {
+		if (fParent != null && !fParent.isDisposed() && mandator != null) {
 			CoreUiUtil.runAsyncIfActive(() -> {
 				CoreModelServiceHolder.get().load(mandator.getId(), IMandator.class).ifPresent(m -> {
 					if (item != null) {
