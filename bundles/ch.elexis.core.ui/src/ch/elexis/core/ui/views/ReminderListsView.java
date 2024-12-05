@@ -2,6 +2,7 @@ package ch.elexis.core.ui.views;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -77,6 +79,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
@@ -663,17 +666,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(reloadAction, newReminderAction, toggleGlobalFiltersAction, toggleAutoSelectPatientAction);
 
-		MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
-		FilterTimeAction action30 = new FilterTimeAction(30);
-		FilterTimeAction action60 = new FilterTimeAction(60);
-		FilterTimeAction action90 = new FilterTimeAction(90);
-		action30.setOthers(Arrays.asList(action60, action90));
-		action60.setOthers(Arrays.asList(action30, action90));
-		action90.setOthers(Arrays.asList(action30, action60));
-		timeFilterSubMenu.add(action30);
-		timeFilterSubMenu.add(action60);
-		timeFilterSubMenu.add(action90);
-
 		HashMap<Table, String> map = new HashMap<>();
 		map.put(currentPatientViewer.getTable(), CURRENTPATIENT);
 		map.put(generalPatientViewer.getTable(), ALLPATIENTS);
@@ -688,6 +680,20 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			Table table = entry.getKey();
 
 			createFilterActions(id);
+
+			MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
+			CustomTimeAction custom = new CustomTimeAction("Benutzerdefiniert", id);
+			FilterTimeAction action30 = new FilterTimeAction(30);
+			FilterTimeAction action60 = new FilterTimeAction(60);
+			FilterTimeAction action90 = new FilterTimeAction(90);
+			action30.setOthers(Arrays.asList(action60, action90, custom));
+			action60.setOthers(Arrays.asList(action30, action90, custom));
+			action90.setOthers(Arrays.asList(action30, action60, custom));
+			custom.setOthers(Arrays.asList(action30, action60, action90));
+			timeFilterSubMenu.add(action30);
+			timeFilterSubMenu.add(action60);
+			timeFilterSubMenu.add(action90);
+			timeFilterSubMenu.add(custom);
 
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new ReminderStatusSubMenu());
@@ -807,7 +813,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		viewParent.layout(true, true);
 	}
 
-	// TODO :
 	private void addDragSupport(TableViewer viewer) {
 		DragSource dragSource = new DragSource(viewer.getTable(), DND.DROP_MOVE);
 		dragSource.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
@@ -820,7 +825,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
-	// TODO :
 	private void addDropSupport(TableViewer viewer, TableType tableType) {
 		DropTarget dropTarget = new DropTarget(viewer.getTable(), DND.DROP_MOVE);
 		dropTarget.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
@@ -844,7 +848,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
-	// TODO :
 	private void updateReminderForTarget(IReminder reminder, TableType type, TableViewer viewer, Patient patient) {
 		switch (type) {
 		case CURRENT_PATIENT:
@@ -931,6 +934,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
 			patientRefresh();
+			generalRefresh();
 			myRemindersRefresh();
 			groupRemindersRefresh();
 			int width = viewersScrolledComposite.getClientArea().width;
@@ -946,6 +950,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 		} else {
 			currentPatientViewer.setInput(Collections.emptyList());
+		}
+	}
+
+	private void generalRefresh() {
+		if (generalPatientViewer.getTable().isVisible()) {
+			refreshGeneralPatientInput(ALLPATIENTS);
 		}
 	}
 
@@ -1123,8 +1133,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + id, false)); //$NON-NLS-1$
 			action.showAssignedToMeAction
 					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + id, false)); //$NON-NLS-1$
+			filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, -1);
 		}
-//
+
 //		// get state from user's configuration
 //		showOthersRemindersAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
 //
@@ -1613,7 +1624,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private class FilterTimeAction extends Action {
 
-		private List<FilterTimeAction> others;
+		private List<Action> others;
 		private int days;
 
 		public FilterTimeAction(int days) {
@@ -1624,7 +1635,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 		}
 
-		public void setOthers(List<FilterTimeAction> list) {
+		public void setOthers(List<Action> list) {
 			this.others = list;
 		}
 
@@ -1643,10 +1654,94 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 
 			if (others != null) {
-				for (FilterTimeAction other : others) {
+				for (Action other : others) {
 					other.setChecked(false);
 				}
 			}
+		}
+	}
+
+	private class CustomTimeAction extends Action {
+
+		private List<Action> others;
+		private String id;
+
+		public CustomTimeAction(String text, String id) {
+			super(text, Action.AS_CHECK_BOX);
+			this.id = id;
+			List<Integer> list = List.of(-1, 30, 60, 90);
+			setChecked(!list.contains(filterDueDateDays));
+		}
+
+		public void setOthers(List<Action> list) {
+			this.others = list;
+		}
+
+		@Override
+		public void run() {
+			if (isChecked()) {
+				CustomTimePopupDialog dialog = new CustomTimePopupDialog();
+				if (dialog.open() == Dialog.OK) {
+					int days = dialog.getSelectedDays();
+					filterDueDateDays = days;
+					if (useGlobalFilters) {
+						ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, //$NON-NLS-1$
+								days);
+					} else {
+						ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, days); //$NON-NLS-1$
+					}
+				}
+			} else {
+				filterDueDateDays = -1;
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, -1); //$NON-NLS-1$
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, -1); //$NON-NLS-1$
+				}
+			}
+			clearSelection();
+			refresh();
+
+			if (others != null) {
+				for (Action other : others) {
+					other.setChecked(false);
+				}
+			}
+		}
+	}
+
+	private class CustomTimePopupDialog extends Dialog {
+
+		private int selectedDays;
+
+		public CustomTimePopupDialog() {
+			super(getViewSite().getShell());
+		}
+
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			Composite area = (Composite) super.createDialogArea(parent);
+			area.setLayout(new GridLayout(1, false));
+
+			DateTime calendar = new DateTime(area, SWT.CALENDAR | SWT.BORDER);
+			calendar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			calendar.addListener(SWT.Selection, e -> {
+				LocalDate today = LocalDate.now();
+				LocalDate selectedDate = LocalDate.of(calendar.getYear(), calendar.getMonth() + 1, calendar.getDay());
+				selectedDays = (int) ChronoUnit.DAYS.between(today, selectedDate);
+			});
+
+			return area;
+		}
+
+		@Override
+		protected void createButtonsForButtonBar(Composite parent) {
+			createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+			createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		}
+
+		public int getSelectedDays() {
+			return selectedDays;
 		}
 	}
 
