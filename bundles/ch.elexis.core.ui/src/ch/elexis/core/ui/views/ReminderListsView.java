@@ -33,6 +33,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -50,6 +51,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -608,12 +619,16 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		currentPatientHeader.setText("aktueller Patient");
 		currentPatientViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 		setupViewer(currentPatientViewer, 3);
+		addDragSupport(currentPatientViewer);
+		addDropSupport(currentPatientViewer, TableType.CURRENT_PATIENT);
 
 		generalPatientHeader = new HeaderComposite(viewersParent, SWT.NONE);
 		generalPatientHeader.setTextFont(boldFont);
 		generalPatientHeader.setText("alle Patienten");
 		generalPatientViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 		setupViewer(generalPatientViewer, 4);
+		addDragSupport(generalPatientViewer);
+		addDropSupport(generalPatientViewer, TableType.GENERAL_PATIENT);
 		((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint = 300;
 
 		generalHeader = new HeaderComposite(viewersParent, SWT.NONE);
@@ -621,12 +636,16 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		generalHeader.setText("allgemein");
 		generalViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 		setupViewer(generalViewer, 3);
+		addDragSupport(generalViewer);
+		addDropSupport(generalViewer, TableType.GENERAL);
 
 		myHeader = new HeaderComposite(viewersParent, SWT.NONE);
 		myHeader.setTextFont(boldFont);
 		myHeader.setText("meine Pendenzen");
 		myViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 		setupViewer(myViewer, 3);
+		addDragSupport(myViewer);
+		addDropSupport(myViewer, TableType.MYREMINDERS);
 
 		for (IUserGroup group : userGroups) {
 			HeaderComposite groupHeader = new HeaderComposite(viewersParent, SWT.NONE);
@@ -634,6 +653,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			groupHeader.setText(group.getId() + "-Pendenzen");
 			TableViewer groupViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
 			setupViewer(groupViewer, 3);
+			addDragSupport(groupViewer);
+			addDropSupport(groupViewer, TableType.GROUP);
 			usergroupComponents.add(new GroupComponent(group.getId(), groupHeader, groupViewer));
 		}
 
@@ -749,6 +770,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		createDescriptionColumn(tableViewer, 400, columnIndex);
 		TableViewerResizer.enableResizing(tableViewer);
 		addModifiedScrollListener(tableViewer.getTable());
+		tableViewer.getTable().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				tableViewer.getTable().deselectAll();
+			}
+		});
 	}
 
 	private void updateViewerSelection(StructuredSelection selection) {
@@ -795,6 +822,93 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		int width = viewersScrolledComposite.getClientArea().width;
 		viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
 		viewParent.layout(true, true);
+	}
+
+	// TODO :
+	private void addDragSupport(TableViewer viewer) {
+		DragSource dragSource = new DragSource(viewer.getTable(), DND.DROP_MOVE);
+		dragSource.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
+
+		dragSource.addDragListener(new DragSourceAdapter() {
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				LocalSelectionTransfer.getTransfer().setSelection(viewer.getStructuredSelection());
+			}
+		});
+	}
+
+	// TODO :
+	private void addDropSupport(TableViewer viewer, TableType tableType) {
+		DropTarget dropTarget = new DropTarget(viewer.getTable(), DND.DROP_MOVE);
+		dropTarget.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
+
+		dropTarget.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void drop(DropTargetEvent event) {
+				ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+				if (selection instanceof IStructuredSelection) {
+					for (Object element : ((IStructuredSelection) selection).toList()) {
+						if (element instanceof IReminder) {
+							IReminder reminder = (IReminder) element;
+							updateReminderForTarget(reminder, tableType, viewer, actPatient);
+							CoreModelServiceHolder.get().save(reminder);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+	}
+
+	// TODO :
+	private void updateReminderForTarget(IReminder reminder, TableType type, TableViewer viewer, Patient patient) {
+		switch (type) {
+		case CURRENT_PATIENT:
+			// do nothing, it should not be possible to change the patient of a reminder.
+			break;
+		case GENERAL_PATIENT:
+			// dont remove patient
+			break;
+		case GENERAL:
+			// wtf is general
+			break;
+		case GROUP:
+			IUserGroup targetGroup = findGroupForViewer(viewer);
+			if (targetGroup != null) {
+				List<IContact> currentResponsibles = reminder.getResponsible();
+				if (!currentResponsibles.isEmpty()) {
+					for (IContact contact : currentResponsibles) {
+						reminder.removeResponsible(contact);
+					}
+				}
+				for (IUser user : targetGroup.getUsers()) {
+					reminder.addResponsible(user.getAssignedContact());
+				}
+			}
+			break;
+		case MYREMINDERS:
+			List<IContact> currentResponsibles = reminder.getResponsible();
+			if (!currentResponsibles.isEmpty()) {
+				for (IContact contact : currentResponsibles) {
+					reminder.removeResponsible(contact);
+				}
+			}
+			reminder.addResponsible(ContextServiceHolder.getActiveMandatorOrNull());
+			break;
+		default:
+			break;
+		}
+	}
+
+	private IUserGroup findGroupForViewer(TableViewer viewer) {
+		return usergroupComponents.stream().filter(component -> component.viewer().equals(viewer))
+				.map(component -> getUserGroupById(component.id()))
+				.findFirst().orElse(null);
+	}
+
+	private IUserGroup getUserGroupById(String id) {
+		return userGroups.stream().filter(group -> group.getId().equals(id)).findFirst().orElse(null);
 	}
 
 	private void showControl(Control control) {
@@ -1010,7 +1124,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshGroupRemindersInput(GroupComponent group) {
-		// TODO
 		if (group.viewer().getTable().isVisible()) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 					.supplyAsync(new GroupRemindersSupplier(group.id())
@@ -2053,7 +2166,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private boolean showOnlyDue;
 		private boolean popupOnLogin;
 		private boolean popupOnPatientSelection;
-		//TODO: is this needed?
 		private boolean assignedToMe;
 		private boolean showNotYetDueReminders;
 		@Override
@@ -2147,7 +2259,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			return this;
 		}
 
-		//TODO: is this needed?
 		public MyRemindersSupplier showAssignedToMeAction(boolean value) {
 			this.assignedToMe = value;
 			return this;
@@ -2282,7 +2393,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			return this;
 		}
 
-		// TODO: is this needed?
 		public GroupRemindersSupplier showAssignedToMeAction(boolean value) {
 			this.assignedToMe = value;
 			return this;
@@ -2384,6 +2494,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			int tableHeight = table.getBounds().height;
 			return y >= tableHeight - tolerance && y <= tableHeight + tolerance;
 		}
+	}
+
+	private enum TableType {
+		CURRENT_PATIENT, GENERAL_PATIENT, GENERAL, MYREMINDERS, GROUP
 	}
 
 	@Override
