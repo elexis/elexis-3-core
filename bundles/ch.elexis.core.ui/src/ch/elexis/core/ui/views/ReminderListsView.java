@@ -138,7 +138,6 @@ import ch.elexis.data.Reminder;
 public class ReminderListsView extends ViewPart implements HeartListener, IRefreshable, ISelectionProvider {
 	public static final String ID = "ch.elexis.core.ui.views.reminderlistsview"; //$NON-NLS-1$
 
-	private final static String GENERAL = "general"; //$NON-NLS-1$
 	private final static String CURRENTPATIENT = "currentpatient"; //$NON-NLS-1$
 	private final static String ALLPATIENTS = "allpatients"; //$NON-NLS-1$
 	private final static String MYREMINDERS = "myreminders"; //$NON-NLS-1$
@@ -166,8 +165,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private TableViewer currentPatientViewer;
 	private HeaderComposite generalPatientHeader;
 	private TableViewer generalPatientViewer;
-	private HeaderComposite generalHeader;
-	private TableViewer generalViewer;
 	private HeaderComposite myHeader;
 	private TableViewer myViewer;
 
@@ -631,14 +628,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		addDropSupport(generalPatientViewer, TableType.GENERAL_PATIENT);
 		((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint = 300;
 
-		generalHeader = new HeaderComposite(viewersParent, SWT.NONE);
-		generalHeader.setTextFont(boldFont);
-		generalHeader.setText("allgemein");
-		generalViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
-		setupViewer(generalViewer, 3);
-		addDragSupport(generalViewer);
-		addDropSupport(generalViewer, TableType.GENERAL);
-
 		myHeader = new HeaderComposite(viewersParent, SWT.NONE);
 		myHeader.setTextFont(boldFont);
 		myHeader.setText("meine Pendenzen");
@@ -688,7 +677,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		HashMap<Table, String> map = new HashMap<>();
 		map.put(currentPatientViewer.getTable(), CURRENTPATIENT);
 		map.put(generalPatientViewer.getTable(), ALLPATIENTS);
-		map.put(generalViewer.getTable(), GENERAL);
 		map.put(myViewer.getTable(), MYREMINDERS);
 
 		for (GroupComponent group : usergroupComponents) {
@@ -784,8 +772,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		hideControl(currentPatientViewer.getTable());
 		hideControl(generalPatientHeader);
 		hideControl(generalPatientViewer.getTable());
-		hideControl(generalHeader);
-		hideControl(generalViewer.getTable());
 		hideControl(myHeader);
 		hideControl(myViewer.getTable());
 		for (GroupComponent group : usergroupComponents) {
@@ -801,9 +787,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					} else if (SELECTIONCOMP_GENERALPATIENT_ID.equals(selected)) {
 						showControl(generalPatientHeader);
 						showControl(generalPatientViewer.getTable());
-					} else if (SELECTIONCOMP_GENERAL_ID.equals(selected)) {
-						showControl(generalHeader);
-						showControl(generalViewer.getTable());
 					} else if (SELECTIONCOMP_MYREMINDERS_ID.equals(selected)) {
 						showControl(myHeader);
 						showControl(myViewer.getTable());
@@ -870,9 +853,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		case GENERAL_PATIENT:
 			// dont remove patient
 			break;
-		case GENERAL:
-			// wtf is general
-			break;
 		case GROUP:
 			IUserGroup targetGroup = findGroupForViewer(viewer);
 			if (targetGroup != null) {
@@ -931,9 +911,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshKeepLabels() {
-		if (generalViewer.getTable().isVisible()) {
-			generalViewer.refresh(false);
-		}
 		if (generalPatientViewer.getTable().isVisible()) {
 			generalPatientViewer.refresh(false);
 		}
@@ -954,7 +931,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
 			patientRefresh();
-			generalRefresh();
 			myRemindersRefresh();
 			groupRemindersRefresh();
 			int width = viewersScrolledComposite.getClientArea().width;
@@ -970,15 +946,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 		} else {
 			currentPatientViewer.setInput(Collections.emptyList());
-		}
-	}
-
-	private void generalRefresh() {
-		if (generalViewer.getTable().isVisible()) {
-			refreshGeneralInput(GENERAL);
-		}
-		if (generalPatientViewer.getTable().isVisible()) {
-			refreshGeneralPatientInput(ALLPATIENTS);
 		}
 	}
 
@@ -1054,36 +1021,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 						generalPatientViewer.setInput(input);
 						viewerSelectionComposite.setCount(SELECTIONCOMP_GENERALPATIENT_ID,
 								generalPatientViewer.getTable().getItemCount());
-					} catch (InterruptedException | ExecutionException e) {
-						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
-					}
-
-				}
-			});
-		});
-	}
-
-	private void refreshGeneralInput(String config) {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralSupplier()
-				.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-						&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-				.filterDue(filterDueDateDays != -1)
-				.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
-				.showNotYetDueReminders(filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
-				.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
-				.popupOnLogin(filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
-				.popupOnPatientSelectionToggleAction(
-						filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
-				.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
-		currentLoader.thenRunAsync(() -> {
-			Display.getDefault().asyncExec(() -> {
-				if (generalViewer != null && !generalViewer.getTable().isDisposed()) {
-					List<IReminder> input;
-					try {
-						input = currentLoader.get();
-						generalViewer.setInput(input);
-						viewerSelectionComposite.setCount(SELECTIONCOMP_GENERAL_ID,
-								generalViewer.getTable().getItemCount());
 					} catch (InterruptedException | ExecutionException e) {
 						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 					}
@@ -1499,7 +1436,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private static String SELECTIONCOMP_CURRENTPATIENT_ID = "reminderlistsview.selection.currentpatient"; //$NON-NLS-1$
 	private static String SELECTIONCOMP_GENERALPATIENT_ID = "reminderlistsview.selection.generalpatient"; //$NON-NLS-1$
-	private static String SELECTIONCOMP_GENERAL_ID = "reminderlistsview.selection.general"; //$NON-NLS-1$
 	private static String SELECTIONCOMP_MYREMINDERS_ID = "reminderlistsview.selection.myreminders"; //$NON-NLS-1$
 	private static String SELECTIONCOMP_GROUPREMINDERS_PREFIX = "reminderlistsview.selection.groupreminders."; //$NON-NLS-1$
 
@@ -1562,25 +1498,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				@Override
 				public String getId() {
 					return SELECTIONCOMP_GENERALPATIENT_ID;
-				}
-
-				@Override
-				public void run() {
-					if (currentSelection.contains(this)) {
-						currentSelection.remove(this);
-					} else {
-						currentSelection.add(this);
-					}
-					fireSelectionChanged();
-					manager.update(true);
-					saveSelection();
-				}
-			});
-			manager.add(new Action("allgemein", Action.AS_CHECK_BOX) {
-
-				@Override
-				public String getId() {
-					return SELECTIONCOMP_GENERAL_ID;
 				}
 
 				@Override
@@ -2048,116 +1965,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
-	private class GeneralSupplier implements Supplier<List<IReminder>> {
-
-		private boolean showAll;
-		private boolean filterDue;
-		private boolean showSelfCreated;
-		private boolean showOnlyDue;
-		private boolean popupOnLogin;
-		private boolean popupOnPatientSelection;
-		private boolean assignedToMe;
-		private boolean showNotYetDueReminders;
-		@Override
-		public List<IReminder> get() {
-			IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-			query.andFeatureCompare(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS,
-					ModelPackage.Literals.IREMINDER__CONTACT);
-			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-
-			if (showOnlyDue) {
-				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
-			}
-			if (showNotYetDueReminders) {
-				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
-			}
-
-			if (popupOnLogin || popupOnPatientSelection) {
-				query.startGroup();
-
-				if (popupOnLogin) {
-					query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
-							Visibility.POPUP_ON_LOGIN);
-				}
-
-				if (popupOnPatientSelection) {
-					if (popupOnLogin) {
-						query.or(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
-								Visibility.POPUP_ON_PATIENT_SELECTION);
-					} else {
-						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
-								Visibility.POPUP_ON_PATIENT_SELECTION);
-					}
-				}
-
-				query.andJoinGroups();
-			}
-
-			if (!showAll) {
-				if (showSelfCreated) {
-					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-					});
-				}
-				if (assignedToMe) {
-					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						ISubQuery<IReminderResponsibleLink> subQuery = query
-								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
-						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-						subQuery.and("responsible", COMPARATOR.EQUALS, m);
-						query.exists(subQuery);
-					});
-				}
-			}
-
-			if (filterDue) {
-				applyDueDateFilter(query, false);
-			}
-
-			return query.execute();
-		}
-
-		public GeneralSupplier showAll(boolean value) {
-			this.showAll = value;
-			return this;
-		}
-
-		public GeneralSupplier filterDue(boolean value) {
-			this.filterDue = value;
-			return this;
-		}
-
-		public GeneralSupplier showSelfCreated(boolean value) {
-			this.showSelfCreated = value;
-			return this;
-		}
-
-		public GeneralSupplier showOnlyDue(boolean showOnlyDueReminders) {
-			this.showOnlyDue = showOnlyDueReminders;
-			return this;
-		}
-
-		public GeneralSupplier popupOnLogin(boolean value) {
-			this.popupOnLogin = value;
-			return this;
-		}
-
-		public GeneralSupplier popupOnPatientSelectionToggleAction(boolean value) {
-			this.popupOnPatientSelection = value;
-			return this;
-		}
-
-		public GeneralSupplier showAssignedToMeAction(boolean value) {
-			this.assignedToMe = value;
-			return this;
-		}
-
-		public GeneralSupplier showNotYetDueReminders(boolean value) {
-			this.showNotYetDueReminders = value;
-			return this;
-		}
-	}
-	
 	private class MyRemindersSupplier implements Supplier<List<IReminder>> {
 
 		private boolean showAll;
@@ -2497,7 +2304,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private enum TableType {
-		CURRENT_PATIENT, GENERAL_PATIENT, GENERAL, MYREMINDERS, GROUP
+		CURRENT_PATIENT, GENERAL_PATIENT, MYREMINDERS, GROUP
 	}
 
 	@Override
@@ -2545,7 +2352,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		StructuredSelection clear = new StructuredSelection();
 		currentPatientViewer.setSelection(clear);
 		generalPatientViewer.setSelection(clear);
-		generalViewer.setSelection(clear);
 		myViewer.setSelection(clear);
 		for (GroupComponent group : usergroupComponents) {
 			group.viewer().setSelection(clear);
