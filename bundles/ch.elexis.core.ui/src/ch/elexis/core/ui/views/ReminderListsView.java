@@ -60,6 +60,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -67,8 +68,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.part.ViewPart;
@@ -255,6 +258,14 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	};
 
+	/**
+	 * <p>
+	 * Create the filter actions for the contextmenu on the composites.
+	 * </p>
+	 * 
+	 * @param config identification. used to save the config to the database with
+	 *               the String. example: 'currentpatient', 'allpatients'
+	 */
 	private void createFilterActions(String config) {
 
 		deleteReminderAction = new Action(Messages.Core_Delete) {
@@ -693,6 +704,34 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 
+	/**
+	 * <p>
+	 * Adds a scroll listener which only scrolls through the table if the mouse is
+	 * hovered over a {@link TableItem}.
+	 * </p>
+	 * <p>
+	 * If the mouse is not hovered over the {@link TableItem}, then it will not
+	 * scroll through the table but instead the entire parent
+	 * {@link ScrolledComposite}.
+	 * </p>
+	 * 
+	 * @param tableViewer viewer to add the listener to.
+	 */
+	private void addModifiedScrollListener(Table table) {
+		table.addListener(SWT.MouseWheel, e -> {
+			Point mouseLocation = table.toControl(Display.getCurrent().getCursorLocation());
+			if (table.getItem(mouseLocation) == null) {
+				e.doit = false;
+				ScrollBar verticalBar = viewersScrolledComposite.getVerticalBar();
+				if (verticalBar != null && verticalBar.isEnabled()) {
+					int newSelection = verticalBar.getSelection() - e.count * verticalBar.getIncrement();
+					verticalBar.setSelection(newSelection);
+					viewersScrolledComposite.setOrigin(viewersScrolledComposite.getOrigin().x, newSelection);
+				}
+			}
+		});
+	}
+
 	private void setupViewer(TableViewer tableViewer, int columnIndex) {
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -709,6 +748,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		createPatientColumn(tableViewer, 150, 3);
 		createDescriptionColumn(tableViewer, 400, columnIndex);
 		TableViewerResizer.enableResizing(tableViewer);
+		addModifiedScrollListener(tableViewer.getTable());
 	}
 
 	private void updateViewerSelection(StructuredSelection selection) {
