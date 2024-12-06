@@ -24,7 +24,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
  *
  * @since 3.8 extracted from CoreOperationAdvisor
  */
-@Component(property = "id=login.envvars")
+@Component(property = "id=login.envvars", immediate = true)
 public class EnvVarsLoginContributor implements ILoginContributor {
 
 	private Optional<IUser> dbUser;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.services.internal.EnvVarsLoginContributor">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="ch.elexis.core.services.internal.EnvVarsLoginContributor">
    <property name="id" value="login.envvars"/>
    <service>
       <provide interface="ch.elexis.core.services.ILoginContributor"/>
