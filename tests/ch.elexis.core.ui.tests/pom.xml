@@ -188,7 +188,7 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <useUIHarness>true</useUIHarness>
-          <useUIThread>true</useUIThread>
+          <useUIThread>false</useUIThread>
           <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.core.ui.tests.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
@@ -1043,6 +1043,16 @@
             </bundle>
             <bundle>
               <id>org.eclipse.core.runtime</id>
+              <level>4</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>ch.elexis.core.services</id>
+              <level>4</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>ch.elexis.core.ui</id>
               <level>4</level>
               <autoStart>true</autoStart>
             </bundle>
