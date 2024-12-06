@@ -11,7 +11,7 @@ public class CoreOperationAdvisorHolder {
 
 	public static ICoreOperationAdvisor get() {
 		if (coreOperationAdvisor == null) {
-			coreOperationAdvisor = OsgiServiceUtil.getService(ICoreOperationAdvisor.class).orElseThrow();
+			coreOperationAdvisor = OsgiServiceUtil.getServiceWait(ICoreOperationAdvisor.class, 1000).orElseThrow();
 		}
 		return coreOperationAdvisor;
 	}
