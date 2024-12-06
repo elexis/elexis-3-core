@@ -26,42 +26,22 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.logging.default_configuration</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>ch.elexis.core.ui.tests</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.jpa.test</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>ch.medelexis.medication.ui</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>info.elexis.server.core.logging</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>ch.elexis.core.jcifs.test</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>ch.rgw.utility.tests</id>
+                <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.test.logging</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.medelexis.medication.ui</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -161,6 +141,11 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>ch.elexis.core.logback.rocketchat</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>org.eclipse.ui.workbench.nl_it</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -205,8 +190,8 @@
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true</argLine>
           <dependencies>
             <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>ch.elexis.core.ui</artifactId>
+              <type>eclipse-feature</type>
+              <artifactId>ch.elexis.core.ui.feature</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -437,11 +422,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.observable</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>ch.elexis.core.logback.rocketchat</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -902,6 +882,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>com.ibm.icu</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>ch.elexis.core.logback.rocketchat</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
