@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="ch.elexis.core.data.extension.CoreOperationAdvisorHolder">
-   <reference bind="setModelService" interface="ch.elexis.core.data.extension.ICoreOperationAdvisor" name="ModelService"/>
-   <implementation class="ch.elexis.core.data.extension.CoreOperationAdvisorHolder"/>
-</scr:component>
