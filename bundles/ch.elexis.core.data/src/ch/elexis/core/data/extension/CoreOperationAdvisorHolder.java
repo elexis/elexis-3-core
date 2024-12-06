@@ -17,6 +17,14 @@ public class CoreOperationAdvisorHolder {
 	}
 
 	public static ICoreOperationAdvisor get() {
+		int waitcounter = 500;
+		while (coreOperationAdvisor == null && --waitcounter > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// ignore
+			}
+		}
 		if (coreOperationAdvisor == null) {
 			throw new IllegalStateException("No coreOperationAdvisor available!");
 		}

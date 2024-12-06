@@ -31,17 +31,17 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>ch.elexis.core.logback.rocketchat</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.test.logging</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
-                <id>ch.medelexis.medication.ui</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -56,12 +56,22 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>jakarta.xml.bind-api</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>org.eclipse.swt.nl_de</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.qos.logback.slf4j</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>org.osgi.framework.system.packages.extra</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -141,11 +151,6 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>ch.elexis.core.logback.rocketchat</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>org.eclipse.ui.workbench.nl_it</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -183,17 +188,12 @@
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
           <useUIHarness>true</useUIHarness>
-          <useUIThread>false</useUIThread>
+          <useUIThread>true</useUIThread>
           <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.core.ui.tests.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
           <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true</argLine>
           <dependencies>
-            <dependency>
-              <type>eclipse-feature</type>
-              <artifactId>ch.elexis.core.ui.feature</artifactId>
-              <version>0.0.0</version>
-            </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.metatype</artifactId>
@@ -251,7 +251,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.jfree.chart</artifactId>
+              <artifactId>org.tukaani.xz</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -292,6 +292,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.felix.gogo.shell</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -381,17 +386,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.google.guava.failureaccess</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.asm</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-spi</artifactId>
+              <artifactId>org.eclipse.core.variables</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -411,7 +411,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
+              <artifactId>org.eclipse.equinox.bidi</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -442,11 +442,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.jdt.junit4.runtime</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -491,11 +486,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.jfree.jcommon</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>javax.activation</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -516,7 +506,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.objectweb.asm</artifactId>
+              <artifactId>org.glassfish.jersey.core.jersey-server</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -527,11 +517,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.databinding.property</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.hamcrest</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -561,6 +546,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.eclipsesource.jaxrs.consumer</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.ui.workbench</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -577,11 +567,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.nebula.widgets.tablecombo</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.objectweb.asm.tree.analysis</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -622,6 +607,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.batik.util</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -671,16 +661,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.objectweb.asm.util</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>com.google.guava</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -706,12 +686,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.text</artifactId>
+              <artifactId>org.eclipse.ant.core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.osgi-resource-locator</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.core.filesystem</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -726,17 +711,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.equinox.console</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.jndi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>jakarta.mail-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -766,7 +741,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.swtchart</artifactId>
+              <artifactId>com.google.protobuf</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -776,7 +751,7 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.glassfish.jersey.ext.jersey-proxy-client</artifactId>
+              <artifactId>org.apache.lucene.core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -811,6 +786,16 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>jakarta.servlet-api</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.ant</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.slf4j.api</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -831,12 +816,22 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.jcraft.jsch</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>jaxb-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.workbench.addons.swt</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.bouncycastle.bcprov</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -852,11 +847,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.junit</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>bcprov</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -881,12 +871,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.ibm.icu</artifactId>
+              <artifactId>jakarta.validation.jakarta.validation-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>ch.elexis.core.logback.rocketchat</artifactId>
+              <artifactId>org.jboss.logging.jboss-logging</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.ibm.icu</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -902,16 +897,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.contexts</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.jfree.chart-swt</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.objectweb.asm.tree</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -937,6 +922,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.core.resources</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -987,11 +977,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache-extras.beanshell.bsh</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.objectweb.asm.commons</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
