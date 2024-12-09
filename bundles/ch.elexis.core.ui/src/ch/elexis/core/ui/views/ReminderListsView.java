@@ -138,6 +138,9 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Reminder;
 
+/**
+ * 
+ */
 public class ReminderListsView extends ViewPart implements HeartListener, IRefreshable, ISelectionProvider {
 	public static final String ID = "ch.elexis.core.ui.views.reminderlistsview"; //$NON-NLS-1$
 
@@ -747,6 +750,20 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
+	/**
+	 * <p>
+	 * Setup the given {@link TableViewer}
+	 * </p>
+	 * <p>
+	 * This method sets up the table header, layout, content provider, filters, and
+	 * listeners for the {@link TableViewer}. It also enables resizing functionality
+	 * and adds a scroll listener and focus listener to the underlying table.
+	 * Additionally, this method creates and configures the required table columns.
+	 * </p>
+	 * 
+	 * @param tableViewer
+	 * @param columnIndex
+	 */
 	private void setupViewer(TableViewer tableViewer, int columnIndex) {
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -884,12 +901,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
+	/**
+	 * Find and return the {@link IUserGroup} which has the same {@link TableViewer}
+	 * as the given one.
+	 * 
+	 * @param viewer
+	 * @return IUserGroup
+	 */
 	private IUserGroup findGroupForViewer(TableViewer viewer) {
 		return usergroupComponents.stream().filter(component -> component.viewer().equals(viewer))
 				.map(component -> getUserGroupById(component.id()))
 				.findFirst().orElse(null);
 	}
 
+	/**
+	 * Find and return the {@link IUserGroup} which has the same id as the given
+	 * one.
+	 * 
+	 * @param id
+	 * @return IUserGroup
+	 */
 	private IUserGroup getUserGroupById(String id) {
 		return userGroups.stream().filter(group -> group.getId().equals(id)).findFirst().orElse(null);
 	}
