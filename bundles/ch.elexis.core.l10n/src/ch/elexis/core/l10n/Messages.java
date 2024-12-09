@@ -5141,6 +5141,8 @@ public class Messages extends NLS {
 	public static String AppointmentHistory_Duration_Changed_From;
 	public static String AppointmentHistory_Edited_On_By;
 	public static String AppointmentHistory_Deleted_On_By;
+	public static String ScreenshotFunction_PreviewShell_Text;
+	public static String ScreenshotFunction_PrintJob_Title;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
