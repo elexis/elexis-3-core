@@ -263,7 +263,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			erd = new ReminderDetailDialog(getViewSite().getShell());
 			int retVal = erd.open();
 			if (retVal == Dialog.OK) {
-//				IReminder reminder = erd.getReminder();
 				IReminder reminder = CoreModelServiceHolder.get().load(erd.getReminder().getId(), IReminder.class)
 						.get();
 				LocalLockServiceHolder.get().acquireLock(reminder);
@@ -1392,8 +1391,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					AcquireLockBlockingUi.aquireAndRun(reminder, new ILockHandler() {
 						@Override
 						public void lockAcquired() {
-//							ReminderDetailDialog rdd = new ReminderDetailDialog(UiDesk.getTopShell(),
-//									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
 							ReminderDetailDialog rdd = new ReminderDetailDialog(UiDesk.getTopShell(),
 									CoreModelServiceHolder.get().load(reminder.getId(), Reminder.class).get());
 							int retVal = rdd.open();
@@ -2444,7 +2441,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	@Override
 	public void heartbeat() {
-//		long highestLastUpdate = PersistentObject.getHighestLastUpdate(IReminder.TABLENAME);
 		long highestLastUpdate = CoreModelServiceHolder.get().getHighestLastUpdate(IReminder.class);
 		if (highestLastUpdate > cvHighestLastUpdate) {
 			refresh();
