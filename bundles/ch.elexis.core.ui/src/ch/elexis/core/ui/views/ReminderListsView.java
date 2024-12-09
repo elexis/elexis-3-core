@@ -135,7 +135,6 @@ import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Reminder;
 
 /**
@@ -188,7 +187,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private List<IReminder> currentSelection = new ArrayList<>();
 	private ListenerList<ISelectionChangedListener> selectionChangedListeners = new ListenerList<>();
 
-	private Patient actPatient;
+	private IPatient actPatient;
 	private long cvHighestLastUpdate;
 
 	record FilterActions(Action deleteReminderAction, Action showAssignedToMeAction,
@@ -264,7 +263,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			erd = new ReminderDetailDialog(getViewSite().getShell());
 			int retVal = erd.open();
 			if (retVal == Dialog.OK) {
-				Reminder reminder = erd.getReminder();
+//				IReminder reminder = erd.getReminder();
+				IReminder reminder = CoreModelServiceHolder.get().load(erd.getReminder().getId(), IReminder.class)
+						.get();
 				LocalLockServiceHolder.get().acquireLock(reminder);
 				LocalLockServiceHolder.get().releaseLock(reminder);
 			}
@@ -525,10 +526,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		CoreUiUtil.runAsyncIfActive(() -> {
 			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
 
-			if (selectedPatient.equals(actPatient)) {
+			if (selectedPatient.toIPatient().equals(actPatient)) {
 				return;
 			}
-			actPatient = selectedPatient;
+			actPatient = selectedPatient.toIPatient();
 			clearSelection();
 			patientRefresh();
 
@@ -662,7 +663,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				refresh();
 			}
 		});
-		actPatient = ElexisEventDispatcher.getSelectedPatient();
+		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		if (patient != null) {
+			actPatient = CoreModelServiceHolder.get().load(patient.getId(), IPatient.class).get();
+		}
+
 		viewerSelectionComposite.loadSelection();
 		updateViewerSelection((StructuredSelection) viewerSelectionComposite.getSelection());
 
@@ -865,7 +870,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		});
 	}
 
-	private void updateReminderForTarget(IReminder reminder, TableType type, TableViewer viewer, Patient patient) {
+	private void updateReminderForTarget(IReminder reminder, TableType type, TableViewer viewer, IPatient patient) {
 		switch (type) {
 		case CURRENT_PATIENT:
 			// do nothing, it should not be possible to change the patient of a reminder.
@@ -1387,8 +1392,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					AcquireLockBlockingUi.aquireAndRun(reminder, new ILockHandler() {
 						@Override
 						public void lockAcquired() {
+//							ReminderDetailDialog rdd = new ReminderDetailDialog(UiDesk.getTopShell(),
+//									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
 							ReminderDetailDialog rdd = new ReminderDetailDialog(UiDesk.getTopShell(),
-									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
+									CoreModelServiceHolder.get().load(reminder.getId(), Reminder.class).get());
 							int retVal = rdd.open();
 							if (retVal == Dialog.OK) {
 								ElexisEventDispatcher.getInstance()
@@ -1856,7 +1863,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					element.setStatus(representedStatus);
 					CoreModelServiceHolder.get().save(element);
 					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(NoPoUtil.loadAsPersistentObject(element),
-							Reminder.class, ElexisEvent.EVENT_UPDATE));
+							IReminder.class, ElexisEvent.EVENT_UPDATE));
 				}
 			}
 		}
@@ -1873,8 +1880,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private boolean popupOnPatientSelection;
 		private boolean assignedToMe;
 		private boolean showNotYetDueReminders;
-		public CurrentPatientSupplier(Patient actPatient) {
-			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
+
+		public CurrentPatientSupplier(IPatient actPatient) {
+			patient = actPatient;
 		}
 
 		@Override
@@ -1988,8 +1996,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private boolean popupOnPatientSelection;
 		private boolean assignedToMe;
 		private boolean showNotYetDueReminders;
-		public GeneralPatientSupplier(Patient actPatient) {
-			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
+
+		public GeneralPatientSupplier(IPatient actPatient) {
+			patient = actPatient;
 		}
 
 		@Override
@@ -2435,7 +2444,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	@Override
 	public void heartbeat() {
-		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
+//		long highestLastUpdate = PersistentObject.getHighestLastUpdate(IReminder.TABLENAME);
+		long highestLastUpdate = CoreModelServiceHolder.get().getHighestLastUpdate(IReminder.class);
 		if (highestLastUpdate > cvHighestLastUpdate) {
 			refresh();
 			cvHighestLastUpdate = highestLastUpdate;
