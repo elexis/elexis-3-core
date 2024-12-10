@@ -324,9 +324,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			if (visible && isSymptomaticEnabled()) {
 				int defaultDays = ConfigServiceHolder.getUser(MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
 				txtEnddate.setText(String.valueOf(defaultDays));
-			}else{
+			} else {
 				txtEnddate.setText(StringUtils.EMPTY);
-				}
+			}
 		}
 	}
 
