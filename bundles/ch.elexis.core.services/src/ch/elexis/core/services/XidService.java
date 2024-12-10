@@ -15,6 +15,7 @@ import static ch.elexis.core.constants.XidConstants.QUALITY_GUID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,8 +38,8 @@ public class XidService implements IXidService {
 
 	private Logger logger = LoggerFactory.getLogger(XidService.class);
 
-	private HashMap<String, XidDomain> domains;
-	private HashMap<String, String> domainMap;
+	private Map<String, XidDomain> domains;
+	private Map<String, String> domainMap;
 
 	public XidService() {
 		domains = new HashMap<>();
@@ -112,7 +113,6 @@ public class XidService implements IXidService {
 			domains.put(spl[0], new XidDomain(spl[0], simpleName, Integer.parseInt(spl[1]), displayOptions));
 			domainMap.put(simpleName, spl[0]);
 		}
-
 	}
 
 	private void storeDomains() {
@@ -230,6 +230,11 @@ public class XidService implements IXidService {
 			xid.setObject(identifiable);
 
 			XidDomain xidDomain = domains.get(domain);
+			if (xidDomain == null) {
+				logger.info("XID Domain " + domain + " not found reload domains");
+				loadDomains();
+				xidDomain = domains.get(domain);
+			}
 			if (xidDomain != null) {
 				int val = xidDomain.getQuality();
 				if (val > 9) {
