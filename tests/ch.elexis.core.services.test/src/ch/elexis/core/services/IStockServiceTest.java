@@ -14,6 +14,7 @@ import org.junit.runners.MethodSorters;
 
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IArticleBuilder;
@@ -22,6 +23,7 @@ import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.rgw.tools.TimeTool;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class IStockServiceTest extends AbstractServiceTest {
@@ -30,14 +32,18 @@ public class IStockServiceTest extends AbstractServiceTest {
 	private static IStockService service;
 	private static IPatient patient;
 	private static IArticle article;
+	private static IPerson person;
 
 	@BeforeClass
 	public static void beforeClass() {
+		TimeTool timeTool = new TimeTool();
 		service = OsgiServiceUtil.getService(IStockService.class).get();
 		patient = new IContactBuilder.PatientBuilder(coreModelService, "test", "patient", LocalDate.of(2000, 1, 1),
 				Gender.MALE).buildAndSave();
 		article = new IArticleBuilder(coreModelService, "test medication article", "1234567", ArticleTyp.ARTIKELSTAMM)
 				.buildAndSave();
+		person = new IContactBuilder.PersonBuilder(coreModelService, "mandator1 " + timeTool.toString(),
+				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator().buildAndSave();
 	}
 
 	@Test
@@ -71,5 +77,29 @@ public class IStockServiceTest extends AbstractServiceTest {
 		assertFalse(service.getPatientStock(patient).isPresent());
 		List<IStockEntry> entries = service.findAllStockEntriesForStock(patientStock);
 		assertTrue(entries.isEmpty());
+	}
+
+	@Test
+	public void performSingleDisposalWithProvidedStock() {
+		IStock stock = coreModelService.create(IStock.class);
+		stock.setOwner(person);
+		IStockEntry stockEntry = service.storeArticleInStock(stock, article);
+		stockEntry.setCurrentStock(2);
+		coreModelService.save(stockEntry);
+
+		service.performSingleDisposal(article, 1, person.getId(), null);
+		assertEquals(1, service.findStockEntryForArticleInStock(stock, article).getCurrentStock());
+	}
+
+	@Test
+	public void performSingleReturn() {
+		IStock stock = coreModelService.create(IStock.class);
+		IStockEntry stockEntry = service.storeArticleInStock(stock, article);
+		stockEntry.setCurrentStock(1);
+		coreModelService.save(stockEntry);
+
+		service.performSingleReturn(article, 1, person.getId(), stock);
+		assertEquals(2, service.findStockEntryForArticleInStock(stock, article).getCurrentStock());
+
 	}
 }

@@ -64,20 +64,21 @@ public class StockService implements IStockService {
 
 	public void performSingleDisposal(IArticle article, int count) {
 		Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
-		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
+		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null, null);
 	}
 
 	@Override
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId) {
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IStock stock) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
 		if (article == null) {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
-
-		IStockEntry se = findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
-				mandatorId);
+		
+		IStockEntry se = (stock == null)
+				? findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article), mandatorId)
+				: this.findStockEntryForArticleInStock(stock, article);
 		if (se == null) {
 			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
 		}
@@ -141,7 +142,7 @@ public class StockService implements IStockService {
 	}
 
 	@Override
-	public IStatus performSingleReturn(IArticle article, int count, String mandatorId) {
+	public IStatus performSingleReturn(IArticle article, int count, String mandatorId, IStock stock) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -149,12 +150,9 @@ public class StockService implements IStockService {
 			return new Status(Status.ERROR, "ch.elexis.core.services", "Article is null");
 		}
 
-		IStockEntry se = findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article),
-				mandatorId);
-		if (se == null) {
-			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
-		}
-
+		IStockEntry se = (stock == null)
+				? findPreferredStockEntryForArticle(StoreToStringServiceHolder.getStoreToString(article), mandatorId)
+				: this.findStockEntryForArticleInStock(stock, article);
 		if (se.getStock().isCommissioningSystem()) {
 			// updates must happen via manual inputs in the machine
 			return Status.OK_STATUS;
@@ -412,7 +410,7 @@ public class StockService implements IStockService {
 	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId) {
 		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
-			return performSingleDisposal((IArticle) article.get(), count, mandatorId);
+			return performSingleDisposal((IArticle) article.get(), count, mandatorId, null);
 		}
 		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}
@@ -421,7 +419,7 @@ public class StockService implements IStockService {
 	public IStatus performSingleReturn(String articleStoreToString, int count, String mandatorId) {
 		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
-			return performSingleReturn((IArticle) article.get(), count, mandatorId);
+			return performSingleReturn((IArticle) article.get(), count, mandatorId, null);
 		}
 		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}

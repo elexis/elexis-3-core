@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
@@ -131,14 +132,16 @@ public interface IStockService {
 
 	/**
 	 * Perform a single disposal of an article. The article will be withdrawn from
-	 * the Stock with the highest priority owning this article (if multiple).
+	 * the Stock with the highest priority owning this article (if multiple) or from
+	 * the given stock.
 	 *
 	 * @param article
 	 * @param mandatorId may be <code>null</code> to not consider the mandator
 	 * @param count
+	 * @param stock
 	 * @return
 	 */
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, @Nullable IStock stock);
 
 	/**
 	 * Perform a single disposal of an article. Use this method if only the store to
@@ -159,9 +162,10 @@ public interface IStockService {
 	 * @param article
 	 * @param count
 	 * @param mandatorId
+	 * @param stock
 	 * @return
 	 */
-	public IStatus performSingleReturn(IArticle article, int count, String mandatorId);
+	public IStatus performSingleReturn(IArticle article, int count, String mandatorId, @Nullable IStock stock);
 
 	/**
 	 * Perform a single return of an article. Use this method if only the store to
