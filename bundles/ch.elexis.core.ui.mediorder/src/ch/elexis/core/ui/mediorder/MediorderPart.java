@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,10 +45,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -58,10 +62,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -75,13 +81,16 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMedicationService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
@@ -119,6 +128,9 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	IMedicationService medicationService;
 
+	@Inject
+	IConfigService configService;
+
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 	private TableViewer tableViewerHistory;
@@ -144,11 +156,15 @@ public class MediorderPart implements IRefreshablePart {
 	private boolean filterActive = false;
 	private boolean isDetailsViewActive = true;
 
+	private Map<TableItem, TableEditor> editorMap = new HashMap<>();
+	private List<String> lManuallyAdjustedEntries = new ArrayList<String>();
+
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
+	private static final String MANUALLY_ADJUSTED_ENTRIES = "manuallyAdjustedEntries";
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -159,6 +175,7 @@ public class MediorderPart implements IRefreshablePart {
 	public void setFocus() {
 		tableViewer.getTable().setFocus();
 		activePatient(contextService.getActivePatient().orElse(null));
+		saveFilterStatus();
 	}
 
 	@Inject
@@ -188,6 +205,9 @@ public class MediorderPart implements IRefreshablePart {
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
+
+		automaticallyUseStockEntryFromDefaultStock();
+
 		tableViewer.setInput(filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
 				: getStocksExcludingAwaitingRequests());
 		if (tableViewer.contains(firstElement)) {
@@ -576,6 +596,7 @@ public class MediorderPart implements IRefreshablePart {
 				tableViewerDetails.refresh(true);
 				removeStockEntry(entry);
 				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+				refresh();
 			}
 
 		});
@@ -584,6 +605,52 @@ public class MediorderPart implements IRefreshablePart {
 		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
 		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
 		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
+
+		TableViewerColumn tvcArticleFromDefaultStock = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		TableColumn tblclmntvcArticleFromDefaultStock = tvcArticleFromDefaultStock.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnWeightData(10, 80, true));
+		tblclmntvcArticleFromDefaultStock.setText(Messages.Core_Stock);
+		tblclmntvcArticleFromDefaultStock.setToolTipText(Messages.Mediorder_stock_Tooltip);
+		tvcArticleFromDefaultStock.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				IStockEntry entry = (IStockEntry) cell.getElement();
+				java.util.Optional<IStock> stock = getMediorderDefaultStock();
+				if (stock.isEmpty()) {
+					return;
+				}
+
+				TableItem item = (TableItem) cell.getItem();
+				Table table = item.getParent();
+				disposeEditorForItem(item);
+				
+				IStockEntry entryFromDefaultStock = stockService.findStockEntryForArticleInStock(stock.get(),
+						entry.getArticle());
+				List<IOrderEntry> lOrderEntries = orderService.findOrderEntryForStock(entry.getStock());
+
+				TableEditor editor = new TableEditor(table);
+				CCombo combo = new CCombo(table, SWT.READ_ONLY);
+				configureCombo(combo, entry, entryFromDefaultStock, lOrderEntries);
+
+				editor.grabHorizontal = true;
+				editor.setEditor(combo, item, cell.getColumnIndex());
+				editorMap.put(item, editor);
+
+				item.addDisposeListener(e -> disposeEditorForItem(item));
+			}
+
+			@Override
+			public void dispose() {
+				for (TableEditor editor : editorMap.values()) {
+					if (editor != null && !editor.getEditor().isDisposed()) {
+						editor.getEditor().dispose();
+						editor.dispose();
+					}
+				}
+				editorMap.clear();
+				super.dispose();
+			}
+		});
 
 		TableViewerColumn tvcOrderDate = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcOrderDate = tvcOrderDate.getColumn();
@@ -685,6 +752,133 @@ public class MediorderPart implements IRefreshablePart {
 				refresh();
 			}
 		});
+	}
+
+	private void disposeEditorForItem(TableItem item) {
+		TableEditor oldEditor = editorMap.remove(item);
+		if (oldEditor != null) {
+			Control editorControl = oldEditor.getEditor();
+			if (editorControl != null && !editorControl.isDisposed()) {
+				editorControl.dispose();
+			}
+			oldEditor.dispose();
+		}
+	}
+
+	private void configureCombo(CCombo combo, IStockEntry entry, IStockEntry entryFromDefaultStock,
+			List<IOrderEntry> orderEntriesForStock) {
+		int defaultStockCurrent = entryFromDefaultStock != null ? entryFromDefaultStock.getCurrentStock() : 0;
+		int maxValue = Math.min(defaultStockCurrent + entry.getCurrentStock(), entry.getMaximumStock());
+
+		String[] items = createValues(maxValue);
+		combo.setItems(items);
+
+		boolean isEnabled = entryFromDefaultStock != null
+				&& MediorderPartUtil.getImageForStock(imageStockStates, entry.getStock()) != 0;
+		combo.setEnabled(isEnabled);
+		combo.setText(String.valueOf(entry.getCurrentStock()));
+		for (IOrderEntry orderEntry : orderEntriesForStock) {
+			if (orderEntry.getArticle().equals(entry.getArticle())
+					&& !orderEntry.getState().equals(OrderEntryState.DONE)) {
+				combo.setText("0");
+				break;
+			}
+		}
+
+		combo.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
+		combo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String amount = combo.getText();
+				if (amount == null || amount.isBlank()) {
+					return;
+				}
+				useFromDefaultStock(entry, entryFromDefaultStock, Integer.parseInt(amount));
+				if (!lManuallyAdjustedEntries.contains(entry.getId())) {
+					lManuallyAdjustedEntries.add(entry.getId());
+				}
+				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+			}
+		});
+	}
+
+	private String[] createValues(int maxValue) {
+		String[] items = new String[maxValue + 1];
+		for (int i = 0; i <= maxValue; i++) {
+			items[i] = String.valueOf(i);
+		}
+		return items;
+
+	}
+
+	private void automaticallyUseStockEntryFromDefaultStock() {
+		for (IStock stock : stockService.getAllPatientStock()) {
+			int status = MediorderPartUtil.getImageForStock(imageStockStates, stock);
+			if (status == 2 || status == 3) {
+				for (IStockEntry entry : stock.getStockEntries()) {
+					if (lManuallyAdjustedEntries.contains(entry.getId())) {
+						continue;
+					}
+
+					MediorderEntryState entryState = MediorderPartUtil.determineState(entry);
+					if (entryState.equals(MediorderEntryState.REQUESTED)
+							|| entryState.equals(MediorderEntryState.PARTIALLY_IN_STOCK)) {
+						processDefaultStockEntry(entry);
+					}
+				}
+			}
+		}
+	}
+
+	private void processDefaultStockEntry(IStockEntry entry) {
+		java.util.Optional<IStock> stock = getMediorderDefaultStock();
+		if (stock.isEmpty()) {
+			return;
+		}
+
+		IStockEntry entryFromDefaultStock = stockService
+				.findStockEntryForArticleInStock(getMediorderDefaultStock().get(),
+				entry.getArticle());
+		if (entryFromDefaultStock != null && entryFromDefaultStock.getCurrentStock() > 0) {
+			useFromDefaultStock(entry, entryFromDefaultStock,
+					Math.min(entry.getMinimumStock(), entryFromDefaultStock.getCurrentStock()));
+		}
+	}
+
+	private java.util.Optional<IStock> getMediorderDefaultStock() {
+		String value = configService.get(ch.elexis.core.constants.Preferences.INVENTORY_MEDIORDER_DEFAULT_STOCK, null);
+		if (value == null) {
+			return java.util.Optional.empty();
+		}
+		return coreModelService.load(value, IStock.class);
+	}
+
+	private void useFromDefaultStock(IStockEntry targetEntry, IStockEntry defaultEntry, int amount) {
+		String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
+		if (mandatorId == null) {
+			return;
+		}
+		
+		java.util.Optional<IStock> stock = getMediorderDefaultStock();
+		if (stock.isEmpty()) {
+			return;
+		}
+
+		int difference = amount - targetEntry.getCurrentStock();
+		if (difference > 0) {
+			stockService.performSingleDisposal(defaultEntry.getArticle(), difference, mandatorId, stock.get());
+		} else if (difference < 0) {
+			difference *= -1;
+			stockService.performSingleReturn(defaultEntry.getArticle(), difference, mandatorId, stock.get());
+		}
+		
+		targetEntry.setCurrentStock(amount);
+		coreModelService.save(defaultEntry);
+		coreModelService.save(targetEntry);
+		tableViewerDetails.refresh();
+
+		MediorderPartUtil.updateStockImageState(imageStockStates, targetEntry.getStock());
+		tableViewer.refresh();
 	}
 
 	/**
@@ -881,9 +1075,23 @@ public class MediorderPart implements IRefreshablePart {
 				: currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
 		boolean isFilterActive = filterValue.isEmpty() ? false : filterActive;
 
+		Iterator<String> iterator = lManuallyAdjustedEntries.iterator();
+		while (iterator.hasNext()) {
+			String id = iterator.next();
+			java.util.Optional<IStockEntry> entry = coreModelService.load(id, IStockEntry.class);
+			if (entry.isPresent()
+					&& MediorderPartUtil.determineState(entry.get()).equals(MediorderEntryState.IN_STOCK)) {
+				iterator.remove();
+			}
+		}
+
+		String manuallyAdjusted = lManuallyAdjustedEntries.stream().map(String::valueOf)
+				.collect(Collectors.joining(","));
+
 		preferences.put(CURRENT_FILTER_VALUE, filterValue);
 		preferences.putBoolean(IS_FILTER_ACTIVE, isFilterActive);
 		preferences.putBoolean(LAST_ACTIVE_TABLEVIEWER, isDetailsViewActive);
+		preferences.put(MANUALLY_ADJUSTED_ENTRIES, manuallyAdjusted);
 
 		try {
 			preferences.flush();
@@ -899,6 +1107,11 @@ public class MediorderPart implements IRefreshablePart {
 		if (!filterValue.isEmpty() && filterActive) {
 			currentFilterValue = Arrays.stream(filterValue.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
+		}
+
+		String manuallyAdjustedEntries = preferences.get(MANUALLY_ADJUSTED_ENTRIES, "");
+		if (!manuallyAdjustedEntries.isEmpty()) {
+			lManuallyAdjustedEntries = Arrays.stream(manuallyAdjustedEntries.split(",")).collect(Collectors.toList());
 		}
 
 		stackLayout.topControl = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true) ? cDetails_table

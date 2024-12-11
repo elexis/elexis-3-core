@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -33,6 +34,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -60,6 +62,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Kontakt;
@@ -90,6 +93,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 	private Button btnStoreBelow;
 	private Button btnStoreAtMin;
+
+	private ComboViewer comboViewer;
 
 	/**
 	 * Create the preference page.
@@ -526,6 +531,26 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 			}
 		});
 
+		Group grp_mediorder = new Group(container, SWT.NONE);
+		grp_mediorder.setText(Messages.Mediorder);
+		grp_mediorder.setLayout(new GridLayout(2, false));
+		grp_mediorder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Label lblMediorderDefaultStock = new Label(grp_mediorder, SWT.NONE);
+		lblMediorderDefaultStock.setText(Messages.Core_Stock);
+
+		comboViewer = new ComboViewer(grp_mediorder, SWT.READ_ONLY);
+		Combo combo = comboViewer.getCombo();
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboViewer.setContentProvider(ArrayContentProvider.getInstance());
+		comboViewer.setLabelProvider(IdentifiableLabelProvider.getInstance());
+		comboViewer.setInput(StockServiceHolder.get().getAllStocks(true, false));
+
+		String value = ConfigServiceHolder.get().get(Preferences.INVENTORY_MEDIORDER_DEFAULT_STOCK, null);
+		IStock stock = (value == null) ? StockServiceHolder.get().getDefaultStock()
+				: CoreModelServiceHolder.get().load(value, IStock.class).orElse(null);
+		comboViewer.setSelection(new StructuredSelection(stock));
+
 		return container;
 	}
 
@@ -561,6 +586,10 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
 				btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
 						: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
+		getPreferenceStore().setValue(Preferences.INVENTORY_MEDIORDER_DEFAULT_STOCK,
+				CoreModelServiceHolder.get()
+						.load(((IStock) comboViewer.getStructuredSelection().getFirstElement()).getId(), IStock.class)
+						.get().getId());
 
 		return super.performOk();
 	}

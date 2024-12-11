@@ -200,6 +200,7 @@ public class Preferences {
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER = "inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
 	public static final boolean INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT = false;
+	public static final String INVENTORY_MEDIORDER_DEFAULT_STOCK = "inventory/mediorder_default_stock";
 
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
