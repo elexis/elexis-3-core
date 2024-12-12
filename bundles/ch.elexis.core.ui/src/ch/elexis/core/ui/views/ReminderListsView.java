@@ -2,11 +2,15 @@ package ch.elexis.core.ui.views;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -30,6 +34,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -47,21 +53,39 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.part.ViewPart;
@@ -73,9 +97,6 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
@@ -84,6 +105,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -109,25 +131,25 @@ import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Reminder;
 
+/**
+ * 
+ */
 public class ReminderListsView extends ViewPart implements HeartListener, IRefreshable, ISelectionProvider {
 	public static final String ID = "ch.elexis.core.ui.views.reminderlistsview"; //$NON-NLS-1$
 
-	private int filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
-	private boolean autoSelectPatient = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT,
+	private final static String CURRENTPATIENT = "currentpatient"; //$NON-NLS-1$
+	private final static String ALLPATIENTS = "allpatients"; //$NON-NLS-1$
+	private final static String MYREMINDERS = "myreminders"; //$NON-NLS-1$
+	private final static String GLOBALFILTERS = "global"; //$NON-NLS-1$
+
+	private boolean useGlobalFilters = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_USE_GLOBAL_FILTERS, false);
+	private int filterDueDateDays = ConfigServiceHolder
+			.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, -1);
+	private boolean autoSelectPatient = ConfigServiceHolder
+			.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT + "/" + GLOBALFILTERS,
 			false);
-	private boolean showOnlyDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, false);
-	private boolean showNotYetDueReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false);
-	private boolean showAllReminders = (ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-			&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)));
-	private boolean showSelfCreatedReminders = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false);
-	private boolean popupOnLogin = ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN, false);
-	private boolean popupOnPatientSelection = ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION,
-			false);
-	private boolean assignedToMe = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false);
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	private Composite viewParent;
@@ -144,8 +166,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private TableViewer currentPatientViewer;
 	private HeaderComposite generalPatientHeader;
 	private TableViewer generalPatientViewer;
-	private HeaderComposite generalHeader;
-	private TableViewer generalViewer;
+	private HeaderComposite myHeader;
+	private TableViewer myViewer;
+
+	record GroupComponent(String id, HeaderComposite header, TableViewer viewer) {
+	}
+	private List<GroupComponent> usergroupComponents = new ArrayList<>();
+	private List<IUserGroup> userGroups = getUserGroups();
 
 	private Font boldFont;
 	private Color colorInProgress;
@@ -156,8 +183,24 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private List<IReminder> currentSelection = new ArrayList<>();
 	private ListenerList<ISelectionChangedListener> selectionChangedListeners = new ListenerList<>();
 
-	private Patient actPatient;
+	private IPatient actPatient;
 	private long cvHighestLastUpdate;
+
+	record FilterActions(Action deleteReminderAction, Action showAssignedToMeAction,
+			Action popupOnPatientSelectionReminderToggleAction, Action popupOnLoginReminderToggleAction,
+			Action showNotYetDueReminderToggleAction, Action showOnlyOwnDueReminderToggleAction,
+			Action showSelfCreatedReminderAction, RestrictedAction showOthersRemindersAction) {
+	}
+	HashMap<String, FilterActions> filtersMap = new HashMap<>();
+
+	private Action deleteReminderAction;
+	private Action showAssignedToMeAction;
+	private Action popupOnPatientSelectionReminderToggleAction;
+	private Action popupOnLoginReminderToggleAction;
+	private Action showNotYetDueReminderToggleAction;
+	private Action showOnlyOwnDueReminderToggleAction;
+	private Action showSelfCreatedReminderAction;
+	private RestrictedAction showOthersRemindersAction;
 	
 	private Action reloadAction = new Action(Messages.Core_Reload) {
 		{
@@ -170,52 +213,21 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			refresh();
 		}
 	};
-
-	private Action deleteReminderAction = new Action(Messages.Core_Delete) {
+	
+	private Action toggleGlobalFiltersAction = new Action(Messages.ReminderView_useGlobalFiltersAction,
+			Action.AS_CHECK_BOX) {
 		{
-			setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
-			setToolTipText(Messages.ReminderView_deleteToolTip);
+			setImageDescriptor(Images.IMG_FILTER.getImageDescriptor());
+			setToolTipText(Messages.ReminderView_useGlobalFiltersToolTip);
+			setChecked(useGlobalFilters);
 		}
-
+		
 		@Override
 		public void run() {
-			StructuredSelection sel = (StructuredSelection) getSelection();
-			if (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder) {
-				IReminder r = (IReminder) sel.getFirstElement();
-				LockResponse lockResponse = LocalLockServiceHolder.get().acquireLock(r);
-				if (lockResponse.isOk()) {
-					CoreModelServiceHolder.get().delete(r);
-					LocalLockServiceHolder.get().releaseLock(r);
-				} else {
-					LockResponseHelper.showInfo(lockResponse, r, null);
-				}
-				refreshKeepLabels();
-			}
-		}
-
-		@Override
-		public boolean isEnabled() {
-			StructuredSelection sel = (StructuredSelection) getSelection();
-			return (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder);
-		}
-	};
-
-	private Action newReminderAction = new Action(Messages.Core_New_ellipsis) {
-		{
-			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
-			setToolTipText(Messages.ReminderView_newReminderToolTip);
-		}
-
-		@Override
-		public void run() {
-			ReminderDetailDialog erd = null;
-			erd = new ReminderDetailDialog(getViewSite().getShell());
-			int retVal = erd.open();
-			if (retVal == Dialog.OK) {
-				Reminder reminder = erd.getReminder();
-				LocalLockServiceHolder.get().acquireLock(reminder);
-				LocalLockServiceHolder.get().releaseLock(reminder);
-			}
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_USE_GLOBAL_FILTERS, //$NON-NLS-1$
+					toggleGlobalFiltersAction.isChecked());
+			useGlobalFilters = toggleGlobalFiltersAction.isChecked();
+			refreshUserConfiguration();
 			refresh();
 		}
 	};
@@ -230,139 +242,240 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 		@Override
 		public void run() {
-			autoSelectPatient = toggleAutoSelectPatientAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, autoSelectPatient);
+			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, //$NON-NLS-1$
+					toggleAutoSelectPatientAction.isChecked());
 		}
 	};
-
-	private Action showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW),
-			Messages.Core_All, Action.AS_CHECK_BOX) {
+	
+	private Action newReminderAction = new Action(Messages.Core_New_ellipsis) {
 		{
-			setToolTipText(Messages.ReminderView_foreignTooltip);
-		}
-
-		@Override
-		public void doRun() {
-		    boolean currentlyChecked = showOthersRemindersAction.isChecked();
-		    if (currentlyChecked) {
-				boolean continueOperation = SWTHelper.askYesNo(Messages.Core_Warning,
-						Messages.ReminderView_WarningAllFilter
-				);
-		        if (!continueOperation) {
-		            showOthersRemindersAction.setChecked(false);
-		            return;
-		        }
-		    }
-		    showAllReminders = currentlyChecked;
-		    ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS, showAllReminders);
-		    resetOtherFilters();
-		    refresh();
-		}
-	};
-
-	private Action showSelfCreatedReminderAction = new Action(Messages.ReminderView_myRemindersAction,
-			Action.AS_CHECK_BOX) { // $NON-NLS-1$
-		{
-			setToolTipText(Messages.ReminderView_myRemindersToolTip); // $NON-NLS-1$
+			setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
+			setToolTipText(Messages.ReminderView_newReminderToolTip);
 		}
 
 		@Override
 		public void run() {
-			showSelfCreatedReminders = showSelfCreatedReminderAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN, showSelfCreatedReminders);
+			ReminderDetailDialog erd = null;
+			erd = new ReminderDetailDialog(getViewSite().getShell());
+			int retVal = erd.open();
+			if (retVal == Dialog.OK) {
+				IReminder reminder = CoreModelServiceHolder.get().load(erd.getReminder().getId(), IReminder.class)
+						.get();
+				LocalLockServiceHolder.get().acquireLock(reminder);
+				LocalLockServiceHolder.get().releaseLock(reminder);
+			}
 			refresh();
 		}
 	};
 
-	private Action showOnlyOwnDueReminderToggleAction = new Action(Messages.ReminderView_onlyDueAction,
-			Action.AS_CHECK_BOX) { // $NON-NLS-1$
-		{
-			setToolTipText(Messages.ReminderView_onlyDueToolTip); // $NON-NLS-1$
+	/**
+	 * <p>
+	 * Create the filter actions for the contextmenu on the composites.
+	 * </p>
+	 * 
+	 * @param config identification. used to save the config to the database with
+	 *               the String. example: 'currentpatient', 'allpatients'
+	 */
+	private void createFilterActions(String config) {
+
+		deleteReminderAction = new Action(Messages.Core_Delete) {
+			{
+				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
+				setToolTipText(Messages.ReminderView_deleteToolTip);
+			}
+
+			@Override
+			public void run() {
+				StructuredSelection sel = (StructuredSelection) getSelection();
+				if (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder) {
+					IReminder r = (IReminder) sel.getFirstElement();
+					LockResponse lockResponse = LocalLockServiceHolder.get().acquireLock(r);
+					if (lockResponse.isOk()) {
+						CoreModelServiceHolder.get().delete(r);
+						LocalLockServiceHolder.get().releaseLock(r);
+					} else {
+						LockResponseHelper.showInfo(lockResponse, r, null);
+					}
+					refreshKeepLabels();
+				}
+			}
+
+			@Override
+			public boolean isEnabled() {
+				StructuredSelection sel = (StructuredSelection) getSelection();
+				return (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder);
+			}
+		};
+
+		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW), Messages.Core_All,
+				Action.AS_CHECK_BOX) {
+			{
+				setToolTipText(Messages.ReminderView_foreignTooltip);
+			}
+
+			@Override
+			public void doRun() {
+				if (showOthersRemindersAction.isChecked()) {
+					boolean continueOperation = SWTHelper.askYesNo(Messages.Core_Warning,
+							Messages.ReminderView_WarningAllFilter);
+					if (!continueOperation) {
+						showOthersRemindersAction.setChecked(false);
+						return;
+					}
+				}
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							showOthersRemindersAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + config, //$NON-NLS-1$
+							showOthersRemindersAction.isChecked());
+				}
+				resetOtherFilters(config);
+				refresh();
+			}
+		};
+
+		showSelfCreatedReminderAction = new Action(Messages.ReminderView_myRemindersAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.ReminderView_myRemindersToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							showSelfCreatedReminderAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + config, //$NON-NLS-1$
+							showSelfCreatedReminderAction.isChecked());
+				}
+
+				refresh();
+			}
+		};
+
+		showOnlyOwnDueReminderToggleAction = new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.ReminderView_onlyDueToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							showOnlyOwnDueReminderToggleAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + config, //$NON-NLS-1$
+							showOnlyOwnDueReminderToggleAction.isChecked());
+				}
+
+				refresh();
+			}
+		};
+
+		showNotYetDueReminderToggleAction = new Action(Messages.ShowNotYetDueReminders, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+			{
+				setToolTipText(Messages.ShowNotYetDueReminders_Tooltip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							showNotYetDueReminderToggleAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + config, //$NON-NLS-1$
+							showNotYetDueReminderToggleAction.isChecked());
+				}
+
+				refresh();
+			}
+		};
+
+		popupOnLoginReminderToggleAction = new Action(Messages.Reminders_PopupOnLogin, Action.AS_CHECK_BOX) {
+			{
+				setToolTipText(Messages.Reminders_PopupOnLogin_ToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							popupOnLoginReminderToggleAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + config, //$NON-NLS-1$
+							popupOnLoginReminderToggleAction.isChecked());
+				}
+				refresh();
+			}
+		};
+
+		popupOnPatientSelectionReminderToggleAction = new Action(Messages.Reminders_PopupOnPatientSelection,
+				Action.AS_CHECK_BOX) {
+			{
+				setToolTipText(Messages.Reminders_PopupOnPatientSelection_ToolTip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							popupOnPatientSelectionReminderToggleAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + config, //$NON-NLS-1$
+							popupOnPatientSelectionReminderToggleAction.isChecked());
+				}
+
+				refresh();
+			}
+		};
+		showAssignedToMeAction = new Action(Messages.Reminders_AssignedToMe, Action.AS_CHECK_BOX) {
+			{
+				setToolTipText(Messages.Reminders_AssignedToMe_ToolTip);
+			}
+
+			@Override
+			public void run() {
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + GLOBALFILTERS, //$NON-NLS-1$
+							showAssignedToMeAction.isChecked());
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + config, //$NON-NLS-1$
+							showAssignedToMeAction.isChecked());
+				}
+				refresh();
+			}
+		};
+		
+		FilterActions filters = new FilterActions(deleteReminderAction, showAssignedToMeAction,
+				popupOnPatientSelectionReminderToggleAction, popupOnLoginReminderToggleAction,
+				showNotYetDueReminderToggleAction, showOnlyOwnDueReminderToggleAction, showSelfCreatedReminderAction,
+				showOthersRemindersAction);
+		filtersMap.put(config, filters);
+	}
+
+	private void resetOtherFilters(String config) {
+		FilterActions filters = filtersMap.get(config);
+		String id = config;
+		if (useGlobalFilters) {
+			id = GLOBALFILTERS;
 		}
 
-		@Override
-		public void run() {
-			showOnlyDueReminders = showOnlyOwnDueReminderToggleAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, showOnlyDueReminders);
-			refresh();
-		}
-	};
-
-	private Action showNotYetDueReminderToggleAction = new Action(
-			Messages.ShowNotYetDueReminders,
-			Action.AS_CHECK_BOX) { // $NON-NLS-1$
-		{
-			setToolTipText(Messages.ShowNotYetDueReminders_Tooltip); // $NON-NLS-1$
-		}
-		@Override
-		public void run() {
-			showNotYetDueReminders = showNotYetDueReminderToggleAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE, showNotYetDueReminders);
-			refresh();
-		}
-	};
-
-	private Action popupOnLoginReminderToggleAction = new Action(
-			Messages.Reminders_PopupOnLogin, Action.AS_CHECK_BOX) {
-		{
-			setToolTipText(Messages.Reminders_PopupOnLogin_ToolTip); // $NON-NLS-1$
-		}
-		@Override
-		public void run() {
-			popupOnLogin = popupOnLoginReminderToggleAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN, popupOnLogin);
-			refresh();
-		}
-	};
-
-	private Action popupOnPatientSelectionReminderToggleAction = new Action(
-			Messages.Reminders_PopupOnPatientSelection,
-			Action.AS_CHECK_BOX) {
-		{
-			setToolTipText(Messages.Reminders_PopupOnPatientSelection_ToolTip); // $NON-NLS-1$
-		}
-		@Override
-		public void run() {
-			popupOnPatientSelection = popupOnPatientSelectionReminderToggleAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION, popupOnPatientSelection);
-			refresh();
-		}
-	};
-	private Action showAssignedToMeAction = new Action(Messages.Reminders_AssignedToMe,
-			Action.AS_CHECK_BOX) {
-		{
-			setToolTipText(Messages.Reminders_AssignedToMe_ToolTip);
-		}
-		@Override
-		public void run() {
-			assignedToMe = showAssignedToMeAction.isChecked();
-			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, assignedToMe);
-			refresh();
-		}
-	};
-
-	private void resetOtherFilters() {
-		autoSelectPatient = false;
 		toggleAutoSelectPatientAction.setChecked(false);
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
-		showSelfCreatedReminders = false;
-		showSelfCreatedReminderAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN, false);
-		showOnlyDueReminders = false;
-		showOnlyOwnDueReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN, false);
-		popupOnLogin = false;
-		popupOnLoginReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN, false);
-		popupOnPatientSelection = false;
-		popupOnPatientSelectionReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION, false);
-		assignedToMe = false;
-		showAssignedToMeAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false);
-		showNotYetDueReminders = false;
-		showNotYetDueReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false);
+
+		filters.showSelfCreatedReminderAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + id, false); //$NON-NLS-1$
+		filters.showOnlyOwnDueReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + id, false); //$NON-NLS-1$
+		filters.popupOnLoginReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + id, false); //$NON-NLS-1$
+		filters.popupOnPatientSelectionReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + id, false); //$NON-NLS-1$
+		filters.showAssignedToMeAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + id, false); //$NON-NLS-1$
+		filters.showNotYetDueReminderToggleAction.setChecked(false);
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + id, false); //$NON-NLS-1$
 	}
 
 	private RestrictedAction selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
@@ -382,8 +495,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				IContact creator = reminder.getCreator();
 				if (patient != null && patient.isPatient()) {
 					if (!patient.getId().equals(creator.getId())) {
-						ElexisEventDispatcher.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(
-								CoreModelServiceHolder.get().load(patient.getId(), IPatient.class).get()));
+						ContextServiceHolder.get().setActivePatient(patient.asIPatient());
 					}
 				}
 			}
@@ -406,12 +518,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Inject
 	void activePatient(IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
-			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
 
-			if (selectedPatient.equals(actPatient)) {
+			if (patient.equals(actPatient)) {
 				return;
 			}
-			actPatient = selectedPatient;
+			actPatient = patient;
 			clearSelection();
 			patientRefresh();
 
@@ -423,11 +534,23 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				UiDesk.asyncExec(new Runnable() {
 
 					public void run() {
-						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
-								false, selectedPatient, true);
+						IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
+						query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
+						query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+							ISubQuery<IReminderResponsibleLink> subQuery = query
+									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
+							subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid"); //$NON-NLS-1$ //$NON-NLS-2$
+							subQuery.and("responsible", COMPARATOR.EQUALS, m); //$NON-NLS-1$
+							query.exists(subQuery);
+						});
+						List<IReminder> list = query.execute();
+
 						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
-							for (Reminder r : list) {
+							for (IReminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
@@ -504,56 +627,37 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		currentPatientHeader.setTextFont(boldFont);
 		currentPatientHeader.setText("aktueller Patient");
 		currentPatientViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
-		currentPatientViewer.getTable().setHeaderVisible(true);
-		currentPatientViewer.setContentProvider(ArrayContentProvider.getInstance());
-		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd.heightHint = 100;
-		currentPatientViewer.getTable().setLayoutData(gd);
-		currentPatientViewer.setComparator(new ReminderComparator());
-		currentPatientViewer.addFilter(filter);
-		currentPatientViewer.addSelectionChangedListener(getSelectionListener());
-		currentPatientViewer.addDoubleClickListener(getDoubleClickListener());
-		createTypeColumn(currentPatientViewer, 20, 0);
-		createDateColumn(currentPatientViewer, 80, 1);
-		createResponsibleColumn(currentPatientViewer, 80, 2);
-		createDescriptionColumn(currentPatientViewer, 400, 3);
+		setupViewer(currentPatientViewer, 3);
+		addDragSupport(currentPatientViewer);
+		addDropSupport(currentPatientViewer, TableType.CURRENT_PATIENT);
 
 		generalPatientHeader = new HeaderComposite(viewersParent, SWT.NONE);
 		generalPatientHeader.setTextFont(boldFont);
 		generalPatientHeader.setText("alle Patienten");
 		generalPatientViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
-		generalPatientViewer.getTable().setHeaderVisible(true);
-		generalPatientViewer.setContentProvider(ArrayContentProvider.getInstance());
-		gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd.heightHint = 100;
-		generalPatientViewer.getTable().setLayoutData(gd);
-		generalPatientViewer.setComparator(new ReminderComparator());
-		generalPatientViewer.addFilter(filter);
-		generalPatientViewer.addSelectionChangedListener(getSelectionListener());
-		generalPatientViewer.addDoubleClickListener(getDoubleClickListener());
-		createTypeColumn(generalPatientViewer, 20, 0);
-		createDateColumn(generalPatientViewer, 80, 1);
-		createResponsibleColumn(generalPatientViewer, 80, 2);
-		createPatientColumn(generalPatientViewer, 150, 3);
-		createDescriptionColumn(generalPatientViewer, 400, 4);
+		setupViewer(generalPatientViewer, 4);
+		addDragSupport(generalPatientViewer);
+		addDropSupport(generalPatientViewer, TableType.GENERAL_PATIENT);
+		((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint = 300;
 
-		generalHeader = new HeaderComposite(viewersParent, SWT.NONE);
-		generalHeader.setTextFont(boldFont);
-		generalHeader.setText("allgemein");
-		generalViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
-		generalViewer.getTable().setHeaderVisible(true);
-		generalViewer.setContentProvider(ArrayContentProvider.getInstance());
-		gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		gd.heightHint = 100;
-		generalViewer.getTable().setLayoutData(gd);
-		generalViewer.setComparator(new ReminderComparator());
-		generalViewer.addFilter(filter);
-		generalViewer.addSelectionChangedListener(getSelectionListener());
-		generalViewer.addDoubleClickListener(getDoubleClickListener());
-		createTypeColumn(generalViewer, 20, 0);
-		createDateColumn(generalViewer, 80, 1);
-		createResponsibleColumn(generalViewer, 80, 2);
-		createDescriptionColumn(generalViewer, 400, 3);
+		myHeader = new HeaderComposite(viewersParent, SWT.NONE);
+		myHeader.setTextFont(boldFont);
+		myHeader.setText("meine Pendenzen");
+		myViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
+		setupViewer(myViewer, 3);
+		addDragSupport(myViewer);
+		addDropSupport(myViewer, TableType.MYREMINDERS);
+
+		for (IUserGroup group : userGroups) {
+			HeaderComposite groupHeader = new HeaderComposite(viewersParent, SWT.NONE);
+			groupHeader.setTextFont(boldFont);
+			groupHeader.setText(group.getId() + "-Pendenzen");
+			TableViewer groupViewer = new TableViewer(viewersParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.VIRTUAL);
+			setupViewer(groupViewer, 3);
+			addDragSupport(groupViewer);
+			addDropSupport(groupViewer, TableType.GROUP);
+			usergroupComponents.add(new GroupComponent(group.getId(), groupHeader, groupViewer));
+		}
 
 		viewerSelectionComposite.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -564,42 +668,59 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				refresh();
 			}
 		});
-		actPatient = ElexisEventDispatcher.getSelectedPatient();
+		actPatient = ContextServiceHolder.get().getActivePatient().orElse(null);
+
 		viewerSelectionComposite.loadSelection();
 		updateViewerSelection((StructuredSelection) viewerSelectionComposite.getSelection());
 
-		refreshUserConfiguration();
-
 		ViewMenus menu = new ViewMenus(getViewSite());
-		menu.createToolbar(reloadAction, newReminderAction, toggleAutoSelectPatientAction);
+		menu.createToolbar(reloadAction, newReminderAction, toggleGlobalFiltersAction, toggleAutoSelectPatientAction);
 
-		MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
-		FilterTimeAction action30 = new FilterTimeAction(30);
-		FilterTimeAction action60 = new FilterTimeAction(60);
-		FilterTimeAction action90 = new FilterTimeAction(90);
-		action30.setOthers(Arrays.asList(action60, action90));
-		action60.setOthers(Arrays.asList(action30, action90));
-		action90.setOthers(Arrays.asList(action30, action60));
-		timeFilterSubMenu.add(action30);
-		timeFilterSubMenu.add(action60);
-		timeFilterSubMenu.add(action90);
+		HashMap<Table, String> map = new HashMap<>();
+		map.put(currentPatientViewer.getTable(), CURRENTPATIENT);
+		map.put(generalPatientViewer.getTable(), ALLPATIENTS);
+		map.put(myViewer.getTable(), MYREMINDERS);
 
-		MenuManager menuManager = new MenuManager();
-		menuManager.add(new ReminderStatusSubMenu());
-		menuManager.add(deleteReminderAction);
-		menuManager.add(timeFilterSubMenu);
-		menuManager.add(showOnlyOwnDueReminderToggleAction);
-		menuManager.add(showNotYetDueReminderToggleAction);
-		menuManager.add(showSelfCreatedReminderAction);
-		menuManager.add(showAssignedToMeAction);
-		menuManager.add(popupOnLoginReminderToggleAction);
-		menuManager.add(popupOnPatientSelectionReminderToggleAction);
-		menuManager.add(showOthersRemindersAction);
+		for (GroupComponent group : usergroupComponents) {
+			map.put(group.viewer().getTable(), group.id());
+		}
 
-		currentPatientViewer.getTable().setMenu(menuManager.createContextMenu(currentPatientViewer.getTable()));
-		generalPatientViewer.getTable().setMenu(menuManager.createContextMenu(generalPatientViewer.getTable()));
-		generalViewer.getTable().setMenu(menuManager.createContextMenu(generalViewer.getTable()));
+		for (Map.Entry<Table, String> entry : map.entrySet()) {
+			String id = entry.getValue();
+			Table table = entry.getKey();
 
+			createFilterActions(id);
+
+			MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
+			CustomTimeAction custom = new CustomTimeAction("Benutzerdefiniert", id);
+			FilterTimeAction action30 = new FilterTimeAction(30);
+			FilterTimeAction action60 = new FilterTimeAction(60);
+			FilterTimeAction action90 = new FilterTimeAction(90);
+			action30.setOthers(Arrays.asList(action60, action90, custom));
+			action60.setOthers(Arrays.asList(action30, action90, custom));
+			action90.setOthers(Arrays.asList(action30, action60, custom));
+			custom.setOthers(Arrays.asList(action30, action60, action90));
+			timeFilterSubMenu.add(action30);
+			timeFilterSubMenu.add(action60);
+			timeFilterSubMenu.add(action90);
+			timeFilterSubMenu.add(custom);
+
+			MenuManager menuManager = new MenuManager();
+			menuManager.add(new ReminderStatusSubMenu());
+			menuManager.add(deleteReminderAction);
+			menuManager.add(timeFilterSubMenu);
+			menuManager.add(showOnlyOwnDueReminderToggleAction);
+			menuManager.add(showNotYetDueReminderToggleAction);
+			menuManager.add(showSelfCreatedReminderAction);
+			menuManager.add(showAssignedToMeAction);
+			menuManager.add(popupOnLoginReminderToggleAction);
+			menuManager.add(popupOnPatientSelectionReminderToggleAction);
+			menuManager.add(showOthersRemindersAction);
+
+			table.setMenu(menuManager.createContextMenu(table));
+		}
+
+		refreshUserConfiguration();
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
@@ -608,14 +729,85 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		getSite().getPage().removePartListener(udpateOnVisible);
 	}
 
+	/**
+	 * <p>
+	 * Adds a scroll listener which only scrolls through the table if the mouse is
+	 * hovered over a {@link TableItem}.
+	 * </p>
+	 * <p>
+	 * If the mouse is not hovered over the {@link TableItem}, then it will not
+	 * scroll through the table but instead the entire parent
+	 * {@link ScrolledComposite}.
+	 * </p>
+	 * 
+	 * @param tableViewer viewer to add the listener to.
+	 */
+	private void addModifiedScrollListener(Table table) {
+		table.addListener(SWT.MouseWheel, e -> {
+			Point mouseLocation = table.toControl(Display.getCurrent().getCursorLocation());
+			if (table.getItem(mouseLocation) == null) {
+				e.doit = false;
+				ScrollBar verticalBar = viewersScrolledComposite.getVerticalBar();
+				if (verticalBar != null && verticalBar.isEnabled()) {
+					int newSelection = verticalBar.getSelection() - e.count * verticalBar.getIncrement();
+					verticalBar.setSelection(newSelection);
+					viewersScrolledComposite.setOrigin(viewersScrolledComposite.getOrigin().x, newSelection);
+				}
+			}
+		});
+	}
+
+	/**
+	 * <p>
+	 * Setup the given {@link TableViewer}
+	 * </p>
+	 * <p>
+	 * This method sets up the table header, layout, content provider, filters, and
+	 * listeners for the {@link TableViewer}. It also enables resizing functionality
+	 * and adds a scroll listener and focus listener to the underlying table.
+	 * Additionally, this method creates and configures the required table columns.
+	 * </p>
+	 * 
+	 * @param tableViewer
+	 * @param columnIndex
+	 */
+	private void setupViewer(TableViewer tableViewer, int columnIndex) {
+		tableViewer.getTable().setHeaderVisible(true);
+		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gd.heightHint = 100;
+		tableViewer.getTable().setLayoutData(gd);
+		tableViewer.setComparator(new ReminderComparator());
+		tableViewer.addFilter(filter);
+		tableViewer.addSelectionChangedListener(getSelectionListener());
+		tableViewer.addDoubleClickListener(getDoubleClickListener());
+		createTypeColumn(tableViewer, 20, 0);
+		createDateColumn(tableViewer, 80, 1);
+		createResponsibleColumn(tableViewer, 80, 2);
+		createPatientColumn(tableViewer, 150, 3);
+		createDescriptionColumn(tableViewer, 400, columnIndex);
+		TableViewerResizer.enableResizing(tableViewer);
+		addModifiedScrollListener(tableViewer.getTable());
+		tableViewer.getTable().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				tableViewer.getTable().deselectAll();
+			}
+		});
+	}
+
 	private void updateViewerSelection(StructuredSelection selection) {
 		viewersParent.setRedraw(false);
 		hideControl(currentPatientHeader);
 		hideControl(currentPatientViewer.getTable());
 		hideControl(generalPatientHeader);
 		hideControl(generalPatientViewer.getTable());
-		hideControl(generalHeader);
-		hideControl(generalViewer.getTable());
+		hideControl(myHeader);
+		hideControl(myViewer.getTable());
+		for (GroupComponent group : usergroupComponents) {
+			hideControl(group.header());
+			hideControl(group.viewer().getTable());
+		}
 		if (selection != null && !selection.isEmpty()) {
 			for (Object selected : selection.toList()) {
 				if (selected instanceof String) {
@@ -625,9 +817,16 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					} else if (SELECTIONCOMP_GENERALPATIENT_ID.equals(selected)) {
 						showControl(generalPatientHeader);
 						showControl(generalPatientViewer.getTable());
-					} else if (SELECTIONCOMP_GENERAL_ID.equals(selected)) {
-						showControl(generalHeader);
-						showControl(generalViewer.getTable());
+					} else if (SELECTIONCOMP_MYREMINDERS_ID.equals(selected)) {
+						showControl(myHeader);
+						showControl(myViewer.getTable());
+					} else if (!userGroups.isEmpty()) {
+						for (GroupComponent group : usergroupComponents) {
+							if ((SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id()).equals(selected)) {
+								showControl(group.header());
+								showControl(group.viewer().getTable());
+							}
+						}
 					}
 				}
 			}
@@ -636,6 +835,101 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		int width = viewersScrolledComposite.getClientArea().width;
 		viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
 		viewParent.layout(true, true);
+	}
+
+	private void addDragSupport(TableViewer viewer) {
+		DragSource dragSource = new DragSource(viewer.getTable(), DND.DROP_MOVE);
+		dragSource.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
+
+		dragSource.addDragListener(new DragSourceAdapter() {
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				LocalSelectionTransfer.getTransfer().setSelection(viewer.getStructuredSelection());
+			}
+		});
+	}
+
+	private void addDropSupport(TableViewer viewer, TableType tableType) {
+		DropTarget dropTarget = new DropTarget(viewer.getTable(), DND.DROP_MOVE);
+		dropTarget.setTransfer(new Transfer[] { LocalSelectionTransfer.getTransfer() });
+
+		dropTarget.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void drop(DropTargetEvent event) {
+				ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+				if (selection instanceof IStructuredSelection) {
+					for (Object element : ((IStructuredSelection) selection).toList()) {
+						if (element instanceof IReminder) {
+							IReminder reminder = (IReminder) element;
+							updateReminderForTarget(reminder, tableType, viewer, actPatient);
+							CoreModelServiceHolder.get().save(reminder);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+	}
+
+	private void updateReminderForTarget(IReminder reminder, TableType type, TableViewer viewer, IPatient patient) {
+		switch (type) {
+		case CURRENT_PATIENT:
+			// do nothing, it should not be possible to change the patient of a reminder.
+			break;
+		case GENERAL_PATIENT:
+			// dont remove patient
+			break;
+		case GROUP:
+			IUserGroup targetGroup = findGroupForViewer(viewer);
+			if (targetGroup != null) {
+				List<IContact> currentResponsibles = reminder.getResponsible();
+				if (!currentResponsibles.isEmpty()) {
+					for (IContact contact : currentResponsibles) {
+						reminder.removeResponsible(contact);
+					}
+				}
+				for (IUser user : targetGroup.getUsers()) {
+					reminder.addResponsible(user.getAssignedContact());
+				}
+			}
+			break;
+		case MYREMINDERS:
+			List<IContact> currentResponsibles = reminder.getResponsible();
+			if (!currentResponsibles.isEmpty()) {
+				for (IContact contact : currentResponsibles) {
+					reminder.removeResponsible(contact);
+				}
+			}
+			reminder.addResponsible(ContextServiceHolder.getActiveMandatorOrNull());
+			break;
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * Find and return the {@link IUserGroup} which has the same {@link TableViewer}
+	 * as the given one.
+	 * 
+	 * @param viewer
+	 * @return IUserGroup
+	 */
+	private IUserGroup findGroupForViewer(TableViewer viewer) {
+		return usergroupComponents.stream().filter(component -> component.viewer().equals(viewer))
+				.map(component -> getUserGroupById(component.id()))
+				.findFirst().orElse(null);
+	}
+
+	/**
+	 * Find and return the {@link IUserGroup} which has the same id as the given
+	 * one.
+	 * 
+	 * @param id
+	 * @return IUserGroup
+	 */
+	private IUserGroup getUserGroupById(String id) {
+		return userGroups.stream().filter(group -> group.getId().equals(id)).findFirst().orElse(null);
 	}
 
 	private void showControl(Control control) {
@@ -658,14 +952,19 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshKeepLabels() {
-		if (generalViewer.getTable().isVisible()) {
-			generalViewer.refresh(false);
-		}
 		if (generalPatientViewer.getTable().isVisible()) {
 			generalPatientViewer.refresh(false);
 		}
 		if (currentPatientViewer.getTable().isVisible()) {
 			currentPatientViewer.refresh(false);
+		}
+		if (myViewer.getTable().isVisible()) {
+			myViewer.refresh(false);
+		}
+		for (GroupComponent group : usergroupComponents) {
+			if (group.viewer().getTable().isVisible()) {
+				group.viewer().refresh(false);
+			}
 		}
 	}
 
@@ -674,6 +973,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		Display.getDefault().asyncExec(() -> {
 			patientRefresh();
 			generalRefresh();
+			myRemindersRefresh();
+			groupRemindersRefresh();
 			int width = viewersScrolledComposite.getClientArea().width;
 			viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
 			viewParent.layout(true, true);
@@ -683,7 +984,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private void patientRefresh() {
 		if (actPatient != null) {
 			if (currentPatientViewer.getTable().isVisible()) {
-				refreshCurrentPatientInput();
+				refreshCurrentPatientInput(CURRENTPATIENT);
 			}
 		} else {
 			currentPatientViewer.setInput(Collections.emptyList());
@@ -691,25 +992,40 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void generalRefresh() {
-		if (generalViewer.getTable().isVisible()) {
-			refreshGeneralInput();
-		}
 		if (generalPatientViewer.getTable().isVisible()) {
-			refreshGeneralPatientInput();
+			refreshGeneralPatientInput(ALLPATIENTS);
 		}
 	}
 
-	private void refreshCurrentPatientInput() {
-		if (actPatient != null) {
+	private void myRemindersRefresh() {
+		if (myViewer.getTable().isVisible()) {
+			refreshMyRemindersInput(MYREMINDERS);
+		}
+	}
+	
+	private void groupRemindersRefresh() {
+		for (GroupComponent group : usergroupComponents) {
+			if (group.viewer().getTable().isVisible()) {
+				refreshGroupRemindersInput(group);
+			}
+		}
+	}
+
+	private void refreshCurrentPatientInput(String config) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 					.supplyAsync(new CurrentPatientSupplier(actPatient)
-							.showAll(showAllReminders
+							.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
 									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-							.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-							.showNotYetDueReminders(showNotYetDueReminders).showSelfCreated(showSelfCreatedReminders)
-							.popupOnLogin(popupOnLogin)
-							.popupOnPatientSelectionToggleAction(popupOnPatientSelection)
-							.showAssignedToMeAction(assignedToMe));
+							.filterDue(filterDueDateDays != -1)
+							.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
+							.showNotYetDueReminders(
+									filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
+							.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
+							.popupOnLogin(filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
+							.popupOnPatientSelectionToggleAction(
+									filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
+							.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
 			currentLoader.thenRunAsync(() -> {
 				Display.getDefault().asyncExec(() -> {
 					if (currentPatientViewer != null && !currentPatientViewer.getTable().isDisposed()) {
@@ -719,17 +1035,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 							currentPatientViewer.setInput(input);
 							viewerSelectionComposite.setCount(SELECTIONCOMP_CURRENTPATIENT_ID,
 									currentPatientViewer.getTable().getItemCount());
-							if (input.size() < 5) {
-								if (((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint != 125) {
-									((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint = 125;
-									currentPatientViewer.getTable().getParent().layout(true, true);
-								}
-							} else {
-								if (((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint != 300) {
-									((GridData) currentPatientViewer.getTable().getLayoutData()).heightHint = 300;
-									currentPatientViewer.getTable().getParent().layout(true, true);
-								}
-							}
 						} catch (InterruptedException | ExecutionException e) {
 							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 						}
@@ -740,83 +1045,110 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
-	private void refreshGeneralPatientInput() {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
-				.supplyAsync(new GeneralPatientSupplier(actPatient)
-						.showAll(
-								showAllReminders && AccessControlServiceHolder.get()
-										.evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-						.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-						.showNotYetDueReminders(showNotYetDueReminders)
-						.showSelfCreated(showSelfCreatedReminders).popupOnLoginReminderToggleAction(popupOnLogin)
-						.popupOnPatientSelectionToggleAction(popupOnPatientSelection)
-						.showAssignedToMeAction(assignedToMe));
-		currentLoader.thenRunAsync(() -> {
-			Display.getDefault().asyncExec(() -> {
-				if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
-					List<IReminder> input;
-					try {
-						input = currentLoader.get();
-						generalPatientViewer.setInput(input);
-						viewerSelectionComposite.setCount(SELECTIONCOMP_GENERALPATIENT_ID,
-								generalPatientViewer.getTable().getItemCount());
-						if (input.size() < 5) {
-							if (((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint != 125) {
-								((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint = 125;
-								generalPatientViewer.getTable().getParent().layout(true, true);
-							}
-						} else {
-							if (((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint != 300) {
-								((GridData) generalPatientViewer.getTable().getLayoutData()).heightHint = 300;
-								generalPatientViewer.getTable().getParent().layout(true, true);
-							}
+	private void refreshGeneralPatientInput(String config) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
+			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
+					.supplyAsync(new GeneralPatientSupplier(actPatient)
+							.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+							.filterDue(filterDueDateDays != -1)
+							.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
+							.showNotYetDueReminders(
+									filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
+							.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
+							.popupOnLoginReminderToggleAction(
+									filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
+							.popupOnPatientSelectionToggleAction(
+									filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
+							.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
+			currentLoader.thenRunAsync(() -> {
+				Display.getDefault().asyncExec(() -> {
+					if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
+						List<IReminder> input;
+						try {
+							input = currentLoader.get();
+							generalPatientViewer.setInput(input);
+							viewerSelectionComposite.setCount(SELECTIONCOMP_GENERALPATIENT_ID,
+									generalPatientViewer.getTable().getItemCount());
+						} catch (InterruptedException | ExecutionException e) {
+							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 						}
-					} catch (InterruptedException | ExecutionException e) {
-						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
-					}
 
-				}
+					}
+				});
 			});
-		});
+		}
 	}
 
-	private void refreshGeneralInput() {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new GeneralSupplier()
-				.showAll(showAllReminders
-						&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-				.filterDue(filterDueDateDays != -1).showOnlyDue(showOnlyDueReminders)
-				.showNotYetDueReminders(showNotYetDueReminders)
-				.showSelfCreated(showSelfCreatedReminders).popupOnLogin(popupOnLogin)
-				.popupOnPatientSelectionToggleAction(popupOnPatientSelection).showAssignedToMeAction(assignedToMe));
-		currentLoader.thenRunAsync(() -> {
-			Display.getDefault().asyncExec(() -> {
-				if (generalViewer != null && !generalViewer.getTable().isDisposed()) {
-					List<IReminder> input;
-					try {
-						input = currentLoader.get();
-						generalViewer.setInput(input);
-						viewerSelectionComposite.setCount(SELECTIONCOMP_GENERAL_ID,
-								generalViewer.getTable().getItemCount());
-						if (input.size() < 5) {
-							if (((GridData) generalViewer.getTable().getLayoutData()).heightHint != 125) {
-								((GridData) generalViewer.getTable().getLayoutData()).heightHint = 125;
-								generalViewer.getTable().getParent().layout(true, true);
-							}
-						} else {
-							if (((GridData) generalViewer.getTable().getLayoutData()).heightHint != 300) {
-								((GridData) generalViewer.getTable().getLayoutData()).heightHint = 300;
-								generalViewer.getTable().getParent().layout(true, true);
-							}
+	private void refreshMyRemindersInput(String config) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
+			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new MyRemindersSupplier()
+					.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+							&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+					.filterDue(filterDueDateDays != -1)
+					.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
+					.showNotYetDueReminders(filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
+					.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
+					.popupOnLogin(filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
+					.popupOnPatientSelectionToggleAction(
+							filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
+					.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
+			currentLoader.thenRunAsync(() -> {
+				Display.getDefault().asyncExec(() -> {
+					if (myViewer != null && !myViewer.getTable().isDisposed()) {
+						List<IReminder> input;
+						try {
+							input = currentLoader.get();
+							myViewer.setInput(input);
+							viewerSelectionComposite.setCount(SELECTIONCOMP_MYREMINDERS_ID,
+									myViewer.getTable().getItemCount());
+						} catch (InterruptedException | ExecutionException e) {
+							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 						}
-					} catch (InterruptedException | ExecutionException e) {
-						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
-					}
 
-				}
+					}
+				});
 			});
-		});
+		}
 	}
 
+	private void refreshGroupRemindersInput(GroupComponent group) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
+			if (group.viewer().getTable().isVisible()) {
+				CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
+						.supplyAsync(new GroupRemindersSupplier(group.id())
+								.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+										&& AccessControlServiceHolder.get()
+												.evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+								.filterDue(filterDueDateDays != -1)
+								.showOnlyDue(filtersMap.get(group.id()).showOnlyOwnDueReminderToggleAction.isChecked())
+								.showNotYetDueReminders(
+										filtersMap.get(group.id()).showNotYetDueReminderToggleAction.isChecked())
+								.showSelfCreated(filtersMap.get(group.id()).showSelfCreatedReminderAction.isChecked())
+								.popupOnLogin(filtersMap.get(group.id()).popupOnLoginReminderToggleAction.isChecked())
+								.popupOnPatientSelectionToggleAction(
+										filtersMap.get(group.id()).popupOnPatientSelectionReminderToggleAction
+												.isChecked())
+								.showAssignedToMeAction(filtersMap.get(group.id()).showAssignedToMeAction.isChecked()));
+				currentLoader.thenRunAsync(() -> {
+					Display.getDefault().asyncExec(() -> {
+						if (group.viewer() != null && !group.viewer().getTable().isDisposed()) {
+							List<IReminder> input;
+							try {
+								input = currentLoader.get();
+								group.viewer().setInput(input);
+								viewerSelectionComposite.setCount(SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id(),
+										group.viewer().getTable().getItemCount());
+							} catch (InterruptedException | ExecutionException e) {
+								LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
+							}
+						}
+					});
+				});
+			}
+		}
+	}
+	
 	private void applyDueDateFilter(IQuery<IReminder> query, boolean includeNoDue) {
 	    LocalDate now = LocalDate.now();
 		LocalDate dueDateDays = now.plusDays(filterDueDateDays);
@@ -827,17 +1159,29 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshUserConfiguration() {
-		showOnlyOwnDueReminderToggleAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN, true));
-		showSelfCreatedReminderAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN, false));
-		toggleAutoSelectPatientAction
-				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
-		showNotYetDueReminderToggleAction
-				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE, false));
-		popupOnLoginReminderToggleAction.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN, false));
-		popupOnPatientSelectionReminderToggleAction
-				.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION, false));
-		showAssignedToMeAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME, false));
-//
+		for (Entry<String, FilterActions> filters : filtersMap.entrySet()) {
+			FilterActions action = filters.getValue();
+			String id = filters.getKey();
+			if (useGlobalFilters) {
+				id = GLOBALFILTERS;
+			}
+			action.showOnlyOwnDueReminderToggleAction
+				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN + "/" + id, true)); //$NON-NLS-1$
+			action.showSelfCreatedReminderAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN + "/" + id, false)); //$NON-NLS-1$
+			toggleAutoSelectPatientAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
+			action.showNotYetDueReminderToggleAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + id, false)); //$NON-NLS-1$
+			action.popupOnLoginReminderToggleAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN + "/" + id, false)); //$NON-NLS-1$
+			action.popupOnPatientSelectionReminderToggleAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + id, false)); //$NON-NLS-1$
+			action.showAssignedToMeAction
+					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + id, false)); //$NON-NLS-1$
+			filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, -1);
+		}
+
 //		// get state from user's configuration
 //		showOthersRemindersAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
 //
@@ -1040,7 +1384,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				ReminderListsView.this.selectionChanged(selection.toList());
 				selectPatientAction.setEnabled(selection.size() <= 1);
 				selectPatientAction.reflectRight();
-				if (autoSelectPatient && selectPatientAction.isEnabled()) {
+				if (toggleAutoSelectPatientAction.isChecked() && selectPatientAction.isEnabled()) {
 					selectPatientAction.doRun();
 				}
 			}
@@ -1062,8 +1406,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
 							int retVal = rdd.open();
 							if (retVal == Dialog.OK) {
-								ElexisEventDispatcher.getInstance()
-										.fire(new ElexisEvent(reminder, getClass(), ElexisEvent.EVENT_UPDATE));
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, reminder);
 							}
 						}
 
@@ -1149,7 +1492,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private static String SELECTIONCOMP_CURRENTPATIENT_ID = "reminderlistsview.selection.currentpatient"; //$NON-NLS-1$
 	private static String SELECTIONCOMP_GENERALPATIENT_ID = "reminderlistsview.selection.generalpatient"; //$NON-NLS-1$
-	private static String SELECTIONCOMP_GENERAL_ID = "reminderlistsview.selection.general"; //$NON-NLS-1$
+	private static String SELECTIONCOMP_MYREMINDERS_ID = "reminderlistsview.selection.myreminders"; //$NON-NLS-1$
+	private static String SELECTIONCOMP_GROUPREMINDERS_PREFIX = "reminderlistsview.selection.groupreminders."; //$NON-NLS-1$
 
 	private class ViewerSelectionComposite extends Composite implements ISelectionProvider {
 
@@ -1224,11 +1568,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					saveSelection();
 				}
 			});
-			manager.add(new Action("allgemein", Action.AS_CHECK_BOX) {
+			manager.add(new Action("meine Pendenzen", Action.AS_CHECK_BOX) {
 
 				@Override
 				public String getId() {
-					return SELECTIONCOMP_GENERAL_ID;
+					return SELECTIONCOMP_MYREMINDERS_ID;
 				}
 
 				@Override
@@ -1243,6 +1587,27 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					saveSelection();
 				}
 			});
+			for (IUserGroup group : userGroups) {
+				manager.add(new Action(group.getId(), Action.AS_CHECK_BOX) {
+
+					@Override
+					public String getId() {
+						return SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.getId();
+					}
+
+					@Override
+					public void run() {
+						if (currentSelection.contains(this)) {
+							currentSelection.remove(this);
+						} else {
+							currentSelection.add(this);
+						}
+						fireSelectionChanged();
+						manager.update(true);
+						saveSelection();
+					}
+				});
+			}
 			manager.createControl(this);
 		}
 
@@ -1304,7 +1669,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private class FilterTimeAction extends Action {
 
-		private List<FilterTimeAction> others;
+		private List<Action> others;
 		private int days;
 
 		public FilterTimeAction(int days) {
@@ -1315,7 +1680,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 		}
 
-		public void setOthers(List<FilterTimeAction> list) {
+		public void setOthers(List<Action> list) {
 			this.others = list;
 		}
 
@@ -1334,10 +1699,94 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 
 			if (others != null) {
-				for (FilterTimeAction other : others) {
+				for (Action other : others) {
 					other.setChecked(false);
 				}
 			}
+		}
+	}
+
+	private class CustomTimeAction extends Action {
+
+		private List<Action> others;
+		private String id;
+
+		public CustomTimeAction(String text, String id) {
+			super(text, Action.AS_CHECK_BOX);
+			this.id = id;
+			List<Integer> list = List.of(-1, 30, 60, 90);
+			setChecked(!list.contains(filterDueDateDays));
+		}
+
+		public void setOthers(List<Action> list) {
+			this.others = list;
+		}
+
+		@Override
+		public void run() {
+			if (isChecked()) {
+				CustomTimePopupDialog dialog = new CustomTimePopupDialog();
+				if (dialog.open() == Dialog.OK) {
+					int days = dialog.getSelectedDays();
+					filterDueDateDays = days;
+					if (useGlobalFilters) {
+						ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, //$NON-NLS-1$
+								days);
+					} else {
+						ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, days); //$NON-NLS-1$
+					}
+				}
+			} else {
+				filterDueDateDays = -1;
+				if (useGlobalFilters) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, -1); //$NON-NLS-1$
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, -1); //$NON-NLS-1$
+				}
+			}
+			clearSelection();
+			refresh();
+
+			if (others != null) {
+				for (Action other : others) {
+					other.setChecked(false);
+				}
+			}
+		}
+	}
+
+	private class CustomTimePopupDialog extends Dialog {
+
+		private int selectedDays;
+
+		public CustomTimePopupDialog() {
+			super(getViewSite().getShell());
+		}
+
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			Composite area = (Composite) super.createDialogArea(parent);
+			area.setLayout(new GridLayout(1, false));
+
+			DateTime calendar = new DateTime(area, SWT.CALENDAR | SWT.BORDER);
+			calendar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			calendar.addListener(SWT.Selection, e -> {
+				LocalDate today = LocalDate.now();
+				LocalDate selectedDate = LocalDate.of(calendar.getYear(), calendar.getMonth() + 1, calendar.getDay());
+				selectedDays = (int) ChronoUnit.DAYS.between(today, selectedDate);
+			});
+
+			return area;
+		}
+
+		@Override
+		protected void createButtonsForButtonBar(Composite parent) {
+			createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+			createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		}
+
+		public int getSelectedDays() {
+			return selectedDays;
 		}
 	}
 
@@ -1420,8 +1869,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				public void doRun(IReminder element) {
 					element.setStatus(representedStatus);
 					CoreModelServiceHolder.get().save(element);
-					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(NoPoUtil.loadAsPersistentObject(element),
-							Reminder.class, ElexisEvent.EVENT_UPDATE));
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 				}
 			}
 		}
@@ -1438,8 +1886,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private boolean popupOnPatientSelection;
 		private boolean assignedToMe;
 		private boolean showNotYetDueReminders;
-		public CurrentPatientSupplier(Patient actPatient) {
-			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
+
+		public CurrentPatientSupplier(IPatient actPatient) {
+			patient = actPatient;
 		}
 
 		@Override
@@ -1553,8 +2002,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private boolean popupOnPatientSelection;
 		private boolean assignedToMe;
 		private boolean showNotYetDueReminders;
-		public GeneralPatientSupplier(Patient actPatient) {
-			patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null);
+
+		public GeneralPatientSupplier(IPatient actPatient) {
+			patient = actPatient;
 		}
 
 		@Override
@@ -1656,7 +2106,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
-	private class GeneralSupplier implements Supplier<List<IReminder>> {
+	private class MyRemindersSupplier implements Supplier<List<IReminder>> {
 
 		private boolean showAll;
 		private boolean filterDue;
@@ -1669,9 +2119,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		@Override
 		public List<IReminder> get() {
 			IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-			query.andFeatureCompare(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS,
-					ModelPackage.Literals.IREMINDER__CONTACT);
-			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 
 			if (showOnlyDue) {
 				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
@@ -1697,26 +2144,31 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 								Visibility.POPUP_ON_PATIENT_SELECTION);
 					}
 				}
-
 				query.andJoinGroups();
 			}
-
 			if (!showAll) {
 				if (showSelfCreated) {
 					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
 						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
 					});
 				}
-				if (assignedToMe) {
-					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-						ISubQuery<IReminderResponsibleLink> subQuery = query
-								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
-						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-						subQuery.and("responsible", COMPARATOR.EQUALS, m);
-						query.exists(subQuery);
-					});
-				}
 			}
+
+			ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+				// subQuery to get reminder with active contact
+				ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
+						CoreModelServiceHolder.get());
+				subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
+				subQuery.and("responsible", COMPARATOR.EQUALS, m);
+				query.exists(subQuery);
+
+				// subQuery to make sure the reminder doesnt have any other contact responsible.
+				ISubQuery<IReminderResponsibleLink> secondSubQuery = query
+						.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
+				secondSubQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
+				secondSubQuery.and("responsible", COMPARATOR.NOT_EQUALS, m);
+				query.notExists(secondSubQuery);
+			});
 
 			if (filterDue) {
 				applyDueDateFilter(query, false);
@@ -1725,42 +2177,176 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			return query.execute();
 		}
 
-		public GeneralSupplier showAll(boolean value) {
+		public MyRemindersSupplier showAll(boolean value) {
 			this.showAll = value;
 			return this;
 		}
 
-		public GeneralSupplier filterDue(boolean value) {
+		public MyRemindersSupplier filterDue(boolean value) {
 			this.filterDue = value;
 			return this;
 		}
 
-		public GeneralSupplier showSelfCreated(boolean value) {
+		public MyRemindersSupplier showSelfCreated(boolean value) {
 			this.showSelfCreated = value;
 			return this;
 		}
 
-		public GeneralSupplier showOnlyDue(boolean showOnlyDueReminders) {
+		public MyRemindersSupplier showOnlyDue(boolean showOnlyDueReminders) {
 			this.showOnlyDue = showOnlyDueReminders;
 			return this;
 		}
 
-		public GeneralSupplier popupOnLogin(boolean value) {
+		public MyRemindersSupplier popupOnLogin(boolean value) {
 			this.popupOnLogin = value;
 			return this;
 		}
 
-		public GeneralSupplier popupOnPatientSelectionToggleAction(boolean value) {
+		public MyRemindersSupplier popupOnPatientSelectionToggleAction(boolean value) {
 			this.popupOnPatientSelection = value;
 			return this;
 		}
 
-		public GeneralSupplier showAssignedToMeAction(boolean value) {
+		public MyRemindersSupplier showAssignedToMeAction(boolean value) {
 			this.assignedToMe = value;
 			return this;
 		}
 
-		public GeneralSupplier showNotYetDueReminders(boolean value) {
+		public MyRemindersSupplier showNotYetDueReminders(boolean value) {
+			this.showNotYetDueReminders = value;
+			return this;
+		}
+	}
+
+	private class GroupRemindersSupplier implements Supplier<List<IReminder>> {
+
+		private boolean showAll;
+		private boolean filterDue;
+		private boolean showSelfCreated;
+		private boolean showOnlyDue;
+		private boolean popupOnLogin;
+		private boolean popupOnPatientSelection;
+		// TODO: is this needed?
+		private boolean assignedToMe;
+		private boolean showNotYetDueReminders;
+		private String groupId;
+
+		public GroupRemindersSupplier(String id) {
+			groupId = id;
+		}
+
+		@Override
+		public List<IReminder> get() {
+			IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
+
+			if (showOnlyDue) {
+				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
+			}
+			if (showNotYetDueReminders) {
+				query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
+			}
+
+			if (popupOnLogin || popupOnPatientSelection) {
+				query.startGroup();
+
+				if (popupOnLogin) {
+					query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+							Visibility.POPUP_ON_LOGIN);
+				}
+
+				if (popupOnPatientSelection) {
+					if (popupOnLogin) {
+						query.or(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					} else {
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+					}
+				}
+				query.andJoinGroups();
+			}
+			if (!showAll) {
+				if (showSelfCreated) {
+					ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+						query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
+					});
+				}
+			}
+
+			IUserGroup group = null;
+			for (IUserGroup g : userGroups) {
+				if (g.getId().equalsIgnoreCase(groupId)) {
+					group = g;
+				}
+			}
+
+			if (group != null) {
+				List<IContact> contactList = group.getUsers().stream().map(user -> user.getAssignedContact())
+						.collect(Collectors.toList());
+
+				// subQuery to get reminders which have any of the contactList assigned.
+				for (IContact c : contactList) {
+					ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
+							CoreModelServiceHolder.get());
+					subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
+					subQuery.and("responsible", COMPARATOR.EQUALS, c);
+					query.exists(subQuery);
+				}
+				
+				// exclusionQuery to make sure that only reminders are returned which are ONLY
+				// assigned to contacts in the contactList.
+				ISubQuery<IReminderResponsibleLink> excludeQuery = query.createSubQuery(IReminderResponsibleLink.class,
+						CoreModelServiceHolder.get());
+				excludeQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
+				for (IContact c : contactList) {
+					excludeQuery.and("responsible", COMPARATOR.NOT_EQUALS, c);
+				}
+				;
+				query.notExists(excludeQuery);
+			}
+
+			if (filterDue) {
+				applyDueDateFilter(query, false);
+			}
+			return query.execute();
+		}
+
+		public GroupRemindersSupplier showAll(boolean value) {
+			this.showAll = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier filterDue(boolean value) {
+			this.filterDue = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier showSelfCreated(boolean value) {
+			this.showSelfCreated = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier showOnlyDue(boolean showOnlyDueReminders) {
+			this.showOnlyDue = showOnlyDueReminders;
+			return this;
+		}
+
+		public GroupRemindersSupplier popupOnLogin(boolean value) {
+			this.popupOnLogin = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier popupOnPatientSelectionToggleAction(boolean value) {
+			this.popupOnPatientSelection = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier showAssignedToMeAction(boolean value) {
+			this.assignedToMe = value;
+			return this;
+		}
+
+		public GroupRemindersSupplier showNotYetDueReminders(boolean value) {
 			this.showNotYetDueReminders = value;
 			return this;
 		}
@@ -1801,9 +2387,70 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
+	private class TableViewerResizer {
+		private static int lastY = 0;
+		private static int newY = 0;
+		private static int tolerance = 15;
+		private static int minHeight = 25;
+
+		public static void enableResizing(TableViewer tableViewer) {
+			Table table = tableViewer.getTable();
+			Composite parent = table.getParent();
+
+			table.addMouseMoveListener(new MouseMoveListener() {
+				@Override
+				public void mouseMove(MouseEvent e) {
+					if (isNearBottomEdge(table, e.y)) {
+						table.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+					} else if (e.stateMask != SWT.BUTTON1 && table.getCursor() != null) {
+						table.setCursor(null);
+					}
+					if (e.stateMask == SWT.BUTTON1 && lastY != 0) {
+						newY = e.y;
+					}
+				}
+			});
+			table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					if (isNearBottomEdge(table, e.y)) {
+						lastY = e.y;
+						table.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+					}
+				}
+				@Override
+				public void mouseUp(MouseEvent e) {
+					if (lastY != 0 && lastY != newY) {
+						int deltaY = newY - lastY;
+						GridData gd = (GridData) table.getLayoutData();
+						if (deltaY != 0) {
+							int newHeight = gd.heightHint + deltaY;
+							if (newHeight > minHeight) {
+								gd.heightHint = newHeight;
+								table.setLayoutData(gd);
+								lastY += deltaY;
+								table.getParent().layout(true, true);
+							}
+						}
+					}
+					lastY = 0;
+				}
+			});
+		}
+
+		private static boolean isNearBottomEdge(Table table, int y) {
+			int tableHeight = table.getBounds().height;
+			return y >= tableHeight - tolerance && y <= tableHeight + tolerance;
+		}
+	}
+
+	private enum TableType {
+		CURRENT_PATIENT, GENERAL_PATIENT, MYREMINDERS, GROUP
+	}
+
 	@Override
 	public void heartbeat() {
-		long highestLastUpdate = PersistentObject.getHighestLastUpdate(Reminder.TABLENAME);
+		long highestLastUpdate = CoreModelServiceHolder.get().getHighestLastUpdate(IReminder.class);
 		if (highestLastUpdate > cvHighestLastUpdate) {
 			refresh();
 			cvHighestLastUpdate = highestLastUpdate;
@@ -1830,11 +2477,26 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		// currently not supported
 	}
 
+	private List<IUserGroup> getUserGroups() {
+		List<IUserGroup> userGroups = CoreModelServiceHolder.get().getQuery(IUserGroup.class).execute();
+		userGroups.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
+		List<IUserGroup> filtered = new ArrayList<>();
+		for (IUserGroup group : userGroups) {
+			if (group.getUsers().contains(ContextServiceHolder.get().getActiveUser().get())) {
+				filtered.add(group);
+			}
+		}
+		return filtered;
+	}
+
 	private void clearSelection() {
 		StructuredSelection clear = new StructuredSelection();
 		currentPatientViewer.setSelection(clear);
 		generalPatientViewer.setSelection(clear);
-		generalViewer.setSelection(clear);
+		myViewer.setSelection(clear);
+		for (GroupComponent group : usergroupComponents) {
+			group.viewer().setSelection(clear);
+		}
 	}
 
 	private void selectionChanged(List<IReminder> list) {

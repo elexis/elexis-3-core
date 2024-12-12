@@ -3961,6 +3961,8 @@ public class Messages extends NLS {
 	public static String ReminderView_importantRemindersOnLogin;
 	public static String ReminderView_myRemindersAction;
 	public static String ReminderView_myRemindersToolTip;
+	public static String ReminderView_useGlobalFiltersAction;
+	public static String ReminderView_useGlobalFiltersToolTip;
 	public static String ReminderView_newReminderToolTip;
 	public static String ReminderView_onePatOnly;
 	public static String ReminderView_onlyDueAction;
