@@ -965,12 +965,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
-			if (!filtersMap.isEmpty()) {
-				patientRefresh();
-				generalRefresh();
-				myRemindersRefresh();
-				groupRemindersRefresh();
-			}
+			patientRefresh();
+			generalRefresh();
+			myRemindersRefresh();
+			groupRemindersRefresh();
 			int width = viewersScrolledComposite.getClientArea().width;
 			viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
 			viewParent.layout(true, true);
