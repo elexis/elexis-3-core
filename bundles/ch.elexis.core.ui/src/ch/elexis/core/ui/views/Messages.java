@@ -461,6 +461,8 @@ public class Messages {
 	public static String ReminderView_importantRemindersOnLogin = ch.elexis.core.l10n.Messages.ReminderView_importantRemindersOnLogin;
 	public static String ReminderView_myRemindersAction = ch.elexis.core.l10n.Messages.ReminderView_myRemindersAction;
 	public static String ReminderView_myRemindersToolTip = ch.elexis.core.l10n.Messages.ReminderView_myRemindersToolTip;
+	public static String ReminderView_useGlobalFiltersAction = ch.elexis.core.l10n.Messages.ReminderView_useGlobalFiltersAction;
+	public static String ReminderView_useGlobalFiltersToolTip = ch.elexis.core.l10n.Messages.ReminderView_useGlobalFiltersToolTip;
 
 	public static String ReminderView_newReminderToolTip = ch.elexis.core.l10n.Messages.ReminderView_newReminderToolTip;
 	public static String ReminderView_onlyDueAction = ch.elexis.core.l10n.Messages.ReminderView_onlyDueAction;
