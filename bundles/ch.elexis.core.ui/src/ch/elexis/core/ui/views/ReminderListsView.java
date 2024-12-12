@@ -97,9 +97,6 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
@@ -134,7 +131,6 @@ import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
-import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 
 /**
@@ -499,8 +495,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				IContact creator = reminder.getCreator();
 				if (patient != null && patient.isPatient()) {
 					if (!patient.getId().equals(creator.getId())) {
-						ElexisEventDispatcher.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(
-								CoreModelServiceHolder.get().load(patient.getId(), IPatient.class).get()));
+						ContextServiceHolder.get().setActivePatient(patient.asIPatient());
 					}
 				}
 			}
@@ -523,12 +518,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Inject
 	void activePatient(IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
-			Patient selectedPatient = (Patient) NoPoUtil.loadAsPersistentObject(patient);
 
-			if (selectedPatient.toIPatient().equals(actPatient)) {
+			if (patient.equals(actPatient)) {
 				return;
 			}
-			actPatient = selectedPatient.toIPatient();
+			actPatient = patient;
 			clearSelection();
 			patientRefresh();
 
@@ -540,11 +534,23 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				UiDesk.asyncExec(new Runnable() {
 
 					public void run() {
-						List<Reminder> list = Reminder.findOpenRemindersResponsibleFor(CoreHub.getLoggedInContact(),
-								false, selectedPatient, true);
+						IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
+						query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
+						query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
+								Visibility.POPUP_ON_PATIENT_SELECTION);
+						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
+							ISubQuery<IReminderResponsibleLink> subQuery = query
+									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
+							subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid"); //$NON-NLS-1$ //$NON-NLS-2$
+							subQuery.and("responsible", COMPARATOR.EQUALS, m); //$NON-NLS-1$
+							query.exists(subQuery);
+						});
+						List<IReminder> list = query.execute();
+
 						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
-							for (Reminder r : list) {
+							for (IReminder r : list) {
 								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
@@ -1400,8 +1406,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
 							int retVal = rdd.open();
 							if (retVal == Dialog.OK) {
-								ElexisEventDispatcher.getInstance()
-										.fire(new ElexisEvent(reminder, getClass(), ElexisEvent.EVENT_UPDATE));
+								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, reminder);
 							}
 						}
 
@@ -1864,8 +1869,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				public void doRun(IReminder element) {
 					element.setStatus(representedStatus);
 					CoreModelServiceHolder.get().save(element);
-					ElexisEventDispatcher.getInstance().fire(new ElexisEvent(NoPoUtil.loadAsPersistentObject(element),
-							IReminder.class, ElexisEvent.EVENT_UPDATE));
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 				}
 			}
 		}
