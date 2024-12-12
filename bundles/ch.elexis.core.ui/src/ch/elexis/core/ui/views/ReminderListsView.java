@@ -662,10 +662,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				refresh();
 			}
 		});
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
-		if (patient != null) {
-			actPatient = CoreModelServiceHolder.get().load(patient.getId(), IPatient.class).get();
-		}
+		actPatient = ContextServiceHolder.get().getActivePatient().orElse(null);
 
 		viewerSelectionComposite.loadSelection();
 		updateViewerSelection((StructuredSelection) viewerSelectionComposite.getSelection());
@@ -968,10 +965,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
-			patientRefresh();
-			generalRefresh();
-			myRemindersRefresh();
-			groupRemindersRefresh();
+			if (!filtersMap.isEmpty()) {
+				patientRefresh();
+				generalRefresh();
+				myRemindersRefresh();
+				groupRemindersRefresh();
+			}
 			int width = viewersScrolledComposite.getClientArea().width;
 			viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
 			viewParent.layout(true, true);
@@ -1009,7 +1008,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshCurrentPatientInput(String config) {
-		if (actPatient != null) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
 					.supplyAsync(new CurrentPatientSupplier(actPatient)
 							.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
@@ -1043,98 +1042,106 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshGeneralPatientInput(String config) {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
-				.supplyAsync(new GeneralPatientSupplier(actPatient)
-						.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-										&& AccessControlServiceHolder.get()
-										.evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-						.filterDue(filterDueDateDays != -1)
-						.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
-						.showNotYetDueReminders(filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
-						.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
-						.popupOnLoginReminderToggleAction(
-								filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
-						.popupOnPatientSelectionToggleAction(
-								filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
-						.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
-		currentLoader.thenRunAsync(() -> {
-			Display.getDefault().asyncExec(() -> {
-				if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
-					List<IReminder> input;
-					try {
-						input = currentLoader.get();
-						generalPatientViewer.setInput(input);
-						viewerSelectionComposite.setCount(SELECTIONCOMP_GENERALPATIENT_ID,
-								generalPatientViewer.getTable().getItemCount());
-					} catch (InterruptedException | ExecutionException e) {
-						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
-					}
-
-				}
-			});
-		});
-	}
-
-	private void refreshMyRemindersInput(String config) {
-		CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new MyRemindersSupplier()
-				.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-						&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-				.filterDue(filterDueDateDays != -1)
-				.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
-				.showNotYetDueReminders(filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
-				.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
-				.popupOnLogin(filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
-				.popupOnPatientSelectionToggleAction(
-						filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
-				.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
-		currentLoader.thenRunAsync(() -> {
-			Display.getDefault().asyncExec(() -> {
-				if (myViewer != null && !myViewer.getTable().isDisposed()) {
-					List<IReminder> input;
-					try {
-						input = currentLoader.get();
-						myViewer.setInput(input);
-						viewerSelectionComposite.setCount(SELECTIONCOMP_MYREMINDERS_ID,
-								myViewer.getTable().getItemCount());
-					} catch (InterruptedException | ExecutionException e) {
-						LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
-					}
-
-				}
-			});
-		});
-	}
-
-	private void refreshGroupRemindersInput(GroupComponent group) {
-		if (group.viewer().getTable().isVisible()) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
 			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
-					.supplyAsync(new GroupRemindersSupplier(group.id())
-					.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
-							&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
-					.filterDue(filterDueDateDays != -1)
-							.showOnlyDue(filtersMap.get(group.id()).showOnlyOwnDueReminderToggleAction.isChecked())
+					.supplyAsync(new GeneralPatientSupplier(actPatient)
+							.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+									&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+							.filterDue(filterDueDateDays != -1)
+							.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
 							.showNotYetDueReminders(
-									filtersMap.get(group.id()).showNotYetDueReminderToggleAction.isChecked())
-							.showSelfCreated(filtersMap.get(group.id()).showSelfCreatedReminderAction.isChecked())
-							.popupOnLogin(filtersMap.get(group.id()).popupOnLoginReminderToggleAction.isChecked())
-					.popupOnPatientSelectionToggleAction(
-									filtersMap.get(group.id()).popupOnPatientSelectionReminderToggleAction.isChecked())
-							.showAssignedToMeAction(filtersMap.get(group.id()).showAssignedToMeAction.isChecked()));
+									filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
+							.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
+							.popupOnLoginReminderToggleAction(
+									filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
+							.popupOnPatientSelectionToggleAction(
+									filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
+							.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
 			currentLoader.thenRunAsync(() -> {
 				Display.getDefault().asyncExec(() -> {
-					if (group.viewer() != null && !group.viewer().getTable().isDisposed()) {
+					if (generalPatientViewer != null && !generalPatientViewer.getTable().isDisposed()) {
 						List<IReminder> input;
 						try {
 							input = currentLoader.get();
-							group.viewer().setInput(input);
-							viewerSelectionComposite.setCount(SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id(),
-									group.viewer().getTable().getItemCount());
+							generalPatientViewer.setInput(input);
+							viewerSelectionComposite.setCount(SELECTIONCOMP_GENERALPATIENT_ID,
+									generalPatientViewer.getTable().getItemCount());
 						} catch (InterruptedException | ExecutionException e) {
 							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
 						}
+
 					}
 				});
 			});
+		}
+	}
+
+	private void refreshMyRemindersInput(String config) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
+			CompletableFuture<List<IReminder>> currentLoader = CompletableFuture.supplyAsync(new MyRemindersSupplier()
+					.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+							&& AccessControlServiceHolder.get().evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+					.filterDue(filterDueDateDays != -1)
+					.showOnlyDue(filtersMap.get(config).showOnlyOwnDueReminderToggleAction.isChecked())
+					.showNotYetDueReminders(filtersMap.get(config).showNotYetDueReminderToggleAction.isChecked())
+					.showSelfCreated(filtersMap.get(config).showSelfCreatedReminderAction.isChecked())
+					.popupOnLogin(filtersMap.get(config).popupOnLoginReminderToggleAction.isChecked())
+					.popupOnPatientSelectionToggleAction(
+							filtersMap.get(config).popupOnPatientSelectionReminderToggleAction.isChecked())
+					.showAssignedToMeAction(filtersMap.get(config).showAssignedToMeAction.isChecked()));
+			currentLoader.thenRunAsync(() -> {
+				Display.getDefault().asyncExec(() -> {
+					if (myViewer != null && !myViewer.getTable().isDisposed()) {
+						List<IReminder> input;
+						try {
+							input = currentLoader.get();
+							myViewer.setInput(input);
+							viewerSelectionComposite.setCount(SELECTIONCOMP_MYREMINDERS_ID,
+									myViewer.getTable().getItemCount());
+						} catch (InterruptedException | ExecutionException e) {
+							LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
+						}
+
+					}
+				});
+			});
+		}
+	}
+
+	private void refreshGroupRemindersInput(GroupComponent group) {
+		if (filtersMap != null || filtersMap.isEmpty()) {
+			if (group.viewer().getTable().isVisible()) {
+				CompletableFuture<List<IReminder>> currentLoader = CompletableFuture
+						.supplyAsync(new GroupRemindersSupplier(group.id())
+								.showAll(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false)
+										&& AccessControlServiceHolder.get()
+												.evaluate(EvACE.of(IReminder.class, Right.VIEW)))
+								.filterDue(filterDueDateDays != -1)
+								.showOnlyDue(filtersMap.get(group.id()).showOnlyOwnDueReminderToggleAction.isChecked())
+								.showNotYetDueReminders(
+										filtersMap.get(group.id()).showNotYetDueReminderToggleAction.isChecked())
+								.showSelfCreated(filtersMap.get(group.id()).showSelfCreatedReminderAction.isChecked())
+								.popupOnLogin(filtersMap.get(group.id()).popupOnLoginReminderToggleAction.isChecked())
+								.popupOnPatientSelectionToggleAction(
+										filtersMap.get(group.id()).popupOnPatientSelectionReminderToggleAction
+												.isChecked())
+								.showAssignedToMeAction(filtersMap.get(group.id()).showAssignedToMeAction.isChecked()));
+				currentLoader.thenRunAsync(() -> {
+					Display.getDefault().asyncExec(() -> {
+						if (group.viewer() != null && !group.viewer().getTable().isDisposed()) {
+							List<IReminder> input;
+							try {
+								input = currentLoader.get();
+								group.viewer().setInput(input);
+								viewerSelectionComposite.setCount(SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id(),
+										group.viewer().getTable().getItemCount());
+							} catch (InterruptedException | ExecutionException e) {
+								LoggerFactory.getLogger(getClass()).error("Error loading reminders", e);
+							}
+						}
+					});
+				});
+			}
 		}
 	}
 	
@@ -1392,7 +1399,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 						@Override
 						public void lockAcquired() {
 							ReminderDetailDialog rdd = new ReminderDetailDialog(UiDesk.getTopShell(),
-									CoreModelServiceHolder.get().load(reminder.getId(), Reminder.class).get());
+									(Reminder) NoPoUtil.loadAsPersistentObject(reminder));
 							int retVal = rdd.open();
 							if (retVal == Dialog.OK) {
 								ElexisEventDispatcher.getInstance()
