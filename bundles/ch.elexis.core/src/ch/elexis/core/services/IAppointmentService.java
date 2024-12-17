@@ -225,4 +225,16 @@ public interface IAppointmentService {
 	List<Area> getAoboAreas();
 
 	public void addArea(String name);
+
+	/**
+	 * Get all {@link IAppointment}s of the provided day of the provided schedule.
+	 * If includeTransientFree is true, transient {@link IAppointment}s are included
+	 * for times in between persistent {@link IAppointment}s.
+	 * 
+	 * @param schedule
+	 * @param day
+	 * @param includeTransientFree
+	 * @return
+	 */
+	public List<IAppointment> getAppointments(String schedule, LocalDate day, boolean includeTransientFree);
 }
