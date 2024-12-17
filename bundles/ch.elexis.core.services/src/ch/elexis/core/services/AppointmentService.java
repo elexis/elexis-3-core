@@ -44,6 +44,7 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.AppointmentServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -743,6 +744,7 @@ public class AppointmentService implements IAppointmentService {
 		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
 		query.and("tag", COMPARATOR.EQUALS, day);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__SCHEDULE, COMPARATOR.EQUALS, schedule);
+		query.orderByLeftPadded("Beginn", ORDER.ASC);
 
 		List<IAppointment> existingAppointments = query.execute();
 		if (includeTransientFree) {
