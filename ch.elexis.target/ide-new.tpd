@@ -1,0 +1,32 @@
+target "Elexis IDE 2024-12-java21" with source allEnvironments
+
+location "https://download.eclipse.org/releases/2024-12/" {
+	org.eclipse.e4.rcp.feature.group
+	org.eclipse.emf.common.feature.group
+	org.eclipse.emf.ecore.feature.group
+}
+
+location "https://download.elexis.info/elexis/target/2023-09-java21/" {
+	info.elexis.target.commons.feature.group
+	com.google.gson
+	org.jdom2
+	org.slf4j.api
+}
+
+maven MavenDependencies scope=compile,test dependencyDepth=infinite missingManifest=generate includeSources {
+	dependency {
+		groupId="jakarta.xml.bind"
+		artifactId="jakarta.xml.bind-api"
+		version="4.0.2"
+	}
+	dependency {
+		groupId="jakarta.ws.rs"
+		artifactId="jakarta.ws.rs-api"
+		version="4.0.0"
+	}
+	dependency {
+		groupId="org.eclipse.persistence"
+		artifactId="eclipselink"
+		version="4.0.4"
+	}
+}

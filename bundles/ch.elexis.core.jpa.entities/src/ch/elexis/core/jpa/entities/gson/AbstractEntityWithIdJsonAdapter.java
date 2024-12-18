@@ -2,7 +2,7 @@ package ch.elexis.core.jpa.entities.gson;
 
 import java.io.IOException;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 

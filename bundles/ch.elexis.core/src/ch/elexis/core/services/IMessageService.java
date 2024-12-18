@@ -24,7 +24,7 @@ public interface IMessageService {
 	 * @param recipientUri a recipient URI scheme and the user.<br>
 	 *                     For internal communication either explicitly select the
 	 *                     transporter e.g. <code>internaldb:user</code>,
-	 *                     <code>rocketchat:user</code> or use the implicit
+	 *                     <code>matrix:user</code> or use the implicit
 	 *                     {@link #INTERNAL_MESSAGE_URI_SCHEME} to leave the choice
 	 *                     to the system.<br>
 	 *                     For external communication use

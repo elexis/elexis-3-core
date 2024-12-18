@@ -1,11 +1,10 @@
 package ch.elexis.core.jpa.entities.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.model.XidQuality;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter
 public class XidQualityConverter implements AttributeConverter<XidQuality, String> {

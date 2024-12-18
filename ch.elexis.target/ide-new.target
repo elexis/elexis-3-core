@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde?>
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Elexis IDE 2024-12-java21" sequenceNumber="1734525210">
+  <locations>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.e4.rcp.feature.group" version="4.34.0.v20241113-2009"/>
+      <unit id="org.eclipse.emf.common.feature.group" version="2.33.0.v20240911-1027"/>
+      <unit id="org.eclipse.emf.ecore.feature.group" version="2.39.0.v20241018-1213"/>
+      <repository location="https://download.eclipse.org/releases/2024-12/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="info.elexis.target.commons.feature.group" version="23.9.0.20241105125320"/>
+      <unit id="com.google.gson" version="2.10.1"/>
+      <unit id="org.jdom2" version="2.0.6.v20221112-0806"/>
+      <unit id="org.slf4j.api" version="1.7.30.v20221112-0806"/>
+      <repository location="https://download.elexis.info/elexis/target/2023-09-java21/"/>
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,test" includeSource="true" missingManifest="generate" type="Maven" label="MavenDependencies">
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <version>4.0.2</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.ws.rs</groupId>
+          <artifactId>jakarta.ws.rs-api</artifactId>
+          <version>4.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.eclipse.persistence</groupId>
+          <artifactId>eclipselink</artifactId>
+          <version>4.0.4</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+    </location>
+  </locations>
+</target>

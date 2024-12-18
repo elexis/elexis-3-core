@@ -10,10 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import ch.elexis.core.types.Gender;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 /**
  * This converter allows "fuzziness" within the country value of an existing
