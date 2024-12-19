@@ -991,6 +991,7 @@ public class Messages extends NLS {
 	public static String Core_Ok;
 	public static String Core_Open;
 	public static String Core_Open_Template;
+	public static String Core_Order;
 	public static String Core_Organisation;
 	public static String Core_Other;
 	public static String Core_Output_Invoice;
@@ -5077,6 +5078,7 @@ public class Messages extends NLS {
 	public static String Button_UpdateCharts;
 	public static String Checkbox_ShowLegend;
 	public static String Article_Medic_Label;
+	public static String Rowa_Article_Medic_Label;
 	public static String Appointment_TrminLinks;
 	public static String CombinedAppointments_Titel;
 	public static String CombinedAppointments_ToolTipText;

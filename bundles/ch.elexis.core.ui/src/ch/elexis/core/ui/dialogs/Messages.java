@@ -292,5 +292,6 @@ public class Messages {
 	public static String Core_EAN = ch.elexis.core.l10n.Messages.Core_EAN;
 	public static String UI_description = ch.elexis.core.l10n.Messages.UI_description;
 	public static String Core_Stock = ch.elexis.core.l10n.Messages.Core_Stock;
+	public static String Core_Order = ch.elexis.core.l10n.Messages.Core_Order;
 
 }
