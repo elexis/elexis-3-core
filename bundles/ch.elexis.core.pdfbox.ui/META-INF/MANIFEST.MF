@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.core.di,
  ch.elexis.core;bundle-version="3.10.0",
- ch.elexis.core.ui.e4;bundle-version="3.10.0"
+ ch.elexis.core.ui.e4;bundle-version="3.10.0",
+ ch.elexis.core.documents
 Automatic-Module-Name: ch.elexis.core.pdfbox.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
@@ -18,3 +19,5 @@ Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
  org.slf4j;version="1.6.6"
 Export-Package: ch.elexis.core.pdfbox.ui.parts,
  ch.elexis.core.pdfbox.ui.parts.handlers
+Service-Component: OSGI-INF/ch.elexis.core.pdfbox.ui.parts.handlers.DocumentConverterServiceHolder.xml
+Bundle-ActivationPolicy: lazy
