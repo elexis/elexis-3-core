@@ -35,9 +35,6 @@ public class PdfPreviewPart {
 	@Inject
 	private IConfigService configService;
 
-
-//	private IDocumentConverter converter;
-
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
 	private PdfPreviewPartLoadHandler pdfPreviewPartLoadHandler;
@@ -93,12 +90,10 @@ public class PdfPreviewPart {
 			pdfPreviewPartLoadHandler.close();
 		}
 		java.util.Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
-		if (converterService.isPresent() && converterService.get().isAvailable()) {
-
-		if (currentDocument != null && "docx".equalsIgnoreCase(currentDocument.getExtension())) {
+		if (converterService.isPresent() && converterService.get().isAvailable() && currentDocument != null
+				&& "docx".equalsIgnoreCase(currentDocument.getExtension())) {
 			try {
-				java.util.Optional<File> pdfFile = DocumentConverterServiceHolder.get().get()
-						.convertToPdf(currentDocument);
+				java.util.Optional<File> pdfFile = converterService.get().convertToPdf(currentDocument);
 				if (pdfFile.isPresent()) {
 					 pdfInputStream = new FileInputStream(pdfFile.get());
 						currentDocument = null;
@@ -106,8 +101,6 @@ public class PdfPreviewPart {
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Error converting document [" + currentDocument + "]", e);
 			}
-		
-		}
 	}
 		
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
