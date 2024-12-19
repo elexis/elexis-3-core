@@ -199,7 +199,8 @@ public class PdfPreviewPartLoadHandler {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
-					headLabel.setText(e.getMessage());
+					headLabel
+							.setText(Messages.PdfPreview_DocXError);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
 					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));

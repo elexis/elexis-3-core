@@ -24,6 +24,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.pdfbox.ui.parts.handlers.DocumentConverterServiceHolder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
@@ -34,8 +35,8 @@ public class PdfPreviewPart {
 	@Inject
 	private IConfigService configService;
 
-	@Inject
-	private IDocumentConverter converter;
+
+//	private IDocumentConverter converter;
 
 	private Composite previewComposite;
 	private ScrolledComposite scrolledComposite;
@@ -91,10 +92,13 @@ public class PdfPreviewPart {
 			}
 			pdfPreviewPartLoadHandler.close();
 		}
+		java.util.Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+		if (converterService.isPresent() && converterService.get().isAvailable()) {
 
 		if (currentDocument != null && "docx".equalsIgnoreCase(currentDocument.getExtension())) {
 			try {
-				 java.util.Optional<File> pdfFile = converter.convertToPdf(currentDocument);
+				java.util.Optional<File> pdfFile = DocumentConverterServiceHolder.get().get()
+						.convertToPdf(currentDocument);
 				if (pdfFile.isPresent()) {
 					 pdfInputStream = new FileInputStream(pdfFile.get());
 						currentDocument = null;
@@ -104,6 +108,7 @@ public class PdfPreviewPart {
 			}
 		
 		}
+	}
 		
 		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
 				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
