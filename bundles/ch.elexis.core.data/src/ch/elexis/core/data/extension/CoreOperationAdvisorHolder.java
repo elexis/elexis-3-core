@@ -1,19 +1,22 @@
 package ch.elexis.core.data.extension;
 
-import ch.elexis.core.utils.OsgiServiceUtil;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @since 3.8 replaced extension point based solution
  */
+@Component
 public class CoreOperationAdvisorHolder {
 
 	private static ICoreOperationAdvisor coreOperationAdvisor;
 
-	public static ICoreOperationAdvisor get() {
-		if (coreOperationAdvisor == null) {
-			coreOperationAdvisor = OsgiServiceUtil.getServiceWait(ICoreOperationAdvisor.class, 30000).orElseThrow();
-		}
-		return coreOperationAdvisor;
+	@Reference
+	public void setCoreOperationAdvisor(ICoreOperationAdvisor coreOperationAdvisor) {
+		CoreOperationAdvisorHolder.coreOperationAdvisor = coreOperationAdvisor;
 	}
 
+	public static ICoreOperationAdvisor get() {
+		return coreOperationAdvisor;
+	}
 }
