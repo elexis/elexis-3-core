@@ -173,7 +173,7 @@
        	  <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.importer.div.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch</argLine>
+          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Dorg.eclipse.gemini.refreshBundles=false</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
@@ -198,11 +198,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>com.opencsv</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>bcpg</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -233,6 +228,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.lang3</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.jfree.chart</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -273,11 +273,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.felix.gogo.shell</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -447,11 +442,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.hamcrest.library</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.core.jersey-common</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -492,6 +482,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.jfree.jcommon</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>javax.activation</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -508,6 +503,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.jaxen</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -677,11 +677,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm.util</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -773,6 +768,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.slf4j.apis.jcl</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.swtchart</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -908,6 +908,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.contexts</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.jfree.chart-swt</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -1070,6 +1075,11 @@
             <bundle>
               <id>org.eclipse.equinox.event</id>
               <level>4</level>
+              <autoStart>true</autoStart>
+            </bundle>
+            <bundle>
+              <id>org.apache.aries.spifly.dynamic.bundle</id>
+              <level>1</level>
               <autoStart>true</autoStart>
             </bundle>
             <bundle>
