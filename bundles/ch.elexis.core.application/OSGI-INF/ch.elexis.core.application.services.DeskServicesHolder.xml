@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.application.services.DeskServicesHolder">
-   <reference bind="setAccessControlService" interface="ch.elexis.core.services.IAccessControlService" name="AccessControlService"/>
-   <reference bind="setConfigService" interface="ch.elexis.core.services.IConfigService" name="ConfigService"/>
-   <reference bind="setCoreOperationAdvisor" interface="ch.elexis.core.data.extension.ICoreOperationAdvisor" name="CoreOperationAdvisor"/>
-   <reference bind="setElexisDataSource" interface="ch.elexis.core.services.IElexisDataSource" name="ElexisDataSource" target="(id=default)"/>
-   <reference bind="setPersistentObjectDataSourceActivator" interface="ch.elexis.data.PersistentObjectDataSourceActivator" name="PersistentObjectDataSourceActivator"/>
-   <implementation class="ch.elexis.core.application.services.DeskServicesHolder"/>
-</scr:component>
