@@ -22,12 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
+import ch.elexis.core.application.services.DeskServicesHolder;
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
@@ -40,7 +40,6 @@ import ch.elexis.core.status.StatusUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectDataSourceActivator;
 import ch.rgw.io.FileTool;
@@ -56,11 +55,11 @@ public class Desk implements IApplication {
 	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		DeskServicesHolder.waitForServices(30000);
 		// Check if we "are complete" - throws Error if not
-		ICoreOperationAdvisor cod = CoreOperationAdvisorHolder.get();
+		ICoreOperationAdvisor cod = DeskServicesHolder.getCoreOperationAdvisor();
 
-		IElexisDataSource elexisDataSource = OsgiServiceUtil.getService(IElexisDataSource.class, "(id=default)")
-				.orElseThrow();
+		IElexisDataSource elexisDataSource = DeskServicesHolder.getElexisDatasource();
 		ObjectStatus connectionStatus = elexisDataSource.getCurrentConnectionStatus();
 		if (connectionStatus != null && !connectionStatus.isOK()) {
 			StatusDialog.show(connectionStatus);
@@ -83,13 +82,12 @@ public class Desk implements IApplication {
 			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
 			if (!connection.isPresent()) {
 				// none found in CoreHub.localCfg - need to configure
-				CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();
+				cod.requestDatabaseConnectionConfiguration();
 				MessageEvent.fireInformation("Datenbankverbindung geändert", "Bitte starten Sie Elexis erneut");
 				System.exit(0);
 			}
 
 			elexisDataSource.setDBConnection(connection.get());
-			OsgiServiceUtil.ungetService(elexisDataSource);
 		}
 
 		// check for initialization parameters
@@ -106,9 +104,7 @@ public class Desk implements IApplication {
 		initIdentifiers();
 
 		// wait for persistent object to be ready
-		PersistentObjectDataSourceActivator service = OsgiServiceUtil
-				.getServiceWait(PersistentObjectDataSourceActivator.class, 5000).orElseThrow();
-		OsgiServiceUtil.ungetService(service);
+		PersistentObjectDataSourceActivator service = DeskServicesHolder.getPersistentObjectDataSourceActivator();
 
 		// close splash
 		context.applicationRunning();
@@ -148,9 +144,9 @@ public class Desk implements IApplication {
 	}
 
 	protected void initIdentifiers() {
-		IAccessControlService accessControlService = OsgiServiceUtil.getServiceWait(IAccessControlService.class, 5000).orElseThrow();
+		IAccessControlService accessControlService = DeskServicesHolder.getAccessControlService();
 		accessControlService.doPrivileged(() -> {
-			IConfigService configService = OsgiServiceUtil.getServiceWait(IConfigService.class, 5000).orElseThrow();
+			IConfigService configService = DeskServicesHolder.getConfigService();
 			if (configService.get(Preferences.INSTALLATION_TIMESTAMP, null) == null) {
 				LocalLock localLock = new LocalLock("initInstallationTimestamp"); //$NON-NLS-1$
 				if (localLock.tryLock()) {
@@ -159,9 +155,7 @@ public class Desk implements IApplication {
 				localLock.unlock();
 			}
 			configService.setLocal(ch.elexis.core.constants.Preferences.SOFTWARE_OID, StringUtils.EMPTY);
-			OsgiServiceUtil.ungetService(configService);
 		});
-		OsgiServiceUtil.ungetService(accessControlService);
 	}
 
 	@Override
