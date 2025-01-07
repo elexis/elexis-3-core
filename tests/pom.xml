@@ -26,9 +26,10 @@
 		<!--
 		<module>ch.elexis.core.jpa.test</module>
 		<module>ch.elexis.core.jpa.entities.test</module>
+		<module>ch.elexis.core.ui.tests</module>
+		<module>ch.elexis.core.ui.importer.div.tests</module>
 		-->
 		<module>ch.elexis.core.text.docx.test</module>
-		<module>ch.elexis.core.ui.tests</module>
 		<module>ch.elexis.core.mail.test</module>
 		<module>ch.elexis.core.jcifs.test</module>
 		<module>ch.elexis.core.model.test</module>
@@ -40,7 +41,6 @@
 		<module>ch.elexis.core.findings.util.test</module>
 		<module>ch.elexis.core.hl7.v2x.tests </module>
 		<module>ch.elexis.core.tasks.test</module>
-		<module>ch.elexis.core.ui.importer.div.tests</module>
 		<module>ch.rgw.utility.tests</module>
 	</modules>
 
