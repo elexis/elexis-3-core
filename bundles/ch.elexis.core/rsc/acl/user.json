@@ -73,6 +73,7 @@
 		"ch.elexis.icpc.model.internal.IcpcCode": "rv",
 		"ch.elexis.icpc.model.internal.IcpcEncounter": "rv",
 		"ch.elexis.icpc.model.internal.IcpcEpisode": "rv",
-		"ch.elexis.privatrechnung.model.IPrivatLeistung": "cruvd"
+		"ch.elexis.privatrechnung.model.IPrivatLeistung": "cruvd",
+		"ch.elexis.data.Script": "rvx"
 	}
 }

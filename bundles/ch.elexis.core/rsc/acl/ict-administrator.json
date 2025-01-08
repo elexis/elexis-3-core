@@ -43,6 +43,7 @@
 		"ch.elexis.core.model.IUserGroup":"cruvdxz",
 		"ch.elexis.core.tasks.model.ITask":"cruvdx",
 		"ch.elexis.core.tasks.model.ITaskDescriptor":"cruvdx",
-		"ch.elexis.omnivore.model.IDocumentHandle":"cruvdx"			
+		"ch.elexis.omnivore.model.IDocumentHandle":"cruvdx",
+		"ch.elexis.data.Script": "cruvdx"			
 	}
 }
