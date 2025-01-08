@@ -194,6 +194,7 @@ public class IConfigServiceTest extends AbstractServiceTest {
 
 	@Test
 	public void getSetLocal() {
+		configService.setLocal("localKey", null);
 		assertEquals("foo", configService.getLocal("localKey", "foo"));
 		configService.setLocal("localKey", "localValue");
 		assertEquals("localValue", configService.getLocal("localKey", "foo"));
