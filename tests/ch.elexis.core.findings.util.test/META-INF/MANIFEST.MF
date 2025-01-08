@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-SymbolicName: ch.elexis.core.findings.util.test
 Bundle-Version: 3.12.0.qualifier
 Fragment-Host: ch.elexis.core.findings.util;bundle-version="3.10.0"
