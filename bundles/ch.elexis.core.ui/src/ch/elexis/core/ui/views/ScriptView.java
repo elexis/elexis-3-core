@@ -134,8 +134,8 @@ public class ScriptView extends ViewPart {
 	class ScriptComparator implements Comparator<Script> {
 		@Override
 		public int compare(Script script0, Script script1) {
-			String script0_ID = ((ch.elexis.data.Script) script0).getId().toUpperCase();
-			String script1_ID = ((ch.elexis.data.Script) script1).getId().toUpperCase();
+			String script0_ID = script0.getId().toUpperCase();
+			String script1_ID = script1.getId().toUpperCase();
 			return script0_ID.compareTo(script1_ID);
 		}
 	}
@@ -177,7 +177,7 @@ public class ScriptView extends ViewPart {
 			}
 		};
 
-		importScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE), "Import Script") {
+		importScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.CREATE), "Import Script") {
 			{
 				setImageDescriptor(Images.IMG_IMPORT.getImageDescriptor());
 				setToolTipText("Import script from a text file");
@@ -200,7 +200,8 @@ public class ScriptView extends ViewPart {
 			}
 
 		};
-		newScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE), Messages.ScriptView_newScriptAction) { // $NON-NLS-1$
+		newScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.CREATE),
+				Messages.ScriptView_newScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_NEW.getImageDescriptor());
 				setToolTipText(Messages.ScriptView_newScriptTooltip); // $NON-NLS-1$
@@ -243,7 +244,7 @@ public class ScriptView extends ViewPart {
 
 			}
 		};
-		removeScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.UPDATE),
+		removeScriptAction = new RestrictedAction(EvACE.of(Script.class, Right.DELETE),
 				Messages.ScriptView_deleteScriptAction) { // $NON-NLS-1$
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
