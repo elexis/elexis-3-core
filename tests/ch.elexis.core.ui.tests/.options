@@ -7,7 +7,7 @@ org.eclipse.osgi/debug/loader=false
 # Prints out event (FrameworkEvent/BundleEvent/ServiceEvent) and listener debug information
 org.eclipse.osgi/debug/events=false
 # Prints out OSGi service debug information (registration/getting/ungetting etc.)
-org.eclipse.osgi/debug/services=false
+org.eclipse.osgi/debug/services=true
 # Prints out bundle manifest parsing debug information
 org.eclipse.osgi/debug/manifest=false
 # Prints out LDAP filter debug information
