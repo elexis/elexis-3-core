@@ -12,7 +12,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
-@Component(property = "id=login.dialog", immediate = true)
+@Component(property = "id=login.dialog")
 public class LoginDialogLoginContributor implements ILoginContributor {
 
 	@Override

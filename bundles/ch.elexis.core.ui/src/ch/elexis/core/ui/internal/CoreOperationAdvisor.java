@@ -45,7 +45,7 @@ import ch.elexis.core.ui.util.SqlWithUiRunner;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.core.utils.CoreUtil;
 
-@Component(immediate = true)
+@Component
 public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 
 	@Reference(target = "(id=login.envvars)")
