@@ -45,7 +45,7 @@ public class DispenseHandler extends AbstractHandler {
 		for (IPrescription prescription : prescRecipes) {
 			CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(null,
 					HandlerUtil.getActiveShell(event));
-			prescriptionHelper.selfDispense(prescription);
+			prescriptionHelper.selfDispense(prescription, true);
 		}
 		ContextServiceHolder.get().getTyped(IEncounter.class)
 				.ifPresent(enc -> ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, enc));
