@@ -8,11 +8,6 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.UUID;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -44,6 +39,10 @@ import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator;
 import ch.elexis.core.services.internal.Bundle;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 
 @Component
 public class ElexisServerService implements IElexisServerService {
@@ -236,7 +235,7 @@ public class ElexisServerService implements IElexisServerService {
 
 			connectionOk = (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 		} catch (IOException e) {
-			log.warn("Error connecting to [{}]: {}", restUrl, e.getMessage());
+//			log.warn("Error connecting to [{}]: {}", restUrl, e.getMessage());
 		}
 
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {

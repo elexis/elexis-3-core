@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
@@ -25,6 +23,7 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.mediorder.MediorderPart;
 import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 import ch.elexis.core.ui.mediorder.MediorderStockState;
+import jakarta.inject.Named;
 
 public class FilterByOrderStatusHandler {
 

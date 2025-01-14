@@ -1,7 +1,8 @@
 package ch.elexis.core.ui.documents.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 

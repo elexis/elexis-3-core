@@ -14,8 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,6 +44,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
+import jakarta.xml.bind.JAXBException;
 
 public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage {
 	private Label lblConnection, lblUser, lblDriver, lblTyp;

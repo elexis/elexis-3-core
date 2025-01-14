@@ -12,9 +12,6 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
@@ -33,6 +30,8 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class DiagnosenView extends ViewPart implements IActivationListener {
 	public final static String ID = "ch.elexis.DiagnosenView"; //$NON-NLS-1$

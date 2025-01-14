@@ -15,8 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.dialogs.Dialog;
@@ -60,6 +58,7 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
 
 /**
  * Diese Klasse ist der OSGi-Activator und steuert somit Start und Ende der

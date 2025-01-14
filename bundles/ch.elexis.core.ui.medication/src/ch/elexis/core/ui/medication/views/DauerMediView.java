@@ -11,9 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.medication.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
@@ -29,6 +26,8 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.ListDisplaySelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Eine platzsparende View zur Anzeige der Dauermedikation

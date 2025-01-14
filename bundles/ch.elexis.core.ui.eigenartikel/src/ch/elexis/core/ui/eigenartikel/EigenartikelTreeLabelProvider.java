@@ -3,8 +3,6 @@ package ch.elexis.core.ui.eigenartikel;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.IColorProvider;
@@ -21,6 +19,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import jakarta.inject.Inject;
 
 public class EigenartikelTreeLabelProvider extends LabelProvider implements IColorProvider {
 

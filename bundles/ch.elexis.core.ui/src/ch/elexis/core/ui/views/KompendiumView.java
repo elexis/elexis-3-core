@@ -12,9 +12,6 @@
 
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
@@ -27,6 +24,8 @@ import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Diese View reichtet einen Browser aufs Arzneimittel-Kompendium ein.

@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.program.Program;
@@ -46,6 +43,8 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Kontakt;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class BestellBlatt extends ViewPart implements ICallback {
 	public final static String ID = "ch.elexis.BestellBlatt"; //$NON-NLS-1$

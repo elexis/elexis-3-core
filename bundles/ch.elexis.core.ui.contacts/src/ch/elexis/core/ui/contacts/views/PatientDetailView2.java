@@ -12,9 +12,6 @@
 
 package ch.elexis.core.ui.contacts.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,6 +28,8 @@ import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Patient;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class PatientDetailView2 extends ViewPart implements IActivationListener {
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$

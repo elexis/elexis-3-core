@@ -13,9 +13,6 @@
 
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -40,6 +37,8 @@ import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.locks.ToggleCurrentCaseLockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class FallDetailView extends ViewPart implements IRefreshable {
 	public static final String ID = "ch.elexis.FallDetailView"; //$NON-NLS-1$

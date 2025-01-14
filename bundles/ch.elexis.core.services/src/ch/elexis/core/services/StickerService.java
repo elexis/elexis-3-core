@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,6 +23,8 @@ import ch.elexis.core.jpa.entities.StickerObjectLinkId;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 @Component
 public class StickerService implements IStickerService {

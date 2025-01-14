@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -110,6 +107,8 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.scripting.CSVWriter;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class StockView extends ViewPart implements IRefreshable {
 	public StockView() {

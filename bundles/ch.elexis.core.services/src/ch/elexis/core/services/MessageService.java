@@ -49,7 +49,7 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public ObjectStatus send(TransientMessage message) {
+	public ObjectStatus<String> send(TransientMessage message) {
 
 		String transporterScheme = message.getTransporterScheme();
 		IMessageTransporter messageTransporter = null;
@@ -60,29 +60,29 @@ public class MessageService implements IMessageService {
 		}
 
 		if (messageTransporter == null) {
-			return new ObjectStatus(IStatus.ERROR, Bundle.ID,
+			return new ObjectStatus<String>(IStatus.ERROR, Bundle.ID,
 					"No transporter found for uri scheme [" + transporterScheme + "]", null);
 		}
 
 		if (messageTransporter.isExternal()) {
 			if (!message.isAlllowExternal()) {
-				return new ObjectStatus(IStatus.ERROR, Bundle.ID,
+				return new ObjectStatus<String>(IStatus.ERROR, Bundle.ID,
 						"Selected transporter is external, but message not marked as allowExternal, rejecting send.",
 						null);
 			}
 		}
 
-		return new ObjectStatus(messageTransporter.send(message), messageTransporter.getUriScheme());
+		return new ObjectStatus<String>(messageTransporter.send(message), messageTransporter.getUriScheme());
 	}
 
 	/**
-	 * Select a transporter for an internal message. Currently we prefer the
-	 * rocketchat transporter (if available).
+	 * Select a transporter for an internal message. Currently we prefer the matrix
+	 * transporter (if available).
 	 *
 	 * @return the transporter or <code>null</code> if none available
 	 */
 	private IMessageTransporter selectInternalSchemeTransporter() {
-		IMessageTransporter messageTransporter = messageTransporters.get("rocketchat");
+		IMessageTransporter messageTransporter = messageTransporters.get("matrix");
 		if (messageTransporter == null) {
 			messageTransporter = messageTransporters.get("internaldb");
 		}

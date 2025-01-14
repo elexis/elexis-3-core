@@ -11,9 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -50,6 +47,8 @@ import ch.elexis.data.BBSEntry;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Tree;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Bulletin Board System - ein Schwarzes Brett. Im Prinzip Erweiterung des

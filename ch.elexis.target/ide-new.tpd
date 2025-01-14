@@ -1,9 +1,23 @@
-target "Elexis IDE 2024-12-java21" with source allEnvironments
+target "Elexis 2024-12-java21" with source allEnvironments
 
 location "https://download.eclipse.org/releases/2024-12/" {
+	org.eclipse.rcp.feature.group
 	org.eclipse.e4.rcp.feature.group
 	org.eclipse.emf.common.feature.group
 	org.eclipse.emf.ecore.feature.group
+	org.eclipse.emf.edit.feature.group
+	org.eclipse.emf.edit.ui.feature.group
+	org.eclipse.nebula.cwt
+	org.eclipse.nebula.widgets.cdatetime
+}
+
+location "https://download.eclipse.org/nebula/updates/release/3.1.1/" {
+}
+
+location "http://download.eclipse.org/nattable/releases/2.5.0/repository/" {
+	org.eclipse.nebula.widgets.nattable.core.feature.feature.group
+	org.eclipse.nebula.widgets.nattable.extension.glazedlists
+	ca.odell.glazedlists
 }
 
 location "https://download.elexis.info/elexis/target/2023-09-java21/" {
@@ -11,6 +25,7 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	com.google.gson
 	org.jdom2
 	org.slf4j.api
+	com.equo.chromium.feature.feature.group
 }
 
 maven MavenDependencies scope=compile,test dependencyDepth=infinite missingManifest=generate includeSources {
@@ -24,9 +39,64 @@ maven MavenDependencies scope=compile,test dependencyDepth=infinite missingManif
 		artifactId="jakarta.ws.rs-api"
 		version="4.0.0"
 	}
+	dependency { // we need to get rid of this
+		groupId="org.jdom"
+		artifactId="jdom2"
+		version="2.0.6.1"
+	}
 	dependency {
 		groupId="org.eclipse.persistence"
 		artifactId="eclipselink"
 		version="4.0.4"
+	}
+	dependency {
+		groupId="com.google.guava"
+		artifactId="guava"
+		version="33.4.0-jre"
+	}
+	dependency {
+		groupId="commons-codec"
+		artifactId="commons-codec"
+		version="1.17.1"
+	}
+	dependency {
+		groupId="org.apache.commons"
+		artifactId="commons-dbcp2"
+		version="2.13.0"
+	}
+	dependency {
+		groupId="com.mysql"
+		artifactId="mysql-connector-j"
+		version="9.1.0"
+	}
+	dependency {
+		groupId="com.h2database"
+		artifactId="h2"
+		version="2.3.232"
+	}
+	dependency {
+		groupId="org.postgresql"
+		artifactId="postgresql"
+		version="42.7.4"
+	}
+	dependency {
+		groupId="ca.uhn.hapi.fhir"
+		artifactId="org.hl7.fhir.r4"
+		version="6.5.2"
+	}
+	dependency {
+		groupId="org.keycloak"
+		artifactId="keycloak-core"
+		version="26.0.7"
+	}
+	dependency {
+		groupId="org.apache-extras.beanshell"
+		artifactId="bsh"
+		version="2.0b6"
+	}
+	dependency {
+		groupId="junit"
+		artifactId="junit"
+		version="4.12"
 	}
 }

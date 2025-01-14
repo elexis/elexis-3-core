@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
-import javax.persistence.EntityManager;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +32,7 @@ import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import jakarta.persistence.EntityManager;
 import net.ttddyy.dsproxy.QueryCountHolder;
 
 public class CoreModelServiceTest {
@@ -357,7 +356,7 @@ public class CoreModelServiceTest {
 	}
 
 	@Test
-	public void getLastUpdate() {
+	public void getLastUpdate() throws InterruptedException {
 		IPatient patient = modelService.create(IPatient.class);
 		patient.setFirstName("Max");
 		patient.setLastName("Mustermann");
@@ -365,6 +364,7 @@ public class CoreModelServiceTest {
 
 		long lastUpdate = modelService.getHighestLastUpdate(IPatient.class);
 		assertTrue(lastUpdate != 0);
+		Thread.sleep(5l);
 
 		patient.setFirstName("Maxi");
 		modelService.save(patient);

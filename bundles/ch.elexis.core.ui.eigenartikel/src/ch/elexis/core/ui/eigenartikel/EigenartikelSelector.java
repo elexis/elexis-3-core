@@ -13,8 +13,6 @@ package ch.elexis.core.ui.eigenartikel;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.MenuManager;
@@ -56,6 +54,7 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.DefaultButtonProvider;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
 import ch.elexis.data.PersistentObject;
+import jakarta.inject.Inject;
 
 public class EigenartikelSelector extends CodeSelectorFactory {
 

@@ -2,7 +2,6 @@ package ch.elexis.core.tasks.internal.model.service;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -18,6 +17,7 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
+import jakarta.persistence.EntityManager;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.tasks.model")
 public class TaskModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {

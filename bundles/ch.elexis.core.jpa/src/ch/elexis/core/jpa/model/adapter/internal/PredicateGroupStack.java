@@ -3,9 +3,8 @@ package ch.elexis.core.jpa.model.adapter.internal;
 import java.util.Iterator;
 import java.util.Stack;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 import ch.elexis.core.jpa.model.adapter.PredicateGroup;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 /**
  * Manage PredicateGroup objects using a {@link Stack}.

@@ -30,8 +30,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -146,6 +144,7 @@ import ch.elexis.data.Xid.XIDDomain;
 import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
 
 /**
  * Detailansicht eines Patientrecords Ersatz für Patientenblatt mit erweiterter

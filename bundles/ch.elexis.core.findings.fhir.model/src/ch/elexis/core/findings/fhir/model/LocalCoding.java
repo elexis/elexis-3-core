@@ -1,10 +1,11 @@
 package ch.elexis.core.findings.fhir.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ILocalCoding;

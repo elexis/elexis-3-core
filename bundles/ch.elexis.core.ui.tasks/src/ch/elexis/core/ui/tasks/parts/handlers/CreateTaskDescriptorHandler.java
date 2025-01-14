@@ -1,11 +1,11 @@
 
 package ch.elexis.core.ui.tasks.parts.handlers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.slf4j.Logger;

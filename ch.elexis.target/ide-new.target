@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2024-12-java21" sequenceNumber="1734525210">
+<target name="Elexis 2024-12-java21" sequenceNumber="1735988574">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.rcp.feature.group" version="4.34.0.v20241120-1800"/>
       <unit id="org.eclipse.e4.rcp.feature.group" version="4.34.0.v20241113-2009"/>
       <unit id="org.eclipse.emf.common.feature.group" version="2.33.0.v20240911-1027"/>
       <unit id="org.eclipse.emf.ecore.feature.group" version="2.39.0.v20241018-1213"/>
+      <unit id="org.eclipse.emf.edit.feature.group" version="2.23.0.v20240604-0832"/>
+      <unit id="org.eclipse.emf.edit.ui.feature.group" version="2.27.0.v20241015-0644"/>
+      <unit id="org.eclipse.nebula.cwt" version="1.1.0.202406291220"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime" version="1.5.0.202406291220"/>
       <repository location="https://download.eclipse.org/releases/2024-12/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/nebula/updates/release/3.1.1/"/>
+    </location>
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.nebula.widgets.nattable.core.feature.feature.group" version="2.5.0.202411280718"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.5.0.202411280718"/>
+      <unit id="ca.odell.glazedlists" version="1.11.0"/>
+      <repository location="http://download.eclipse.org/nattable/releases/2.5.0/repository/"/>
     </location>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="info.elexis.target.commons.feature.group" version="23.9.0.20241105125320"/>
       <unit id="com.google.gson" version="2.10.1"/>
       <unit id="org.jdom2" version="2.0.6.v20221112-0806"/>
       <unit id="org.slf4j.api" version="1.7.30.v20221112-0806"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="124.0.2"/>
       <repository location="https://download.elexis.info/elexis/target/2023-09-java21/"/>
     </location>
     <location includeDependencyDepth="infinite" includeDependencyScopes="compile,test" includeSource="true" missingManifest="generate" type="Maven" label="MavenDependencies">
@@ -31,9 +46,75 @@
           <type>jar</type>
         </dependency>
         <dependency>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom2</artifactId>
+          <version>2.0.6.1</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
           <groupId>org.eclipse.persistence</groupId>
           <artifactId>eclipselink</artifactId>
           <version>4.0.4</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>33.4.0-jre</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+          <version>1.17.1</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-dbcp2</artifactId>
+          <version>2.13.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>com.mysql</groupId>
+          <artifactId>mysql-connector-j</artifactId>
+          <version>9.1.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <version>2.3.232</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>42.7.4</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>ca.uhn.hapi.fhir</groupId>
+          <artifactId>org.hl7.fhir.r4</artifactId>
+          <version>6.5.2</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-core</artifactId>
+          <version>26.0.7</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>org.apache-extras.beanshell</groupId>
+          <artifactId>bsh</artifactId>
+          <version>2.0b6</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.12</version>
           <type>jar</type>
         </dependency>
       </dependencies>

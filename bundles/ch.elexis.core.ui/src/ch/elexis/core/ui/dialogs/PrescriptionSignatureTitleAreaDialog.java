@@ -11,10 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.views.controls.ArticleDefaultSignatureComposite;
 
 public class PrescriptionSignatureTitleAreaDialog extends TitleAreaDialog {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="ch.elexis.core.coding.ChEprValueSetsContribution">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.coding.ChEprValueSetsContribution">
    <service>
       <provide interface="ch.elexis.core.findings.codes.IValueSetContribution"/>
    </service>

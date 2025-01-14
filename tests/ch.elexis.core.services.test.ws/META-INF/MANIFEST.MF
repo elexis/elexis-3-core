@@ -7,7 +7,7 @@ Bundle-Vendor: elexis.info
 Automatic-Module-Name: ch.elexis.core.services.test.ws
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: com.wstutorial.ws
-Import-Package: javax.jws,
- javax.xml.bind,
- javax.xml.bind.annotation,
- javax.xml.bind.annotation.adapters
+Import-Package: jakarta.jws,
+ jakarta.xml.bind,
+ jakarta.xml.bind.annotation,
+ jakarta.xml.bind.annotation.adapters

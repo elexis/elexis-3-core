@@ -25,9 +25,6 @@ import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -86,6 +83,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Eine View, die untereinander Fälle und zugehörigende Behandlungen des aktuell

@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.persistence.Transient;
-
 import com.google.gson.Gson;
 
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
 import ch.elexis.core.services.INamedQuery;
+import jakarta.persistence.Transient;
 
 public class Message extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Message>
 		implements Identifiable, IMessage {

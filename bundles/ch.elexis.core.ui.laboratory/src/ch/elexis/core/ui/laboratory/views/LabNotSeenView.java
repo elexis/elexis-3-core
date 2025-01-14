@@ -14,9 +14,6 @@ package ch.elexis.core.ui.laboratory.views;
 
 import java.util.logging.Level;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -63,6 +60,8 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.Log;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * This view displays all LabResults that are not marked as seen by the doctor.

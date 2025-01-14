@@ -7,37 +7,35 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.eclipse.persistence.config.EntityManagerProperties;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.eclipse.persistence.jpa.PersistenceProvider;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.jpa.EntityManagerFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 @Component(property = "id=default")
 public class ElexisEntityManger implements IElexisEntityManager {
 
 	private static Logger logger = LoggerFactory.getLogger(ElexisEntityManger.class);
-
-	private EntityManagerFactoryBuilder factoryBuilder;
 
 	private EntityManagerFactory factory;
 
@@ -90,52 +88,46 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		this.dataSource = null;
 	}
 
-	@Reference(service = EntityManagerFactoryBuilder.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.STATIC, target = "(osgi.unit.name=elexis)")
-	protected synchronized void bind(EntityManagerFactoryBuilder factoryBuilder) {
-		logger.debug("Binding " + factoryBuilder.getClass().getName()); //$NON-NLS-1$
-		this.factoryBuilder = factoryBuilder;
-	}
-
 	@Override
 	public synchronized EntityManager getEntityManager(boolean managed) {
+
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
-			if (factoryBuilder != null) {
 
-				if (!SKIP_LIQUIBASE) {
-					if (updateProgress != null) {
-						try {
-							updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
-								dbInit(updateProgress);
-							});
-							updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Update, () -> {
-								dbUpdate(updateProgress);
-							});
-						} catch (Exception e) {
-							logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
-						}
-					} else {
-						dbInit(null);
-						dbUpdate(null);
+			if (!SKIP_LIQUIBASE) {
+				if (updateProgress != null) {
+					try {
+						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
+							dbInit(updateProgress);
+						});
+						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Update, () -> {
+							dbUpdate(updateProgress);
+						});
+					} catch (Exception e) {
+						logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
 					}
 				} else {
-					logger.warn("Skipping liquibase execution");
-					updateSuccess = true;
+					dbInit(null);
+					dbUpdate(null);
 				}
-
-				// initialize the entity manager factory
-				HashMap<String, Object> props = new HashMap<>();
-				props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
-				props.put("gemini.jpa.providerConnectedDataSource", dataSource); //$NON-NLS-1$
-				props.put("javax.persistence.nonJtaDataSource", dataSource); //$NON-NLS-1$
-				// we keep EntityManager instances possibly for the whole application lifecycle
-				// so enable GC to clear entities from EntityManager cache
-				props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK"); //$NON-NLS-1$
-				this.factory = factoryBuilder.createEntityManagerFactory(props);
 			} else {
-				throw new IllegalStateException("No EntityManagerFactoryBuilder available"); //$NON-NLS-1$
+				logger.warn("Skipping liquibase execution");
+				updateSuccess = true;
 			}
+
+			// initialize the entity manager factory
+			HashMap<String, Object> props = new HashMap<>();
+			props.put(PersistenceUnitProperties.DDL_GENERATION, PersistenceUnitProperties.NONE);
+			props.put("jakarta.persistence.nonJtaDataSource", dataSource); //$NON-NLS-1$
+			// we keep EntityManager instances possibly for the whole application lifecycle
+			// so enable GC to clear entities from EntityManager cache
+			props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK"); //$NON-NLS-1$
+			props.put(PersistenceUnitProperties.CLASSLOADER, Kontakt.class.getClassLoader());
+
+			PersistenceProvider persistenceProvider = new PersistenceProvider();
+
+			factory = persistenceProvider.createEntityManagerFactory("elexis", props);
 		}
 
 		if (factory != null) {

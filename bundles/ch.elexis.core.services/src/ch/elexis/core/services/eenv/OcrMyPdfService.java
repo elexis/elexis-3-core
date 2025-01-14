@@ -6,10 +6,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -22,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.eenv.IOcrMyPdfService;
+import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 
 @Component
 public class OcrMyPdfService implements IOcrMyPdfService {

@@ -13,9 +13,6 @@ package ch.elexis.core.ui.contacts.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -85,6 +82,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class PatientDetailView extends ViewPart implements IUnlockable, IActivationListener {
 

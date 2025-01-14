@@ -11,9 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.eigendiagnosen;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.swt.SWT;
@@ -31,6 +28,8 @@ import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class EigendiagnoseDetailDisplay implements IDetailDisplay {
 	Form form;

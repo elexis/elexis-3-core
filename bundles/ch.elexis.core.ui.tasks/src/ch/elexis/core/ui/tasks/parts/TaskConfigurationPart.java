@@ -8,10 +8,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -55,6 +51,9 @@ import ch.elexis.core.ui.tasks.parts.controls.GeneralConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.RunnableAndContextConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.controls.TaskTriggerTypeConfigurationComposite;
 import ch.elexis.core.ui.tasks.parts.handlers.TaskPartSystemFilterHandler;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class TaskConfigurationPart implements IRefreshablePart {
 

@@ -56,7 +56,7 @@ public class TestLocalLockService implements ILocalLockService {
 
 	@Override
 	public boolean isLocked(Object object) {
-		// TODO Auto-generated method stub
+		System.out.println(getClass().getName() + " isLocked");
 		return false;
 	}
 

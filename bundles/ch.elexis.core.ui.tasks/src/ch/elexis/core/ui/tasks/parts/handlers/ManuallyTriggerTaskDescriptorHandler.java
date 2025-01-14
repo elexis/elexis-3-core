@@ -4,8 +4,6 @@ package ch.elexis.core.ui.tasks.parts.handlers;
 import java.util.Collections;
 import java.util.Objects;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -17,6 +15,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
+import jakarta.inject.Named;
 
 public class ManuallyTriggerTaskDescriptorHandler {
 

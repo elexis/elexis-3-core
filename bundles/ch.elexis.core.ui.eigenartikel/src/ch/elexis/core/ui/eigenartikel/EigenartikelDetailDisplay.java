@@ -2,9 +2,6 @@ package ch.elexis.core.ui.eigenartikel;
 
 import java.text.MessageFormat;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
@@ -33,6 +30,8 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockRequestingRestrictedAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.views.IDetailDisplay;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class EigenartikelDetailDisplay implements IDetailDisplay {
 	private IViewSite site;

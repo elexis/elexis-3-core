@@ -1,6 +1,5 @@
 package ch.elexis.core.jpa.liquibase;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +11,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +39,7 @@ public class LiquibaseDBScriptExecutor {
 		resourceAccessor.setContent(changeId, sqlScript);
 		Connection connection = null;
 		try {
+			System.out.println("Executing [ " + changeId + " ]");
 			connection = dataSource.getConnection();
 			final DatabaseConnection database = new JdbcConnection(connection);
 			Database targetDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(database);

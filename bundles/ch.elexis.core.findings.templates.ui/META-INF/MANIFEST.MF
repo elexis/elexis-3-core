@@ -14,8 +14,7 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  org.eclipse.ui,
  ch.elexis.core.findings.templates;bundle-version="3.10.0",
  ch.elexis.core.findings.templates.edit;bundle-version="3.10.0",
- org.eclipse.ui.views;bundle-version="3.8.102",
- org.eclipse.emf.edit.ui;bundle-version="2.19.0"
+ org.eclipse.emf.edit.ui;bundle-version="2.25.0"
 Bundle-Vendor: medevit.at
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.lang3;version="3.1.0",
@@ -30,10 +29,8 @@ Import-Package: org.apache.commons.lang3;version="3.1.0",
  org.eclipse.core.databinding.property.value,
  org.eclipse.core.databinding.validation,
  org.eclipse.e4.core.contexts,
- org.eclipse.emf.databinding,
  org.eclipse.jface.databinding.fieldassist,
  org.eclipse.jface.databinding.swt,
  org.eclipse.jface.databinding.swt.typed,
- org.eclipse.jface.databinding.viewers,
- org.osgi.service.component.annotations;version="1.2.0"
+ org.eclipse.jface.databinding.viewers
 Service-Component: OSGI-INF/ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder.xml

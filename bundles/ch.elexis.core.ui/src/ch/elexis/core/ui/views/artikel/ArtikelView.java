@@ -15,9 +15,6 @@ package ch.elexis.core.ui.views.artikel;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -53,6 +50,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class ArtikelView extends ViewPart implements IActivationListener {
 	private static final String KEY_CE = "ce"; //$NON-NLS-1$

@@ -1,16 +1,16 @@
 package ch.elexis.core.jpa.liquibase;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
+import ch.elexis.core.l10n.Messages;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSet.RunStatus;
@@ -62,6 +62,7 @@ public class LiquibaseDBUpdater {
 					}
 				});
 			}
+			System.out.println("Updating database [" + connection + "] with liquibase");
 			logger.info("Updating database [" + connection + "] with liquibase"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				liquibase.update(StringUtils.EMPTY);
@@ -75,6 +76,7 @@ public class LiquibaseDBUpdater {
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB update.", e); //$NON-NLS-1$
+			System.out.println("Exception on DB update." + e);
 			return false;
 		} finally {
 			try {

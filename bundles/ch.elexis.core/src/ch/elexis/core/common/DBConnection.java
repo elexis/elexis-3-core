@@ -168,6 +168,7 @@ public class DBConnection implements Serializable {
 			m.marshal(this, sw);
 			return sw.toString();
 		} catch (JAXBException | IOException e) {
+			e.printStackTrace();
 			return StringUtils.EMPTY;
 		}
 	}

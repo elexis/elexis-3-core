@@ -1,9 +1,6 @@
 package ch.elexis.core.ui.medication.views;
 
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -24,6 +21,8 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.core.ui.views.IRefreshable;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class MedicationView extends ViewPart implements IRefreshable {
 	public MedicationView() {

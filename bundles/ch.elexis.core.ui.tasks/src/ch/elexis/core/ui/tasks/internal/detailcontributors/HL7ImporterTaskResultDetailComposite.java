@@ -1,11 +1,11 @@
 package ch.elexis.core.ui.tasks.internal.detailcontributors;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;

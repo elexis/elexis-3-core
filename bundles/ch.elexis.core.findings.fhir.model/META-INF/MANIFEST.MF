@@ -13,8 +13,8 @@ Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.findings.util;bundle-version="1.0.0",
  info.elexis.target.hapi.fhir;bundle-version="5.4.2"
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.persistence;version="2.2.3",
- javax.persistence.criteria;version="2.2.3",
+Import-Package: jakarta.persistence;version="[3.2.0,4.0.0)",
+ jakarta.persistence.criteria;version="[3.2.0,4.0.0)",
  org.apache.commons.lang3;version="3.1.0"
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml,

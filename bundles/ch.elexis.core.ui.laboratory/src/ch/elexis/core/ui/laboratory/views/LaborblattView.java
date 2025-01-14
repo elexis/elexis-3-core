@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -44,6 +41,8 @@ import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
 import ch.elexis.data.LabResult;
 import ch.elexis.data.Patient;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class LaborblattView extends ViewPart implements ICallback {
 	public static final String ID = "ch.elexis.Laborblatt"; //$NON-NLS-1$

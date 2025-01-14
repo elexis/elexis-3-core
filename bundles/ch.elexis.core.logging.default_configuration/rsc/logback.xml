@@ -43,7 +43,7 @@
 	<logger name="OSGI" level="WARN" /> <!-- OsgiSl4fjLoggingAdapter -->
 	<logger name="PLATFORM" level="INFO" /> 
 	
-	<logger name="org.eclipse" level="INFO" />
+	<logger name="org.eclipse.jetty.ee10" level="DEBUG" />
 	<logger name="org.eclipse.persistence" level="WARN" />
 	<logger name="org.apache" level="INFO" />
 	<logger name="ch.qos.logback" level="INFO" />

@@ -3,8 +3,6 @@ package ch.elexis.core.ui.mediorder.internal.handler;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.extensions.Service;
@@ -22,6 +20,7 @@ import ch.elexis.core.services.IStockService;
 import ch.elexis.core.ui.e4.dialog.StatusDialog;
 import ch.elexis.core.ui.mediorder.AbstractBillAndCloseMediorderHandler;
 import ch.elexis.core.ui.mediorder.MediorderPart;
+import jakarta.inject.Inject;
 
 public class BillAndCloseMediorderHandler extends AbstractBillAndCloseMediorderHandler {
 

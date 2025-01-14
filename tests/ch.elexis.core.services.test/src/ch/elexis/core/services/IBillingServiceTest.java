@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,6 +31,7 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
+import jakarta.persistence.EntityManager;
 
 public class IBillingServiceTest extends AbstractServiceTest {
 
