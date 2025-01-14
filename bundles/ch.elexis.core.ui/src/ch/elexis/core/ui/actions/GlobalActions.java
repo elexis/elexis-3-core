@@ -14,7 +14,6 @@ package ch.elexis.core.ui.actions;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_KG_COVER_SHEET;
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_XRAY;
 
-import java.awt.Desktop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -256,20 +256,15 @@ public class GlobalActions {
 
 			@Override
 			public void run() {
-				Desktop desktop = Desktop.getDesktop();
 				String url = ConfigServiceHolder.getGlobal(UiPreferenceConstants.CFG_HANDBOOK,
 						UiPreferenceConstants.DEFAULT_HANDBOOK);
-				if (Desktop.isDesktopSupported()) {
-					try {
-						desktop.browse(new java.net.URI(url));
-					} catch (Exception e) {
-						logger.warn("failed to open default browser :" + e); //$NON-NLS-1$
-						MessageDialog.openError(mainWindow.getShell(), Messages.Core_Error,
-								Messages.GlobalActions_PreferencesHandbook_URL);
-						ExHandler.handle(e);
-					}
-				} else {
-					logger.warn("isDesktopSupported was false."); //$NON-NLS-1$
+				try {
+					Program.launch(url);
+				} catch (Exception e) {
+					logger.warn("failed to open default browser :" + e); //$NON-NLS-1$
+					MessageDialog.openError(mainWindow.getShell(), Messages.Core_Error,
+							Messages.GlobalActions_PreferencesHandbook_URL);
+					ExHandler.handle(e);
 				}
 			}
 		};
