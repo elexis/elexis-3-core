@@ -17,7 +17,7 @@ public interface Constants {
 	public static final String CFG_BASE_URL = CFG_BASE + "/base_url"; //$NON-NLS-1$
 	public static final String CFG_START_PAGE = CFG_BASE + "/start_page"; //$NON-NLS-1$
 	public static final String CFG_HANDBOOK = CFG_BASE + "/handbook"; //$NON-NLS-1$
-	public static final String DEFAULT_BASE_URL = "http://wiki.elexis.info/"; //$NON-NLS-1$
+	public static final String DEFAULT_BASE_URL = "https://github.com/elexis/elexis.github.io/wiki"; //$NON-NLS-1$
 	public static final String DEFAULT_START_PAGE = "Hauptseite"; //$NON-NLS-1$
-	public static final String DEFAULT_HANDBOOK = "https://wiki.elexis.info/Deutsches_Handbuch_3.1"; //$NON-NLS-1$
+	public static final String DEFAULT_HANDBOOK = "https://github.com/elexis/elexis.github.io/wiki/Deutsches-Handbuch"; //$NON-NLS-1$
 }
