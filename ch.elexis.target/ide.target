@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2023-09-java21" sequenceNumber="1730808494">
+<target name="Elexis IDE 2023-09-java21" sequenceNumber="1736930363">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -54,7 +54,6 @@
       <unit id="ch.elexis.core.logback.rocketchat" version="3.12.0.202406011237"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
-      <unit id="info.elexis.target.ehealth.connector.ch" version="0.0.0"/>
       <unit id="io.swagger.core.v3.swagger-annotations" version="2.2.19"/>
       <unit id="info.elexis.target.commons.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.jaxwsrs.core.feature.group" version="0.0.0"/>

@@ -71,8 +71,6 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	info.elexis.target.hapi.fhir lazy
 	// jaxws
 	info.elexis.target.jaxws.core lazy
-	// ehealth connector
-	info.elexis.target.ehealth.connector.ch lazy
 	// swagger
 	io.swagger.core.v3.swagger-annotations
 	// apache commons
