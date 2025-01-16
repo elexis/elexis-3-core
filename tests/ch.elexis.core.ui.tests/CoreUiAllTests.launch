@@ -48,7 +48,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.ui.tests"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true -DREFRESH_BUNDLES=false"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.eclipse.platform.ide"/>
     <booleanAttribute key="run_in_ui_thread" value="true"/>
@@ -142,7 +142,6 @@
         <setEntry value="org.eclipse.e4.ui.swt.gtk@default:false"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.addons.swt@default:default"/>
-        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.cocoa@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_de@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_it@default:false"/>
@@ -188,12 +187,12 @@
         <setEntry value="org.eclipse.persistence.core@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
-        <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:false"/>
         <setEntry value="org.eclipse.swt.gtk.linux.x86_64@default:false"/>
         <setEntry value="org.eclipse.swt.nl_de@default:false"/>
         <setEntry value="org.eclipse.swt.nl_fr@default:false"/>
         <setEntry value="org.eclipse.swt.nl_it@default:false"/>
         <setEntry value="org.eclipse.swt@default:default"/>
+        <setEntry value="org.eclipse.swtchart@default:default"/>
         <setEntry value="org.eclipse.ui.forms@default:default"/>
         <setEntry value="org.eclipse.ui.nl_de@default:false"/>
         <setEntry value="org.eclipse.ui.nl_fr@default:false"/>
@@ -220,6 +219,10 @@
         <setEntry value="org.hamcrest@default:default"/>
         <setEntry value="org.jaxen@default:default"/>
         <setEntry value="org.jdom2@default:default"/>
+        <setEntry value="org.jfree.chart-swt@default:default"/>
+        <setEntry value="org.jfree.chart@default:default"/>
+        <setEntry value="org.jfree.jcommon@default:default"/>
+        <setEntry value="org.jfree.swtgraphics2d@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
         <setEntry value="org.keycloak.keycloak-adapter-core@default:default"/>

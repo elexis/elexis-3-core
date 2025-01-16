@@ -173,7 +173,7 @@
           <application>ch.elexis.core.application.ElexisApp</application>
           <testClass>ch.elexis.core.ui.tests.AllTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true</argLine>
+          <argLine>-Dch.elexis.username=007 -Dch.elexis.password=topsecret -Delexis-run-mode=RunFromScratch -Delexis.test.mode=true -DREFRESH_BUNDLES=false</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
