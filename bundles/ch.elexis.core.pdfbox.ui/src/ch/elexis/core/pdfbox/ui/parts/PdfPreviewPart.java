@@ -90,8 +90,9 @@ public class PdfPreviewPart {
 			pdfPreviewPartLoadHandler.close();
 		}
 		java.util.Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
-		if (converterService.isPresent() && converterService.get().isAvailable() && currentDocument != null
-				&& "docx".equalsIgnoreCase(currentDocument.getExtension())) {
+		if (converterService.isPresent() && converterService.get().isAvailable() && currentDocument != null) {
+			boolean isSupported = converterService.get().isSupportedFile(currentDocument);
+			if (isSupported) {
 			try {
 				java.util.Optional<File> pdfFile = converterService.get().convertToPdf(currentDocument);
 				if (pdfFile.isPresent()) {
@@ -108,7 +109,7 @@ public class PdfPreviewPart {
 
 		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
 				previewComposite, scrolledComposite);
-
+	}
 	}
 
 	public void changeScalingFactor(Float _zoomLevel) {

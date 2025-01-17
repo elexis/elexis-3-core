@@ -23,4 +23,12 @@ public interface IDocumentConverter {
 	 */
 	public boolean isAvailable();
 
+	/**
+	 * Check if the file format is supported for conversion.
+	 *
+	 * @param document
+	 * @return true if supported, false otherwise
+	 */
+	public boolean isSupportedFile(IDocument document);
+
 }
