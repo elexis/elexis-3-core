@@ -17,7 +17,7 @@ jobs:
     - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
       run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
     - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
-      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V -T 1C clean verify -B
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V clean verify -B
     - name: upload artifacts
       run: |
         eval $(ssh-agent -s)
