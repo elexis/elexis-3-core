@@ -5,8 +5,17 @@
 	<version>3.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Elexis-Core</name>
-
-
+        <description>Elexis 3 Core Project</description>
+        <licenses>
+                <license>
+                        <name>Eclipse Public License</name>
+                        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+                </license>
+        </licenses>
+        <organization>
+                <name>elexis.info</name>
+                <url>http://www.elexis.info</url>
+        </organization>
 	<properties>
 		<elexis.target>2022-09-java17</elexis.target>
 		<formatterConfigFile>${env.PWD}/Elexis_formatter_2022_03.xml</formatterConfigFile>
@@ -17,7 +26,6 @@
 		<os-jvm-flags />
 		<jarsigner.plugin.version>3.0.0</jarsigner.plugin.version>
 	</properties>
-
 	<repositories>
 		<repository>
 			<id>elexis.3.target</id>
@@ -25,32 +33,6 @@
 			<layout>p2</layout>
 		</repository>
 	</repositories>
-
-	<organization>
-		<name>elexis.info</name>
-		<url>http://www.elexis.info</url>
-	</organization>
-
-	<scm>
-		<connection>scm:git:https://github.com/elexis/elexis-3-core.git</connection>
-		<developerConnection>scm:git:https://github.com/elexis/elexis-3-core.git</developerConnection>
-		<url>https://github.com/elexis/elexis-3-core</url>
-	</scm>
-
-	<licenses>
-		<license>
-			<name>Eclipse Public License</name>
-			<url>http://www.eclipse.org/legal/epl-v10.html</url>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<url>https://github.com/elexis/elexis-3-core/issues</url>
-		<system>Github</system>
-	</issueManagement>
-
-	<description>Elexis 3 Core Project</description>
-
 	<modules>
 		<module>bundles</module>
 		<module>features</module>
@@ -145,102 +127,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!--https://books.sonatype.com/mcookbook/reference/ch02s03.html#ex-groovy-script-ex -->
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.13.1</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<allowSystemExits>true</allowSystemExits>
-							<scripts>
-								<script>
-									<![CDATA[
-  import java.text.SimpleDateFormat;
-  HINT_GENERATED    = "#  ${project.name}: Generated from pom.xml groovy shell using gmavenplus-plugin at ${new Date()}\n"
-  HINT_LAST_CHANGED = "# Last changed from pom.xml groovy shell by gmavenplus-plugin in pom.xml at ${new Date()}\n"
-
-  // Returns the current branchName
-  public String createVersionProperties(String filename) {
-      branch =  System.getenv()['CI_COMMIT_REF_NAME']
-      if (branch != null ) {
-        println "branch name set to ${branch} because of CI_COMMIT_REF_NAME environment variable"
-      } else {
-        branch="git rev-parse --abbrev-ref HEAD".execute().text.replaceAll("\n", '')
-        println "NO CI_COMMIT_REF_NAME environment branch is now ${branch}"
-      }
-      commit_id="git rev-parse HEAD".execute().text.replaceAll("\n", '')
-      elexis_version = "${project.version}".replace("-SNAPSHOT", ".") + new SimpleDateFormat("yyyyMMdd-HHmm").format(Calendar.getInstance().getTime())
-      tags =  "git tag --contains ${commit_id}".execute().text.split("\n")
-      for ( i in tags ) {
-          if (i ==~/release\/(.*)/ ) {
-              elexis_version = (i=~ /release\//).replaceFirst("")
-              break
-          }
-      }
-      // Set property git_branch, but this property cannot be used in maven/pom.xml
-      // But it is used to invoke the modification only once per run
-      System.setProperty("git_branch",  branch)
-      System.setProperty("elexis_version",  elexis_version)
-      repo_version_file = new File(filename)
-      repo_version_file.write(HINT_GENERATED)
-      repo_version_file.append("elexis.version=${elexis_version}\n")
-      println("${project.name}: Created ${repo_version_file} with elexis_version ${elexis_version} from commit_id ${commit_id}")
-      return branch;
-  }
-  // Write a repo.properties file
-  public void createRepoProperties(String repo_properties_name, String branch) {
-    // Now we are have the info to crate teh repo.properties
-    repo_version_file = new File(repo_properties_name)
-    repo_version_file.write(HINT_GENERATED)
-    repo_version_file.append("repoVariant=${branch}\n")
-    repo_version_file.append("project.id=${project.id}\n")
-    repo_version_file.append("project.name=${project.name}\n")
-    repo_version_file.append("project.version=${project.version}\n")
-    repo_version_file.append("projectVersion=${elexis_version}\n")
-    println("Created ${repo_properties_name}")
-  }
-
-if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core.data') {
-  branch = createVersionProperties('bundles/ch.elexis.core.data/rsc/version.properties')
-  createRepoProperties('ch.elexis.core.p2site/repo.properties', branch)
-}
-]]>
-								</script>
-							</scripts>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.groovy</groupId>
-						<artifactId>groovy-all</artifactId>
-						<!-- any version of Groovy \>= 1.5.0 should work here -->
-						<version>2.4.21</version>
-						<scope>runtime</scope>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<includeTestResources>false</includeTestResources>
-					<linkXRef>true</linkXRef>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>false</consoleOutput>
-					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<version>2.17</version>
-			</plugin>
-			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>${tycho.version}</version>
@@ -280,50 +166,7 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>2.18.0</version>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
 				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.gmavenplus
-										</groupId>
-										<artifactId>
-											gmavenplus-plugin
-										</artifactId>
-										<versionRange>
-											[1.5,)
-										</versionRange>
-										<goals>
-											<goal>execute</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<!-- Use compiler plugin with tycho as the adapter to the JDT compiler. -->
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
-					<configuration>
-						<release>17</release>
-					</configuration>
-				</plugin>
-				<plugin>
-					<!-- we want to ensure that the bin directory created by the Eclipse 
-						gets cleaned, too. Without it Maven would put two versions of each class 
-						file into the jars -->
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
@@ -343,13 +186,6 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho.version}</version>
-					<configuration>
-						<compilerArguments>
-							<inlineJSR />
-							<enableJavadoc />
-							<!-- Removed due to bug #2105 <encoding>ISO-8859-1</encoding> -->
-						</compilerArguments>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
@@ -410,44 +246,4 @@ if ( System.getProperty("git_branch") == null && project.name == 'ch.elexis.core
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
-				<configuration>
-					<includeTestResources>false</includeTestResources>
-					<linkXRef>true</linkXRef>
-					<encoding>UTF-8</encoding>
-					<consoleOutput>false</consoleOutput>
-					<failsOnError>false</failsOnError>
-					<headerLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/epl-v10.html</headerLocation>
-					<configLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle.xml</configLocation>
-					<suppressionsLocation>https://raw.githubusercontent.com/elexis/elexis-3-core/master/ch.elexis.core.releng/checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<inherited>false</inherited>
-						<reports>
-							<report>checkstyle-aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<!-- maven-jxr-plugin is needed for linkXRef -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-		</plugins>
-	</reporting>
-	<distributionManagement>
-		<site>
-			<id>www.elexis.info</id>
-			<url>http://www.elexis.info</url>
-		</site>
-	</distributionManagement>
 </project>
