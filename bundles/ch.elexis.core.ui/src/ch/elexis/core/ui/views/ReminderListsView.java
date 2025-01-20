@@ -878,7 +878,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			// do nothing, it should not be possible to change the patient of a reminder.
 			break;
 		case GENERAL_PATIENT:
-			// dont remove patient
+			if (!reminder.getResponsible().isEmpty()) {
+				for (IContact contact : reminder.getResponsible()) {
+					reminder.removeResponsible(contact);
+				}
+				reminder.addResponsible(patient);
+			}
+			reminder.setResponsibleAll(true);
 			break;
 		case GROUP:
 			IUserGroup targetGroup = findGroupForViewer(viewer);
@@ -895,9 +901,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 			break;
 		case MYREMINDERS:
-			List<IContact> currentResponsibles = reminder.getResponsible();
-			if (!currentResponsibles.isEmpty()) {
-				for (IContact contact : currentResponsibles) {
+			if (!reminder.getResponsible().isEmpty()) {
+				for (IContact contact : reminder.getResponsible()) {
 					reminder.removeResponsible(contact);
 				}
 			}
