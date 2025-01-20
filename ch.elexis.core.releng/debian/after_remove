@@ -1,6 +1,0 @@
-#/bin/sh
-rm -f /usr/bin/elexis
-rm -f /usr/local/elexis
-rm -f /usr/share/applications/elexis*.desktop
-
-
