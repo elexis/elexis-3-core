@@ -882,7 +882,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				for (IContact contact : reminder.getResponsible()) {
 					reminder.removeResponsible(contact);
 				}
-				reminder.addResponsible(patient);
 			}
 			reminder.setResponsibleAll(true);
 			break;
