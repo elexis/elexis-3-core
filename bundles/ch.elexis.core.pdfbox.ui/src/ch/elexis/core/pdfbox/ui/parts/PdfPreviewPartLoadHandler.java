@@ -36,6 +36,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.pdfbox.ui.parts.handlers.PDFLabelMouseListener;
 import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextExtractor;
 import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextHighlighter;
+import ch.elexis.core.pdfbox.ui.parts.handlers.PDFTextHighlighter.MatchPosition;
 
 public class PdfPreviewPartLoadHandler {
 
@@ -148,6 +149,7 @@ public class PdfPreviewPartLoadHandler {
 							headLabel.setText(StringUtils.EMPTY);
 							headLabel.setImage(images[j]);
 							headLabel.addDisposeListener(dl -> images[j].dispose());
+							pDFLabelMouseListener.disposeResources();
 							final int pageIndex = j;
 							addMouseListenersToLabel(headLabel, pageIndex, j);
 							previewComposite.addKeyListener(new KeyAdapter() {
@@ -166,7 +168,15 @@ public class PdfPreviewPartLoadHandler {
 						} else {
 							label = new Label(previewComposite, SWT.None);
 							label.setImage(images[j]);
-							label.addDisposeListener(dl -> images[j].dispose());
+							label.addDisposeListener(dl -> {
+								pDFLabelMouseListener.disposeResources();
+								if (images[j] != null && !images[j].isDisposed()) {
+									images[j].dispose();
+								}
+								if (labelBackgrounds[j] != null && !labelBackgrounds[j].isDisposed()) {
+									labelBackgrounds[j].dispose();
+								}
+							});
 							final int pageIndex = j;
 							addMouseListenersToLabel(label, pageIndex, j);
 							previewComposite.addKeyListener(new KeyAdapter() {
@@ -199,8 +209,7 @@ public class PdfPreviewPartLoadHandler {
 						headLabel.dispose();
 					}
 					headLabel = new Label(previewComposite, SWT.None);
-					headLabel
-							.setText(Messages.PdfPreview_DocXError);
+					headLabel.setText(Messages.PdfPreview_DocXError);
 					previewComposite.layout(true, true);
 					scrolledComposite.layout(true, true);
 					scrolledComposite.setMinSize(previewComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -309,17 +318,29 @@ public class PdfPreviewPartLoadHandler {
 				pDFLabelMouseListener = new PDFLabelMouseListener(markedAreasPerPage, images, labelBackgrounds,
 						gcBackgrounds, pdfTextExtractor);
 				for (int i = 0; i < numberOfPages; i++) {
-					final int j = i;
+					final int pageIndex = i;
 					BufferedImage bufferedImage = renderer.renderImage(i, scalingFactor);
 					ImageData imageData = convertToSWT(bufferedImage);
-					images[j] = new Image(previewComposite.getDisplay(), imageData);
+					images[pageIndex] = new Image(previewComposite.getDisplay(), imageData);
 					Display.getDefault().syncExec(() -> {
 						Label label = new Label(previewComposite, SWT.NONE);
-						label.setImage(images[j]);
+						label.setImage(images[pageIndex]);
 						label.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false));
-						label.addDisposeListener(e -> images[j].dispose());
-						final int pageIndex = j;
-						addMouseListenersToLabel(label, pageIndex, j);
+						label.addDisposeListener(dl -> {
+							if (images[pageIndex] != null && !images[pageIndex].isDisposed()) {
+								images[pageIndex].dispose();
+								images[pageIndex] = null;
+							}
+							if (labelBackgrounds[pageIndex] != null && !labelBackgrounds[pageIndex].isDisposed()) {
+								labelBackgrounds[pageIndex].dispose();
+								labelBackgrounds[pageIndex] = null;
+							}
+							if (gcBackgrounds[pageIndex] != null && !gcBackgrounds[pageIndex].isDisposed()) {
+								gcBackgrounds[pageIndex].dispose();
+								gcBackgrounds[pageIndex] = null;
+							}
+						});
+						addMouseListenersToLabel(label, pageIndex, pageIndex);
 					});
 				}
 				Display.getDefault().syncExec(() -> {
@@ -346,7 +367,7 @@ public class PdfPreviewPartLoadHandler {
 	 * does nothing if either the scrolledComposite or previewComposite is disposed
 	 * at the time of execution.
 	 */
-	private void centerContentHorizontally() {
+	public void centerContentHorizontally() {
 		previewComposite.getDisplay().asyncExec(() -> {
 			if (!scrolledComposite.isDisposed() && !previewComposite.isDisposed()) {
 				int clientWidth = scrolledComposite.getClientArea().width;
@@ -421,7 +442,56 @@ public class PdfPreviewPartLoadHandler {
 		});
 	}
 
+	public void reloadPdfFromKons() {
+		PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
+		if (!searchText.isEmpty()) {
+		try {
+			highlighter.highlightSearchTextInPDF(searchText.toLowerCase());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		loader.submit(() -> {
+			Display.getDefault().syncExec(() -> {
+				for (Control control : previewComposite.getChildren()) {
+					control.dispose();
+				}
+			});
+			renderPdfWithHighlights();
+		});
+	}
+	}
+
 	private void addMouseListenersToLabel(Label label, int pageIndex, int j) {
 		pDFLabelMouseListener.addMouseListenersToLabel(label, pageIndex, j);
 	}
+
+	public int getNumberOfMatches() {
+		return PDFTextHighlighter.getNumberOfMatches();
+	}
+
+	public MatchPosition navigateToNextMatch() throws IOException {
+		return PDFTextHighlighter.getNextMatch();
+	}
+
+	public MatchPosition navigateToPreviousMatch() throws IOException {
+		return PDFTextHighlighter.getPreviousMatch();
+	}
+
+	public void resetHighlighting() {
+		try {
+			PDFTextHighlighter.resetHighlighting();
+			reloadPdf();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void resetMatch() {
+		PDFTextHighlighter.resetMatch();
+	}
+	public boolean hasDocumentLoaded() {
+		return pdDocument != null;
+	}
+
 }

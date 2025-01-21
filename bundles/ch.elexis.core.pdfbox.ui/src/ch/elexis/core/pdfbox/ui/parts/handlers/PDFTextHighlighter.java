@@ -32,7 +32,7 @@ public class PDFTextHighlighter {
 	private static PDDocument pdDocument;
 	private boolean pageSet = false;
 	private static List<MatchPosition> foundPositions = new ArrayList<>();
-	private static int currentPosition = -1;
+	public static int currentPosition = -1;
 	/**
 	 * Constructs a new PDFTextHighlighter with the specified PDF document.
 	 *
@@ -207,6 +207,9 @@ public class PDFTextHighlighter {
 		}
 	}
 
+	public static void resetMatch() {
+		foundPositions.clear();
+	}
 	public static void highlightCurrentMatch(MatchPosition currentMatch) throws IOException {
 		if (currentMatch == null) {
 			return;
@@ -278,4 +281,9 @@ public class PDFTextHighlighter {
 	        e.printStackTrace();
 	    }
 	}
+
+	public static int getNumberOfMatches() {
+		return foundPositions.size();
+	}
+
 }
