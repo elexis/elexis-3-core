@@ -1,0 +1,32 @@
+name: Build P2 Site
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
+  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:2023-09-java17
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, x64, Docker]
+    steps:
+    - uses: actions/checkout@v4
+    - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
+    - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V clean verify -B
+    - name: upload artifacts
+      run: |
+        eval $(ssh-agent -s)
+        ssh-add <(echo "${{ env.DEPLOY_SECRET }}" | base64 -d)
+        rsync -aiv --delete --mkpath -e ssh ch.elexis.core.p2site/target/repository/ deploy@download.medelexis.ch:download.elexis.info/elexis/${{ env.BRANCH_NAME }}/p2/elexis-3-core/
+        eval $(ssh-agent -k)
+    - name: Trigger elexis-3-base Workflow
+      run: |
+        curl -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${{ secrets.TRIGGER_WORKFLOW_TOKEN }}" \
+        https://api.github.com/repos/elexis/elexis-3-base/actions/workflows/build-p2-site.yaml/dispatches \
+        -d '{"ref":"${{ env.BRANCH_NAME }}"}'
