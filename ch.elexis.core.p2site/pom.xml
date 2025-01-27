@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>ch.elexis.core</groupId>
@@ -8,71 +10,53 @@
 	<artifactId>ch.elexis.core.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
 	<profiles>
-    <profile>
-      <id>MATERIALIZE_PRODUCTS</id>
-      <activation>
-        <property>
-           <name>env.MATERIALIZE_PRODUCTS</name>
-           <value>!false</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.soebes.maven.plugins</groupId>
-            <artifactId>echo-maven-plugin</artifactId>
-            <version>0.5.0</version>
-            <executions>
-              <execution>
-                <id>debug-MATERIALIZE_PRODUCTS</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>echo</goal>
-                </goals>
-                <configuration>
-                  <echos>
-                    <echo>debug materialize MATERIALIZE_PRODUCTS is set to ${env.MATERIALIZE_PRODUCTS}</echo>
-                  </echos>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho </groupId>
-				<artifactId>tycho-p2-director-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>materialize-products</id>
-						<goals>
-							<goal>materialize-products</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>archive-products</id>
-						<goals>
-							<goal>archive-products</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<products>
-						<product>
-              <id>Elexis3</id> <!-- Name of final EXE/zip file -->
-							<attachId>ElexisApp</attachId>
-							<rootFolder />
-							<rootFolders>
-								<macosx>Elexis3.app</macosx>
-								<win32 />
-							</rootFolders>
-						</product>
-					</products>
-				</configuration>
-			</plugin>
-    </plugins>
-  </build>
-    </profile>
-  </profiles>
-  <build>
+		<profile>
+			<id>MATERIALIZE_PRODUCTS</id>
+			<!-- explicitely started mvn -->
+			<activation>
+				<property>
+					<name>materialize-products</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-director-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>materialize-products</id>
+								<goals>
+									<goal>materialize-products</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>archive-products</id>
+								<goals>
+									<goal>archive-products</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<products>
+								<product>
+									<id>Elexis3</id> <!-- Name of final EXE/zip
+									file -->
+									<attachId>ElexisApp</attachId>
+									<rootFolder />
+									<rootFolders>
+										<macosx>Elexis3.app</macosx>
+										<win32 />
+									</rootFolders>
+								</product>
+							</products>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho </groupId>
@@ -85,25 +69,6 @@
 					</profileProperties>
 				</configuration>
 			</plugin>
-          <plugin>
-            <groupId>com.soebes.maven.plugins</groupId>
-            <artifactId>echo-maven-plugin</artifactId>
-            <version>0.5.0</version>
-            <executions>
-              <execution>
-                <id>show-MATERIALIZE_PRODUCTS</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>echo</goal>
-                </goals>
-                <configuration>
-                  <echos>
-                    <echo>tycho-p2-repository-plugin MATERIALIZE_PRODUCTS is set to ${env.MATERIALIZE_PRODUCTS}</echo>
-                  </echos>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
