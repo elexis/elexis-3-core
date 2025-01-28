@@ -133,7 +133,7 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 		}
 	}
 
-	private class CodeSelectionAction extends Action {
+	public class CodeSelectionAction extends Action {
 
 		private ICoding iCoding;
 
@@ -160,7 +160,7 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 		}
 	}
 
-	private class AllSelectionAction extends Action {
+	public class AllSelectionAction extends Action {
 
 		public AllSelectionAction() {
 			super("Alle", Action.AS_PUSH_BUTTON);
@@ -201,4 +201,9 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 					currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
 		}
 	}
+
+	public ToolBarManager getManager() {
+		return manager;
+	}
+
 }

@@ -12,12 +12,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
 import org.eclipse.swt.graphics.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PDFTextExtractor {
 
 	private PDDocument pdDocument;
 	private Image[] images;
 	private Map<Integer, List<Rectangle>> markedAreasPerPage;
+	private static final Logger logger = LoggerFactory.getLogger(PDFTextExtractor.class);
 
 	public PDFTextExtractor(PDDocument pdDocument, Image[] images, Map<Integer, List<Rectangle>> markedAreasPerPage) {
 		this.pdDocument = pdDocument;
@@ -57,7 +60,7 @@ public class PDFTextExtractor {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error extracting text from marked areas", e);
 		}
 		return extractedText.toString();
 	}
@@ -76,7 +79,7 @@ public class PDFTextExtractor {
 				extractedText.append(stripperByArea.getTextForRegion("page" + (i + 1))).append("\n");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error extracting text from document", e);
 		}
 		return extractedText.toString();
 	}
@@ -116,7 +119,7 @@ public class PDFTextExtractor {
 			stripperByArea.setEndPage(pageIndex + 1);
 			stripperByArea.extractRegions(page);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error extracting rectangles for text: {}", searchText, e);
 		}
 		return textRectangles;
 	}

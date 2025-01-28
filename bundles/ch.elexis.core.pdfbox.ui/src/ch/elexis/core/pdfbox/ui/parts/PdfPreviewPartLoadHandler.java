@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.l10n.Messages;
@@ -62,7 +63,7 @@ public class PdfPreviewPartLoadHandler {
 	private GC[] gcBackgrounds;
 	private Map<Integer, List<Rectangle>> markedAreasPerPage = new HashMap<>();
 	private Label label;
-
+	private static final Logger logger = LoggerFactory.getLogger(PdfPreviewPartLoadHandler.class);
 
 	public PdfPreviewPartLoadHandler(InputStream pdfInputStream, Float scalingFactor, Composite previewComposite,
 			ScrolledComposite scrolledComposite) {
@@ -237,7 +238,7 @@ public class PdfPreviewPartLoadHandler {
 			try {
 				pdDocument.close();
 			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).warn("Excepton closing PDDocument", e);
+				logger.warn("Exception occurred while closing PDDocument", e);
 			}
 		}
 	}
@@ -354,7 +355,7 @@ public class PdfPreviewPartLoadHandler {
 				});
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error rendering PDF with highlights", e);
 		}
 	}
 
@@ -449,7 +450,7 @@ public class PdfPreviewPartLoadHandler {
 			highlighter.highlightSearchTextInPDF(searchText.toLowerCase());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error highlighting search text in PDF", e);
 		}
 		loader.submit(() -> {
 			Display.getDefault().syncExec(() -> {
@@ -483,7 +484,7 @@ public class PdfPreviewPartLoadHandler {
 			PDFTextHighlighter.resetHighlighting();
 			reloadPdf();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error while resetting highlighting", e);
 		}
 	}
 

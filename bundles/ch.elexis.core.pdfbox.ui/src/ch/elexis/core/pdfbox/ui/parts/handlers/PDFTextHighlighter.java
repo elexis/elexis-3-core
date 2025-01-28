@@ -15,6 +15,8 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
 
@@ -29,6 +31,7 @@ import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPartLoadHandler;
  */
 public class PDFTextHighlighter {
 
+	private static final Logger logger = LoggerFactory.getLogger(PDFTextHighlighter.class);
 	private static PDDocument pdDocument;
 	private boolean pageSet = false;
 	private static List<MatchPosition> foundPositions = new ArrayList<>();
@@ -278,7 +281,7 @@ public class PDFTextHighlighter {
 	            page.getAnnotations().add(annotation);
 	        }
 	    } catch (IOException e) {
-	        e.printStackTrace();
+			logger.error("Error while reapplying highlights", e);
 	    }
 	}
 
