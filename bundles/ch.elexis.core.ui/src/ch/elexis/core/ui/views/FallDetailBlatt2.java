@@ -539,7 +539,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	private void updateCopyForPatient(Fall fall) {
 		if (fall != null && ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT, false)
-				&& ((Fall) fall).getTiersType() == Tiers.PAYANT) {
+				&& fall.getTiersType() == Tiers.PAYANT) {
 			getFall().setCopyForPatient(true);
 			fireSelectedFallUpdateEvent();
 			btnCopyForPatient.setSelection(true);
@@ -637,7 +637,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		public String getValue(Control control) {
 			String newval = StringTool.leer;
 			if (control instanceof Combo) {
-				String kind = (String) ((Combo) control).getData("kind"); //$NON-NLS-1$
+				String kind = (String) control.getData("kind"); //$NON-NLS-1$
 				if (kind.equalsIgnoreCase("S")) { //$NON-NLS-1$
 					newval = ((Combo) control).getText(); // save as string
 				} else {
@@ -647,7 +647,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			} else if (control instanceof org.eclipse.swt.widgets.List) {
 				int[] selection = ((org.eclipse.swt.widgets.List) control).getSelectionIndices();
 				String delim = StringTool.leer;
-				String kind = (String) ((org.eclipse.swt.widgets.List) control).getData("kind"); //$NON-NLS-1$
+				String kind = (String) control.getData("kind"); //$NON-NLS-1$
 				if (kind.equalsIgnoreCase("S")) { // save as string list, tab delimited //$NON-NLS-1$
 					for (int ii = 0; ii < selection.length; ii++) {
 						newval = newval + delim + ((org.eclipse.swt.widgets.List) control).getItem(selection[ii]);
@@ -947,21 +947,23 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				for (int ii = 0; ii < bedArr.length; ii++) {
 					String fldParts = bedArr[ii];
 					String[] flds = fldParts.split(ARGUMENTSSDELIMITER);
-					String fld = flds[0];
-					if ((flds[1].equalsIgnoreCase("X")) && ((flds.length > 2)) //$NON-NLS-1$
-							&& (!flds[2].isEmpty())) {
-						String checkBoxes = flds[2];
-						String[] checkBoxArray = checkBoxes.split(ITEMDELIMITER);
-						for (int cb_i = 0; cb_i < checkBoxArray.length; cb_i++) {
-							if ((fld + "_" + checkBoxArray[cb_i]).equalsIgnoreCase(subkey)) { //$NON-NLS-1$
+					if (flds != null && flds.length > 1) {
+						String fld = flds[0];
+						if ((flds[1].equalsIgnoreCase("X")) && ((flds.length > 2)) //$NON-NLS-1$
+								&& (!flds[2].isEmpty())) {
+							String checkBoxes = flds[2];
+							String[] checkBoxArray = checkBoxes.split(ITEMDELIMITER);
+							for (int cb_i = 0; cb_i < checkBoxArray.length; cb_i++) {
+								if ((fld + "_" + checkBoxArray[cb_i]).equalsIgnoreCase(subkey)) { //$NON-NLS-1$
+									isAlreadyShown = true;
+									break;
+								}
+							}
+						} else {
+							if (fld.equalsIgnoreCase(subkey)) {
 								isAlreadyShown = true;
 								break;
 							}
-						}
-					} else {
-						if (fld.equalsIgnoreCase(subkey)) {
-							isAlreadyShown = true;
-							break;
 						}
 					}
 				}
@@ -982,7 +984,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 			if (!isAlreadyShown) {
 				if (unusedHash.containsKey(subkey)) {
 					// *** try to find def
-					String theVal = (String) unusedHash.get(subkey);
+					String theVal = unusedHash.get(subkey);
 					String[] vals = theVal.split(ARGUMENTSSDELIMITER);
 					otherFieldsList = otherFieldsList + delim + subkey + ARGUMENTSSDELIMITER + vals[0];
 					if (vals.length > 1) {
