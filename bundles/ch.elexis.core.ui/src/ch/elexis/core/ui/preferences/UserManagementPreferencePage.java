@@ -3,8 +3,8 @@ package ch.elexis.core.ui.preferences;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -132,6 +132,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private RestrictedAction addUserAction, deleteUserAction, lockUserAction;
 	private Button btnUserIsLocked;
 	private Label userInfoLabel;
+	private boolean isShowOnlyActive = true;
 
 	/**
 	 * Create the preference page.
@@ -214,6 +215,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 				IUser currentUser = ContextServiceHolder.get().getActiveUser().orElse(null);
 				if (currentUser != null) {
 					if (currentUser.getId().equals(user.getId())) {
+						
 						MessageDialog.openWarning(getShell(), "Warnung",
 								"Dieser Benutzer ist gerade eingeloggt und kann daher nicht entfernt werden!");
 					} else {
@@ -270,16 +272,43 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_compositeLeft.marginHeight = 0;
 		compositeLeft.setLayout(gl_compositeLeft);
 
-		Composite compositeButtons = new Composite(compositeLeft, SWT.None);
-		compositeButtons.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite compositeButtons = new Composite(compositeLeft, SWT.NONE);
+		GridLayout gridLayoutButtons = new GridLayout(3, false);
+		gridLayoutButtons.marginWidth = 0;
+		gridLayoutButtons.marginHeight = 0;
+		gridLayoutButtons.horizontalSpacing = 0;
+		compositeButtons.setLayout(gridLayoutButtons);
 		compositeButtons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Button btnAdd = new Button(compositeButtons, SWT.FLAT);
 		btnAdd.setImage(Images.IMG_NEW.getImage());
+		GridData gd_btnAdd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_btnAdd.widthHint = 30;
+		btnAdd.setLayoutData(gd_btnAdd);
 		btnAdd.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        addUserAction.doRun();
+		    }
+		});
+
+		Button btnToggleUserFilter = new Button(compositeButtons, SWT.PUSH);
+		btnToggleUserFilter.setImage(Images.IMG_EYE_WO_SHADOW.getImage());
+		btnToggleUserFilter.setText("Alle User");//$NON-NLS-1$
+		GridData gd_btnToggleUserFilter = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		btnToggleUserFilter.setLayoutData(gd_btnToggleUserFilter);
+
+		btnToggleUserFilter.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addUserAction.doRun();
+				isShowOnlyActive = !isShowOnlyActive;
+
+				updateUserList();
+				btnToggleUserFilter.setText(isShowOnlyActive ? "Alle User" : "Aktive User");//$NON-NLS-1$ //$NON-NLS-2$
+				btnToggleUserFilter.setImage(
+						isShowOnlyActive ? Images.IMG_EYE_WO_SHADOW.getImage() : Images.IMG_REMOVEITEM.getImage());
+				resetAll();
+
 			}
 		});
 
@@ -905,6 +934,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 		updateUserList();
 
+
 		setUnlocked(ConnectionStatus.STANDALONE == ElexisServerServiceHolder.get().getConnectionStatus());
 
 		sash.setWeights(new int[] { 1, 5 });
@@ -921,10 +951,12 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 
 	private void updateUserList() {
 		List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
-		users.sort((u1, u2) -> u1.getLabel().compareTo(u2.getLabel()));
+		if (isShowOnlyActive) {
+			users = users.stream().filter(IUser::isActive).collect(Collectors.toList());
+		}
+		users.sort(Comparator.comparing(IUser::getLabel));
 		tableViewerUsers.setInput(users);
 	}
-
 	private class ValueChangedAdapter implements IValueChangeListener<IUser> {
 
 		@Override
@@ -1009,6 +1041,23 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private void updateRoles() {
 		List<IRole> roles = CoreModelServiceHolder.get().getQuery(IRole.class).execute();
 		checkboxTableViewerRoles.setInput(roles);
+	}
+
+	private void resetAll() {
+		tableViewerUsers.setSelection(StructuredSelection.EMPTY);
+		wvUser.setValue(null);
+		wvUserContact.setValue(null);
+		updateRoles();
+		updateAssociations();
+		checkboxTableViewerRoles.setCheckedElements(new IRole[0]);
+		checkboxTableViewerAssociation.setCheckedElements(new IMandator[0]);
+		btnIsExecutiveDoctor.setSelection(false);
+		btnUserIsLocked.setSelection(false);
+		for (Link link : new Link[] { linkContact, linkRechnungssteller }) {
+			link.setText(StringUtils.EMPTY);
+		}
+		lblRespPhysColor.setBackground(lblRespPhysColorDefColor);
+		userInfoLabel.setText(StringUtils.EMPTY);
 	}
 
 	private void updateAssociations() {
@@ -1112,4 +1161,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			return m1.getDescription1().compareToIgnoreCase(m2.getDescription1());
 		}
 	}
+
+
+
 }
