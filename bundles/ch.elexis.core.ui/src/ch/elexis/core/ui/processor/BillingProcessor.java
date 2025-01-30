@@ -12,11 +12,10 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
 import ch.elexis.core.model.IBillable;
@@ -38,7 +37,6 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Messages;
 import ch.elexis.core.ui.dialogs.PrescriptionSignatureTitleAreaDialog;
 import ch.elexis.core.ui.dialogs.ResultDialog;
-import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.rgw.tools.Result;
 
 public class BillingProcessor {
@@ -97,37 +95,26 @@ public class BillingProcessor {
 		if (medicationExists) {
 			return;
 		}
-		EntryType disposalType = signature.getDisposalType();
-		IPrescription prescription = null;
-		if (disposalType != EntryType.SELF_DISPENSED) {
-			Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
-			if (billResult.isOK()) {
-				IBilled billed = billResult.get();
-				CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
-						Display.getDefault().getActiveShell());
-				prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
-				if (prescription != null) {
-					prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
-							billed.getId().toString());
-					prescription.setDosageInstruction(signature.getSignatureAsDosisString());
-					prescription.setRemark(signature.getComment());
-					CoreModelServiceHolder.get().save(prescription);
-					updatePrescriptionWithBilledId(billed, signature);
-	            }
-			} else {
-				ResultDialog.show(billResult);
-				return;
-			}
-		} else {
-			CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(selectedArticle,
-					Display.getDefault().getActiveShell());
-			prescription = prescriptionHelper.createPrescriptionFromSignature(signature);
-			if (prescription != null) {
+		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
+		if (!billResult.isOK()) {
+			ResultDialog.show(billResult);
+			return;
+		}
+		IBilled billed = billResult.get();
+		String prescId = billed.getExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID).toString();
+		if (prescId != null) {
+			Optional<IPrescription> prescriptionOpt = CoreModelServiceHolder.get().load(prescId, IPrescription.class);
+			if (prescriptionOpt.isPresent()) {
+				IPrescription prescription = prescriptionOpt.get();
 				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 				prescription.setRemark(signature.getComment());
+				prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
+						billed.getId());
+				prescription.setEntryType(signature.getDisposalType());
+				prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
 				CoreModelServiceHolder.get().save(prescription);
-	        }
-	    }
+			}
+		}
 		CoreModelServiceHolder.get().save(actEncounter);
 		postRefreshMedicationEvent();
 	}
@@ -141,21 +128,6 @@ public class BillingProcessor {
 			boolean sameDosage = Objects.equals(prescription.getDosageInstruction(), signatureDosage);
 			boolean sameEntryType = prescription.getEntryType().equals(signatureEntryType);
 			return sameArticle && sameDosage && sameEntryType;
-		});
-	}
-
-	private void updatePrescriptionWithBilledId(IBilled billed, IArticleDefaultSignature signature) {
-		getRecentPatientPrescriptions(actEncounter.getPatient(), actEncounter.getDate().atStartOfDay()).stream()
-				.filter(prescription -> {
-			Object extInfo = prescription.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID);
-			return extInfo != null && billed.getId().equals(extInfo.toString());
-		}).findFirst().ifPresent(prescription -> {
-			prescription.setDosageInstruction(signature.getSignatureAsDosisString());
-			prescription.setRemark(signature.getComment());
-			prescription.setDateFrom(billed.getEncounter().getDate().atStartOfDay());
-					prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
-							billed.getId().toString());
-			CoreModelServiceHolder.get().save(prescription);
 		});
 	}
 
