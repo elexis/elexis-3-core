@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -186,21 +187,40 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private IPatient actPatient;
 	private long cvHighestLastUpdate;
 
-	record FilterActions(Action deleteReminderAction, Action showAssignedToMeAction,
+	private record FilterActions(Action deleteReminderAction, Action showAssignedToMeAction,
 			Action popupOnPatientSelectionReminderToggleAction, Action popupOnLoginReminderToggleAction,
 			Action showNotYetDueReminderToggleAction, Action showOnlyOwnDueReminderToggleAction,
 			Action showSelfCreatedReminderAction, RestrictedAction showOthersRemindersAction) {
+		public void reload() {
+			for (Object action : new Object[] { showAssignedToMeAction,
+					popupOnPatientSelectionReminderToggleAction, popupOnLoginReminderToggleAction,
+					showNotYetDueReminderToggleAction, showOnlyOwnDueReminderToggleAction,
+					showSelfCreatedReminderAction, showOthersRemindersAction }) {
+				try {
+					Method refreshMethod = action.getClass().getMethod("reload"); //$NON-NLS-1$
+					refreshMethod.invoke(action);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(getClass()).error("Error reloading filters", e);
+				}
+			}
+		}
+
+		public void reset() {
+			for (Object action : new Object[] { showAssignedToMeAction,
+					popupOnPatientSelectionReminderToggleAction, popupOnLoginReminderToggleAction,
+					showNotYetDueReminderToggleAction, showOnlyOwnDueReminderToggleAction,
+					showSelfCreatedReminderAction }) {
+				try {
+					Method refreshMethod = action.getClass().getMethod("reset"); //$NON-NLS-1$
+					refreshMethod.invoke(action);
+				} catch (Exception e) {
+					LoggerFactory.getLogger(getClass()).error("Error resetting filters", e);
+				}
+			}
+		}
 	}
 	HashMap<String, FilterActions> filtersMap = new HashMap<>();
 
-	private Action deleteReminderAction;
-	private Action showAssignedToMeAction;
-	private Action popupOnPatientSelectionReminderToggleAction;
-	private Action popupOnLoginReminderToggleAction;
-	private Action showNotYetDueReminderToggleAction;
-	private Action showOnlyOwnDueReminderToggleAction;
-	private Action showSelfCreatedReminderAction;
-	private RestrictedAction showOthersRemindersAction;
 	
 	private Action reloadAction = new Action(Messages.Core_Reload) {
 		{
@@ -225,7 +245,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		@Override
 		public void run() {
 			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_USE_GLOBAL_FILTERS, //$NON-NLS-1$
-					toggleGlobalFiltersAction.isChecked());
+					this.isChecked());
 			useGlobalFilters = toggleGlobalFiltersAction.isChecked();
 			refreshUserConfiguration();
 			refresh();
@@ -243,7 +263,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		@Override
 		public void run() {
 			ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, //$NON-NLS-1$
-					toggleAutoSelectPatientAction.isChecked());
+					this.isChecked());
 		}
 	};
 	
@@ -275,10 +295,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	 * 
 	 * @param config identification. used to save the config to the database with
 	 *               the String. example: 'currentpatient', 'allpatients'
+	 * @return FilterActions
 	 */
-	private void createFilterActions(String config) {
+	private FilterActions createFilterActions(String config) {
 
-		deleteReminderAction = new Action(Messages.Core_Delete) {
+		Action deleteReminderAction = new Action(Messages.Core_Delete) {
 			{
 				setImageDescriptor(Images.IMG_DELETE.getImageDescriptor());
 				setToolTipText(Messages.ReminderView_deleteToolTip);
@@ -307,175 +328,295 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 		};
 
-		showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW), Messages.Core_All,
+		RestrictedAction showOthersRemindersAction = new RestrictedAction(EvACE.of(IReminder.class, Right.VIEW),
+				Messages.Core_All,
 				Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.ReminderView_foreignTooltip);
 			}
 
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
 			@Override
 			public void doRun() {
-				if (showOthersRemindersAction.isChecked()) {
+				if (this.isChecked()) {
 					boolean continueOperation = SWTHelper.askYesNo(Messages.Core_Warning,
 							Messages.ReminderView_WarningAllFilter);
 					if (!continueOperation) {
-						showOthersRemindersAction.setChecked(false);
+						this.setChecked(false);
 						return;
 					}
 				}
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							showOthersRemindersAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + config, //$NON-NLS-1$
-							showOthersRemindersAction.isChecked());
+							this.isChecked());
 				}
 				resetOtherFilters(config);
 				refresh();
 			}
 		};
 
-		showSelfCreatedReminderAction = new Action(Messages.ReminderView_myRemindersAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		Action showSelfCreatedReminderAction = new Action(Messages.ReminderView_myRemindersAction,Action.AS_CHECK_BOX){ // $NON-NLS-1$
 			{
 				setToolTipText(Messages.ReminderView_myRemindersToolTip); // $NON-NLS-1$
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + config, false); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							showSelfCreatedReminderAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + config, //$NON-NLS-1$
-							showSelfCreatedReminderAction.isChecked());
+							this.isChecked());
 				}
-
 				refresh();
 			}
 		};
 
-		showOnlyOwnDueReminderToggleAction = new Action(Messages.ReminderView_onlyDueAction, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		Action showOnlyOwnDueReminderToggleAction = new Action(Messages.ReminderView_onlyDueAction,Action.AS_CHECK_BOX){ // $NON-NLS-1$
 			{
 				setToolTipText(Messages.ReminderView_onlyDueToolTip); // $NON-NLS-1$
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + config, false)); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							showOnlyOwnDueReminderToggleAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + config, //$NON-NLS-1$
-							showOnlyOwnDueReminderToggleAction.isChecked());
+							this.isChecked());
 				}
 
 				refresh();
 			}
 		};
 
-		showNotYetDueReminderToggleAction = new Action(Messages.ShowNotYetDueReminders, Action.AS_CHECK_BOX) { // $NON-NLS-1$
+		Action showNotYetDueReminderToggleAction = new Action(Messages.ShowNotYetDueReminders,Action.AS_CHECK_BOX){ // $NON-NLS-1$
 			{
 				setToolTipText(Messages.ShowNotYetDueReminders_Tooltip); // $NON-NLS-1$
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(ConfigServiceHolder
+							.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + config, false); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							showNotYetDueReminderToggleAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + config, //$NON-NLS-1$
-							showNotYetDueReminderToggleAction.isChecked());
+							this.isChecked());
 				}
 
 				refresh();
 			}
 		};
 
-		popupOnLoginReminderToggleAction = new Action(Messages.Reminders_PopupOnLogin, Action.AS_CHECK_BOX) {
+		Action popupOnLoginReminderToggleAction = new Action(Messages.Reminders_PopupOnLogin,Action.AS_CHECK_BOX){
 			{
 				setToolTipText(Messages.Reminders_PopupOnLogin_ToolTip); // $NON-NLS-1$
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + config, false); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							popupOnLoginReminderToggleAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + config, //$NON-NLS-1$
-							popupOnLoginReminderToggleAction.isChecked());
+							this.isChecked());
 				}
 				refresh();
 			}
 		};
 
-		popupOnPatientSelectionReminderToggleAction = new Action(Messages.Reminders_PopupOnPatientSelection,
+		Action popupOnPatientSelectionReminderToggleAction = new Action(Messages.Reminders_PopupOnPatientSelection,
 				Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.Reminders_PopupOnPatientSelection_ToolTip); // $NON-NLS-1$
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(ConfigServiceHolder
+							.getUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + config, false); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							popupOnPatientSelectionReminderToggleAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + config, //$NON-NLS-1$
-							popupOnPatientSelectionReminderToggleAction.isChecked());
+							this.isChecked());
 				}
 
 				refresh();
 			}
 		};
-		showAssignedToMeAction = new Action(Messages.Reminders_AssignedToMe, Action.AS_CHECK_BOX) {
+
+		Action showAssignedToMeAction = new Action(Messages.Reminders_AssignedToMe, Action.AS_CHECK_BOX) {
 			{
 				setToolTipText(Messages.Reminders_AssignedToMe_ToolTip);
+			}
+
+			public void reload() {
+				if (useGlobalFilters) {
+					this.setChecked(ConfigServiceHolder
+							.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + GLOBALFILTERS, false)); //$NON-NLS-1$
+				} else {
+					this.setChecked(
+							ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			public void reset() {
+				if (useGlobalFilters) {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + GLOBALFILTERS, false); //$NON-NLS-1$
+				} else {
+					this.setChecked(false);
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + config, false); //$NON-NLS-1$
+				}
 			}
 
 			@Override
 			public void run() {
 				if (useGlobalFilters) {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + GLOBALFILTERS, //$NON-NLS-1$
-							showAssignedToMeAction.isChecked());
+							this.isChecked());
 				} else {
 					ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + config, //$NON-NLS-1$
-							showAssignedToMeAction.isChecked());
+							this.isChecked());
 				}
 				refresh();
 			}
 		};
 		
-		FilterActions filters = new FilterActions(deleteReminderAction, showAssignedToMeAction,
+		return new FilterActions(deleteReminderAction, showAssignedToMeAction,
 				popupOnPatientSelectionReminderToggleAction, popupOnLoginReminderToggleAction,
 				showNotYetDueReminderToggleAction, showOnlyOwnDueReminderToggleAction, showSelfCreatedReminderAction,
 				showOthersRemindersAction);
-		filtersMap.put(config, filters);
 	}
 
+	/**
+	 * resets the filters of a tableviewer to false. parameter config for example
+	 * could be 'currentpatient', 'myreminders' or 'global'. <br>
+	 * 'global' resets the filter actions of all tableviewers
+	 * 
+	 * @param config key for defining which filters to reset
+	 */
 	private void resetOtherFilters(String config) {
-		FilterActions filters = filtersMap.get(config);
-		String id = config;
 		if (useGlobalFilters) {
-			id = GLOBALFILTERS;
+			for (Entry<String, FilterActions> set : filtersMap.entrySet()) {
+				set.getValue().reset();
+			}
+		} else {
+			filtersMap.get(config).reset();
 		}
 
 		toggleAutoSelectPatientAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false);
-
-		filters.showSelfCreatedReminderAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDEROWN + "/" + id, false); //$NON-NLS-1$
-		filters.showOnlyOwnDueReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDERSOPEN + "/" + id, false); //$NON-NLS-1$
-		filters.popupOnLoginReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.POPUP_ON_LOGIN + "/" + id, false); //$NON-NLS-1$
-		filters.popupOnPatientSelectionReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + id, false); //$NON-NLS-1$
-		filters.showAssignedToMeAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + id, false); //$NON-NLS-1$
-		filters.showNotYetDueReminderToggleAction.setChecked(false);
-		ConfigServiceHolder.setUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + id, false); //$NON-NLS-1$
 	}
 
 	private RestrictedAction selectPatientAction = new RestrictedAction(EvACE.of(IPatient.class, Right.VIEW),
@@ -689,7 +830,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			String id = entry.getValue();
 			Table table = entry.getKey();
 
-			createFilterActions(id);
+			FilterActions actions = createFilterActions(id);
+			filtersMap.put(id, actions);
 
 			MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
 			CustomTimeAction custom = new CustomTimeAction("Benutzerdefiniert", id);
@@ -707,15 +849,15 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 			MenuManager menuManager = new MenuManager();
 			menuManager.add(new ReminderStatusSubMenu());
-			menuManager.add(deleteReminderAction);
+			menuManager.add(actions.deleteReminderAction());
 			menuManager.add(timeFilterSubMenu);
-			menuManager.add(showOnlyOwnDueReminderToggleAction);
-			menuManager.add(showNotYetDueReminderToggleAction);
-			menuManager.add(showSelfCreatedReminderAction);
-			menuManager.add(showAssignedToMeAction);
-			menuManager.add(popupOnLoginReminderToggleAction);
-			menuManager.add(popupOnPatientSelectionReminderToggleAction);
-			menuManager.add(showOthersRemindersAction);
+			menuManager.add(actions.showOnlyOwnDueReminderToggleAction());
+			menuManager.add(actions.showNotYetDueReminderToggleAction());
+			menuManager.add(actions.showSelfCreatedReminderAction());
+			menuManager.add(actions.showAssignedToMeAction());
+			menuManager.add(actions.popupOnLoginReminderToggleAction());
+			menuManager.add(actions.popupOnPatientSelectionReminderToggleAction());
+			menuManager.add(actions.showOthersRemindersAction());
 
 			table.setMenu(menuManager.createContextMenu(table));
 		}
@@ -889,6 +1031,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			IUserGroup targetGroup = findGroupForViewer(viewer);
 			if (targetGroup != null) {
 				List<IContact> currentResponsibles = reminder.getResponsible();
+				if (reminder.isResponsibleAll()) {
+					reminder.setResponsibleAll(false);
+				}
 				if (!currentResponsibles.isEmpty()) {
 					for (IContact contact : currentResponsibles) {
 						reminder.removeResponsible(contact);
@@ -900,6 +1045,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			}
 			break;
 		case MYREMINDERS:
+			if (reminder.isResponsibleAll()) {
+				reminder.setResponsibleAll(false);
+			}
 			if (!reminder.getResponsible().isEmpty()) {
 				for (IContact contact : reminder.getResponsible()) {
 					reminder.removeResponsible(contact);
@@ -975,6 +1123,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
+			if (!filtersMap.isEmpty()) {
+				filtersMap.values().forEach(fa -> fa.reload());
+			}
 			patientRefresh();
 			generalRefresh();
 			myRemindersRefresh();
@@ -1163,28 +1314,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	}
 
 	private void refreshUserConfiguration() {
-		for (Entry<String, FilterActions> filters : filtersMap.entrySet()) {
-			FilterActions action = filters.getValue();
-			String id = filters.getKey();
-			if (useGlobalFilters) {
-				id = GLOBALFILTERS;
-			}
-			action.showOnlyOwnDueReminderToggleAction
-				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERSOPEN + "/" + id, true)); //$NON-NLS-1$
-			action.showSelfCreatedReminderAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROWN + "/" + id, false)); //$NON-NLS-1$
-			toggleAutoSelectPatientAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
-			action.showNotYetDueReminderToggleAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDERS_NOT_YET_DUE + "/" + id, false)); //$NON-NLS-1$
-			action.popupOnLoginReminderToggleAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_LOGIN + "/" + id, false)); //$NON-NLS-1$
-			action.popupOnPatientSelectionReminderToggleAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.POPUP_ON_PATIENT_SELECTION + "/" + id, false)); //$NON-NLS-1$
-			action.showAssignedToMeAction
-					.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_ASSIGNED_TO_ME + "/" + id, false)); //$NON-NLS-1$
-			filterDueDateDays = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + id, -1);
-		}
+		// reload all filters
+		filtersMap.values().forEach(fa -> fa.reload());
 
 //		// get state from user's configuration
 //		showOthersRemindersAction.setChecked(CoreHub.userCfg.get(Preferences.USR_REMINDEROTHERS, false));
