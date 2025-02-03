@@ -200,7 +200,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					Method refreshMethod = action.getClass().getMethod("reload"); //$NON-NLS-1$
 					refreshMethod.invoke(action);
 				} catch (Exception e) {
-					e.printStackTrace();
+					LoggerFactory.getLogger(getClass()).error("Error reloading filters", e);
 				}
 			}
 		}
@@ -214,7 +214,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					Method refreshMethod = action.getClass().getMethod("reset"); //$NON-NLS-1$
 					refreshMethod.invoke(action);
 				} catch (Exception e) {
-					e.printStackTrace();
+					LoggerFactory.getLogger(getClass()).error("Error resetting filters", e);
 				}
 			}
 		}
