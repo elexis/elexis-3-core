@@ -48,7 +48,6 @@ Import-Package: bsh,
  org.keycloak.representations.adapters.config;version="12.0.4",
  org.osgi.framework;version="1.10.0",
  org.osgi.service.component;version="1.4.0",
- org.osgi.service.component.annotations;version="1.3.0",
  org.osgi.service.useradmin;version="1.1.0",
  org.slf4j
 Service-Component: OSGI-INF/*.xml

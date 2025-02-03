@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2024-12-java21" sequenceNumber="1738572595">
+<target name="Elexis 2024-12-java21" sequenceNumber="1738586790">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -40,7 +40,6 @@
       <unit id="org.apache.xmlgraphics" version="2.10.0.v20241009-1200"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.16"/>
       <unit id="org.apache.httpcomponents.httpclient" version="4.5.14"/>
-      <unit id="org.apache.httpcomponents.httpclient-win" version="4.5.14"/>
       <unit id="jakarta.servlet-api" version="6.1.0"/>
       <unit id="slf4j.api" version="2.0.16"/>
       <unit id="slf4j.osgi" version="2.0.0"/>

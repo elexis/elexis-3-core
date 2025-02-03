@@ -50,10 +50,7 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
-	org.apache.httpcomponents.httpclient-win
 	jakarta.servlet-api
-	
-
 	
 	// logging
 	slf4j.api
