@@ -675,11 +675,19 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				UiDesk.asyncExec(new Runnable() {
 
 					public void run() {
+						// base reminders for active patient query execution
 						IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
 						query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
 						query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
 								Visibility.POPUP_ON_PATIENT_SELECTION);
+
+						List<IReminder> list = query.execute();
+
+						// all responsible filter
+						list.removeIf(r -> !r.isResponsibleAll());
+
+						// reminders with active mandator responsible query
 						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
 							ISubQuery<IReminderResponsibleLink> subQuery = query
 									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
@@ -687,7 +695,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 							subQuery.and("responsible", COMPARATOR.EQUALS, m); //$NON-NLS-1$
 							query.exists(subQuery);
 						});
-						List<IReminder> list = query.execute();
+						list.addAll(query.execute());
 
 						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
