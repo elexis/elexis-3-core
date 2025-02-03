@@ -11,7 +11,8 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.12.0",
  ch.elexis.core.jpa.entities;bundle-version="3.12.0",
  org.glassfish.jersey.core.jersey-common;bundle-version="3.1.9",
- jakarta.ws.rs-api;bundle-version="3.1.0"
+ jakarta.ws.rs-api;bundle-version="3.1.0",
+ org.apache.httpcomponents.httpclient;bundle-version="4.5.14"
 Import-Package: bsh,
  ch.elexis.core.webdav,
  com.fasterxml.jackson.core;version="2.16.0",
