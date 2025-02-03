@@ -47,7 +47,7 @@
     <setAttribute key="selected_target_bundles">
         <setEntry value="bcprov@default:default"/>
         <setEntry value="ch.qos.logback.classic@2:true"/>
-        <setEntry value="ch.qos.logback.core@2:true"/>
+        <setEntry value="ch.qos.logback.core@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
@@ -143,11 +143,11 @@
         <setEntry value="org.keycloak.keycloak-core@default:default"/>
         <setEntry value="org.keycloak.keycloak-servlet-adapter-spi@default:false"/>
         <setEntry value="org.keycloak.keycloak-servlet-filter-adapter@default:default"/>
-        <setEntry value="org.objectweb.asm.commons@default:default"/>
+        <setEntry value="org.objectweb.asm*9.7.1@default:default"/>
+        <setEntry value="org.objectweb.asm.commons*9.7.1@default:default"/>
+        <setEntry value="org.objectweb.asm.tree*9.7.1@default:default"/>
         <setEntry value="org.objectweb.asm.tree.analysis@default:default"/>
-        <setEntry value="org.objectweb.asm.tree@default:default"/>
         <setEntry value="org.objectweb.asm.util@default:default"/>
-        <setEntry value="org.objectweb.asm@default:default"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
         <setEntry value="org.osgi.service.device@default:default"/>
@@ -169,11 +169,12 @@
         <setEntry value="slf4j.api@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="ch.elexis.core.documents@default:default"/>
         <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
         <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
-        <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
+        <setEntry value="ch.elexis.core.jpa.entities@default:default"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
@@ -185,6 +186,7 @@
         <setEntry value="ch.elexis.core.test.context@default:false"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
+        <setEntry value="ch.elexis.core.text.docx@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility.tests@default:false"/>
@@ -192,7 +194,7 @@
         <setEntry value="es.gogo.shell@default:false"/>
         <setEntry value="org.apache.felix.gogo.shell.contribution@default:false"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>

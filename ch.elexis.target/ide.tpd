@@ -28,15 +28,30 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.apache.felix.scr
 	org.eclipse.e4.ui.progress
 	
+	org.eclipse.e4.emf.xpath [0.5.1,1.0.0)
+	
 	org.sat4j.core
 	org.sat4j.pb
+	
+	// overriden
+	jakarta.ws.rs-api [3.1.99,3.1.99]
+	org.glassfish.jersey.core.jersey-common [3.1.99,3.1.100)
+	org.glassfish.jersey.core.jersey-client [3.1.99,3.1.100)
+
+	// required by org.eclipse.e4.ui.css.core
+	org.apache.batik.constants
+	org.apache.batik.css
+	org.apache.batik.i18n
+	org.apache.batik.util
+	org.eclipse.orbit.xml-apis-ext
+	org.apache.xmlgraphics
 
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
 	org.apache.httpcomponents.httpclient-win
 	jakarta.servlet-api
 	
-//	javax.inject 
+
 	
 	// logging
 	slf4j.api
@@ -64,7 +79,6 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	com.mysql.cj
 	org.postgresql.jdbc
 	org.eclipse.persistence.jpa.feature.group
-	org.eclipse.gemini.jpa.feature.feature.group
 	org.osgi.service.jdbc
 	org.osgi.service.jndi
 	jakarta.persistence-api
