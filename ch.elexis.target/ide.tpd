@@ -27,6 +27,7 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.eclipse.mylyn.wikitext.feature.feature.group
 	org.apache.felix.scr
 	org.eclipse.e4.ui.progress
+	org.osgi.service.component.annotations
 	
 	// overriden
 	org.eclipse.e4.emf.xpath [0.5.1,1.0.0)

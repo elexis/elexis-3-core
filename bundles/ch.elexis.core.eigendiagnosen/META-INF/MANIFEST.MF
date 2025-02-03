@@ -10,7 +10,7 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.data;bundle-version="3.10.0",
  ch.elexis.core.jpa;bundle-version="3.10.0",
- ch.elexis.core.jpa.entities;bundle-version="3.10.0"
+ ch.elexis.core.jpa.entities;bundle-version="3.13.0"
 Export-Package: ch.elexis.core.eigendiagnosen
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.services.holder,
