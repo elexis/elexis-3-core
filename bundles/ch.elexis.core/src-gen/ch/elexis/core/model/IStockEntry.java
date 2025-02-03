@@ -216,4 +216,8 @@ public interface IStockEntry extends Identifiable, Deleteable {
 	 */
 	void setProvider(IContact value);
 
+	IStock getRwaStockLink();
+
+	void setRwaStockLink(IStock value);
+
 } // IStockEntry

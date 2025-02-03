@@ -96,6 +96,10 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	@JoinColumn(name = "PROVIDER", insertable = false)
 	Kontakt provider;
 
+	@ManyToOne
+	@JoinColumn(name = "rwa_link")
+	Stock rwa_stock_link;
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -195,5 +199,13 @@ public class StockEntry extends AbstractEntityWithId implements EntityWithId, En
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public Stock getRwa_stock_link() {
+		return rwa_stock_link;
+	}
+
+	public void setRwa_stock_link(Stock rwa_stock_link) {
+		this.rwa_stock_link = rwa_stock_link;
 	}
 }

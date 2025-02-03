@@ -122,4 +122,22 @@ public class StockEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 			return getEntity().getArticleType() + "[" + getEntity().getArticleId() + "]";
 		}
 	}
+
+	@Override
+	public IStock getRwaStockLink() {
+		if (getEntity().getRwa_stock_link() != null) {
+			return ModelUtil.getAdapter(getEntity().getRwa_stock_link(), IStock.class);
+		}
+		return null;
+	}
+
+	@Override
+	public void setRwaStockLink(IStock rwaStockLink) {
+		if (rwaStockLink instanceof AbstractIdModelAdapter) {
+			getEntityMarkDirty().setRwa_stock_link(
+					(ch.elexis.core.jpa.entities.Stock) ((AbstractIdModelAdapter<?>) rwaStockLink).getEntity());
+		} else if (rwaStockLink == null) {
+			getEntityMarkDirty().setRwa_stock_link(null);
+		}
+	}
 }
