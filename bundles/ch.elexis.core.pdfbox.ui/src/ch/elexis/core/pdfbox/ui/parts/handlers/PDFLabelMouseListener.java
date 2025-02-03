@@ -19,7 +19,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -54,6 +53,7 @@ public class PDFLabelMouseListener {
 	}
 
 	public void addMouseListenersToLabel(Label label, int pageIndex, int j) {
+
 		label.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -101,6 +101,7 @@ public class PDFLabelMouseListener {
 					int oldEndY = endY;
 					endX = e.x;
 					endY = e.y;
+
 					currentSelection = new Rectangle(Math.min(startX, endX), Math.min(startY, endY),
 							Math.abs(endX - startX), Math.abs(endY - startY));
 					label.redraw(Math.min(startX, oldEndX), Math.min(startY, oldEndY), Math.abs(oldEndX - startX),
@@ -119,23 +120,43 @@ public class PDFLabelMouseListener {
 					gcBackgrounds[j] = new GC(labelBackgrounds[j]);
 					gcBackgrounds[j].drawImage(images[j], 0, 0);
 					gcBackgrounds[j].dispose();
+					gcBackgrounds[j] = null;
 				}
+
 				e.gc.drawImage(labelBackgrounds[j], 0, 0, labelBackgrounds[j].getBounds().width,
 						labelBackgrounds[j].getBounds().height, 0, 0, label.getSize().x, label.getSize().y);
+
 				List<Rectangle> markedAreas = markedAreasPerPage.get(pageIndex);
 				if (markedAreas != null) {
-					e.gc.setBackground(new Color(Display.getDefault(), new RGB(0, 0, 255)));
-					e.gc.setAlpha(30);
-					for (Rectangle rect : markedAreas) {
-						e.gc.fillRectangle(rect.x, rect.y, rect.width, rect.height);
+					Color highlightColor = new Color(Display.getDefault(), 0, 0, 255);
+					try {
+						e.gc.setBackground(highlightColor);
+						e.gc.setAlpha(30);
+						for (Rectangle rect : markedAreas) {
+							e.gc.fillRectangle(rect.x, rect.y, rect.width, rect.height);
+						}
+					} finally {
+						highlightColor.dispose();
 					}
 				}
+
 				if (currentSelection != null) {
-					e.gc.setBackground(new Color(Display.getDefault(), new RGB(0, 0, 255)));
-					e.gc.setAlpha(30);
-					e.gc.fillRectangle(currentSelection.x, currentSelection.y, currentSelection.width,
-							currentSelection.height);
+					Color highlightColor = new Color(Display.getDefault(), 0, 0, 255);
+					try {
+						e.gc.setBackground(highlightColor);
+						e.gc.setAlpha(30);
+						e.gc.fillRectangle(currentSelection.x, currentSelection.y, currentSelection.width,
+								currentSelection.height);
+					} finally {
+						highlightColor.dispose();
+					}
 				}
+			}
+		});
+		label.addDisposeListener(e -> {
+			if (labelBackgrounds[j] != null && !labelBackgrounds[j].isDisposed()) {
+				labelBackgrounds[j].dispose();
+				labelBackgrounds[j] = null;
 			}
 		});
 	}

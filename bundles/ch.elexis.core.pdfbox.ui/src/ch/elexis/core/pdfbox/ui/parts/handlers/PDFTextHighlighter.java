@@ -196,17 +196,19 @@ public class PDFTextHighlighter {
 	}
 
 	public static void resetHighlighting() throws IOException {
-		for (PDPage page : pdDocument.getPages()) {
-			List<PDAnnotation> annotationsToRemove = new ArrayList<>();
-			for (PDAnnotation annotation : page.getAnnotations()) {
-				if (annotation instanceof PDAnnotationTextMarkup) {
-					PDAnnotationTextMarkup textMarkup = (PDAnnotationTextMarkup) annotation;
-					if (textMarkup.getSubtype().equals(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT)) {
-						annotationsToRemove.add(textMarkup);
+		if (pdDocument != null) {
+			for (PDPage page : pdDocument.getPages()) {
+				List<PDAnnotation> annotationsToRemove = new ArrayList<>();
+				for (PDAnnotation annotation : page.getAnnotations()) {
+					if (annotation instanceof PDAnnotationTextMarkup) {
+						PDAnnotationTextMarkup textMarkup = (PDAnnotationTextMarkup) annotation;
+						if (textMarkup.getSubtype().equals(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT)) {
+							annotationsToRemove.add(textMarkup);
+						}
 					}
 				}
+				page.getAnnotations().removeAll(annotationsToRemove);
 			}
-			page.getAnnotations().removeAll(annotationsToRemove);
 		}
 	}
 
