@@ -21,109 +21,56 @@
    <requires>
       <import plugin="org.eclipse.osgi.services" version="3.3.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="ch.qos.logback.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="ch.qos.logback.classic"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.equinox.console"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.apache.felix.gogo.command"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.apache.felix.gogo.runtime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.apache.felix.gogo.shell"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="ch.elexis.core.logging.default_configuration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.slf4j.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="ch.qos.logback.slf4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="ch.elexis.core.logging.osgi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
-         id="ch.elexis.core.logback.rocketchat"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
+         id="slf4j.api"
+         version="0.0.0"/>
 
    <plugin
-         id="org.slf4j.apis.jcl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="slf4j.osgi"
+         version="0.0.0"/>
 
    <plugin
-         id="org.slf4j.bridge.jul"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="jcl.over.slf4j"
+         version="0.0.0"/>
 
    <plugin
-         id="org.slf4j.binding.log4j12"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         id="jul.to.slf4j"
+         version="0.0.0"/>
 
 </feature>
