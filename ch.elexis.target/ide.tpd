@@ -28,16 +28,18 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.apache.felix.scr
 	org.eclipse.e4.ui.progress
 	
+	// overriden
 	org.eclipse.e4.emf.xpath [0.5.1,1.0.0)
+	jakarta.ws.rs-api [3.1.99,3.1.99]
+	org.glassfish.jersey.core.jersey-common [3.1.99,3.1.100)
+	org.glassfish.jersey.core.jersey-client [3.1.99,3.1.100)
 	
 	org.sat4j.core
 	org.sat4j.pb
 	
-	// overriden
-	jakarta.ws.rs-api [3.1.99,3.1.99]
-	org.glassfish.jersey.core.jersey-common [3.1.99,3.1.100)
-	org.glassfish.jersey.core.jersey-client [3.1.99,3.1.100)
-
+	// required by org.eclipse.equinox.p2.artifact.repository
+	org.tukaani.xz
+	
 	// required by org.eclipse.e4.ui.css.core
 	org.apache.batik.constants
 	org.apache.batik.css
@@ -116,7 +118,6 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.objectweb.asm.util
 	org.jboss.logging.jboss-logging
 
-	org.apache.commons.jxpath
 	com.ibm.icu
 	com.sun.jna
 	com.sun.jna.platform

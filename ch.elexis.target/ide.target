@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2024-12-java21" sequenceNumber="1738571331">
+<target name="Elexis 2024-12-java21" sequenceNumber="1738572595">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -26,11 +26,12 @@
       <unit id="org.apache.felix.scr" version="2.2.12"/>
       <unit id="org.eclipse.e4.ui.progress" version="0.4.700.v20241015-1729"/>
       <unit id="org.eclipse.e4.emf.xpath" version="0.5.1.202502030911"/>
-      <unit id="org.sat4j.core" version="2.3.6.v20201214"/>
-      <unit id="org.sat4j.pb" version="2.3.6.v20201214"/>
       <unit id="jakarta.ws.rs-api" version="3.1.99"/>
       <unit id="org.glassfish.jersey.core.jersey-common" version="3.1.99.SNAPSHOT"/>
       <unit id="org.glassfish.jersey.core.jersey-client" version="3.1.99.SNAPSHOT"/>
+      <unit id="org.sat4j.core" version="2.3.6.v20201214"/>
+      <unit id="org.sat4j.pb" version="2.3.6.v20201214"/>
+      <unit id="org.tukaani.xz" version="1.10.0"/>
       <unit id="org.apache.batik.constants" version="1.18.0.v20241009-1200"/>
       <unit id="org.apache.batik.css" version="1.18.0.v20241009-1200"/>
       <unit id="org.apache.batik.i18n" version="1.18.0.v20241009-1200"/>
@@ -75,7 +76,6 @@
       <unit id="org.objectweb.asm.tree.analysis" version="9.6.0"/>
       <unit id="org.objectweb.asm.util" version="9.6.0"/>
       <unit id="org.jboss.logging.jboss-logging" version="3.6.1.Final"/>
-      <unit id="org.apache.commons.jxpath" version="1.3.0"/>
       <unit id="com.ibm.icu" version="76.1.0"/>
       <unit id="com.sun.jna" version="5.15.0.v20240915-2000"/>
       <unit id="com.sun.jna.platform" version="5.15.0"/>
