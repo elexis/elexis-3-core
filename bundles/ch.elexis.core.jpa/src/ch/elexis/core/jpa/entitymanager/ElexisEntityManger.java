@@ -93,7 +93,6 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
-			new Throwable().printStackTrace();
 
 			if (!SKIP_LIQUIBASE) {
 				if (updateProgress != null) {
