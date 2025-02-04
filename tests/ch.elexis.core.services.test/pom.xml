@@ -7,7 +7,7 @@
     <artifactId>ch.elexis.core.tests</artifactId>
     <version>3.13.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ch.elexis.core.services.test;singleton:=true</artifactId>
+  <artifactId>ch.elexis.core.services.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
