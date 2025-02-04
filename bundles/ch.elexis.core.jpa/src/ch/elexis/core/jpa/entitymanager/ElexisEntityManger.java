@@ -90,10 +90,10 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	@Override
 	public synchronized EntityManager getEntityManager(boolean managed) {
-
 		// do lazy initialization on first access
 		if (factory == null) {
 			// try to initialize
+			new Throwable().printStackTrace();
 
 			if (!SKIP_LIQUIBASE) {
 				if (updateProgress != null) {
@@ -125,9 +125,17 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			props.put(EntityManagerProperties.PERSISTENCE_CONTEXT_REFERENCE_MODE, "WEAK"); //$NON-NLS-1$
 			props.put(PersistenceUnitProperties.CLASSLOADER, Kontakt.class.getClassLoader());
 
-			PersistenceProvider persistenceProvider = new PersistenceProvider();
+			try {
+				PersistenceProvider persistenceProvider = new PersistenceProvider();
+				factory = persistenceProvider.createEntityManagerFactory("elexis", props);
+			} catch (Exception e) {
+				// check that org.eclipse.persistence.asm, core, jpa and jpa.jpql are included
+				// jpa.datasource is set to Run-Level 3 and Auto Start
+				// jpa.entities is included
+				logger.error("Error creating EntityManagerFactory", e);
+				System.exit(1);
+			}
 
-			factory = persistenceProvider.createEntityManagerFactory("elexis", props);
 		}
 
 		if (factory != null) {

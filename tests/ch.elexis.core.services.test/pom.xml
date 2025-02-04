@@ -7,7 +7,7 @@
     <artifactId>ch.elexis.core.tests</artifactId>
     <version>3.13.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ch.elexis.core.services.test</artifactId>
+  <artifactId>ch.elexis.core.services.test;singleton:=true</artifactId>
   <packaging>eclipse-test-plugin</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -32,6 +32,11 @@
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.logging.default_configuration</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.elexis.core.services.test.ws-bind</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -79,16 +84,6 @@
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.util.measurement</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.metatype</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.emf.ecore</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -114,12 +109,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.wireadmin</artifactId>
+              <artifactId>com.h2database</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.h2database</artifactId>
+              <artifactId>info.elexis.target.jaxws.core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -164,6 +159,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.osgi.service.component.annotations</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.felix.scr</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -175,16 +175,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.felix.gogo.command</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.jdbc</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.ant.core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -234,11 +224,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.jndi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.external.aopalliance-repackaged</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -274,11 +259,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.util.xml</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>ch.qos.logback.classic</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -299,11 +279,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.device</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.collections</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -315,11 +290,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.osgi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.eclipse.osgi.util</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -365,11 +335,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.apache.ant</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -474,11 +439,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.useradmin</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.expressions</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -554,11 +514,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.upnp</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -604,11 +559,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.osgi.util.position</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm.commons</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -635,11 +585,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache-extras.beanshell.bsh</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.osgi.service.provisioning</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

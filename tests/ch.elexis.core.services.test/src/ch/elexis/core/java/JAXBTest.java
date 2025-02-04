@@ -18,26 +18,26 @@ import jakarta.xml.bind.Marshaller;
 
 public class JAXBTest {
 
-//	@Test
-//	public void jaxbFunctionality() throws JAXBException, IOException {
-//		DBConnection dbc = new DBConnection();
-//		dbc.databaseName = "testDatabase";
-//		dbc.hostName = "testHost";
-//		dbc.password = "testPassword";
-//		dbc.rdbmsType = DBType.H2;
-//		dbc.username = "testUsername";
-//
-//		String marshallIntoString = dbc.marshallIntoString();
-//		assertNotNull(marshallIntoString);
-//		assertNotEquals(StringUtils.EMPTY, marshallIntoString);
-//		System.out.println("DBConnection: [" + marshallIntoString + "]");
-//
-//		DBConnection _dbc = DBConnection.unmarshall(marshallIntoString);
-//		assertEquals(dbc.databaseName, _dbc.databaseName);
-//		assertEquals(dbc.hostName, _dbc.hostName);
-//		assertEquals(dbc.password, _dbc.password);
-//		assertEquals(dbc.rdbmsType, _dbc.rdbmsType);
-//	}
+	@Test
+	public void jaxbFunctionality() throws JAXBException, IOException {
+		DBConnection dbc = new DBConnection();
+		dbc.databaseName = "testDatabase";
+		dbc.hostName = "testHost";
+		dbc.password = "testPassword";
+		dbc.rdbmsType = DBType.H2;
+		dbc.username = "testUsername";
+
+		String marshallIntoString = dbc.marshallIntoString();
+		assertNotNull(marshallIntoString);
+		assertNotEquals(StringUtils.EMPTY, marshallIntoString);
+		System.out.println("DBConnection: [" + marshallIntoString + "]");
+
+		DBConnection _dbc = DBConnection.unmarshall(marshallIntoString);
+		assertEquals(dbc.databaseName, _dbc.databaseName);
+		assertEquals(dbc.hostName, _dbc.hostName);
+		assertEquals(dbc.password, _dbc.password);
+		assertEquals(dbc.rdbmsType, _dbc.rdbmsType);
+	}
 
 	@Test
 	public void test() throws JAXBException, IOException {
