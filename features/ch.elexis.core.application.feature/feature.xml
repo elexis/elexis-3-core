@@ -19,19 +19,11 @@
    </license>
 
    <includes
-         id="org.eclipse.e4.rcp"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.emf.common"
          version="0.0.0"/>
 
    <includes
          id="org.eclipse.emf.ecore"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.rcp"
          version="0.0.0"/>
 
    <includes
@@ -747,10 +739,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.httpcomponents.client5.httpclient5-win"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.httpcomponents.core5.httpcore5"
          version="0.0.0"/>
 
@@ -824,6 +812,8 @@
 
    <plugin
          id="org.eclipse.equinox.security.win32"
+         os="win32"
+         arch="x86_64"
          version="0.0.0"/>
 
    <plugin
