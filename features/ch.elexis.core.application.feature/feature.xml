@@ -359,10 +359,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="javax.activation"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.equinox.event"
          version="0.0.0"/>
 
@@ -403,10 +399,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.poi.ooxml.schemas"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.core.filesystem"
          version="0.0.0"/>
 
@@ -419,12 +411,6 @@
    <plugin
          id="org.eclipse.core.filesystem.macosx"
          os="macosx"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.win32.x86_64"
-         os="win32"
-         arch="x86_64"
          version="0.0.0"/>
 
    <plugin
@@ -446,12 +432,6 @@
    <plugin
          id="org.eclipse.equinox.security.macosx"
          os="macosx"
-         arch="x86_64"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.win32.x86_64"
-         os="win32"
          arch="x86_64"
          version="0.0.0"/>
 
@@ -512,10 +492,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.commons.codec"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.commons.commons-collections4"
          version="0.0.0"/>
 
@@ -528,10 +504,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="jaxb-api"
-         version="0.0.0"/>
-
-   <plugin
          id="org.glassfish.jersey.media.jersey-media-jaxb"
          version="0.0.0"/>
 
@@ -541,10 +513,6 @@
 
    <plugin
          id="org.glassfish.hk2.external.aopalliance-repackaged"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.glassfish.hk2.external.jakarta.inject"
          version="0.0.0"/>
 
    <plugin
@@ -750,10 +718,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.jetty.osgi.alpn.fragment"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.nebula.widgets.nattable.extension.nebula"
          version="0.0.0"/>
 
@@ -775,19 +739,11 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.jdom2"
-         version="0.0.0"/>
-
-   <plugin
          id="org.osgi.service.prefs"
          version="0.0.0"/>
 
    <plugin
          id="org.apache-extras.beanshell.bsh"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.jaxen"
          version="0.0.0"/>
 
    <plugin
@@ -835,17 +791,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.core.net.linux"
-         os="linux"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.core.net.win32.x86_64"
-         os="win32"
-         arch="x86_64"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.commons.commons-io"
          version="0.0.0"/>
 
@@ -858,11 +803,51 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.commons.jxpath"
+         id="org.jboss.logging.jboss-logging"
          version="0.0.0"/>
 
    <plugin
-         id="org.jboss.logging.jboss-logging"
+         id="jakarta.activation-api"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.jdom.2"
+         version="0.0.0"/>
+
+   <plugin
+         id="jakarta.inject.jakarta.inject-api"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.keycloak.keycloak-adapter-core"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.equinox.security.win32"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.qos.logback.classic"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.qos.logback.core"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.fasterxml.jackson.core.jackson-annotations"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.fasterxml.jackson.core.jackson-core"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.fasterxml.jackson.core.jackson-databind"
+         version="0.0.0"/>
+
+   <plugin
+         id="jakarta.annotation-api"
          version="0.0.0"/>
 
 </feature>
