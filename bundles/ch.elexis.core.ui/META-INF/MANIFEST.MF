@@ -23,7 +23,8 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexpor
  org.eclipse.nebula.widgets.cdatetime;bundle-version="0.14.0";visibility:=reexport,
  org.eclipse.nebula.widgets.nattable.core,
  org.eclipse.nebula.widgets.nattable.extension.nebula,
- org.eclipse.nebula.widgets.richtext
+ org.eclipse.nebula.widgets.richtext,
+ org.jdom.2;bundle-version="2.0.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
@@ -79,10 +80,7 @@ Import-Package: com.equo.chromium.swt,
  org.apache.commons.lang3.math;version="3.12.0",
  org.eclipse.core.expressions,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
- org.eclipse.e4.ui.model.application.ui.basic,
- org.jdom2,
- org.jdom2.input,
- org.jdom2.output
+ org.eclipse.e4.ui.model.application.ui.basic
 Service-Component: OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
  OSGI-INF/ch.elexis.core.ui.events.ElexisServerCreateEventForwarderEventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml,
