@@ -170,6 +170,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	private HeaderComposite myHeader;
 	private TableViewer myViewer;
 
+	HashMap<TableViewer, String> allViewers = new HashMap<>();
+
 	record GroupComponent(String id, HeaderComposite header, TableViewer viewer) {
 	}
 	private List<GroupComponent> usergroupComponents = new ArrayList<>();
@@ -305,9 +307,11 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.ReminderView_deleteToolTip);
 			}
 
+			private TableViewer viewer = getViewerForId(config);
+
 			@Override
 			public void run() {
-				StructuredSelection sel = (StructuredSelection) getSelection();
+				StructuredSelection sel = (StructuredSelection) viewer.getStructuredSelection();
 				if (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder) {
 					IReminder r = (IReminder) sel.getFirstElement();
 					LockResponse lockResponse = LocalLockServiceHolder.get().acquireLock(r);
@@ -323,7 +327,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 			@Override
 			public boolean isEnabled() {
-				StructuredSelection sel = (StructuredSelection) getSelection();
+				StructuredSelection sel = (StructuredSelection) viewer.getStructuredSelection();
 				return (sel != null && sel.size() == 1 && sel.getFirstElement() instanceof IReminder);
 			}
 		};
@@ -681,13 +685,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 						query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 						query.and(ModelPackage.Literals.IREMINDER__VISIBILITY, COMPARATOR.EQUALS,
 								Visibility.POPUP_ON_PATIENT_SELECTION);
+						query.startGroup();
 
-						List<IReminder> list = query.execute();
-
-						// all responsible filter
-						list.removeIf(r -> !r.isResponsibleAll());
-
-						// reminders with active mandator responsible query
+						// active mandator responsible
 						ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
 							ISubQuery<IReminderResponsibleLink> subQuery = query
 									.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
@@ -695,8 +695,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 							subQuery.and("responsible", COMPARATOR.EQUALS, m); //$NON-NLS-1$
 							query.exists(subQuery);
 						});
-						list.addAll(query.execute());
 
+						// or responsible all
+						query.or("responsibleValue", COMPARATOR.EQUALS, "ALL"); //$NON-NLS-1$ //$NON-NLS-2$
+						query.andJoinGroups();
+
+						List<IReminder> list = query.execute();
 						if (!list.isEmpty()) {
 							StringBuilder sb = new StringBuilder();
 							for (IReminder r : list) {
@@ -825,24 +829,23 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		ViewMenus menu = new ViewMenus(getViewSite());
 		menu.createToolbar(reloadAction, newReminderAction, toggleGlobalFiltersAction, toggleAutoSelectPatientAction);
 
-		HashMap<Table, String> map = new HashMap<>();
-		map.put(currentPatientViewer.getTable(), CURRENTPATIENT);
-		map.put(generalPatientViewer.getTable(), ALLPATIENTS);
-		map.put(myViewer.getTable(), MYREMINDERS);
+		allViewers.put(currentPatientViewer, CURRENTPATIENT);
+		allViewers.put(generalPatientViewer, ALLPATIENTS);
+		allViewers.put(myViewer, MYREMINDERS);
 
 		for (GroupComponent group : usergroupComponents) {
-			map.put(group.viewer().getTable(), group.id());
+			allViewers.put(group.viewer(), group.id());
 		}
 
-		for (Map.Entry<Table, String> entry : map.entrySet()) {
+		for (Map.Entry<TableViewer, String> entry : allViewers.entrySet()) {
 			String id = entry.getValue();
-			Table table = entry.getKey();
+			Table table = entry.getKey().getTable();
 
 			FilterActions actions = createFilterActions(id);
 			filtersMap.put(id, actions);
 
-			MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige");
-			CustomTimeAction custom = new CustomTimeAction("Benutzerdefiniert", id);
+			MenuManager timeFilterSubMenu = new MenuManager("Zeitraum Anzeige (ab heute)");
+			CustomTimeAction custom = new CustomTimeAction("Benutzerdefinierte Anzahl", id);
 			FilterTimeAction action30 = new FilterTimeAction(30);
 			FilterTimeAction action60 = new FilterTimeAction(60);
 			FilterTimeAction action90 = new FilterTimeAction(90);
@@ -856,7 +859,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			timeFilterSubMenu.add(custom);
 
 			MenuManager menuManager = new MenuManager();
-			menuManager.add(new ReminderStatusSubMenu());
+			menuManager.add(new ReminderStatusSubMenu(id));
 			menuManager.add(actions.deleteReminderAction());
 			menuManager.add(timeFilterSubMenu);
 			menuManager.add(actions.showOnlyOwnDueReminderToggleAction());
@@ -866,6 +869,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			menuManager.add(actions.popupOnLoginReminderToggleAction());
 			menuManager.add(actions.popupOnPatientSelectionReminderToggleAction());
 			menuManager.add(actions.showOthersRemindersAction());
+
+			menuManager.addMenuListener(new IMenuListener() {
+				@Override
+				public void menuAboutToShow(IMenuManager manager) {
+					actions.deleteReminderAction().setEnabled(actions.deleteReminderAction().isEnabled());
+				}
+			});
 
 			table.setMenu(menuManager.createContextMenu(table));
 		}
@@ -1066,6 +1076,13 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		default:
 			break;
 		}
+	}
+
+	private TableViewer getViewerForId(String id) {
+		return allViewers.entrySet().stream().filter(c -> c.getValue().equalsIgnoreCase(id)).findFirst()
+				.orElse(null)
+				.getKey();
+
 	}
 
 	/**
@@ -1318,6 +1335,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	    if (!includeNoDue) {
 	        query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.NOT_EQUALS, null);
 	    }
+		query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, now);
 	    query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, dueDateDays);
 	}
 
@@ -1900,7 +1918,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 	private class CustomTimePopupDialog extends Dialog {
 
-		private int selectedDays;
+		LocalDate today = LocalDate.now();
+		private int selectedDays = 0;
+		private String title = "Nächste %s Tage";
 
 		public CustomTimePopupDialog() {
 			super(getViewSite().getShell());
@@ -1908,15 +1928,20 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 		@Override
 		protected Control createDialogArea(Composite parent) {
+			updateTitle(parent);
 			Composite area = (Composite) super.createDialogArea(parent);
 			area.setLayout(new GridLayout(1, false));
 
 			DateTime calendar = new DateTime(area, SWT.CALENDAR | SWT.BORDER);
 			calendar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			calendar.addListener(SWT.Selection, e -> {
-				LocalDate today = LocalDate.now();
 				LocalDate selectedDate = LocalDate.of(calendar.getYear(), calendar.getMonth() + 1, calendar.getDay());
-				selectedDays = (int) ChronoUnit.DAYS.between(today, selectedDate);
+				if (selectedDate.isBefore(today)) {
+					calendar.setDate(today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth());
+				} else {
+					selectedDays = (int) ChronoUnit.DAYS.between(today, selectedDate);
+					updateTitle(parent);
+				}
 			});
 
 			return area;
@@ -1931,12 +1956,19 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		public int getSelectedDays() {
 			return selectedDays;
 		}
+
+		private void updateTitle(Composite parent) {
+			parent.getShell().setText(String.format(title, selectedDays));
+		}
 	}
 
 	private class ReminderStatusSubMenu extends MenuManager {
 
-		public ReminderStatusSubMenu() {
+		private TableViewer viewer;
+
+		public ReminderStatusSubMenu(String id) {
 			super("Status...");
+			viewer = getViewerForId(id);
 			setRemoveAllWhenShown(true);
 			addMenuListener(new ReminderStatusSubMenuListener());
 		}
@@ -1945,7 +1977,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				StructuredSelection selection = (StructuredSelection) getSelection();
+				StructuredSelection selection = (StructuredSelection) viewer.getStructuredSelection();
 				if (selection != null && selection.size() == 1) {
 					if (selection.getFirstElement() instanceof IReminder) {
 						IReminder reminder = (IReminder) selection.getFirstElement();
