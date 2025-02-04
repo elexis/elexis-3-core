@@ -1609,30 +1609,53 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 		@Override
 		public int compare(IReminder r1, IReminder r2) {
-			if (r1.getDue() != null && r2.getDue() != null) {
-				if (direction == SWT.UP) {
-					return r2.getDue().compareTo(r1.getDue());
-				} else {
-					return r1.getDue().compareTo(r2.getDue());
-				}
-			} else if (r1.getDue() == null && r2.getDue() == null) {
-				return 0;
-			} else if (r1.getDue() == null) {
-				return direction == SWT.UP ? 1 : -1;
-			} else if (r2.getDue() == null) {
-				return direction == SWT.UP ? -1 : 1;
-			} else {
-				if (direction == SWT.UP) {
-					return r2.getLastupdate().compareTo(r1.getLastupdate());
-				} else {
-					return r1.getLastupdate().compareTo(r2.getLastupdate());
-				}
+			int result = 0;
+
+			switch (column) {
+			case 0: // reminder type
+				result = compareByString(r1.getType().toString(), r2.getType().toString());
+				break;
+			case 1: // data
+				result = compareByDate(r1, r2);
+				break;
+			case 2: // responsible
+				result = compareByString(r1.getResponsible().toString(), r2.getResponsible().toString());
+				break;
+			case 3: // patient
+				result = compareByString(r1.getContact().getLabel(), r2.getContact().getLabel());
+				break;
+			case 4: // subject
+				result = compareByString(r1.getSubject(), r2.getSubject());
+				break;
+			default:
+				result = compareByDate(r1, r2);
+				break;
 			}
+
+			return (direction == SWT.UP) ? -result : result;
 		}
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			return compare((IReminder) e1, (IReminder) e2);
+		}
+
+		private int compareByDate(IReminder r1, IReminder r2) {
+			if (r1.getDue() != null && r2.getDue() != null) {
+				return r1.getDue().compareTo(r2.getDue());
+			} else if (r1.getDue() == null && r2.getDue() == null) {
+				return 0;
+			} else {
+				return (r1.getDue() == null) ? 1 : -1;
+			}
+		}
+
+		private int compareByString(String s1, String s2) {
+			if (s1 == null)
+				s1 = "";
+			if (s2 == null)
+				s2 = "";
+			return s1.compareToIgnoreCase(s2);
 		}
 
 		public void setColumn(int index) {
@@ -2605,6 +2628,14 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 								table.setLayoutData(gd);
 								lastY += deltaY;
 								table.getParent().layout(true, true);
+								if (table.getParent().getParent() instanceof ScrolledComposite) {
+									ScrolledComposite scrolledComposite = (ScrolledComposite) table.getParent()
+											.getParent();
+									Point newSize = table.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+									scrolledComposite.setMinSize(newSize.x,
+											Math.max(newSize.y, scrolledComposite.getClientArea().height));
+									scrolledComposite.layout(true, true);
+								}
 							}
 						}
 					}
@@ -2615,6 +2646,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 
 		private static boolean isNearBottomEdge(Table table, int y) {
 			int tableHeight = table.getBounds().height;
+			if (table.getHorizontalBar().isVisible()) {
+				tableHeight -= table.getHorizontalBar().getSize().y;
+			}
 			return y >= tableHeight - tolerance && y <= tableHeight + tolerance;
 		}
 	}
