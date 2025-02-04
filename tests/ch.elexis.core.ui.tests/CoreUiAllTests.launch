@@ -136,7 +136,7 @@
         <setEntry value="org.eclipse.e4.core.di.extensions@default:default"/>
         <setEntry value="org.eclipse.e4.core.di@default:default"/>
         <setEntry value="org.eclipse.e4.core.services@default:default"/>
-        <setEntry value="org.eclipse.e4.emf.xpath*0.5.1.202501291344@default:default"/>
+        <setEntry value="org.eclipse.e4.emf.xpath@default:default"/>
         <setEntry value="org.eclipse.e4.ui.bindings@default:default"/>
         <setEntry value="org.eclipse.e4.ui.css.core@default:default"/>
         <setEntry value="org.eclipse.e4.ui.css.swt.theme@default:default"/>
@@ -168,14 +168,11 @@
         <setEntry value="org.eclipse.equinox.common@2:true"/>
         <setEntry value="org.eclipse.equinox.console@default:default"/>
         <setEntry value="org.eclipse.equinox.event@1:true"/>
-        <setEntry value="org.eclipse.equinox.http.service.api@default:default"/>
         <setEntry value="org.eclipse.equinox.preferences@default:default"/>
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
         <setEntry value="org.eclipse.help@default:default"/>
         <setEntry value="org.eclipse.jdt.junit.runtime@default:default"/>
         <setEntry value="org.eclipse.jdt.junit4.runtime@default:default"/>
-        <setEntry value="org.eclipse.jetty.ee10.osgi.alpn.fragment@default:false"/>
-        <setEntry value="org.eclipse.jetty.servlet-api@default:default"/>
         <setEntry value="org.eclipse.jface.databinding@default:default"/>
         <setEntry value="org.eclipse.jface.nl_de@default:false"/>
         <setEntry value="org.eclipse.jface.nl_fr@default:false"/>
@@ -189,7 +186,6 @@
         <setEntry value="org.eclipse.nebula.widgets.tablecombo@default:default"/>
         <setEntry value="org.eclipse.orbit.xml-apis-ext@default:default"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
-        <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi@1:true"/>
         <setEntry value="org.eclipse.pde.junit.runtime@default:default"/>
         <setEntry value="org.eclipse.persistence.asm@default:default"/>
@@ -245,18 +241,10 @@
         <setEntry value="org.objectweb.asm.tree.analysis@default:default"/>
         <setEntry value="org.objectweb.asm.util@default:default"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
+        <setEntry value="org.osgi.service.component.annotations@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
-        <setEntry value="org.osgi.service.device@default:default"/>
         <setEntry value="org.osgi.service.event@default:default"/>
-        <setEntry value="org.osgi.service.http.whiteboard@default:default"/>
-        <setEntry value="org.osgi.service.jdbc@default:default"/>
-        <setEntry value="org.osgi.service.jndi@default:default"/>
-        <setEntry value="org.osgi.service.metatype@default:default"/>
         <setEntry value="org.osgi.service.prefs@default:default"/>
-        <setEntry value="org.osgi.service.provisioning@default:default"/>
-        <setEntry value="org.osgi.service.upnp@default:default"/>
-        <setEntry value="org.osgi.service.useradmin@default:default"/>
-        <setEntry value="org.osgi.service.wireadmin@default:default"/>
         <setEntry value="org.osgi.util.function@default:default"/>
         <setEntry value="org.osgi.util.promise@default:default"/>
         <setEntry value="org.postgresql.jdbc@default:default"/>
@@ -271,7 +259,7 @@
         <setEntry value="ch.elexis.core.importer.div@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
+        <setEntry value="ch.elexis.core.jpa.entities@default:false"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
@@ -280,7 +268,6 @@
         <setEntry value="ch.elexis.core.model@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.tasks@default:default"/>
-        <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.ui.contacts@default:default"/>
@@ -294,12 +281,9 @@
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.medelexis.medication.ui@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="es.gogo.shell@default:false"/>
-        <setEntry value="info.elexis.server.core.logging@default:false"/>
-        <setEntry value="org.apache.felix.gogo.shell.contribution@default:false"/>
         <setEntry value="org.iatrix.help.wiki@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <stringAttribute key="testApplication" value="ch.elexis.core.application.ElexisApp"/>
     <booleanAttribute key="tracing" value="false"/>
