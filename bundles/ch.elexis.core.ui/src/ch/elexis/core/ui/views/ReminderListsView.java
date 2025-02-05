@@ -946,7 +946,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		createResponsibleColumn(tableViewer, 80, 2);
 		createPatientColumn(tableViewer, 150, 3);
 		createDescriptionColumn(tableViewer, 400, columnIndex);
-		TableViewerResizer.enableResizing(tableViewer);
+		TableViewerResizer.enableResizing(tableViewer, viewersScrolledComposite);
 		addModifiedScrollListener(tableViewer.getTable());
 		tableViewer.getTable().addFocusListener(new FocusAdapter() {
 			@Override
@@ -2591,7 +2591,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private static int tolerance = 15;
 		private static int minHeight = 25;
 
-		public static void enableResizing(TableViewer tableViewer) {
+		public static void enableResizing(TableViewer tableViewer, ScrolledComposite scrolledComposite) {
 			Table table = tableViewer.getTable();
 			Composite parent = table.getParent();
 
@@ -2628,14 +2628,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 								table.setLayoutData(gd);
 								lastY += deltaY;
 								table.getParent().layout(true, true);
-								if (table.getParent().getParent() instanceof ScrolledComposite) {
-									ScrolledComposite scrolledComposite = (ScrolledComposite) table.getParent()
-											.getParent();
 									Point newSize = table.getParent().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 									scrolledComposite.setMinSize(newSize.x,
 											Math.max(newSize.y, scrolledComposite.getClientArea().height));
 									scrolledComposite.layout(true, true);
-								}
 							}
 						}
 					}
