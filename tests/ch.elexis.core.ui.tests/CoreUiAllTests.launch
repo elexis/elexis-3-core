@@ -58,6 +58,7 @@
         <setEntry value="ch.elexis.core.persistence.feature:default"/>
     </setAttribute>
     <setAttribute key="selected_target_bundles">
+        <setEntry value="angus-activation@default:default"/>
         <setEntry value="bcpg@default:default"/>
         <setEntry value="bcprov@default:default"/>
         <setEntry value="bcutil@default:default"/>
@@ -119,6 +120,7 @@
         <setEntry value="org.apache.poi@default:default"/>
         <setEntry value="org.apache.xmlbeans@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
+        <setEntry value="org.eclipse.angus.jakarta.mail@default:default"/>
         <setEntry value="org.eclipse.collections@default:default"/>
         <setEntry value="org.eclipse.core.commands@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -282,7 +284,7 @@
         <setEntry value="ch.rgw.utility@default:default"/>
         <setEntry value="org.iatrix.help.wiki@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="true"/>
+    <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <stringAttribute key="testApplication" value="ch.elexis.core.application.ElexisApp"/>
     <booleanAttribute key="tracing" value="false"/>

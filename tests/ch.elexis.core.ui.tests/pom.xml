@@ -788,6 +788,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.eclipse.angus.jakarta.mail</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.jobs</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -889,6 +894,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.css.swt</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>angus-activation</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

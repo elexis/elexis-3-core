@@ -140,6 +140,7 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	com.google.protobuf
 	jakarta.mail-api
 	com.sun.mail.jakarta.mail
+	angus-activation
 	com.healthmarketscience.jackcess
 	com.google.zxing.core
 	com.google.zxing.javase
@@ -161,7 +162,6 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
 	org.eclipse.nebula.widgets.floatingtext.feature.feature.group
 	org.eclipse.nebula.widgets.nattable.core
-	org.eclipse.nebula.widgets.nattable.extension.e4
 	org.eclipse.nebula.widgets.nattable.extension.nebula
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	org.eclipse.nebula.widgets.richtext
