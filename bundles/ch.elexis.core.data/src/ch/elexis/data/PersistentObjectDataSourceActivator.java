@@ -16,6 +16,7 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
@@ -56,6 +57,9 @@ public class PersistentObjectDataSourceActivator {
 
 	@Reference
 	private IConfigService configService;
+
+	@Reference
+	private IAccessControlService accessControlService;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -99,7 +103,7 @@ public class PersistentObjectDataSourceActivator {
 			log.info("PO data initialization");
 			try {
 				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
-				Mandant.initializeAdministratorUser();
+				Mandant.initializeAdministratorUser(accessControlService, coreModelService);
 				Mandant bypassMandator = PersistentObjectUtil
 						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch() || CoreUtil.isTestMode());
 
