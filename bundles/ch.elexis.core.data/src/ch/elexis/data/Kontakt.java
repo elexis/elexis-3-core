@@ -22,11 +22,9 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.util.MFUList;
 import ch.rgw.tools.StringTool;
 
@@ -95,22 +93,6 @@ public class Kontakt extends PersistentObject {
 				FLD_REMARK, FLD_PHONE1, FLD_PHONE2, "E-Mail=EMail", FLD_E_MAIL2, FLD_WEBSITE, FLD_EXTINFO, //$NON-NLS-1$
 				FLD_IS_ORGANIZATION, FLD_IS_PERSON, FLD_IS_PATIENT, FLD_IS_USER, FLD_IS_MANDATOR, FLD_IS_LAB,
 				FLD_STREET, FLD_ZIP, FLD_PLACE, FLD_COUNTRY, FLD_FAX, FLD_ANSCHRIFT, FLD_MOBILEPHONE, "PatientNr"); //$NON-NLS-1$
-
-		AccessControlServiceHolder.get().doPrivileged(() -> {
-			// TODO move to NoPo initialisation
-			Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ANREDE, "Anrede", Xid.ASSIGNMENT_REGIONAL);
-			Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_KANTON, "Kanton", Xid.ASSIGNMENT_REGIONAL);
-			Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_SPEZ, "Spezialität",
-					Xid.ASSIGNMENT_REGIONAL);
-			Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ROLLE, "Rolle", Xid.ASSIGNMENT_REGIONAL);
-			Xid.localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "Sendende Institution",
-					Xid.ASSIGNMENT_REGIONAL);
-			// TODO move to NoPo initialisation
-			Xid.getDomain(XidConstants.XID_KONTAKT_ANREDE).addDisplayOption(Person.class);
-			Xid.getDomain(XidConstants.XID_KONTAKT_KANTON).addDisplayOption(Person.class);
-			Xid.getDomain(XidConstants.XID_KONTAKT_SPEZ).addDisplayOption(Person.class);
-			Xid.getDomain(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY).addDisplayOption(Labor.class);
-		});
 	}
 
 	/**
@@ -526,35 +508,6 @@ public class Kontakt extends PersistentObject {
 	@SuppressWarnings("unchecked")
 	public void flushInfoStore(Map store) {
 		setMap(FLD_EXTINFO, store);
-	}
-
-	/**
-	 * Einen Kontakt finden, der einen bestimmten Eintrag im Infostore enthält.
-	 * Falls mehrere passende Kontakte vorhanden sind, wird nur der erste
-	 * zurückgeliefert.
-	 *
-	 * @param clazz Unterklasse von Kontakt, nach der gesucht werden soll
-	 * @param field Name des gesuchten Infostore-Eintrags
-	 * @param value gesuchter Wert dieses Eintrags
-	 * @return Ein Objekt der Klasse clazz, welches einen Infostore-Eintrag field
-	 *         mit dem Inhalt value enthält, oder null wenn kein solches Objekt
-	 *         existiert.
-	 *
-	 * @deprecated performance will suffer. don't query infostore - create separate
-	 *             table
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public static Kontakt findKontaktfromInfoStore(Class clazz, String field, String value) {
-		Query qbe = new Query(clazz);
-		List list = qbe.execute();
-		for (Kontakt k : (List<Kontakt>) list) {
-			String i = (String) k.getInfoElement(field);
-			if (i != null && i.equals(value)) {
-				return k;
-			}
-		}
-		return null;
 	}
 
 	/**

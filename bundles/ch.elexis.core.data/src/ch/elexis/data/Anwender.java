@@ -24,15 +24,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.model.builder.IUserBuilder;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -215,17 +217,17 @@ public class Anwender extends Person {
 	/**
 	 * Initializes the first user to the system, the administrator
 	 */
-	protected static void initializeAdministratorUser() {
+	protected static void initializeAdministratorUser(IAccessControlService accessControlService,
+			IModelService coreModelService) {
 		new User(); // compatibility - needed because of static db inits
 		Anwender admin = new Anwender();
 		admin.create(null);
 		admin.set(new String[] { Person.NAME, FLD_LABEL, Kontakt.FLD_IS_USER }, ADMINISTRATOR, ADMINISTRATOR,
 				StringConstants.ONE);
-		AccessControlServiceHolder.get().doPrivileged(() -> {
-			Optional<IUser> user = CoreModelServiceHolder.get().load(ADMINISTRATOR, IUser.class);
+		accessControlService.doPrivileged(() -> {
+			Optional<IUser> user = coreModelService.load(ADMINISTRATOR, IUser.class);
 			if (user.isPresent()) {
-				user.get().setAssignedContact(
-						CoreModelServiceHolder.get().load(admin.getId(), IContact.class).orElse(null));
+				user.get().setAssignedContact(coreModelService.load(admin.getId(), IContact.class).orElse(null));
 			} else {
 				throw new IllegalStateException("Incorrect DB state - No admin user found!");
 			}
