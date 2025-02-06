@@ -27,7 +27,7 @@ public class UiPreferenceConstants {
 	public static final String USERSETTINGS2_EXPANDABLECOMPOSITE_STATE_REMEMBER_STATE = "3"; //$NON-NLS-1$
 	public static final String DEFAULT_BASE_URL = "http://wiki.elexis.info/"; //$NON-NLS-1$
 	public static final String DEFAULT_START_PAGE = "Hauptseite"; //$NON-NLS-1$
-	public static final String DEFAULT_HANDBOOK = "https://wiki.elexis.info/Deutsches_Handbuch_3.1"; //$NON-NLS-1$
+	public static final String DEFAULT_HANDBOOK = "https://support.medelexis.ch/"; //$NON-NLS-1$
 	public static final String CFG_BASE = "org.iatrix.help.wiki"; //$NON-NLS-1$
 	public static final String CFG_HANDBOOK = CFG_BASE + "/handbook"; //$NON-NLS-1$
 }
