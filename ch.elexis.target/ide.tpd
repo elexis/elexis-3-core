@@ -65,10 +65,14 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	//ch.qos.logback.slf4j
 	
 	// JAXB
-//	javax.activation
-//	jaxb-api // javax.xml.bind:jaxb-api:2.3.1
 	jakarta.xml.bind-api
 	com.sun.xml.bind.jaxb-osgi
+	
+	// mail
+	jakarta.mail-api
+	com.sun.mail.jakarta.mail
+	angus-activation
+	org.eclipse.angus.jakarta.mail
 	
 	// reqs for org.eclipse.osgi.services
 	org.eclipse.equinox.http.service.api
@@ -138,9 +142,6 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.apache-extras.beanshell.bsh
 	com.opencsv
 	com.google.protobuf
-	jakarta.mail-api
-	com.sun.mail.jakarta.mail
-	angus-activation
 	com.healthmarketscience.jackcess
 	com.google.zxing.core
 	com.google.zxing.javase
