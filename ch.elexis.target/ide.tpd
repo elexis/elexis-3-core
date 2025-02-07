@@ -73,6 +73,9 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	com.sun.mail.jakarta.mail
 	angus-activation
 	org.eclipse.angus.jakarta.mail
+	com.icegreen.greenmail
+	com.icegreen.greenmail-junit4
+	com.github.kirviq.dumbster
 	
 	// reqs for org.eclipse.osgi.services
 	org.eclipse.equinox.http.service.api

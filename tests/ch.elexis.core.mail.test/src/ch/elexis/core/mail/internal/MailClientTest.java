@@ -5,12 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.After;
-import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,21 +29,22 @@ public class MailClientTest {
 
 	private static IMailClient client;
 
-	private static SimpleSmtpServer server;
+	private SimpleSmtpServer server;
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
 		client = OsgiServiceUtil.getService(IMailClient.class).get();
-		server = SimpleSmtpServer.start(10025);
 	}
 
-	@AfterClass
-	public static void afterClass() {
-		server.stop();
+	@Before
+	public void before() throws IOException {
+		server = SimpleSmtpServer.start(10025);
 	}
 
 	@After
 	public void after() {
+		server.stop();
+
 		List<String> accounts = client.getAccounts();
 		for (String string : accounts) {
 			Optional<MailAccount> account = client.getAccount(string);
@@ -52,7 +54,6 @@ public class MailClientTest {
 		}
 		accounts = client.getAccounts();
 		assertTrue(accounts.isEmpty());
-
 	}
 
 	@Test
@@ -133,11 +134,12 @@ public class MailClientTest {
 		account.setPort("10025");
 
 		MailMessage message = new MailMessage().to("receiver@there.com").subject("subject").text("text");
+		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		assertTrue(client.sendMail(account, message));
 
-		assertTrue(server.getReceivedEmailSize() == 1);
-		Iterator<?> emailIter = server.getReceivedEmail();
-		SmtpMessage email = (SmtpMessage) emailIter.next();
+		assertTrue(server.getReceivedEmails().size() == 1);
+		List<SmtpMessage> emailIter = server.getReceivedEmails();
+		SmtpMessage email = (SmtpMessage) emailIter.getFirst();
 		assertTrue(email.getHeaderValue("Subject").equals("subject"));
 		assertTrue(email.getBody().contains("text"));
 	}

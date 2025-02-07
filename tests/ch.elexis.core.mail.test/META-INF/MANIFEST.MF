@@ -10,8 +10,9 @@ Require-Bundle: org.junit,
  ch.elexis.core.model;bundle-version="3.13.0",
  org.apache.felix.scr;bundle-version="2.2.6",
  org.eclipse.equinox.event;bundle-version="1.6.200",
- ch.elexis.core.test.context;bundle-version="3.12.0"
-Bundle-ClassPath: lib/dumbster1.6.jar,
- lib/greenmail-2.0.1.jar,
- lib/greenmail-junit4-2.0.1.jar,
- .
+ ch.elexis.core.test.context;bundle-version="3.12.0",
+ com.github.kirviq.dumbster;bundle-version="1.7.1",
+ com.icegreen.greenmail;bundle-version="2.1.3",
+ com.icegreen.greenmail-junit4;bundle-version="2.1.3"
+Bundle-ClassPath: .
+Import-Package: org.eclipse.angus.mail.imap;version="[2.0.0,3.0.0)"
