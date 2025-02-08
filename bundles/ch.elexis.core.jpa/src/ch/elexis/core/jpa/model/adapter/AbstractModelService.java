@@ -687,7 +687,7 @@ public abstract class AbstractModelService implements IModelService {
 		for (String string : properties) {
 			queryName.add(string);
 		}
-		if (accessControlService.isAoboOrSelf(EvACE.of(clazz, Right.READ)).isPresent()) {
+		if (getAccessControlService().isAoboOrSelf(EvACE.of(clazz, Right.READ)).isPresent()) {
 			queryName.add("aobo");
 		}
 		return queryName.toString();
