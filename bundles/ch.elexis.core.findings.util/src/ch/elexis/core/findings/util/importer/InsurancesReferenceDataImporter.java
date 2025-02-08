@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -39,18 +38,43 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 	private ISticker sticker;
 
 	private Optional<ISticker> readOnlySticker;
-	
-	@Activate
-	public void activate() {
+
+	@Override
+	public int getCurrentVersion() {
+		return ConfigServiceHolder.get().get(REFERENCEDATA_MANAGEDINSURANCE_VERSION, 0);
+	}
+
+	@Override
+	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion) {
 		accessControlService.doPrivileged(() -> {
 			sticker = getOrCreateInsuranceSticker();
 			readOnlySticker = coreModelService.load(IStickerService.STICKER_ID_READONLY, ISticker.class);
 		});
+
+		// perform import with update consumer
+		IStatus ret = ((FhirBundleReferenceDataImporter) fhirBundleImporter).performImport(ipm, input, newVersion,
+				(o) -> {
+					if (o instanceof IOrganization) {
+						IOrganization insurance = (IOrganization) o;
+						if (!stickerService.hasSticker(insurance, sticker)) {
+							stickerService.addSticker(sticker, insurance);
+						}
+						if (readOnlySticker.isPresent()
+								&& !StickerServiceHolder.get().hasSticker(insurance, readOnlySticker.get())) {
+							stickerService.addSticker(readOnlySticker.get(), insurance);
+						}
+					}
+				});
+		if (ret.isOK()) {
+			if (newVersion != null) {
+				ConfigServiceHolder.get().set(REFERENCEDATA_MANAGEDINSURANCE_VERSION, newVersion);
+			}
+		}
+		return ret;
 	}
 
 	private ISticker getOrCreateInsuranceSticker() {
-		ISticker insuranceSticker = coreModelService.load("managedinsurance", ISticker.class)
-				.orElse(null);
+		ISticker insuranceSticker = coreModelService.load("managedinsurance", ISticker.class).orElse(null);
 		if (insuranceSticker == null) {
 			insuranceSticker = coreModelService.create(ISticker.class);
 			insuranceSticker.setId("managedinsurance");
@@ -61,34 +85,5 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 			stickerService.setStickerAddableToClass(IOrganization.class, insuranceSticker);
 		}
 		return insuranceSticker;
-	}
-
-	@Override
-	public int getCurrentVersion() {
-		return ConfigServiceHolder.get().get(REFERENCEDATA_MANAGEDINSURANCE_VERSION, 0);
-	}
-
-	@Override
-	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion) {
-		// perform import with update consumer
-		IStatus ret = ((FhirBundleReferenceDataImporter) fhirBundleImporter).performImport(ipm, input, newVersion,
-				(o) -> {
-			if (o instanceof IOrganization) {
-				IOrganization insurance = (IOrganization) o;
-				if (!stickerService.hasSticker(insurance, sticker)) {
-					stickerService.addSticker(sticker, insurance);
-				}
-				if (readOnlySticker.isPresent()
-						&& !StickerServiceHolder.get().hasSticker(insurance, readOnlySticker.get())) {
-					stickerService.addSticker(readOnlySticker.get(), insurance);
-				}
-			}
-		});
-		if (ret.isOK()) {
-			if (newVersion != null) {
-				ConfigServiceHolder.get().set(REFERENCEDATA_MANAGEDINSURANCE_VERSION, newVersion);
-			}
-		}
-		return ret;
 	}
 }
