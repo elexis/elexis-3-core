@@ -14,12 +14,15 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -28,10 +31,10 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -62,6 +65,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
@@ -100,6 +106,10 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	public static int ACTION_MODE_REGISTER = 0; // Einbuchungsmodus
 	public static int ACTION_MODE_INVENTORY = 1; // Inventurmodus
+
+	public static final String ROWA_ARTICLE_MEDICATION_LABEL_ID = "ch.itmed.fop.printing.command.RowaArticleMedicationLabelHandler";
+	public static final String ROWA_ARTICL_MEDICATION_LABEL_PATIENT = "rowa_article_medication_label_patient";
+	public static final String ROWA_ARTICL_MEDICATION_LABEL_ARTICLE = "rowa_article_medication_label_article";
 
 	@Inject
 	private IContextService contextService;
@@ -151,7 +161,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 					IStockEntry stockEntry = StockServiceHolder.get().findStockEntryForArticleInStock(stock,
 							StoreToStringServiceHolder.getStoreToString(entry.getArticle()));
 					if (stockEntry != null) {
-						OrderElement orderElement = new OrderElement(entry, stockEntry, entry.getAmount());
+						OrderElement orderElement = new OrderElement(entry, stockEntry, 0);
 						orderElements.add(orderElement);
 					}
 				} else {
@@ -327,7 +337,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		/* OK (checkbox column) */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.Core_ok);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(50, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(10, 30, true));
 		column.setLabelProvider(new CheckboxLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
 			public boolean canEdit(Object element) {
@@ -353,16 +363,24 @@ public class OrderImportDialog extends TitleAreaDialog {
 					if (value instanceof Boolean) {
 						Boolean bValue = (Boolean) value;
 						orderElement.setVerified(bValue.booleanValue());
+						if (!bValue) {
+							orderElement.setOrderState(OrderEntryState.OPEN.getValue());
+						}
 					}
 					viewer.update(orderElement, null);
 				}
 			}
 		});
+		/* Amount Ordered */
+		column = new TableViewerColumn(viewer, SWT.LEFT);
+		column.getColumn().setText(Messages.Core_Order);
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(10, 50, true));
+		column.setLabelProvider(new OrderedLabelProvider());
 
 		/* Amount delivered */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.BestellView_delivered);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(60, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(10, 60, true));
 		column.setLabelProvider(new AmountLabelProvider());
 		column.setEditingSupport(new EditingSupport(viewer) {
 			public boolean canEdit(Object element) {
@@ -403,30 +421,30 @@ public class OrderImportDialog extends TitleAreaDialog {
 		/* Amount on stock */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.BestellView_inventory);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(60, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(10, 60, true));
 		column.setLabelProvider(new StockLabelProvider());
 
 		/* Pharamcode */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.Core_Phamacode);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(20, 100, true));
 		column.setLabelProvider(new PharamcodeLabelProvider());
 
 		/* EAN */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.Core_EAN);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(70, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(20, 100, true));
 		column.setLabelProvider(new EANLabelProvider());
 
 		/* Description */
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.UI_description);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(200, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(30, 170, true));
 		column.setLabelProvider(new DescriptionLabelProvider());
 
 		column = new TableViewerColumn(viewer, SWT.LEFT);
 		column.getColumn().setText(Messages.Core_Stock);
-		tcLayout.setColumnData(column.getColumn(), new ColumnPixelData(100, true, true));
+		tcLayout.setColumnData(column.getColumn(), new ColumnWeightData(20, 100, true));
 		column.setLabelProvider(new StockNameLabelProvider());
 
 	}
@@ -493,9 +511,10 @@ public class OrderImportDialog extends TitleAreaDialog {
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 
 		OrderElement orderElement = findOrderElementByEAN(gtin);
-		if (orderElement != null) {
+		if (orderElement != null && !orderElement.getOrderState().equals(OrderEntryState.DONE)) {
 			int newAmount = orderElement.getAmount() + diff;
 			updateOrderElement(orderElement, newAmount);
+			executeMediorderPrintLabel(orderElement, gtin);
 		} else {
 			if (actionMode == ACTION_MODE_INVENTORY) {
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().get().getId();
@@ -511,6 +530,23 @@ public class OrderImportDialog extends TitleAreaDialog {
 			}
 		}
 		viewer.refresh();
+	}
+
+	private void executeMediorderPrintLabel(OrderElement orderElement, String gtin) {
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command printMediorderLabel = commandService.getCommand(ROWA_ARTICLE_MEDICATION_LABEL_ID);
+
+		HashMap<String, String> params = new HashMap<>();
+		params.put(ROWA_ARTICL_MEDICATION_LABEL_PATIENT, orderElement.getStockEntry().getStock().getOwner().getId());
+		params.put(ROWA_ARTICL_MEDICATION_LABEL_ARTICLE, gtin);
+
+		try {
+			ParameterizedCommand parametrizedCommmand = ParameterizedCommand.generateCommand(printMediorderLabel,
+					params);
+			PlatformUI.getWorkbench().getService(IHandlerService.class).executeCommand(parametrizedCommmand, null);
+		} catch (Exception e) {
+			throw new RuntimeException(ROWA_ARTICLE_MEDICATION_LABEL_ID + " not found", e);
+		}
 	}
 
 	@Inject
@@ -529,7 +565,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 
 		for (OrderElement orderElement : orderElements) {
-			if (orderElement.getArticle().getGtin().equals(ean)) {
+			if (!orderElement.getOrderState().equals(OrderEntryState.MARKED)
+					&& orderElement.getArticle().getGtin().equals(ean)) {
 				return orderElement;
 			}
 		}
@@ -542,6 +579,11 @@ public class OrderImportDialog extends TitleAreaDialog {
 		orderElement.setAmount(newAmount);
 		if (ACTION_MODE_INVENTORY != actionMode) {
 			orderElement.setVerified(true);
+		}
+
+		if (orderElements.contains(orderElement)
+				&& orderElement.getAmount() == orderElement.getOrderEntry().getAmount()) {
+			orderElement.setOrderState(OrderEntryState.MARKED.getValue());
 		}
 		viewer.update(orderElement, null);
 	}
@@ -675,6 +717,17 @@ public class OrderImportDialog extends TitleAreaDialog {
 				}
 			}
 
+			return text;
+		}
+	}
+
+	private class OrderedLabelProvider extends BaseLabelProvider {
+		public String getText(Object element) {
+			String text = StringUtils.EMPTY;
+			if (element instanceof OrderElement) {
+				OrderElement orderElement = (OrderElement) element;
+				text = String.valueOf(orderElement.getOrderEntry().getAmount());
+			}
 			return text;
 		}
 	}
