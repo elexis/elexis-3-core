@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -14,6 +15,8 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -32,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
@@ -42,7 +46,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.services.IContextService;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
 public class CoreUiUtil implements EventHandler {
@@ -56,6 +65,10 @@ public class CoreUiUtil implements EventHandler {
 	private static IEclipseContext applicationContext;
 
 	private static IEclipseContext serviceContext;
+
+	private static final List<IPreferenceNode> hiddenNodes = new ArrayList<>();
+
+	private static final String ALLOWED_PREFERENCE_PAGE_ID = "ch.elexis.preferences.UserPreferences";
 
 	@Override
 	public void handleEvent(Event event) {
@@ -423,5 +436,40 @@ public class CoreUiUtil implements EventHandler {
 	public static int compareNullSafe(Object o1, Object o2) {
 		return o1 == null ? (o2 == null ? 0 : -1) : (o2 == null ? 1 : Integer.MAX_VALUE);
 
+	}
+
+	/**
+	 * Shows or hides preference pages based on the active user's roles.
+	 * {@link RoleConstants}
+	 */
+	public static void hidePreferencePage() {
+		Set<String> authorizedRoles = Set.of(RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR,
+				RoleConstants.ACCESSCONTROLE_ROLE_POWERUSER, RoleConstants.ACCESSCONTROLE_ROLE_MPK,
+				RoleConstants.ACCESSCONTROLE_ROLE_MANDATOR);
+
+		IContextService contextService = OsgiServiceUtil.getService(IContextService.class)
+				.orElseThrow(() -> new IllegalStateException());
+		IUser user = contextService.getActiveUser().orElseThrow(() -> new IllegalStateException("No active user"));
+
+		boolean hidePreferencePage = user.getRoles().stream().map(IRole::getId).noneMatch(authorizedRoles::contains);
+		if (!hidePreferencePage && hiddenNodes.isEmpty()) {
+			return;
+		}
+
+		PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode[] nodes = pm.getRootSubNodes();
+		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+			if (hidePreferencePage) {
+				for (IPreferenceNode node : nodes) {
+					if (!node.getId().equals(ALLOWED_PREFERENCE_PAGE_ID)) {
+						hiddenNodes.add(node);
+						pm.remove(node);
+					}
+				}
+			} else {
+				hiddenNodes.forEach(pm::addToRoot);
+				hiddenNodes.clear();
+			}
+		});
 	}
 }
