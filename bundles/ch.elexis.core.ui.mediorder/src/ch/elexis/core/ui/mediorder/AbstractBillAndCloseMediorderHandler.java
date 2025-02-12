@@ -24,6 +24,8 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
@@ -58,10 +60,25 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 
 		IPatient patient = person.asIPatient();
 
+		IStock commissioningSystemStock = null;
+		for (IStock cStock : StockServiceHolder.get().getAllStocks(true, false)) {
+			if (cStock.isCommissioningSystem()) {
+				commissioningSystemStock = cStock;
+				break;
+			}
+		}
+
 		List<IStockEntry> entries = stock.getStockEntries();
 		Map<Boolean, List<IStockEntry>> mapEntries = entries.stream()
 				.collect(Collectors.partitioningBy(entry -> entry.getArticle().isObligation()));
 		for (Map.Entry<Boolean, List<IStockEntry>> entry : mapEntries.entrySet()) {
+			if (commissioningSystemStock != null && !entry.getValue().isEmpty()) {
+				for (IStockEntry e : commissioningSystemStock.getStockEntries()) {
+					if (e.getRwaStockLink().equals(stock)) {
+						StockCommissioningServiceHolder.get().performArticleOutlay(e, e.getCurrentStock(), null);
+					}
+				}
+			}
 			IStatus status = processArticles(entry.getValue(), patient, entry.getKey());
 			if (!status.isOK()) {
 				return status;

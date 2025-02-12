@@ -866,6 +866,7 @@
             <column defaultValueNumeric="0" name="MAX" type="INT"/>
             <column defaultValueNumeric="0" name="FRACTIONUNITS" type="INT"/>
             <column name="PROVIDER" type="VARCHAR(25)"/>
+            <column name="RWA_LINK" type="VARCHAR(25)"/>
         </createTable>
     </changeSet>
     <changeSet author="thomas (generated)" id="1527175239251-72">
