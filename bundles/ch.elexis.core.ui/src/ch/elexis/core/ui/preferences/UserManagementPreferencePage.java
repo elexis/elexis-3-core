@@ -133,6 +133,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private Button btnUserIsLocked;
 	private Label userInfoLabel;
 	private boolean isShowOnlyActive = true;
+	private Composite compositeAssociation;
 
 	/**
 	 * Create the preference page.
@@ -302,8 +303,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isShowOnlyActive = !isShowOnlyActive;
-
-				updateUserList();
+				updateUserList(); 
+				updateAssociations();
 				btnToggleUserFilter.setText(isShowOnlyActive ? "Alle User" : "Aktive User");//$NON-NLS-1$ //$NON-NLS-2$
 				btnToggleUserFilter.setImage(
 						isShowOnlyActive ? Images.IMG_EYE_WO_SHADOW.getImage() : Images.IMG_REMOVEITEM.getImage());
@@ -606,7 +607,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_grp.marginHeight = 0;
 		grpAssociation.setLayout(gl_grp);
 
-		Composite compositeAssociation = new Composite(grpAssociation, SWT.NONE);
+		compositeAssociation = new Composite(grpAssociation, SWT.NONE);
 		compositeAssociation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		TableColumnLayout tcl_compositeAssociation = new TableColumnLayout();
 		compositeAssociation.setLayout(tcl_compositeAssociation);
@@ -1063,6 +1064,19 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private void updateAssociations() {
 		checkboxTableViewerAssociation.setInput(CoreModelServiceHolder.get().getQuery(IMandator.class).execute());
 		checkboxTableViewerAssociation.setCheckedElements(new IMandator[] {});
+		List<IMandator> allMandators = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
+			if (isShowOnlyActive) {
+				List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
+				List<String> activeContactIds = users.stream().filter(IUser::isActive).map(IUser::getAssignedContact)
+						.filter(contact -> contact != null).map(IContact::getId).collect(Collectors.toList());
+
+				allMandators = allMandators.stream().filter(mandator -> activeContactIds.contains(mandator.getId()))
+						.collect(Collectors.toList());
+			}
+			checkboxTableViewerAssociation.setInput(null);
+			checkboxTableViewerAssociation.setInput(allMandators);
+			checkboxTableViewerAssociation.refresh();
+			compositeAssociation.redraw();
 	}
 
 	private class AnwenderCellLabelProvider extends CellLabelProvider {
