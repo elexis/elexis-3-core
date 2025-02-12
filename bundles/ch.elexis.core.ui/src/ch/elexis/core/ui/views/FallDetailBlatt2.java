@@ -22,7 +22,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -75,8 +78,11 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.OrganizationConstants;
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -84,6 +90,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.preferences.UserCasePreferences;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
@@ -149,6 +156,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	boolean invoiceCorrection = false;
 
+	@Inject
+	private IContextService contextService;
+
 	@Override
 	public void setUnlocked(boolean unlock) {
 		allowFieldUpdate(unlock);
@@ -166,6 +176,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	public FallDetailBlatt2(final Composite parent) {
 		this(parent, null, false);
+		CoreUiUtil.injectServices(this);
 	}
 
 	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection) {
@@ -1009,9 +1020,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				tmpDel = DEFINITIONSDELIMITER;
 			}
 			// *** only for admins!
-			if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE))) {
-				setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
-						true, false); // $NON-NLS-1$
+			Optional<IUser> user = contextService.getActiveUser();
+			if (user.isPresent()) {
+				boolean isAdministrator = user.get().getRoles().stream()
+						.anyMatch(role -> RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR.contains(role.getId()));
+				if (isAdministrator) {
+					setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
+							true, false); // $NON-NLS-1$
+				}
 			}
 		}
 
