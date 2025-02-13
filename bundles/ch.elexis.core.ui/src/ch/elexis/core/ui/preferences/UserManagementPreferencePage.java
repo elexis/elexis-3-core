@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,8 +84,10 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
@@ -1065,13 +1068,13 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		checkboxTableViewerAssociation.setInput(CoreModelServiceHolder.get().getQuery(IMandator.class).execute());
 		checkboxTableViewerAssociation.setCheckedElements(new IMandator[] {});
 		List<IMandator> allMandators = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
-			if (isShowOnlyActive) {
-				List<IUser> users = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
-				List<String> activeContactIds = users.stream().filter(IUser::isActive).map(IUser::getAssignedContact)
-						.filter(contact -> contact != null).map(IContact::getId).collect(Collectors.toList());
+		if (isShowOnlyActive) {
+			final List<IUser> activeUsers = CoreModelServiceHolder.get().getQuery(IUser.class)
+					.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true).execute();
+			allMandators = activeUsers.stream().map(IUser::getAssignedContact).filter(Objects::nonNull)
+					.map(contact -> CoreModelServiceHolder.get().load(contact.getId(), IMandator.class))
+					.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 
-				allMandators = allMandators.stream().filter(mandator -> activeContactIds.contains(mandator.getId()))
-						.collect(Collectors.toList());
 			}
 			checkboxTableViewerAssociation.setInput(null);
 			checkboxTableViewerAssociation.setInput(allMandators);
