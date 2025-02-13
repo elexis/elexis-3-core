@@ -5146,6 +5146,7 @@ public class Messages extends NLS {
 	public static String ScreenshotFunction_PreviewShell_Text;
 	public static String ScreenshotFunction_PrintJob_Title;
 	public static String PdfPreview_DocXError;
+	public static String LaborView_queue;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
