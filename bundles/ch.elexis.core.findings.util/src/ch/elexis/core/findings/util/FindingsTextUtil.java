@@ -37,7 +37,7 @@ public class FindingsTextUtil {
 				stringBuilder.append(getObservationText(children.get(i), shouldSet));
 			}
 
-			observation.getComment().ifPresent(comment -> stringBuilder.append(" ").append(comment));
+			observation.getComment().ifPresent(comment -> stringBuilder.append(StringUtils.SPACE).append(comment));
 		} else {
 			stringBuilder.append(getObservationText(observation, shouldSet));
 		}
@@ -53,7 +53,7 @@ public class FindingsTextUtil {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotBlank(title)) {
-            stringBuilder.append(title).append(" ");
+			stringBuilder.append(title).append(StringUtils.SPACE);
         }
         stringBuilder.append(value);
 
@@ -72,7 +72,7 @@ public class FindingsTextUtil {
 	public static String getValueText(IObservation observation) {
         switch (observation.getObservationType()) {
             case TEXT:
-                return getTextValue(observation);
+                return getStringValue(observation);
             case NUMERIC:
                 return getNumericValue(observation);
             case BOOLEAN:
@@ -87,10 +87,9 @@ public class FindingsTextUtil {
         }
     }
 
-	public static String getTextValue(IObservation observation) {
+	public static String getStringValue(IObservation observation) {
 		StringBuilder sb = new StringBuilder(observation.getStringValue().orElse(StringUtils.EMPTY));
-		observation.getComment().filter(StringUtils::isNotBlank)
-				.ifPresent(comment -> sb.append(" [").append(comment).append("]"));
+		sb.append(getCommentText(observation));
 		return sb.toString();
 	}
 
@@ -98,24 +97,21 @@ public class FindingsTextUtil {
 		StringBuilder sb = new StringBuilder();
 		observation.getNumericValue().ifPresent(value -> sb.append(value.toPlainString()));
 		observation.getNumericValueUnit().ifPresent(unit -> sb.append(StringUtils.SPACE).append(unit));
-		observation.getComment().filter(StringUtils::isNotBlank)
-				.ifPresent(comment -> sb.append(" [").append(comment).append("]"));
+		sb.append(getCommentText(observation));
 		return sb.toString();
 	}
 
 	public static String getBooleanValue(IObservation observation) {
 		StringBuilder sb = new StringBuilder();
 		observation.getBooleanValue().ifPresent(value -> sb.append(value ? "Ja" : "Nein"));
-		observation.getComment().filter(StringUtils::isNotBlank)
-				.ifPresent(comment -> sb.append(" [").append(comment).append("]"));
+		sb.append(getCommentText(observation));
 		return sb.toString();
 	}
 
 	public static String getDateValue(IObservation observation) {
 		StringBuilder sb = new StringBuilder();
 		observation.getDateTimeValue().ifPresent(date -> sb.append(new SimpleDateFormat("dd.MM.yyyy").format(date)));
-		observation.getComment().filter(StringUtils::isNotBlank)
-				.ifPresent(comment -> sb.append(" [").append(comment).append("]"));
+		sb.append(getCommentText(observation));
 		return sb.toString();
 	}
 
@@ -142,11 +138,16 @@ public class FindingsTextUtil {
         return sb.toString();
     }
 
+	private static String getCommentText(IObservation observation) {
+		return observation.getComment().filter(StringUtils::isNotBlank).map(comment -> " [" + comment + "]")
+				.orElse(StringUtils.EMPTY);
+	}
+
 	public static String getComponentText(ObservationComponent component, boolean showUnitInComponent) {
         StringBuilder sb = new StringBuilder();
         component.getNumericValue().ifPresent(value -> sb.append(value.toPlainString()));
         if (showUnitInComponent) {
-            component.getNumericValueUnit().ifPresent(unit -> sb.append(" ").append(unit));
+			component.getNumericValueUnit().ifPresent(unit -> sb.append(StringUtils.SPACE).append(unit));
         }
         return sb.toString();
     }
