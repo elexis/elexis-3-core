@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis IDE 2023-09-java17" sequenceNumber="1718283500">
+<target name="Elexis IDE 2023-09-java17" sequenceNumber="1739457663">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>
@@ -110,8 +110,8 @@
       <unit id="ca.odell.glazedlists" version="1.11.0.v20190926-1838"/>
       <unit id="org.eclipse.collections" version="10.4.0.v20200820-2049"/>
       <unit id="org.eclipse.swtchart.feature.feature.group" version="0.14.0.202301260747"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="88.0.6.202205201430"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="88.0.6.202205201415"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="128.0.7"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.7"/>
       <unit id="info.elexis.target.jetty.additions.feature.group" version="10.0.18"/>
       <unit id="org.junit" version="4.13.2.v20230809-1000"/>
       <unit id="org.hamcrest" version="2.2.0"/>
