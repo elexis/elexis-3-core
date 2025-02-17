@@ -1,7 +1,7 @@
-target "Elexis 2024-12-java21" with source allEnvironments
+target "Elexis 2025-03-java21" with source allEnvironments
 
 
-location "https://download.elexis.info/elexis/target/2024-12-java21/" {
+location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	
 	// justj.21
 	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
@@ -9,7 +9,7 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	// eclipse base
 	org.eclipse.platform.feature.group
 	org.eclipse.equinox.executable.feature.group
-	org.eclipse.equinox.core.feature.feature.group
+//	org.eclipse.equinox.core.feature.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.e4.rcp.feature.group
 	org.eclipse.emf.common.feature.group
@@ -19,9 +19,9 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	org.eclipse.emf.common.ui.feature.group
 	org.eclipse.emf.edit.ui.feature.group
 	org.eclipse.ecf.core.feature.feature.group
-	org.eclipse.ecf.core.ssl.feature.feature.group
+//	org.eclipse.ecf.core.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.feature.feature.group
-	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
+//	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group
 	org.eclipse.ecf.remoteservice.feature.feature.group
 	org.eclipse.mylyn.wikitext.feature.feature.group
@@ -97,7 +97,8 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 	bcutil
 	
 	// hapi
-	 info.elexis.target.hapi.fhir lazy
+	// info.elexis.target.hapi.fhir lazy
+	info.elexis.target.hl7.fhir.r4 lazy
 	// jaxws
 	info.elexis.target.jaxws.core lazy
 	// ehealth connector
@@ -129,7 +130,7 @@ location "https://download.elexis.info/elexis/target/2024-12-java21/" {
 
 	// overridden
 	org.apache.commons.commons-dbcp2
-	org.apache.geronimo.specs.geronimo-jta_1.1_spec
+//	org.apache.geronimo.specs.geronimo-jta_1.1_spec
 	// e
 
 	org.jdom.2

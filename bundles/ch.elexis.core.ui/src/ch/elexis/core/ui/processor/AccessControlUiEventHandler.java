@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
@@ -24,7 +25,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
@@ -60,6 +60,9 @@ public class AccessControlUiEventHandler implements EventHandler {
 	@Inject
 	private IEventBroker eventBroker;
 
+	@Inject
+	private UISynchronize uiSynchronize;
+
 	private Map<String, List<String>> viewAccessControlMap;
 
 	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
@@ -83,13 +86,13 @@ public class AccessControlUiEventHandler implements EventHandler {
 			}
 			CoreUiUtil.injectServices(this);
 			startUpComplete = true;
-			Display.getDefault().asyncExec(() -> {
+			uiSynchronize.asyncExec(() -> {
 				updateModel();
 			});
 		}
 		if (startUpComplete) {
 			if (event.getTopic().endsWith("ui/accesscontrol/reset")) {
-				Display.getDefault().asyncExec(() -> {
+				uiSynchronize.asyncExec(() -> {
 					LoggerFactory.getLogger(getClass()).info("RESET for event [" + event + "]");
 					if (mApplication != null && eModelService != null) {
 						resetModel();
@@ -97,7 +100,7 @@ public class AccessControlUiEventHandler implements EventHandler {
 				});
 			}
 			if (event.getTopic().endsWith("ui/accesscontrol/update")) {
-				Display.getDefault().asyncExec(() -> {
+				uiSynchronize.asyncExec(() -> {
 					LoggerFactory.getLogger(getClass()).info("UPDATE for event [" + event + "]");
 					if (mApplication != null && eModelService != null) {
 						updateModel();

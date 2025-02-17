@@ -58,10 +58,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.geronimo.specs.geronimo-jta_1.1_spec"
-         version="0.0.0"/>
-
-   <plugin
          id="jakarta.persistence-api"
          version="0.0.0"/>
 

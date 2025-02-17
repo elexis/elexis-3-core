@@ -30,7 +30,7 @@
 			<fileNamePattern>${user.home}/elexis/logs/elexis-%d{yyyy-MM-dd}.%i.log.zip
 			</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
 				<maxFileSize>25MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
@@ -48,7 +48,7 @@
 	<logger name="org.apache" level="INFO" />
 	<logger name="ch.qos.logback" level="INFO" />
 	<logger name="liquibase" level="WARN" />
-	<logger name="liquibase.util" level="WARN" />
+	<logger name="liquibase.*" level="WARN" />
 	<logger name="liquibase.executor" level="WARN" />
 	<logger name="org.apache.commons.httpclient" level="WARN" />
 	<logger name="ca.uhn.fhir" level="INFO" />

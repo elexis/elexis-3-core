@@ -19,7 +19,6 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.osgi.services" version="3.3.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>

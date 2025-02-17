@@ -31,6 +31,11 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
+                <id>ch.elexis.core.test.logging</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
                 <id>org.eclipse.jetty.ee10.osgi.alpn.fragment</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -120,7 +125,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>jakarta.el-api</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>jakarta.xml.bind-api</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.enterprise.lang-model</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -171,11 +186,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.felix.gogo.runtime</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.apache.geronimo.specs.geronimo-jta_1.1_spec</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -330,6 +340,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>jakarta.interceptor-api</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-codec</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -376,6 +391,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.keycloak.keycloak-authz-client</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.enterprise.cdi-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -541,6 +561,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.core.jersey-client</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.transaction-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

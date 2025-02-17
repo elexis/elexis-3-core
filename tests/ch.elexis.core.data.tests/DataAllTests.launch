@@ -62,8 +62,13 @@
         <setEntry value="com.mysql.cj@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
+        <setEntry value="jakarta.el-api@default:default"/>
+        <setEntry value="jakarta.enterprise.cdi-api@default:default"/>
+        <setEntry value="jakarta.enterprise.lang-model@default:default"/>
         <setEntry value="jakarta.inject.jakarta.inject-api@default:default"/>
+        <setEntry value="jakarta.interceptor-api@default:default"/>
         <setEntry value="jakarta.persistence-api@default:default"/>
+        <setEntry value="jakarta.transaction-api@default:default"/>
         <setEntry value="jakarta.ws.rs-api*3.1.99@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
         <setEntry value="jcl.over.slf4j@default:default"/>
@@ -81,7 +86,6 @@
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
-        <setEntry value="org.apache.geronimo.specs.geronimo-jta_1.1_spec@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -153,12 +157,13 @@
         <setEntry value="ch.elexis.core.model@default:false"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
+        <setEntry value="ch.elexis.core.test.logging@default:default"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="true"/>
+    <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>

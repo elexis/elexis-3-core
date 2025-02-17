@@ -31,15 +31,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.ecf.core.ssl.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.ecf.filetransfer.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.ecf.filetransfer.ssl.feature"
          version="0.0.0"/>
 
    <includes
@@ -56,10 +48,6 @@
 
    <plugin
          id="org.eclipse.update.configurator"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.osgi.services"
          version="0.0.0"/>
 
    <plugin
@@ -246,10 +234,6 @@
 
    <plugin
          id="org.eclipse.core.net"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.ecf.provider.filetransfer.ssl"
          version="0.0.0"/>
 
    <plugin
