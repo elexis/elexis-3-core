@@ -28,7 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -353,12 +356,15 @@ public class Interaction extends PersistentObject {
 							logger.info("Start importing interactions from {} ", //$NON-NLS-1$
 									MATRIX_CSV_LOCAL);
 							CSVReader cr;
-//							try {
-//								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
-//							} catch (FileNotFoundException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
+							try {
+								cr = new CSVReaderBuilder(new FileReader(MATRIX_CSV_LOCAL))
+										.withCSVParser(
+												new CSVParserBuilder().withSeparator(',').withQuoteChar('"').build())
+										.build();
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							String info = String.format(Messages.VerrDetailDialog_ImportInteractions,
 									MATRIX_CSV_LOCAL.toString());
 							try {
@@ -369,28 +375,31 @@ public class Interaction extends PersistentObject {
 								 * ElexisEvent.PRIORITY_HIGH);
 								 * ElexisEventDispatcher.getInstance().fire(progress);
 								 */
-//								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+								cr = new CSVReaderBuilder(new FileReader(MATRIX_CSV_LOCAL))
+										.withCSVParser(
+												new CSVParserBuilder().withSeparator(',').withQuoteChar('"').build())
+										.build();
 								String[] line;
-//								while ((line = cr.readNext()) != null) {
-//									monitor.worked(1);
-//									if (line.length == 9) {
-//										if (line[0].equalsIgnoreCase("ATC1")) { //$NON-NLS-1$
-//											// skip description line
-//											continue;
-//										}
-//										new Interaction(line[0], line[1], line[2], line[3], line[4], line[5], line[6],
-//												line[7], line[8]);
-//										importerInteractionsCreated++;
-//									} else {
-//										notImported++;
-//										logger.info(String.format("Skipping [%s] ", line.toString())); //$NON-NLS-1$
-//									}
-//									// Check if the user pressed "cancel"
-//									if (monitor.isCanceled()) {
-//										monitor.done();
-//										return;
-//									}
-//								}
+								while ((line = cr.readNext()) != null) {
+									monitor.worked(1);
+									if (line.length == 9) {
+										if (line[0].equalsIgnoreCase("ATC1")) { //$NON-NLS-1$
+											// skip description line
+											continue;
+										}
+										new Interaction(line[0], line[1], line[2], line[3], line[4], line[5], line[6],
+												line[7], line[8]);
+										importerInteractionsCreated++;
+									} else {
+										notImported++;
+										logger.info(String.format("Skipping [%s] ", line.toString())); //$NON-NLS-1$
+									}
+									// Check if the user pressed "cancel"
+									if (monitor.isCanceled()) {
+										monitor.done();
+										return;
+									}
+								}
 								getShaFromFile();
 								getDefaultConnection().exec("UPDATE " + TABLENAME + " SET " //$NON-NLS-1$ //$NON-NLS-2$
 										+ FLD_ABUSE_ID_FOR_LAST_PARSED + " = '" + today + "', " //$NON-NLS-1$//$NON-NLS-2$
@@ -400,7 +409,7 @@ public class Interaction extends PersistentObject {
 																														// $NON-NLS-2$
 								logger.info("Imported {} interactions setting date {} sha {}", //$NON-NLS-1$
 										importerInteractionsCreated, today, hash_from_file); // $ }
-							} catch (IOException e) {
+							} catch (IOException | CsvValidationException e) {
 								info = String.format("Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
 										importerInteractionsCreated, notImported);
 								logger.error(info);

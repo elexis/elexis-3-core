@@ -156,10 +156,8 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	org.jfree.swtgraphics2d
 	xerces.Impl
 	
-	// ch.medelexis.openoffice
-//	ag.ion.bion.workbench.office.editor.core
-//	ag.ion.noa
-//	ag.ion.noa4e.ui
+	// solr
+	org.apache.solr.solrj
 	
 	// Nebula
 	org.eclipse.nebula.cwt.feature.feature.group
