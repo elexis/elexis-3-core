@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,8 +84,10 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
@@ -133,6 +136,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private Button btnUserIsLocked;
 	private Label userInfoLabel;
 	private boolean isShowOnlyActive = true;
+	private Composite compositeAssociation;
 
 	/**
 	 * Create the preference page.
@@ -302,8 +306,8 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isShowOnlyActive = !isShowOnlyActive;
-
-				updateUserList();
+				updateUserList(); 
+				updateAssociations();
 				btnToggleUserFilter.setText(isShowOnlyActive ? "Alle User" : "Aktive User");//$NON-NLS-1$ //$NON-NLS-2$
 				btnToggleUserFilter.setImage(
 						isShowOnlyActive ? Images.IMG_EYE_WO_SHADOW.getImage() : Images.IMG_REMOVEITEM.getImage());
@@ -606,7 +610,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		gl_grp.marginHeight = 0;
 		grpAssociation.setLayout(gl_grp);
 
-		Composite compositeAssociation = new Composite(grpAssociation, SWT.NONE);
+		compositeAssociation = new Composite(grpAssociation, SWT.NONE);
 		compositeAssociation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		TableColumnLayout tcl_compositeAssociation = new TableColumnLayout();
 		compositeAssociation.setLayout(tcl_compositeAssociation);
@@ -1063,6 +1067,19 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	private void updateAssociations() {
 		checkboxTableViewerAssociation.setInput(CoreModelServiceHolder.get().getQuery(IMandator.class).execute());
 		checkboxTableViewerAssociation.setCheckedElements(new IMandator[] {});
+		List<IMandator> allMandators = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
+		if (isShowOnlyActive) {
+			final List<IUser> activeUsers = CoreModelServiceHolder.get().getQuery(IUser.class)
+					.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true).execute();
+			allMandators = activeUsers.stream().map(IUser::getAssignedContact).filter(Objects::nonNull)
+					.map(contact -> CoreModelServiceHolder.get().load(contact.getId(), IMandator.class))
+					.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+
+			}
+			checkboxTableViewerAssociation.setInput(null);
+			checkboxTableViewerAssociation.setInput(allMandators);
+			checkboxTableViewerAssociation.refresh();
+			compositeAssociation.redraw();
 	}
 
 	private class AnwenderCellLabelProvider extends CellLabelProvider {
