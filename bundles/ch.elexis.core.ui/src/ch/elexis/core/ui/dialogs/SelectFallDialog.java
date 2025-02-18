@@ -12,8 +12,6 @@
 
 package ch.elexis.core.ui.dialogs;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
@@ -33,6 +31,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
+import jakarta.inject.Inject;
 
 public class SelectFallDialog extends TitleAreaDialog {
 	Fall[] faelle;

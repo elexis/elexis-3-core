@@ -7,9 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.angus.mail.imap.IMAPMessage;
 import org.slf4j.LoggerFactory;
-
-import com.sun.mail.imap.IMAPMessage;
 
 import jakarta.mail.BodyPart;
 import jakarta.mail.Message;

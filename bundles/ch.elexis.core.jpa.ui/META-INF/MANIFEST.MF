@@ -6,13 +6,18 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.jpa.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: ch.elexis.core.jpa;bundle-version="3.10.0",
- org.eclipse.swt;bundle-version="3.117.0",
- org.eclipse.jface
+Require-Bundle: ch.elexis.core.jpa;bundle-version="3.10.0"
 Import-Package: ch.elexis.core.ui.util,
  ch.elexis.core.ui.wizards,
  org.apache.commons.lang3;version="3.14.0",
- org.osgi.service.component.annotations,
+ org.eclipse.jface,
+ org.eclipse.jface.dialogs,
+ org.eclipse.jface.window,
+ org.eclipse.jface.wizard,
+ org.eclipse.swt,
+ org.eclipse.swt.graphics,
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets,
  org.slf4j;version="1.7.30"
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/ch.elexis.core.jpa.ui.DatabaseUpdateUi.xml

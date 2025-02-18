@@ -11,9 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views.rechnung;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +20,8 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class RnDetailView extends ViewPart {
 	public final static String ID = "ch.elexis.RechnungsDetailView"; //$NON-NLS-1$

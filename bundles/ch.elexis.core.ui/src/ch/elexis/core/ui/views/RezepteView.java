@@ -17,9 +17,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -109,6 +106,8 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Rezept;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Eine View zum Anzeigen von Rezepten. Links wird eine Liste mit allen Rezepten

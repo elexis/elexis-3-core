@@ -2,12 +2,11 @@ package ch.elexis.core.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.Transient;
-
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import jakarta.persistence.Transient;
 
 public class Image extends AbstractIdDeleteModelAdapter<DbImage> implements IdentifiableWithXid, IImage {
 

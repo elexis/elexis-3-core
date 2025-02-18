@@ -3,12 +3,12 @@ package ch.elexis.data;
 import java.util.List;
 import java.util.Locale;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.AddressType;
 import ch.elexis.data.dto.ZusatzAdresseDTO;
-import junit.framework.Assert;
 
 public class Test_ZusatzAdresse extends AbstractPersistentObjectTest {
 

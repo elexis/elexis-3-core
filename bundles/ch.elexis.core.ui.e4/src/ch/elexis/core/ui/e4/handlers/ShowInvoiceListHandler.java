@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -17,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
+import jakarta.inject.Named;
 
 public class ShowInvoiceListHandler {
 

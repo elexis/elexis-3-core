@@ -1,9 +1,9 @@
 package ch.elexis.core.ui.tasks.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;

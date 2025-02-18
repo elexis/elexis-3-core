@@ -23,9 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -83,6 +80,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Person;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Anzeige von Laboritems und Anzeige und Eingabemöglichkeit von Laborwerten.

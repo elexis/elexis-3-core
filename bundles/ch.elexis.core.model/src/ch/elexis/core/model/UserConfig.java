@@ -1,7 +1,8 @@
 package ch.elexis.core.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;

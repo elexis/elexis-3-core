@@ -18,9 +18,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -90,6 +87,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Display of Patients

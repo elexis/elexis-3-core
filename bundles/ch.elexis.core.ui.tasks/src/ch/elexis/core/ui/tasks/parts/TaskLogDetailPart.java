@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -17,6 +14,8 @@ import org.eclipse.swt.widgets.Composite;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.tasks.ITaskResultDetailContributions;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 public class TaskLogDetailPart {
 

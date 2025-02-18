@@ -18,10 +18,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
-
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -40,7 +36,6 @@ import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
-
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -51,6 +46,8 @@ import ch.rgw.io.FileTool;
 import ch.rgw.tools.MimeTool;
 import ch.rgw.tools.TimeSpan;
 import ch.rgw.tools.TimeTool;
+import jakarta.activation.MimeType;
+import jakarta.activation.MimeTypeParseException;
 
 public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	private final String title;

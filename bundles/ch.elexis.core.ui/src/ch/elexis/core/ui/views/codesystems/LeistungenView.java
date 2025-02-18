@@ -13,9 +13,6 @@
 
 package ch.elexis.core.ui.views.codesystems;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
@@ -45,6 +42,8 @@ import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory.cPage;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class LeistungenView extends ViewPart implements IActivationListener {
 

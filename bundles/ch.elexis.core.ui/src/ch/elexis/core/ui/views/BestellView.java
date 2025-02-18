@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -105,6 +102,8 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Bestellung;
 import ch.elexis.data.Kontakt;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class BestellView extends ViewPart {
 

@@ -3,9 +3,9 @@ package ch.elexis.core.jpa.model.adapter;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.persistence.Query;
 
 import ch.elexis.core.services.INativeQuery;
+import jakarta.persistence.Query;
 
 public class NativeQuery implements INativeQuery {
 

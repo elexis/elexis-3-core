@@ -11,15 +11,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.angus.mail.imap.IMAPFolder;
+import org.eclipse.angus.mail.imap.IMAPMessage;
+import org.eclipse.angus.mail.imap.IMAPStore;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPMessage;
-import com.sun.mail.imap.IMAPStore;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.mail.IMAPMailMessage;
@@ -70,11 +69,13 @@ public class MailClient implements IMailClient {
 	@Activate
 	private void activate() {
 		MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
-		mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-		mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-		mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-		mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-		mc.addMailcap("message/rfc822;; x-java-content- handler=com.sun.mail.handlers.message_rfc822");
+		mc.addMailcap("text/html;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_html");
+		mc.addMailcap("text/xml;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_xml");
+		mc.addMailcap("text/plain;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
+		mc.addMailcap("multipart/mixed;; x-java-content-handler=org.eclipse.angus.mail.handlers.multipart_mixed");
+		mc.addMailcap("message/rfc822;; x-java-content- handler=org.eclipse.angus.mail.handlers.message_rfc822");
+		mc.addMailcap(
+				"message/disposition-notification;;x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
 		CommandMap.setDefaultCommandMap(mc);
 	}
 

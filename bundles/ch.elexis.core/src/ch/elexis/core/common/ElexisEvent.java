@@ -4,7 +4,7 @@ import java.beans.Transient;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ElexisEvent {

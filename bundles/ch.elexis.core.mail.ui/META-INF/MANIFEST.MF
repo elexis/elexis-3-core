@@ -27,7 +27,6 @@ Import-Package: ch.elexis.core.model.tasks,
  ch.elexis.core.ui.util,
  ch.elexis.data,
  ch.rgw.tools,
- javax.inject;version="1.0.0",
  org.apache.commons.io;version="2.5.0",
  org.apache.commons.lang3;version="3.7.0"
 Service-Component: OSGI-INF/ch.elexis.core.mail.ui.archive.OmnivoreDocumentStoreServiceHolder.xml,

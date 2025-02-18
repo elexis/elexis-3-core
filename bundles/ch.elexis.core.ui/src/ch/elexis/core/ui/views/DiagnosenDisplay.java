@@ -15,8 +15,6 @@ package ch.elexis.core.ui.views;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -82,6 +80,7 @@ import ch.elexis.core.ui.views.codesystems.DiagnosenView;
 import ch.elexis.data.FreeTextDiagnose;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
 
 public class DiagnosenDisplay extends Composite implements IUnlockable {
 	private Table table;

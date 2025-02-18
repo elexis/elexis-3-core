@@ -23,8 +23,8 @@ public class VirtualFilesystemServiceTestUtil {
 		String server = "gitlab.medelexis.ch";
 
 		try {
-			serviceIsReachable = InetAddress.getByName(server).isReachable(300)
-					|| InetAddress.getAllByName(server)[0].isReachable(300);
+			serviceIsReachable = InetAddress.getByName(server).isReachable(200)
+					|| InetAddress.getAllByName(server)[0].isReachable(200);
 			if (!serviceIsReachable) {
 				LoggerFactory.getLogger(VirtualFileHandle_SmbDirectory_Test.class)
 						.error("Skipping Tests as server " + server + " did not respond in 300 ms");

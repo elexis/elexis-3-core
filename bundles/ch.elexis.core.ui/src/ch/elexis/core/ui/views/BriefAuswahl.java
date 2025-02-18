@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -105,6 +102,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Patient;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class BriefAuswahl extends ViewPart implements IRefreshable {
 

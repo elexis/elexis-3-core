@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -32,6 +30,7 @@ import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
+import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")
 public class SpotlightUiUtil {

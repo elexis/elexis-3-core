@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -52,6 +50,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
+import jakarta.inject.Inject;
 
 public class StockDetailComposite extends Composite {
 

@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -87,6 +85,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ElexisText;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.BestellungEntry;
+import jakarta.inject.Inject;
 
 /*
  * @author Daniel Lutz

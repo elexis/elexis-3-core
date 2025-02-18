@@ -4,8 +4,6 @@ package ch.elexis.core.spotlight.ui.command;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -20,6 +18,7 @@ import ch.elexis.core.spotlight.ISpotlightService;
 import ch.elexis.core.spotlight.ui.internal.ISpotlightResultEntryDetailCompositeService;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
 import ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService;
+import jakarta.inject.Named;
 
 public class OpenSpotlightShellHandler {
 

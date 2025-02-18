@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -111,6 +108,8 @@ import ch.elexis.core.ui.services.LocalDocumentServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * A class do receive documents by drag&drop. Documents are imported into the

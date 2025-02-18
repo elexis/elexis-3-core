@@ -14,10 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -45,6 +41,9 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
 import ch.rgw.tools.TimeTool;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 public class PrintMedicationHistoryHandler extends AbstractHandler implements IHandler {
 

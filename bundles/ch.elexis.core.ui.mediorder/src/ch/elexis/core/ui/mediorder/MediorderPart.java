@@ -13,9 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
@@ -88,6 +85,8 @@ import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 public class MediorderPart implements IRefreshablePart {
 

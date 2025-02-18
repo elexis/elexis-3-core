@@ -1,13 +1,12 @@
 package ch.elexis.core.model;
 
-import javax.persistence.Transient;
-
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import jakarta.persistence.Transient;
 
 public class Sticker extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Sticker>
 		implements IdentifiableWithXid, ISticker {

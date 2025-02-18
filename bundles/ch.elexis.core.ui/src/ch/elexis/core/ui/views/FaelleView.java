@@ -19,9 +19,6 @@ import static ch.elexis.core.ui.actions.GlobalActions.neuerFallAction;
 import static ch.elexis.core.ui.actions.GlobalActions.openFallaction;
 import static ch.elexis.core.ui.actions.GlobalActions.reopenFallAction;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -63,6 +60,8 @@ import ch.elexis.core.ui.views.provider.FaelleContentProvider;
 import ch.elexis.core.ui.views.provider.FaelleLabelProvider;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Eine alternative, platzsparendere Fälle-View

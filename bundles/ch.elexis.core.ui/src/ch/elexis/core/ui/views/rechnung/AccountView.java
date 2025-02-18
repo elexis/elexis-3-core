@@ -14,9 +14,6 @@
 
 package ch.elexis.core.ui.views.rechnung;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -69,6 +66,8 @@ import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * This view shows the current patient's account

@@ -1,6 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * Abstract class for {@link EntityWithId} instances. This is NOT a JPA

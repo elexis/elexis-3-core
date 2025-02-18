@@ -1,5 +1,7 @@
 package ch.elexis.core.eenv;
 
+import com.google.gson.JsonObject;
+
 public interface IElexisEnvironmentService {
 
 	/**
@@ -28,6 +30,11 @@ public interface IElexisEnvironmentService {
 	static final String EE_KEYCLOAK_REALM_ID = "ElexisEnvironment";
 
 	/**
+	 * @since EER3
+	 */
+	JsonObject getStatus();
+
+	/**
 	 * @return the entry hostname of the elexis-environment
 	 */
 	String getHostname();
@@ -54,14 +61,6 @@ public interface IElexisEnvironmentService {
 
 	default String getBaseUrl() {
 		return "https://" + getHostname();
-	}
-
-	default String getRocketchatBaseUrl() {
-		return getBaseUrl() + "/chat";
-	}
-
-	default String getRocketchatIntegrationBaseUrl() {
-		return getRocketchatBaseUrl() + "/hooks/";
 	}
 
 	default String getBookstackBaseUrl() {

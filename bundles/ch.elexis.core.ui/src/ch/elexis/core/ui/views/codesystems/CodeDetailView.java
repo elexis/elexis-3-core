@@ -16,9 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -57,6 +54,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.core.ui.views.MakrosCTabItem;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class CodeDetailView extends ViewPart implements IActivationListener {
 	public final static String ID = "ch.elexis.codedetailview"; //$NON-NLS-1$

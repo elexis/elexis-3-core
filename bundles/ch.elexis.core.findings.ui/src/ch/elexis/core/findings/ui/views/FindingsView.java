@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -57,6 +55,7 @@ import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
 
 public class FindingsView extends ViewPart implements IRefreshable {
 

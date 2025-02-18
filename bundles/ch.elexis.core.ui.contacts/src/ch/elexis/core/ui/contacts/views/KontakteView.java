@@ -14,9 +14,6 @@ package ch.elexis.core.ui.contacts.views;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -64,6 +61,8 @@ import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class KontakteView extends ViewPart implements ControlFieldListener {
 	public static final String ID = "ch.elexis.Kontakte"; //$NON-NLS-1$

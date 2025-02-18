@@ -14,8 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.persistence.EntityManager;
-
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -39,6 +37,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
+import jakarta.persistence.EntityManager;
 
 @Component
 public class ConfigService implements IConfigService {

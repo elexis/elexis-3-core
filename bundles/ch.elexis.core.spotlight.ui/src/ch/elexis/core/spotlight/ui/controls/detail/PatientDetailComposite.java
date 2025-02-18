@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -41,6 +39,7 @@ import ch.elexis.core.spotlight.ui.controls.SpotlightSearchHelper;
 import ch.elexis.core.spotlight.ui.internal.SpotlightShell;
 import ch.elexis.core.spotlight.ui.internal.SpotlightUiUtil;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import jakarta.inject.Inject;
 
 public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailComposite
 		implements ISpotlightResultEntryDetailComposite {

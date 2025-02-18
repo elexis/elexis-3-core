@@ -3,8 +3,6 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
@@ -42,6 +40,7 @@ import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
+import jakarta.inject.Inject;
 
 public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 

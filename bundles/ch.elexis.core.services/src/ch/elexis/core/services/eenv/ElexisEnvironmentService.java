@@ -1,5 +1,10 @@
 package ch.elexis.core.services.eenv;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Timer;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +15,9 @@ import org.keycloak.authorization.client.Configuration;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
@@ -39,8 +47,8 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 		keycloakDeployment = KeycloakDeploymentBuilder.build(getKeycloakConfiguration());
 		refreshAccessTokenTimer = new Timer("Refresh EE access-token", true); //$NON-NLS-1$
-		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(keycloakDeployment, contextService),
-				60 * 1000, 60 * 1000);
+		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(keycloakDeployment, contextService), 60 * 1000,
+				60 * 1000);
 	}
 
 	@Override
@@ -59,6 +67,22 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		// TODO first try via LocalProperties?
 		// THEN Config DB Table ?
 		return configService.get(key, null);
+	}
+
+	@Override
+	public JsonObject getStatus() {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.status.json")).build();
+
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return JsonParser.parseString(response.body()).getAsJsonObject();
+		} catch (IOException | InterruptedException e) {
+			logger.warn("Error obtaining status", e);
+		}
+
+		return null;
 	}
 
 	@Override

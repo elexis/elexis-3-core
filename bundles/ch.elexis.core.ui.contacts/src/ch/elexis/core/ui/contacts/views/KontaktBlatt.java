@@ -14,8 +14,6 @@ package ch.elexis.core.ui.contacts.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -79,6 +77,7 @@ import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.elexis.data.Xid;
 import ch.elexis.data.Xid.XIDDomain;
+import jakarta.inject.Inject;
 
 public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable {
 

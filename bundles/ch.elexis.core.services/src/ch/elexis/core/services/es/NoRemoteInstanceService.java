@@ -1,9 +1,8 @@
 package ch.elexis.core.services.es;
 
-import javax.ws.rs.core.Response;
-
 import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.server.IInstanceService;
+import jakarta.ws.rs.core.Response;
 
 public class NoRemoteInstanceService implements IInstanceService {
 

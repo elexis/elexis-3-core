@@ -2,8 +2,6 @@ package ch.elexis.core.eigendiagnosen.model.service;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -22,6 +20,7 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
+import jakarta.persistence.EntityManager;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.eigendiagnosen.model")
 public class DiagnosisModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {

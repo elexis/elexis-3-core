@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 
@@ -23,6 +21,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import jakarta.inject.Inject;
 
 public class SpotlightReadyRefreshTimerTask extends TimerTask {
 

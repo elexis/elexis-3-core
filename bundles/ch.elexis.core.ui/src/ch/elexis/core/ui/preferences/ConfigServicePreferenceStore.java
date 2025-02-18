@@ -2,8 +2,6 @@ package ch.elexis.core.ui.preferences;
 
 import static ch.elexis.core.constants.Preferences.SETTINGS_PREFERENCE_STORE_DEFAULT;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -15,6 +13,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import jakarta.inject.Inject;
 
 /**
  * Adapter for {@link IConfigService} to {@link IPreferenceStore}. Replacement

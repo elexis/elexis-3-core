@@ -16,9 +16,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -62,6 +59,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Rechnung;
 import ch.elexis.data.Zahlung;
 import ch.rgw.tools.Money;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * This view shows the current patient's account

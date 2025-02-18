@@ -2,8 +2,6 @@ package ch.elexis.core.ui.locks;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -22,6 +20,7 @@ import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import jakarta.inject.Inject;
 
 public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler implements IElementUpdater {
 

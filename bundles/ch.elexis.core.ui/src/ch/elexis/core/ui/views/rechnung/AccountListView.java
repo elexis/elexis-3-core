@@ -15,9 +15,6 @@ package ch.elexis.core.ui.views.rechnung;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +52,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * This view shows the current patient's account

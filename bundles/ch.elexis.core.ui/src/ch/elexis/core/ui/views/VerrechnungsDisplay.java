@@ -17,12 +17,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -69,7 +64,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -112,7 +106,6 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -136,6 +129,7 @@ import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
 
 public class VerrechnungsDisplay extends Composite implements IUnlockable {
 

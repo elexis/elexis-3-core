@@ -4,7 +4,9 @@ Bundle-Name: Logging Configuration for Tests
 Bundle-SymbolicName: ch.elexis.core.test.logging
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: elexis.ch
-Fragment-Host: ch.qos.logback.classic
+Fragment-Host: ch.qos.logback.classic;bundle-version="1.5.12"
+Import-Package: org.slf4j;version="2.0.16",
+ org.slf4j.spi;version="2.0.16"
 Automatic-Module-Name: ch.elexis.core.test.logging
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ClassPath: rsc/,

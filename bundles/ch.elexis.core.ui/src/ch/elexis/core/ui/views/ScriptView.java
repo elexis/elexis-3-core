@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -64,6 +61,8 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Script;
 import ch.elexis.scripting.ScriptEditor;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Display and edit Beanshell-Scripts

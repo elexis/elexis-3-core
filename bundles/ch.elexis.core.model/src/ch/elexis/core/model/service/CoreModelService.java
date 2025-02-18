@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -32,6 +29,8 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IStoreToStringContribution;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.model")
 public class CoreModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {

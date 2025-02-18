@@ -4,13 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLinkException;
 import ch.rgw.tools.TimeTool;
-import junit.framework.Assert;
 
 public class Test_VkPreise extends AbstractPersistentObjectTest {
 
@@ -19,7 +19,7 @@ public class Test_VkPreise extends AbstractPersistentObjectTest {
 		Eigenleistung leistung = new Eigenleistung("TD999", "Leistung.xy999", "99", "10");
 		TimeTool now = new TimeTool(System.currentTimeMillis());
 		leistung.setVKMultiplikator(now, null, 98.12345, "typ");
-		Assert.assertEquals(98.12345, leistung.getVKMultiplikator(now, "typ"));
+		Assert.assertEquals(98.12345, leistung.getVKMultiplikator(now, "typ"), 0.00001);
 
 		ResultSet res = getLink().getStatement().query("SELECT ID FROM VK_PREISE WHERE TYP='typ'");
 		if (res.next()) {

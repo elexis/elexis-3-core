@@ -50,7 +50,6 @@ public class XChangeImporter implements IDataReceiver {
 	 * @return the best matching handler or null if no handler exists at all for the
 	 *         given data type
 	 */
-	@SuppressWarnings("unchecked")
 	public IExchangeContributor findImportHandler(XChangeElement el) {
 		int matchedRestrictions = 0;
 		IConfigurationElement cand = null;

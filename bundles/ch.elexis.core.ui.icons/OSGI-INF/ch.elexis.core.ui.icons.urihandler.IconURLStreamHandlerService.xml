@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="ch.elexis.core.ui.icons.urihandler.IconURLStreamHandlerService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="ch.elexis.core.ui.icons.urihandler.IconURLStreamHandlerService">
    <property name="url.handler.protocol" type="String" value="icon"/>
    <service>
       <provide interface="org.osgi.service.url.URLStreamHandlerService"/>

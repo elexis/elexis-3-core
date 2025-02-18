@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.action.Action;
@@ -78,6 +76,7 @@ import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.GenericRange;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
 
 /**
  * Ein StyledText mit erweiterten Eigenschaften. Kann XML-Dokumente von

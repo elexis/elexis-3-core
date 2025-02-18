@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.types.RelationshipType;
-import junit.framework.Assert;
 
 public class Test_BezugsKontakt extends AbstractPersistentObjectTest {
 

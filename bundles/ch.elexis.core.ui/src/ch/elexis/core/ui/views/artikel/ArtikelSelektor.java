@@ -16,9 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,6 +49,8 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.CodeSystemDescription;
 import ch.elexis.core.ui.views.provider.StockEntryLabelProvider;
 import ch.elexis.data.PersistentObject;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class ArtikelSelektor extends ViewPart {
 	public ArtikelSelektor() {

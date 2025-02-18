@@ -13,8 +13,6 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
@@ -42,6 +40,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Fall;
+import jakarta.inject.Inject;
 
 public class SelectFallNoObligationDialog extends TitleAreaDialog {
 

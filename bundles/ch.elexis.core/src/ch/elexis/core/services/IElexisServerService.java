@@ -2,7 +2,7 @@ package ch.elexis.core.services;
 
 import java.util.UUID;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.core.runtime.IStatus;
 

@@ -1,12 +1,12 @@
 package ch.elexis.core.services.es;
 
-import javax.inject.Singleton;
-import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
+
+import jakarta.inject.Singleton;
+import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 
 public final class GsonAutoDiscoverable implements ForcedAutoDiscoverable {
 

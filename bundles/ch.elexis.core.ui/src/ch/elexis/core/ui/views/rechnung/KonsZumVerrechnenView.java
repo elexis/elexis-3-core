@@ -19,9 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -112,6 +109,8 @@ import ch.rgw.tools.LazyTree;
 import ch.rgw.tools.LazyTree.LazyTreeListener;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.Tree;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Anzeige aller Behandlungen, für die noch keine Rechnung erstellt wurde. Die

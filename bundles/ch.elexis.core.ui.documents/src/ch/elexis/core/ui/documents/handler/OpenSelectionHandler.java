@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.documents.handler;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

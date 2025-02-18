@@ -1,9 +1,8 @@
 package ch.elexis.core.jpa.entities.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import ch.rgw.tools.VersionedResource;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter
 public class VersionedResourceConverter implements AttributeConverter<VersionedResource, byte[]> {

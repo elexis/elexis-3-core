@@ -2,6 +2,7 @@ package ch.elexis.core.ui.commands;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ISickCertificate;
 

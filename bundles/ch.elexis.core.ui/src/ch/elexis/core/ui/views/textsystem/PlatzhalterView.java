@@ -12,9 +12,6 @@ package ch.elexis.core.ui.views.textsystem;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -60,6 +57,8 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.SortedList;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.views.TextView;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class PlatzhalterView extends ViewPart {
 	public static final String ID = "ch.elexis.views.textsystem.Platzhalterview"; //$NON-NLS-1$

@@ -1,7 +1,9 @@
 package ch.elexis.core.ui.views.provider;
 
 import java.time.LocalDate;
+
 import org.eclipse.swt.graphics.Image;
+
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;

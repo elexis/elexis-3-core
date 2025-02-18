@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -72,6 +70,7 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
 
 /**
  * Display and let the user modify the medication of the currently selected
