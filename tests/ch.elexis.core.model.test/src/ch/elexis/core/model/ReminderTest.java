@@ -10,9 +10,11 @@ import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.model.builder.IUserGroupBuilder;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.ISubQuery;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.test.AbstractTest;
 
 public class ReminderTest extends AbstractTest {
@@ -43,6 +45,28 @@ public class ReminderTest extends AbstractTest {
 
 		assertEquals(2, reminder.getResponsible().size());
 		assertTrue(reminder.getResponsible().contains(coreModelService.load(person.getId(), IContact.class).get()));
+
+		coreModelService.delete(reminder);
+		coreModelService.remove(reminder);
+	}
+
+	@Test
+	public void createDeleteReminderGroup() throws IOException {
+		IUserGroup group = new IUserGroupBuilder(CoreModelServiceHolder.get(), "testGroup").buildAndSave();
+
+		IReminder reminder = coreModelService.create(IReminder.class);
+		reminder.setContact(patient);
+		reminder.setCreator(mandator);
+		reminder.setGroup(group);
+		reminder.addResponsible(mandator);
+		reminder.addResponsible(person);
+		reminder.setSubject("test");
+		coreModelService.save(reminder);
+
+		reminder = coreModelService.load(reminder.getId(), IReminder.class).orElse(null);
+		assertNotNull(reminder);
+
+		assertEquals(group, reminder.getGroup());
 
 		coreModelService.delete(reminder);
 		coreModelService.remove(reminder);

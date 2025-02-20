@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.UserGroup;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.issue.Priority;
@@ -71,6 +72,21 @@ public class Reminder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 			getEntityMarkDirty().setKontakt(((AbstractIdModelAdapter<Kontakt>) value).getEntity());
 		} else {
 			getEntityMarkDirty().setKontakt(null);
+		}
+	}
+
+	@Override
+	public IUserGroup getGroup() {
+		return ModelUtil.getAdapter(getEntity().getUserGroup(), IUserGroup.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setGroup(IUserGroup value) {
+		if (value != null) {
+			getEntityMarkDirty().setUserGroup(((AbstractIdModelAdapter<UserGroup>) value).getEntity());
+		} else {
+			getEntityMarkDirty().setUserGroup(null);
 		}
 	}
 
