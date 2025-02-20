@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_tisiUOI8Ee-lvK2aOBOKuA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_u0pSYOI8Ee-lvK2aOBOKuA" featurename="descriptors" parentElementId="xpath:/">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_yv3x0OI8Ee-lvK2aOBOKuA" elementId="ch.elexis.core.ui.reminder.remindertablespart" label="Pendenzen neu" iconURI="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/bell_exclamation.png" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.part.ReminderTablesPart">
+      <tags>View</tags>
+      <toolbar xmi:id="_-vHyEOI8Ee-lvK2aOBOKuA" elementId="ch.elexis.core.ui.reminder.toolbar.remindertablespart">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_trUcsO-LEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.handledtoolitem.0" iconURI="icon://IMG_NEW" command="_3W1AQOhaEe-wd4tFRRI7kg"/>
+        <children xsi:type="menu:DirectToolItem" xmi:id="_bUdvUO7JEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.directtoolitem.refresh" iconURI="icon://IMG_REFRESH" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.menu.RefreshToolItem">
+          <menu xmi:id="_b9gFQO7JEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.menu.1">
+            <children xsi:type="menu:DynamicMenuContribution" xmi:id="_qRIz4O7SEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.dynamicmenucontribution.0" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.menu.ColumnsMenuContribution"/>
+          </menu>
+        </children>
+      </toolbar>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tR6bMOhZEe-wd4tFRRI7kg" featurename="commands" parentElementId="xpath:/">
+    <elements xsi:type="commands:Command" xmi:id="_wYKacOhZEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.editReminder" commandName="Edit Reminder"/>
+    <elements xsi:type="commands:Command" xmi:id="_3W1AQOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.createReminder" commandName="Create Reminder"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_GogQAOhaEe-wd4tFRRI7kg" featurename="handlers" parentElementId="xpath:/">
+    <elements xsi:type="commands:Handler" xmi:id="_IkXfwOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.handler.editReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.EditReminder" command="_wYKacOhZEe-wd4tFRRI7kg"/>
+    <elements xsi:type="commands:Handler" xmi:id="_5vbPUOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.handler.createReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.CreateReminder" command="_3W1AQOhaEe-wd4tFRRI7kg"/>
+  </fragments>
+</fragment:ModelFragments>
