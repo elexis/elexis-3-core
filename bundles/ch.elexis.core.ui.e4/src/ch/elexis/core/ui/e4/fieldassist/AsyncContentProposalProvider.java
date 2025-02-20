@@ -31,7 +31,7 @@ public abstract class AsyncContentProposalProvider<T extends Identifiable> imple
 	private String[] dbFields = null;
 	private ContentProposalAdapter adapter = null;
 
-	private static final int PROPOSAL_MONITORING_DELAY = 1000;
+	private static final int PROPOSAL_MONITORING_DELAY = 500;
 	private int lastQueriedContentHash = 0;
 	private String contents = null;
 	private boolean startMonitoring = false;
