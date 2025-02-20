@@ -8013,13 +8013,22 @@ public interface ModelPackage extends EPackage {
 	int IREMINDER__RESPONSIBLE_ALL = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IREMINDER__GROUP = DELETEABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IReminder</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IREMINDER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
+	int IREMINDER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}' class.
@@ -12920,6 +12929,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIReminder_ResponsibleAll();
 
 	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IReminder#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Group</em>'.
+	 * @see ch.elexis.core.model.IReminder#getGroup()
+	 * @see #getIReminder()
+	 * @generated
+	 */
+	EReference getIReminder_Group();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16907,6 +16927,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IREMINDER__RESPONSIBLE_ALL = eINSTANCE.getIReminder_ResponsibleAll();
+
+		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IREMINDER__GROUP = eINSTANCE.getIReminder_Group();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IReminderResponsibleLink <em>IReminder Responsible Link</em>}' class.
