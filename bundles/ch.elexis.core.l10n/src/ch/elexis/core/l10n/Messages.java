@@ -5148,6 +5148,7 @@ public class Messages extends NLS {
 	public static String PdfPreview_DocXError;
 	public static String Attention;
 	public static String HttpOrderTransportService_Dialog;
+	public static String OrderSupplierNotDefined;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
