@@ -3,6 +3,7 @@ package ch.elexis.core.ui.reminder.part.nattable;
 import java.time.format.DateTimeFormatter;
 
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.issue.Priority;
 
 public class RemiderRichTextUtil {
@@ -19,7 +20,7 @@ public class RemiderRichTextUtil {
 			sb.append(" " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(reminder.getDue()));
 		}
 		if (reminder.getContact() != null && reminder.getContact().isPatient()) {
-			sb.append("<br />").append(reminder.getContact().getLabel());
+			sb.append("<br />").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()));
 		}
 		return sb.toString();
 	}

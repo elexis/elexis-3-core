@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -22,6 +23,11 @@ public class CreateReminder {
 		
 		IReminder reminder = new IReminderBuilder(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
 				Visibility.ALWAYS, ProcessStatus.OPEN, StringUtils.EMPTY).build();
+		reminder.setType(Type.COMMON);
+
+		ContextServiceHolder.get().getActiveUserContact().ifPresent(c -> {
+			reminder.addResponsible(c);
+		});
 
 		ContextServiceHolder.get().getActivePatient().ifPresent(p -> {
 			reminder.setContact(p);

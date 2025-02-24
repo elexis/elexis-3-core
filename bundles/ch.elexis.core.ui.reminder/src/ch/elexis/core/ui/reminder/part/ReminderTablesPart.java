@@ -14,6 +14,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -27,6 +28,7 @@ import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.painter.layer.NatGridLayerPainter;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
+import org.eclipse.nebula.widgets.nattable.selection.action.SelectCellAction;
 import org.eclipse.nebula.widgets.nattable.selection.event.CellSelectionEvent;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
@@ -80,7 +82,7 @@ public class ReminderTablesPart implements IRefreshable {
 	@Optional
 	@Inject
 	void activePatient(IPatient patient) {
-		refresh();
+		refresh(false);
 	}
 
 	@Optional
@@ -92,23 +94,23 @@ public class ReminderTablesPart implements IRefreshable {
 	@Optional
 	@Inject
 	void updateReminder(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IReminder reminder) {
-		refresh();
+		refresh(false);
 	}
 
 	@Optional
 	@Inject
 	void createReminder(@UIEventTopic(ElexisEventTopics.EVENT_CREATE) IReminder reminder) {
-		refresh();
+		refresh(false);
 	}
 
 	@Optional
 	@Inject
 	void deleteReminder(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IReminder reminder) {
-		refresh();
+		refresh(false);
 	}
 
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, EMenuService menuService) {
 		// To make the default edit and selection configurations work correctly,
 		// the region label GridRegion.BODY is necessary, which is directly set to the
 		// ViewportLayer instance here.
@@ -138,6 +140,9 @@ public class ReminderTablesPart implements IRefreshable {
 		Transfer[] transfer = { TextTransfer.getInstance() };
 		natTable.addDragSupport(DND.DROP_COPY, transfer, dndSupport);
 		natTable.addDropSupport(DND.DROP_COPY, transfer, dndSupport);
+
+		// register context menu for natTable
+		menuService.registerContextMenu(natTable, "ch.elexis.core.ui.reminder.popupmenu.remindertable"); //$NON-NLS-1$
 
 		dataProvider.reload();
 		Display.getDefault().asyncExec(() -> {
@@ -205,6 +210,8 @@ public class ReminderTablesPart implements IRefreshable {
 //									+ cellEvent.getColumnPosition() + "], "
 //									+ ((IReminder) data).getSubject());
 							ContextServiceHolder.get().setTyped(data);
+						} else {
+							ContextServiceHolder.get().removeTyped(IReminder.class);
 						}
 					} else {
 						ContextServiceHolder.get().removeTyped(IReminder.class);
@@ -251,6 +258,9 @@ public class ReminderTablesPart implements IRefreshable {
 								}
 							}
 						});
+
+				uiBindingRegistry.registerMouseDownBinding(
+						new MouseEventMatcher(SWT.NONE, null, MouseEventMatcher.RIGHT_BUTTON), new SelectCellAction());
 			}
 		});
 	}
@@ -279,16 +289,22 @@ public class ReminderTablesPart implements IRefreshable {
 		dataLayer.resetRowHeightConfiguration(true);
 	}
 
-	@Override
-	public void refresh() {
+	private void refresh(boolean updateColumns) {
 		if (dataProvider != null) {
 			dataProvider.reload();
 			Display.getDefault().asyncExec(() -> {
 				if (CoreUiUtil.isActiveControl(natTable)) {
-					updateColumns();
+					if (updateColumns) {
+						updateColumns();
+					}
 					natTable.refresh();
 				}
 			});
 		}
+	}
+
+	@Override
+	public void refresh() {
+		refresh(true);
 	}
 }
