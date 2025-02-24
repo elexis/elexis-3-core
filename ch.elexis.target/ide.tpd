@@ -1,6 +1,5 @@
 target "Elexis 2025-03-java21" with source allEnvironments
 
-
 location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	
 	// justj.21
@@ -9,7 +8,6 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	// eclipse base
 	org.eclipse.platform.feature.group
 	org.eclipse.equinox.executable.feature.group
-//	org.eclipse.equinox.core.feature.feature.group
 	org.eclipse.rcp.feature.group
 	org.eclipse.e4.rcp.feature.group
 	org.eclipse.emf.common.feature.group
@@ -19,9 +17,7 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	org.eclipse.emf.common.ui.feature.group
 	org.eclipse.emf.edit.ui.feature.group
 	org.eclipse.ecf.core.feature.feature.group
-//	org.eclipse.ecf.core.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.feature.feature.group
-//	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group
 	org.eclipse.ecf.remoteservice.feature.feature.group
 	org.eclipse.mylyn.wikitext.feature.feature.group
@@ -59,6 +55,7 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	// java.util.logging -> slf4j
 	jul.to.slf4j
 	jcl.over.slf4j
+	log4j.over.slf4j
 	//org.slf4j.binding.log4j12
 	ch.qos.logback.classic
 	ch.qos.logback.core
@@ -96,9 +93,9 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	bcpg
 	bcutil
 	
-	// hapi
-	// info.elexis.target.hapi.fhir lazy
-	info.elexis.target.hl7.fhir.r4 lazy
+	// fhir
+	info.elexis.target.hapi.fhir lazy
+//	info.elexis.target.hl7.fhir.r4 lazy
 	// jaxws
 	info.elexis.target.jaxws.core lazy
 	// ehealth connector
@@ -113,6 +110,8 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	info.elexis.target.jaxwsrs.core.feature.group lazy
 	// keycloak
 	info.elexis.target.keycloak.feature.group lazy
+	io.curity.oauth-filter
+	jakarta.websocket-api [2.1.100.SNAPSHOT,2.1.100.SNAPSHOT]
 	// poi
 	info.elexis.target.apache.poi.feature.group lazy
 	// Require-Capability: osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)"
