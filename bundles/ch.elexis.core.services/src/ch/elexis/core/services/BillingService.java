@@ -166,7 +166,8 @@ public class BillingService implements IBillingService {
 
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
-							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
+							contextService.getActiveMandator().map(m -> m.getId()).orElse(null),
+							Optional.ofNullable(encounter.getPatient()).orElse(null));
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
 					}

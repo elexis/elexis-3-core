@@ -138,7 +138,7 @@ public interface IStockService {
 	 * @param count
 	 * @return
 	 */
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, Object... args);
 
 	/**
 	 * Perform a single disposal of an article. Use this method if only the store to
