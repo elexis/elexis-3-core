@@ -4,11 +4,14 @@ package ch.elexis.core.ui.reminder.part;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -41,10 +44,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -73,6 +81,9 @@ public class ReminderTablesPart implements IRefreshable {
 	private EHandlerService handlerService;
 	private SelectionLayer selectionLayer;
 	private ViewportLayer viewportLayer;
+
+	private Text searchText;
+	private SearchRunnable currentSearchRunnable;
 
 	@Inject
 	public ReminderTablesPart() {
@@ -111,6 +122,36 @@ public class ReminderTablesPart implements IRefreshable {
 
 	@PostConstruct
 	public void postConstruct(Composite parent, EMenuService menuService) {
+		parent.setLayout(new GridLayout());
+		searchText = new Text(parent, SWT.SEARCH | SWT.BORDER);
+		searchText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		searchText.setMessage("Suche nach Titel");
+		searchText.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (StringUtils.isNotBlank(searchText.getText()) && searchText.getText().length() > 2) {
+					if (currentSearchRunnable != null) {
+						currentSearchRunnable.cancel();
+					}
+					currentSearchRunnable = new SearchRunnable(searchText.getText());
+					CompletableFuture.delayedExecutor(1000, TimeUnit.MILLISECONDS).execute(currentSearchRunnable);
+				} else {
+					resetSearch();
+				}
+			}
+
+			private void resetSearch() {
+				if (currentSearchRunnable != null) {
+					currentSearchRunnable.cancel();
+				}
+				if (dataProvider.getColumnCount() > 0 && dataProvider.getColumns().get(0).hasSearch()) {
+					dataProvider.getColumns().forEach(c -> c.setSearch(null));
+					refresh(true);
+				}
+			}
+		});
+
 		// To make the default edit and selection configurations work correctly,
 		// the region label GridRegion.BODY is necessary, which is directly set to the
 		// ViewportLayer instance here.
@@ -123,6 +164,7 @@ public class ReminderTablesPart implements IRefreshable {
 		dataProvider.setColumns(loadColumnsPreference());
 
 		natTable = new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
+		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		natTable.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		natTable.setLayerPainter(new NatGridLayerPainter(natTable, DataLayer.DEFAULT_ROW_HEIGHT));
 
@@ -306,5 +348,28 @@ public class ReminderTablesPart implements IRefreshable {
 	@Override
 	public void refresh() {
 		refresh(true);
+	}
+
+	private class SearchRunnable implements Runnable {
+
+		private String search;
+		private boolean cancel;
+
+		public SearchRunnable(String search) {
+			this.search = search;
+		}
+
+		public void cancel() {
+			this.cancel = true;
+		}
+
+		@Override
+		public void run() {
+			if (!cancel) {
+				currentSearchRunnable = null;
+				dataProvider.getColumns().forEach(c -> c.setSearch(search));
+				refresh(true);
+			}
+		}
 	}
 }

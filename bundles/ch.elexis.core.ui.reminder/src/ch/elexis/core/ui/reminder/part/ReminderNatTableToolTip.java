@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 
 public class ReminderNatTableToolTip extends DefaultToolTip {
@@ -49,6 +50,9 @@ public class ReminderNatTableToolTip extends DefaultToolTip {
 			if(data instanceof IReminder) {
 				IReminder reminder = (IReminder) data;
 				StringBuilder sb = new StringBuilder();
+				if (reminder.getType() != null && reminder.getType() != Type.COMMON) {
+					sb.append("Typ: ").append(reminder.getType().getLocaleText()).append("\n");
+				}
 				sb.append("Titel: ").append(reminder.getSubject()).append("\n");
 				sb.append("Status: ").append(reminder.getStatus().getLocaleText()).append("\n");
 				sb.append("Beschreibung: \n").append(reminder.getMessage());

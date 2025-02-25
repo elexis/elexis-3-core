@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.graphics.Color;
+
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
@@ -21,6 +25,7 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.ISubQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.data.UiMandant;
 
 public class ReminderColumn {
 
@@ -35,6 +40,7 @@ public class ReminderColumn {
 	private IContact contact;
 
 	private IUserGroup group;
+	private String search;
 
 	public static List<ReminderColumn> getAllAvailable() {
 		List<ReminderColumn> available = new ArrayList<ReminderColumn>();
@@ -70,7 +76,14 @@ public class ReminderColumn {
 	public ReminderColumn(IUser user, String color, Type type) {
 		this.name = user.getId();
 		this.contact = user.getAssignedContact();
-		this.color = color;
+		if (this.contact.isMandator()) {
+			Color mandatorColor = UiMandant.getColorForIMandator(
+					CoreModelServiceHolder.get().load(this.contact.getId(), IMandator.class).get());
+			this.color = Integer.toHexString(mandatorColor.getRed()) + Integer.toHexString(mandatorColor.getGreen())
+					+ Integer.toHexString(mandatorColor.getBlue());
+		} else {
+			this.color = color;
+		}
 		this.type = type;
 	}
 
@@ -102,8 +115,14 @@ public class ReminderColumn {
 	private List<IReminder> loadPopup() {
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
 		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+		query.startGroup();
 		query.and("visibility", COMPARATOR.EQUALS, Visibility.POPUP_ON_PATIENT_SELECTION);
 		query.or("visibility", COMPARATOR.EQUALS, Visibility.POPUP_ON_LOGIN);
+		query.andJoinGroups();
+
+		if (hasSearch()) {
+			addSearchToQuery(query);
+		}
 
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(500);
@@ -117,6 +136,10 @@ public class ReminderColumn {
 		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_PATIENT_SELECTION);
 		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_LOGIN);
 
+		if (hasSearch()) {
+			addSearchToQuery(query);
+		}
+
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(500);
 		return query.execute();
@@ -127,6 +150,10 @@ public class ReminderColumn {
 		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 
 		query.and("userGroup", COMPARATOR.EQUALS, group);
+
+		if (hasSearch()) {
+			addSearchToQuery(query);
+		}
 
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(500);
@@ -143,6 +170,10 @@ public class ReminderColumn {
 		subQuery.and("responsible", COMPARATOR.EQUALS, contact);
 		query.exists(subQuery);
 
+		if (hasSearch()) {
+			addSearchToQuery(query);
+		}
+
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(500);
 		return query.execute();
@@ -152,6 +183,10 @@ public class ReminderColumn {
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
 		query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
 		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+
+		if (hasSearch()) {
+			addSearchToQuery(query);
+		}
 
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(500);
@@ -209,5 +244,18 @@ public class ReminderColumn {
 			return false;
 		ReminderColumn other = (ReminderColumn) obj;
 		return Objects.equals(name, other.name) && type == other.type;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public boolean hasSearch() {
+		return StringUtils.isNotBlank(this.search);
+	}
+
+	private void addSearchToQuery(IQuery<IReminder> query) {
+		String likeSearch = "%" + search + "%";
+		query.and(ModelPackage.Literals.IREMINDER__SUBJECT, COMPARATOR.LIKE, likeSearch, true);
 	}
 }
