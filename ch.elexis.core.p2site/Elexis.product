@@ -7,7 +7,7 @@
       <image path="rsc/elexislogo2.png"/>
       <text>
          Elexis 3.13 - www.elexis.info
-         Copyright 2005-2024 G. Weirich und Elexis-Team
+         Copyright 2005-2025 G. Weirich und Elexis-Team
       </text>
    </aboutInfo>
 
@@ -15,7 +15,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 -Dorg.eclipse.gemini.refreshBundles=false --add-opens=java.base/java.util=ALL-UNNAMED
+      <vmArgs>-Xmx1024m -Duser.language=de -Duser.region=CH  -Dfile.encoding=utf-8 --add-opens=java.base/java.util=ALL-UNNAMED
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts=false -Dfile.encoding=utf-8
       </vmArgsMac>
@@ -33,6 +33,7 @@
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</linux>
@@ -61,27 +62,10 @@
 
    <configurations>
       <plugin id="ch.elexis.core.jpa.datasource" autoStart="true" startLevel="3" />
-      <plugin id="ch.elexis.core.jpa.entities" autoStart="true" startLevel="3" />
-      <plugin id="ch.elexis.core.logging.osgi" autoStart="true" startLevel="2" />
-      <plugin id="ch.elexis.core.ui.p2" autoStart="true" startLevel="4" />
       <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="2" />
-      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.console" autoStart="true" startLevel="4" />
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
-      <plugin id="org.eclipse.equinox.p2.transport.ecf" autoStart="true" startLevel="3" />
-      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.gemini.jpa" autoStart="true" startLevel="3" />
-      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
-      <plugin id="org.slf4j.api" autoStart="false" startLevel="1" />
-      <plugin id="org.slf4j.jcl" autoStart="true" startLevel="1" />
-      <plugin id="org.slf4j.jul" autoStart="true" startLevel="1" />
-      <plugin id="org.slf4j.log4j" autoStart="true" startLevel="1" />
+      <plugin id="org.apache.aries.spifly.dynamic.bundle" autoStart="true" startLevel="1" />
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="1" />
    </configurations>
 
    <repositories>

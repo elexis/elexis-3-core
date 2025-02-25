@@ -824,4 +824,18 @@
          id="jakarta.annotation-api"
          version="0.0.0"/>
 
+   <plugin
+         id="org.eclipse.swt.cocoa.macosx.aarch64"
+         os="macosx"
+         arch="aarch64"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.angus.jakarta.mail"
+         version="0.0.0"/>
+
+   <plugin
+         id="angus-activation"
+         version="0.0.0"/>
+
 </feature>
