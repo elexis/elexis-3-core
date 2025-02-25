@@ -15,13 +15,16 @@ package ch.elexis.core.ui.views.rechnung;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.data.interfaces.IRnOutputter;
@@ -57,8 +60,14 @@ public class DefaultOutputter implements IRnOutputter {
 		final Composite compParent = (Composite) parent;
 		Composite ret = new Composite(compParent, SWT.NONE);
 		ret.setLayout(new GridLayout(2, false));
+
+		@SuppressWarnings("unchecked")
+		Set<String> outputters = new LinkedHashSet<>(
+				Optional.ofNullable((List<String>) compParent.getData(RnOutputDialog.RNOUTPUTTER_DESCRIPTION))
+						.orElse(Collections.emptyList()));
+
 		Label lbl = new Label(ret, SWT.NONE);
-		lbl.setText(Messages.DefaultOutputter_useIdividualPlugins);
+		lbl.setText(Messages.DefaultOutputter_InvoiceOutput + String.join(", ", outputters));
 		lbl.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 		return ret;
 	}
@@ -69,26 +78,9 @@ public class DefaultOutputter implements IRnOutputter {
 		for (Rechnung rn : rnn) {
 			Fall fall = rn.getFall();
 			final IRnOutputter iro = fall.getOutputter();
-			if (!configured.contains(iro)) {
-				SWTHelper.SimpleDialog dlg = new SWTHelper.SimpleDialog(new SWTHelper.IControlProvider() {
-					public Control getControl(Composite parent) {
-						parent.getShell().setText(iro.getDescription());
-						return (Control) iro.createSettingsControl(parent);
-
-					}
-
-					public void beforeClosing() {
-						iro.saveComposite();
-					}
-				});
-				if (dlg.open() == Dialog.OK) {
-					configured.add(iro);
-				} else {
-					continue;
-				}
+			if (iro != null) {
+				res.add(iro.doOutput(type, Arrays.asList(new Rechnung[] { rn }), props));
 			}
-
-			res.add(iro.doOutput(type, Arrays.asList(new Rechnung[] { rn }), props));
 		}
 		return null;
 	}

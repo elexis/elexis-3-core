@@ -1387,7 +1387,7 @@ public class Messages extends NLS {
 	public static String DefaultControlFieldProvider_enterFilter;
 	public static String DefaultError_Message;
 	public static String DefaultOutputter_defaultOutputForCase;
-	public static String DefaultOutputter_useIdividualPlugins;
+	public static String DefaultOutputter_InvoiceOutput;
 	public static String DefaultPDFImportStrategy_InitContextFailed;
 	public static String DefaultPDFImportStrategy_LabName;
 	public static String DefaultPDFImportStrategy_NoDocManager;
