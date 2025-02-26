@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core.jpa.entities;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
  ch.elexis.core;bundle-version="3.10.0",
- ch.elexis.core.l10n
+ ch.elexis.core.l10n,
+ org.apache.commons.commons-io;bundle-version="2.15.0"
 Import-Package: javax.activation;version="1.2.2",
  javax.persistence;version="2.2.3",
  javax.persistence.criteria;version="2.2.3",
@@ -32,8 +33,10 @@ Import-Package: javax.activation;version="1.2.2",
  org.osgi.service.jpa;version="1.1.0",
  org.slf4j
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/liquibase-core-3.10.3.jar,
- lib/snakeyaml-1.28.jar,
+Bundle-ClassPath: lib/liquibase-core-4.31.1.jar,
+ lib/snakeyaml-2.3.jar,
+ lib/opencsv-5.9.jar,
+ lib/commons-collections4-4.4.jar,
  .
 Export-Package: ch.elexis.core.jpa.entitymanager.ui,
  ch.elexis.core.jpa.model.adapter,
