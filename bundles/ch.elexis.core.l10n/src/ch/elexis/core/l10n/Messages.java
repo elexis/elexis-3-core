@@ -5142,6 +5142,7 @@ public class Messages extends NLS {
 	public static String PdfPreview_DocXError;
 	public static String ScreenshotFunction_PreviewShell_Text;
 	public static String ScreenshotFunction_PrintJob_Title;
+	public static String Medikamentenauswertung_Description;
 	public static String Attention;
 	public static String HttpOrderTransportService_Dialog;
 	public static String OrderSupplierNotDefined;
