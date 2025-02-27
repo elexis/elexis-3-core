@@ -73,7 +73,6 @@ import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
 import ch.elexis.data.Organisation;
@@ -106,6 +105,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	AutoForm afDetails;
 	Listener mandantListener, checkIfContactExistsListener, changeEmailListener;
 	
+	@Inject
 	private IStickerService stickerService;
 
 	static final InputData[] def = new InputData[] {
@@ -212,10 +212,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 
 	public KontaktBlatt(Composite parent, int style, IViewSite vs) {
 		super(parent, style);
-
-		stickerService = OsgiServiceUtil.getService(IStickerService.class)
-				.orElseThrow(() -> new IllegalStateException());
-
 		site = vs;
 		tk = UiDesk.getToolkit();
 		setLayout(new FillLayout());

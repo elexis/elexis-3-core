@@ -140,7 +140,6 @@ import ch.elexis.core.ui.views.contribution.IViewContribution;
 import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.BezugsKontakt;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Labor;
@@ -263,7 +262,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private Button increasedTreatmentBtn;
 	ArrayList<InputData> fields;
 
-	IStickerService stickerService;
+	@Inject
+	private IStickerService stickerService;
 
 	void recreateUserpanel() {
 		// cUserfields.setRedraw(false);
@@ -524,10 +524,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	Patientenblatt2(final Composite parent, final IViewSite site) {
 		super(parent, SWT.NONE);
 		viewsite = site;
-
-		stickerService = OsgiServiceUtil.getService(IStickerService.class)
-				.orElseThrow(() -> new IllegalStateException());
-
 		makeActions();
 		parent.setLayout(new FillLayout());
 		setLayout(new GridLayout());
