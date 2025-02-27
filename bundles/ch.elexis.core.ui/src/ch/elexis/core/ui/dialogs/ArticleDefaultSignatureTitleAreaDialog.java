@@ -101,9 +101,11 @@ public class ArticleDefaultSignatureTitleAreaDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		adsc.updateModelNonDatabinding();
 		adsc.save();
+		adsc.layout();
 
 		super.okPressed();
 	}
+
 
 	private String trimTrailingZeros(String number) {
 		if (!number.contains(".")) { //$NON-NLS-1$
