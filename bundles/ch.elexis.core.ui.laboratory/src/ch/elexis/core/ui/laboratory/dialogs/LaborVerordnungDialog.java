@@ -290,7 +290,9 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		if (getSelectedUser() != null) {
 			createReminder(getSelectedUser(), orders);
 		}
-
+		for (ILabOrder order : orders) {
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, order);
+		}
 		saveLastSelectedUser();
 
 		StructuredSelection externSelection = (StructuredSelection) externViewer.getSelection();
