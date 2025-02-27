@@ -9,6 +9,7 @@ import ch.elexis.core.model.Identifiable;
 public interface IStickerService {
 
 	String STICKER_ID_READONLY = "readOnly";
+	String PEA_MEDIORDER_STICKER_ID = "activate_mediorder";
 
 	/**
 	 * Whether the identifiable is tagged with the given sticker
@@ -20,13 +21,23 @@ public interface IStickerService {
 	public boolean hasSticker(Identifiable identifiable, ISticker iSticker);
 
 	/**
-	 * Get all stickers for the {@link Identifiable}. The returned list is sorted by
-	 * {@link ISticker#getImportance()}.
+	 * Get all stickers for the {@link Identifiable} excluding pea mediorder
+	 * sticker. The returned list is sorted by {@link ISticker#getImportance()}.
 	 *
 	 * @param identifiable
 	 * @return
 	 */
 	public List<ISticker> getStickers(Identifiable identifiable);
+
+	/**
+	 * Get all stickers for the {@link Identifiable}.The returned list is sorted by
+	 * {@link ISticker#getImportance()}.
+	 * 
+	 * @param identifiable
+	 * @param includeMediorderSticker
+	 * @return
+	 */
+	public List<ISticker> getStickers(Identifiable identifiable, boolean includeMediorderSticker);
 
 	/**
 	 * Get the sticker with the highest importance for the {@link Identifiable}.

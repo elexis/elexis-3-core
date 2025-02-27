@@ -106,6 +106,11 @@ public class StickerService implements IStickerService {
 
 	@Override
 	public List<ISticker> getStickers(Identifiable identifiable) {
+		return getStickers(identifiable, false);
+	}
+
+	@Override
+	public List<ISticker> getStickers(Identifiable identifiable, boolean includeMediorderSticker) {
 		if (identifiable == null) {
 			return Collections.emptyList();
 		}
@@ -113,7 +118,8 @@ public class StickerService implements IStickerService {
 		List<ISticker> loadedStickers = new ArrayList<>();
 		for (StickerObjectLink link : stickerObjectLinks) {
 			ISticker sticker = loadStickerForStickerObjectLink(link, identifiable);
-			if (sticker != null && !sticker.getId().equals("activate_mediorder")) {
+			if (sticker != null
+					&& (includeMediorderSticker || !IStickerService.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
 				loadedStickers.add(sticker);
 			}
 		}

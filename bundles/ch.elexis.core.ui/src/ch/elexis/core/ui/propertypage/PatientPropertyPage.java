@@ -8,9 +8,11 @@ package ch.elexis.core.ui.propertypage;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -30,10 +32,13 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 
@@ -51,6 +56,8 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private CDateTime geburtsdatum;
 
 	private ComboViewer comboGeschlecht;
+	
+	private IStickerService stickerService;
 
 	public PatientPropertyPage() {
 		super();
@@ -161,12 +168,25 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 
+		textEmail.addVerifyListener(e -> {
+			List<ISticker> lSticker = stickerService.getStickers(pat, true);
+			if (lSticker.stream()
+					.anyMatch(sticker -> sticker.getId().equals(IStickerService.PEA_MEDIORDER_STICKER_ID))) {
+				if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+						Messages.Mediorder_changeEmail_text)) {
+					e.doit = false;
+				}
+			}
+		});
+
 		return comp;
 	}
 
 	private void init() {
 		IAdaptable adapt = getElement();
 		pat = (IPatient) adapt.getAdapter(IPatient.class);
+		
+		stickerService = OsgiServiceUtil.getService(IStickerService.class).orElseThrow(() -> new IllegalStateException());
 	}
 
 	private Date getGeburtsdatum() {
