@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -83,6 +82,7 @@ import ch.elexis.core.model.OrganizationConstants;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -129,6 +129,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	private final ScrolledForm form;
 	String[] Abrechnungstypen = UserCasePreferences.sortBillingSystems(BillingSystem.getAbrechnungsSysteme());
 	private IFall actFall;
+	private IUser actUser;
 	DayDateCombo ddc;
 
 	String itemsErrorMessage = "parameters not supplied;please control parameters;in preferences"; //$NON-NLS-1$
@@ -159,11 +160,14 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	@Inject
 	private IContextService contextService;
 
+	@Inject
+	private IUserService userService;
+
 	@Override
 	public void setUnlocked(boolean unlock) {
 		allowFieldUpdate(unlock);
 	}
-
+	
 	/**
 	 * Defines if the lock should be updated on setting a Fall on the composite.
 	 * Default value is true.
@@ -1020,14 +1024,9 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				tmpDel = DEFINITIONSDELIMITER;
 			}
 			// *** only for admins!
-			Optional<IUser> user = contextService.getActiveUser();
-			if (user.isPresent()) {
-				boolean isAdministrator = user.get().getRoles().stream()
-						.anyMatch(role -> RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR.contains(role.getId()));
-				if (isAdministrator) {
-					setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
-							true, false); // $NON-NLS-1$
-				}
+			if (userService.hasRole(actUser, RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR)) {
+				setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
+						true, false); // $NON-NLS-1$
 			}
 		}
 
@@ -1668,4 +1667,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 		return rawDate;
 	}
 
+	public void setUser(IUser user) {
+		this.actUser = user;
+	}
 }
