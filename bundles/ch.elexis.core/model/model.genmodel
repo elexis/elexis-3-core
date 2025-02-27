@@ -772,6 +772,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/priority"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/type"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IReminder/responsibleAll"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IReminder/group"/>
       <genOperations ecoreOperation="model.ecore#//IReminder/addResponsible">
         <genParameters ecoreParameter="model.ecore#//IReminder/addResponsible/responsible"/>
       </genOperations>

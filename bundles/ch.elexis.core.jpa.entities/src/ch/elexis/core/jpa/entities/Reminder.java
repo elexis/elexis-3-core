@@ -63,6 +63,10 @@ public class Reminder extends AbstractEntityWithId implements EntityWithId, Enti
 	@JoinColumn(name = "OriginID")
 	private Kontakt creator;
 
+	@OneToOne
+	@JoinColumn(name = "GroupID")
+	private UserGroup userGroup;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "reminders_responsible_link", joinColumns = @JoinColumn(name = "ReminderID"), inverseJoinColumns = @JoinColumn(name = "ResponsibleID"))
 	private List<Kontakt> responsible;
@@ -104,6 +108,14 @@ public class Reminder extends AbstractEntityWithId implements EntityWithId, Enti
 
 	public void setKontakt(Kontakt kontakt) {
 		this.kontakt = kontakt;
+	}
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
 	}
 
 	public Type getActionType() {

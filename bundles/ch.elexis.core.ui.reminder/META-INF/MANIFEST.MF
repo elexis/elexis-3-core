@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Reminder UI
+Bundle-SymbolicName: ch.elexis.core.ui.reminder;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: medevit.at
+Require-Bundle: org.eclipse.jface;bundle-version="3.31.0",
+ org.eclipse.nebula.widgets.nattable.core;bundle-version="2.2.1",
+ org.eclipse.nebula.widgets.nattable.extension.e4;bundle-version="2.2.1",
+ ch.elexis.core,
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.ui.di,
+ ch.elexis.core.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Import-Package: ch.elexis.core.services.holder,
+ ch.elexis.core.ui.e4.util,
+ javax.annotation,
+ javax.inject,
+ org.eclipse.e4.core.di.annotations;version="[1.6.0,2.0.0)",
+ org.eclipse.nebula.widgets.nattable.extension.nebula.richtext;version="[2.2.0,3.0.0)"
+Automatic-Module-Name: ch.elexis.core.ui.reminder

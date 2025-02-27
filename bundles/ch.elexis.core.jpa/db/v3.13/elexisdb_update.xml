@@ -53,4 +53,18 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 		</sql>
 	</changeSet>
 
+	<changeSet id="manual_update_reminders_groupid" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="REMINDERS" columnName="GROUPID" />
+			</not>
+		</preConditions>
+		<addColumn tableName="REMINDERS">
+			<column name="GROUPID" type="VARCHAR(25)"/>
+		</addColumn>
+		<createIndex tableName="REMINDERS" indexName="rem4">
+			<column name="GROUPID" />
+		</createIndex>
+	</changeSet>
+
 </databaseChangeLog>
