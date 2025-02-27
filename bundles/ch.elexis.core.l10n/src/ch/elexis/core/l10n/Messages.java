@@ -4980,6 +4980,7 @@ public class Messages extends NLS {
 	public static String DocumentMetaDataDialog_deleteCategoryComboConfirm;
 	public static String Statistics_Info;
 	public static String Article_Medic_Label;
+	public static String Medikamentenauswertung_Description;
 	public static String Attention;
 	public static String HttpOrderTransportService_Dialog;
 	public static String OrderSupplierNotDefined;
