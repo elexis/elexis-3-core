@@ -57,6 +57,7 @@ public class FallDetailView extends ViewPart implements IRefreshable {
 	}
 
 	private void adaptForUser(IUser user) {
+		fdb.setUser(user);
 		fdb.reloadBillingSystemsMenu();
 	}
 
