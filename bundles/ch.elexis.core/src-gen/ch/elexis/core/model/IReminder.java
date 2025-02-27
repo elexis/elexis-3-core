@@ -39,6 +39,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IReminder#getPriority <em>Priority</em>}</li>
  *   <li>{@link ch.elexis.core.model.IReminder#getType <em>Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IReminder#isResponsibleAll <em>Responsible All</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IReminder#getGroup <em>Group</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIReminder()
@@ -278,6 +279,28 @@ public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
 	 * @generated
 	 */
 	void setResponsibleAll(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Group</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' reference.
+	 * @see #setGroup(IUserGroup)
+	 * @see ch.elexis.core.model.ModelPackage#getIReminder_Group()
+	 * @model
+	 * @generated
+	 */
+	IUserGroup getGroup();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IReminder#getGroup <em>Group</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group</em>' reference.
+	 * @see #getGroup()
+	 * @generated
+	 */
+	void setGroup(IUserGroup value);
 
 	/**
 	 * <!-- begin-user-doc -->

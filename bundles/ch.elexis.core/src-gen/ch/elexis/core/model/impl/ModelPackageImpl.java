@@ -5206,6 +5206,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getIReminder_Group() {
+		return (EReference)iReminderEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIReminderResponsibleLink() {
 		return iReminderResponsibleLinkEClass;
 	}
@@ -5891,6 +5901,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iReminderEClass, IREMINDER__PRIORITY);
 		createEAttribute(iReminderEClass, IREMINDER__TYPE);
 		createEAttribute(iReminderEClass, IREMINDER__RESPONSIBLE_ALL);
+		createEReference(iReminderEClass, IREMINDER__GROUP);
 
 		iReminderResponsibleLinkEClass = createEClass(IREMINDER_RESPONSIBLE_LINK);
 		createEReference(iReminderResponsibleLinkEClass, IREMINDER_RESPONSIBLE_LINK__REMINDER);
@@ -6983,6 +6994,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIReminder_Priority(), theTypesPackage.getPriority(), "priority", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIReminder_Type(), theTypesPackage.getType(), "type", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIReminder_ResponsibleAll(), ecorePackage.getEBoolean(), "responsibleAll", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIReminder_Group(), this.getIUserGroup(), null, "group", null, 0, 1, IReminder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iReminderEClass, null, "addResponsible", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIContact(), "responsible", 1, 1, IS_UNIQUE, IS_ORDERED);
