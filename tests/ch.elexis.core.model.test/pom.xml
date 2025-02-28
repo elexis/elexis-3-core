@@ -56,8 +56,7 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.model.test.AllPluginTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED
--Delexis.test.mode=true</argLine>
+          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED -Delexis.test.mode=true</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
