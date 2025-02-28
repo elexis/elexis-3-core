@@ -62,21 +62,23 @@ public class LiquibaseDBUpdater {
 					}
 				});
 			}
-			System.out.println("Updating database [" + connection + "] with liquibase");
 			logger.info("Updating database [" + connection + "] with liquibase"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				liquibase.update(StringUtils.EMPTY);
-			} catch (ValidationFailedException e) {
-				logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
-				// removes current checksums from database, on next run checksums will be
-				// recomputed
-				liquibase.clearCheckSums();
-				liquibase.update(StringUtils.EMPTY);
+			} catch (Exception e) {
+				if (e.getCause() instanceof ValidationFailedException || e instanceof ValidationFailedException) {
+					logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
+					// removes current checksums from database, on next run checksums will be
+					// recomputed
+					liquibase.clearCheckSums();
+					liquibase.changeLogSync(StringUtils.EMPTY);
+				} else {
+					logger.error("Exception performing DB init", e); //$NON-NLS-1$
+				}
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on
 			logger.warn("Exception on DB update.", e); //$NON-NLS-1$
-			System.out.println("Exception on DB update." + e);
 			return false;
 		} finally {
 			try {

@@ -56,7 +56,8 @@
           <useUIHarness>false</useUIHarness>
           <testClass>ch.elexis.core.model.test.AllPluginTests</testClass>
           <showEclipseLog>true</showEclipseLog>
-          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED -Delexis.test.mode=true</argLine>
+          <argLine>--add-opens java.base/java.lang=ALL-UNNAMED
+-Delexis.test.mode=true</argLine>
           <dependencies>
             <dependency>
               <type>eclipse-plugin</type>
@@ -66,6 +67,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.opencsv</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -231,6 +237,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.jvnet.mimepull</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-collections4</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -455,6 +466,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.google.gson</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -531,11 +547,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

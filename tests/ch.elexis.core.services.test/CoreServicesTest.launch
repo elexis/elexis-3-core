@@ -51,12 +51,13 @@
         <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
-        <setEntry value="com.google.gson@default:default"/>
+        <setEntry value="com.google.gson*2.12.1@default:default"/>
         <setEntry value="com.google.guava.failureaccess@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.jcraft.jsch@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
+        <setEntry value="com.opencsv@default:default"/>
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="com.sun.mail.jakarta.mail@default:default"/>
@@ -81,6 +82,7 @@
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-codec*1.17.0@default:default"/>
+        <setEntry value="org.apache.commons.commons-collections4@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
         <setEntry value="org.apache.commons.commons-io*2.18.0@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
@@ -128,7 +130,7 @@
         <setEntry value="org.glassfish.hk2.osgi-resource-locator@default:default"/>
         <setEntry value="org.glassfish.hk2.utils@default:default"/>
         <setEntry value="org.glassfish.jersey.core.jersey-client*3.1.99.SNAPSHOT@2:true"/>
-        <setEntry value="org.glassfish.jersey.core.jersey-common*3.1.99.SNAPSHOT@2:true"/>
+        <setEntry value="org.glassfish.jersey.core.jersey-common*3.1.99.SNAPSHOT@default:default"/>
         <setEntry value="org.glassfish.jersey.ext.jersey-proxy-client@default:default"/>
         <setEntry value="org.glassfish.jersey.inject.jersey-hk2@default:true"/>
         <setEntry value="org.glassfish.jersey.media.jersey-media-multipart@default:default"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2025-03-java21" sequenceNumber="1740406699">
+<target name="Elexis 2025-03-java21" sequenceNumber="1740743870">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>

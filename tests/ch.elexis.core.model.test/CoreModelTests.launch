@@ -51,11 +51,12 @@
         <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
         <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
-        <setEntry value="com.google.gson@default:default"/>
+        <setEntry value="com.google.gson*2.12.1@default:default"/>
         <setEntry value="com.google.guava.failureaccess@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
+        <setEntry value="com.opencsv@default:default"/>
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="com.sun.mail.jakarta.mail@default:default"/>
@@ -78,6 +79,7 @@
         <setEntry value="org.apache.commons.collections@default:default"/>
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-codec*1.17.0@default:default"/>
+        <setEntry value="org.apache.commons.commons-collections4@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
         <setEntry value="org.apache.commons.commons-io*2.18.0@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>

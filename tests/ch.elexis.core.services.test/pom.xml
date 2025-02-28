@@ -80,6 +80,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.opencsv</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.httpcomponents.httpcore</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -265,6 +270,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-collections4</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.ext.jersey-proxy-client</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -281,6 +291,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.osgi</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.glassfish.jersey.core.jersey-common</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -435,11 +450,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.glassfish.jersey.core.jersey-common</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.expressions</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -511,6 +521,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.httpcomponents.httpclient</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -610,11 +625,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.google.gson</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.core</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -652,11 +662,6 @@
             </bundle>
             <bundle>
               <id>org.eclipse.equinox.common</id>
-              <level>2</level>
-              <autoStart>true</autoStart>
-            </bundle>
-            <bundle>
-              <id>org.glassfish.jersey.core.jersey-common</id>
               <level>2</level>
               <autoStart>true</autoStart>
             </bundle>
