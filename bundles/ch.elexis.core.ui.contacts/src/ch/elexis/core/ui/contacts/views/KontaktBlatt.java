@@ -56,6 +56,9 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.StickerConstants;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -101,7 +104,10 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private final ScrolledForm form;
 	private final FormToolkit tk;
 	AutoForm afDetails;
-	Listener mandantListener, checkIfContactExistsListener;
+	Listener mandantListener, checkIfContactExistsListener, changeEmailListener;
+	
+	@Inject
+	private IStickerService stickerService;
 
 	static final InputData[] def = new InputData[] {
 			new InputData(Messages.Core_Name, Kontakt.FLD_NAME1, Typ.STRING, null),
@@ -264,6 +270,17 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 				}
 			}
 
+		};
+
+		changeEmailListener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+						Messages.Mediorder_changeEmail_text)) {
+					event.doit = false;
+				}
+				def[15].getWidget().getControl().removeListener(SWT.KeyDown, changeEmailListener);
+			}
 		};
 
 		Composite cAnschrift = tk.createComposite(body);
@@ -520,14 +537,20 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		try {
 			boolean mandatorEditGuard = kontakt.istMandant();
 
+			List<ISticker> lSticker = stickerService.getStickers(kontakt.toIContact().asIPatient());
+			boolean hasSticker = lSticker.stream().anyMatch(
+					sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()));
 			for (int i = 0; i < def.length; i++) {
 				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);
+				def[i].getWidget().getControl().removeListener(SWT.KeyDown, changeEmailListener);
 			}
 			if (mandatorEditGuard) {
 				for (int i = 0; i < def.length; i++) {
 					def[i].getWidget().getControl().addListener(SWT.KeyDown, mandantListener);
 				}
+			} else if (hasSticker) {
+				def[15].getWidget().getControl().addListener(SWT.KeyDown, changeEmailListener);
 			} else {
 				// Listener deliberately applied to name1, name2 and sex
 				def[0].getWidget().getControl().addListener(SWT.CHANGED, checkIfContactExistsListener);
