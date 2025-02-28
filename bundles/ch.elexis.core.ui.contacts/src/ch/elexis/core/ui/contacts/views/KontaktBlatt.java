@@ -57,6 +57,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -536,9 +537,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		try {
 			boolean mandatorEditGuard = kontakt.istMandant();
 
-			List<ISticker> lSticker = stickerService.getStickers(kontakt.toIContact().asIPatient(), true);
+			List<ISticker> lSticker = stickerService.getStickers(kontakt.toIContact().asIPatient());
 			boolean hasSticker = lSticker.stream().anyMatch(
-					sticker -> IStickerService.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()));
+					sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()));
 			for (int i = 0; i < def.length; i++) {
 				def[i].getWidget().getControl().removeListener(SWT.KeyDown, mandantListener);
 				def[i].getWidget().getControl().removeListener(SWT.CHANGED, checkIfContactExistsListener);

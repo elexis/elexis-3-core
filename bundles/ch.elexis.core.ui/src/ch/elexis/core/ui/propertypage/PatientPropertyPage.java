@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,6 +34,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
@@ -57,6 +59,8 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 	private ComboViewer comboGeschlecht;
 	
+	private VerifyListener emailVerifyListener;
+
 	private IStickerService stickerService;
 
 	public PatientPropertyPage() {
@@ -168,16 +172,18 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 
-		textEmail.addVerifyListener(e -> {
-			List<ISticker> lSticker = stickerService.getStickers(pat, true);
+		emailVerifyListener = e -> {
+			List<ISticker> lSticker = stickerService.getStickers(pat);
 			if (lSticker.stream()
-					.anyMatch(sticker -> sticker.getId().equals(IStickerService.PEA_MEDIORDER_STICKER_ID))) {
+					.anyMatch(sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
 				if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
 						Messages.Mediorder_changeEmail_text)) {
 					e.doit = false;
 				}
+				textEmail.removeVerifyListener(emailVerifyListener);
 			}
-		});
+		};
+		textEmail.addVerifyListener(emailVerifyListener);
 
 		return comp;
 	}
@@ -243,5 +249,11 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textBemerkungen.setEditable(unlocked);
 		geburtsdatum.setEditable(unlocked);
 		comboGeschlecht.getControl().setEnabled(unlocked);
+	}
+
+	@Override
+	public void dispose() {
+		OsgiServiceUtil.ungetService(IStickerService.class);
+		super.dispose();
 	}
 }

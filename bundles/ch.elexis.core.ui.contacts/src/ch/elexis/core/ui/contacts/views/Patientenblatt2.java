@@ -106,6 +106,7 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.PatientConstants;
+import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -962,9 +963,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				public void keyPressed(KeyEvent e) {
 					if (actPatient != null) {
 
-						List<ISticker> lSticker = stickerService.getStickers(actPatient.toIPatient(), true);
+						List<ISticker> lSticker = stickerService.getStickers(actPatient.toIPatient());
 						if (lSticker.stream().anyMatch(
-								sticker -> IStickerService.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
+								sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
 							if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
 									Messages.Mediorder_changeEmail_text)) {
 								e.doit = false;
