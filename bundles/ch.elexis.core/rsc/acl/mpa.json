@@ -4,7 +4,8 @@
 	],
 	"system-command": {
 		"ACL_VIEW_SELECTION": "x",
-		"LSTG_CHARGE_FOR_ALL": "x"
+		"LSTG_CHARGE_FOR_ALL": "x",
+		"ACL_SEND_ZURROSE": "x"
 	},
 	"object": {
 		"ch.elexis.core.model.IEncounter": "cruvdx:aobo",
