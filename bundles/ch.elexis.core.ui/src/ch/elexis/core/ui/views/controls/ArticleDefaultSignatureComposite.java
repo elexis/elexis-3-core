@@ -183,7 +183,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
 				} else {
 					stackLayoutDosage.topControl = compositeDayTimeDosage;
-					txtFreeTextDosage.setText(StringUtils.EMPTY);
+					if (!txtFreeTextDosage.getText().isEmpty()) {
+						signatureItem.getValue().setFreeText(txtFreeTextDosage.getText());
+					}
 				}
 				stackCompositeDosage.layout();
 			};
@@ -607,6 +609,9 @@ public class ArticleDefaultSignatureComposite extends Composite {
 				dateStart.setDate(signature.getStartDate().getYear(), signature.getStartDate().getMonthValue() - 1,
 						signature.getStartDate().getDayOfMonth());
 			}
+
+			stackCompositeDosage.layout(true, true);
+			stackCompositeDosage.redraw();
 		}
 		updateMedicationTypeDetails();
 	}
