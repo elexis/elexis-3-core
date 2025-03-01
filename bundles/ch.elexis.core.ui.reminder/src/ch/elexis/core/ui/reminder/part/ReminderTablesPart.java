@@ -8,9 +8,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -67,6 +64,8 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 import ch.elexis.core.ui.views.IRefreshable;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 public class ReminderTablesPart implements IRefreshable {
 

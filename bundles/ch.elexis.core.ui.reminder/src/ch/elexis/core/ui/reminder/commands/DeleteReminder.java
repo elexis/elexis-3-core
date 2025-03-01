@@ -3,8 +3,6 @@ package ch.elexis.core.ui.reminder.commands;
 
 import java.text.MessageFormat;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -16,6 +14,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import jakarta.inject.Named;
 
 public class DeleteReminder {
 

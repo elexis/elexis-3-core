@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -56,6 +54,7 @@ import ch.elexis.core.ui.e4.fieldassist.AsyncContentProposalProvider;
 import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import jakarta.inject.Inject;
 
 public class ReminderComposite extends Composite {
 
