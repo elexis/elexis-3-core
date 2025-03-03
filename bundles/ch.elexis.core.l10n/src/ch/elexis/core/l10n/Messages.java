@@ -1387,7 +1387,7 @@ public class Messages extends NLS {
 	public static String DefaultControlFieldProvider_enterFilter;
 	public static String DefaultError_Message;
 	public static String DefaultOutputter_defaultOutputForCase;
-	public static String DefaultOutputter_useIdividualPlugins;
+	public static String DefaultOutputter_InvoiceOutput;
 	public static String DefaultPDFImportStrategy_InitContextFailed;
 	public static String DefaultPDFImportStrategy_LabName;
 	public static String DefaultPDFImportStrategy_NoDocManager;
@@ -5151,6 +5151,11 @@ public class Messages extends NLS {
 	public static String PdfPreviewComposite_Search_Pdf_Text;
 	public static String CommandHandler_Cannot_Open_Element;
 	public static String KonsultationPreviewManager_No_Details_Available;
+	public static String Medikamentenauswertung_Description;
+	public static String LaborView_queue;
+	public static String Attention;
+	public static String HttpOrderTransportService_Dialog;
+	public static String OrderSupplierNotDefined;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

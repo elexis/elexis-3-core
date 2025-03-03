@@ -304,4 +304,9 @@ public class UserService implements IUserService {
 		modelService.save(user);
 		return targetUserRoleSet.stream().map(r -> r.getId()).collect(Collectors.toSet());
 	}
+
+	@Override
+	public boolean hasRole(IUser user, String roleId) {
+		return getUserRoles(user).stream().anyMatch(role -> roleId.equals(role.getId()));
+	}
 }

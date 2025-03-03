@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" immediate="true" name="ch.elexis.data.PersistentObjectDataSourceActivator">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" immediate="true" name="ch.elexis.data.PersistentObjectDataSourceActivator">
    <service>
       <provide interface="ch.elexis.data.PersistentObjectDataSourceActivator"/>
    </service>
+   <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
    <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="coreOperationAdvisor" interface="ch.elexis.core.data.extension.ICoreOperationAdvisor" name="coreOperationAdvisor"/>
    <reference cardinality="1..1" field="dataSource" interface="javax.sql.DataSource" name="dataSource" target="(id=default)"/>
    <reference cardinality="1..1" field="elexisEntityManager" interface="ch.elexis.core.services.IElexisEntityManager" name="elexisEntityManager" target="(id=default)"/>
+   <reference cardinality="1..1" field="xidService" interface="ch.elexis.core.services.IXidService" name="xidService"/>
    <implementation class="ch.elexis.data.PersistentObjectDataSourceActivator"/>
 </scr:component>

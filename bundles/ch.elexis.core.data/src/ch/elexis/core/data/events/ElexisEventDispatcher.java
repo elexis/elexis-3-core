@@ -34,8 +34,8 @@ import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.Anwender;
@@ -89,6 +89,8 @@ public final class ElexisEventDispatcher implements Runnable {
 
 	private static ClassToModelInterfaceService classToModelInterfaceService;
 
+	private static IAccessControlService accessControlService;
+
 	private static ClassToModelInterfaceService getClassToModelInterfaceService() {
 		if (classToModelInterfaceService == null) {
 			classToModelInterfaceService = OsgiServiceUtil.getService(ClassToModelInterfaceService.class)
@@ -116,6 +118,10 @@ public final class ElexisEventDispatcher implements Runnable {
 		elexisUIContext = new ElexisContext();
 
 		service = Executors.newSingleThreadScheduledExecutor();
+
+		// this code should not be called, before PersistentObjectDataSourceActivator
+		// thus IAccessControlService should be available
+		accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).get();
 	}
 
 	/**
@@ -203,7 +209,7 @@ public final class ElexisEventDispatcher implements Runnable {
 				return;
 			}
 
-			AccessControlServiceHolder.get().doPrivileged(() -> {
+			accessControlService.doPrivileged(() -> {
 				transalteAndPostOsgiEvent(ee.getType(), ee.getObject() != null ? ee.getObject() : ee.getGenericObject(),
 						ee.getObjectClass());
 			});

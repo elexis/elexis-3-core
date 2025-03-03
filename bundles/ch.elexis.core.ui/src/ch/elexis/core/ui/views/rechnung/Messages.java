@@ -53,7 +53,7 @@ public class Messages {
 	public static String BillSummary_total = ch.elexis.core.l10n.Messages.BillSummary_total;
 	public static String ContactNotAvailable = ch.elexis.core.l10n.Messages.ContactNotAvailable;
 	public static String DefaultOutputter_defaultOutputForCase = ch.elexis.core.l10n.Messages.DefaultOutputter_defaultOutputForCase;
-	public static String DefaultOutputter_useIdividualPlugins = ch.elexis.core.l10n.Messages.DefaultOutputter_useIdividualPlugins;
+	public static String DefaultOutputter_InvoiceOutput = ch.elexis.core.l10n.Messages.DefaultOutputter_InvoiceOutput;
 	public static String ErstelleRnnCommand_BadCaseDefinition = ch.elexis.core.l10n.Messages.ErstelleRnnCommand_BadCaseDefinition;
 	public static String ErstelleRnnCommand_BillsNotCreatedMissingData = ch.elexis.core.l10n.Messages.ErstelleRnnCommand_BillsNotCreatedMissingData;
 	public static String ErstelleRnnCommand_ErstelleRnnCheckCaseDetails = ch.elexis.core.l10n.Messages.ErstelleRnnCommand_ErstelleRnnCheckCaseDetails;

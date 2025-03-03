@@ -162,4 +162,13 @@ public interface IUserService {
 	 */
 	public Set<String> setUserRoles(IUser user, Set<String> userRoles);
 
+	/**
+	 * Checks if the given {@link IUser} has the specified {@link IRole}
+	 * 
+	 * @param user
+	 * @param roleId
+	 * @return
+	 */
+	public boolean hasRole(IUser user, String roleId);
+
 }

@@ -55,6 +55,7 @@ public class RnOutputDialog extends TitleAreaDialog {
 
 	private static final String STANDARD_OUTPUTTER_CLASS = "ch.elexis.core.ui.views.rechnung.DefaultOutputter";
 	private static final String RECHNUNG_AUSDRUCKEN_OUTPUTTER_CLASS = "ch.elexis.pdfBills.QrRnOutputter";
+	public static final String RNOUTPUTTER_DESCRIPTION = "RnOuputter_description";
 
 	public RnOutputDialog(Shell shell, Collection<Rechnung> rnn) {
 		super(shell);
@@ -87,6 +88,8 @@ public class RnOutputDialog extends TitleAreaDialog {
 		bottom.setLayout(stack);
 		for (IRnOutputter ro : lo) {
 			cbLo.add(ro.getDescription());
+			bottom.setData(RNOUTPUTTER_DESCRIPTION,
+					rnn.stream().map(r -> r.getFall().getOutputter().getDescription()).toList());
 			Control control = (Control) ro.createSettingsControl(bottom);
 			GridData controlGridData = new GridData();
 			controlGridData.horizontalIndent = 50;

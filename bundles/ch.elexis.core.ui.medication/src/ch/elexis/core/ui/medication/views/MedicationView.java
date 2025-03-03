@@ -32,6 +32,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 	private MedicationComposite tpc;
 
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
+		@Override
 		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef) {
 			super.partActivated(partRef);
 			if (tpc != null && !tpc.isDisposed()) {
@@ -39,6 +40,8 @@ public class MedicationView extends ViewPart implements IRefreshable {
 			}
 		};
 	};
+
+	private boolean refreshForceUpdate;
 
 	public static final String PART_ID = "ch.elexis.core.ui.medication.views.MedicationView"; //$NON-NLS-1$
 
@@ -70,6 +73,8 @@ public class MedicationView extends ViewPart implements IRefreshable {
 				Display.getDefault().asyncExec(() -> {
 					updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), true);
 				});
+			} else {
+				refreshForceUpdate = true;
 			}
 		}
 	}
@@ -90,6 +95,8 @@ public class MedicationView extends ViewPart implements IRefreshable {
 					updateUi(prescription.getPatient(), true);
 				}
 			}
+		} else {
+			refreshForceUpdate = true;
 		}
 	}
 
@@ -147,10 +154,12 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		tpc.updateUi(patient, forceUpdate);
 	}
 
+	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
 			if (CoreUiUtil.isActiveControl(tpc)) {
-				updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), false);
+				updateUi(ContextServiceHolder.get().getActivePatient().orElse(null), refreshForceUpdate);
+				refreshForceUpdate = false;
 			}
 		});
 	}

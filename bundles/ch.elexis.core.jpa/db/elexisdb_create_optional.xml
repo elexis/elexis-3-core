@@ -2869,5 +2869,27 @@ WHERE kontakt.id IN (
 			<column name="PATIENT_ID" />
 		</createIndex>
 	</changeSet>
-	
+
+	<changeSet author="thomas" id="manual_idx1_BESTELLUNG_ENTRY">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BESTELLUNG_ENTRY_IDX1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="BESTELLUNG_ENTRY_IDX1"
+			tableName="BESTELLUNG_ENTRY">
+			<column name="STOCK" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx2_BESTELLUNG_ENTRY">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BESTELLUNG_ENTRY_IDX2" />
+			</not>
+		</preConditions>
+		<createIndex indexName="BESTELLUNG_ENTRY_IDX2"
+			tableName="BESTELLUNG_ENTRY">
+			<column name="ARTICLE_ID" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

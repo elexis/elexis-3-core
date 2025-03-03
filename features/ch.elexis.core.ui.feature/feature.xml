@@ -161,4 +161,8 @@
          id="ch.elexis.core.ui.mediorder"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.ui.reminder"
+         version="0.0.0"/>
+
 </feature>
