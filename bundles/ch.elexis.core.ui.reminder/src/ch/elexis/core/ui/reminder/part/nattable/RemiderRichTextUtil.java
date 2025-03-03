@@ -2,6 +2,8 @@ package ch.elexis.core.ui.reminder.part.nattable;
 
 import java.time.format.DateTimeFormatter;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.issue.Priority;
@@ -15,7 +17,7 @@ public class RemiderRichTextUtil {
 			sb.append(" !! ");
 			sb.append("</span></strong>");
 		}
-		sb.append("<strong>" + reminder.getSubject() + "</strong>");
+		sb.append("<strong>" + getSubject(reminder) + "</strong>");
 		if (addDate && reminder.getDue() != null) {
 			sb.append(" " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(reminder.getDue()));
 		}
@@ -23,6 +25,15 @@ public class RemiderRichTextUtil {
 			sb.append("<br />").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()));
 		}
 		return sb.toString();
+	}
+
+	private static String getSubject(IReminder reminder) {
+		if (StringUtils.isNotBlank(reminder.getSubject())) {
+			return reminder.getSubject();
+		} else if (StringUtils.isNotBlank(reminder.getMessage())) {
+			return StringUtils.abbreviate(reminder.getMessage(), 80);
+		}
+		return StringUtils.EMPTY;
 	}
 
 	public static String richText(String string) {

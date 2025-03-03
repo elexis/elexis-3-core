@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.reminder.part;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -53,7 +54,7 @@ public class ReminderNatTableToolTip extends DefaultToolTip {
 				if (reminder.getType() != null && reminder.getType() != Type.COMMON) {
 					sb.append("Typ: ").append(reminder.getType().getLocaleText()).append("\n");
 				}
-				sb.append("Titel: ").append(reminder.getSubject()).append("\n");
+				sb.append("Titel: ").append(StringUtils.defaultString(reminder.getSubject())).append("\n");
 				sb.append("Status: ").append(reminder.getStatus().getLocaleText()).append("\n");
 				sb.append("Beschreibung: \n").append(reminder.getMessage());
 				return sb.toString();
