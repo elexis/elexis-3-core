@@ -101,6 +101,7 @@ import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
@@ -370,6 +371,7 @@ public class GlobalActions {
 					// reset after login
 					if (loginUserName != null) {
 						System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, loginUserName);
+						CoreUiUtil.hidePreferencePage();
 					}
 					if (!performLogin) {
 						exitAction.run();

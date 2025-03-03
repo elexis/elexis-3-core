@@ -28,6 +28,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.UiResourceConstants;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.rgw.tools.ExHandler;
 
 /**
@@ -54,6 +55,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	 */
 	@Override
 	public void initialize(final IWorkbenchConfigurer configurer) {
+		CoreUiUtil.hidePreferencePage();
 		Hub.pin.initializeDisplayPreferences(UiDesk.getDisplay());
 		configurer.setSaveAndRestore(true);
 		super.initialize(configurer);
