@@ -443,13 +443,15 @@ public class PdfPreviewPartLoadHandler {
 		});
 	}
 
-	public void reloadPdfFromKons() {
+	/**
+	 * Reload the search text and highlighting.
+	 */
+	public void reloadSearchText() {
 		PDFTextHighlighter highlighter = new PDFTextHighlighter(pdDocument);
 		if (!searchText.isEmpty()) {
 		try {
 			highlighter.highlightSearchTextInPDF(searchText.toLowerCase());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error highlighting search text in PDF", e);
 		}
 		loader.submit(() -> {
