@@ -20,8 +20,8 @@ public interface IStickerService {
 	public boolean hasSticker(Identifiable identifiable, ISticker iSticker);
 
 	/**
-	 * Get all stickers for the {@link Identifiable} excluding pea mediorder
-	 * sticker. The returned list is sorted by {@link ISticker#getImportance()}.
+	 * Get all stickers for the {@link Identifiable}. The returned list is sorted by
+	 * {@link ISticker#getImportance()}.
 	 *
 	 * @param identifiable
 	 * @return

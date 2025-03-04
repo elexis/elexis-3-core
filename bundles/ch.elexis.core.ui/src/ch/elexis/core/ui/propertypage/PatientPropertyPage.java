@@ -61,8 +61,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	
 	private VerifyListener emailVerifyListener;
 
-	private IStickerService stickerService;
-
 	public PatientPropertyPage() {
 		super();
 	}
@@ -173,15 +171,18 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
 
 		emailVerifyListener = e -> {
-			List<ISticker> lSticker = stickerService.getStickers(pat);
-			if (lSticker.stream()
-					.anyMatch(sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
-				if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
-						Messages.Mediorder_changeEmail_text)) {
-					e.doit = false;
+			OsgiServiceUtil.getService(IStickerService.class).ifPresent(stickerService -> {
+				List<ISticker> lSticker = stickerService.getStickers(pat);
+				if (lSticker.stream()
+						.anyMatch(sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
+					if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+							Messages.Mediorder_changeEmail_text)) {
+						e.doit = false;
+					}
+					textEmail.removeVerifyListener(emailVerifyListener);
 				}
-				textEmail.removeVerifyListener(emailVerifyListener);
-			}
+				OsgiServiceUtil.ungetService(stickerService);
+			});
 		};
 		textEmail.addVerifyListener(emailVerifyListener);
 
@@ -191,8 +192,6 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private void init() {
 		IAdaptable adapt = getElement();
 		pat = (IPatient) adapt.getAdapter(IPatient.class);
-		
-		stickerService = OsgiServiceUtil.getService(IStickerService.class).orElseThrow(() -> new IllegalStateException());
 	}
 
 	private Date getGeburtsdatum() {
@@ -249,11 +248,5 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textBemerkungen.setEditable(unlocked);
 		geburtsdatum.setEditable(unlocked);
 		comboGeschlecht.getControl().setEnabled(unlocked);
-	}
-
-	@Override
-	public void dispose() {
-		OsgiServiceUtil.ungetService(IStickerService.class);
-		super.dispose();
 	}
 }
