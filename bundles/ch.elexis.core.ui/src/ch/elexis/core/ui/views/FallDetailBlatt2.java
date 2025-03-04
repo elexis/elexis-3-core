@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -110,6 +108,7 @@ import ch.elexis.data.dto.FallDTO;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
 
 /**
  * Display detail data of a Fall
