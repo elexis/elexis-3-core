@@ -1,6 +1,6 @@
 # IDE Target
 
-The current used target is `2023-09-java21`
+The current used target is `2025-03-java21`
 
 ## Usage
 
