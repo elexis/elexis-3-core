@@ -10,9 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.ui.eigenleistung;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.swt.SWT;
@@ -29,6 +26,8 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class EigenleistungDetailDisplay implements IDetailDisplay {
 	private Text textTarif;

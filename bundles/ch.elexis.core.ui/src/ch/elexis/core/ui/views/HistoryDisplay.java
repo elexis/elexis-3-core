@@ -15,8 +15,6 @@ package ch.elexis.core.ui.views;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.swt.SWT;
@@ -51,6 +49,7 @@ import ch.elexis.core.ui.actions.KonsFilter;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.controls.PagingComposite;
+import jakarta.inject.Inject;
 
 /**
  * Anzeige der vergangenen Konsultationen. Es sollen einerseits "sofort" die

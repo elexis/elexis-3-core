@@ -1,7 +1,6 @@
 package ch.elexis.core.ui.eenv.part;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
@@ -11,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.equo.chromium.swt.Browser;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import jakarta.inject.Inject;
 
 public class BookstackPart {
 

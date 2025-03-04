@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -70,7 +67,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.Extensions;
-import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.commands.LoadTemplateCommand;
@@ -88,6 +84,8 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Query;
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class TextTemplateView extends ViewPart {
 	public static final String ID = "ch.elexis.views.textsystem.TextTemplateView"; //$NON-NLS-1$

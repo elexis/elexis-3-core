@@ -14,9 +14,6 @@ package ch.elexis.core.ui.views;
 
 import static ch.elexis.core.ui.text.TextTemplateRequirement.TT_AUF_CERT;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.widgets.Composite;
@@ -38,6 +35,8 @@ import ch.elexis.core.ui.text.TextContainer;
 import ch.elexis.data.Brief;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class AUFZeugnis extends ViewPart implements ICallback, IActivationListener {
 	public static final String ID = "ch.elexis.AUFView"; //$NON-NLS-1$

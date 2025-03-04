@@ -12,9 +12,6 @@
 
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -33,6 +30,8 @@ import ch.elexis.data.Brief;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class TemplatePrintView extends ViewPart {
 	private static final String KEY_TEXT = "text"; //$NON-NLS-1$

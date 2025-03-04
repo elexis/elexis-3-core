@@ -16,9 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -48,6 +45,8 @@ import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Mandant;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 /**
  * This class implements the {@link Mandant} selection button bar within the

@@ -2,10 +2,10 @@ package ch.elexis.core.jpa.entities.listener;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PrePersist;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.TypedQuery;
 
 import ch.elexis.core.jpa.entities.Config;
 import ch.elexis.core.jpa.entities.Invoice;

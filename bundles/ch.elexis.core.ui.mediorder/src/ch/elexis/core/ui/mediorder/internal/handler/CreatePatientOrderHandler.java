@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -31,6 +28,8 @@ import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStockService;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class CreatePatientOrderHandler {
 

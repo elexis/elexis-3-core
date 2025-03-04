@@ -6,10 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -29,6 +25,9 @@ import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class PdfPreviewPart {
 

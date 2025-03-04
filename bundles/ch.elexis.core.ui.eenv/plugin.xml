@@ -2,15 +2,6 @@
 <plugin>
    <extension
          point="org.eclipse.ui.views">
-      <e4view
-            allowMultiple="false"
-            category="ch.elexis.core.ui.eenv.category"
-            class="ch.elexis.core.ui.eenv.part.RocketchatPart"
-            icon="rsc/rocketchat.png"
-            id="ch.elexis.core.ui.eenv.part.rocketchatpart"
-            name="Chat"
-            restorable="true">
-      </e4view>
         <e4view
             allowMultiple="true"
             category="ch.elexis.core.ui.eenv.category"

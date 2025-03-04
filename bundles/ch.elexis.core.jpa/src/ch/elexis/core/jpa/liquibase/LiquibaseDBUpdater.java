@@ -1,16 +1,16 @@
 package ch.elexis.core.jpa.liquibase;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
+import ch.elexis.core.l10n.Messages;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.ChangeSet.RunStatus;
@@ -65,12 +65,16 @@ public class LiquibaseDBUpdater {
 			logger.info("Updating database [" + connection + "] with liquibase"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				liquibase.update(StringUtils.EMPTY);
-			} catch (ValidationFailedException e) {
-				logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
-				// removes current checksums from database, on next run checksums will be
-				// recomputed
-				liquibase.clearCheckSums();
-				liquibase.update(StringUtils.EMPTY);
+			} catch (Exception e) {
+				if (e.getCause() instanceof ValidationFailedException || e instanceof ValidationFailedException) {
+					logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
+					// removes current checksums from database, on next run checksums will be
+					// recomputed
+					liquibase.clearCheckSums();
+					liquibase.changeLogSync(StringUtils.EMPTY);
+				} else {
+					logger.error("Exception performing DB init", e); //$NON-NLS-1$
+				}
 			}
 		} catch (LiquibaseException | SQLException e) {
 			// log and try to carry on

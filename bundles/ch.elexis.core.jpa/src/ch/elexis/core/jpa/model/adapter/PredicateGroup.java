@@ -1,7 +1,7 @@
 package ch.elexis.core.jpa.model.adapter;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
 
 /**
  * Helper class to build groups of predicates that can be joined.

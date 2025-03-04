@@ -10,9 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -31,6 +28,8 @@ import ch.elexis.data.LabItem;
 import ch.elexis.data.LabOrder;
 import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.Patient;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class LabOrderView extends ViewPart implements ICallback {
 	public static final String ID = "ch.elexis.core.ui.laboratory.LabOrderView"; //$NON-NLS-1$

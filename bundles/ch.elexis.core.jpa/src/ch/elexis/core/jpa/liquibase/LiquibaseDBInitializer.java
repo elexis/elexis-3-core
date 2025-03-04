@@ -90,12 +90,16 @@ public class LiquibaseDBInitializer {
 				logger.info("Synchronize liquibase log of database [" + connection + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				try {
 					liquibase.changeLogSync(StringUtils.EMPTY);
-				} catch (ValidationFailedException e) {
-					logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
-					// removes current checksums from database, on next run checksums will be
-					// recomputed
-					liquibase.clearCheckSums();
-					liquibase.changeLogSync(StringUtils.EMPTY);
+				} catch (Exception e) {
+					if (e.getCause() instanceof ValidationFailedException || e instanceof ValidationFailedException) {
+						logger.info("Validation failed clear checksums and retry"); //$NON-NLS-1$
+						// removes current checksums from database, on next run checksums will be
+						// recomputed
+						liquibase.clearCheckSums();
+						liquibase.changeLogSync(StringUtils.EMPTY);
+					} else {
+						logger.error("Exception performing DB init", e); //$NON-NLS-1$
+					}
 				}
 			}
 		} catch (LiquibaseException | SQLException e) {

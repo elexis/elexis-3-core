@@ -1,8 +1,6 @@
 
 package ch.elexis.core.pdfbox.ui.parts.handlers;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MDirectToolItem;
@@ -10,6 +8,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MDirectToolItem;
 import ch.elexis.core.pdfbox.ui.parts.Constants;
 import ch.elexis.core.pdfbox.ui.parts.PdfPreviewPart;
 import ch.elexis.core.services.IConfigService;
+import jakarta.inject.Inject;
 
 public class PdfPreviewPartZoomHandler {
 

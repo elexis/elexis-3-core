@@ -1,6 +1,6 @@
-target "Elexis IDE 2023-09-java21" with source allEnvironments
+target "Elexis 2025-03-java21" with source allEnvironments
 
-location "https://download.elexis.info/elexis/target/2023-09-java21/" {
+location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	
 	// justj.21
 	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
@@ -17,60 +17,91 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	org.eclipse.emf.common.ui.feature.group
 	org.eclipse.emf.edit.ui.feature.group
 	org.eclipse.ecf.core.feature.feature.group
-	org.eclipse.ecf.core.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.feature.feature.group
-	org.eclipse.ecf.filetransfer.ssl.feature.feature.group
 	org.eclipse.ecf.filetransfer.httpclient5.feature.feature.group
 	org.eclipse.ecf.remoteservice.feature.feature.group
-	org.eclipse.mylyn.wikitext_feature.feature.group
-	javax.annotation
+	org.eclipse.mylyn.wikitext.feature.feature.group
 	org.apache.felix.scr
 	org.eclipse.e4.ui.progress
+	org.osgi.service.component.annotations
+	
+	// overriden
+	org.eclipse.e4.emf.xpath [0.5.1,1.0.0)
+	jakarta.ws.rs-api [3.1.99,3.1.99]
+	org.glassfish.jersey.core.jersey-common [3.1.99,3.1.100)
+	org.glassfish.jersey.core.jersey-client [3.1.99,3.1.100)
 	
 	org.sat4j.core
 	org.sat4j.pb
+	
+	// required by org.eclipse.equinox.p2.artifact.repository
+	org.tukaani.xz
+	
+	// required by org.eclipse.e4.ui.css.core
+	org.apache.batik.constants
+	org.apache.batik.css
+	org.apache.batik.i18n
+	org.apache.batik.util
+	org.eclipse.orbit.xml-apis-ext
+	org.apache.xmlgraphics
 
 	org.apache.httpcomponents.httpcore
 	org.apache.httpcomponents.httpclient
-	org.apache.httpcomponents.httpclient.win
-	
-	javax.inject 
+	jakarta.servlet-api
 	
 	// logging
-	org.slf4j.api
+	slf4j.api
+	slf4j.osgi
 	// java.util.logging -> slf4j
-	org.slf4j.bridge.jul
-	org.slf4j.apis.jcl
-	org.slf4j.binding.log4j12
+	jul.to.slf4j
+	jcl.over.slf4j
+	log4j.over.slf4j
+	//org.slf4j.binding.log4j12
 	ch.qos.logback.classic
 	ch.qos.logback.core
-	ch.qos.logback.slf4j
+	//ch.qos.logback.slf4j
 	
 	// JAXB
-	javax.activation
-	jaxb-api // javax.xml.bind:jaxb-api:2.3.1
+	jakarta.xml.bind-api
 	com.sun.xml.bind.jaxb-osgi
 	
+	// mail
+	jakarta.mail-api
+	com.sun.mail.jakarta.mail
+	angus-activation
+	org.eclipse.angus.jakarta.mail
+	com.icegreen.greenmail
+	com.icegreen.greenmail-junit4
+	com.github.kirviq.dumbster
+	
+	// reqs for org.eclipse.osgi.services
+	org.eclipse.equinox.http.service.api
+	org.osgi.service.http.whiteboard
+		
 	// persistence
 	com.h2database
 	com.mysql.cj
 	org.postgresql.jdbc
 	org.eclipse.persistence.jpa.feature.group
-	org.eclipse.gemini.jpa.feature.feature.group
 	org.osgi.service.jdbc
 	org.osgi.service.jndi
-	jakarta.persistence
+	jakarta.persistence-api
 	
 	//org.osgi.framework.system.packages.extra
 	
 	bcprov
 	bcpg
+	bcutil
 	
-	ch.elexis.core.logback.rocketchat
-	// hapi
+	// fhir
 	info.elexis.target.hapi.fhir lazy
+//	info.elexis.target.hl7.fhir.r4 lazy
 	// jaxws
 	info.elexis.target.jaxws.core lazy
+	// ehealth connector
+	// info.elexis.target.ehealth.connector.ch lazy
+	// liquibase
+	// info.elexis.target.liquibase lazy
 	// swagger
 	io.swagger.core.v3.swagger-annotations
 	// apache commons
@@ -79,6 +110,10 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	info.elexis.target.jaxwsrs.core.feature.group lazy
 	// keycloak
 	info.elexis.target.keycloak.feature.group lazy
+	io.curity.oauth-filter
+	jakarta.websocket-api [2.1.100.SNAPSHOT,2.1.100.SNAPSHOT]
+	// poi
+	info.elexis.target.apache.poi.feature.group lazy
 	// Require-Capability: osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)"
 	org.apache.aries.spifly.dynamic.bundle
 	org.objectweb.asm
@@ -88,30 +123,28 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	org.objectweb.asm.util
 	org.jboss.logging.jboss-logging
 
-	org.apache.commons.jxpath
 	com.ibm.icu
 	com.sun.jna
 	com.sun.jna.platform
 
 	// overridden
 	org.apache.commons.commons-dbcp2
-	org.apache.geronimo.specs.geronimo-jta_1.1_spec
+//	org.apache.geronimo.specs.geronimo-jta_1.1_spec
 	// e
 
-	org.jdom2
-	org.jaxen
-	com.google.gson [2.10.1,2.10.1]
+	org.jdom.2
+//	org.jaxen
+	com.google.gson
 	com.google.guava
 	com.google.guava.failureaccess
 	org.jsoup
-	org.apache.poi
-	org.apache.poi.ooxml
-	org.apache.poi.ooxml.schemas
-	org.apache.xmlbeans
+//	org.apache.poi
+//	org.apache.poi.ooxml
+//	org.apache.poi.ooxml.schemas
+//	org.apache.xmlbeans
 	org.apache-extras.beanshell.bsh
 	com.opencsv
 	com.google.protobuf
-	jakarta.mail-api
 	com.healthmarketscience.jackcess
 	com.google.zxing.core
 	com.google.zxing.javase
@@ -122,10 +155,8 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	org.jfree.swtgraphics2d
 	xerces.Impl
 	
-	// ch.medelexis.openoffice
-	ag.ion.bion.workbench.office.editor.core
-	ag.ion.noa
-	ag.ion.noa4e.ui
+	// solr
+	org.apache.solr.solrj
 	
 	// Nebula
 	org.eclipse.nebula.cwt.feature.feature.group
@@ -133,7 +164,6 @@ location "https://download.elexis.info/elexis/target/2023-09-java21/" {
 	org.eclipse.nebula.widgets.tablecombo.feature.feature.group
 	org.eclipse.nebula.widgets.floatingtext.feature.feature.group
 	org.eclipse.nebula.widgets.nattable.core
-	org.eclipse.nebula.widgets.nattable.extension.e4
 	org.eclipse.nebula.widgets.nattable.extension.nebula
 	org.eclipse.nebula.widgets.nattable.extension.glazedlists
 	org.eclipse.nebula.widgets.richtext

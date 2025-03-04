@@ -4,7 +4,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IElexisEntityManager"/>
    </service>
-   <reference bind="bind" cardinality="1..1" interface="org.osgi.service.jpa.EntityManagerFactoryBuilder" policy="static" target="(osgi.unit.name=elexis)"/>
    <reference bind="bindDataSource" interface="javax.sql.DataSource" name="DataSource" target="(id=default)" unbind="unbindDataSource"/>
    <reference cardinality="0..1" field="updateProgress" interface="ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi" name="updateProgress"/>
    <implementation class="ch.elexis.core.jpa.entitymanager.ElexisEntityManger"/>

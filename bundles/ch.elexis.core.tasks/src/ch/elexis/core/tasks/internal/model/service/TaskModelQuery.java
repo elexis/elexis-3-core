@@ -1,6 +1,6 @@
 package ch.elexis.core.tasks.internal.model.service;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import ch.elexis.core.jpa.model.adapter.AbstractModelQuery;
 import ch.elexis.core.services.IQuery;

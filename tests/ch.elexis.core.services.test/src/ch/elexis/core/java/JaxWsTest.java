@@ -8,13 +8,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.Service;
 
 import org.junit.Test;
 
 import com.wstutorial.ws.HelloWorld;
 import com.wstutorial.ws.HelloWorldImpl;
+
+import jakarta.xml.ws.Endpoint;
+import jakarta.xml.ws.Service;
 
 /**
  * Publish and consume a jax ws webservice. Requires the fragment

@@ -15,8 +15,6 @@ package ch.elexis.core.ui.views.codesystems;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -75,6 +73,7 @@ import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
+import jakarta.inject.Inject;
 
 /**
  * Bereitstellung der Auswahlliste für Codes aller Art: Oben häufigste des

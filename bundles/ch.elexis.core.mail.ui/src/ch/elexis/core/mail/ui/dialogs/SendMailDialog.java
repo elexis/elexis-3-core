@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
@@ -80,6 +78,7 @@ import ch.elexis.core.ui.documents.composites.DocumentsSelectionComposite;
 import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Kontakt;
+import jakarta.inject.Inject;
 
 public class SendMailDialog extends TitleAreaDialog {
 

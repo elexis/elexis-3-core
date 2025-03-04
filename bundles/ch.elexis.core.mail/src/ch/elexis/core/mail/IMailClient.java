@@ -3,7 +3,7 @@ package ch.elexis.core.mail;
 import java.util.List;
 import java.util.Optional;
 
-import com.sun.mail.imap.IMAPMessage;
+import org.eclipse.angus.mail.imap.IMAPMessage;
 
 import ch.elexis.core.jdt.Nullable;
 import jakarta.mail.MessagingException;

@@ -14,9 +14,6 @@ package ch.elexis.core.ui.views.rechnung;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -53,6 +50,8 @@ import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Rechnung;
 import ch.rgw.tools.Tree;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Display a listing of all bills selected after several user selectable

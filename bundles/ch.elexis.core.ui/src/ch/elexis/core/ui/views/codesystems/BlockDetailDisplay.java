@@ -15,8 +15,6 @@ package ch.elexis.core.ui.views.codesystems;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
@@ -96,6 +94,7 @@ import ch.elexis.core.ui.views.IDetailDisplay;
 import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
 
 public class BlockDetailDisplay implements IDetailDisplay {
 

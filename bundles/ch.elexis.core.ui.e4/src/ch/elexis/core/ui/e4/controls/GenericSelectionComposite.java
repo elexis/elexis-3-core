@@ -10,9 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.ui.e4.controls;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;

@@ -18,9 +18,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -134,6 +131,8 @@ import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.Reminder;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * 

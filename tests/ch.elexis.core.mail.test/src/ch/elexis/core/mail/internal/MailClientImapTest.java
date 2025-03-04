@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.angus.mail.imap.IMAPStore;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +21,6 @@ import org.junit.Test;
 import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import com.sun.mail.imap.IMAPStore;
 
 import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
@@ -146,6 +146,7 @@ public class MailClientImapTest {
 
 		msg.setContent(multipart);
 
+		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		Transport.send(msg);
 
 		List<IMAPMailMessage> messages = client.getMessages(account, null, false, false);

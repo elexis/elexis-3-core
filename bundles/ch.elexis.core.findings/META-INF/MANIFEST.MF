@@ -9,4 +9,4 @@ Export-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.codes,
  ch.elexis.core.findings.migration
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
- ch.elexis.core;bundle-version="3.10.0"
+ ch.elexis.core;bundle-version="3.13.0"

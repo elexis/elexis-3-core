@@ -1,11 +1,11 @@
 package ch.elexis.core.ui.perspective.service.internal;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;

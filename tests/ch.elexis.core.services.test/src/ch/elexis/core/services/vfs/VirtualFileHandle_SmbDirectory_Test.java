@@ -11,6 +11,7 @@ import static org.junit.Assume.assumeTrue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -64,7 +65,7 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	@Test
 	public void testCreateAndMoveToAndDelete() throws IOException {
 		assumeTrue(serviceIsReachable());
-		
+
 		IVirtualFilesystemHandle dir = service.of(PREFIX_AUTH_SAMBA);
 		IVirtualFilesystemHandle subFile = dir.subFile("Test File.txt");
 		try (PrintWriter p = new PrintWriter(subFile.openOutputStream())) {
@@ -89,9 +90,12 @@ public class VirtualFileHandle_SmbDirectory_Test {
 	public void testCreateAndMoveToBetweenHosts() throws UnknownHostException, IOException {
 		assumeTrue(serviceIsReachable());
 
-		boolean ee_medevit_atIsReachable = InetAddress.getByName("192.168.0.23").isReachable(300)
-				|| InetAddress.getAllByName("192.168.0.23")[0].isReachable(300);
-
+		boolean ee_medevit_atIsReachable = false;
+		try {
+			ee_medevit_atIsReachable = InetAddress.getByName("192.168.0.23").isReachable(300)
+					|| InetAddress.getAllByName("192.168.0.23")[0].isReachable(300);
+		} catch (ConnectException e) {
+		}
 		assumeTrue(ee_medevit_atIsReachable);
 
 		IVirtualFilesystemHandle dir = service.of("smb://192.168.0.23/scan/processed/");

@@ -38,13 +38,13 @@
 		<url>http://www.elexis.info</url>
 	</organization>
 	<properties>
-		<elexis.target>2023-09-java21</elexis.target>
+		<elexis.target>2025-03-java21</elexis.target>
 		<formatterConfigFile>${env.PWD}/ch.elexis.sdk/Elexis_formatter_2022_03.xml</formatterConfigFile>
-		<tycho.version>4.0.8</tycho.version>
+		<tycho.version>4.0.12</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<buildplan.plugin.version>1.5</buildplan.plugin.version>
-		<formatter.plugin.version>2.18.0</formatter.plugin.version>
-		<clean.plugin.version>2.5</clean.plugin.version>	
+		<buildplan.plugin.version>2.2.2</buildplan.plugin.version>
+		<formatter.plugin.version>2.24.1</formatter.plugin.version>
+		<clean.plugin.version>3.4.0</clean.plugin.version>	
 	</properties>
 	<repositories>
 		<repository>

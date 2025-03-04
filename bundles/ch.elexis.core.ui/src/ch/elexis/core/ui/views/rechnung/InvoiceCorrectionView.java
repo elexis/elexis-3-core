@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -138,6 +135,8 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 

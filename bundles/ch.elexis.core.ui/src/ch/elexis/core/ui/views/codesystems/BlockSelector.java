@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -78,6 +76,7 @@ import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
+import jakarta.inject.Inject;
 
 public class BlockSelector extends CodeSelectorFactory {
 	protected static final String BLOCK_ONLY_FILTER_ENABLED = "blockselector/blockonlyfilter"; //$NON-NLS-1$

@@ -14,9 +14,7 @@ Export-Package: ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.parts,
  ch.elexis.core.ui.e4.providers,
  ch.elexis.core.ui.e4.util
-Require-Bundle: javax.annotation;bundle-version="1.3.5";visibility:=reexport,
- javax.inject;bundle-version="1.0.0";visibility:=reexport,
- ch.elexis.core;bundle-version="3.12.0";visibility:=reexport,
+Require-Bundle: ch.elexis.core;bundle-version="3.12.0";visibility:=reexport,
  ch.rgw.utility;bundle-version="3.12.0";visibility:=reexport,
  ch.elexis.core.l10n;bundle-version="3.12.0";visibility:=reexport,
  ch.elexis.core.model;bundle-version="3.12.0";visibility:=reexport,
@@ -38,7 +36,10 @@ Require-Bundle: javax.annotation;bundle-version="1.3.5";visibility:=reexport,
  org.eclipse.core.databinding.beans;visibility:=reexport,
  org.eclipse.core.databinding.property;visibility:=reexport,
  org.eclipse.jface.databinding,
- com.ibm.icu
+ com.ibm.icu,
+ jakarta.annotation-api;bundle-version="2.1.1";visibility:=reexport,
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1";visibility:=reexport,
+ org.apache.httpcomponents.httpclient;bundle-version="4.5.14"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Service-Component: OSGI-INF/ch.elexis.core.ui.e4.util.CoreUiUtil.xml
 Bundle-ActivationPolicy: lazy
@@ -46,7 +47,6 @@ Import-Package: ch.elexis.core.data.util,
  ch.elexis.core.lock.types,
  ch.elexis.data,
  org.apache.commons.lang3;version="3.12.0",
- org.apache.http.client.utils;version="4.5.13",
  org.eclipse.swt,
  org.eclipse.swt.custom,
  org.eclipse.swt.events,

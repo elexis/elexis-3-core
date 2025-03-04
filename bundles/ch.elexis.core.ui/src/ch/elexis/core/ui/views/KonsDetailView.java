@@ -18,9 +18,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -67,7 +64,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
@@ -112,6 +108,8 @@ import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 import ch.rgw.tools.VersionedResource.ResourceItem;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Behandlungseintrag, Diagnosen und Verrechnung Dg und Verrechnung können wie

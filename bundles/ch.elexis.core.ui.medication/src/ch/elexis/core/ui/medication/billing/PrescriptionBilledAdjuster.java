@@ -1,12 +1,10 @@
 package ch.elexis.core.ui.medication.billing;
 
-import org.apache.commons.lang3.StringUtils;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -17,13 +15,9 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IBilledAdjuster;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;

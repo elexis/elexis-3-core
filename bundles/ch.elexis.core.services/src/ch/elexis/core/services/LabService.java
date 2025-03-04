@@ -1,6 +1,5 @@
 package ch.elexis.core.services;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;

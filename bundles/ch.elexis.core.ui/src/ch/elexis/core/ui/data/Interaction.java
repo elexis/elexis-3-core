@@ -28,7 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
@@ -278,7 +281,7 @@ public class Interaction extends PersistentObject {
 			byte[] b = Files.readAllBytes(MATRIX_CSV_LOCAL.toPath());
 			byte[] digest = MessageDigest.getInstance("SHA-256").digest(b); //$NON-NLS-1$
 			// hash_from_file = Base64.getEncoder().encodeToString(digest);
-			hash_from_file = javax.xml.bind.DatatypeConverter.printHexBinary(digest);
+			hash_from_file = jakarta.xml.bind.DatatypeConverter.printHexBinary(digest);
 			String sha25_from_db = version.get(FLD_ABUSE_ID_FOR_SHA);
 			logger.info("digest for  '{}' {} {}", //$NON-NLS-1$
 					MATRIX_CSV_LOCAL, sha25_from_db, hash_from_file);
@@ -354,7 +357,10 @@ public class Interaction extends PersistentObject {
 									MATRIX_CSV_LOCAL);
 							CSVReader cr;
 							try {
-								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+								cr = new CSVReaderBuilder(new FileReader(MATRIX_CSV_LOCAL))
+										.withCSVParser(
+												new CSVParserBuilder().withSeparator(',').withQuoteChar('"').build())
+										.build();
 							} catch (FileNotFoundException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -369,7 +375,10 @@ public class Interaction extends PersistentObject {
 								 * ElexisEvent.PRIORITY_HIGH);
 								 * ElexisEventDispatcher.getInstance().fire(progress);
 								 */
-								cr = new CSVReader(new FileReader(MATRIX_CSV_LOCAL), ',', '"');
+								cr = new CSVReaderBuilder(new FileReader(MATRIX_CSV_LOCAL))
+										.withCSVParser(
+												new CSVParserBuilder().withSeparator(',').withQuoteChar('"').build())
+										.build();
 								String[] line;
 								while ((line = cr.readNext()) != null) {
 									monitor.worked(1);
@@ -400,7 +409,7 @@ public class Interaction extends PersistentObject {
 																														// $NON-NLS-2$
 								logger.info("Imported {} interactions setting date {} sha {}", //$NON-NLS-1$
 										importerInteractionsCreated, today, hash_from_file); // $ }
-							} catch (IOException e) {
+							} catch (IOException | CsvValidationException e) {
 								info = String.format("Import aborted after %d interactions with %d failures ", //$NON-NLS-1$
 										importerInteractionsCreated, notImported);
 								logger.error(info);

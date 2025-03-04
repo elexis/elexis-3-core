@@ -1,6 +1,6 @@
 package com.wstutorial.ws;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 @WebService(endpointInterface = "com.wstutorial.ws.HelloWorld")
 public class HelloWorldImpl implements HelloWorld {

@@ -1,10 +1,10 @@
 package ch.elexis.core.model;
 
-import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.Heap2;

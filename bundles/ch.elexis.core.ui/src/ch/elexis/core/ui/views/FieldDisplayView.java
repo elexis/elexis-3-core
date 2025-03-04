@@ -11,9 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.contexts.RunAndTrack;
@@ -59,6 +56,8 @@ import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * This view displays the content of an arbitrary field.

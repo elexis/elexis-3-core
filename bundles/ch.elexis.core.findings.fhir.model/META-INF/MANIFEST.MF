@@ -6,15 +6,15 @@ Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.findings.fhir.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
- ch.elexis.core.findings;bundle-version="3.10.0",
- ch.elexis.core.jpa;bundle-version="3.10.0",
- ch.elexis.core.jpa.entities;bundle-version="3.10.0",
- ch.elexis.core.findings.util;bundle-version="1.0.0",
- info.elexis.target.hapi.fhir;bundle-version="5.4.2"
+Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core.findings;bundle-version="3.13.0",
+ ch.elexis.core.jpa;bundle-version="3.13.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.13.0",
+ ch.elexis.core.findings.util;bundle-version="3.13.0",
+ info.elexis.target.hapi.fhir;bundle-version="7.2.3"
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.persistence;version="2.2.3",
- javax.persistence.criteria;version="2.2.3",
+Import-Package: jakarta.persistence;version="[3.2.0,4.0.0)",
+ jakarta.persistence.criteria;version="[3.2.0,4.0.0)",
  org.apache.commons.lang3;version="3.1.0"
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml,

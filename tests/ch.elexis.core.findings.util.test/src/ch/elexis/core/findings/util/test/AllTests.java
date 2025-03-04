@@ -20,13 +20,7 @@ import ch.elexis.core.findings.util.importer.FhirBundleReferenceDataImporterTest
 		FhirBundleReferenceDataImporterTest.class })
 public class AllTests {
 
-	private static FhirContext context3 = FhirContext.forDstu3();
-
 	private static FhirContext context4 = FhirContext.forR4();
-
-	public static IParser getJsonParser3() {
-		return context3.newJsonParser();
-	}
 
 	public static IParser getJsonParser4() {
 		return context4.newJsonParser();

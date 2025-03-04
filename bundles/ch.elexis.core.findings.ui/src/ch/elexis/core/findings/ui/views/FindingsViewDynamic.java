@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.viewers.ISelection;
@@ -60,6 +58,7 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
+import jakarta.inject.Inject;
 
 public class FindingsViewDynamic extends ViewPart implements IRefreshable {
 

@@ -14,6 +14,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.time.TimeUtil;
 
@@ -24,6 +25,9 @@ public class TimeUtilTest {
 	@BeforeClass
 	public static void beforeClass() throws DatatypeConfigurationException {
 		dtf = DatatypeFactory.newInstance();
+		
+		
+		LoggerFactory.getLogger(TimeUtilTest.class).info("TimeUtilTest initialized");
 	}
 
 	@Test

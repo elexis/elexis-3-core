@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.Optional;
 
 import ch.elexis.core.model.IPatient;
+import jakarta.inject.Inject;
 
 public class PatientSelectionHistorySupplier implements Supplier<List<Object[]>> {
 

@@ -1,11 +1,10 @@
 package ch.elexis.core.ui.e4.handlers;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.di.annotations.CanExecute;
 
 import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.services.IAccessControlService;
+import jakarta.inject.Inject;
 
 public class RestrictedHandler {
 

@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import org.eclipse.persistence.config.CacheUsage;
 import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.QueryHints;
@@ -19,6 +16,8 @@ import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 public class NamedQuery<R, T> implements INamedQuery<R> {
 
@@ -89,8 +88,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	}
 
 	private boolean isAoboQuery() {
-		return query.getParameters().stream().filter(p -> p.getName().equals("aoboids")).findFirst()
-				.isPresent();
+		return query.getParameters().stream().filter(p -> p.getName().equals("aoboids")).findFirst().isPresent();
 	}
 
 	@Override

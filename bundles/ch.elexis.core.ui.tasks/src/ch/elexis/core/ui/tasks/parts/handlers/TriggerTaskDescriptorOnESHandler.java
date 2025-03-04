@@ -1,7 +1,5 @@
 package ch.elexis.core.ui.tasks.parts.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -11,6 +9,7 @@ import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
+import jakarta.inject.Named;
 
 public class TriggerTaskDescriptorOnESHandler {
 

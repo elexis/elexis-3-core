@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.ui.feature"
       label="Elexis Core UI Feature"
-      version="3.12.1.qualifier"
+      version="3.13.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -11,7 +11,7 @@
    </description>
 
    <copyright url="http://elexis.info/de_contributers.html">
-      Gerry Weirich, 2007-2013 und viele andere
+      Gerry Weirich, 2007-2025 und viele andere
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -143,10 +143,6 @@
          os="win32"
          ws="win32"
          arch="x86_64"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.nebula.widgets.nattable.extension.e4"
          version="0.0.0"/>
 
    <plugin

@@ -24,9 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -117,6 +114,8 @@ import ch.rgw.tools.IFilter;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class PatHeuteView extends ViewPart implements IRefreshable, BackgroundJobListener {
 	public static final String ID = "ch.elexis.PatHeuteView"; //$NON-NLS-1$

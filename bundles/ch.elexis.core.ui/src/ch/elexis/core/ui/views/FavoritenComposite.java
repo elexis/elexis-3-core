@@ -1,7 +1,5 @@
 package ch.elexis.core.ui.views;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -57,6 +55,7 @@ import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.VerrechenbarFavorites;
 import ch.elexis.data.VerrechenbarFavorites.Favorite;
+import jakarta.inject.Inject;
 
 public class FavoritenComposite extends Composite {
 
