@@ -27,7 +27,6 @@ public class ExtInfoHandler {
 	}
 
 	public Object getExtInfo(Object key) {
-		System.out.println(getExtInfoMap().entrySet());
 		return getExtInfoMap().get(key);
 	}
 

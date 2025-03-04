@@ -308,7 +308,6 @@ public class ArtikelView extends ViewPart implements IActivationListener {
 	}
 
 	public void visible(boolean mode) {
-		System.out.println(this.getClass().getName() + " visible " + mode); //$NON-NLS-1$
 	}
 
 	@Optional

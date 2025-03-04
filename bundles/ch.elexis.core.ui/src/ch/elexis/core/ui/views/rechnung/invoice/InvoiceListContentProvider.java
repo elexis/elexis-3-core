@@ -142,7 +142,6 @@ public class InvoiceListContentProvider implements IStructuredContentProvider {
 			QueryBuilder queryBuilder = performPreparedStatementReplacements(InvoiceListSqlQuery.getSqlCountStats(true),
 					false, false);
 			PreparedStatement ps = queryBuilder.createPreparedStatement(dbConnection);
-			System.out.println(ps);
 			try (ResultSet res = ps.executeQuery()) {
 				while (res.next()) {
 					countInvoicesWoLimit = res.getInt(1);
