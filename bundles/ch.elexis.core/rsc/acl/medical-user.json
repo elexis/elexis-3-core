@@ -15,7 +15,8 @@
 	"system-command": {
 		"ch.elexis.core.ui.login": "x",
 		"ACL_AUTO_INSTALL_FEATURES": "x",
-		"ACL_VIEW_SELECTION": "x"
+		"ACL_VIEW_SELECTION": "x",
+		"ACL_SEND_ZURROSE": "x"
 	},
 	"object": {
 		"at.medevit.ch.artikelstamm.IArtikelstammItem": "cruvdie",
