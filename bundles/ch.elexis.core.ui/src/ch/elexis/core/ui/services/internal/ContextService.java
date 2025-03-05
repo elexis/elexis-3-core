@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.contexts.RunAndTrack;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.service.component.annotations.Activate;
@@ -24,8 +23,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +50,8 @@ import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
  * @author thomas
  *
  */
-@Component(property = EventConstants.EVENT_TOPIC + "=" + UIEvents.UILifeCycle.APP_STARTUP_COMPLETE)
-public class ContextService implements IContextService, EventHandler {
+@Component
+public class ContextService implements IContextService {
 
 	private static Logger logger = LoggerFactory.getLogger(ContextService.class);
 
@@ -136,20 +133,20 @@ public class ContextService implements IContextService, EventHandler {
 		logger.info("DEACTIVATE"); //$NON-NLS-1$
 	}
 
-	@Override
-	public void handleEvent(Event event) {
-		Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
-		if (property instanceof MApplication) {
-			logger.info("APPLICATION STARTUP COMPLETE " + property); //$NON-NLS-1$
-			MApplication application = (MApplication) property;
-			applicationContext = application.getContext();
-			if (getRootContext() != null) {
-				logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
-				((Context) getRootContext()).setEclipseContext(applicationContext);
-			}
-			addDelayedRunAndTrack();
-		}
-	}
+//	@Override
+//	public void handleEvent(Event event) {
+//		Object property = event.getProperty("org.eclipse.e4.data"); //$NON-NLS-1$
+//		if (property instanceof MApplication) {
+//			logger.info("APPLICATION STARTUP COMPLETE " + property); //$NON-NLS-1$
+//			MApplication application = (MApplication) property;
+//			applicationContext = application.getContext();
+//			if (getRootContext() != null) {
+//				logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
+//				((Context) getRootContext()).setEclipseContext(applicationContext);
+//			}
+//			addDelayedRunAndTrack();
+//		}
+//	}
 
 	@Override
 	public IContext getRootContext() {
@@ -215,4 +212,12 @@ public class ContextService implements IContextService, EventHandler {
 		}
 	}
 
+	public void setApplication(MApplication application) {
+		applicationContext = application.getContext();
+		if (getRootContext() != null) {
+			logger.info("SET APPLICATION CONTEXT " + applicationContext); //$NON-NLS-1$
+			((Context) getRootContext()).setEclipseContext(applicationContext);
+		}
+		addDelayedRunAndTrack();
+	}
 }

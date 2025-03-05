@@ -91,5 +91,6 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml
  OSGI-INF/ch.elexis.core.ui.services.EncounterServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.services.LocalDocumentServiceHolder.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,
+ OSGI-INF/ch.elexis.core.ui.services.internal.ContextServiceEventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.LoginDialogLoginContributor.xml,
  OSGI-INF/ch.elexis.core.ui.startup.StartupHandler.xml

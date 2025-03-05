@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.ui.services.internal.ContextService">
-   <property name="event.topics" value="org/eclipse/e4/ui/LifeCycle/appStartupComplete"/>
    <service>
       <provide interface="ch.elexis.core.services.IContextService"/>
-      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
