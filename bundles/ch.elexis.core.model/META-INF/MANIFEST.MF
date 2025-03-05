@@ -26,8 +26,7 @@ Import-Package: com.google.gson,
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.model.ac,
  ch.elexis.core.model.util
-Service-Component: OSGI-INF/ch.elexis.core.model.service.holder.CoreModelServiceHolder.xml,
+Service-Component: OSGI-INF/ch.elexis.core.model.service.CoreModelService.xml,
+ OSGI-INF/ch.elexis.core.model.service.holder.CoreModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.model.service.holder.IBillingSystemServiceHolder.xml,
- OSGI-INF/ch.elexis.core.model.service.CoreModelService.xml,
- OSGI-INF/ch.elexis.core.model.service.holder.ContextServiceHolder.xml,
  OSGI-INF/ch.elexis.core.model.service.holder.StoreToStringServiceHolder.xml

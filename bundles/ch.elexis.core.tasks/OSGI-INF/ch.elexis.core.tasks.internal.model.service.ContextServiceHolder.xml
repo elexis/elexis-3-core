@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="ch.elexis.core.tasks.internal.model.service.ContextServiceHolder">
-   <reference bind="setContextService" cardinality="0..1" interface="ch.elexis.core.services.IContextService" name="ContextService" policy-option="greedy"/>
-   <implementation class="ch.elexis.core.tasks.internal.model.service.ContextServiceHolder"/>
-</scr:component>
