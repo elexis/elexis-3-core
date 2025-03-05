@@ -12,9 +12,8 @@ package ch.elexis.core.model;
 
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IOrder Entry</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IOrder
+ * Entry</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -26,6 +25,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IOrderEntry#getArticle <em>Article</em>}</li>
  *   <li>{@link ch.elexis.core.model.IOrderEntry#getProvider <em>Provider</em>}</li>
  *   <li>{@link ch.elexis.core.model.IOrderEntry#getState <em>State</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IOrderEntry#getDelivered <em>Delivered</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIOrderEntry()
@@ -188,5 +188,24 @@ public interface IOrderEntry extends Identifiable, Deleteable {
 	 * @generated
 	 */
 	void setState(OrderEntryState value);
+
+	/**
+	 * Returns the value of the '<em><b>Delivered</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @return the value of the '<em>Delivered</em>' attribute.
+	 * @see #setDelivered(int)
+	 * @see ch.elexis.core.model.ModelPackage#getIOrderEntry_Delivered()
+	 * @model
+	 * @generated
+	 */
+	int getDelivered();
+
+	/**
+	 * Sets the value of the '<em><b>Delivered</b></em>' attribute.
+	 * 
+	 * @param value the new delivered count
+	 */
+
+	void setDelivered(int value);
 
 } // IOrderEntry

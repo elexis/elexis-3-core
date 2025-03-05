@@ -84,6 +84,9 @@ public class BestellungEntry extends AbstractEntityWithId implements EntityWithI
 	@Column
 	private int state;
 
+	@Column(name = "DELIVERED_COUNT")
+	private int delivered;
+
 	@Column(length = 25, name = "PROVIDER")
 	private String providerId;
 
@@ -141,5 +144,13 @@ public class BestellungEntry extends AbstractEntityWithId implements EntityWithI
 
 	public void setProviderId(String providerId) {
 		this.providerId = providerId;
+	}
+
+	public int getDelivered() {
+		return delivered;
+	}
+
+	public void setDelivered(int delivered) {
+		this.delivered = delivered;
 	}
 }
