@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.mail.internal.DocumentConverterServiceHolder;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IImage;
@@ -25,6 +24,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class AttachmentsUtil {
 
@@ -45,12 +45,16 @@ public class AttachmentsUtil {
 
 	private static Optional<File> getTempFile(IDocument iDocument) {
 		String extension = iDocument.getExtension();
-		Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+		Optional<IDocumentConverter> converterService = OsgiServiceUtil.getService(IDocumentConverter.class);
 		if (converterService.isPresent() && converterService.get().isAvailable() && extension != null
 				&& !extension.toLowerCase().endsWith("pdf")) {
-			Optional<File> converted = DocumentConverterServiceHolder.get().get().convertToPdf(iDocument);
-			if (converted.isPresent()) {
-				return converted;
+			try {
+				Optional<File> converted = converterService.get().convertToPdf(iDocument);
+				if (converted.isPresent()) {
+					return converted;
+				}
+			} finally {
+				OsgiServiceUtil.ungetService(converterService);
 			}
 		}
 		File tmpFile = new File(getAttachmentsFolder(), getFileName(iDocument));

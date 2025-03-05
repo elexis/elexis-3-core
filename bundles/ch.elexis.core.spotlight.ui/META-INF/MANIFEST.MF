@@ -29,6 +29,5 @@ Export-Package: ch.elexis.core.spotlight.ui,
  ch.elexis.core.spotlight.ui.controls,
  ch.elexis.core.spotlight.ui.internal
 Service-Component: OSGI-INF/ch.elexis.core.spotlight.ui.controls.detail.PatientSpotlightResultEntryDetailCompositeContributor.xml,
- OSGI-INF/ch.elexis.core.spotlight.ui.internal.DocumentConverterServiceHolder.xml,
  OSGI-INF/ch.elexis.core.spotlight.ui.internal.SpotlightResultEntryDetailCompositeService.xml,
  OSGI-INF/ch.elexis.core.spotlight.ui.internal.ready.SpotlightReadyService.xml

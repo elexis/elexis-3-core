@@ -20,11 +20,11 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.pdfbox.ui.parts.handlers.DocumentConverterServiceHolder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.ui.e4.events.ElexisUiEventTopics;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -88,27 +88,28 @@ public class PdfPreviewPart {
 			}
 			pdfPreviewPartLoadHandler.close();
 		}
-		java.util.Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+		java.util.Optional<IDocumentConverter> converterService = OsgiServiceUtil.getService(IDocumentConverter.class);
 		if (converterService.isPresent() && converterService.get().isAvailable() && currentDocument != null) {
 			boolean isSupported = converterService.get().isSupportedFile(currentDocument);
 			if (isSupported) {
-			try {
-				java.util.Optional<File> pdfFile = converterService.get().convertToPdf(currentDocument);
-				if (pdfFile.isPresent()) {
-					 pdfInputStream = new FileInputStream(pdfFile.get());
+				try {
+					java.util.Optional<File> pdfFile = converterService.get().convertToPdf(currentDocument);
+					if (pdfFile.isPresent()) {
+						pdfInputStream = new FileInputStream(pdfFile.get());
 						currentDocument = null;
+					}
+				} catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("Error converting document [" + currentDocument + "]", e);
 				}
-			} catch (IOException e) {
-				LoggerFactory.getLogger(getClass()).error("Error converting document [" + currentDocument + "]", e);
 			}
-	}
-		
-		String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
-				Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
 
-		pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
-				previewComposite, scrolledComposite);
-	}
+			String zoomLevel = configService.getActiveUserContact(Constants.PREFERENCE_USER_ZOOMLEVEL,
+					Constants.PREFERENCE_USER_ZOOMLEVEL_DEFAULT);
+
+			pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
+					previewComposite, scrolledComposite);
+			OsgiServiceUtil.ungetService(converterService);
+		}
 	}
 
 	public void changeScalingFactor(Float _zoomLevel) {

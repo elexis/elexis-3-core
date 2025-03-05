@@ -30,6 +30,7 @@ import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")
@@ -224,7 +225,7 @@ public class SpotlightUiUtil {
 		IDocument document = documentStore.loadDocument(objectId, documentStore.getDefaultDocumentStore().getId())
 				.orElse(null);
 		if (document != null && "docx".equalsIgnoreCase(document.getExtension())) {
-			Optional<IDocumentConverter> converterService = DocumentConverterServiceHolder.get();
+			Optional<IDocumentConverter> converterService = OsgiServiceUtil.getService(IDocumentConverter.class);
 			if (converterService.isPresent() && converterService.get().isAvailable()) {
 				try {
 					Optional<File> pdfFile = converterService.get().convertToPdf(document);
@@ -236,6 +237,8 @@ public class SpotlightUiUtil {
 					}
 				} catch (IOException e) {
 					LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
+				} finally {
+					OsgiServiceUtil.ungetService(converterService);
 				}
 			}
 		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
