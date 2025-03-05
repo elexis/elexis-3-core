@@ -6038,13 +6038,113 @@ public interface ModelPackage extends EPackage {
 	int IORDER_ENTRY__STATE = IDENTIFIABLE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Delivered</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IORDER_ENTRY__DELIVERED = IDENTIFIABLE_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>IOrder Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IORDER_ENTRY_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
+	int IORDER_ENTRY_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IOutputLog <em>IOutput Log</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IOutputLog
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOutputLog()
+	 * @generated
+	 */
+	int IOUTPUT_LOG = 50;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Object Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__OBJECT_TYPE = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Object Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__OBJECT_ID = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Creator Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__CREATOR_ID = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Outputter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__OUTPUTTER = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__DATE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Outputter Status</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG__OUTPUTTER_STATUS = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The number of structural features of the '<em>IOutput Log</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IOUTPUT_LOG_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}' class.
@@ -6054,7 +6154,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 50;
+	int IORDER = 51;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6118,7 +6218,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 51;
+	int IADDRESS = 52;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6227,7 +6327,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 52;
+	int IIMAGE = 53;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6246,7 +6346,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 53;
+	int WITH_ASSIGNABLE_ID = 54;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -6256,7 +6356,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointment()
 	 * @generated
 	 */
-	int IAPPOINTMENT = 65;
+	int IAPPOINTMENT = 66;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -6339,7 +6439,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 54;
+	int IPRESCRIPTION = 55;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6503,7 +6603,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
 	 * @generated
 	 */
-	int IRIGHT = 55;
+	int IRIGHT = 56;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6567,7 +6667,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBillingSystem()
 	 * @generated
 	 */
-	int IBILLING_SYSTEM = 56;
+	int IBILLING_SYSTEM = 57;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6604,7 +6704,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRecipe()
 	 * @generated
 	 */
-	int IRECIPE = 57;
+	int IRECIPE = 58;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6686,7 +6786,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIBlobSecondary()
 	 * @generated
 	 */
-	int IBLOB_SECONDARY = 58;
+	int IBLOB_SECONDARY = 59;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6741,7 +6841,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRelatedContact()
 	 * @generated
 	 */
-	int IRELATED_CONTACT = 59;
+	int IRELATED_CONTACT = 60;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6823,7 +6923,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPayment()
 	 * @generated
 	 */
-	int IPAYMENT = 60;
+	int IPAYMENT = 61;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6896,7 +6996,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccountTransaction()
 	 * @generated
 	 */
-	int IACCOUNT_TRANSACTION = 61;
+	int IACCOUNT_TRANSACTION = 62;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6996,7 +7096,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAccount()
 	 * @generated
 	 */
-	int IACCOUNT = 62;
+	int IACCOUNT = 63;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7033,7 +7133,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIMessage()
 	 * @generated
 	 */
-	int IMESSAGE = 63;
+	int IMESSAGE = 64;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7142,7 +7242,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getITextTemplate()
 	 * @generated
 	 */
-	int ITEXT_TEMPLATE = 64;
+	int ITEXT_TEMPLATE = 65;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7413,7 +7513,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAppointmentSeries()
 	 * @generated
 	 */
-	int IAPPOINTMENT_SERIES = 66;
+	int IAPPOINTMENT_SERIES = 67;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7711,7 +7811,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getISickCertificate()
 	 * @generated
 	 */
-	int ISICK_CERTIFICATE = 67;
+	int ISICK_CERTIFICATE = 68;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -7829,7 +7929,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIDayMessage()
 	 * @generated
 	 */
-	int IDAY_MESSAGE = 68;
+	int IDAY_MESSAGE = 69;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -7893,7 +7993,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminder()
 	 * @generated
 	 */
-	int IREMINDER = 69;
+	int IREMINDER = 70;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -8038,7 +8138,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIReminderResponsibleLink()
 	 * @generated
 	 */
-	int IREMINDER_RESPONSIBLE_LINK = 70;
+	int IREMINDER_RESPONSIBLE_LINK = 71;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -8093,7 +8193,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIVaccination()
 	 * @generated
 	 */
-	int IVACCINATION = 71;
+	int IVACCINATION = 72;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -11604,6 +11704,93 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIOrderEntry_State();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOrderEntry#getDelivered <em>Delivered</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Delivered</em>'.
+	 * @see ch.elexis.core.model.IOrderEntry#getDelivered()
+	 * @see #getIOrderEntry()
+	 * @generated
+	 */
+	EAttribute getIOrderEntry_Delivered();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IOutputLog <em>IOutput Log</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IOutput Log</em>'.
+	 * @see ch.elexis.core.model.IOutputLog
+	 * @generated
+	 */
+	EClass getIOutputLog();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getObjectType <em>Object Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Object Type</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getObjectType()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_ObjectType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getObjectId <em>Object Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Object Id</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getObjectId()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_ObjectId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getCreatorId <em>Creator Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Creator Id</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getCreatorId()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_CreatorId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getOutputter <em>Outputter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Outputter</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getOutputter()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_Outputter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getDate()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_Date();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IOutputLog#getOutputterStatus <em>Outputter Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Outputter Status</em>'.
+	 * @see ch.elexis.core.model.IOutputLog#getOutputterStatus()
+	 * @see #getIOutputLog()
+	 * @generated
+	 */
+	EAttribute getIOutputLog_OutputterStatus();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}'.
@@ -15913,6 +16100,72 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IORDER_ENTRY__STATE = eINSTANCE.getIOrderEntry_State();
+
+		/**
+		 * The meta object literal for the '<em><b>Delivered</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IORDER_ENTRY__DELIVERED = eINSTANCE.getIOrderEntry_Delivered();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IOutputLog <em>IOutput Log</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IOutputLog
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOutputLog()
+		 * @generated
+		 */
+		EClass IOUTPUT_LOG = eINSTANCE.getIOutputLog();
+
+		/**
+		 * The meta object literal for the '<em><b>Object Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__OBJECT_TYPE = eINSTANCE.getIOutputLog_ObjectType();
+
+		/**
+		 * The meta object literal for the '<em><b>Object Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__OBJECT_ID = eINSTANCE.getIOutputLog_ObjectId();
+
+		/**
+		 * The meta object literal for the '<em><b>Creator Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__CREATOR_ID = eINSTANCE.getIOutputLog_CreatorId();
+
+		/**
+		 * The meta object literal for the '<em><b>Outputter</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__OUTPUTTER = eINSTANCE.getIOutputLog_Outputter();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__DATE = eINSTANCE.getIOutputLog_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Outputter Status</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IOUTPUT_LOG__OUTPUTTER_STATUS = eINSTANCE.getIOutputLog_OutputterStatus();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IOrder <em>IOrder</em>}' class.
