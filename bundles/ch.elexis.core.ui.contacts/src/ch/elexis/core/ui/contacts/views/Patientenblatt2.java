@@ -112,6 +112,7 @@ import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
+import ch.elexis.core.ui.contacts.ContactsUtil;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
@@ -518,6 +519,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			setupFieldWidthsAndListeners(ipp.getAutoForm().getChildren());
 			setToolTipTextListeners();
 		}
+		ContactsUtil.setEmailValidationListener(ipp.getAutoForm());
 		layout(true);
 	}
 

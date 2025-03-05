@@ -61,6 +61,7 @@ import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.contacts.ContactsUtil;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -238,6 +239,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		((ColumnLayout) afDetails.getLayout()).minNumColumns = 5;
 		updateFieldsView();
 		setToolTipTextListeners();
+		ContactsUtil.setEmailValidationListener(afDetails);
 
 		mandantListener = new Listener() {
 
