@@ -8,9 +8,11 @@ package ch.elexis.core.ui.propertypage;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -18,6 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,10 +33,14 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.StickerConstants;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 
@@ -51,6 +58,8 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 	private CDateTime geburtsdatum;
 
 	private ComboViewer comboGeschlecht;
+	
+	private VerifyListener emailVerifyListener;
 
 	public PatientPropertyPage() {
 		super();
@@ -160,6 +169,22 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 		textBemerkungen.setText(StringUtils.defaultString(pat.getComment()));
 
 		setUnlocked(LocalLockServiceHolder.get().isLocked(pat));
+
+		emailVerifyListener = e -> {
+			OsgiServiceUtil.getService(IStickerService.class).ifPresent(stickerService -> {
+				List<ISticker> lSticker = stickerService.getStickers(pat);
+				if (lSticker.stream()
+						.anyMatch(sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()))) {
+					if (!MessageDialog.openConfirm(getShell(), Messages.Core_E_Mail + " " + Messages.Core_Edit,
+							Messages.Mediorder_changeEmail_text)) {
+						e.doit = false;
+					}
+					textEmail.removeVerifyListener(emailVerifyListener);
+				}
+				OsgiServiceUtil.ungetService(stickerService);
+			});
+		};
+		textEmail.addVerifyListener(emailVerifyListener);
 
 		return comp;
 	}

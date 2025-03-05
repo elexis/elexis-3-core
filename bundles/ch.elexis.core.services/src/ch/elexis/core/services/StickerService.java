@@ -113,7 +113,7 @@ public class StickerService implements IStickerService {
 		List<ISticker> loadedStickers = new ArrayList<>();
 		for (StickerObjectLink link : stickerObjectLinks) {
 			ISticker sticker = loadStickerForStickerObjectLink(link, identifiable);
-			if (sticker != null && !sticker.getId().equals("activate_mediorder")) {
+			if (sticker != null) {
 				loadedStickers.add(sticker);
 			}
 		}
