@@ -370,7 +370,7 @@ public class BillingService implements IBillingService {
 			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 			double difference = newAmount - oldAmount;
 			if (difference > 0) {
-				stockService.performSingleDisposal(art, (int) difference, mandatorId);
+				stockService.performSingleDisposal(art, (int) difference, mandatorId, null);
 			} else if (difference < 0) {
 				difference *= -1;
 				stockService.performSingleReturn(art, (int) difference, mandatorId);

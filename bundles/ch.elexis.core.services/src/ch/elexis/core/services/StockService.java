@@ -64,11 +64,11 @@ public class StockService implements IStockService {
 
 	public void performSingleDisposal(IArticle article, int count) {
 		Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
-		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
+		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null, null);
 	}
 
 	@Override
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, Object... args) {
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IPatient patient) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -99,9 +99,11 @@ public class StockService implements IStockService {
 					return Status.OK_STATUS;
 				}
 			}
-			handleStockDispoal(se, count, args);
+			if (patient != null) {
+				handleStockDispoal(se, count, patient);
+			}
 			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
-		
+
 		} else {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1, new NullProgressMonitor());
 			if (lr.isOk()) {
@@ -141,23 +143,19 @@ public class StockService implements IStockService {
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
 	}
 
-	private void handleStockDispoal(IStockEntry se, int count, Object... args) {
-		for (Object arg : args) {
-			if (arg instanceof IPatient patient) {
-				Optional<IStock> patientStock = this.getPatientStock(patient);
-				if (patientStock.isPresent()) {
-					for (IStockEntry entry : patientStock.get().getStockEntries()) {
-						if (entry.getCurrentStock() == entry.getMinimumStock()) {
-							se.setMinimumStock(se.getMinimumStock() - count);
-						}
-					}
-				} else if (se.getCurrentStock() - count < se.getMinimumStock()) {
-					se.setMinimumStock(se.getMinimumStock() + count);
-					count = se.getCurrentStock() - se.getMinimumStock();
+	private void handleStockDispoal(IStockEntry se, int count, IPatient patient) {
+		Optional<IStock> patientStock = this.getPatientStock(patient);
+		if (patientStock.isPresent()) {
+			for (IStockEntry entry : patientStock.get().getStockEntries()) {
+				if (entry.getCurrentStock() == entry.getMinimumStock()) {
+					se.setMinimumStock(se.getMinimumStock() - count);
 				}
-				coreModelService.save(se);
 			}
+		} else if (se.getCurrentStock() - count < se.getMinimumStock()) {
+			se.setMinimumStock(se.getMinimumStock() + count);
+			count = se.getCurrentStock() - se.getMinimumStock();
 		}
+		coreModelService.save(se);
 	}
 
 	@Override
