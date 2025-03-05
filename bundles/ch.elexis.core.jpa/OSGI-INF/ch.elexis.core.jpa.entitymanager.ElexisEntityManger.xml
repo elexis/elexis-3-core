@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.jpa.entitymanager.ElexisEntityManger">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" deactivate="deactivate" name="ch.elexis.core.jpa.entitymanager.ElexisEntityManger">
    <property name="id" value="default"/>
    <service>
       <provide interface="ch.elexis.core.services.IElexisEntityManager"/>
    </service>
    <reference bind="bindDataSource" interface="javax.sql.DataSource" name="DataSource" target="(id=default)" unbind="unbindDataSource"/>
-   <reference cardinality="0..1" field="updateProgress" interface="ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi" name="updateProgress"/>
    <implementation class="ch.elexis.core.jpa.entitymanager.ElexisEntityManger"/>
 </scr:component>

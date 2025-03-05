@@ -16,7 +16,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +28,7 @@ import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -55,7 +55,6 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		entityManagerCollector = Executors.newSingleThreadScheduledExecutor();
 	}
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private IDatabaseUpdateUi updateProgress;
 
 	private final boolean SKIP_LIQUIBASE = Boolean
@@ -95,6 +94,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			// try to initialize
 
 			if (!SKIP_LIQUIBASE) {
+				updateProgress = OsgiServiceUtil.getServiceWait(IDatabaseUpdateUi.class, 100).orElse(null);
 				if (updateProgress != null) {
 					try {
 						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
@@ -106,6 +106,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 					} catch (Exception e) {
 						logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
 					}
+					OsgiServiceUtil.ungetService(updateProgress);
 				} else {
 					dbInit(null);
 					dbUpdate(null);
