@@ -108,7 +108,7 @@ public class PdfPreviewPart {
 
 			pdfPreviewPartLoadHandler = new PdfPreviewPartLoadHandler(pdfInputStream, Float.valueOf(zoomLevel),
 					previewComposite, scrolledComposite);
-			OsgiServiceUtil.ungetService(converterService);
+			OsgiServiceUtil.ungetService(converterService.get());
 		}
 	}
 

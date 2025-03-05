@@ -54,7 +54,7 @@ public class AttachmentsUtil {
 					return converted;
 				}
 			} finally {
-				OsgiServiceUtil.ungetService(converterService);
+				OsgiServiceUtil.ungetService(converterService.get());
 			}
 		}
 		File tmpFile = new File(getAttachmentsFolder(), getFileName(iDocument));

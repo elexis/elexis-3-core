@@ -238,7 +238,7 @@ public class SpotlightUiUtil {
 				} catch (IOException e) {
 					LoggerFactory.getLogger(getClass()).error("Error converting document [" + document + "]", e);
 				} finally {
-					OsgiServiceUtil.ungetService(converterService);
+					OsgiServiceUtil.ungetService(converterService.get());
 				}
 			}
 		} else if (selectedElement.getCategory() == Category.DOCUMENT && document != null
