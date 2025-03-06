@@ -232,12 +232,6 @@ public class ConfigService implements IConfigService {
 	}
 
 	@Override
-	public Map<String, String> getAsMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean set(IContact contact, String key, String value) {
 		Optional<IUserConfig> loaded = Optional.empty();
 		if (contact != null) {

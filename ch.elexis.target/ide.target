@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2025-03-java21" sequenceNumber="1740991254">
+<target name="Elexis 2025-03-java21" sequenceNumber="1741251210">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -67,6 +67,7 @@
       <unit id="bcprov" version="1.79.0"/>
       <unit id="bcpg" version="1.79.0"/>
       <unit id="bcutil" version="1.79.0"/>
+      <unit id="com.nimbusds.nimbus-jose-jwt" version="10.0.2"/>
       <unit id="info.elexis.target.hapi.fhir" version="0.0.0"/>
       <unit id="info.elexis.target.jaxws.core" version="0.0.0"/>
       <unit id="io.swagger.core.v3.swagger-annotations" version="2.2.27"/>

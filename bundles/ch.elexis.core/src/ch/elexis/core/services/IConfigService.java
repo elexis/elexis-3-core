@@ -457,12 +457,6 @@ public interface IConfigService {
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public Map<String, String> getAsMap();
-
-	/**
 	 * Retrieve a value as a list for a contact specific configuration entry.
 	 * Retains the order it was persisted.
 	 *

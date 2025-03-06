@@ -92,6 +92,7 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	bcprov
 	bcpg
 	bcutil
+	com.nimbusds.nimbus-jose-jwt
 	
 	// fhir
 	info.elexis.target.hapi.fhir lazy
