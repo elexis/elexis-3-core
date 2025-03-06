@@ -189,6 +189,9 @@ public class LabeledInputField extends Composite {
 		}
 		if (ctl instanceof Text) {
 			FilterNonPrintableModifyListener.addTo((Text) ctl);
+			if (ch.elexis.core.l10n.Messages.Core_E_Mail.equals(lbl.getText())) {
+				EmailValidationModifyListener.addTo((Text) ctl);
+			}
 		}
 		lbl.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 	}
