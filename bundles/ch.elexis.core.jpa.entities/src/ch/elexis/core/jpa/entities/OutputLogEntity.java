@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 /**
@@ -76,13 +77,15 @@ public class OutputLogEntity extends AbstractEntityWithId implements EntityWithI
 	/**
 	 * Corresponds to "EXTINFO" - additional metadata related to the output process.
 	 */
-	@Column(name = "EXTINFO", length = 4096)
-	private String extInfo;
+	@Lob
+	@Column(name = "EXTINFO")
+	protected byte[] extInfo;
 
 	/**
 	 * Stores the status of the output process.
 	 */
-	@Column(name = "OUTPUTTERSTATUS", length = 1024)
+	@Lob
+	@Column(name = "OUTPUTTERSTATUS")
 	private String outputterStatus;
 
 	/**
@@ -154,11 +157,11 @@ public class OutputLogEntity extends AbstractEntityWithId implements EntityWithI
 		this.datum = datum;
 	}
 
-	public String getExtInfo() {
+	public byte[] getExtInfo() {
 		return extInfo;
 	}
 
-	public void setExtInfo(String extInfo) {
+	public void setExtInfo(byte[] extInfo) {
 		this.extInfo = extInfo;
 	}
 
