@@ -66,6 +66,7 @@ import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.IPeriod;
@@ -451,6 +452,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iOrderEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iOutputLogEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3806,6 +3814,86 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIOrderEntry_Delivered() {
+		return (EAttribute)iOrderEntryEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIOutputLog() {
+		return iOutputLogEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_ObjectType() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_ObjectId() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_CreatorId() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_Outputter() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_Date() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIOutputLog_OutputterStatus() {
+		return (EAttribute)iOutputLogEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIOrder() {
 		return iOrderEClass;
 	}
@@ -5731,6 +5819,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iOrderEntryEClass, IORDER_ENTRY__ARTICLE);
 		createEReference(iOrderEntryEClass, IORDER_ENTRY__PROVIDER);
 		createEAttribute(iOrderEntryEClass, IORDER_ENTRY__STATE);
+		createEAttribute(iOrderEntryEClass, IORDER_ENTRY__DELIVERED);
+
+		iOutputLogEClass = createEClass(IOUTPUT_LOG);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__OBJECT_TYPE);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__OBJECT_ID);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__CREATOR_ID);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__OUTPUTTER);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__DATE);
+		createEAttribute(iOutputLogEClass, IOUTPUT_LOG__OUTPUTTER_STATUS);
 
 		iOrderEClass = createEClass(IORDER);
 		createEReference(iOrderEClass, IORDER__ENTRIES);
@@ -6033,6 +6130,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iStockEntryEClass.getESuperTypes().add(this.getDeleteable());
 		iOrderEntryEClass.getESuperTypes().add(this.getIdentifiable());
 		iOrderEntryEClass.getESuperTypes().add(this.getDeleteable());
+		iOutputLogEClass.getESuperTypes().add(this.getIdentifiable());
+		iOutputLogEClass.getESuperTypes().add(this.getDeleteable());
+		iOutputLogEClass.getESuperTypes().add(this.getWithExtInfo());
 		iOrderEClass.getESuperTypes().add(this.getIdentifiable());
 		iOrderEClass.getESuperTypes().add(this.getDeleteable());
 		iAddressEClass.getESuperTypes().add(this.getIdentifiable());
@@ -6770,6 +6870,15 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIOrderEntry_Article(), this.getIArticle(), null, "article", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIOrderEntry_Provider(), this.getIContact(), null, "provider", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIOrderEntry_State(), theTypesPackage.getOrderEntryState(), "state", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOrderEntry_Delivered(), ecorePackage.getEInt(), "delivered", null, 0, 1, IOrderEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(iOutputLogEClass, IOutputLog.class, "IOutputLog", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIOutputLog_ObjectType(), ecorePackage.getEString(), "objectType", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOutputLog_ObjectId(), ecorePackage.getEString(), "objectId", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOutputLog_CreatorId(), ecorePackage.getEString(), "creatorId", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOutputLog_Outputter(), ecorePackage.getEString(), "outputter", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOutputLog_Date(), theTypesPackage.getLocalDate(), "date", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIOutputLog_OutputterStatus(), ecorePackage.getEString(), "outputterStatus", null, 0, 1, IOutputLog.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iOrderEClass, IOrder.class, "IOrder", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIOrder_Entries(), this.getIOrderEntry(), null, "entries", null, 0, -1, IOrder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

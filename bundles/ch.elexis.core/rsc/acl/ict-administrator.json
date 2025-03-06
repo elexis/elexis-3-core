@@ -32,6 +32,7 @@
 		"ch.elexis.core.model.ILaboratory":"cruvdx",
 		"ch.elexis.core.model.IMandator":"cruvdx",
 		"ch.elexis.core.model.IOrganization":"cruvdx",
+		"ch.elexis.core.model.IOutputLog": "cruvdx",
 		"ch.elexis.core.model.IRight":"cruvdx",
 		"ch.elexis.core.model.IRole":"cruvdx",
 		"ch.elexis.core.model.ISticker":"cruvdx",

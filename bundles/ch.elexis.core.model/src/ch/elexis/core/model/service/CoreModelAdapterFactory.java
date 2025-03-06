@@ -70,6 +70,7 @@ import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.IPerson;
@@ -98,6 +99,7 @@ import ch.elexis.core.model.Mandator;
 import ch.elexis.core.model.Message;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.Organization;
+import ch.elexis.core.model.OutputLog;
 import ch.elexis.core.model.Patient;
 import ch.elexis.core.model.Payment;
 import ch.elexis.core.model.Person;
@@ -252,6 +254,9 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 
 		addMapping(
 				new MappingEntry(ISickCertificate.class, SickCertificate.class, ch.elexis.core.jpa.entities.AUF.class));
+		addMapping(
+				new MappingEntry(IOutputLog.class, OutputLog.class, ch.elexis.core.jpa.entities.OutputLogEntity.class));
+
 	}
 
 	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter) {
