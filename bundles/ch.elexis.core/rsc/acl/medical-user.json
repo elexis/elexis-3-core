@@ -82,6 +82,7 @@
 		"ch.elexis.core.model.IOrder": "cruvdx",
 		"ch.elexis.core.model.IOrderEntry": "cruvdxz",
 		"ch.elexis.core.model.IOrganization": "cruvdx",
+		"ch.elexis.core.model.IOutputLog": "cruvdx",
 		"ch.elexis.core.model.IPatient": "cruvdxie",
 		"ch.elexis.core.model.IPayment": "cruvdx",
 		"ch.elexis.core.model.IPerson": "cruvdx",

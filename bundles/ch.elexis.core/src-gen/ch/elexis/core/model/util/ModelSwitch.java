@@ -498,6 +498,15 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IOUTPUT_LOG: {
+				IOutputLog iOutputLog = (IOutputLog)theEObject;
+				T1 result = caseIOutputLog(iOutputLog);
+				if (result == null) result = caseIdentifiable(iOutputLog);
+				if (result == null) result = caseDeleteable(iOutputLog);
+				if (result == null) result = caseWithExtInfo(iOutputLog);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.IORDER: {
 				IOrder iOrder = (IOrder)theEObject;
 				T1 result = caseIOrder(iOrder);
@@ -1431,6 +1440,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIOrderEntry(IOrderEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IOutput Log</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IOutput Log</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIOutputLog(IOutputLog object) {
 		return null;
 	}
 

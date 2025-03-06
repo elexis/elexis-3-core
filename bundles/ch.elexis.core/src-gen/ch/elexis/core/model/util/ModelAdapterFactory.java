@@ -276,6 +276,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIOrderEntryAdapter();
 			}
 			@Override
+			public Adapter caseIOutputLog(IOutputLog object) {
+				return createIOutputLogAdapter();
+			}
+			@Override
 			public Adapter caseIOrder(IOrder object) {
 				return createIOrderAdapter();
 			}
@@ -1084,6 +1088,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIOrderEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IOutputLog <em>IOutput Log</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IOutputLog
+	 * @generated
+	 */
+	public Adapter createIOutputLogAdapter() {
 		return null;
 	}
 

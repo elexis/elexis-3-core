@@ -58,6 +58,16 @@ public class OrderEntry extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.
 	}
 
 	@Override
+	public int getDelivered() {
+		return getEntity().getDelivered();
+	}
+
+	@Override
+	public void setDelivered(int value) {
+		getEntityMarkDirty().setDelivered(value);
+	}
+
+	@Override
 	public IArticle getArticle() {
 		Optional<Identifiable> loaded = ModelUtil.getFromStoreToString(
 				getEntity().getArticleType() + IStoreToStringContribution.DOUBLECOLON + getEntity().getArticleId());

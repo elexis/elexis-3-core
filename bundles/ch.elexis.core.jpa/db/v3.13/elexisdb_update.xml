@@ -66,5 +66,43 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 			<column name="GROUPID" />
 		</createIndex>
 	</changeSet>
-
+	<changeSet id="add_delivered_count_to_bestellung_entry" author="dalibor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="bestellung_entry" columnName="DELIVERED_COUNT"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="bestellung_entry">
+            <column name="DELIVERED_COUNT" type="INT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet id="modify_output_log_objectid" author="dalibor">
+    	<preConditions onFail="MARK_RAN">
+        	<and>
+            	<tableExists tableName="OUTPUT_LOG"/>
+            	<columnExists tableName="OUTPUT_LOG" columnName="OBJECTID"/>
+        	</and>
+    	</preConditions>
+    	<modifyDataType tableName="OUTPUT_LOG" columnName="OBJECTID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	<changeSet id="add_creatorid_to_output_log" author="dalibor">
+    	<preConditions onFail="MARK_RAN">
+        	<not>
+            	<columnExists tableName="OUTPUT_LOG" columnName="CREATORID"/>
+        	</not>
+    	</preConditions>
+	    <addColumn tableName="OUTPUT_LOG">
+        	<column name="CREATORID" type="VARCHAR(80)"/>
+    	</addColumn>
+	</changeSet>
+	<changeSet id="add_outputter_status_to_output_log" author="dalibor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="OUTPUT_LOG" columnName="OUTPUTTERSTATUS"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="OUTPUT_LOG">
+            <column name="OUTPUTTERSTATUS" type="LONGTEXT"/>
+        </addColumn>
+	</changeSet>
 </databaseChangeLog>

@@ -73,6 +73,7 @@
 		<class>ch.elexis.core.jpa.entities.ObjVatInfo</class>
 		<class>ch.elexis.core.jpa.entities.OccupationalLeistung</class>
 		<class>ch.elexis.core.jpa.entities.OutboxElement</class>
+		<class>ch.elexis.core.jpa.entities.OutputLogEntity</class>
 		<class>ch.elexis.core.jpa.entities.PandemieLeistung</class>
 		<class>ch.elexis.core.jpa.entities.PercentileData</class>
 		<class>ch.elexis.core.jpa.entities.PercentileChecklistData</class>
