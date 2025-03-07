@@ -39,6 +39,7 @@ import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
+import ch.elexis.core.ui.util.EmailValidationModifyListener;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
@@ -145,6 +146,7 @@ public class PatientPropertyPage extends PropertyPage implements IWorkbenchPrope
 
 		textEmail = new Text(comp, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		EmailValidationModifyListener.addTo(textEmail);
 
 		new Label(comp, SWT.NONE);
 		new Label(comp, SWT.NONE);
