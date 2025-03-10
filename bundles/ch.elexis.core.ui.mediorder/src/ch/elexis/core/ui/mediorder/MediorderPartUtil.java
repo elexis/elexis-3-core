@@ -108,9 +108,9 @@ public class MediorderPartUtil {
 				if (minimumStock == maximumStock) {
 					state = MediorderEntryState.REQUESTED;
 				} else if (minimumStock > maximumStock) {
-					state = MediorderEntryState.INVALID;
-				} else {
 					state = MediorderEntryState.PARTIALLY_REQUESTED;
+				} else {
+					state = MediorderEntryState.INVALID;
 				}
 			}
 		} else if (minimumStock == 0 && maximumStock > 0 && currentStock == 0) {
