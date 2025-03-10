@@ -37,6 +37,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite;
@@ -291,7 +292,11 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			createReminder(getSelectedUser(), orders);
 		}
 		for (ILabOrder order : orders) {
-			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, order);
+			CoreModelServiceHolder.get().load(order.getId(), ch.elexis.core.model.ILabOrder.class)
+					.ifPresent(laborder -> {
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, laborder);
+					});
+
 		}
 		saveLastSelectedUser();
 
