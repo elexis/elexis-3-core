@@ -10,6 +10,7 @@
  *******************************************************************************/
 package ch.elexis.core.ui.p2.handlers;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.equinox.internal.p2.ui.dialogs.UpdateSingleIUWizard;
 import org.eclipse.equinox.p2.operations.RepositoryTracker;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -25,13 +26,14 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 
 	boolean hasNoRepos = false;
 
+	@Override
 	protected void doExecute(LoadMetadataRepositoryJob job) {
 		if (hasNoRepos) {
 			return;
 		}
 		UpdateOperation operation = getProvisioningUI().getUpdateOperation(null, null);
 		// check for updates
-		operation.resolveModal(null);
+		operation.resolveModal(new NullProgressMonitor());
 		if (getProvisioningUI().getPolicy().continueWorkingWithOperation(operation, getShell())) {
 			if (UpdateSingleIUWizard.validFor(operation)) {
 				// Special case for only updating a single root
@@ -46,6 +48,7 @@ public class UpdateHandler extends PreloadingRepositoryHandler {
 		}
 	}
 
+	@Override
 	protected boolean preloadRepositories() {
 		hasNoRepos = false;
 		RepositoryTracker repoMan = getProvisioningUI().getRepositoryTracker();
