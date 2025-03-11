@@ -9,8 +9,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -55,7 +53,8 @@ public class ConfigService implements IConfigService {
 
 	private Map<Object, LocalLock> managedLocks;
 
-	private ExecutorService traceExecutor;
+	// lazy initialized
+	private ITraceService traceService;
 
 	@Activate
 	public void activate() {
@@ -65,13 +64,14 @@ public class ConfigService implements IConfigService {
 
 			managedLocks = new HashMap<>();
 
-			traceExecutor = Executors.newSingleThreadExecutor();
 		});
 	}
 
 	@Deactivate
 	public void deactivate() {
-		traceExecutor.shutdown();
+		if (traceService != null) {
+			OsgiServiceUtil.ungetService(traceService);
+		}
 	}
 
 	/**
@@ -123,27 +123,11 @@ public class ConfigService implements IConfigService {
 	}
 
 	private void addTraceEntry(String action) {
-		traceExecutor.execute(() -> {
-			String username = "unknown";
-			if (ContextServiceHolder.isAvailable()) {
-				IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-				if (user != null) {
-					username = StringUtils.abbreviate(user.getId(), 30);
-				}
-			}
-
-			String workstation = NetTool.hostname;
-			if (StringUtils.isEmpty(workstation)) {
-				workstation = "unknown";
-			}
-			workstation = StringUtils.abbreviate(workstation, 40);
-			String _action = (StringUtils.isEmpty(action)) ? StringUtils.EMPTY : action;
-
-			String insertStatement = "INSERT INTO TRACES (logtime, workstation, username, action) VALUES("
-					+ System.currentTimeMillis() + ", '" + workstation + "', '" + username + "', '" + _action + "')";
-
-			modelService.executeNativeUpdate(insertStatement, false);
-		});
+		if (traceService == null) {
+			traceService = OsgiServiceUtil.getService(ITraceService.class).get();
+		}
+		String userId = contextService.getActiveUser().map(IUser::getId).orElse("unknown");
+		traceService.addTraceEntry(userId, NetTool.hostname, action);
 	}
 
 	@Override
