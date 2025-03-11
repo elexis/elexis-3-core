@@ -2,6 +2,7 @@ package ch.elexis.core.tasks.internal.console;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -321,7 +322,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 		String referenceId = taskDescriptor.getReferenceId();
 		taskDescriptor.setReferenceId("sshot_" + referenceId);
 		ITask task = taskService.triggerSync(taskDescriptor, new ConsoleProgressMonitor(), TaskTriggerType.MANUAL,
-				null);
+				Collections.emptyMap());
 		Map<String, ?> result = task.getResult();
 		Set<String> keySet = result.keySet();
 		for (Iterator<String> iterator = keySet.iterator(); iterator.hasNext();) {
