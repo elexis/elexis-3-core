@@ -31,6 +31,8 @@ import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStockService;
+import ch.elexis.core.ui.mediorder.MediorderEntryState;
+import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 
 public class CreatePatientOrderHandler {
 
@@ -66,7 +68,8 @@ public class CreatePatientOrderHandler {
 			stockEntries = new ArrayList<>(stockEntries);
 			for (Iterator<IStockEntry> iterator = stockEntries.iterator(); iterator.hasNext();) {
 				IStockEntry stockEntry = iterator.next();
-				if (orderService.findOpenOrderEntryForStockEntry(stockEntry) != null) {
+				if (orderService.findOpenOrderEntryForStockEntry(stockEntry) != null
+						|| MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(stockEntry))) {
 					iterator.remove();
 				}
 			}
