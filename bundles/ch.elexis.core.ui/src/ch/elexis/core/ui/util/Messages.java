@@ -60,4 +60,11 @@ public class Messages {
 	public static String CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate;
 	public static String CreatePrescriptionHelper_WarninigNoConsTitle = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_WarninigNoConsTitle;
 	public static String CreatePrescriptionHelper_WarninigNoConsText = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_WarninigNoConsText;
+	public static String OrderManagement_NoItems = ch.elexis.core.l10n.Messages.OrderManagement_NoItems;
+	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
+	public static String OrderManagement_PartiallyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_PartiallyDelivered;
+	public static String OrderManagement_Ordered = ch.elexis.core.l10n.Messages.OrderManagement_Ordered;
+	public static String OrderManagement_NotOrdered = ch.elexis.core.l10n.Messages.OrderManagement_NotOrdered;
+	public static String BestellView_OrderIsClosed = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
+	public static String Outputter_Sent = ch.elexis.core.l10n.Messages.Outputter_Sent;
 }
