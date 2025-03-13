@@ -23,6 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -370,6 +373,10 @@ public class GlobalActions {
 					// reset after login
 					if (loginUserName != null) {
 						System.setProperty(ElexisSystemPropertyConstants.LOGIN_USERNAME, loginUserName);
+						ECommandService commandService = PlatformUI.getWorkbench().getService(ECommandService.class);
+						EHandlerService handlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
+						handlerService.executeHandler(new ParameterizedCommand(
+								commandService.getCommand("ch.elexis.core.ui.e4.command.hidePreferencePages"), null));
 					}
 					if (!performLogin) {
 						exitAction.run();

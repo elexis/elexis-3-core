@@ -52,5 +52,6 @@ Import-Package: ch.elexis.core.data.util,
  org.eclipse.swt.events,
  org.eclipse.swt.graphics,
  org.eclipse.swt.layout,
- org.eclipse.swt.widgets
+ org.eclipse.swt.widgets,
+ org.eclipse.ui
 Automatic-Module-Name: ch.elexis.core.ui.e4
