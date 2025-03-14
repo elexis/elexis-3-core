@@ -13,10 +13,7 @@
 
 package ch.elexis.core.application.advisors;
 
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
@@ -57,10 +54,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	 */
 	@Override
 	public void initialize(final IWorkbenchConfigurer configurer) {
-		ECommandService commandService = PlatformUI.getWorkbench().getService(ECommandService.class);
-		EHandlerService handlerService = PlatformUI.getWorkbench().getService(EHandlerService.class);
-		handlerService.executeHandler(new ParameterizedCommand(
-				commandService.getCommand("ch.elexis.core.ui.e4.command.hidePreferencePages"), null));
 		Hub.pin.initializeDisplayPreferences(UiDesk.getDisplay());
 		configurer.setSaveAndRestore(true);
 		super.initialize(configurer);
