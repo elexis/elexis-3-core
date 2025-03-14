@@ -161,4 +161,18 @@
          id="ch.elexis.core.ui.reminder"
          version="0.0.0"/>
 
+   <plugin
+         id="com.equo.chromium.cef.cocoa.macosx.aarch64"
+         os="macosx"
+         ws="cocoa"
+         arch="aarch64"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.equo.chromium.cef.gtk.linux.aarch64"
+         os="linux"
+         ws="gtk"
+         arch="aarch64"
+         version="0.0.0"/>
+
 </feature>
