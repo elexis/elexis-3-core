@@ -426,6 +426,14 @@
             inject="true"
             name="Pendenzen (beta)">
       </view>
+      <view
+            category="ch.elexis.datenKategorie"
+            class="ch.elexis.core.ui.views.OrderManagementView"
+            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/cart.png"
+            id="ch.elexis.OrderManagementView"
+            inject="true"
+            name="%elexis.orderManagementView">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
