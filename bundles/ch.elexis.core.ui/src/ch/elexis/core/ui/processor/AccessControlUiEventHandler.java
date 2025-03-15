@@ -25,6 +25,9 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
@@ -36,7 +39,10 @@ import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -63,10 +69,18 @@ public class AccessControlUiEventHandler implements EventHandler {
 	@Inject
 	private UISynchronize uiSynchronize;
 
+	@Inject
+	private IContextService contextService;
+
+	@Inject
+	private IUserService userService;
+
 	private Map<String, List<String>> viewAccessControlMap;
 
 	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
 
+	private static final List<IPreferenceNode> hiddenNodes = new ArrayList<>();
+	private static final String ALLOWED_PREFERENCE_PAGE_ID = "ch.elexis.preferences.UserPreferences";
 
 	private void updateModel() {
 		LoggerFactory.getLogger(getClass()).info("UPDATE MODEL " + mApplication + " / " + eModelService);
@@ -75,6 +89,7 @@ public class AccessControlUiEventHandler implements EventHandler {
 		updateParts();
 		updatePlaceholders();
 		updatePartStacks();
+		updatePreferencePages();
 	}
 
 	@Override
@@ -153,6 +168,30 @@ public class AccessControlUiEventHandler implements EventHandler {
 				}
 			}
 		}
+	}
+
+	private void updatePreferencePages() {
+		contextService.getActiveUser().ifPresent(u -> {
+			boolean hasRole = userService.hasRole(u, RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR);
+			if (hasRole && hiddenNodes.isEmpty()) {
+				return;
+			}
+			PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+			IPreferenceNode[] nodes = pm.getRootSubNodes();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+				if (!hasRole) {
+					for (IPreferenceNode node : nodes) {
+						if (!node.getId().equals(ALLOWED_PREFERENCE_PAGE_ID)) {
+							hiddenNodes.add(node);
+							pm.remove(node);
+						}
+					}
+				} else {
+					hiddenNodes.forEach(pm::addToRoot);
+					hiddenNodes.clear();
+				}
+			});
+		});
 	}
 
 	private void sendStackSelectedElement(MStackElement mStackElement, MPartStack partStack) {
