@@ -934,6 +934,15 @@ public class OrderImportDialog extends TitleAreaDialog {
 		public Long getLastupdate() {
 			return null;
 		}
+
+		@Override
+		public IStock getRwaStockLink() {
+			return null;
+		}
+
+		@Override
+		public void setRwaStockLink(IStock value) {
+		}
 	}
 
 	private static class TransientOrderEntry implements IOrderEntry {
