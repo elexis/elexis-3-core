@@ -1,7 +1,7 @@
 package ch.elexis.core.model;
 
 public enum OrderEntryState {
-	OPEN(0), ORDERED(1), PARTIAL_DELIVER(2), DONE(3);
+	OPEN(0), ORDERED(1), PARTIAL_DELIVER(2), DONE(3), MARKED(4);
 
 	private final Integer value;
 
