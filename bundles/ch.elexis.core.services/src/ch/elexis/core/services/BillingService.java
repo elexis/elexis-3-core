@@ -166,7 +166,8 @@ public class BillingService implements IBillingService {
 
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
-							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
+							contextService.getActiveMandator().map(m -> m.getId()).orElse(null),
+							Optional.ofNullable(encounter.getPatient()).orElse(null));
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
 					}
@@ -369,7 +370,7 @@ public class BillingService implements IBillingService {
 			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
 			double difference = newAmount - oldAmount;
 			if (difference > 0) {
-				stockService.performSingleDisposal(art, (int) difference, mandatorId);
+				stockService.performSingleDisposal(art, (int) difference, mandatorId, null);
 			} else if (difference < 0) {
 				difference *= -1;
 				stockService.performSingleReturn(art, (int) difference, mandatorId);
