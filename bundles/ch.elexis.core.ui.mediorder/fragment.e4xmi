@@ -12,7 +12,7 @@
         <children xsi:type="menu:DirectMenuItem" xmi:id="_DhJkgLRvEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.billmediorderentry" label="%bill_and_close" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.BillAndCloseMediorderEntryHandler"/>
         <children xsi:type="menu:DirectMenuItem" xmi:id="_WjBBALRxEe64Z7WXERmOJw" elementId="ch.elexis.core.ui.mediorder.directmenuitem.removeentry" label="%remove_entry" iconURI="icon://IMG_DELETE" contributionURI="bundleclass://ch.elexis.core.ui.mediorder/ch.elexis.core.ui.mediorder.internal.handler.RemoveMediorderEntryHandler"/>
       </menus>
-      <toolbar xmi:id="_rywI0K_JEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.toolbar.0">
+      <toolbar xmi:id="_rywI0K_JEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.toolbar.mediorderpart">
         <children xsi:type="menu:HandledToolItem" xmi:id="_Gj6eMK_KEe6-dOX11WJmlQ" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.refresh" label="" iconURI="icon://IMG_REFRESH" tooltip="" command="_hobvwIGhEeuh_oRSm2ExFw"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_NOLH4LFYEe6KJvcCRQJoEQ" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.createpatientorder" label="%create_patient_order" iconURI="icon://IMG_PERSPECTIVE_ORDERS" tooltip="%create_patient_order_tooltip" command="_TiC5sLFYEe6KJvcCRQJoEQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_LV0ekIoyEe-ZpOLCafes2w" elementId="ch.elexis.core.ui.mediorder.handledtoolitem.filter" label="%filter_status" iconURI="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/filter_ps.png" type="Check" command="_GvjooIozEe-ZpOLCafes2w"/>
