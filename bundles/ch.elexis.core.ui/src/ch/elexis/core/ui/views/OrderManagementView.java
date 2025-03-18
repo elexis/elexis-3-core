@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -47,13 +48,11 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IStock;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
-import ch.elexis.core.ui.dialogs.OrderMethodDialog;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -65,7 +64,7 @@ import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.util.dnd.DropReceiver;
 import jakarta.inject.Inject;
 
-public class OrderManagementView extends ViewPart {
+public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	public static final String ID = "ch.elexis.OrderManagementView"; //$NON-NLS-1$
 
@@ -260,15 +259,15 @@ public class OrderManagementView extends ViewPart {
 
 	private void handleOrderButtonClick() {
 		String buttonText = orderButton.getText();
-
 		if (buttonText.equals(Messages.OrderManagement_Button_Order)) {
-			Optional<IUser> user = ContextServiceHolder.get().getActiveUser();
-			user.ifPresent(u -> {
-			});
-			OrderMethodDialog.OrderMethod method = OrderMethodDialog.open();
-			if (method == OrderMethodDialog.OrderMethod.SEND) {
-				actionFactory.sendOrder();
-				loadOpenOrders();
+			if (buttonText.equals(Messages.OrderManagement_Button_Order)) {
+				boolean confirm = MessageDialog.openQuestion(this.getSite().getShell(),
+						ch.elexis.core.ui.dialogs.Messages.OrderMethodDialog_Title,
+						ch.elexis.core.ui.dialogs.Messages.OrderMethodDialog_Message);
+				if (confirm) {
+					actionFactory.sendOrder();
+					loadOpenOrders();
+				}
 			}
 			refresh();
 
@@ -533,9 +532,12 @@ public class OrderManagementView extends ViewPart {
 		}
 	}
 
+	@Override
 	public void refresh() {
-		loadOrderDetails(actOrder);
-		updateOrderDetails(actOrder);
+		if (actOrder != null) {
+			loadOrderDetails(actOrder);
+			updateOrderDetails(actOrder);
+		}
 		updateUI();
 	}
 	

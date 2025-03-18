@@ -17,6 +17,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -704,10 +705,10 @@ public class BestellView extends ViewPart {
 	@Inject
 	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event,
 			IContextService contextService) {
-//		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
-//				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
-////			addItemsToOrder(Collections.singletonList((IArticle) event));
-//		}
+		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
+				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
+			addItemsToOrder(Collections.singletonList((IArticle) event));
+		}
 	}
 
 	@org.eclipse.e4.core.di.annotations.Optional
