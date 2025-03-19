@@ -658,18 +658,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.keycloak.keycloak-authz-client"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.keycloak.keycloak-common"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.keycloak.keycloak-core"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.jetty.client"
          version="0.0.0"/>
 
@@ -791,10 +779,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.keycloak.keycloak-adapter-core"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.equinox.security.win32"
          os="win32"
          arch="x86_64"
@@ -806,18 +790,6 @@
 
    <plugin
          id="ch.qos.logback.core"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-annotations"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-core"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-databind"
          version="0.0.0"/>
 
    <plugin

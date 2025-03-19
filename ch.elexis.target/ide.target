@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2025-03-java21" sequenceNumber="1741251210">
+<target name="Elexis 2025-03-java21" sequenceNumber="1742379788">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -73,7 +73,6 @@
       <unit id="io.swagger.core.v3.swagger-annotations" version="2.2.27"/>
       <unit id="info.elexis.target.commons.feature.group" version="0.0.0"/>
       <unit id="info.elexis.target.jaxwsrs.core.feature.group" version="0.0.0"/>
-      <unit id="info.elexis.target.keycloak.feature.group" version="0.0.0"/>
       <unit id="io.curity.oauth-filter" version="5.0.0"/>
       <unit id="jakarta.websocket-api" version="2.1.100.SNAPSHOT"/>
       <unit id="info.elexis.target.apache.poi.feature.group" version="0.0.0"/>
@@ -117,9 +116,9 @@
       <unit id="ca.odell.glazedlists" version="1.11.0"/>
       <unit id="org.eclipse.collections" version="11.1.0.v20220705-1455"/>
       <unit id="org.eclipse.swtchart.feature.feature.group" version="1.0.0.202412021530"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="124.0.10"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="124.0.10"/>
-      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="124.0.10"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="128.0.8"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.8"/>
+      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="128.0.8"/>
       <unit id="info.elexis.target.jetty.additions.feature.group" version="12.0.16"/>
       <unit id="org.junit" version="4.13.2.v20240929-1000"/>
       <unit id="org.hamcrest" version="3.0.0"/>
@@ -163,6 +162,16 @@
       <unit id="org.eclipse.e4.ui.workbench.swt.nl_it" version="4.26.0.v20230220105658"/>
       <unit id="com.googlecode.libphonenumber" version="8.13.42"/>
       <repository location="https://download.elexis.info/elexis/target/2025-03-java21/"/>
+    </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,test" includeSource="true" missingManifest="generate" type="Maven" label="MavenDependencies">
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse.jdt</groupId>
+          <artifactId>org.eclipse.jdt.annotation</artifactId>
+          <version>2.0.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
     </location>
   </locations>
 </target>

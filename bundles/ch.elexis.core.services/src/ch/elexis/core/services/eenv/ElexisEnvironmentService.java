@@ -8,11 +8,6 @@ import java.net.http.HttpResponse;
 import java.util.Timer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
-import org.keycloak.authorization.client.AuthzClient;
-import org.keycloak.authorization.client.Configuration;
-import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +18,9 @@ import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.oauth2.OAuth2Service;
+import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
+import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
 
 // Activated via ElexisEnvironmentServiceActivator
@@ -34,7 +32,6 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 	private IContextService contextService;
 	private IConfigService configService;
 
-	private KeycloakDeployment keycloakDeployment;
 	private Timer refreshAccessTokenTimer;
 
 	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
@@ -45,10 +42,8 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 
-		keycloakDeployment = KeycloakDeploymentBuilder.build(getKeycloakConfiguration());
 		refreshAccessTokenTimer = new Timer("Refresh EE access-token", true); //$NON-NLS-1$
-		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(keycloakDeployment, contextService), 60 * 1000,
-				60 * 1000);
+		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(contextService), 60 * 1000, 60 * 1000);
 	}
 
 	@Override
@@ -92,32 +87,19 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	@Override
 	public void loadAccessToken(String username, char[] password) {
-		try {
-			AuthzClient authzClient = AuthzClient.create(getKeycloakConfiguration());
-			AccessTokenResponse obtainAccessToken = authzClient.obtainAccessToken(username, String.valueOf(password));
-			AccessToken keycloakAccessToken = AccessTokenUtil.load(obtainAccessToken);
-
-			contextService.getRootContext().setTyped(keycloakAccessToken);
-			logger.info("Loaded access-token for [{}], valid until [{}], refresh until [{}]",
-					keycloakAccessToken.getUsername(),
-					TimeUtil.toLocalDateTime(keycloakAccessToken.getAccessTokenExpiration()),
-					TimeUtil.toLocalDateTime(keycloakAccessToken.refreshTokenExpiration()));
-		} catch (Exception e) {
-			logger.warn("Error obtaining access token", e);
-			return;
-		}
-	}
-
-	private Configuration getKeycloakConfiguration() {
-		Configuration keycloakConfiguration = new Configuration();
-		keycloakConfiguration.setRealm(IElexisEnvironmentService.EE_KEYCLOAK_REALM_ID);
-		keycloakConfiguration.setAuthServerUrl(getKeycloakBaseUrl() + "/auth");
-		keycloakConfiguration.setResource("elexis-rcp-openid");
-		keycloakConfiguration.setPublicClient(false);
-		keycloakConfiguration.setDisableTrustManager(false);
 		String rcpClientSecret = getProperty(IElexisEnvironmentService.EE_RCP_OPENID_SECRET);
-		keycloakConfiguration.getCredentials().put("secret", rcpClientSecret);
-		return keycloakConfiguration;
+		ObjectStatus<AccessToken> accessToken = new OAuth2Service().performDirectAccessGrantFlow(
+				URI.create(getKeycloakRealmEndpoint()), "elexis-rcp-openid", rcpClientSecret, "elexis-rcp-openid",
+				password);
+		if (accessToken.isOK()) {
+			contextService.getRootContext().setTyped(accessToken.getObject());
+			logger.info("Loaded access-token for [{}], valid until [{}], refresh until [{}]",
+					accessToken.getObject().getUsername(),
+					TimeUtil.toLocalDateTime(accessToken.getObject().getAccessTokenExpiration()),
+					TimeUtil.toLocalDateTime(accessToken.getObject().refreshTokenExpiration()));
+		} else {
+			logger.warn("Could not load accessToken: " + accessToken.getMessage());
+		}
 	}
 
 }

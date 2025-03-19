@@ -27,8 +27,9 @@ public interface IFhirTransformerRegistry {
 	 * Use the {@link IFhirTransformer} implementations to load the local object for
 	 * a FHIR reference String.
 	 * 
-	 * @param code
+	 * @param fhirReference e.g. "Patient/11233"
 	 * @return
 	 */
 	public Optional<? extends Identifiable> getLocalObjectForReference(String fhirReference);
+
 }

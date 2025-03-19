@@ -1,5 +1,14 @@
 target "Elexis 2025-03-java21" with source allEnvironments
 
+maven MavenDependencies scope=compile,test dependencyDepth=infinite missingManifest=generate includeSources {
+	dependency {
+		groupId="org.eclipse.jdt"
+		artifactId="org.eclipse.jdt.annotation"
+		version="2.0.0"
+	}
+}
+
+
 location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	
 	// justj.21
@@ -109,8 +118,7 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	info.elexis.target.commons.feature.group lazy
 	// jax ws-rs
 	info.elexis.target.jaxwsrs.core.feature.group lazy
-	// keycloak
-	info.elexis.target.keycloak.feature.group lazy
+	// oauth2
 	io.curity.oauth-filter
 	jakarta.websocket-api [2.1.100.SNAPSHOT,2.1.100.SNAPSHOT]
 	// poi

@@ -197,6 +197,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.services</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -287,11 +292,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.model.workbench</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -347,22 +347,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-spi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.pde.junit.runtime</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.di.extensions.supplier</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -417,17 +407,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-annotations</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-io</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.hamcrest.library</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.servlet-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -572,11 +562,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.google.gson</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.core</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -657,6 +642,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.client5.httpclient5</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.osgi-resource-locator</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -677,17 +667,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5-h2</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>jcl.over.slf4j</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.mail-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -822,11 +812,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-authz-client</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>jakarta.enterprise.cdi-api</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -902,17 +887,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.ui.css.swt</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>angus-activation</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>com.google.gson</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -987,11 +972,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-common</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.e4.core.di</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -1003,6 +983,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>io.curity.oauth-filter</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
