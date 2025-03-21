@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
@@ -167,9 +170,14 @@ public class BillingService implements IBillingService {
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
 							contextService.getActiveMandator().map(m -> m.getId()).orElse(null),
-							Optional.ofNullable(encounter.getPatient()).orElse(null));
+							Optional.ofNullable(encounter.getPatient()).orElse(null), encounter.getPatient());
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
+						for (IStatus child : status.getChildren()) {
+							if (child.getSeverity() == IStatus.WARNING) {
+								optifierResult.add(SEVERITY.WARNING, 0, Messages.Mediorder_reservation, null, false);
+							}
+						}
 					}
 				}
 
@@ -205,7 +213,8 @@ public class BillingService implements IBillingService {
 					}
 				}
 
-				return optifierResult;
+				return optifierResult.getSeverity().equals(SEVERITY.OK) ? optifierResult
+						: translateWarningOnly(optifierResult);
 			} else {
 				return translateResult(verificationResult);
 			}
@@ -270,6 +279,13 @@ public class BillingService implements IBillingService {
 		return ret;
 	}
 
+	private Result<IBilled> translateWarningOnly(Result<?> result) {
+		Result<IBilled> ret = new Result<>(SEVERITY.WARNING, null);
+		result.getMessages().stream().filter(msg -> SEVERITY.WARNING.equals(msg.getSeverity()))
+				.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
+		return ret;
+	}
+
 	@Override
 	public Optional<IBillingSystemFactor> getBillingSystemFactor(String system, LocalDate date) {
 		IQuery<IBillingSystemFactor> query = coreModelService.getQuery(IBillingSystemFactor.class);
@@ -316,7 +332,7 @@ public class BillingService implements IBillingService {
 			return Status.OK_STATUS;
 		}
 
-		IStatus ret = Status.OK_STATUS;
+		MultiStatus ret = new MultiStatus(getClass(), 0, null);
 		boolean bAllowOverrideStrict = ConfigServiceHolder.get()
 				.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
 
@@ -331,12 +347,12 @@ public class BillingService implements IBillingService {
 					if (ret.isOK() && !result.isOK()) {
 						String message = result.getMessages().stream().map(m -> m.getText())
 								.collect(Collectors.joining(", "));
-						ret = new Status(Status.WARNING, "ch.elexis.core.services", message);
+						ret.add(new Status(Status.WARNING, "ch.elexis.core.services", message));
 					}
 				} else if (!result.isOK()) {
 					String message = result.getMessages().stream().map(m -> m.getText())
 							.collect(Collectors.joining(", "));
-					return new Status(Status.ERROR, "ch.elexis.core.services", message);
+					ret.add(new Status(Status.ERROR, "ch.elexis.core.services", message));
 				}
 			}
 			if (fractions > 0.0) {
@@ -345,19 +361,25 @@ public class BillingService implements IBillingService {
 					if (ret.isOK() && !result.isOK()) {
 						String message = result.getMessages().stream().map(m -> m.getText())
 								.collect(Collectors.joining(", "));
-						ret = new Status(Status.WARNING, "ch.elexis.core.services", message);
+						ret.add(new Status(Status.WARNING, "ch.elexis.core.services", message));
 					}
 				} else if (!result.isOK()) {
 					String message = result.getMessages().stream().map(m -> m.getText())
 							.collect(Collectors.joining(", "));
-					return new Status(Status.ERROR, "ch.elexis.core.services", message);
+					ret.add(new Status(Status.ERROR, "ch.elexis.core.services", message));
 				}
 			}
 		} else if (difference < 0) {
 			changeAmount(billed, newAmount);
 		}
 
-		return ret;
+		if (ret.getChildren().length > 0) {
+			List<String> messages = Arrays.stream(ret.getChildren()).map(IStatus::getMessage).toList();
+			String message = messages.stream().distinct().collect(Collectors.joining(", "));
+			return new Status(Status.ERROR, "ch.elexis.core.services", message);
+		} else {
+			return ret;
+		}
 	}
 
 	@Override

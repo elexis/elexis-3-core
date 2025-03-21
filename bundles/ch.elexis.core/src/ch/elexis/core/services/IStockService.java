@@ -9,6 +9,7 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.rgw.tools.Result.SEVERITY;
 
 public interface IStockService {
 
@@ -132,14 +133,29 @@ public interface IStockService {
 	/**
 	 * Perform a single disposal of an article. The article will be withdrawn from
 	 * the Stock with the highest priority owning this article (if multiple).
-	 * 
-	 * Based on whether or not the article is included in a mediorder, the item will
-	 * be removed from the reserve
 	 *
 	 * @param article
 	 * @param mandatorId may be <code>null</code> to not consider the mandator
 	 * @param count
 	 * @return
+	 */
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
+
+	/**
+	 * Perform a single disposal of an article.
+	 * 
+	 * The dispensing of a mediorder article must always be ensured, regardless of
+	 * wether the {@link IStockEntry#getMinimumStock()} value is reached or not.<br>
+	 * 
+	 * If the article is not part of a mediorder and the
+	 * {@link IStockEntry#getMinimumStock()} is undercut, a warning is returned
+	 * 
+	 * @param article
+	 * @param count
+	 * @param mandatorId
+	 * @param patient
+	 * @return {@link SEVERITY#WARNING} if the MIN value will be undercut after the
+	 *         disposal
 	 */
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IPatient patient);
 

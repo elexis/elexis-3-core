@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
@@ -64,11 +66,12 @@ public class StockService implements IStockService {
 
 	public void performSingleDisposal(IArticle article, int count) {
 		Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
-		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null, null);
+		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
 	}
 
 	@Override
 	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IPatient patient) {
+		MultiStatus multistatus = new MultiStatus(getClass(), IStatus.OK, Messages.Core_Status, null);
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -80,6 +83,12 @@ public class StockService implements IStockService {
 				mandatorId);
 		if (se == null) {
 			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
+		}
+
+		if (this.getPatientStock(patient).isEmpty()) {
+			if (se.getCurrentStock() - count < se.getMinimumStock()) {
+				multistatus.add(new Status(Status.WARNING, "ch.elexis.core.services", "Not enough stock for disposal"));
+			}
 		}
 
 		if (se.getStock().isCommissioningSystem()) {
@@ -98,9 +107,6 @@ public class StockService implements IStockService {
 				if (!performPartialOutlay) {
 					return Status.OK_STATUS;
 				}
-			}
-			if (patient != null) {
-				handleStockDispoal(se, count, patient);
 			}
 			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
 
@@ -136,26 +142,11 @@ public class StockService implements IStockService {
 				}
 				coreModelService.save(se);
 				LocalLockServiceHolder.get().releaseLock(se);
-				return Status.OK_STATUS;
+				return multistatus.getChildren().length == 0 ? Status.OK_STATUS : multistatus;
 			}
 		}
 
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
-	}
-
-	private void handleStockDispoal(IStockEntry se, int count, IPatient patient) {
-		Optional<IStock> patientStock = this.getPatientStock(patient);
-		if (patientStock.isPresent()) {
-			for (IStockEntry entry : patientStock.get().getStockEntries()) {
-				if (entry.getCurrentStock() == entry.getMinimumStock()) {
-					se.setMinimumStock(se.getMinimumStock() - count);
-				}
-			}
-		} else if (se.getCurrentStock() - count < se.getMinimumStock()) {
-			se.setMinimumStock(se.getMinimumStock() + count);
-			count = se.getCurrentStock() - se.getMinimumStock();
-		}
-		coreModelService.save(se);
 	}
 
 	@Override
@@ -268,10 +259,6 @@ public class StockService implements IStockService {
 		int val = Integer.MAX_VALUE;
 		IStockEntry ret = null;
 		for (IStockEntry iStockEntry : entries) {
-			IPerson stockOwner = iStockEntry.getStock().getOwner();
-			if (stockOwner != null && stockOwner.isPatient()) {
-				continue;
-			}
 			IStock stock = iStockEntry.getStock();
 			Integer priority = stock.getPriority();
 			if (priority < val) {
@@ -428,6 +415,11 @@ public class StockService implements IStockService {
 		IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 		query.and("stock", COMPARATOR.EQUALS, stock);
 		return query.execute();
+	}
+
+	@Override
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId) {
+		return performSingleDisposal(article, count, mandatorId, null);
 	}
 
 	@Override
