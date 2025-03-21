@@ -1,7 +1,6 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
 
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,8 +76,10 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 		LocalDateTime originalEndTime = localObject.getEndTime();
 		attributeMapper.fhirToElexis(fhirObject, localObject);
 		if (!Objects.equals(originalEndTime, localObject.getEndTime())) {
-			AppointmentHistoryServiceHolder.get().logAppointmentDurationChange(localObject, originalEndTime,
-					localObject.getEndTime());
+			if (originalEndTime != null && localObject.getEndTime() != null) {
+				AppointmentHistoryServiceHolder.get().logAppointmentDurationChange(localObject, originalEndTime,
+						localObject.getEndTime());
+			}
 		}
 		if (!Objects.equals(originalReason, fhirObject.getDescription())) {
 			AppointmentHistoryServiceHolder.get().logAppointmentEdit(localObject);
