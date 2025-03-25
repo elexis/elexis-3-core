@@ -150,6 +150,7 @@ public class MediorderPart implements IRefreshablePart {
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
+	private static final String ONLY_NUMBER_REGEX = "\\d*";
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -514,7 +515,7 @@ public class MediorderPart implements IRefreshablePart {
 
 			@Override
 			protected CellEditor getCellEditor(Object element) {
-				return new TextCellEditor(tableViewerDetails.getTable());
+				return createTextCellEditor();
 			}
 
 			@Override
@@ -530,14 +531,16 @@ public class MediorderPart implements IRefreshablePart {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				IStockEntry entry = (IStockEntry) element;
 				String amount = (String) value;
-				entry.setMinimumStock(Integer.parseInt(amount));
-				coreModelService.save(entry);
-				tableViewerDetails.refresh(true);
-				removeStockEntry(entry);
-				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
-				refresh();
+				if (StringUtils.isNotBlank(amount)) {
+					IStockEntry entry = (IStockEntry) element;
+					entry.setMinimumStock(Integer.parseInt(amount));
+					coreModelService.save(entry);
+					tableViewerDetails.refresh(true);
+					removeStockEntry(entry);
+					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+					refresh();
+				}
 			}
 
 		});
@@ -557,7 +560,7 @@ public class MediorderPart implements IRefreshablePart {
 
 			@Override
 			protected CellEditor getCellEditor(Object element) {
-				return new TextCellEditor(tableViewerDetails.getTable());
+				return createTextCellEditor();
 			}
 
 			@Override
@@ -573,13 +576,15 @@ public class MediorderPart implements IRefreshablePart {
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				IStockEntry entry = (IStockEntry) element;
 				String amount = (String) value;
-				entry.setMaximumStock(Integer.parseInt(amount));
-				coreModelService.save(entry);
-				tableViewerDetails.refresh(true);
-				removeStockEntry(entry);
-				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+				if (StringUtils.isNotBlank(amount)) {
+					IStockEntry entry = (IStockEntry) element;
+					entry.setMaximumStock(Integer.parseInt(amount));
+					coreModelService.save(entry);
+					tableViewerDetails.refresh(true);
+					removeStockEntry(entry);
+					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+				}
 			}
 
 		});
@@ -735,6 +740,12 @@ public class MediorderPart implements IRefreshablePart {
 				refresh();
 			}
 		});
+	}
+
+	private TextCellEditor createTextCellEditor() {
+		TextCellEditor editor = new TextCellEditor(tableViewerDetails.getTable());
+		((Text) editor.getControl()).addVerifyListener(e -> e.doit = e.text.matches(ONLY_NUMBER_REGEX));
+		return editor;
 	}
 
 	/**
