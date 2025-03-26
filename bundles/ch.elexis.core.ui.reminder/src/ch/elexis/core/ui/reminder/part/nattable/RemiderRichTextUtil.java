@@ -18,12 +18,14 @@ public class RemiderRichTextUtil {
 			sb.append("</span></strong>");
 		}
 		sb.append("<strong>" + getSubject(reminder) + "</strong>");
-		if (addDate && reminder.getDue() != null) {
-			sb.append(" " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(reminder.getDue()));
-		}
 		if (reminder.getContact() != null && reminder.getContact().isPatient()) {
 			sb.append("<br />").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()));
 		}
+		sb.append("<addition>");
+		if (addDate && reminder.getDue() != null) {
+			sb.append(DateTimeFormatter.ofPattern("dd.MM.yy").format(reminder.getDue()));
+		}
+		sb.append("</addition>");
 		return sb.toString();
 	}
 

@@ -64,9 +64,29 @@ public class SelectionUtil {
 			if (x > startX && y > startY) {
 				int cellx = x - startX;
 				int celly = y - startY;
+				
+				return cell.getBounds().width - cellx < 16 && (celly < 16);
+			}
+		}
+		return false;
+	}
 
-				int middle = (cell.getBounds().height / 2);
-				return cellx < 16 && (celly < middle + 8 && celly > middle - 8);
+	public static boolean isHoverLink(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider, ILayerCell cell,
+			int x, int y) {
+		if (cell != null) {
+			int columnPosition = natTable.getColumnPositionByX(x);
+			int rowPosition = natTable.getRowPositionByY(y);
+
+			// use the row position of the row with data not the spanned afterwards
+			rowPosition = SelectionUtil.getSpanningRowPosition(natTable, dataProvider, x, y);
+			int startX = cell.getLayer().getStartXOfColumnPosition(columnPosition);
+			int startY = cell.getLayer().getStartYOfRowPosition(rowPosition);
+
+			if (x > startX && y > startY) {
+				int cellx = x - startX;
+				int celly = y - startY;
+
+				return cell.getBounds().width - cellx < 16 && (celly > 18 && celly < 34);
 			}
 		}
 		return false;

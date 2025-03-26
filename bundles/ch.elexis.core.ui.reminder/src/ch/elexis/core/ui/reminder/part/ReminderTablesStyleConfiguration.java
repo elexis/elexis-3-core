@@ -5,20 +5,21 @@ import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfigurat
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.extension.nebula.richtext.RichTextCellPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundPainter;
-import org.eclipse.nebula.widgets.nattable.painter.cell.ImagePainter;
-import org.eclipse.nebula.widgets.nattable.painter.cell.decorator.CellPainterDecorator;
+import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.style.HorizontalAlignmentEnum;
 import org.eclipse.nebula.widgets.nattable.style.SelectionStyleLabels;
 import org.eclipse.nebula.widgets.nattable.style.Style;
+import org.eclipse.nebula.widgets.nattable.style.VerticalAlignmentEnum;
 import org.eclipse.nebula.widgets.nattable.ui.util.CellEdgeEnum;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
-import ch.elexis.core.ui.icons.ImageSize;
-import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderAdditionCellPainter;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderCellPainterDecorator;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderRichTextCellPainter;
 
 public class ReminderTablesStyleConfiguration extends DefaultNatTableStyleConfiguration {
 
@@ -38,12 +39,21 @@ public class ReminderTablesStyleConfiguration extends DefaultNatTableStyleConfig
 				SelectionStyleLabels.SELECTION_ANCHOR_STYLE);
 		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT);
 
-		cellPainter = new RichTextCellPainter(true, false, true);
-		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, new BackgroundPainter(cellPainter));
-
+		this.cellPainter = new BackgroundPainter(new RichTextCellPainter(false, false, true));
 		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER,
-				new CellPainterDecorator(cellPainter, CellEdgeEnum.LEFT,
-						new ImagePainter(Images.IMG_TICK.getImage(ImageSize._16x16_DefaultIconSize))),
+				cellPainter);
+
+		ICellPainter decoratedCellPainter = new ReminderCellPainterDecorator(new ReminderRichTextCellPainter(),
+				CellEdgeEnum.RIGHT, new ReminderAdditionCellPainter());
+//		decoratedCellPainter = new LineBorderDecorator(decoratedCellPainter,
+//				new BorderStyle(2, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK), LineStyleEnum.SOLID));
+		
+		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, decoratedCellPainter,
 				DisplayMode.NORMAL, "REMINDER");
+
+		Style cellStyle = new Style();
+		cellStyle.setAttributeValue(CellStyleAttributes.VERTICAL_ALIGNMENT, VerticalAlignmentEnum.TOP);
+		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL,
+				"REMINDER");
 	}
 }
