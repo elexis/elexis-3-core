@@ -14,6 +14,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
@@ -58,6 +59,17 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public Optional<? extends Identifiable> getLocalObjectForReference(String fhirReference) {
+		if (fhirReference.startsWith(Person.class.getSimpleName())) {
+			Optional<String> localId = FhirUtil.getLocalId(fhirReference);
+			if (localId.isPresent()) {
+				return modelService.load(localId.get(), IPerson.class);
+			}
+		}
+		return IFhirTransformer.super.getLocalObjectForReference(fhirReference);
 	}
 
 	@Override
