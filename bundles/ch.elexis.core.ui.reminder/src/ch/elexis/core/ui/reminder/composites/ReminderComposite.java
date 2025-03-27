@@ -223,6 +223,9 @@ public class ReminderComposite extends Composite {
 				if (proposal instanceof IdentifiableContentProposal) {
 					IdentifiableContentProposal<IUser> prop = (IdentifiableContentProposal<IUser>) proposal;
 					item.getValue().setGroup(null);
+					item.getValue().getResponsible().forEach(c -> {
+						item.getValue().removeResponsible(c);
+					});
 					item.getValue().addResponsible(prop.getIdentifiable().getAssignedContact());
 					item.getValue().setResponsibleAll(false);
 					updateResponsibleFields();
