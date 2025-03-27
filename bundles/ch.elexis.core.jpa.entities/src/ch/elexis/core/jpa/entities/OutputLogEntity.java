@@ -180,11 +180,8 @@ public class OutputLogEntity extends AbstractEntityWithId implements EntityWithI
 	 * @param outputterStatus The new outputter status.
 	 */
 	public void setOutputterStatus(String outputterStatus) {
-		if (this.outputterStatus == null || this.outputterStatus.isEmpty()) {
-			this.outputterStatus = outputterStatus;
-		} else {
-			this.outputterStatus += "; " + outputterStatus;
-		}
+		this.outputterStatus = outputterStatus;
+
 	}
 
 	@Override

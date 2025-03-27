@@ -24,7 +24,8 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexpor
  org.eclipse.nebula.widgets.nattable.core,
  org.eclipse.nebula.widgets.nattable.extension.nebula,
  org.eclipse.nebula.widgets.richtext,
- org.jdom.2;bundle-version="2.0.6"
+ org.jdom.2;bundle-version="2.0.6",
+ com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
@@ -67,6 +68,8 @@ Export-Package: ch.elexis.core.ui,
  com.tiff.common.ui.datepicker;uses:="org.eclipse.swt.events,org.eclipse.swt.graphics,org.eclipse.swt.widgets"
 Import-Package: com.equo.chromium.swt,
  com.google.common.collect;version="21.0.0",
+ com.google.gson;version="[2.11.0,3.0.0)",
+ com.google.gson.annotations;version="[2.12.0,3.0.0)",
  com.opencsv;version="3.10.0",
  com.opencsv.exceptions;version="[5.9.0,6.0.0)",
  jakarta.activation;version="1.2.2",
@@ -81,7 +84,10 @@ Import-Package: com.equo.chromium.swt,
  org.apache.commons.lang3.math;version="3.12.0",
  org.eclipse.core.expressions,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
- org.eclipse.e4.ui.model.application.ui.basic
+ org.eclipse.e4.ui.model.application.ui.basic,
+ org.jsoup;version="[1.18.0,2.0.0)",
+ org.jsoup.nodes;version="[1.18.0,2.0.0)",
+ org.jsoup.parser;version="[1.18.0,2.0.0)"
 Service-Component: OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml,
  OSGI-INF/ch.elexis.core.ui.events.ElexisServerCreateEventForwarderEventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.internal.CoreOperationAdvisor.xml,

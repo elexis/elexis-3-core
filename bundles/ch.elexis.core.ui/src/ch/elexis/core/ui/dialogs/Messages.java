@@ -292,5 +292,24 @@ public class Messages {
 	public static String Core_EAN = ch.elexis.core.l10n.Messages.Core_EAN;
 	public static String UI_description = ch.elexis.core.l10n.Messages.UI_description;
 	public static String Core_Stock = ch.elexis.core.l10n.Messages.Core_Stock;
+	public static Object OrderHistory_Created = ch.elexis.core.l10n.Messages.OrderHistory_Created;
+	public static Object OrderHistory_AddMedi = ch.elexis.core.l10n.Messages.OrderHistory_AddMedi;
+	public static Object OrderHistory_Edited = ch.elexis.core.l10n.Messages.OrderHistory_Edited;
+	public static Object OrderHistory_Delivered = ch.elexis.core.l10n.Messages.OrderHistory_Delivered;
+	public static Object OrderHistory_Ordered = ch.elexis.core.l10n.Messages.OrderHistory_Ordered;
+	public static Object OrderHistory_Deleted = ch.elexis.core.l10n.Messages.OrderHistory_Deleted;
+	public static Object OrderHistory_RemovedMedi = ch.elexis.core.l10n.Messages.OrderHistory_RemovedMedi;
+	public static Object OrderHistory_SupplierAdded = ch.elexis.core.l10n.Messages.OrderHistory_SupplierAdded;
+	public static Object OrderHistory_CompleteDelivery = ch.elexis.core.l10n.Messages.OrderHistory_CompleteDelivery;
+	public static Object HistoryDialog_NoHistoryAvailable = ch.elexis.core.l10n.Messages.HistoryDialog_NoHistoryAvailable;
+	public static String HistoryDialog_Header = ch.elexis.core.l10n.Messages.HistoryDialog_Header;
+	public static String HistoryDialog_Description = ch.elexis.core.l10n.Messages.HistoryDialog_Description;
+	public static String HistoryDialog_Action = ch.elexis.core.l10n.Messages.HistoryDialog_Action;
+	public static String HistoryDialog_Details = ch.elexis.core.l10n.Messages.HistoryDialog_Details;
+	public static String HistoryDialog_Date = ch.elexis.core.l10n.Messages.HistoryDialog_Date;
+	public static String HistoryDialog_User = ch.elexis.core.l10n.Messages.HistoryDialog_User;
+	public static String Core_DoSend = ch.elexis.core.l10n.Messages.Core_DoSend;
+	public static String OrderMethodDialog_Title = ch.elexis.core.l10n.Messages.OrderMethodDialog_Title;
+	public static String OrderMethodDialog_Message = ch.elexis.core.l10n.Messages.OrderMethodDialog_Message;
 
 }
