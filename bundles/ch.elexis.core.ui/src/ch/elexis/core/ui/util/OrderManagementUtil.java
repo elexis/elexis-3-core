@@ -52,19 +52,17 @@ public class OrderManagementUtil {
 		return getOrders(false, true);
 	}
 
-	public static List<IOrder> getCompletedOrders(boolean all) {
-		return getOrders(true, all);
+	public static List<IOrder> getCompletedOrders(boolean showAllYears) {
+		return getOrders(true, showAllYears);
 	}
 
-
-
-	private static List<IOrder> getOrders(boolean completed, boolean all) {
+	private static List<IOrder> getOrders(boolean completed, boolean showAllYears) {
 		IQuery<IOrder> query = CoreModelServiceHolder.get().getQuery(IOrder.class);
 		List<IOrder> orders = query.execute();
-		if (!all) {
+		if (!showAllYears) {
 			LocalDateTime twoYearsAgo = LocalDateTime.now().minusYears(2);
 			orders = orders.stream().filter(order -> {
-				LocalDateTime orderTimestamp = order.getTimestamp(); // Holt Zeit aus ID
+				LocalDateTime orderTimestamp = order.getTimestamp();
 				return orderTimestamp != null && orderTimestamp.isAfter(twoYearsAgo);
 			}).collect(Collectors.toList());
 		}
@@ -121,48 +119,42 @@ public class OrderManagementUtil {
 		return Messages.OrderManagement_NotOrdered;
 	}
 
-
-	public static void saveSingleDelivery(TableItem tableItem) {
-		if (tableItem == null)
+	public static void saveSingleDelivery(IOrderEntry entry, int partialDelivery) {
+		if (entry == null || partialDelivery <= 0) {
 			return;
-
-		IOrderEntry entry = (IOrderEntry) tableItem.getData("orderEntry"); //$NON-NLS-1$
-		if (entry == null)
-			return;
+		}
 
 		try {
-			int partialDelivery = Integer.parseInt(tableItem.getText(2));
-			int orderAmount = Integer.parseInt(tableItem.getText(1));
-			if (partialDelivery <= 0)
-				return;
-
+			int orderAmount = entry.getAmount();
 			int newDelivered = entry.getDelivered() + partialDelivery;
 
 			IStock stock = entry.getStock();
 			if (stock != null) {
-				updateStockEntry(stock, entry);
+				updateStockEntry(stock, entry, partialDelivery);
 			}
-
 			orderHistoryManager.logDelivery(entry.getOrder(), entry, newDelivered, orderAmount);
 			entry.setDelivered(newDelivered);
 			entry.setState(newDelivered >= entry.getAmount() ? OrderEntryState.DONE : OrderEntryState.PARTIAL_DELIVER);
 			CoreModelServiceHolder.get().save(entry);
-
 			IOrder order = entry.getOrder();
 			boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
-
 			if (allDelivered) {
 				orderHistoryManager.logCompleteDelivery(order);
 			}
 
 		} catch (NumberFormatException e) {
-			logger.error("Error: Invalid value in ‘Delivered’ column: " + tableItem.getText(2), e); //$NON-NLS-1$
+			logger.error("Error: Invalid partialDelivery value: " + partialDelivery, e);
 		}
 	}
 
-	public static void saveAllDeliveries(Table table) {
-		for (TableItem item : table.getItems()) {
-			saveSingleDelivery(item);
+
+	public static void saveAllDeliveries(List<IOrderEntry> entries) {
+		for (IOrderEntry entry : entries) {
+
+			int partialDelivery = entry.getAmount() - entry.getDelivered();
+			if (partialDelivery > 0) {
+				saveSingleDelivery(entry, partialDelivery);
+			}
 		}
 	}
 
@@ -250,13 +242,6 @@ public class OrderManagementUtil {
 		}
 	}
 
-	public static void saveAllDeliveries(Table table, IOrder actOrder) {
-		for (TableItem item : table.getItems()) {
-			saveSingleDelivery(item);
-		}
-
-	}
-
 	public static void focusEntryInTable(Table table, IOrderEntry orderEntry, int columnIndex) {
 		for (TableItem item : table.getItems()) {
 			IOrderEntry entry = (IOrderEntry) item.getData("orderEntry"); //$NON-NLS-1$
@@ -283,7 +268,7 @@ public class OrderManagementUtil {
 		return query.execute().isEmpty() ? null : query.execute().get(0);
 	}
 
-	public static void updateStockEntry(IStock stock, IOrderEntry entry) {
+	public static void updateStockEntry(IStock stock, IOrderEntry entry, int amountToAdd) {
 		if (stock == null || entry == null || entry.getArticle() == null) {
 			logger.error("Error: Invalid parameters in updateStockEntry()"); //$NON-NLS-1$
 			return;
@@ -294,17 +279,15 @@ public class OrderManagementUtil {
 
 		if (existingStockEntry.isPresent()) {
 			IStockEntry se = existingStockEntry.get();
-			se.setCurrentStock(se.getCurrentStock() + 1);
+			se.setCurrentStock(se.getCurrentStock() + amountToAdd);
 			CoreModelServiceHolder.get().save(se);
 
 		} else {
 			IStockEntry newStockEntry = CoreModelServiceHolder.get().create(IStockEntry.class);
 			newStockEntry.setArticle(entry.getArticle());
 			newStockEntry.setStock(stock);
-			newStockEntry.setCurrentStock(1);
+			newStockEntry.setCurrentStock(amountToAdd);
 			CoreModelServiceHolder.get().save(newStockEntry);
-
 		}
 	}
-
 }

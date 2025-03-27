@@ -51,7 +51,7 @@ public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 		}
 
 		if (changesMade) {
-			view.table.getDisplay().asyncExec(() -> {
+			view.tableViewer.getTable().getDisplay().asyncExec(() -> {
 				view.refresh();
 				view.loadOpenOrders();
 				view.loadCompletedOrders();

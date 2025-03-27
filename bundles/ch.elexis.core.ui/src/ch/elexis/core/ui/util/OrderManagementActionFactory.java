@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
@@ -17,9 +16,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -27,9 +27,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
@@ -394,8 +391,8 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-	public void createContextMenu(Table table, Table orderTable) {
-		Menu menu = new Menu(table);
+	public void createContextMenu(TableViewer table, TableViewer orderTable) {
+		Menu menu = new Menu(table.getTable());
 
 		MenuItem removeItem = new MenuItem(menu, SWT.NONE);
 		removeItem.setImage(Images.IMG_CLEAR.getImage());
@@ -412,73 +409,62 @@ public class OrderManagementActionFactory {
 		addItem.setText(Messages.OrderManagement_AddItem);
 		addItem.addListener(SWT.Selection, event -> handleAddItem());
 
-		table.setMenu(menu);
+		table.getTable().setMenu(menu);
 		createOrderHistoryMenu(orderTable);
 	}
 
-	public void createOrderHistoryMenu(Table orderTable) {
-		Menu menu = new Menu(orderTable);
+	public void createOrderHistoryMenu(TableViewer orderTableViewer) {
+		Menu menu = new Menu(orderTableViewer.getTable());
 		MenuItem historyItem = new MenuItem(menu, SWT.NONE);
 		historyItem.setImage(Images.IMG_INFO.getImage());
 		historyItem.setText(Messages.OrderManagement_ShowOrderHistory);
-		historyItem.addListener(SWT.Selection, event -> handleShowOrderHistory(orderTable));
-		orderTable.setMenu(menu);
+		historyItem.addListener(SWT.Selection, event -> handleShowOrderHistory(orderTableViewer));
+		orderTableViewer.getTable().setMenu(menu);
 	}
+
 
 	private void handleRemoveItem() {
-		TableItem[] selection = view.table.getSelection();
-		if (selection.length > 0) {
-			IOrderEntry entry = (IOrderEntry) selection[0].getData("orderEntry"); //$NON-NLS-1$
+		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
+		IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
+		if (entry != null && entry.getState() == OrderEntryState.OPEN) {
+			IOrder order = entry.getOrder();
+			orderHistoryManager.logRemove(order, entry);
+			CoreModelServiceHolder.get().delete(entry);
+			order.getEntries().remove(entry);
 
-			if (entry != null && entry.getState() == OrderEntryState.OPEN) {
-				IOrder order = entry.getOrder();
-				orderHistoryManager.logRemove(order, entry);
-				CoreModelServiceHolder.get().delete(entry);
-				order.getEntries().remove(entry);
+			if (order.getEntries().isEmpty()) {
+				CoreModelServiceHolder.get().delete(order);
+				actOrder = null;
+			}
 
-				if (order.getEntries().isEmpty()) {
-					CoreModelServiceHolder.get().delete(order);
-					actOrder = null;
+			Display.getDefault().asyncExec(() -> {
+				view.tableViewer.refresh();
+				if (actOrder != null) {
+					view.updateOrderDetails(actOrder);
+				} else {
+					setOrder(null);
 				}
-
-				view.table.getDisplay().asyncExec(() -> {
-					if (!view.table.isDisposed() && selection[0] != null && !selection[0].isDisposed()) {
-						view.table.remove(view.table.indexOf(selection[0]));
-					}
-
-					if (actOrder != null) {
-						view.updateOrderDetails(actOrder);
-					} else {
-						setOrder(actOrder);
-						view.table.removeAll();
-					}
-				});
-			}
-		}
-		view.loadOpenOrders();
-		view.refresh();
-	}
-
-	private void handleShowOrderHistory(Table table) {
-		TableItem[] selection = table.getSelection();
-		if (selection.length > 0) {
-			IOrderEntry entry = (IOrderEntry) selection[0].getData("orderEntry"); //$NON-NLS-1$
-			IOrder order = null;
-
-			if (entry != null) {
-				order = entry.getOrder();
-			} else {
-				String orderId = (String) selection[0].getData("orderId"); //$NON-NLS-1$
-				if (orderId != null) {
-					order = OrderManagementUtil.getSelectedOrder(orderId, false);
-				}
-			}
-
-			if (order != null) {
-				new HistoryDialog(UiDesk.getTopShell(), order).open();
-			}
+			});
+			view.loadOpenOrders();
+			view.refresh();
 		}
 	}
+
+
+	private void handleShowOrderHistory(TableViewer viewer) {
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+		Object selectedElement = selection.getFirstElement();
+		IOrder order = null;
+		if (selectedElement instanceof IOrderEntry entry) {
+			order = entry.getOrder();
+		} else if (selectedElement instanceof IOrder) {
+			order = (IOrder) selectedElement;
+		}
+		if (order != null) {
+			new HistoryDialog(UiDesk.getTopShell(), order).open();
+		}
+	}
+
 
 	public void handleAddItem() {
 		try {
@@ -486,7 +472,7 @@ public class OrderManagementActionFactory {
 
 			Display.getDefault().asyncExec(() -> {
 				if (view.dropTarget == null) {
-					view.dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", view.table, //$NON-NLS-1$
+					view.dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", view.tableViewer.getControl(), //$NON-NLS-1$
 							new DropReceiver(view));
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(view.dropTarget);
 				}
@@ -499,126 +485,64 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-	public void handleOrderSelection(TableItem selectedItem) {
-
-		if (selectedItem == null)
-			return;
-
-		String orderId = (String) selectedItem.getData("orderId"); //$NON-NLS-1$
-		IOrder selectedOrder = OrderManagementUtil.getSelectedOrder(orderId, false);
-
-		if (selectedOrder != null) {
-			view.setActOrder(selectedOrder);
-			view.table.removeAll();
+	public void handleOrderSelection(IOrder order) {
+		if (order != null) {
+			view.setActOrder(order);
 			view.refresh();
-			if (selectedOrder.getEntries().isEmpty()) {
+			if (order.getEntries().isEmpty()) {
 				try {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LeistungenView.ID);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Error opening LeistungenView", e);
 				}
-			} else {
-				if (view.dropTarget != null) {
-					view.dropTarget.registered(false);
-				}
+			} else if (view.dropTarget != null) {
+				view.dropTarget.registered(false);
 			}
 		}
 	}
 
-	public void handleCompletedOrderSelection(TableItem selectedItem) {
-		if (selectedItem == null)
-			return;
-		IOrder selectedOrder = OrderManagementUtil.getSelectedOrder((String) selectedItem.getData("orderId"), true); //$NON-NLS-1$
-		if (selectedOrder != null) {
-			view.setActOrder(selectedOrder);
+
+	public void handleCompletedOrderSelection(IOrder order) {
+		if (order != null) {
+			view.setActOrder(order);
 			view.setShowDeliveredColumn(true);
 			view.refresh();
 		}
 	}
 
+
 	private void handleEditItem() {
-		TableItem[] selection = view.table.getSelection();
-		if (selection.length > 0) {
-			IOrderEntry entry = (IOrderEntry) selection[0].getData("orderEntry"); //$NON-NLS-1$
-			if (entry != null && entry.getState() == OrderEntryState.OPEN) {
-				editOrderEntry(selection[0], entry, false);
-			}
+		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
+		IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
+		if (entry != null && entry.getState() == OrderEntryState.OPEN) {
+			editOrderEntry(entry, false);
 		}
 	}
 
-	public void handleTableDoubleClick() {
-		TableItem[] selection = view.table.getSelection();
-		if (selection.length == 0)
-			return;
 
-		IOrderEntry entry = (IOrderEntry) selection[0].getData("orderEntry"); //$NON-NLS-1$
-		if (entry != null) {
-			editOrderEntry(selection[0], entry, true);
+//	public void handleTableDoubleClick() {
+//	    IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
+//	    IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
+//	    if (entry != null) {
+//
+//			int colIndex = view.determineEditableColumn(entry);
+//	        if (colIndex >= 0) {
+//	        	System.out.println();
+//	            view.tableViewer.editElement(entry, colIndex);
+//	        }
+//	    }
+//	}
+
+
+
+
+	private void editOrderEntry(IOrderEntry entry, boolean isDoubleClick) {
+		int editableColumn = view.determineEditableColumn(entry);
+		if (editableColumn != -1) {
+			view.tableViewer.editElement(entry, editableColumn);
 		}
 	}
 
-	private void editOrderEntry(TableItem selectedItem, IOrderEntry entry, boolean isDoubleClick) {
-		if (entry == null)
-			return;
-
-		TableEditor editor = new TableEditor(view.table);
-		editor.grabHorizontal = true;
-		editor.grabVertical = true;
-
-		Text textEditor = new Text(view.table, SWT.NONE);
-
-		int columnToEdit = isDoubleClick ? view.determineEditableColumn(entry) : 1;
-
-		textEditor.setText(isDoubleClick ? StringUtils.EMPTY : String.valueOf(entry.getAmount()));
-
-		if (isDoubleClick) {
-			textEditor.addVerifyListener(e -> e.doit = e.text.matches("\\d*")); //$NON-NLS-1$
-		}
-
-		textEditor.addModifyListener(e -> selectedItem.setText(columnToEdit, textEditor.getText()));
-
-		Runnable saveValue = () -> {
-			try {
-				int newValue = Integer.parseInt(textEditor.getText().trim());
-				if (newValue >= 0) {
-					selectedItem.setText(columnToEdit, String.valueOf(newValue));
-					if (isDoubleClick) {
-						view.updateOrderEntry(entry, newValue);
-					} else {
-						int oldValue = entry.getAmount();
-						entry.setAmount(newValue);
-						orderHistoryManager.logEdit(actOrder, entry, oldValue, newValue);
-						CoreModelServiceHolder.get().save(entry);
-					}
-				}
-			} catch (NumberFormatException ignored) {
-			}
-			textEditor.dispose();
-		};
-
-		textEditor.addTraverseListener(e -> {
-			if (e.detail == SWT.TRAVERSE_RETURN) {
-				e.doit = false;
-				saveValue.run();
-				view.refreshTables();
-			}
-		});
-
-		textEditor.addFocusListener(new org.eclipse.swt.events.FocusAdapter() {
-			@Override
-			public void focusLost(org.eclipse.swt.events.FocusEvent e) {
-				saveValue.run();
-				view.refreshTables();
-			}
-		});
-
-		editor.setEditor(textEditor, selectedItem, columnToEdit);
-		textEditor.setFocus();
-		Display.getDefault().asyncExec(() -> {
-			if (!textEditor.isDisposed())
-				textEditor.selectAll();
-		});
-	}
 
 	public void handleMouseWheelScroll(Event event, ScrolledComposite scrollComposite) {
 		event.doit = false;

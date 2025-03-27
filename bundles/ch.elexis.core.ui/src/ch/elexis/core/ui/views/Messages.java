@@ -643,5 +643,7 @@ public class Messages {
 	public static String OrderManagement_EditItem = ch.elexis.core.l10n.Messages.OrderManagement_EditItem;
 	public static String OrderManagement_AddItem = ch.elexis.core.l10n.Messages.OrderManagement_AddItem;
 	public static String OrderManagement_ShowOrderHistory = ch.elexis.core.l10n.Messages.OrderManagement_ShowOrderHistory;
+	public static String OrderManagement_Overdelivery_Title = ch.elexis.core.l10n.Messages.OrderManagement_Overdelivery_Title;
+	public static String OrderManagement_Overdelivery_Message = ch.elexis.core.l10n.Messages.OrderManagement_Overdelivery_Message;
 
 }

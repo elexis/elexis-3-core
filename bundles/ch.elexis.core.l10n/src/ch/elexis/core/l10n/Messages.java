@@ -5214,6 +5214,8 @@ public class Messages extends NLS {
 	public static String OrderManagement_ShowOrderHistory;
 	public static String OrderMethodDialog_Title;
 	public static String OrderMethodDialog_Message;
+	public static String OrderManagement_Overdelivery_Title;
+	public static String OrderManagement_Overdelivery_Message;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
