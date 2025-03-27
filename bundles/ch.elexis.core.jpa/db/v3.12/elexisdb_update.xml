@@ -179,4 +179,31 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
 	</insert>
 </changeSet>
 
+<changeSet id="craete_mediorderMailSent_sticker" author="pdenzler">
+	<insert tableName="ETIKETTEN">
+		<column name="ID" value="mediorderMailSent" />
+		<column name="LASTUPDATE" valueComputed="${timestamp}" />
+		<column name="IMAGE" value="NULL" />
+		<column name="DELETED" value="0" />
+		<column name="IMPORTANCE" value="1001" />
+		<column name="NAME" value="Mediorder Mail Sent" />
+		<column name="FOREGROUND" value="000000" />
+		<column name="BACKGROUND" value="ffffff" />
+	</insert>
+</changeSet>
+
+<changeSet id="create_mediorderMailTemplate" author="pdenzler">
+	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+		<column name="ID" valueComputed="${elexisid}" />
+		<column name="LASTUPDATE" valueComputed="${timestamp}" />
+		<column name="DELETED" value="0" />
+		<column name="MANDATORID" value="NULL" />
+		<column name="CATEGORY" value="MAIL" />
+		<column name="NAME" value="mediorder" />
+		<column name="TEMPLATE"
+			value="Guten Tag [Patient.Anrede] [Patient.Name]&#10;&#10;Ihre online bestellten Medikamente stehen ab sofort in unserer Praxis zur Abholung bereit.&#10;Wir freuen uns, Sie bald bei uns begrüssen zu dürfen.&#10;&#10;Freundliche Grüsse&#10;Ihr Praxis Team" />
+		<column name="EXTINFO" value="Medikamentenbestellung abholbereit" />
+	</insert>
+</changeSet>
+
 </databaseChangeLog>

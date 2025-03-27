@@ -74,12 +74,15 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMedicationService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
@@ -119,6 +122,15 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	IMedicationService medicationService;
 
+	@Inject
+	IStickerService stickerService;
+
+	@Inject
+	IConfigService configService;
+
+	@Inject
+	ITextReplacementService textReplacementService;
+
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 	private TableViewer tableViewerHistory;
@@ -150,7 +162,7 @@ public class MediorderPart implements IRefreshablePart {
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
 	private static final String ONLY_NUMBER_REGEX = "\\d*";
-
+	
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 		selectedDetailStock = new WritableValue<>();
@@ -189,11 +201,19 @@ public class MediorderPart implements IRefreshablePart {
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
-		tableViewer.setInput(filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
-				: getStocksExcludingAwaitingRequests());
+		List<IStock> stocks = filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
+				: getStocksExcludingAwaitingRequests();
+		List<IPatient> patientsToNotify = stocks.stream()
+				.filter(stock -> MediorderPartUtil.calculateStockState(stock) == 1)
+				.map(stock -> stock.getOwner().asIPatient()).distinct().toList();
+		if (!patientsToNotify.isEmpty()) {
+			MediorderPartUtil.sendMediorderMailJob(coreModelService, contextService, stickerService, configService,
+					textReplacementService, patientsToNotify);
+		}
+		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) stock));
+		tableViewer.setInput(stocks);
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
-			MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) firstElement);
 		}
 		tableViewer.refresh(true);
 	}
@@ -293,6 +313,7 @@ public class MediorderPart implements IRefreshablePart {
 				case 1 -> Images.IMG_BULLET_GREEN.getImage();
 				case 2 -> Images.IMG_BULLET_YELLOW.getImage();
 				case 3 -> Images.IMG_BULLET_BLUE.getImage();
+				case 4 -> Images.IMG_MAIL_SEND.getImage();
 				default -> null;
 				};
 			}
@@ -744,7 +765,7 @@ public class MediorderPart implements IRefreshablePart {
 		((Text) editor.getControl()).addVerifyListener(e -> e.doit = e.text.matches(ONLY_NUMBER_REGEX));
 		return editor;
 	}
-
+	
 	/**
 	 * IArticle drag and drop<br>
 	 * Drag to tableViewer - add to to patient currently in context<br>

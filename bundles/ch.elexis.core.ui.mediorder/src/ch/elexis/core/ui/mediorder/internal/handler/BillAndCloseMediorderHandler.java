@@ -16,6 +16,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.ui.e4.dialog.StatusDialog;
 import ch.elexis.core.ui.mediorder.AbstractBillAndCloseMediorderHandler;
@@ -34,6 +35,12 @@ public class BillAndCloseMediorderHandler extends AbstractBillAndCloseMediorderH
 	@Inject
 	ICoverageService coverageService;
 
+	@Inject
+	IStickerService stickerService;
+
+	@Inject
+	IStockService stockService;
+
 	@Execute
 	public void execute(MPart part, ESelectionService selectionService, IStockService stockService,
 			IBillingService billingService, IEncounterService encounterService) {
@@ -42,7 +49,8 @@ public class BillAndCloseMediorderHandler extends AbstractBillAndCloseMediorderH
 		IStock selectedStock = mediOrderPart.getSelectedStock();
 		List<IStockEntry> stockEntries = selectedStock.getStockEntries();
 
-		IStatus status = billAndClose(coreModelService, contextService, coverageService, billingService, stockEntries,
+		IStatus status = billAndClose(coreModelService, contextService, stockService, stickerService, coverageService,
+				billingService, stockEntries,
 				true);
 		StatusDialog.show(status, false);
 

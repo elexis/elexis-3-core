@@ -5,20 +5,41 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.elexis.core.mail.MailConstants;
+import ch.elexis.core.mail.MailTextTemplate;
+import ch.elexis.core.mail.PreferenceConstants;
+import ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
+import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MediorderPartUtil {
 
@@ -159,6 +180,13 @@ public class MediorderPartUtil {
 	 * @return
 	 */
 	public static int calculateStockState(IStock stock) {
+		IModelService coreModelService = OsgiServiceUtil
+				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+				.orElseThrow(() -> new IllegalStateException("no model service found"));
+
+		IStickerService stickerService = OsgiServiceUtil.getService(IStickerService.class)
+				.orElseThrow(() -> new IllegalStateException("no stock service found"));
+
 		boolean allEnabledForPea = true;
 		boolean hasInStock = false;
 		boolean hasPartiallyInStock = false;
@@ -188,8 +216,14 @@ public class MediorderPartUtil {
 
 		if (hasPartiallyInStock)
 			return 2;
-		if (hasInStock && allEnabledForPea)
+		if (hasInStock && allEnabledForPea) {
+			if (stickerService.hasSticker(stock.getOwner().asIPatient(),
+					coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class)
+							.orElseThrow(() -> new IllegalStateException("no mediorderMailSend sticker found")))) {
+				return 4;
+			}
 			return 1;
+		}
 		if (hasInStock && hasOtherStatus)
 			return 2;
 		if (allEnabledForPea)
@@ -295,5 +329,80 @@ public class MediorderPartUtil {
 		entry.setCurrentStock(amount);
 		coreModelService.save(article);
 		coreModelService.save(entry);
+	}
+
+	public static void removeMailSticker(IModelService coreModelService, IStockService stockService,
+			IStickerService stickerService, IPatient patient) {
+		if (stickerService.hasSticker(patient,
+				coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class).get())) {
+			Optional<IStock> stock = stockService.getPatientStock(patient);
+			if (stock.isEmpty()
+					|| calculateStockState(stockService.getPatientStock(patient).get()) != 1) {
+				stickerService.removeSticker(
+						coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class).get(), patient);
+			}
+		}
+	}
+
+	/**
+	 * Send a mail to the patient as soon as all entries have
+	 * {@link MediorderEntryState#IN_STOCK}. {@link ISticker} mediorderSendMail is
+	 * used to check if the email already has been sent
+	 * 
+	 * @param patient
+	 */
+	public static void sendMediorderMailJob(IModelService coreModelService, IContextService contextService,
+			IStickerService stickerService, IConfigService configService,
+			ITextReplacementService textReplacementService, List<IPatient> patients) {
+
+		Logger logger = LoggerFactory.getLogger(MediorderPartUtil.class);
+		Optional<ISticker> sticker = coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class);
+		if (sticker.isEmpty()) {
+			logger.error("no mediorderMailSent sticker found");
+			return;
+		}
+
+		ISticker mediorderMailSticker = sticker.get();
+			Job mailJob = new Job("mediorderMailSent") { //$NON-NLS-1$
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					for (IPatient patient : patients) {
+						if (!stickerService.hasSticker(patient, mediorderMailSticker)) {
+							try {
+								ExecutionEvent event = new ExecutionEvent(null,
+										setParameters(configService, contextService, textReplacementService, patient),
+										null, null);
+								if (new SendMailNoUiHandler().execute(event) == null) {
+									stickerService.addSticker(mediorderMailSticker, patient);
+								}
+							} catch (ExecutionException e) {
+								logger.warn(e.getMessage());
+							}
+						}
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			mailJob.schedule();
+	}
+
+	protected static Map<String, String> setParameters(IConfigService configService, IContextService contextService,
+			ITextReplacementService textReplacementService, IPatient patient) {
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.accountid",
+				configService.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null));
+		parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.to", patient.getEmail());
+		Optional<ITextTemplate> template = MailTextTemplate.load(Constants.MEDIORDER_MAIL_TEMPLATE);
+		if (template.isPresent()) {
+			parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.subject",
+					template.get().getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT).toString());
+
+			IContext context = contextService.createNamedContext("mediorder_mail_context");
+			context.setTyped(patient);
+			String preparedText = textReplacementService.performReplacement(context, template.get().getTemplate());
+			parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.text", preparedText);
+		}
+
+		return parameters;
 	}
 }
