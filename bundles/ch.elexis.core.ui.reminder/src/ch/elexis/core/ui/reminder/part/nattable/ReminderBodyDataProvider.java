@@ -2,19 +2,17 @@ package ch.elexis.core.ui.reminder.part.nattable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.ISpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.cell.DataCell;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IReminder;
 
-public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpanningDataProvider {
+public class ReminderBodyDataProvider implements ISpanningDataProvider {
 
 	private Object[][] dataMatrix;
 
@@ -39,28 +37,6 @@ public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpannin
 			return dataMatrix[rowIndex][columnIndex];
 		}
 		return null;
-	}
-
-	public List<Integer> getDataSpanningRowPositions(int columnIndex, int rowIndex) {
-		Integer startRowIndex = -1;
-		if (columnIndex > 0 && rowIndex > 0) {
-			if (dataMatrix[rowIndex][columnIndex] instanceof Integer) {
-				startRowIndex = rowIndex - ((Integer) dataMatrix[rowIndex][columnIndex]);
-			}
-			if (dataMatrix.length > (rowIndex + 1) && dataMatrix[rowIndex + 1][columnIndex] instanceof Integer) {
-				startRowIndex = rowIndex;
-			}
-			if (startRowIndex != -1) {
-				List<Integer> ret = new ArrayList<Integer>();
-				ret.add(startRowIndex);
-				while (dataMatrix.length > (startRowIndex + 1)
-						&& dataMatrix[startRowIndex + 1][columnIndex] instanceof Integer) {
-					ret.add(++startRowIndex);
-				}
-				return ret;
-			}
-		}
-		return Collections.singletonList(rowIndex);
 	}
 
 	@Override
@@ -93,31 +69,6 @@ public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpannin
 		throw new IllegalStateException("Edit data not supported");
 	}
 
-	@Override
-	public DataCell getCellByPosition(int columnIndex, int rowIndex) {
-		Object data = dataMatrix[rowIndex][columnIndex];
-
-		int columnsSpan = rowIndex > 0 ? getColumnsSpan(data) : 1;
-		
-		return new DataCell(columnIndex, rowIndex, columnsSpan, getRowSpan(data));
-	}
-
-	private int getColumnsSpan(Object data) {
-		if (data instanceof String) {
-			return columns.size();
-		}
-		return 1;
-	}
-
-	private int getRowSpan(Object data) {
-		if (data instanceof IReminder) {
-			if (((IReminder) data).getContact() != null && ((IReminder) data).getContact().isPatient()) {
-				return 2;
-			}
-		}
-		return 1;
-	}
-
 	public void reload() {
 		if (columns == null || columns.isEmpty()) {
 			dataMatrix = null;
@@ -137,15 +88,15 @@ public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpannin
 					"future", futureReminders, "nodue", noDueReminders));
 
 			maxMap.put("overdue", Math.max(maxMap.getOrDefault("overdue", 0),
-					overDueReminders.stream().mapToInt(r -> getRowSpan(r)).sum()));
+					overDueReminders.size()));
 			maxMap.put("today", Math.max(maxMap.getOrDefault("today", 0),
-					todayReminders.stream().mapToInt(r -> getRowSpan(r)).sum()));
+					todayReminders.size()));
 			maxMap.put("tomorrow", Math.max(maxMap.getOrDefault("tomorrow", 0),
-					tomorrowReminders.stream().mapToInt(r -> getRowSpan(r)).sum()));
+					tomorrowReminders.size()));
 			maxMap.put("future", Math.max(maxMap.getOrDefault("future", 0),
-					futureReminders.stream().mapToInt(r -> getRowSpan(r)).sum()));
+					futureReminders.size()));
 			maxMap.put("nodue", Math.max(maxMap.getOrDefault("nodue", 0),
-					noDueReminders.stream().mapToInt(r -> getRowSpan(r)).sum()));
+					noDueReminders.size()));
 		}
 		
 		dataMatrix = new Object[2 + maxMap.get("overdue") + 1 + maxMap.get("today") + 1 + maxMap.get("tomorrow") + 1
@@ -200,14 +151,8 @@ public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpannin
 
 	private void addListToMatrix(int xOff, int yOff, List<IReminder> list) {
 		if (!list.isEmpty()) {
-			for (int i = 0, spanned = 0; i < list.size(); i++) {
-				dataMatrix[i + yOff + spanned][xOff] = list.get(i);
-				if (getRowSpan(list.get(i)) > 1) {
-					for (int s = 1; s < getRowSpan(list.get(i)); s++) {
-						dataMatrix[i + yOff + spanned + s][xOff] = Integer.valueOf(s);
-					}
-				}
-				spanned += getRowSpan(list.get(i)) - 1;
+			for (int i = 0; i < list.size(); i++) {
+				dataMatrix[i + yOff][xOff] = list.get(i);
 			}
 		}
 	}
@@ -238,5 +183,21 @@ public class ReminderSpanningBodyDataProvider implements IDataProvider, ISpannin
 
 	public List<ReminderColumn> getColumns() {
 		return columns;
+	}
+
+	@Override
+	public DataCell getCellByPosition(int columnIndex, int rowIndex) {
+		Object data = dataMatrix[rowIndex][columnIndex];
+
+		int columnsSpan = rowIndex > 0 ? getColumnsSpan(data) : 1;
+
+		return new DataCell(columnIndex, rowIndex, columnsSpan, 1);
+	}
+
+	private int getColumnsSpan(Object data) {
+		if (data instanceof String) {
+			return columns.size();
+		}
+		return 1;
 	}
 }

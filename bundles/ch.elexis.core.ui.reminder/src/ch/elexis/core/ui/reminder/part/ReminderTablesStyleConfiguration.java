@@ -45,8 +45,6 @@ public class ReminderTablesStyleConfiguration extends DefaultNatTableStyleConfig
 
 		ICellPainter decoratedCellPainter = new ReminderCellPainterDecorator(new ReminderRichTextCellPainter(),
 				CellEdgeEnum.RIGHT, new ReminderAdditionCellPainter());
-//		decoratedCellPainter = new LineBorderDecorator(decoratedCellPainter,
-//				new BorderStyle(2, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK), LineStyleEnum.SOLID));
 		
 		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, decoratedCellPainter,
 				DisplayMode.NORMAL, "REMINDER");

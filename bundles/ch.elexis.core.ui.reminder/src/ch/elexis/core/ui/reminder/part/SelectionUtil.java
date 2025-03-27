@@ -1,63 +1,43 @@
 package ch.elexis.core.ui.reminder.part;
 
-import java.util.List;
-
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 
 public class SelectionUtil {
 
-	public static Object getData(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider, int x, int y) {
+	public static Object getData(NatTable natTable, ReminderBodyDataProvider dataProvider, int x, int y) {
 		int columnPosition = natTable.getColumnPositionByX(x);
 		int rowPosition = natTable.getRowPositionByY(y);
 
 		return dataProvider.getData(natTable.getColumnIndexByPosition(columnPosition), natTable.getRowIndexByPosition(rowPosition));
 	}
 
-	public static Integer getSpanningRowPosition(NatTable natTable,
-			ReminderSpanningBodyDataProvider dataProvider, int x, int y) {
-		int columnPosition = natTable.getColumnPositionByX(x);
-		int rowPosition = natTable.getRowPositionByY(y);
-		int columnIndex = natTable.getColumnIndexByPosition(columnPosition);
-		int rowIndex = natTable.getRowIndexByPosition(rowPosition);
-
-		List<Integer> rowIndexs = dataProvider.getDataSpanningRowPositions(columnIndex, rowIndex);
-
-		return (rowIndexs.get(0) - rowIndex) + rowPosition;
-	}
-
-	public static ILayerCell getCell(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider, int x, int y) {
+	public static ILayerCell getCell(NatTable natTable, ReminderBodyDataProvider dataProvider, int x, int y) {
 		int columnPosition = natTable.getColumnPositionByX(x);
 		int rowPosition = natTable.getRowPositionByY(y);
 
-		// use the row position of the row with data not the spanned afterwards
-		rowPosition = SelectionUtil.getSpanningRowPosition(natTable, dataProvider, x, y);
 		return natTable.getCellByPosition(columnPosition, rowPosition);
 	}
 
-	public static boolean isHoverCell(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider, ILayerCell cell,
+	public static boolean isHoverCell(NatTable natTable, ReminderBodyDataProvider dataProvider, ILayerCell cell,
 			int x, int y) {
 		int columnPosition = natTable.getColumnPositionByX(x);
 		int rowPosition = natTable.getRowPositionByY(y);
 
-		// use the row position of the row with data not the spanned afterwards
-		rowPosition = SelectionUtil.getSpanningRowPosition(natTable, dataProvider, x, y);
 		int startX = cell.getLayer().getStartXOfColumnPosition(columnPosition);
 		int startY = cell.getLayer().getStartYOfRowPosition(rowPosition);
 
 		return x > startX && y > startY;
 	}
 
-	public static boolean isHoverCheck(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider,
+	public static boolean isHoverCheck(NatTable natTable, ReminderBodyDataProvider dataProvider,
 			ILayerCell cell, int x, int y) {
 		if (cell != null) {
 			int columnPosition = natTable.getColumnPositionByX(x);
 			int rowPosition = natTable.getRowPositionByY(y);
 
-			// use the row position of the row with data not the spanned afterwards
-			rowPosition = SelectionUtil.getSpanningRowPosition(natTable, dataProvider, x, y);
 			int startX = cell.getLayer().getStartXOfColumnPosition(columnPosition);
 			int startY = cell.getLayer().getStartYOfRowPosition(rowPosition);
 
@@ -71,14 +51,12 @@ public class SelectionUtil {
 		return false;
 	}
 
-	public static boolean isHoverLink(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider, ILayerCell cell,
+	public static boolean isHoverLink(NatTable natTable, ReminderBodyDataProvider dataProvider, ILayerCell cell,
 			int x, int y) {
 		if (cell != null) {
 			int columnPosition = natTable.getColumnPositionByX(x);
 			int rowPosition = natTable.getRowPositionByY(y);
 
-			// use the row position of the row with data not the spanned afterwards
-			rowPosition = SelectionUtil.getSpanningRowPosition(natTable, dataProvider, x, y);
 			int startX = cell.getLayer().getStartXOfColumnPosition(columnPosition);
 			int startY = cell.getLayer().getStartYOfRowPosition(rowPosition);
 

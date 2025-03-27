@@ -27,6 +27,8 @@ import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.painter.layer.NatGridLayerPainter;
+import org.eclipse.nebula.widgets.nattable.resize.MaxCellBoundsHelper;
+import org.eclipse.nebula.widgets.nattable.resize.command.MultiRowResizeCommand;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.action.SelectCellAction;
 import org.eclipse.nebula.widgets.nattable.selection.event.CellSelectionEvent;
@@ -36,6 +38,8 @@ import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.ui.action.IMouseAction;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
 import org.eclipse.nebula.widgets.nattable.ui.matcher.MouseEventMatcher;
+import org.eclipse.nebula.widgets.nattable.util.GCFactory;
+import org.eclipse.nebula.widgets.nattable.util.ObjectUtils;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -61,8 +65,8 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 import ch.elexis.core.ui.views.IRefreshable;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -70,8 +74,8 @@ import jakarta.inject.Inject;
 public class ReminderTablesPart implements IRefreshable {
 
 	private NatTable natTable;
-	private ReminderSpanningBodyDataProvider dataProvider;
-	private SpanningDataLayer dataLayer;
+	private ReminderBodyDataProvider dataProvider;
+	private DataLayer dataLayer;
 
 	@Inject
 	private ECommandService commandService;
@@ -86,7 +90,7 @@ public class ReminderTablesPart implements IRefreshable {
 
 	@Inject
 	public ReminderTablesPart() {
-		dataProvider = new ReminderSpanningBodyDataProvider();
+		dataProvider = new ReminderBodyDataProvider();
 	}
 	
 	@Optional
@@ -241,10 +245,6 @@ public class ReminderTablesPart implements IRefreshable {
 					Integer columnPosition = natTable.getColumnIndexByPosition(cellEvent.getColumnPosition());
 					Integer rowPosition = natTable.getRowIndexByPosition(cellEvent.getRowPosition());
 					if (columnPosition >= 0 && rowPosition >= 0) {
-						List<Integer> rowPositions = dataProvider.getDataSpanningRowPositions(columnPosition,
-								rowPosition);
-						// use the row position of the row with data not the spanned afterwards
-						rowPosition = rowPositions.get(0);
 						Object data = dataProvider.getData(columnPosition, rowPosition);
 						if (data instanceof IReminder) {
 //							System.out.println("Selected cell: [" + cellEvent.getRowPosition() + ", "
@@ -337,10 +337,48 @@ public class ReminderTablesPart implements IRefreshable {
 				if (CoreUiUtil.isActiveControl(natTable)) {
 					if (updateColumns) {
 						updateColumns();
+					} else {
+						updateRowHeights();
 					}
 					natTable.refresh();
 				}
 			});
+		}
+	}
+
+	private void updateRowHeights() {
+		final List<Integer> positions = new ArrayList<>();
+		final List<Integer> heights = new ArrayList<>();
+		int rowCount = this.viewportLayer.getRowCount();
+		if (rowCount > 0) {
+			for (int i = 0; i < rowCount; i++) {
+				int[] rowPos = new int[1];
+				int[] rowHeights = new int[1];
+				rowPos[0] = this.viewportLayer.getRowIndexByPosition(i);
+				rowHeights[0] = this.viewportLayer.getRowHeightByPosition(i);
+
+				if (dataProvider.getData(0, rowPos[0]) instanceof String && rowPos[0] > 0) {
+					int[] calculatedRowHeights = MaxCellBoundsHelper.getPreferredRowHeights(
+							this.natTable.getConfigRegistry(), new GCFactory(this.natTable), dataLayer, rowPos);
+					if (calculatedRowHeights != null && calculatedRowHeights.length > 0) {
+						if (calculatedRowHeights[0] >= 0) {
+							// on scaling there could be a difference of 1
+							// pixel because of rounding issues.
+							// in that case we do not trigger a resize to
+							// avoid endless useless resizing
+							int diff = rowHeights[0] - calculatedRowHeights[0];
+							if (diff < -1 || diff > 1) {
+								positions.add(rowPos[0]);
+								heights.add(calculatedRowHeights[0]);
+							}
+						}
+					}
+				}
+			}
+		}
+		if (!positions.isEmpty()) {
+			dataLayer.doCommand(new MultiRowResizeCommand(dataLayer, ObjectUtils.asIntArray(positions),
+					ObjectUtils.asIntArray(heights), true));
 		}
 	}
 

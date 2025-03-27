@@ -5,15 +5,15 @@ import org.eclipse.nebula.widgets.nattable.layer.cell.IConfigLabelAccumulator;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 
 public class ReminderTablesConfigLabelsAccumulator implements IConfigLabelAccumulator {
 
-	private ReminderSpanningBodyDataProvider dataProvider;
+	private ReminderBodyDataProvider dataProvider;
 	private ViewportLayer viewportLayer;
 
-	public ReminderTablesConfigLabelsAccumulator(ReminderSpanningBodyDataProvider dataProvider, ViewportLayer viewportLayer) {
+	public ReminderTablesConfigLabelsAccumulator(ReminderBodyDataProvider dataProvider, ViewportLayer viewportLayer) {
 		this.dataProvider = dataProvider;
 		this.viewportLayer = viewportLayer;
 	}
