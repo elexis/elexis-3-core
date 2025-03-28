@@ -394,8 +394,9 @@ public class MediorderPartUtil {
 		parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.to", patient.getEmail());
 		Optional<ITextTemplate> template = MailTextTemplate.load(Constants.MEDIORDER_MAIL_TEMPLATE);
 		if (template.isPresent()) {
+			String subject = (String) template.get().getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT);
 			parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.subject",
-					template.get().getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT).toString());
+					subject == null ? template.get().getName() : subject);
 
 			IContext context = contextService.createNamedContext("mediorder_mail_context");
 			context.setTyped(patient);
