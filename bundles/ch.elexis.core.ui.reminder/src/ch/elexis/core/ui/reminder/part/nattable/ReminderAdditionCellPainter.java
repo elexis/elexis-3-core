@@ -46,7 +46,15 @@ public class ReminderAdditionCellPainter extends AbstractTextPainter {
 
 	@Override
 	public int getPreferredHeight(ILayerCell cell, GC gc, IConfigRegistry configRegistry) {
-		return tick.getBounds().height + 4 + link.getBounds().height;
+		if (hasLink(cell, configRegistry)) {
+			return tick.getBounds().height + 4 + link.getBounds().height;
+		} else {
+			return tick.getBounds().height;
+		}
+	}
+
+	private boolean hasLink(ILayerCell cell, IConfigRegistry configRegistry) {
+		return getAdditionText(cell, configRegistry).contains("<link>");
 	}
 
 	@Override
@@ -119,12 +127,14 @@ public class ReminderAdditionCellPainter extends AbstractTextPainter {
 						+ CellStyleUtil.getHorizontalAlignmentPadding(cellStyle, bounds, imageBounds.width),
 				bounds.y + CellStyleUtil.getVerticalAlignmentPadding(cellStyle, bounds, imageBounds.height));
 
-		imageBounds = link.getBounds();
-		gc.drawImage(link,
-				textWidth + bounds.x
-						+ CellStyleUtil.getHorizontalAlignmentPadding(cellStyle, bounds, imageBounds.width),
-				bounds.y + CellStyleUtil.getVerticalAlignmentPadding(cellStyle, bounds, imageBounds.height)
-						+ imageBounds.height + 4);
+		if (hasLink(cell, configRegistry)) {
+			imageBounds = link.getBounds();
+			gc.drawImage(link,
+					textWidth + bounds.x
+							+ CellStyleUtil.getHorizontalAlignmentPadding(cellStyle, bounds, imageBounds.width),
+					bounds.y + CellStyleUtil.getVerticalAlignmentPadding(cellStyle, bounds, imageBounds.height)
+							+ imageBounds.height + 4);
+		}
 	}
 
 	@Override

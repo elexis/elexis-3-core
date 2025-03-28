@@ -32,7 +32,7 @@ public class ReminderTablesStyleConfiguration extends DefaultNatTableStyleConfig
 		selectionStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR,
 				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
-				Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
+				Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		selectionStyle.setAttributeValue(CellStyleAttributes.FONT, GUIHelper.DEFAULT_FONT);
 
 		configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT,

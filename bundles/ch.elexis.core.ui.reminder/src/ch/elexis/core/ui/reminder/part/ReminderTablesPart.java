@@ -20,13 +20,13 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.painter.layer.NatGridLayerPainter;
 import org.eclipse.nebula.widgets.nattable.resize.MaxCellBoundsHelper;
 import org.eclipse.nebula.widgets.nattable.resize.command.MultiRowResizeCommand;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
@@ -57,6 +57,8 @@ import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
@@ -169,7 +171,6 @@ public class ReminderTablesPart implements IRefreshable {
 		natTable = new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
 		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		natTable.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		natTable.setLayerPainter(new NatGridLayerPainter(natTable, DataLayer.DEFAULT_ROW_HEIGHT));
 
 		natTable.addConfiguration(new ReminderTablesStyleConfiguration());
 
@@ -251,6 +252,16 @@ public class ReminderTablesPart implements IRefreshable {
 //									+ cellEvent.getColumnPosition() + "], "
 //									+ ((IReminder) data).getSubject());
 							ContextServiceHolder.get().setTyped(data);
+							if (ConfigServiceHolder.get()
+									.getActiveUserContact(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false)) {
+								IContact patient = ((IReminder) data).getContact();
+								IContact creator = ((IReminder) data).getCreator();
+								if (patient != null && patient.isPatient()) {
+									if (!patient.getId().equals(creator.getId())) {
+										ContextServiceHolder.get().setActivePatient(patient.asIPatient());
+									}
+								}
+							}
 						} else {
 							ContextServiceHolder.get().removeTyped(IReminder.class);
 						}
@@ -340,7 +351,11 @@ public class ReminderTablesPart implements IRefreshable {
 					} else {
 						updateRowHeights();
 					}
+					PositionCoordinate[] selectedPositions = selectionLayer.getSelectedCellPositions();
 					natTable.refresh();
+					for(PositionCoordinate pos : selectedPositions) {
+						selectionLayer.setSelectedCell(pos.columnPosition, pos.rowPosition);
+					}
 				}
 			});
 		}
