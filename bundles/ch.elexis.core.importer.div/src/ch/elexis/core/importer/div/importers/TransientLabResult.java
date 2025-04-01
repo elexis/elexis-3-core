@@ -158,20 +158,26 @@ public class TransientLabResult {
 
 		setFieldsAndInterpret(labResult);
 
-		if (flags != null && !isNormalAndNumeric()) {
-			// if the pathologic flag is already set during import
-			// keep it
-			labResult.setPathologic(flags > 0 ? true : false);
-			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+		if (flags != null) {
+			// if the pathologic flag is already set during import, keep it for non numeric
+			// values, or for numeric if the numeric ref values could not be used
+			if (!isNumeric()) {
+				labResult.setPathologic(flags > 0 ? true : false);
+				labResult.setPathologicDescription(
+						new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+			} else if (labResult.getPathologicDescription() != null
+					&& labResult.getPathologicDescription().getDescription() == Description.PATHO_NOREF) {
+				labResult.setPathologic(flags > 0 ? true : false);
+				labResult.setPathologicDescription(
+						new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+			}
 		} else {
-
 			// if not, at last for numeric values keep the evaluation done in
 			// setFieldsAndInterpret
 			if (!isNumeric()) {
 				labResult.setPathologicDescription(
 						new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
-
 			// MPF Rule #11231
 			if (origin != null) {
 				List<String> mpfRuleContactIds = ConfigServiceHolder.get().getAsList(

@@ -124,8 +124,10 @@ public class Test_HL7Import_MPFRule {
 				assertEquals("404", labResult.getResult());
 				break;
 			case "MIKAQ":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("H", pathologicDescription.getReference());
+				// default use local ref is true for numeric
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+				assertEquals("<  2.3", pathologicDescription.getReference());
 				assertEquals(1, labResult.getFlags());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
 				assertEquals("g/mol", labResult.getUnit());
