@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/boxable-1.7.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-csv-1.11.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jsoup-1.17.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai-imageio-core-1.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai-imageio-jpeg2000-1.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/pdfbox-tools-2.0.24.jar"/>
@@ -12,8 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/pdfbox-2.0.24.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/fontbox-2.0.24.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jbig2-imageio-3.0.3.jar"/>
 	<classpathentry kind="src" output="target/classes" path="src">
 		<attributes>
