@@ -7,19 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ch.elexis.core.mail.MailConstants;
-import ch.elexis.core.mail.MailTextTemplate;
-import ch.elexis.core.mail.PreferenceConstants;
-import ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
@@ -27,15 +14,11 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.services.IConfigService;
-import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
-import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -342,68 +325,5 @@ public class MediorderPartUtil {
 						coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class).get(), patient);
 			}
 		}
-	}
-
-	/**
-	 * Send a mail to the patient as soon as all entries have
-	 * {@link MediorderEntryState#IN_STOCK}. {@link ISticker} mediorderSendMail is
-	 * used to check if the email already has been sent
-	 * 
-	 * @param patient
-	 */
-	public static void sendMediorderMailJob(IModelService coreModelService, IContextService contextService,
-			IStickerService stickerService, IConfigService configService,
-			ITextReplacementService textReplacementService, List<IPatient> patients) {
-
-		Logger logger = LoggerFactory.getLogger(MediorderPartUtil.class);
-		Optional<ISticker> sticker = coreModelService.load(Constants.MEDIORDER_MAIL_STICKER, ISticker.class);
-		if (sticker.isEmpty()) {
-			logger.error("no mediorderMailSent sticker found");
-			return;
-		}
-
-		ISticker mediorderMailSticker = sticker.get();
-			Job mailJob = new Job("mediorderMailSent") { //$NON-NLS-1$
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					for (IPatient patient : patients) {
-						if (!stickerService.hasSticker(patient, mediorderMailSticker)) {
-							try {
-								ExecutionEvent event = new ExecutionEvent(null,
-										setParameters(configService, contextService, textReplacementService, patient),
-										null, null);
-								if (new SendMailNoUiHandler().execute(event) == null) {
-									stickerService.addSticker(mediorderMailSticker, patient);
-								}
-							} catch (ExecutionException e) {
-								logger.warn(e.getMessage());
-							}
-						}
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			mailJob.schedule();
-	}
-
-	protected static Map<String, String> setParameters(IConfigService configService, IContextService contextService,
-			ITextReplacementService textReplacementService, IPatient patient) {
-		Map<String, String> parameters = new HashMap<>();
-		parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.accountid",
-				configService.get(PreferenceConstants.PREF_DEFAULT_MAIL_ACCOUNT, null));
-		parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.to", patient.getEmail());
-		Optional<ITextTemplate> template = MailTextTemplate.load(Constants.MEDIORDER_MAIL_TEMPLATE);
-		if (template.isPresent()) {
-			String subject = (String) template.get().getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT);
-			parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.subject",
-					subject == null ? template.get().getName() : subject);
-
-			IContext context = contextService.createNamedContext("mediorder_mail_context");
-			context.setTyped(patient);
-			String preparedText = textReplacementService.performReplacement(context, template.get().getTemplate());
-			parameters.put("ch.elexis.core.mail.ui.sendMailNoUi.text", preparedText);
-		}
-
-		return parameters;
 	}
 }
