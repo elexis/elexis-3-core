@@ -158,6 +158,8 @@ public class MediorderPart implements IRefreshablePart {
 
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
+	private MediorderMailJobManager mailJobManager;
+
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
@@ -207,8 +209,7 @@ public class MediorderPart implements IRefreshablePart {
 				.filter(stock -> MediorderPartUtil.calculateStockState(stock) == 1)
 				.map(stock -> stock.getOwner().asIPatient()).distinct().toList();
 		if (!patientsToNotify.isEmpty()) {
-			MediorderPartUtil.sendMediorderMailJob(coreModelService, contextService, stickerService, configService,
-					textReplacementService, patientsToNotify);
+			mailJobManager.scheduleMailJob(patientsToNotify);
 		}
 		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) stock));
 		tableViewer.setInput(stocks);
@@ -225,6 +226,9 @@ public class MediorderPart implements IRefreshablePart {
 		stockComparator = new StockComparator();
 		medicationComparator = new MedicationComparator();
 		medicationHistoryComparator = new MedicationHistoryComparator();
+
+		mailJobManager = new MediorderMailJobManager(coreModelService, contextService, stickerService, configService,
+				textReplacementService);
 
 		createSearchBar(parent);
 
@@ -251,7 +255,7 @@ public class MediorderPart implements IRefreshablePart {
 		tableViewer.setInput(getStocksExcludingAwaitingRequests());
 		applySavedFilter();
 		refresh();
-
+		
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
 	}
 
