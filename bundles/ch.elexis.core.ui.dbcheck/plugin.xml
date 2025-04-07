@@ -121,6 +121,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.XidsFromExtInfo">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ExportPatientDocAndGuardianId">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
