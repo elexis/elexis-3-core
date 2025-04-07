@@ -5168,16 +5168,16 @@ public class Messages extends NLS {
 	public static String OrderManagement_PartiallyDelivered;
 	public static String OrderManagement_Ordered;
 	public static String OrderManagement_NotOrdered;
-	public static Object OrderHistory_Created;
-	public static Object OrderHistory_AddMedi;
-	public static Object OrderHistory_Edited;
-	public static Object OrderHistory_Delivered;
-	public static Object OrderHistory_Ordered;
-	public static Object OrderHistory_Deleted;
-	public static Object OrderHistory_RemovedMedi;
-	public static Object OrderHistory_SupplierAdded;
-	public static Object OrderHistory_CompleteDelivery;
-	public static Object HistoryDialog_NoHistoryAvailable;
+	public static String OrderHistory_Created;
+	public static String OrderHistory_AddMedi;
+	public static String OrderHistory_Edited;
+	public static String OrderHistory_Delivered;
+	public static String OrderHistory_Ordered;
+	public static String OrderHistory_Deleted;
+	public static String OrderHistory_RemovedMedi;
+	public static String OrderHistory_SupplierAdded;
+	public static String OrderHistory_CompleteDelivery;
+	public static String HistoryDialog_NoHistoryAvailable;
 	public static String HistoryDialog_Header;
 	public static String HistoryDialog_Description;
 	public static String HistoryDialog_Action;
@@ -5216,6 +5216,9 @@ public class Messages extends NLS {
 	public static String OrderMethodDialog_Message;
 	public static String OrderManagement_Overdelivery_Title;
 	public static String OrderManagement_Overdelivery_Message;
+	public static String OrderHistory_Added;
+	public static String OrderHistory_Increased;
+	public static String OrderHistory_Decreased;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

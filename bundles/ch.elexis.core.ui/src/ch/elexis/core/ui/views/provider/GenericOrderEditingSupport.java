@@ -19,8 +19,8 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IOrderHistoryService;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
-import ch.elexis.core.ui.util.OrderHistoryManager;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
 
@@ -29,12 +29,12 @@ public class GenericOrderEditingSupport extends EditingSupport {
     private final TableViewer viewer;
     private final EditingColumnType columnType;
     private final IOrder order;
-    private final OrderHistoryManager historyManager;
+	private final IOrderHistoryService historyManager;
 	private final OrderManagementView orderManagementView;
 	private final int columnIndex; 
 
 	public GenericOrderEditingSupport(OrderManagementView orderManagementView, TableViewer viewer,
-			EditingColumnType columnType, IOrder order, OrderHistoryManager historyManager, int columnIndex) {
+			EditingColumnType columnType, IOrder order, IOrderHistoryService historyManager, int columnIndex) {
         super(viewer);
         this.viewer = viewer;
         this.columnType = columnType;
@@ -119,37 +119,43 @@ public class GenericOrderEditingSupport extends EditingSupport {
         try {
             switch (columnType) {
 			case ORDERED -> {
-                    int ordered = Integer.parseInt(value.toString().trim());
-                    entry.setAmount(ordered);
-                    CoreModelServiceHolder.get().save(entry);
-                    viewer.refresh(entry);
-				}
-				case DELIVERED -> {
-					int part = Integer.parseInt(value.toString().trim());
-					int oldDelivered = entry.getDelivered();
-					int newTotalDelivery = oldDelivered + part;
-					int ordered = entry.getAmount();
-
-					if (newTotalDelivery > ordered) {
-						boolean confirm = MessageDialog.openQuestion(viewer.getControl().getShell(),
-								Messages.OrderManagement_Overdelivery_Title,
-								MessageFormat.format(Messages.OrderManagement_Overdelivery_Message, oldDelivered, part,
-										newTotalDelivery, ordered));
-
-						if (!confirm) {
-							viewer.refresh(entry);
-							return;
-						}
-					}
-					OrderManagementUtil.saveSingleDelivery(entry, part);
-
-					boolean allDelivered = order.getEntries().stream()
-							.allMatch(e -> e.getState() == OrderEntryState.DONE);
-					if (allDelivered) {
-						orderManagementView.reload();
-					}
+				int newAmount = Integer.parseInt(value.toString().trim());
+				int oldAmount = entry.getAmount();
+				if (oldAmount != newAmount) {
+					entry.setAmount(newAmount);
+					CoreModelServiceHolder.get().save(entry);
 					viewer.refresh(entry);
+					if (historyManager != null && order != null) {
+						historyManager.logChangedAmount(order, entry, oldAmount, newAmount);
+					}
 				}
+			}
+			case DELIVERED -> {
+				int part = Integer.parseInt(value.toString().trim());
+				int oldDelivered = entry.getDelivered();
+				int newTotalDelivery = oldDelivered + part;
+				int ordered = entry.getAmount();
+
+				if (newTotalDelivery > ordered) {
+					boolean confirm = MessageDialog.openQuestion(viewer.getControl().getShell(),
+							Messages.OrderManagement_Overdelivery_Title,
+							MessageFormat.format(Messages.OrderManagement_Overdelivery_Message, oldDelivered, part,
+									newTotalDelivery, ordered));
+					if (!confirm) {
+						viewer.refresh(entry);
+						return;
+					}
+				}
+				if (historyManager != null && order != null) {
+					historyManager.logDelivery(order, entry, part, ordered);
+				}
+				OrderManagementUtil.saveSingleDelivery(entry, part);
+				boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+				if (allDelivered) {
+					orderManagementView.reload();
+				}
+				viewer.refresh(entry);
+			}
 				case SUPPLIER -> {
                     if (value instanceof IContact contact) {
                         entry.setProvider(contact);

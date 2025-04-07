@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.Clipboard;
@@ -41,6 +42,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IOrderHistoryService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -49,7 +51,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
-import ch.elexis.core.ui.dialogs.DailyOrderDialog;
+import ch.elexis.core.ui.dialogs.DailyConsumptionOrderDialog;
 import ch.elexis.core.ui.dialogs.HistoryDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
@@ -73,7 +75,9 @@ public class OrderManagementActionFactory {
 	private Action newAction;
 	private Action printAction;
 	private Action exportClipboardAction;
-	private final OrderHistoryManager orderHistoryManager = new OrderHistoryManager();
+
+	private IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
+			.getService(IOrderHistoryService.class).orElse(null);
 
 	private IOrder actOrder;
 
@@ -139,40 +143,50 @@ public class OrderManagementActionFactory {
 	}
 
 	private void handleDailyOrder() {
+		boolean hasOrderedEntries = actOrder != null
+				&& actOrder.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.ORDERED);
+
+		boolean orderIsTrulyDone = actOrder != null && !actOrder.getEntries().isEmpty()
+				&& actOrder.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+
+		boolean reuseExistingOrder = actOrder != null && !orderIsTrulyDone
+				&& actOrder.getTimestamp().toLocalDate().equals(LocalDate.now()) && !hasOrderedEntries;
+
+		IOrder orderToUse = actOrder != null ? actOrder : CoreModelServiceHolder.get().create(IOrder.class);
+
 		if (actOrder == null) {
-			IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
-			order.setTimestamp(LocalDateTime.now());
-			order.setName(Messages.BestellView_AutomaticDaily);
-			CoreModelServiceHolder.get().save(order);
-			orderHistoryManager.logCreateOrder(order);
-			actOrder = order;
+			orderToUse.setTimestamp(LocalDateTime.now());
+			orderToUse.setName(Messages.BestellView_AutomaticDaily);
+		}
+
+		if (reuseExistingOrder) {
+			orderToUse = actOrder;
 		} else {
-			if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-				if (MessageDialog.openQuestion(view.getSite().getShell(), Messages.Core_Areas,
-						Messages.BestellView_WizardAskNewOrder)) {
-					actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic);
-				}
+			orderToUse = CoreModelServiceHolder.get().create(IOrder.class);
+			orderToUse.setTimestamp(LocalDateTime.now());
+			orderToUse.setName(Messages.BestellView_AutomaticDaily);
+		}
+
+		DailyConsumptionOrderDialog doDlg = new DailyConsumptionOrderDialog(view.getSite().getShell(), orderToUse);
+		int result = doDlg.open();
+
+		if (result == Window.OK) {
+			if (!reuseExistingOrder) {
+
+				orderHistoryManager.logCreateOrder(orderToUse);
+			}
+
+			if (!reuseExistingOrder) {
+				actOrder = orderToUse;
 			}
 		}
 
-		if (actOrder == null) {
-			logger.warn("No active order found. Aborting."); //$NON-NLS-1$
-			return;
+		if (actOrder != null) {
+			view.reload();
+			view.updateCheckIn();
 		}
-
-		DailyOrderDialog doDlg = new DailyOrderDialog(view.getSite().getShell(), actOrder);
-		doDlg.open();
-
-		for (IOrderEntry entry : actOrder.getEntries()) {
-			orderHistoryManager.logCreateEntry(actOrder, entry, entry.getAmount());
-		}
-
-		view.loadOpenOrders();
-		view.loadCompletedOrders();
-		view.updateCheckIn();
-		view.loadOrderDetails(actOrder);
-		view.updateOrderDetails(actOrder);
 	}
+
 
 	private void handleAutomaticOrder() {
 		if (actOrder == null) {
@@ -217,11 +231,9 @@ public class OrderManagementActionFactory {
 		for (IOrderEntry entry : actOrder.getEntries()) {
 			orderHistoryManager.logCreateEntry(actOrder, entry, entry.getAmount());
 		}
-		view.loadOpenOrders();
-		view.loadCompletedOrders();
+		view.refresh();
+
 		view.updateCheckIn();
-		view.loadOrderDetails(actOrder);
-		view.updateOrderDetails(actOrder);
 	}
 
 	private void createNewOrder() {
@@ -229,10 +241,7 @@ public class OrderManagementActionFactory {
 				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 		if (nbDlg.open() == Dialog.OK) {
 			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle());
-			view.loadOpenOrders();
-			view.loadCompletedOrders();
-			view.refresh();
-
+			view.reload();
 		}
 	}
 
@@ -258,7 +267,7 @@ public class OrderManagementActionFactory {
 							CoreModelServiceHolder.get().save(oe);
 						});
 						orderHistoryManager.logOrderSent(actOrder, false);
-						view.loadOpenOrders();
+						view.reload();
 					} catch (Exception e) {
 						logger.error("Error printing order", e); //$NON-NLS-1$
 						MessageDialog.openError(view.getViewSite().getShell(), Messages.Core_Error,
@@ -349,7 +358,7 @@ public class OrderManagementActionFactory {
 						}
 						SWTHelper.showInfo(ch.elexis.core.ui.views.Messages.BestellView_OrderSentCaption,
 								ch.elexis.core.ui.views.Messages.BestellView_OrderSentBody);
-						view.loadOrderDetails(actOrder);
+						view.refresh();
 						orderableItems.forEach(oe -> {
 							if (oe.getState() == OrderEntryState.OPEN) {
 								oe.setState(OrderEntryState.ORDERED);
@@ -357,7 +366,7 @@ public class OrderManagementActionFactory {
 							}
 						});
 						orderHistoryManager.logOrderSent(actOrder, true);
-						view.loadOpenOrders();
+						view.reload();
 					} catch (CoreException ex) {
 						ExHandler.handle(ex);
 						logger.error("Error sending the order: ", ex); //$NON-NLS-1$
@@ -445,8 +454,7 @@ public class OrderManagementActionFactory {
 					setOrder(null);
 				}
 			});
-			view.loadOpenOrders();
-			view.refresh();
+			view.reload();
 		}
 	}
 
@@ -518,22 +526,6 @@ public class OrderManagementActionFactory {
 			editOrderEntry(entry, false);
 		}
 	}
-
-
-//	public void handleTableDoubleClick() {
-//	    IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
-//	    IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
-//	    if (entry != null) {
-//
-//			int colIndex = view.determineEditableColumn(entry);
-//	        if (colIndex >= 0) {
-//	        	System.out.println();
-//	            view.tableViewer.editElement(entry, colIndex);
-//	        }
-//	    }
-//	}
-
-
 
 
 	private void editOrderEntry(IOrderEntry entry, boolean isDoubleClick) {

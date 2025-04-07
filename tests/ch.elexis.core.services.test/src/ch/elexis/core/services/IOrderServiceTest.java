@@ -5,24 +5,34 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.builder.IArticleBuilder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.rgw.tools.Result;
 
 public class IOrderServiceTest extends AbstractServiceTest {
 
-	static IModelService coreModelService = AllServiceTests.getModelService();
+	static IModelService coreModelService = OsgiServiceUtil
+			.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 	private static IOrderService orderService;
 	private static IArticle article;
 	private static IStock stock;
@@ -34,7 +44,6 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		orderService = OsgiServiceUtil.getService(IOrderService.class).get();
 		article = new IArticleBuilder(coreModelService, "test medication article", "1234567", ArticleTyp.ARTIKELSTAMM)
 				.buildAndSave();
-
 		stock = createStock();
 		stockEntry = createStockEntry();
 		order = createOrder();
@@ -43,7 +52,6 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@Test
 	public void addRefillForStockEntryToOrder() {
 		IOrderEntry newEntry = orderService.addRefillForStockEntryToOrder(stockEntry, order);
-
 		assertNotNull(newEntry);
 		assertEquals(stockEntry.getArticle(), newEntry.getArticle());
 		assertEquals(2, newEntry.getAmount());
@@ -52,7 +60,6 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@Test
 	public void findOpenOrderEntryForStockEntry() {
 		IOrderEntry entry = orderService.findOpenOrderEntryForStockEntry(stockEntry);
-
 		assertNotNull(entry);
 		assertEquals(order.getEntries().get(0), entry);
 	}
@@ -61,7 +68,6 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	public void findOrderEntryForStock() {
 		IOrderEntry orderEntry = order.getEntries().get(0);
 		orderEntry.setState(OrderEntryState.DONE);
-
 		List<IOrderEntry> entries = orderService.findOrderEntryForStock(stock);
 		assertFalse(entries.isEmpty());
 		assertTrue(entries.contains(orderEntry));
@@ -90,5 +96,88 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		coreModelService.save(order);
 		coreModelService.save(order.addEntry(article, stock, null, 1));
 		return order;
+	}
+
+	@Test
+	public void calculateDailyDifferences_shouldCalculateCorrectDiff() {
+		IMandator mandator = AllServiceTests.getMandator();
+		IArticle testArticle = new IArticleBuilder(coreModelService, "Testartikel", "9999999", ArticleTyp.EIGENARTIKEL)
+				.buildAndSave();
+		IEncounter encounter = coreModelService.create(IEncounter.class);
+		encounter.setDate(LocalDate.now());
+		encounter.setMandator(mandator);
+		encounter.setBillable(true);
+		coreModelService.save(encounter);
+		IBillingService billingService = OsgiServiceUtil.getService(IBillingService.class).get();
+		billingService.bill(testArticle, encounter, 5.0);
+		IOrder order = coreModelService.create(IOrder.class);
+		IOrderEntry entry = order.addEntry(testArticle, stock, null, 2);
+		entry.setState(OrderEntryState.OPEN);
+		coreModelService.save(order);
+		coreModelService.save(entry);
+		Map<IArticle, Integer> differences = orderService.calculateDailyDifferences(LocalDate.now(), List.of(mandator));
+		assertNotNull(differences);
+		assertTrue(differences.containsKey(testArticle));
+		assertEquals(Integer.valueOf(3), differences.get(testArticle));
+	}
+
+	@Test
+	public void reduceOpenEntries() {
+		IOrder freshOrder = coreModelService.create(IOrder.class);
+		coreModelService.save(freshOrder);
+		IOrderEntry entry = freshOrder.addEntry(article, stock, null, 4);
+		entry.setState(OrderEntryState.OPEN);
+		coreModelService.save(entry);
+		orderService.reduceOpenEntries(List.of(freshOrder), article, 3);
+		IOrderEntry updated = freshOrder.getEntries().stream().filter(e -> e.getId().equals(entry.getId())).findFirst()
+				.orElse(null);
+		assertNotNull(updated);
+		assertEquals(1, updated.getAmount());
+	}
+
+	@Test
+	public void createOrderEntries() {
+		order.getEntries().forEach(e -> {
+			e.setState(OrderEntryState.DONE);
+			coreModelService.save(e);
+		});
+		Map<IArticle, Integer> toCreate = new LinkedHashMap<>();
+		toCreate.put(article, 3);
+		int initialCount = order.getEntries().size();
+		orderService.createOrderEntries(List.of(order), order, toCreate, null);
+		assertEquals(initialCount + 1, order.getEntries().size());
+		IOrderEntry added = order.getEntries().get(order.getEntries().size() - 1);
+		assertEquals(article, added.getArticle());
+		assertEquals(3, added.getAmount());
+	}
+
+	@Test
+	public void testCalculateDailyConsumption_withExistingCoverage() {
+		ICoverage coverage = AllServiceTests.getCoverage();
+		IMandator mandator = AllServiceTests.getMandator();
+		coverage.setDateFrom(LocalDate.of(2020, 1, 1));
+		coverage.setExtInfo("Versicherungsnummer", "12340815");
+		coreModelService.save(coverage);
+		ContextServiceHolder.get().setActiveMandator(mandator);
+		IEncounter encounter = coreModelService.create(IEncounter.class);
+		encounter.setCoverage(coverage);
+		encounter.setDate(LocalDate.of(2025, 4, 6));
+		encounter.setMandator(mandator);
+		encounter.setBillable(true);
+		coreModelService.save(encounter);
+		IArticle localArticle = coreModelService.create(IArticle.class);
+		localArticle.setName("Mandator Consumption Article");
+		localArticle.setCode("8888889");
+		localArticle.setTyp(ArticleTyp.EIGENARTIKEL);
+		coreModelService.save(localArticle);
+		IBillingService billingService = OsgiServiceUtil.getService(IBillingService.class).get();
+		Result<IBilled> resultBill = billingService.bill(localArticle, encounter, 3.0);
+		coreModelService.refresh(encounter, true);
+		List<IMandator> mandators = List.of(mandator);
+		Map<IArticle, Integer> dailyResult = orderService.calculateDailyConsumption(encounter.getDate(), mandators);
+		assertTrue("Billing should be OK", resultBill.isOK());
+		assertEquals("Encounter should have 1 IBilled", 1, encounter.getBilled().size());
+		assertFalse("dailyResult should not be empty", dailyResult.isEmpty());
+		assertEquals("Should find 3 consumed", Integer.valueOf(3), dailyResult.get(localArticle));
 	}
 }

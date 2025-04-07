@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOutputLog;
-import ch.elexis.core.ui.util.OrderHistoryEntry;
+import ch.elexis.core.services.internal.model.OrderHistoryEntry;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 
 public class HistoryDialog extends Dialog {
@@ -185,33 +185,38 @@ public class HistoryDialog extends Dialog {
     }
 
     private static String getIconForAction(String action) {
-        return switch (action) {
-            case "Created"          -> "📌"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "ADDMedi"          -> "➕"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Edited"           -> "🖊️"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Delivered"        -> "📦"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Ordered"          -> "📤"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Deleted"          -> "🗑️"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "RemovedMedi"      -> "❌💊"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "SupplierAdded"    -> "🏭"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "CompleteDelivery" -> "✅"; //$NON-NLS-1$ //$NON-NLS-2$
-            default                 -> "🔹";
-        };
+		return switch (action) {
+		case "Created" -> "📌"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "ADDMedi" -> "➕"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Edited" -> "🖊️"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Delivered" -> "📦"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Ordered" -> "📤"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Deleted" -> "🗑️"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "RemovedMedi" -> "❌💊"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "SupplierAdded" -> "🏭"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "CompleteDelivery" -> "✅"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Added" -> "🆕"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Increased" -> "🔼"; //$NON-NLS-1$ //$NON-NLS-2$
+		case "Decreased" -> "🔽"; //$NON-NLS-1$ //$NON-NLS-2$
+		default -> "🔹";
+		};
     }
 
     private static String translateAction(String action) {
-        return switch (action) {
-		case "Created" -> Messages.OrderHistory_Created.toString(); //$NON-NLS-1$
-		case "ADDMedi" -> Messages.OrderHistory_AddMedi.toString(); //$NON-NLS-1$
-		case "Edited" -> Messages.OrderHistory_Edited.toString(); //$NON-NLS-1$
-		case "Delivered" -> Messages.OrderHistory_Delivered.toString(); //$NON-NLS-1$
-		case "Ordered" -> Messages.OrderHistory_Ordered.toString(); //$NON-NLS-1$
-		case "Deleted" -> Messages.OrderHistory_Deleted.toString(); //$NON-NLS-1$
-		case "RemovedMedi" -> Messages.OrderHistory_RemovedMedi.toString(); //$NON-NLS-1$
-		case "SupplierAdded" -> Messages.OrderHistory_SupplierAdded.toString(); //$NON-NLS-1$
-		case "CompleteDelivery" -> Messages.OrderHistory_CompleteDelivery.toString(); //$NON-NLS-1$
-            default                 -> action;
-        };
+		return switch (action) {
+		case "Created" -> Messages.OrderHistory_Created; //$NON-NLS-1$
+		case "ADDMedi" -> Messages.OrderHistory_AddMedi; //$NON-NLS-1$
+		case "Edited" -> Messages.OrderHistory_Edited; //$NON-NLS-1$
+		case "Delivered" -> Messages.OrderHistory_Delivered; //$NON-NLS-1$
+		case "Ordered" -> Messages.OrderHistory_Ordered; //$NON-NLS-1$
+		case "Deleted" -> Messages.OrderHistory_Deleted; //$NON-NLS-1$
+		case "RemovedMedi" -> Messages.OrderHistory_RemovedMedi; //$NON-NLS-1$
+		case "SupplierAdded" -> Messages.OrderHistory_SupplierAdded; //$NON-NLS-1$
+		case "CompleteDelivery" -> Messages.OrderHistory_CompleteDelivery; //$NON-NLS-1$
+		case "Added" -> Messages.OrderHistory_Added; //$NON-NLS-1$
+		case "Increased" -> Messages.OrderHistory_Increased; //$NON-NLS-1$
+		case "Decreased" -> Messages.OrderHistory_Decreased; //$NON-NLS-1$
+		default -> action;
+		};
     }
-
 }

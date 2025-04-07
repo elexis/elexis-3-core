@@ -40,7 +40,6 @@ public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 					continue;
 				}
 
-				// Falls ein Eintrag nicht mehr "OPEN" ist, wird nichts hinzugefügt
 				if (actOrder.getEntries().stream().anyMatch(entry -> entry.getState() != OrderEntryState.OPEN)) {
 					return;
 				}
@@ -52,9 +51,7 @@ public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 
 		if (changesMade) {
 			view.tableViewer.getTable().getDisplay().asyncExec(() -> {
-				view.refresh();
-				view.loadOpenOrders();
-				view.loadCompletedOrders();
+				view.reload();
 			});
 		}
 	}

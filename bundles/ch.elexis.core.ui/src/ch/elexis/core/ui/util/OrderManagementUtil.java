@@ -7,13 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +21,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IOrderHistoryService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -46,7 +42,8 @@ public class OrderManagementUtil {
 	private static final Image TICK_IMAGE = Images.IMG_TICK.getImage();
 	private static final Image SHOPPING = Images.IMG_SHOPPING_CART_WHITE.getImage(ImageSize._75x66_TitleDialogIconSize);
 
-	private final static OrderHistoryManager orderHistoryManager = new OrderHistoryManager();
+	private static final IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
+			.getService(IOrderHistoryService.class).orElse(null);
 
 	public static List<IOrder> getOpenOrders() {
 		return getOrders(false, true);
@@ -202,23 +199,6 @@ public class OrderManagementUtil {
 		return dateTime.format(FORMATTER);
 	}
 
-	public static IOrderEntry getNextOpenEntryAsOrderEntry(Table table, IOrderEntry currentEntry) {
-		boolean foundCurrent = false;
-		for (TableItem item : table.getItems()) {
-			IOrderEntry entry = (IOrderEntry) item.getData("orderEntry"); //$NON-NLS-1$
-			if (entry != null) {
-				if (foundCurrent && (entry.getState() == OrderEntryState.ORDERED
-						|| entry.getState() == OrderEntryState.PARTIAL_DELIVER)) {
-					return entry;
-				}
-				if (entry == currentEntry) {
-					foundCurrent = true;
-				}
-			}
-		}
-		return null;
-	}
-
 	public static IOrder getSelectedOrder(String orderId, boolean isCompleted) {
 		IQuery<IOrder> query = CoreModelServiceHolder.get().getQuery(IOrder.class);
 		return query.execute().stream()
@@ -239,23 +219,6 @@ public class OrderManagementUtil {
 			return Images.IMG_BULLET_YELLOW.getImage();
 		} else {
 			return Images.IMG_BULLET_GREEN.getImage();
-		}
-	}
-
-	public static void focusEntryInTable(Table table, IOrderEntry orderEntry, int columnIndex) {
-		for (TableItem item : table.getItems()) {
-			IOrderEntry entry = (IOrderEntry) item.getData("orderEntry"); //$NON-NLS-1$
-			if (entry == orderEntry) {
-				TableEditor editor = new TableEditor(table);
-				final Text nextText = new Text(table, SWT.BORDER);
-				editor.grabHorizontal = true;
-				editor.grabVertical = true;
-				editor.setEditor(nextText, item, columnIndex);
-				nextText.setText(item.getText(columnIndex));
-				nextText.selectAll();
-				nextText.setFocus();
-				break;
-			}
 		}
 	}
 

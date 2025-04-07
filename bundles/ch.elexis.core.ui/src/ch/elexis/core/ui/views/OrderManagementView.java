@@ -50,6 +50,7 @@ import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IOrderHistoryService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
@@ -57,7 +58,6 @@ import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
-import ch.elexis.core.ui.util.OrderHistoryManager;
 import ch.elexis.core.ui.util.OrderManagementActionFactory;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.util.dnd.DropReceiver;
@@ -134,7 +134,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private static final GridData FIXED_WIDTH_50 = new GridData(50, SWT.DEFAULT);
 	private Map<Integer, Boolean> expandedStates = new HashMap<>();
 
-	private final OrderHistoryManager orderHistoryManager = new OrderHistoryManager();
+	private IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
+			.getService(IOrderHistoryService.class).orElse(null);
 
 	public GenericObjectDropTarget dropTarget;
 
@@ -647,7 +648,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				event -> actionFactory.handleMouseWheelScroll(event, scrolledComposite));
 	}
 
-	public void loadOpenOrders() {
+	private void loadOpenOrders() {
 		List<IOrder> orders = OrderManagementUtil.getOpenOrders();
 		orderTable.setContentProvider(ArrayContentProvider.getInstance());
 		orderTable.setLabelProvider(new OrderTableLabelProvider());
@@ -657,7 +658,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 
-	public void loadCompletedOrders() {
+	private void loadCompletedOrders() {
 		loadCompletedOrders(completedContainer);
 	}
 
@@ -764,7 +765,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		refresh();
 	}
 
-	public void loadOrderDetails(IOrder order) {
+	private void loadOrderDetails(IOrder order) {
 		if (order == null) {
 			actOrder = null;
 			tableViewer.setInput(Collections.emptyList());
