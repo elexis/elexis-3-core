@@ -3,6 +3,7 @@ package ch.elexis.core.ui.proposals;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -16,16 +17,35 @@ public class IdentifiableProposalProvider<T extends Identifiable> implements ICo
 	private IQuery<T> query;
 	private List<T> queryResults = new LinkedList<>();
 
+	private boolean allowNoContent = false;
+	private boolean matchContained = false;
+
 	public IdentifiableProposalProvider(IQuery<T> query) {
 		this.query = query;
 	}
 
+	/**
+	 * Allow proposals to be loaded if there is not contents string.
+	 * 
+	 */
+	public void allowNoContent() {
+		this.allowNoContent = true;
+	}
+
+	/**
+	 * Match label of loaded proposals containing the contents string.
+	 * 
+	 */
+	public void matchContained() {
+		this.matchContained = true;
+	}
+
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
-		if (contents == null || contents.length() < 1)
+		if (!allowNoContent && StringUtils.isBlank(contents))
 			return null;
 
-		if (position == 1) {
+		if (position == 1 || allowNoContent) {
 			// refresh all available from database
 			queryResults.clear();
 			queryResults = query.execute();
@@ -35,8 +55,18 @@ public class IdentifiableProposalProvider<T extends Identifiable> implements ICo
 
 		for (T a : queryResults) {
 			String label = getLabelForObject(a);
-			if (label.toLowerCase().startsWith(contents.toLowerCase())) {
+			if (allowNoContent && StringUtils.isEmpty(contents)) {
 				proposals.add(new IdentifiableContentProposal<T>(label, a));
+			} else {
+				if (matchContained) {
+					if (label.toLowerCase().contains(contents.toLowerCase())) {
+						proposals.add(new IdentifiableContentProposal<T>(label, a));
+					}
+				} else {
+					if (label.toLowerCase().startsWith(contents.toLowerCase())) {
+						proposals.add(new IdentifiableContentProposal<T>(label, a));
+					}
+				}
 			}
 		}
 

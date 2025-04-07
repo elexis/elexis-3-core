@@ -27,11 +27,11 @@ public class ReminderTablesConfigLabelsAccumulator implements IConfigLabelAccumu
 			ReminderColumn column = dataProvider.getColumns().get(columnPosition);
 
 			if (dataProvider.getData(columnPosition, rowPosition) == null) {
-				configLabels.addLabel("BG_" + column.getName());
+				configLabels.addLabel("BG_" + column.getId());
 			}
 
 			if (dataProvider.getData(columnPosition, rowPosition) instanceof IReminder || rowPosition == 0) {
-				configLabels.addLabel("BG_" + column.getName());
+				configLabels.addLabel("BG_" + column.getId());
 			}
 
 			if (dataProvider.getData(columnPosition, rowPosition) instanceof IReminder) {

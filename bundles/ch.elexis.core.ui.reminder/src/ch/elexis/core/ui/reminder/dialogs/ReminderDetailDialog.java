@@ -24,6 +24,8 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 
 	private ReminderComposite reminderComposite;
 
+	private Composite composite;
+
 	public ReminderDetailDialog(IReminder reminder, Shell parentShell) {
 		super(parentShell);
 		this.reminder = reminder;
@@ -45,16 +47,16 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 
 		setMessage(Messages.EditReminderDialog_enterDataForReminder);
 		setTitleImage(Images.lookupImage("tick_banner.png", ImageSize._75x66_TitleDialogIconSize)); //$NON-NLS-1$
+		reminderComposite = new ReminderComposite(composite, SWT.NONE);
+		reminderComposite.setReminder(reminder);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite ret = new Composite(parent, SWT.NONE);
-		ret.setLayoutData(new GridData(GridData.FILL_BOTH));
-		ret.setLayout(new FillLayout());
-		reminderComposite = new ReminderComposite(ret, SWT.NONE);
-		reminderComposite.setReminder(reminder);
-		return ret;
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		composite.setLayout(new FillLayout());
+		return composite;
 	}
 
 	@Override

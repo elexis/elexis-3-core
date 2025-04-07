@@ -3,7 +3,9 @@ package ch.elexis.core.ui.reminder.part;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -217,14 +219,20 @@ public class ReminderTablesPart implements IRefreshable {
 	}
 
 	private void saveColumnsPreference() {
-		String columns = getColumns().stream().map(c -> c.getName()).collect(Collectors.joining("|"));
+		String columns = getColumns().stream().map(c -> c.getId()).collect(Collectors.joining("|"));
 		ConfigServiceHolder.get().setActiveUserContact("ch.elexis.core.ui.reminder.part/columns", columns);
 	}
 
 	private List<ReminderColumn> loadColumnsPreference() {
-		String names = ConfigServiceHolder.get().getActiveUserContact("ch.elexis.core.ui.reminder.part/columns", "Meine|Patient|Alle");
-		List<String> nameParts = Arrays.asList(names.split("\\|")); 
-		return ReminderColumn.getAllAvailable().stream().filter(c -> nameParts.contains(c.getName())).toList();
+		String names = ConfigServiceHolder.get().getActiveUserContact("ch.elexis.core.ui.reminder.part/columns", "");
+		List<String> idParts = Arrays.asList(names.split("\\|"));
+		List<ReminderColumn> ret = new ArrayList<>();
+		List<ReminderColumn> available = ReminderColumn.getAllAvailable();
+		// keep order of saved columns
+		for (String id : idParts) {
+			available.stream().filter(c -> c.getId().equals(id)).findFirst().ifPresent(c -> ret.add(c));
+		}
+		return ret;
 	}
 
 	private void addTooltip() {
@@ -307,6 +315,42 @@ public class ReminderTablesPart implements IRefreshable {
 											}
 										}
 									}
+								} else {
+									int columnPosition = natTable.getColumnPositionByX(event.x);
+									if (columnPosition > -1) {
+										Map<String, Object> parameters = new HashMap<>();
+										ReminderColumn column = dataProvider.getColumns().get(columnPosition);
+										switch (column.getType()) {
+										case USER:
+											parameters.put("createReminder.responsible",
+													column.getResponsible().getId());
+											break;
+										case ALL:
+											parameters.put("createReminder.responsible", "Alle");
+											break;
+										case GROUP:
+											parameters.put("createReminder.responsiblegroup",
+													column.getGroup().getId());
+											break;
+										case PATIENT:
+											if (column.getPatient() != null) {
+												parameters.put("createReminder.patient", column.getPatient().getId());
+											}
+											break;
+										case POPUP:
+											parameters.put("createReminder.popup", Boolean.TRUE.toString());
+											break;
+										default:
+											break;
+										}
+										ParameterizedCommand command = commandService.createCommand(
+												"ch.elexis.core.ui.reminder.command.createReminder", parameters);//$NON-NLS-1$
+										if (command != null) {
+											handlerService.executeHandler(command);
+										} else {
+											LoggerFactory.getLogger(getClass()).error("Command not found"); //$NON-NLS-1$
+										}
+									}
 								}
 							}
 						});
@@ -324,7 +368,7 @@ public class ReminderTablesPart implements IRefreshable {
 			columnStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
 					CoreUiUtil.getColorForString(reminderColumn.getColor()));
 			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnStyle,
-					DisplayMode.NORMAL, "BG_" + reminderColumn.getName());
+					DisplayMode.NORMAL, "BG_" + reminderColumn.getId());
 		}
 
 		resetColumns();

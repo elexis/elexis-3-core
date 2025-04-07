@@ -24,7 +24,12 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tR6bMOhZEe-wd4tFRRI7kg" featurename="commands" parentElementId="xpath:/">
     <elements xsi:type="commands:Command" xmi:id="_wYKacOhZEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.editReminder" commandName="Edit Reminder"/>
-    <elements xsi:type="commands:Command" xmi:id="_3W1AQOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.createReminder" commandName="Create Reminder"/>
+    <elements xsi:type="commands:Command" xmi:id="_3W1AQOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.createReminder" commandName="Create Reminder">
+      <parameters xmi:id="_yJ01UBEqEfC3Z9U87QgOog" elementId="createReminder.responsible" name="createReminder.responsible"/>
+      <parameters xmi:id="_YpgOABEwEfC3Z9U87QgOog" elementId="createReminder.responsiblegroup" name="createReminder.responsiblegroup"/>
+      <parameters xmi:id="_cg59YBEwEfC3Z9U87QgOog" elementId="createReminder.patient" name="createReminder.patient"/>
+      <parameters xmi:id="_ckMh8BEwEfC3Z9U87QgOog" elementId="createReminder.popup" name="createReminder.popup"/>
+    </elements>
     <elements xsi:type="commands:Command" xmi:id="_3WY58PKjEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.command.closeReminder" commandName="Close Reminder"/>
     <elements xsi:type="commands:Command" xmi:id="_I31XcPKkEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.command.deleteReminder" commandName="Delete Reminder"/>
     <elements xsi:type="commands:Command" xmi:id="_LluTEAuoEfCpZcwegOUHJQ" elementId="ch.elexis.core.ui.reminder.command.autoSelectPatient" commandName="Auto Select Patient"/>
