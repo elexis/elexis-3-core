@@ -281,7 +281,9 @@ public class LaborResultsComposite extends Composite {
 				Point point = new Point(e.x, e.y);
 				TreeItem item = viewer.getTree().getItem(point);
 				laborChartPopupManager.dispose();
-				createChartPopup(item, e);
+				if (item != null) {
+					createChartPopup(item, e);
+				}
 			}
 			@Override
 			public void mouseExit(MouseEvent e) {

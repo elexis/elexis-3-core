@@ -5159,6 +5159,19 @@ public class Messages extends NLS {
 	public static String Attention;
 	public static String HttpOrderTransportService_Dialog;
 	public static String OrderSupplierNotDefined;
+	public static String LabSettings_importTitle;
+	public static String LabSettings_importDirLabel;
+	public static String LabSettings_browseButton;
+	public static String LabSettings_importProfileLabel;
+	public static String LabSettings_startAutoGroupButton;
+	public static String LabSettings_pathMissingTitle;
+	public static String LabSettings_pathMissingMessage;
+	public static String LabSettings_importDoneTitle;
+	public static String LabSettings_importDoneMessage;
+	public static String LabSettings_importErrorTitle;
+	public static String LabSettings_importErrorMessage;
+	public static String LabSettings_histogramTitle;
+	public static String LabSettings_histogramPopupLabel;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
