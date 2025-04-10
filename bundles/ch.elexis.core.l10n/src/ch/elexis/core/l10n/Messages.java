@@ -5159,6 +5159,10 @@ public class Messages extends NLS {
 	public static String Attention;
 	public static String HttpOrderTransportService_Dialog;
 	public static String OrderSupplierNotDefined;
+	public static String HttpOrderTransportService_OrderAlreadySent_Title;
+	public static String HttpOrderTransportService_OrderAlreadySent_Message;
+	public static String HttpOrderTransportService_LinkText;
+	public static String HttpOrderTransportService_LinkTooltip;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
