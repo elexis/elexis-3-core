@@ -33,7 +33,6 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -278,16 +277,17 @@ public class EncounterService implements IEncounterService {
 	@Override
 	public Optional<IEncounter> getLatestEncounter(IPatient patient) {
 		List<IEncounter> result = null;
-		Optional<ACEAccessBitMapConstraint> aoboOrSelf = AccessControlServiceHolder.get().isAoboOrSelf(EvACE.of(IEncounter.class, Right.READ));
+		Optional<ACEAccessBitMapConstraint> aoboOrSelf = accessControlService
+				.isAoboOrSelf(EvACE.of(IEncounter.class, Right.READ));
 		if(aoboOrSelf.isPresent()) {
 			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
 					IEncounter.class, "Behandlung.patient.last.aobo");
 			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
 				result = query.executeWithParameters(query.getParameterMap("patient", patient, "aoboids",
-						AccessControlServiceHolder.get().getAoboMandatorIdsForSqlIn()));
+						accessControlService.getAoboMandatorIdsForSqlIn()));
 			} else if (aoboOrSelf.get() == ACEAccessBitMapConstraint.SELF) {
 				result = query.executeWithParameters(query.getParameterMap("patient", patient, "aoboids",
-						Collections.singletonList(AccessControlServiceHolder.get().getSelfMandatorId())));
+						Collections.singletonList(accessControlService.getSelfMandatorId())));
 			}
 		} else {
 			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
