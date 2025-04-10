@@ -14,5 +14,3 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.ui.mediorder
 Bundle-ActivationPolicy: lazy
-Export-Package: ch.elexis.core.ui.mediorder
-Import-Package: ch.elexis.core.mediorder

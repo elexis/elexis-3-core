@@ -5,8 +5,8 @@ import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStickerService;
-import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MediorderUtil {
@@ -61,7 +61,10 @@ public class MediorderUtil {
 			}
 		} else if (minimumStock > 0 && maximumStock > 0 && currentStock == 0) {
 			// determine if already ordered
-			IOrderEntry order = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
+			IOrderService orderService = OsgiServiceUtil.getService(IOrderService.class)
+					.orElseThrow(() -> new IllegalStateException("no order service found"));
+			IOrderEntry order = orderService.findOpenOrderEntryForStockEntry(stockEntry);
+			OsgiServiceUtil.ungetService(orderService);
 			if (order != null) {
 				if (minimumStock == maximumStock) {
 					state = MediorderEntryState.ORDERED;
@@ -106,13 +109,6 @@ public class MediorderUtil {
 	 * @return
 	 */
 	public static int calculateStockState(IStock stock) {
-		IModelService coreModelService = OsgiServiceUtil
-				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-				.orElseThrow(() -> new IllegalStateException("no model service found"));
-
-		IStickerService stickerService = OsgiServiceUtil.getService(IStickerService.class)
-				.orElseThrow(() -> new IllegalStateException("no stock service found"));
-
 		boolean allEnabledForPea = true;
 		boolean hasInStock = false;
 		boolean hasPartiallyInStock = false;
@@ -143,12 +139,21 @@ public class MediorderUtil {
 		if (hasPartiallyInStock)
 			return 2;
 		if (hasInStock && allEnabledForPea) {
-			if (stickerService.hasSticker(stock.getOwner().asIPatient(),
-					coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class)
-							.orElseThrow(() -> new IllegalStateException("no mediorderMailSend sticker found")))) {
-				return 4;
+			IModelService coreModelService = OsgiServiceUtil
+					.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+					.orElseThrow(() -> new IllegalStateException("no model service found"));
+
+			IStickerService stickerService = OsgiServiceUtil.getService(IStickerService.class)
+					.orElseThrow(() -> new IllegalStateException("no stock service found"));
+			try {
+				boolean hasSticker = stickerService.hasSticker(stock.getOwner().asIPatient(),
+						coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class)
+								.orElseThrow(() -> new IllegalStateException("no mediorderMailSend sticker found")));
+				return hasSticker ? 4 : 1;
+			} finally {
+				OsgiServiceUtil.ungetService(coreModelService);
+				OsgiServiceUtil.ungetService(stickerService);
 			}
-			return 1;
 		}
 		if (hasInStock && hasOtherStatus)
 			return 2;
