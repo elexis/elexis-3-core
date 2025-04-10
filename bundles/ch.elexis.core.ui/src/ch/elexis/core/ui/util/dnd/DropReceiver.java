@@ -7,6 +7,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
@@ -14,9 +15,11 @@ import ch.elexis.core.ui.views.OrderManagementView;
 public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 
 	private final OrderManagementView view;
+	private final IOrderService orderService;
 
-	public DropReceiver(OrderManagementView view) {
+	public DropReceiver(OrderManagementView view, IOrderService orderService) {
 		this.view = view;
+		this.orderService = orderService;
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 
 				if (actOrder.getEntries().isEmpty()) {
 					actOrder = OrderManagementUtil.addItemsToOrder(actOrder, List.of(article),
-							view.getSite().getShell());
+							view.getSite().getShell(), orderService);
 					changesMade = true;
 					continue;
 				}
@@ -44,7 +47,8 @@ public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
 					return;
 				}
 
-				actOrder = OrderManagementUtil.addItemsToOrder(actOrder, List.of(article), view.getSite().getShell());
+				actOrder = OrderManagementUtil.addItemsToOrder(actOrder, List.of(article), view.getSite().getShell(),
+						orderService);
 				changesMade = true;
 			}
 		}

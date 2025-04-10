@@ -50,7 +50,7 @@ import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IOrderHistoryService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
@@ -104,6 +104,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private Composite completedContainer;
 	private boolean isUIUpdating = false;
 
+	@Inject
+	private IOrderService orderService;
+
 	public Composite getCompletedContainer() {
 		return completedContainer;
 	}
@@ -134,8 +137,6 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private static final GridData FIXED_WIDTH_50 = new GridData(50, SWT.DEFAULT);
 	private Map<Integer, Boolean> expandedStates = new HashMap<>();
 
-	private IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
-			.getService(IOrderHistoryService.class).orElse(null);
 
 	public GenericObjectDropTarget dropTarget;
 
@@ -193,7 +194,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 					.allMatch(entry -> entry.getState() == OrderEntryState.OPEN);
 
 			if (isOrderOpen) {
-				actOrder = OrderManagementUtil.addItemsToOrder(actOrder, List.of(scannedArticle), getSite().getShell());
+				actOrder = OrderManagementUtil.addItemsToOrder(actOrder, List.of(scannedArticle), getSite().getShell(),
+						orderService);
 			} else {
 				Optional<IOrderEntry> matchingEntry = actOrder.getEntries().stream()
 						.filter(entry -> entry.getArticle() != null
@@ -223,11 +225,11 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 					entry.setDelivered(newDelivered);
 					entry.setState(newDelivered >= ordered ? OrderEntryState.DONE : OrderEntryState.PARTIAL_DELIVER);
 					CoreModelServiceHolder.get().save(entry);
-					orderHistoryManager.logDelivery(entry.getOrder(), entry, newDelivered, ordered);
+					orderService.getHistoryService().logDelivery(entry.getOrder(), entry, newDelivered, ordered);
 					boolean allDelivered = entry.getOrder().getEntries().stream()
 							.allMatch(e -> e.getState() == OrderEntryState.DONE);
 					if (allDelivered) {
-						orderHistoryManager.logCompleteDelivery(entry.getOrder());
+						orderService.getHistoryService().logCompleteDelivery(entry.getOrder());
 					}
 				}
 			}
@@ -293,7 +295,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				for (IOrderEntry entry : actOrder.getEntries()) {
 					if (entry.getProvider() == null) {
 						entry.setProvider(selectedProvider);
-						orderHistoryManager.logSupplierAdded(actOrder, entry, selectedProvider.getLabel());
+						orderService.getHistoryService().logSupplierAdded(actOrder, entry, selectedProvider.getLabel());
 						CoreModelServiceHolder.get().save(entry);
 					}
 				}
@@ -328,9 +330,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		if (entry.getState() == OrderEntryState.OPEN) {
 			int oldValue = entry.getAmount();
 			entry.setAmount(newValue);
-			orderHistoryManager.logEdit(actOrder, entry, oldValue, newValue);
+			orderService.getHistoryService().logEdit(actOrder, entry, oldValue, newValue);
 		} else {
-			OrderManagementUtil.saveSingleDelivery(entry, newValue);
+			OrderManagementUtil.saveSingleDelivery(entry, newValue, orderService);
 		}
 		CoreModelServiceHolder.get().save(entry);
 		tableViewer.refresh(entry);
@@ -460,7 +462,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tableControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableControl.setHeaderVisible(true);
 		tableControl.setLinesVisible(true);
-		dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", tableViewer.getControl(), new DropReceiver(this)); //$NON-NLS-1$
+		dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", tableViewer.getControl(), //$NON-NLS-1$
+				new DropReceiver(this, orderService));
 		CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 
 		dropTarget.registered(false);
@@ -806,7 +809,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		supplierColumn.setLabelProvider(new EntryTableLabelProvider(4, showDeliveredColumn));
 		supplierColumn.setEditingSupport(
 				new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.SUPPLIER, actOrder,
-						orderHistoryManager, 4));
+						4, orderService));
 	}
 
 	private void addEditingSupportForDeliveredColumn() {
@@ -814,7 +817,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		TableViewerColumn deliveredColumn = new TableViewerColumn(tableViewer, existingDeliveredColumn);
 		deliveredColumn.setLabelProvider(new EntryTableLabelProvider(2, showDeliveredColumn));
 		deliveredColumn.setEditingSupport(new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.DELIVERED,
-				actOrder, orderHistoryManager, 2
+				actOrder, 2, orderService
 				));
 	}
 
@@ -823,7 +826,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		TableViewerColumn orderColumn = new TableViewerColumn(tableViewer, existingOrderColumn);
 		orderColumn.setLabelProvider(new EntryTableLabelProvider(1, showDeliveredColumn));
 		orderColumn.setEditingSupport(new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.ORDERED, actOrder,
-				orderHistoryManager, 1
+				1, orderService
 		));
 	}
 
@@ -910,7 +913,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private void makeActions() {
-		actionFactory = new OrderManagementActionFactory(this, actOrder);
+		actionFactory = new OrderManagementActionFactory(this, actOrder, orderService);
 		actionFactory.initActions();
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager tbm = actionBars.getToolBarManager();

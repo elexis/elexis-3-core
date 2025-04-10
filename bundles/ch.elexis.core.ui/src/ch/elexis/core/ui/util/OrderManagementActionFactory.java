@@ -42,7 +42,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
-import ch.elexis.core.services.IOrderHistoryService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -76,14 +76,15 @@ public class OrderManagementActionFactory {
 	private Action printAction;
 	private Action exportClipboardAction;
 
-	private IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
-			.getService(IOrderHistoryService.class).orElse(null);
+
+	private IOrderService orderService;
 
 	private IOrder actOrder;
 
-	public OrderManagementActionFactory(OrderManagementView view, IOrder actOrder) {
+	public OrderManagementActionFactory(OrderManagementView view, IOrder actOrder, IOrderService orderService) {
 		this.view = Objects.requireNonNull(view);
 		this.actOrder = actOrder;
+		this.orderService = orderService;
 	}
 
 	public void initActions() {
@@ -185,12 +186,12 @@ public class OrderManagementActionFactory {
 
 	private void handleAutomaticOrder() {
 		if (actOrder == null) {
-			actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic);
+			actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic, orderService);
 		} else {
 			if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
 				if (MessageDialog.openQuestion(view.getSite().getShell(), Messages.Core_Areas,
 						Messages.BestellView_WizardAskNewOrder)) {
-					actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic);
+					actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic, orderService);
 				}
 			}
 		}
@@ -233,7 +234,7 @@ public class OrderManagementActionFactory {
 		NeueBestellungDialog nbDlg = new NeueBestellungDialog(view.getSite().getShell(),
 				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 		if (nbDlg.open() == Dialog.OK) {
-			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle());
+			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle(), orderService);
 			view.reload();
 		}
 	}
@@ -259,7 +260,7 @@ public class OrderManagementActionFactory {
 							oe.setState(OrderEntryState.ORDERED);
 							CoreModelServiceHolder.get().save(oe);
 						});
-						orderHistoryManager.logOrderSent(actOrder, false);
+						orderService.getHistoryService().logOrderSent(actOrder, false);
 						view.reload();
 					} catch (Exception e) {
 						logger.error("Error printing order", e); //$NON-NLS-1$
@@ -358,7 +359,7 @@ public class OrderManagementActionFactory {
 								CoreModelServiceHolder.get().save(oe);
 							}
 						});
-						orderHistoryManager.logOrderSent(actOrder, true);
+						orderService.getHistoryService().logOrderSent(actOrder, true);
 						view.reload();
 					} catch (CoreException ex) {
 						ExHandler.handle(ex);
@@ -430,7 +431,7 @@ public class OrderManagementActionFactory {
 		IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
 		if (entry != null && entry.getState() == OrderEntryState.OPEN) {
 			IOrder order = entry.getOrder();
-			orderHistoryManager.logRemove(order, entry);
+			orderService.getHistoryService().logRemove(order, entry);
 			CoreModelServiceHolder.get().delete(entry);
 			order.getEntries().remove(entry);
 
@@ -474,7 +475,7 @@ public class OrderManagementActionFactory {
 			Display.getDefault().asyncExec(() -> {
 				if (view.dropTarget == null) {
 					view.dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", view.tableViewer.getControl(), //$NON-NLS-1$
-							new DropReceiver(view));
+							new DropReceiver(view, orderService));
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(view.dropTarget);
 				}
 				view.dropTarget.registered(false);

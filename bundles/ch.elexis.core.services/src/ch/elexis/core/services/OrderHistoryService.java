@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,6 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.model.OrderHistoryEntry;
 
 
-@Component
 public class OrderHistoryService implements IOrderHistoryService {
 
 		private static final Logger logger = LoggerFactory.getLogger(OrderHistoryService.class);

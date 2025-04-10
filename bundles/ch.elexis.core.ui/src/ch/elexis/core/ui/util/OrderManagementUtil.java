@@ -21,7 +21,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
-import ch.elexis.core.services.IOrderHistoryService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -42,8 +42,7 @@ public class OrderManagementUtil {
 	private static final Image TICK_IMAGE = Images.IMG_TICK.getImage();
 	private static final Image SHOPPING = Images.IMG_SHOPPING_CART_WHITE.getImage(ImageSize._75x66_TitleDialogIconSize);
 
-	private static final IOrderHistoryService orderHistoryManager = ch.elexis.core.utils.OsgiServiceUtil
-			.getService(IOrderHistoryService.class).orElse(null);
+
 
 	public static List<IOrder> getOpenOrders() {
 		return getOrders(false, true);
@@ -69,12 +68,12 @@ public class OrderManagementUtil {
 				.sorted((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp())).collect(Collectors.toList());
 	}
 
-	public static IOrder createOrder(String name) {
+	public static IOrder createOrder(String name, IOrderService orderService) {
 		IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
 		order.setTimestamp(LocalDateTime.now());
 		order.setName(name);
 		CoreModelServiceHolder.get().save(order);
-		orderHistoryManager.logCreateOrder(order);
+		orderService.getHistoryService().logCreateOrder(order);
 		return order;
 	}
 
@@ -116,7 +115,7 @@ public class OrderManagementUtil {
 		return Messages.OrderManagement_NotOrdered;
 	}
 
-	public static void saveSingleDelivery(IOrderEntry entry, int partialDelivery) {
+	public static void saveSingleDelivery(IOrderEntry entry, int partialDelivery, IOrderService orderService) {
 		if (entry == null || partialDelivery <= 0) {
 			return;
 		}
@@ -129,14 +128,14 @@ public class OrderManagementUtil {
 			if (stock != null) {
 				updateStockEntry(stock, entry, partialDelivery);
 			}
-			orderHistoryManager.logDelivery(entry.getOrder(), entry, newDelivered, orderAmount);
+			orderService.getHistoryService().logDelivery(entry.getOrder(), entry, newDelivered, orderAmount);
 			entry.setDelivered(newDelivered);
 			entry.setState(newDelivered >= entry.getAmount() ? OrderEntryState.DONE : OrderEntryState.PARTIAL_DELIVER);
 			CoreModelServiceHolder.get().save(entry);
 			IOrder order = entry.getOrder();
 			boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 			if (allDelivered) {
-				orderHistoryManager.logCompleteDelivery(order);
+				orderService.getHistoryService().logCompleteDelivery(order);
 			}
 
 		} catch (NumberFormatException e) {
@@ -145,23 +144,24 @@ public class OrderManagementUtil {
 	}
 
 
-	public static void saveAllDeliveries(List<IOrderEntry> entries) {
+	public static void saveAllDeliveries(List<IOrderEntry> entries, IOrderService orderService) {
 		for (IOrderEntry entry : entries) {
 
 			int partialDelivery = entry.getAmount() - entry.getDelivered();
 			if (partialDelivery > 0) {
-				saveSingleDelivery(entry, partialDelivery);
+				saveSingleDelivery(entry, partialDelivery, orderService);
 			}
 		}
 	}
 
-	public static IOrder addItemsToOrder(IOrder actOrder, List<IArticle> articlesToOrder, Shell shell) {
+	public static IOrder addItemsToOrder(IOrder actOrder, List<IArticle> articlesToOrder, Shell shell,
+			IOrderService orderService) {
 		if (actOrder == null) {
 			NeueBestellungDialog nbDlg = new NeueBestellungDialog(shell,
 					ch.elexis.core.ui.views.Messages.BestellView_CreateNewOrder,
 					ch.elexis.core.ui.views.Messages.BestellView_EnterOrderTitle);
 			if (nbDlg.open() == Dialog.OK) {
-				actOrder = createOrder(nbDlg.getTitle());
+				actOrder = createOrder(nbDlg.getTitle(), orderService);
 			} else {
 				return null;
 			}
@@ -181,7 +181,7 @@ public class OrderManagementUtil {
 				orderEntry.setAmount(newQuantity);
 				CoreModelServiceHolder.get().save(orderEntry);
 
-				orderHistoryManager.logEdit(actOrder, orderEntry, oldQuantity, newQuantity);
+				orderService.getHistoryService().logEdit(actOrder, orderEntry, oldQuantity, newQuantity);
 			} else {
 
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().map(IMandator::getId).orElse(null);

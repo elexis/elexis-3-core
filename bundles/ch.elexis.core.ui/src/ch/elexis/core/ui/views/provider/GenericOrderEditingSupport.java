@@ -19,7 +19,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
-import ch.elexis.core.services.IOrderHistoryService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
@@ -29,17 +29,18 @@ public class GenericOrderEditingSupport extends EditingSupport {
     private final TableViewer viewer;
     private final EditingColumnType columnType;
     private final IOrder order;
-	private final IOrderHistoryService historyManager;
+	private final IOrderService orderService;
 	private final OrderManagementView orderManagementView;
 	private final int columnIndex; 
 
 	public GenericOrderEditingSupport(OrderManagementView orderManagementView, TableViewer viewer,
-			EditingColumnType columnType, IOrder order, IOrderHistoryService historyManager, int columnIndex) {
+			EditingColumnType columnType, IOrder order, int columnIndex,
+			IOrderService orderService) {
         super(viewer);
         this.viewer = viewer;
         this.columnType = columnType;
         this.order = order;
-        this.historyManager = historyManager;
+		this.orderService = orderService;
 		this.orderManagementView = orderManagementView;
 		this.columnIndex = columnIndex;
     }
@@ -125,8 +126,8 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					entry.setAmount(newAmount);
 					CoreModelServiceHolder.get().save(entry);
 					viewer.refresh(entry);
-					if (historyManager != null && order != null) {
-						historyManager.logChangedAmount(order, entry, oldAmount, newAmount);
+					if (orderService.getHistoryService() != null && order != null) {
+						orderService.getHistoryService().logChangedAmount(order, entry, oldAmount, newAmount);
 					}
 				}
 			}
@@ -146,10 +147,10 @@ public class GenericOrderEditingSupport extends EditingSupport {
 						return;
 					}
 				}
-				if (historyManager != null && order != null) {
-					historyManager.logDelivery(order, entry, part, ordered);
+				if (orderService.getHistoryService() != null && order != null) {
+					orderService.getHistoryService().logDelivery(order, entry, part, ordered);
 				}
-				OrderManagementUtil.saveSingleDelivery(entry, part);
+				OrderManagementUtil.saveSingleDelivery(entry, part, orderService);
 				boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 				if (allDelivered) {
 					orderManagementView.reload();
@@ -159,8 +160,8 @@ public class GenericOrderEditingSupport extends EditingSupport {
 				case SUPPLIER -> {
                     if (value instanceof IContact contact) {
                         entry.setProvider(contact);
-                        if (historyManager != null && order != null) {
-                            historyManager.logSupplierAdded(order, entry, contact.getLabel());
+						if (orderService.getHistoryService() != null && order != null) {
+							orderService.getHistoryService().logSupplierAdded(order, entry, contact.getLabel());
                         }
                         CoreModelServiceHolder.get().save(entry);
                         viewer.refresh(entry);

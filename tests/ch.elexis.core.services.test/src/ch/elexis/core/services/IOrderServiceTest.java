@@ -39,9 +39,6 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@BeforeClass
 	public static void beforeClass() {
 		orderService = OsgiServiceUtil.getService(IOrderService.class).get();
-		if (orderService instanceof OrderService realService) {
-			realService.setOrderHistoryService(new OrderHistoryService());
-		}
 		article = new IArticleBuilder(coreModelService, "test medication article", "1234567", ArticleTyp.ARTIKELSTAMM)
 				.buildAndSave();
 		stock = createStock();

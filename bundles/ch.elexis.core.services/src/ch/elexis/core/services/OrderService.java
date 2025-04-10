@@ -32,17 +32,9 @@ public class OrderService implements IOrderService {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService modelService;
 
-	private IOrderHistoryService orderHistoryService = ch.elexis.core.utils.OsgiServiceUtil
-			.getService(IOrderHistoryService.class).orElse(null);
-
-	@Reference
-	void setOrderHistoryService(IOrderHistoryService service) {
-		this.orderHistoryService = service;
-	}
-
 	@Override
 	public IOrderHistoryService getHistoryService() {
-		return this.orderHistoryService;
+		return new OrderHistoryService();
 	}
 
 	@Override
@@ -81,7 +73,7 @@ public class OrderService implements IOrderService {
 		if (toOrder > 0) {
 			IOrderEntry entry = order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
 			modelService.save(entry);
-			orderHistoryService.logChangedAmount(order, entry, 0, toOrder);
+			getHistoryService().logChangedAmount(order, entry, 0, toOrder);
 			return entry;
 		}
 		return null;
@@ -122,12 +114,12 @@ public class OrderService implements IOrderService {
 				int amount = entry.getAmount();
 				if (amount <= reduceBy) {
 					reduceBy -= amount;
-					orderHistoryService.logRemove(order, entry);
+					getHistoryService().logRemove(order, entry);
 					modelService.delete(entry);
 				} else {
 					entry.setAmount(amount - reduceBy);
 					modelService.save(entry);
-					orderHistoryService.logChangedAmount(order, entry, amount, entry.getAmount());
+					getHistoryService().logChangedAmount(order, entry, amount, entry.getAmount());
 					reduceBy = 0;
 				}
 			}
@@ -137,7 +129,7 @@ public class OrderService implements IOrderService {
 	@Override
 	public void createOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
 			Map<IArticle, Integer> entriesToAdd, @Nullable IMandator mandator) {
-			orderHistoryService.logCreateOrder(fallbackOrder);
+		getHistoryService().logCreateOrder(fallbackOrder);
 		for (Map.Entry<IArticle, Integer> entry : entriesToAdd.entrySet()) {
 			if (entry.getValue() <= 0)
 				continue;
@@ -150,7 +142,7 @@ public class OrderService implements IOrderService {
 						int old = oe.getAmount();
 						oe.setAmount(oe.getAmount() + amountToAdd);
 						modelService.save(oe);
-						orderHistoryService.logChangedAmount(order, oe, old, oe.getAmount());
+						getHistoryService().logChangedAmount(order, oe, old, oe.getAmount());
 						appended = true;
 						break;
 					}
@@ -168,7 +160,7 @@ public class OrderService implements IOrderService {
 						? fallbackOrder.addEntry(se.getArticle(), se.getStock(), se.getProvider(), amountToAdd)
 						: fallbackOrder.addEntry(article, null, null, amountToAdd);
 				modelService.save(newEntry);
-				orderHistoryService.logChangedAmount(fallbackOrder, newEntry, 0, amountToAdd);
+				getHistoryService().logChangedAmount(fallbackOrder, newEntry, 0, amountToAdd);
 			}
 		}
 		if (!fallbackOrder.getEntries().isEmpty()) {
