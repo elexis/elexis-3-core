@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" immediate="true" name="ch.elexis.core.mediorder.mail.task.MediorderMailRunnableFactory">
+   <service>
+      <provide interface="ch.elexis.core.model.tasks.IIdentifiedRunnableFactory"/>
+   </service>
+   <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="stickerService" interface="ch.elexis.core.services.IStickerService" name="stickerService"/>
+   <reference cardinality="1..1" field="stockService" interface="ch.elexis.core.services.IStockService" name="stockService"/>
+   <reference cardinality="1..1" field="taskService" interface="ch.elexis.core.tasks.model.ITaskService" name="taskService"/>
+   <reference cardinality="1..1" field="textReplacementService" interface="ch.elexis.core.services.ITextReplacementService" name="textReplacementService"/>
+   <implementation class="ch.elexis.core.mediorder.mail.task.MediorderMailRunnableFactory"/>
+</scr:component>

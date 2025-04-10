@@ -67,6 +67,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderEntryState;
+import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
@@ -203,13 +205,6 @@ public class MediorderPart implements IRefreshablePart {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
 		List<IStock> stocks = filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
 				: getStocksExcludingAwaitingRequests();
-		List<IPatient> patientsToNotify = stocks.stream()
-				.filter(stock -> MediorderPartUtil.calculateStockState(stock) == 1)
-				.map(stock -> stock.getOwner().asIPatient()).distinct().toList();
-		if (!patientsToNotify.isEmpty()) {
-			MediorderPartUtil.sendMediorderMailJob(coreModelService, contextService, stickerService, configService,
-					textReplacementService, patientsToNotify);
-		}
 		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) stock));
 		tableViewer.setInput(stocks);
 		if (tableViewer.contains(firstElement)) {
@@ -920,7 +915,7 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> getStocksExcludingAwaitingRequests() {
 		return stockService.getAllPatientStock().stream().filter(stock -> !stock.getStockEntries().isEmpty())
 				.filter(stock -> stock.getStockEntries().stream().anyMatch(
-						entry -> !MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(entry))))
+						entry -> !MediorderEntryState.AWAITING_REQUEST.equals(MediorderUtil.determineState(entry))))
 				.toList();
 	}
 
