@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui;
 
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -197,6 +198,9 @@ public class Hub extends AbstractUIPlugin {
 		log.debug("Starting " + this.getClass().getName()); //$NON-NLS-1$
 		plugin = this;
 
+		// set unique chromium cache path to support multiple running instances #27014
+		System.setProperty("chromium.cache_path", Files.createTempDirectory("chromium").toFile().getAbsolutePath());
+		
 		CoreUiUtil.injectServicesWithContext(this);
 
 		// add UI ClassLoader to default Script Interpreter
