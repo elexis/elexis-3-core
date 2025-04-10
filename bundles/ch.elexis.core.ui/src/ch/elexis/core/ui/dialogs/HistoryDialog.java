@@ -158,8 +158,9 @@ public class HistoryDialog extends Dialog {
             OrderHistoryEntry entry = entries[i];
             String timestamp = LocalDateTime.parse(entry.getTimestamp()).format(displayFormat);
             String userId = entry.getUserId();
-            String action = translateAction(entry.getAction());
-            String icon = getIconForAction(entry.getAction());
+			OrderHistoryAction enumAction = OrderHistoryAction.from(entry.getAction());
+			String icon = (enumAction != null) ? enumAction.getIcon() : StringUtils.EMPTY;
+			String actionText = (enumAction != null) ? enumAction.getTranslation() : entry.getAction();
 
 			String details = (entry.getDetails() != null)
 					? entry.getDetails().replace(StringUtils.LF, StringUtils.SPACE)
@@ -173,7 +174,7 @@ public class HistoryDialog extends Dialog {
             Element row = table.appendElement("tr") //$NON-NLS-1$
                     .attr("style", "background-color: " + rowColor + ";"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-            row.appendElement("td").html(icon + " <b>" + action + "</b>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			row.appendElement("td").html(icon + " <b>" + actionText + "</b>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 			String detailsText = details + (!extraInfo.isEmpty() ? " (" + extraInfo + ")" : StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
             row.appendElement("td").text(detailsText); //$NON-NLS-1$
@@ -184,39 +185,5 @@ public class HistoryDialog extends Dialog {
         }
     }
 
-    private static String getIconForAction(String action) {
-		return switch (action) {
-		case "Created" -> "📌"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "ADDMedi" -> "➕"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Edited" -> "🖊️"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Delivered" -> "📦"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Ordered" -> "📤"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Deleted" -> "🗑️"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "RemovedMedi" -> "❌💊"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "SupplierAdded" -> "🏭"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "CompleteDelivery" -> "✅"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Added" -> "🆕"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Increased" -> "🔼"; //$NON-NLS-1$ //$NON-NLS-2$
-		case "Decreased" -> "🔽"; //$NON-NLS-1$ //$NON-NLS-2$
-		default -> "🔹";
-		};
-    }
 
-    private static String translateAction(String action) {
-		return switch (action) {
-		case "Created" -> Messages.OrderHistory_Created; //$NON-NLS-1$
-		case "ADDMedi" -> Messages.OrderHistory_AddMedi; //$NON-NLS-1$
-		case "Edited" -> Messages.OrderHistory_Edited; //$NON-NLS-1$
-		case "Delivered" -> Messages.OrderHistory_Delivered; //$NON-NLS-1$
-		case "Ordered" -> Messages.OrderHistory_Ordered; //$NON-NLS-1$
-		case "Deleted" -> Messages.OrderHistory_Deleted; //$NON-NLS-1$
-		case "RemovedMedi" -> Messages.OrderHistory_RemovedMedi; //$NON-NLS-1$
-		case "SupplierAdded" -> Messages.OrderHistory_SupplierAdded; //$NON-NLS-1$
-		case "CompleteDelivery" -> Messages.OrderHistory_CompleteDelivery; //$NON-NLS-1$
-		case "Added" -> Messages.OrderHistory_Added; //$NON-NLS-1$
-		case "Increased" -> Messages.OrderHistory_Increased; //$NON-NLS-1$
-		case "Decreased" -> Messages.OrderHistory_Decreased; //$NON-NLS-1$
-		default -> action;
-		};
-    }
 }

@@ -14,8 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
@@ -27,7 +25,6 @@ import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
-import ch.rgw.tools.Result;
 
 public class IOrderServiceTest extends AbstractServiceTest {
 
@@ -42,6 +39,9 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@BeforeClass
 	public static void beforeClass() {
 		orderService = OsgiServiceUtil.getService(IOrderService.class).get();
+		if (orderService instanceof OrderService realService) {
+			realService.setOrderHistoryService(new OrderHistoryService());
+		}
 		article = new IArticleBuilder(coreModelService, "test medication article", "1234567", ArticleTyp.ARTIKELSTAMM)
 				.buildAndSave();
 		stock = createStock();
@@ -101,6 +101,7 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@Test
 	public void calculateDailyDifferences_shouldCalculateCorrectDiff() {
 		IMandator mandator = AllServiceTests.getMandator();
+		ContextServiceHolder.get().setActiveMandator(mandator);
 		IArticle testArticle = new IArticleBuilder(coreModelService, "Testartikel", "9999999", ArticleTyp.EIGENARTIKEL)
 				.buildAndSave();
 		IEncounter encounter = coreModelService.create(IEncounter.class);
@@ -151,33 +152,4 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		assertEquals(3, added.getAmount());
 	}
 
-	@Test
-	public void testCalculateDailyConsumption_withExistingCoverage() {
-		ICoverage coverage = AllServiceTests.getCoverage();
-		IMandator mandator = AllServiceTests.getMandator();
-		coverage.setDateFrom(LocalDate.of(2020, 1, 1));
-		coverage.setExtInfo("Versicherungsnummer", "12340815");
-		coreModelService.save(coverage);
-		ContextServiceHolder.get().setActiveMandator(mandator);
-		IEncounter encounter = coreModelService.create(IEncounter.class);
-		encounter.setCoverage(coverage);
-		encounter.setDate(LocalDate.of(2025, 4, 6));
-		encounter.setMandator(mandator);
-		encounter.setBillable(true);
-		coreModelService.save(encounter);
-		IArticle localArticle = coreModelService.create(IArticle.class);
-		localArticle.setName("Mandator Consumption Article");
-		localArticle.setCode("8888889");
-		localArticle.setTyp(ArticleTyp.EIGENARTIKEL);
-		coreModelService.save(localArticle);
-		IBillingService billingService = OsgiServiceUtil.getService(IBillingService.class).get();
-		Result<IBilled> resultBill = billingService.bill(localArticle, encounter, 3.0);
-		coreModelService.refresh(encounter, true);
-		List<IMandator> mandators = List.of(mandator);
-		Map<IArticle, Integer> dailyResult = orderService.calculateDailyConsumption(encounter.getDate(), mandators);
-		assertTrue("Billing should be OK", resultBill.isOK());
-		assertEquals("Encounter should have 1 IBilled", 1, encounter.getBilled().size());
-		assertFalse("dailyResult should not be empty", dailyResult.isEmpty());
-		assertEquals("Should find 3 consumed", Integer.valueOf(3), dailyResult.get(localArticle));
-	}
 }

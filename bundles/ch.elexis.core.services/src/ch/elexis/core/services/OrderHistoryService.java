@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -154,7 +155,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 
 			boolean exists = logList.stream()
 					.anyMatch(e -> e.getAction().equals(entry.getAction()) && e.getUserId().equals(entry.getUserId())
-							&& e.getDetails().equals(entry.getDetails())
+							&& Objects.equals(e.getDetails(), entry.getDetails())
 							&& ((e.getExtraInfo() == null && entry.getExtraInfo() == null)
 									|| (e.getExtraInfo() != null && e.getExtraInfo().equals(entry.getExtraInfo()))));
 

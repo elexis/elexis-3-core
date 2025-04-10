@@ -172,11 +172,6 @@ public class OrderManagementActionFactory {
 
 		if (result == Window.OK) {
 			if (!reuseExistingOrder) {
-
-				orderHistoryManager.logCreateOrder(orderToUse);
-			}
-
-			if (!reuseExistingOrder) {
 				actOrder = orderToUse;
 			}
 		}
@@ -228,9 +223,7 @@ public class OrderManagementActionFactory {
 						+ " of stock entry " + stockEntry.getId()); //$NON-NLS-1$
 			}
 		}
-		for (IOrderEntry entry : actOrder.getEntries()) {
-			orderHistoryManager.logCreateEntry(actOrder, entry, entry.getAmount());
-		}
+
 		view.refresh();
 
 		view.updateCheckIn();

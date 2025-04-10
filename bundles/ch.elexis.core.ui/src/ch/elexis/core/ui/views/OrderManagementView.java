@@ -299,6 +299,14 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				}
 				refreshTables();
 			}
+		} else if (buttonText.equals(Messages.OrderManagement_Button_Book)) {
+			for (IOrderEntry entry : actOrder.getEntries()) {
+				if (entry.getState() == OrderEntryState.ORDERED
+						|| entry.getState() == OrderEntryState.PARTIAL_DELIVER) {
+					tableViewer.editElement(entry, 2);
+					break;
+				}
+			}
 		}
 	}
 

@@ -35,6 +35,16 @@ public class OrderService implements IOrderService {
 	private IOrderHistoryService orderHistoryService = ch.elexis.core.utils.OsgiServiceUtil
 			.getService(IOrderHistoryService.class).orElse(null);
 
+	@Reference
+	void setOrderHistoryService(IOrderHistoryService service) {
+		this.orderHistoryService = service;
+	}
+
+	@Override
+	public IOrderHistoryService getHistoryService() {
+		return this.orderHistoryService;
+	}
+
 	@Override
 	public IOrderEntry findOpenOrderEntryForStockEntry(IStockEntry stockEntry) {
 		IArticle article = stockEntry.getArticle();
@@ -71,6 +81,7 @@ public class OrderService implements IOrderService {
 		if (toOrder > 0) {
 			IOrderEntry entry = order.addEntry(ise.getArticle(), ise.getStock(), ise.getProvider(), toOrder);
 			modelService.save(entry);
+			orderHistoryService.logChangedAmount(order, entry, 0, toOrder);
 			return entry;
 		}
 		return null;
@@ -111,12 +122,12 @@ public class OrderService implements IOrderService {
 				int amount = entry.getAmount();
 				if (amount <= reduceBy) {
 					reduceBy -= amount;
-					orderHistoryService.logRemove(order, entry); // 📝 Log Löschung
+					orderHistoryService.logRemove(order, entry);
 					modelService.delete(entry);
 				} else {
 					entry.setAmount(amount - reduceBy);
 					modelService.save(entry);
-					orderHistoryService.logChangedAmount(order, entry, amount, entry.getAmount()); // 📝 Log Reduktion
+					orderHistoryService.logChangedAmount(order, entry, amount, entry.getAmount());
 					reduceBy = 0;
 				}
 			}
@@ -126,44 +137,45 @@ public class OrderService implements IOrderService {
 	@Override
 	public void createOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
 			Map<IArticle, Integer> entriesToAdd, @Nullable IMandator mandator) {
-			for (Map.Entry<IArticle, Integer> entry : entriesToAdd.entrySet()) {
-				if (entry.getValue() <= 0) continue;
-				IArticle article = entry.getKey();
-				int amountToAdd = entry.getValue();
-				boolean appended = false;
-				for (IOrder order : existingOrders) {
-					for (IOrderEntry oe : order.getEntries()) {
-						if (oe.getArticle().equals(article)
-								&& oe.getState() == OrderEntryState.OPEN) {
-							int old = oe.getAmount();
-							oe.setAmount(oe.getAmount() + amountToAdd);
-							modelService.save(oe);
-							orderHistoryService.logChangedAmount(order, oe, old, oe.getAmount()); // 📝 Log Erhöhung
-							appended = true;
-							break;
-						}
+			orderHistoryService.logCreateOrder(fallbackOrder);
+		for (Map.Entry<IArticle, Integer> entry : entriesToAdd.entrySet()) {
+			if (entry.getValue() <= 0)
+				continue;
+			IArticle article = entry.getKey();
+			int amountToAdd = entry.getValue();
+			boolean appended = false;
+			for (IOrder order : existingOrders) {
+				for (IOrderEntry oe : order.getEntries()) {
+					if (oe.getArticle().equals(article) && oe.getState() == OrderEntryState.OPEN) {
+						int old = oe.getAmount();
+						oe.setAmount(oe.getAmount() + amountToAdd);
+						modelService.save(oe);
+						orderHistoryService.logChangedAmount(order, oe, old, oe.getAmount());
+						appended = true;
+						break;
 					}
-					if (appended) break;
 				}
-				if (!appended) {
-					IStockEntry se = null;
-					if (mandator != null) {
-						String articleStr = StoreToStringServiceHolder.getStoreToString(article);
-						se = StockServiceHolder.get().findPreferredStockEntryForArticle(articleStr, mandator.getId());
-					}
-					IOrderEntry newEntry = (se != null)
-							? fallbackOrder.addEntry(se.getArticle(), se.getStock(), se.getProvider(), amountToAdd)
-							: fallbackOrder.addEntry(article, null, null, amountToAdd);
-					modelService.save(newEntry);
-					orderHistoryService.logChangedAmount(fallbackOrder, newEntry, 0, amountToAdd); // 📝 Log
-																									// Neuerstellung
-				}
+				if (appended)
+					break;
 			}
-			if (!fallbackOrder.getEntries().isEmpty()) {
-				modelService.save(fallbackOrder);
-				modelService.refresh(fallbackOrder, true);
+			if (!appended) {
+				IStockEntry se = null;
+				if (mandator != null) {
+					String articleStr = StoreToStringServiceHolder.getStoreToString(article);
+					se = StockServiceHolder.get().findPreferredStockEntryForArticle(articleStr, mandator.getId());
+				}
+				IOrderEntry newEntry = (se != null)
+						? fallbackOrder.addEntry(se.getArticle(), se.getStock(), se.getProvider(), amountToAdd)
+						: fallbackOrder.addEntry(article, null, null, amountToAdd);
+				modelService.save(newEntry);
+				orderHistoryService.logChangedAmount(fallbackOrder, newEntry, 0, amountToAdd);
 			}
 		}
+		if (!fallbackOrder.getEntries().isEmpty()) {
+			modelService.save(fallbackOrder);
+			modelService.refresh(fallbackOrder, true);
+		}
+	}
 
 	@Override
 	public List<IOrder> findOrderByDate(LocalDate date) {
@@ -203,4 +215,5 @@ public class OrderService implements IOrderService {
 		}
 		return differences;
 	}
+
 }

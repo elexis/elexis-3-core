@@ -188,8 +188,6 @@ public class OrderManagementUtil {
 				IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
 				IOrderEntry newOrderEntry = actOrder.addEntry(article, stock, null, quantity);
 				CoreModelServiceHolder.get().save(newOrderEntry);
-
-				orderHistoryManager.logCreateEntry(actOrder, newOrderEntry, quantity);
 			}
 		}
 		return actOrder;

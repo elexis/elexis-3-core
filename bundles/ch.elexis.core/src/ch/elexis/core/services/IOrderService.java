@@ -96,4 +96,11 @@ public interface IOrderService {
 	 */
 	public Map<IArticle, Integer> calculateDailyDifferences(LocalDate date, List<IMandator> mandators);
 
+	/**
+	 * Returns the order history service used by this order service.
+	 *
+	 * @return instance of IOrderHistoryService
+	 */
+	public IOrderHistoryService getHistoryService();
+
 }

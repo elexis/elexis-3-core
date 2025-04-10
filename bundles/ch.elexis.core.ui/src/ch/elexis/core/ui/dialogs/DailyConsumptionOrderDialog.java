@@ -41,10 +41,11 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
 
 public class DailyConsumptionOrderDialog extends TitleAreaDialog {
 
@@ -57,12 +58,13 @@ public class DailyConsumptionOrderDialog extends TitleAreaDialog {
 	private List<IMandator> limitationList = new ArrayList<>();
 	private Map<IArticle, Integer> tempEntries = new LinkedHashMap<>();
 
-	private final IOrderService orderService;
+	@Inject
+	private IOrderService orderService;
 
 	public DailyConsumptionOrderDialog(Shell parentShell, IOrder currOrder) {
 		super(parentShell);
 		this.currOrder = currOrder;
-		this.orderService = OrderServiceHolder.get();
+		CoreUiUtil.injectServices(this);
 	}
 
 
