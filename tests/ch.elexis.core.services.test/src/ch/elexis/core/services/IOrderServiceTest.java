@@ -142,7 +142,7 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		Map<IArticle, Integer> toCreate = new LinkedHashMap<>();
 		toCreate.put(article, 3);
 		int initialCount = order.getEntries().size();
-		orderService.createOrderEntries(List.of(order), order, toCreate, null);
+		orderService.addOrCreateOrderEntries(List.of(order), order, toCreate, null);
 		assertEquals(initialCount + 1, order.getEntries().size());
 		IOrderEntry added = order.getEntries().get(order.getEntries().size() - 1);
 		assertEquals(article, added.getArticle());

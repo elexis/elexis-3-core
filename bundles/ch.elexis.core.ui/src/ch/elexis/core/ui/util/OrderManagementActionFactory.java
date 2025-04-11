@@ -57,7 +57,7 @@ import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.util.dnd.DropReceiver;
+import ch.elexis.core.ui.util.dnd.OrderDropReceiver;
 import ch.elexis.core.ui.views.BestellBlatt;
 import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.OrderManagementView;
@@ -475,7 +475,7 @@ public class OrderManagementActionFactory {
 			Display.getDefault().asyncExec(() -> {
 				if (view.dropTarget == null) {
 					view.dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", view.tableViewer.getControl(), //$NON-NLS-1$
-							new DropReceiver(view, orderService));
+							new OrderDropReceiver(view, orderService));
 					CodeSelectorHandler.getInstance().setCodeSelectorTarget(view.dropTarget);
 				}
 				view.dropTarget.registered(false);

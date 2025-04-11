@@ -1,10 +1,12 @@
 package ch.elexis.core.services;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
@@ -127,9 +129,9 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public void createOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
+	public void addOrCreateOrderEntries(List<IOrder> existingOrders, IOrder createOrder,
 			Map<IArticle, Integer> entriesToAdd, @Nullable IMandator mandator) {
-		getHistoryService().logCreateOrder(fallbackOrder);
+		getHistoryService().logCreateOrder(createOrder);
 		for (Map.Entry<IArticle, Integer> entry : entriesToAdd.entrySet()) {
 			if (entry.getValue() <= 0)
 				continue;
@@ -140,7 +142,7 @@ public class OrderService implements IOrderService {
 				for (IOrderEntry oe : order.getEntries()) {
 					if (oe.getArticle().equals(article) && oe.getState() == OrderEntryState.OPEN) {
 						int old = oe.getAmount();
-						oe.setAmount(oe.getAmount() + amountToAdd);
+						oe.setAmount(old + amountToAdd);
 						modelService.save(oe);
 						getHistoryService().logChangedAmount(order, oe, old, oe.getAmount());
 						appended = true;
@@ -157,40 +159,38 @@ public class OrderService implements IOrderService {
 					se = StockServiceHolder.get().findPreferredStockEntryForArticle(articleStr, mandator.getId());
 				}
 				IOrderEntry newEntry = (se != null)
-						? fallbackOrder.addEntry(se.getArticle(), se.getStock(), se.getProvider(), amountToAdd)
-						: fallbackOrder.addEntry(article, null, null, amountToAdd);
+						? createOrder.addEntry(se.getArticle(), se.getStock(), se.getProvider(), amountToAdd)
+						: createOrder.addEntry(article, null, null, amountToAdd);
 				modelService.save(newEntry);
-				getHistoryService().logChangedAmount(fallbackOrder, newEntry, 0, amountToAdd);
+				getHistoryService().logChangedAmount(createOrder, newEntry, 0, amountToAdd);
 			}
 		}
-		if (!fallbackOrder.getEntries().isEmpty()) {
-			modelService.save(fallbackOrder);
-			modelService.refresh(fallbackOrder, true);
+		if (!createOrder.getEntries().isEmpty()) {
+			modelService.save(createOrder);
+			modelService.refresh(createOrder, true);
 		}
 	}
 
 	@Override
-	public List<IOrder> findOrderByDate(LocalDate date) {
+	public List<IOrder> findOpenOrdersByDate(LocalDate date) {
+		long startMillis = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+		long endMillis = date.plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - 1;
 
-		long startMillis = date.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
-		long endMillis = date.plusDays(1).atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant()
-				.toEpochMilli() - 1;
-		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
-		query.and("lastupdate", COMPARATOR.GREATER_OR_EQUAL, startMillis);
-		query.and("lastupdate", COMPARATOR.LESS_OR_EQUAL, endMillis);
-		List<IOrder> allOrders = query.execute();
-		List<IOrder> withOpenEntries = allOrders.stream()
-				.filter(order -> order.getEntries().stream().anyMatch(entry -> {
-					var state = entry.getState();
-					return state == OrderEntryState.OPEN || state == OrderEntryState.ORDERED;
-				})).collect(Collectors.toList());
-		return withOpenEntries;
+		IQuery<IOrderEntry> entryQuery = modelService.getQuery(IOrderEntry.class);
+		entryQuery.and(ModelPackage.Literals.IORDER_ENTRY__STATE, COMPARATOR.IN,
+				List.of(OrderEntryState.OPEN.ordinal(), OrderEntryState.ORDERED.ordinal()));
+		entryQuery.and("lastupdate", COMPARATOR.GREATER_OR_EQUAL, startMillis);
+		entryQuery.and("lastupdate", COMPARATOR.LESS_OR_EQUAL, endMillis);
+
+		List<IOrderEntry> matchingEntries = entryQuery.execute();
+		return matchingEntries.stream().map(IOrderEntry::getOrder).filter(Objects::nonNull).distinct()
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Map<IArticle, Integer> calculateDailyDifferences(LocalDate date, List<IMandator> mandators) {
 		Map<IArticle, Integer> consumptionMap = calculateDailyConsumption(date, mandators);
-		List<IOrder> relevantOrders = findOrderByDate(date);
+		List<IOrder> relevantOrders = findOpenOrdersByDate(date);
 		Map<IArticle, Integer> orderedArticles = new HashMap<>();
 		for (IOrder order : relevantOrders) {
 			for (IOrderEntry entry : order.getEntries()) {

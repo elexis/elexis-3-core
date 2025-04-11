@@ -60,7 +60,7 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.OrderManagementActionFactory;
 import ch.elexis.core.ui.util.OrderManagementUtil;
-import ch.elexis.core.ui.util.dnd.DropReceiver;
+import ch.elexis.core.ui.util.dnd.OrderDropReceiver;
 import ch.elexis.core.ui.views.provider.CompletedOrderTableLabelProvider;
 import ch.elexis.core.ui.views.provider.EntryTableLabelProvider;
 import ch.elexis.core.ui.views.provider.GenericOrderEditingSupport;
@@ -463,7 +463,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tableControl.setHeaderVisible(true);
 		tableControl.setLinesVisible(true);
 		dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", tableViewer.getControl(), //$NON-NLS-1$
-				new DropReceiver(this, orderService));
+				new OrderDropReceiver(this, orderService));
 		CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 
 		dropTarget.registered(false);

@@ -12,12 +12,12 @@ import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
 
-public final class DropReceiver implements GenericObjectDropTarget.IReceiver {
+public final class OrderDropReceiver implements GenericObjectDropTarget.IReceiver {
 
 	private final OrderManagementView view;
 	private final IOrderService orderService;
 
-	public DropReceiver(OrderManagementView view, IOrderService orderService) {
+	public OrderDropReceiver(OrderManagementView view, IOrderService orderService) {
 		this.view = view;
 		this.orderService = orderService;
 	}

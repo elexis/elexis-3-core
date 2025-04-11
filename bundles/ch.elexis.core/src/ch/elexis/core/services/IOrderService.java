@@ -61,22 +61,41 @@ public interface IOrderService {
 	public void reduceOpenEntries(List<IOrder> order, IArticle article, int reduceBy);
 
 	/**
-	 * Creates and saves order entries for the given articles and amounts.
+	 * Adds the specified article quantities to existing open entries within the
+	 * provided orders, or creates new entries in the given order if no matching
+	 * open entry is found.
+	 * <p>
+	 * For each article in {@code entriesToAdd}, the method attempts to find an open
+	 * {@link IOrderEntry} with the same article in {@code existingOrders}. If
+	 * found, the quantity is increased. If not, a new entry is created in
+	 * {@code createOrder}.
+	 * <p>
+	 * If a {@code mandator} is provided, it is used to determine the preferred
+	 * stock entry when creating a new order entry.
 	 *
-	 * @param order        the order to which entries should be added
-	 * @param entriesToAdd map of article to amount
-	 * @param mandator     the active mandator (for finding preferred stock)
+	 * @param existingOrders the list of existing orders to search for matching open
+	 *                       entries
+	 * @param createOrder    the order in which new entries are created when no
+	 *                       matching open entry exists
+	 * @param entriesToAdd   a map of articles and their quantities to be added
+	 * @param mandator       the active mandator, used to resolve preferred stock
+	 *                       entries (may be {@code null})
 	 */
-	public void createOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
+	public void addOrCreateOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
 			Map<IArticle, Integer> entriesToAdd, IMandator mandator);
 
 	/**
-	 * Find all orders that were modified on the given date.
+	 * Finds all orders that were modified on the given date and contain at least
+	 * one entry with the state {@code OPEN} or {@code ORDERED}.
+	 * <p>
+	 * The filtering is based on the {@code lastupdate} timestamp and the state of
+	 * the associated order entries.
 	 *
-	 * @param date the day to search for
-	 * @return list of {@link IOrder} objects with changes on the given date
+	 * @param date the date to search for (from start to end of day, inclusive)
+	 * @return list of {@link IOrder} objects that contain open or ordered entries
+	 *         and were modified on the given date
 	 */
-	public List<IOrder> findOrderByDate(LocalDate date);
+	public List<IOrder> findOpenOrdersByDate(LocalDate date);
 
 	/**
 	 * Calculates the differences between the consumed articles and the already
@@ -85,7 +104,7 @@ public interface IOrderService {
 	 * This method internally combines:
 	 * <ul>
 	 * <li>{@link #calculateDailyConsumption(LocalDate, List)}</li>
-	 * <li>{@link #findOrderByDate(LocalDate)}</li>
+	 * <li>{@link #findOpenOrdersByDate(LocalDate)}</li>
 	 * <li>Difference logic based on open and ordered entries</li>
 	 * </ul>
 	 *

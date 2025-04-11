@@ -211,8 +211,8 @@ public class DailyConsumptionOrderDialog extends TitleAreaDialog {
 					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
 			Map<IArticle, Integer> toReduce = diffEntries.entrySet().stream().filter(e -> e.getValue() < 0)
 					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
-			List<IOrder> relevantOrders = orderService.findOrderByDate(selectedDate.toLocalDate());
-			orderService.createOrderEntries(relevantOrders, currOrder, toCreate, mandator.orElse(null));
+			List<IOrder> relevantOrders = orderService.findOpenOrdersByDate(selectedDate.toLocalDate());
+			orderService.addOrCreateOrderEntries(relevantOrders, currOrder, toCreate, mandator.orElse(null));
 			toReduce.forEach((article, amount) -> {
 				orderService.reduceOpenEntries(relevantOrders, article, -amount);
 			});
