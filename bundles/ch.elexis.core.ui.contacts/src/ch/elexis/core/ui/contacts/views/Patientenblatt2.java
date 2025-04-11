@@ -202,11 +202,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	@Inject
 	void activePatient(@Optional IPatient patient) {
-		CoreUiUtil.runAsyncIfActive(() -> {
-			Patient deselectedPatient = actPatient;
-			releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
-			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
-		}, form);
+		Display.getDefault().asyncExec(() -> {
+			if (form != null && !form.isDisposed()) {
+				Patient deselectedPatient = actPatient;
+				releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
+				setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
+			}
+		});
 	}
 
 	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
