@@ -45,6 +45,9 @@ public class HL7ImporterTaskResultDetailComposite {
 		handlerService = (EHandlerService) e4Services.get(EHandlerService.class.getName());
 
 		fileUrl = task.getResultEntryTyped(ReturnParameter.STRING_URL, String.class);
+		if (fileUrl == null) {
+			fileUrl = task.getRunContextEntryTyped(ReturnParameter.STRING_URL, String.class);
+		}
 
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
@@ -57,6 +60,7 @@ public class HL7ImporterTaskResultDetailComposite {
 
 		btnManualImport = new Button(container, SWT.NONE);
 		btnManualImport.setText("Datei manuell importieren");
+		btnManualImport.setEnabled(fileUrl != null);
 		btnManualImport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -84,6 +88,7 @@ public class HL7ImporterTaskResultDetailComposite {
 
 		btnArchive = new Button(container, SWT.NONE);
 		btnArchive.setText("Datei archivieren");
+		btnArchive.setEnabled(fileUrl != null);
 		btnArchive.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

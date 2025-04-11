@@ -296,6 +296,7 @@ public class TaskServiceImpl implements ITaskService {
 	 */
 	private void release(ITaskDescriptor taskDescriptor) throws TaskException {
 		if (TaskTriggerType.FILESYSTEM_CHANGE == taskDescriptor.getTriggerType()) {
+			assertFilesystemChangeWatcher();
 			fileSystemChangeWatcher.release(taskDescriptor);
 		} else if (TaskTriggerType.CRON == taskDescriptor.getTriggerType()) {
 			if (quartzExecutor != null) {
