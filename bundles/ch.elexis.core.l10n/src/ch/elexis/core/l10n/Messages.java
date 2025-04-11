@@ -5163,6 +5163,7 @@ public class Messages extends NLS {
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;
 	public static String HttpOrderTransportService_LinkText;
 	public static String HttpOrderTransportService_LinkTooltip;
+	public static String UserCasePreferences_StammarztAutoMandant;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
