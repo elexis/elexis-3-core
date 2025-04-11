@@ -130,6 +130,7 @@ public class Preferences {
 	public static final String USR_DEFLAW = "fall/std_gesetz"; //$NON-NLS-1$
 	public static final String USR_DEFDIAGNOSE = "fall/std_diagnose"; //$NON-NLS-1$
 	public static final String USR_DEFLOADCONSALL = "fall/load_consall"; //$NON-NLS-1$
+	public static final String USR_AUTOMATIC_STAMMARZT_MANDANT = "usr/automaticStammarztMandant"; //$NON-NLS-1$
 	public static final String USR_TOPITEMSSORTING = "fall/topitemssorting"; //$NON-NLS-1$
 	public static final String USR_REMINDERCOLORS = "reminder/colors"; //$NON-NLS-1$
 	public static final String USR_REMINDERSOPEN = "reminder/onlyclosed"; //$NON-NLS-1$

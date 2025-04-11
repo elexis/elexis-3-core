@@ -389,4 +389,5 @@ public class Messages {
 	public static String StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_linkDefaultArticleProvider_toolTipText;
 	public static String StockManagementPreferencePage_lblNewLabel_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblNewLabel_text;
 	public static String StockManagementPreferencePage_lblMachine_text = ch.elexis.core.l10n.Messages.StockManagementPreferencePage_lblMachine_text;
+	public static String UserCasePreferences_StammarztAutoMandant = ch.elexis.core.l10n.Messages.UserCasePreferences_StammarztAutoMandant;
 }
