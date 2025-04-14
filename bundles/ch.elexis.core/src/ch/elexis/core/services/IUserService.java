@@ -166,9 +166,9 @@ public interface IUserService {
 	 * Checks if the given {@link IUser} has the specified {@link IRole}
 	 * 
 	 * @param user
-	 * @param roleId
+	 * @param lRoleIds
 	 * @return
 	 */
-	public boolean hasRole(IUser user, String roleId);
+	public boolean hasRole(IUser user, List<String> lRoleIds);
 
 }

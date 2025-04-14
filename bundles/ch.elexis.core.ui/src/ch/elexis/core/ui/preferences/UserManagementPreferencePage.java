@@ -103,7 +103,6 @@ import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
-import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.core.ui.util.BooleanNotConverter;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
@@ -153,11 +152,6 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 	 */
 	@Override
 	public Control createContents(Composite parent) {
-		if (!AccessControlServiceHolder.get()
-				.evaluate(EvACE.of(IUser.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
-			return new PrefAccessDenied(parent);
-		}
-
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
 
