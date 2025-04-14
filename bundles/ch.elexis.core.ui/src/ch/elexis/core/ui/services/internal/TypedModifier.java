@@ -13,6 +13,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
@@ -27,12 +28,19 @@ public class TypedModifier {
 
 	private Context context;
 
+	private IPatient previousPatient;
+
 	public TypedModifier(Context context) {
 		this.context = context;
 	}
 
 	public void modifyFor(Object object) {
-		if (object instanceof IPatient) {
+		if (object instanceof IPatient patient) {
+			if (previousPatient != null) {
+				releaseAndRefreshLock(previousPatient);
+			}
+			previousPatient = patient;
+
 			Optional<IEncounter> latestEncounter = getEncounterService().getLatestEncounter((IPatient) object);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
@@ -101,5 +109,17 @@ public class TypedModifier {
 			coverageService = OsgiServiceUtil.getService(ICoverageService.class).get();
 		}
 		return coverageService;
+	}
+
+	private void releaseAndRefreshLock(Object object) {
+		ILocalLockService localLockService = OsgiServiceUtil.getService(ILocalLockService.class)
+				.orElseThrow(() -> new IllegalStateException("No ILocalLockService found"));
+		try {
+			if (object != null && localLockService.isLockedLocal(object)) {
+				localLockService.releaseLock(object);
+			}
+		} finally {
+			OsgiServiceUtil.ungetService(localLockService);
+		}
 	}
 }
