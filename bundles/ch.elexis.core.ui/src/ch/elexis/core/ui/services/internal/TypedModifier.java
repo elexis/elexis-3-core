@@ -26,6 +26,8 @@ public class TypedModifier {
 
 	private ICoverageService coverageService;
 
+	private ILocalLockService localLockService;
+
 	private Context context;
 
 	private IPatient previousPatient;
@@ -111,15 +113,16 @@ public class TypedModifier {
 		return coverageService;
 	}
 
+	private ILocalLockService getLocalLockService() {
+		if (localLockService == null) {
+			localLockService = OsgiServiceUtil.getService(ILocalLockService.class).get();
+		}
+		return localLockService;
+	}
+
 	private void releaseAndRefreshLock(Object object) {
-		ILocalLockService localLockService = OsgiServiceUtil.getService(ILocalLockService.class)
-				.orElseThrow(() -> new IllegalStateException("No ILocalLockService found"));
-		try {
-			if (object != null && localLockService.isLockedLocal(object)) {
-				localLockService.releaseLock(object);
-			}
-		} finally {
-			OsgiServiceUtil.ungetService(localLockService);
+		if (object != null && getLocalLockService().isLockedLocal(object)) {
+			getLocalLockService().releaseLock(object);
 		}
 	}
 }
