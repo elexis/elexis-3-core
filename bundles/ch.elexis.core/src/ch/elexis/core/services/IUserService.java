@@ -163,12 +163,13 @@ public interface IUserService {
 	public Set<String> setUserRoles(IUser user, Set<String> userRoles);
 
 	/**
-	 * Checks if the given {@link IUser} has the specified {@link IRole}
+	 * Checks if the given {@link IUser} has at least one of the specified
+	 * {@link IRole} ids.
 	 * 
 	 * @param user
-	 * @param lRoleIds
+	 * @param roleIds
 	 * @return
 	 */
-	public boolean hasRole(IUser user, List<String> lRoleIds);
+	public boolean hasRole(IUser user, Set<String> roleIds);
 
 }
