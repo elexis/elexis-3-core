@@ -30,19 +30,12 @@ public class TypedModifier {
 
 	private Context context;
 
-	private IPatient previousPatient;
-
 	public TypedModifier(Context context) {
 		this.context = context;
 	}
 
 	public void modifyFor(Object object) {
-		if (object instanceof IPatient patient) {
-			if (previousPatient != null) {
-				releaseAndRefreshLock(previousPatient);
-			}
-			previousPatient = patient;
-
+		if (object instanceof IPatient) {
 			Optional<IEncounter> latestEncounter = getEncounterService().getLatestEncounter((IPatient) object);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
@@ -120,7 +113,7 @@ public class TypedModifier {
 		return localLockService;
 	}
 
-	private void releaseAndRefreshLock(Object object) {
+	public void releaseAndRefreshLock(Object object) {
 		if (object != null && getLocalLockService().isLockedLocal(object)) {
 			getLocalLockService().releaseLock(object);
 		}

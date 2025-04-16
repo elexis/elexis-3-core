@@ -47,8 +47,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -92,7 +90,6 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
-import ch.elexis.core.ui.locks.ToggleCurrentKonsultationLockHandler;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.text.EnhancedTextField;
 import ch.elexis.core.ui.util.CoverageComparator;
@@ -256,15 +253,10 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				if (form != null && !form.isDisposed()) {
 					if (encounter != null) {
 						// ElexisEvent.EVENT_SELECTED
-						IEncounter deselectedKons = actEncounter;
-						setKons(encounter);
-						releaseAndRefreshLock(deselectedKons);
 						setKons(encounter);
 					} else {
 						// ElexisEvent.EVENT_DESELECTED
-						IEncounter deselectedKons = actEncounter;
 						setKons(null);
-						releaseAndRefreshLock(deselectedKons);
 					}
 				}
 			});
@@ -304,7 +296,6 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 					setKons(encounter);
 				} else {
 					setUnlocked(true);
-					refreshContributionItemState();
 				}
 			}
 		}
@@ -315,21 +306,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		if (created) {
 			if (Objects.equals(encounter, actEncounter)) {
 				setUnlocked(false);
-				refreshContributionItemState();
 			}
 		}
-	}
-
-	private void releaseAndRefreshLock(Object object) {
-		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
-			LocalLockServiceHolder.get().releaseLock(object);
-		}
-		refreshContributionItemState();
-	}
-
-	private void refreshContributionItemState() {
-		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
-		commandService.refreshElements(ToggleCurrentKonsultationLockHandler.COMMAND_ID, null);
 	}
 
 	@Override
