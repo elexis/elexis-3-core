@@ -51,7 +51,6 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
@@ -112,8 +111,6 @@ public class Hub extends AbstractUIPlugin {
 		Display.getDefault().syncExec(() -> {
 			Hub.setWindowText(pat);
 		});
-
-		commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
 
 		PatientSelectionStatus provider = (PatientSelectionStatus) sps
 				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
