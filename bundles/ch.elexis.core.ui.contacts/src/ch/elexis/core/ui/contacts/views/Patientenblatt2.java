@@ -73,8 +73,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -95,7 +93,6 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -124,7 +121,6 @@ import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
-import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.settings.UserSettings;
 import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
@@ -204,18 +200,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	@Inject
 	void activePatient(@Optional IPatient patient) {
 		CoreUiUtil.runAsyncIfActive(() -> {
-			Patient deselectedPatient = actPatient;
-			releaseAndRefreshLock(deselectedPatient, ToggleCurrentPatientLockHandler.COMMAND_ID);
 			setPatient((Patient) NoPoUtil.loadAsPersistentObject(patient));
 		}, form);
-	}
-
-	private void releaseAndRefreshLock(IPersistentObject object, String commandId) {
-		if (object != null && LocalLockServiceHolder.get().isLockedLocal(object)) {
-			LocalLockServiceHolder.get().releaseLock(object);
-		}
-		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
-		commandService.refreshElements(commandId, null);
 	}
 
 	@Inject
