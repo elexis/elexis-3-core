@@ -1022,7 +1022,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 				tmpDel = DEFINITIONSDELIMITER;
 			}
 			// *** only for admins!
-			if (userService.hasRole(actUser, RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR)) {
+			if (userService.hasRole(actUser, Arrays.asList(RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR))) {
 				setExtendedFields(f, otherFieldsList, Messages.FallDetailBlatt2_unusedFieldsWithoutDefinition, true,
 						true, false); // $NON-NLS-1$
 			}
