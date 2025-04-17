@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.processor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -172,7 +173,9 @@ public class AccessControlUiEventHandler implements EventHandler {
 
 	private void updatePreferencePages() {
 		contextService.getActiveUser().ifPresent(u -> {
-			boolean hasRole = userService.hasRole(u, RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR);
+			boolean hasRole = userService.hasRole(u,
+					Arrays.asList(RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR,
+							RoleConstants.ACCESSCONTROLE_ROLE_POWERUSER));
 			if (hasRole && hiddenNodes.isEmpty()) {
 				return;
 			}

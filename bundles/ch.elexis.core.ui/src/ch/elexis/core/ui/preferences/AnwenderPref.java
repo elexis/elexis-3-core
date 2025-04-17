@@ -28,15 +28,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import ch.elexis.core.ac.EvACE;
-import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.model.IUser;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
@@ -57,8 +52,6 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 
 	@Override
 	protected Control createContents(Composite parent) {
-		if (AccessControlServiceHolder.get()
-				.evaluate(EvACE.of(IUser.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
 			FormToolkit tk = new FormToolkit(UiDesk.getDisplay());
 			Form form = tk.createForm(parent);
 			Composite body = form.getBody();
@@ -89,9 +82,6 @@ public class AnwenderPref extends PreferencePage implements IWorkbenchPreference
 			lfa.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			tk.paintBordersFor(body);
 			return form;
-		} else {
-			return new PrefAccessDenied(parent);
-		}
 	}
 
 	public void init(IWorkbench workbench) {

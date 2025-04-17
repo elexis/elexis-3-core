@@ -55,7 +55,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.builder.IUserGroupBuilder;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.Hub;
@@ -63,7 +62,6 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
-import ch.elexis.core.ui.preferences.inputs.PrefAccessDenied;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 
 public class UserGroupsManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IUnlockable {
@@ -93,11 +91,6 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 	 */
 	@Override
 	public Control createContents(Composite parent) {
-		if (!AccessControlServiceHolder.get()
-				.evaluate(EvACE.of(IUserGroup.class, Right.CREATE).and(Right.UPDATE).and(Right.DELETE))) {
-			return new PrefAccessDenied(parent);
-		}
-
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
 
