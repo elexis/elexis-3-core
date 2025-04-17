@@ -9,16 +9,24 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Annotation;
+import org.hl7.fhir.r4.model.CareTeam;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Person;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Task;
 import org.hl7.fhir.r4.model.Task.TaskIntent;
 import org.hl7.fhir.r4.model.Task.TaskStatus;
 
 import ca.uhn.fhir.model.api.Include;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IModelService;
@@ -50,6 +58,42 @@ public class IReminderTaskAttributeMapper
 
 		if (source.getDue() != null) {
 			target.setExecutionPeriod(getExecutionPeriod(source));
+		}
+
+		if (!source.getResponsible().isEmpty()) {
+			source.getResponsible().forEach(contact -> {
+				if (contact.isOrganization()) {
+					Reference organizationReference = new Reference(
+							new IdDt(Organization.class.getSimpleName(), contact.getId()));
+					target.setOwner(organizationReference);
+				} else if (contact.isMandator()) {
+					Reference practitionerReference = new Reference(
+							new IdDt(Practitioner.class.getSimpleName(), contact.getId()));
+					target.setOwner(practitionerReference);
+				} else {
+					Reference personReference = new Reference(new IdDt(Person.class.getSimpleName(), contact.getId()));
+					target.setOwner(personReference);
+				}
+			});
+		} else if (source.getGroup() != null) {
+			IUserGroup userGroup = source.getGroup();
+			Reference groupReference = new Reference(new IdDt(CareTeam.class.getSimpleName(), userGroup.getId()));
+			target.setOwner(groupReference);
+		} else if (source.isResponsibleAll()) {
+			Reference groupReference = new Reference(new IdDt(CareTeam.class.getSimpleName(), "ALL"));
+			target.setOwner(groupReference);
+		}
+
+		if (source.getContact() != null) {
+			if (source.getContact().isPatient()) {
+				Reference patientReference = new Reference(
+						new IdDt(Patient.class.getSimpleName(), source.getContact().getId()));
+				target.setFor(patientReference);
+			} else if (source.getContact().isMandator()) {
+				Reference practitionerReference = new Reference(
+						new IdDt(Practitioner.class.getSimpleName(), source.getContact().getId()));
+				target.setFor(practitionerReference);
+			}
 		}
 	}
 
@@ -92,10 +136,9 @@ public class IReminderTaskAttributeMapper
 		case ON_HOLD:
 			return TaskStatus.ONHOLD;
 		case OPEN:
-			return TaskStatus.ACCEPTED;
 		case DUE:
 		case OVERDUE:
-			return TaskStatus.REQUESTED;
+			return TaskStatus.ACCEPTED;
 		default:
 			return TaskStatus.DRAFT;
 		}
@@ -105,6 +148,7 @@ public class IReminderTaskAttributeMapper
 		switch (source.getStatus()) {
 		case DRAFT:
 		case ACCEPTED:
+		case REQUESTED:
 		case RECEIVED:
 		case READY:
 			return ProcessStatus.OPEN;
@@ -118,8 +162,6 @@ public class IReminderTaskAttributeMapper
 			return ProcessStatus.IN_PROGRESS;
 		case ONHOLD:
 			return ProcessStatus.ON_HOLD;
-		case REQUESTED:
-			return ProcessStatus.DUE;
 		default:
 			break;
 		}
