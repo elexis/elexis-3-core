@@ -81,7 +81,7 @@ public interface IOrderService {
 	 * @param mandator       the active mandator, used to resolve preferred stock
 	 *                       entries (may be {@code null})
 	 */
-	public void addOrCreateOrderEntries(List<IOrder> existingOrders, IOrder fallbackOrder,
+	public void addOrCreateOrderEntries(List<IOrder> existingOrders, IOrder createOrder,
 			Map<IArticle, Integer> entriesToAdd, IMandator mandator);
 
 	/**

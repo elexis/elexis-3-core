@@ -160,7 +160,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		public void partActivated(IWorkbenchPartReference partRef) {
 			if (isMatchingPart(partRef)) {
 				hasFocus = true;
-				String valueToSet = hasFocus ? OrderManagementView.class.getName() : null;
+				String valueToSet = OrderManagementView.class.getName();
 				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet); //$NON-NLS-1$
 
 			}
@@ -170,7 +170,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			if (isMatchingPart(partRef)) {
 				hasFocus = false;
-				String valueToSet = hasFocus ? OrderManagementView.class.getName() : null;
+				String valueToSet = OrderManagementView.class.getName();
 				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet); //$NON-NLS-1$
 			}
 		}
@@ -502,7 +502,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		createTableColumns(orderTable, columnOrderHeaders, columnOrderWidths, showDeliveredColumn);
 
 		orderTable.setContentProvider(ArrayContentProvider.getInstance());
-
+		orderTable.setLabelProvider(new OrderTableLabelProvider());
 		Label completedTitle = new Label(rightListComposite, SWT.NONE);
 		completedTitle.setText(Messages.OrderManagement_CompletedTitle);
 
@@ -661,8 +661,6 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	private void loadOpenOrders() {
 		List<IOrder> orders = OrderManagementUtil.getOpenOrders();
-		orderTable.setContentProvider(ArrayContentProvider.getInstance());
-		orderTable.setLabelProvider(new OrderTableLabelProvider());
 		orderTable.setInput(orders);
 		registerMouseWheelListeners(null);
 		refresh();
