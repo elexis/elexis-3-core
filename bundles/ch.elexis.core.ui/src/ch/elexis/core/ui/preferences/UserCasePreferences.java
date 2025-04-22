@@ -61,6 +61,7 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	public static final String MENUSEPARATOR = "------------------------------------"; //$NON-NLS-1$
 	private static final String PREFSDELIMITER = "`^"; //$NON-NLS-1$
 	private static final String PREFSDELIMITER_REGEX = "\\`\\^"; //$NON-NLS-1$
+	public static final String USR_AUTOMATIC_STAMMARZT_MANDANT = "usr/automaticStammarztMandant";
 
 	Text diagnoseTxt;
 	List sorterList2;
@@ -208,6 +209,35 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 			}
 		});
 		lastConsBtn.setSelection(ConfigServiceHolder.getUser(Preferences.USR_DEFLOADCONSALL, false));
+
+		Composite stammarztAutoParent = new Composite((Composite) suParent, SWT.NULL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd.horizontalSpan = 2;
+		stammarztAutoParent.setLayoutData(gd);
+
+		stammarztAutoParent.setLayout(new FormLayout());
+		Label stammarztAutoLbl = new Label(stammarztAutoParent, SWT.NONE);
+		stammarztAutoLbl.setText(Messages.UserCasePreferences_StammarztAutoMandant);
+
+		final Button stammarztAutoBtn = new Button(stammarztAutoParent, SWT.CHECK);
+		stammarztAutoBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ConfigServiceHolder.setUser(Preferences.USR_AUTOMATIC_STAMMARZT_MANDANT,
+						stammarztAutoBtn.getSelection());
+			}
+		});
+		stammarztAutoBtn.setSelection(ConfigServiceHolder.getUser(Preferences.USR_AUTOMATIC_STAMMARZT_MANDANT, false));
+
+		fd = new FormData();
+		fd.top = new FormAttachment(0, 5);
+		fd.left = new FormAttachment(0, 0);
+		stammarztAutoLbl.setLayoutData(fd);
+
+		fd = new FormData();
+		fd.top = new FormAttachment(0, 5);
+		fd.right = new FormAttachment(100, -5);
+		stammarztAutoBtn.setLayoutData(fd);
 
 		fd = new FormData();
 		fd.top = new FormAttachment(0, 5);
