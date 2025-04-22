@@ -13,7 +13,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQuery;
@@ -32,7 +31,6 @@ public class Observation extends AbstractEntityWithId implements EntityWithId, E
 	protected Long lastupdate;
 
 	@Id
-	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
 
