@@ -282,7 +282,9 @@ public class Hub extends AbstractUIPlugin {
 		if (mainActions.mainWindow != null) {
 			Shell shell = mainActions.mainWindow.getShell();
 			if ((shell != null) && (!shell.isDisposed())) {
-				mainActions.mainWindow.getShell().setText(sb.toString());
+				Display.getDefault().asyncExec(() -> {
+					mainActions.mainWindow.getShell().setText(sb.toString());
+				});
 			}
 		}
 	}
