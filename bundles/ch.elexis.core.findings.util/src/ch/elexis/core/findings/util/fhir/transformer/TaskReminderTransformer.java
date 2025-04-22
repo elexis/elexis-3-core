@@ -7,6 +7,7 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.Task;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
@@ -45,6 +46,10 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 
 	@Override
 	public Optional<IReminder> createLocalObject(Task fhirObject) {
+		if (!fhirObject.hasStatus()) {
+			LoggerFactory.getLogger(getClass()).warn("Create Task failed, has no status set.");
+			return Optional.empty();
+		}
 		IReminder create = coreModelService.create(IReminder.class);
 		attributeMapper.fhirToElexis(fhirObject, create);
 		coreModelService.save(create);

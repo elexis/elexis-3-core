@@ -25,11 +25,13 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class IReminderTaskAttributeMapper
 		implements IdentifiableDomainResourceAttributeMapper<IReminder, Task> {
@@ -109,6 +111,48 @@ public class IReminderTaskAttributeMapper
 		if (source.hasExecutionPeriod() && source.getExecutionPeriod().hasEnd()) {
 			target.setDue(
 					LocalDate.ofInstant(source.getExecutionPeriod().getEnd().toInstant(), ZoneId.systemDefault()));
+		}
+		if (source.hasOwner()) {
+			if (CareTeam.class.getSimpleName().equals(source.getOwner().getReferenceElement().getResourceType())) {
+				if ("all".equalsIgnoreCase(source.getOwner().getReferenceElement().getIdPart())) {
+					target.setGroup(null);
+					target.getResponsible().forEach(c -> {
+						target.removeResponsible(c);
+					});
+					target.setResponsibleAll(true);
+				} else {
+					Optional<IUserGroup> ownerGroup = CoreModelServiceHolder.get()
+							.load(source.getOwner().getReferenceElement().getIdPart(),
+							IUserGroup.class);
+					if (ownerGroup.isPresent()) {
+						target.setResponsibleAll(false);
+						target.getResponsible().forEach(c -> {
+							target.removeResponsible(c);
+						});
+						target.setGroup(ownerGroup.get());
+					}
+				}
+			} else {
+				Optional<IContact> ownerContact = CoreModelServiceHolder.get()
+						.load(source.getOwner().getReferenceElement().getIdPart(),
+						IContact.class);
+				if (ownerContact.isPresent()) {
+					target.setResponsibleAll(false);
+					target.setGroup(null);
+					target.getResponsible().forEach(c -> {
+						target.removeResponsible(c);
+					});
+					target.addResponsible(ownerContact.get());
+				}
+			}
+		}
+		if (source.hasFor()) {
+			Optional<IContact> forContact = CoreModelServiceHolder.get()
+					.load(source.getFor().getReferenceElement().getIdPart(),
+					IContact.class);
+			if (forContact.isPresent()) {
+				target.setContact(forContact.get());
+			}
 		}
 	}
 
