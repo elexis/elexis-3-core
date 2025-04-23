@@ -18,14 +18,16 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILaboratory;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.hl7.HL7PatientResolver;
 import ch.elexis.hl7.HL7Reader;
-import ch.elexis.hl7.HL7ReaderFactory;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
+import ch.elexis.hl7.v2x.labitem.helper.HL7AutoImportHelper;
+
 
 public class HL7AutoGroupImporter {
 
@@ -36,13 +38,10 @@ public class HL7AutoGroupImporter {
 	);
 
 	private static ILaboratory myLab;
-	private final HL7PatientResolver patientResolver;
 	private String profile;
 	private IProgressMonitor monitor;
 
-	public HL7AutoGroupImporter(HL7PatientResolver patientResolver) {
-		this.patientResolver = patientResolver;
-	}
+
 
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		this.monitor = monitor;
@@ -89,13 +88,15 @@ public class HL7AutoGroupImporter {
 		File originalFile = new File(filePath);
 		if (!originalFile.canRead()) {
 			logger.error("File not readable: " + filePath); //$NON-NLS-1$
+			return;
 		}
 
 		File fixedFile = fixHL7File(originalFile);
 		myLab = LabImportUtilHolder.get().getOrCreateLabor(profile);
-		HL7ReaderFactory.setCalledByAutoImporter(true);
 
-		List<HL7Reader> readerList = HL7ReaderFactory.INSTANCE.getReader(fixedFile);
+		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(fixedFile);
+		List<HL7Reader> readerList = HL7AutoImportHelper.parseImportReaders(fileHandle);
+
 		if (readerList.isEmpty()) {
 			logger.info("No HL7 messages found in {}", filePath); //$NON-NLS-1$
 			return;
@@ -108,6 +109,7 @@ public class HL7AutoGroupImporter {
 			processReader(reader, groupInfo);
 		}
 	}
+
 
 	private File fixHL7File(File originalFile) throws IOException {
 		List<String> lines = Files.readAllLines(originalFile.toPath(), StandardCharsets.ISO_8859_1);
@@ -131,7 +133,7 @@ public class HL7AutoGroupImporter {
 
 	private void processReader(HL7Reader reader, GroupAndPriority groupInfo) {
 		try {
-			ObservationMessage obsMsg = reader.readObservation(patientResolver, true);
+			ObservationMessage obsMsg = reader.readObservation(null, true);
 			if (obsMsg == null) {
 				logger.warn("No ObservationMessage in message"); //$NON-NLS-1$
 				return;

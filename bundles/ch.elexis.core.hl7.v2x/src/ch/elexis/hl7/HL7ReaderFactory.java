@@ -28,7 +28,6 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.hl7.v26.Messages;
-import ch.elexis.hl7.v2x.HL7ImportLabItimReader;
 import ch.elexis.hl7.v2x.HL7ReaderV21;
 import ch.elexis.hl7.v2x.HL7ReaderV22;
 import ch.elexis.hl7.v2x.HL7ReaderV23;
@@ -45,12 +44,6 @@ public enum HL7ReaderFactory {
 	protected List<Message> messageList;
 
 	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
-
-	private static boolean calledByAutoImporter = false;
-
-	public static void setCalledByAutoImporter(boolean value) {
-		calledByAutoImporter = value;
-	}
 
 	public List<HL7Reader> getReader(File file) throws IOException {
 		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(file);
@@ -139,6 +132,10 @@ public enum HL7ReaderFactory {
 		}
 
 		return new ByteArrayInputStream(bytes);
+	}
+
+	public String getAssureSaveMessage(String hl7Message) {
+		return assureSaveMessage(hl7Message);
 	}
 
 	private String assureSaveMessage(String hl7Message) {
@@ -262,11 +259,6 @@ public enum HL7ReaderFactory {
 	}
 
 	private HL7Reader getReaderForMessage(Message message) {
-
-		if (calledByAutoImporter) {
-			setCalledByAutoImporter(false);
-			return new HL7ImportLabItimReader(message);
-		}
 		String version = message.getVersion();
 
 		if (version.equals("2.1")) {

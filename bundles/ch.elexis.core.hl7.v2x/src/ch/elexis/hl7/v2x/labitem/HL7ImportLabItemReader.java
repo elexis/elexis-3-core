@@ -1,4 +1,4 @@
-package ch.elexis.hl7.v2x;
+package ch.elexis.hl7.v2x.labitem;
 
 
 import java.text.MessageFormat;
@@ -46,10 +46,10 @@ import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
 
-public class HL7ImportLabItimReader extends HL7Reader {
-	static Logger logger = LoggerFactory.getLogger(HL7ImportLabItimReader.class);
+public class HL7ImportLabItemReader extends HL7Reader {
+	static Logger logger = LoggerFactory.getLogger(HL7ImportLabItemReader.class);
 
-	public HL7ImportLabItimReader(Message message) {
+	public HL7ImportLabItemReader(Message message) {
 		super(message);
 	}
 

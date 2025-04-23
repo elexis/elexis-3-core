@@ -227,7 +227,7 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 				try {
 					ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
 					dialog.run(true, false, monitor -> {
-						HL7AutoGroupImporter importer = new HL7AutoGroupImporter(null);
+						HL7AutoGroupImporter importer = new HL7AutoGroupImporter();
 						importer.setProgressMonitor(monitor);
 
 						java.util.concurrent.atomic.AtomicInteger anzahl = new java.util.concurrent.atomic.AtomicInteger();
