@@ -26,7 +26,7 @@ import ch.elexis.hl7.HL7Reader;
 import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
-import ch.elexis.hl7.v2x.labitem.helper.HL7AutoImportHelper;
+import ch.elexis.hl7.util.HL7Helper;
 
 
 public class HL7AutoGroupImporter {
@@ -95,7 +95,7 @@ public class HL7AutoGroupImporter {
 		myLab = LabImportUtilHolder.get().getOrCreateLabor(profile);
 
 		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(fixedFile);
-		List<HL7Reader> readerList = HL7AutoImportHelper.parseImportReaders(fileHandle);
+		List<HL7Reader> readerList = HL7Helper.parseImportReaders(fileHandle);
 
 		if (readerList.isEmpty()) {
 			logger.info("No HL7 messages found in {}", filePath); //$NON-NLS-1$

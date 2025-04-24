@@ -157,7 +157,6 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 
 		Label lblImportTitle = new Label(getFieldEditorParent(), SWT.NONE);
 		lblImportTitle.setText(Messages.LabSettings_importTitle);
-		histogramFont = new Font(getFieldEditorParent().getDisplay(), fontData);
 		lblImportTitle.setFont(histogramFont);
 		GridData importTitleGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		importTitleGridData.verticalIndent = 20;

@@ -26,8 +26,7 @@ Export-Package: ca.uhn.hl7v2,
  ch.elexis.hl7.v22,
  ch.elexis.hl7.v231,
  ch.elexis.hl7.v26,
- ch.elexis.hl7.v2x,
- ch.elexis.hl7.v2x.labitem.helper
+ ch.elexis.hl7.v2x
 Bundle-Vendor: elexis.info
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",

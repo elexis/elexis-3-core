@@ -134,10 +134,6 @@ public enum HL7ReaderFactory {
 		return new ByteArrayInputStream(bytes);
 	}
 
-	public String getAssureSaveMessage(String hl7Message) {
-		return assureSaveMessage(hl7Message);
-	}
-
 	private String assureSaveMessage(String hl7Message) {
 		String ret = assureSaveMSH9Access(hl7Message);
 		ret = assureSaveORC(ret);
