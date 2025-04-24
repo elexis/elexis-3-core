@@ -17,6 +17,7 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.OrderHistoryAction;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -28,7 +29,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		private static final Logger logger = LoggerFactory.getLogger(OrderHistoryService.class);
 
 		public void logCreateOrder(IOrder order) {
-			logOrderStatus(order, "Created", null); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.CREATED, null); // $NON-NLS-1$
 		}
 
 		public void logEdit(IOrder order, IOrderEntry entry, int oldValue, int newValue) {
@@ -36,25 +37,25 @@ public class OrderHistoryService implements IOrderHistoryService {
 				return;
 
 			String details = entry.getArticle().getLabel() + " changed from " + oldValue + " to " + newValue; //$NON-NLS-1$ //$NON-NLS-2$
-			logOrderStatus(order, "Edited", details); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.EDITED, details); // $NON-NLS-1$
 		}
 
 		public void logDelivery(IOrder order, IOrderEntry entry, int deliveredAmount, int orderAmaunt) {
 			String details = deliveredAmount + "x von " + orderAmaunt + " " + entry.getArticle().getLabel(); //$NON-NLS-1$ //$NON-NLS-2$
-			logOrderStatus(order, "Delivered", details); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.DELIVERED, details); // $NON-NLS-1$
 		}
 
 		public void logCreateEntry(IOrder order, IOrderEntry entry, int quantity) {
 			String details = entry.getArticle().getLabel() + "/" + quantity; //$NON-NLS-1$
-			logOrderStatus(order, "ADDMedi", details); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.ADDMEDI, details); // $NON-NLS-1$
 		}
 
 		public void logOrder(IOrder order) {
-			logOrderStatus(order, "Ordered", null); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.ORDERED, null); // $NON-NLS-1$
 		}
 
 		public void logDelete(IOrder order) {
-			logOrderStatus(order, "Deleted", null); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.DELETED, null); // $NON-NLS-1$
 		}
 
 		public void logChangedAmount(IOrder order, IOrderEntry entry, int oldAmount, int newAmount) {
@@ -62,20 +63,20 @@ public class OrderHistoryService implements IOrderHistoryService {
 				return;
 			}
 
-			String action;
+			OrderHistoryAction action;
 			String details;
 			String articleLabel = entry.getArticle().getLabel();
 
 			if (oldAmount == 0) {
-				action = "Added";
+				action = OrderHistoryAction.ADDED;
 				details = articleLabel + " (Neu: " + newAmount + ")";
 			} else if (newAmount > oldAmount) {
 				int diff = newAmount - oldAmount;
-				action = "Increased";
+				action = OrderHistoryAction.INCREASED;
 				details = articleLabel + " (" + oldAmount + " \u2192 " + newAmount + ", +" + diff + ")";
 			} else {
 				int diff = oldAmount - newAmount;
-				action = "Decreased";
+				action = OrderHistoryAction.DECREASED;
 				details = articleLabel + " (" + oldAmount + " \u2192 " + newAmount + ", -" + diff + ")";
 			}
 
@@ -89,7 +90,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 			}
 
 			String details = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
-			logOrderStatus(order, "CompleteDelivery", details); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.COMPLETEDELIVERY, details); // $NON-NLS-1$
 		}
 
 		public void logRemove(IOrder order, IOrderEntry entry) {
@@ -97,7 +98,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 				return;
 
 			String details = entry.getArticle().getLabel() + "/" + entry.getAmount(); //$NON-NLS-1$
-			logOrderStatus(order, "RemovedMedi", details); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.REMOVEDMEDI, details); // $NON-NLS-1$
 		}
 
 		public void logOrderSent(IOrder order, boolean sent) {
@@ -105,7 +106,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 				return;
 
 			String method = sent ? ch.elexis.core.l10n.Messages.Outputter_Sent : "Printed"; //$NON-NLS-1$
-			logOrderStatus(order, "Ordered", method); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.ORDERED, method); // $NON-NLS-1$
 		}
 
 		public void logSupplierAdded(IOrder order, IOrderEntry entry, String supplier) {
@@ -113,14 +114,14 @@ public class OrderHistoryService implements IOrderHistoryService {
 				return;
 
 			String details = entry.getArticle().getLabel();
-			logOrderStatus(order, "SupplierAdded", details, supplier); //$NON-NLS-1$
+			logOrderStatus(order, OrderHistoryAction.SUPPLIERADDED, details, supplier); // $NON-NLS-1$
 		}
 
-		private void logOrderStatus(IOrder order, String action, String details) {
+		private void logOrderStatus(IOrder order, OrderHistoryAction action, String details) {
 			logOrderStatus(order, action, details, null);
 		}
 
-		private void logOrderStatus(IOrder order, String action, String details, String extraInfo) {
+		private void logOrderStatus(IOrder order, OrderHistoryAction action, String details, String extraInfo) {
 			if (order == null)
 				return;
 			String userId = ContextServiceHolder.get().getActiveUser().map(user -> user.getId()).orElse("Unknown"); //$NON-NLS-1$

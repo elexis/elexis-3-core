@@ -1,4 +1,5 @@
-package ch.elexis.core.ui.dialogs;
+package ch.elexis.core.model;
+
 
 public enum OrderHistoryAction {
 	CREATED("📌", Messages.OrderHistory_Created), ADDMEDI("➕", Messages.OrderHistory_AddMedi),
@@ -24,12 +25,16 @@ public enum OrderHistoryAction {
 		return translation;
 	}
 
-	public static OrderHistoryAction from(String value) {
+	public static OrderHistoryAction from(OrderHistoryAction value) {
+		if (value == null) {
+			return null;
+		}
 		for (OrderHistoryAction action : values()) {
-			if (action.name().equalsIgnoreCase(value)) {
+			if (action.name().equalsIgnoreCase(value.name())) {
 				return action;
 			}
 		}
 		return null;
 	}
+
 }

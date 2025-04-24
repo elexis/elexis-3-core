@@ -292,15 +292,7 @@ public class Messages {
 	public static String Core_EAN = ch.elexis.core.l10n.Messages.Core_EAN;
 	public static String UI_description = ch.elexis.core.l10n.Messages.UI_description;
 	public static String Core_Stock = ch.elexis.core.l10n.Messages.Core_Stock;
-	public static String OrderHistory_Created = ch.elexis.core.l10n.Messages.OrderHistory_Created;
-	public static String OrderHistory_AddMedi = ch.elexis.core.l10n.Messages.OrderHistory_AddMedi;
-	public static String OrderHistory_Edited = ch.elexis.core.l10n.Messages.OrderHistory_Edited;
-	public static String OrderHistory_Delivered = ch.elexis.core.l10n.Messages.OrderHistory_Delivered;
-	public static String OrderHistory_Ordered = ch.elexis.core.l10n.Messages.OrderHistory_Ordered;
-	public static String OrderHistory_Deleted = ch.elexis.core.l10n.Messages.OrderHistory_Deleted;
-	public static String OrderHistory_RemovedMedi = ch.elexis.core.l10n.Messages.OrderHistory_RemovedMedi;
-	public static String OrderHistory_SupplierAdded = ch.elexis.core.l10n.Messages.OrderHistory_SupplierAdded;
-	public static String OrderHistory_CompleteDelivery = ch.elexis.core.l10n.Messages.OrderHistory_CompleteDelivery;
+
 	public static String HistoryDialog_NoHistoryAvailable = ch.elexis.core.l10n.Messages.HistoryDialog_NoHistoryAvailable;
 	public static String HistoryDialog_Header = ch.elexis.core.l10n.Messages.HistoryDialog_Header;
 	public static String HistoryDialog_Description = ch.elexis.core.l10n.Messages.HistoryDialog_Description;
@@ -311,8 +303,6 @@ public class Messages {
 	public static String Core_DoSend = ch.elexis.core.l10n.Messages.Core_DoSend;
 	public static String OrderMethodDialog_Title = ch.elexis.core.l10n.Messages.OrderMethodDialog_Title;
 	public static String OrderMethodDialog_Message = ch.elexis.core.l10n.Messages.OrderMethodDialog_Message;
-	public static String OrderHistory_Added = ch.elexis.core.l10n.Messages.OrderHistory_Added;
-	public static String OrderHistory_Increased = ch.elexis.core.l10n.Messages.OrderHistory_Increased;
-	public static String OrderHistory_Decreased = ch.elexis.core.l10n.Messages.OrderHistory_Decreased;
+
 
 }

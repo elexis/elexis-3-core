@@ -6,11 +6,13 @@ import java.time.format.DateTimeFormatter;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import ch.elexis.core.model.OrderHistoryAction;
+
 public class OrderHistoryEntry {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"); //$NON-NLS-1$
 
     @SerializedName("action")
-    private String action;
+	private OrderHistoryAction action;
 
     @SerializedName("timestamp")
     private String timestamp;
@@ -24,7 +26,7 @@ public class OrderHistoryEntry {
 	@SerializedName("extraInfo")
 	private String extraInfo;
 
-	public OrderHistoryEntry(String action, String userId, String details, String extraInfo) {
+	public OrderHistoryEntry(OrderHistoryAction action, String userId, String details, String extraInfo) {
         this.action = action;
         this.timestamp = LocalDateTime.now().format(TIME_FORMAT);
         this.userId = userId;
@@ -36,11 +38,11 @@ public class OrderHistoryEntry {
         return new Gson().toJson(this);
     }
 
-	public String getAction() {
+	public OrderHistoryAction getAction() {
 		return action;
 	}
 
-	public void setAction(String action) {
+	public void setAction(OrderHistoryAction action) {
 		this.action = action;
 	}
 

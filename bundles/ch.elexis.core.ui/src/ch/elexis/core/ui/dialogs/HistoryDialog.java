@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOutputLog;
+import ch.elexis.core.model.OrderHistoryAction;
 import ch.elexis.core.services.internal.model.OrderHistoryEntry;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 
@@ -160,7 +161,7 @@ public class HistoryDialog extends Dialog {
             String userId = entry.getUserId();
 			OrderHistoryAction enumAction = OrderHistoryAction.from(entry.getAction());
 			String icon = (enumAction != null) ? enumAction.getIcon() : StringUtils.EMPTY;
-			String actionText = (enumAction != null) ? enumAction.getTranslation() : entry.getAction();
+			String actionText = (enumAction != null) ? enumAction.getTranslation() : entry.getAction().name();
 
 			String details = (entry.getDetails() != null)
 					? entry.getDetails().replace(StringUtils.LF, StringUtils.SPACE)
