@@ -167,7 +167,7 @@ public class HistoryDialog extends Dialog {
 				actionText = action.getTranslation();
 			} else {
 				// fallback auf Enum-Name, falls alte Daten
-				actionText = (entry.getAction() != null) ? entry.getAction().name() : ch.elexis.core.l10n.Messages.UNKNOWN;
+				actionText = ch.elexis.core.l10n.Messages.UNKNOWN;
 			}
 			String details = (entry.getDetails() != null)
 					? entry.getDetails().replace(StringUtils.LF, StringUtils.SPACE)
