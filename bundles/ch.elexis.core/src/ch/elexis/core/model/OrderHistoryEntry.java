@@ -1,4 +1,4 @@
-package ch.elexis.core.services.internal.model;
+package ch.elexis.core.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

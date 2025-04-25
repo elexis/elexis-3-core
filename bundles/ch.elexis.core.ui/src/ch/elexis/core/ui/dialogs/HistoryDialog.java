@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.OrderHistoryAction;
-import ch.elexis.core.services.internal.model.OrderHistoryEntry;
+import ch.elexis.core.model.OrderHistoryEntry;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 
 public class HistoryDialog extends Dialog {

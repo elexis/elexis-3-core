@@ -18,20 +18,21 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderHistoryAction;
+import ch.elexis.core.model.OrderHistoryEntry;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.internal.model.OrderHistoryEntry;
-
 
 public class OrderHistoryService implements IOrderHistoryService {
 
 		private static final Logger logger = LoggerFactory.getLogger(OrderHistoryService.class);
 
+		@Override
 		public void logCreateOrder(IOrder order) {
 			logOrderStatus(order, OrderHistoryAction.CREATED, null); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logEdit(IOrder order, IOrderEntry entry, int oldValue, int newValue) {
 			if (oldValue == newValue)
 				return;
@@ -40,24 +41,29 @@ public class OrderHistoryService implements IOrderHistoryService {
 			logOrderStatus(order, OrderHistoryAction.EDITED, details); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logDelivery(IOrder order, IOrderEntry entry, int deliveredAmount, int orderAmaunt) {
 			String details = deliveredAmount + "x von " + orderAmaunt + " " + entry.getArticle().getLabel(); //$NON-NLS-1$ //$NON-NLS-2$
 			logOrderStatus(order, OrderHistoryAction.DELIVERED, details); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logCreateEntry(IOrder order, IOrderEntry entry, int quantity) {
 			String details = entry.getArticle().getLabel() + "/" + quantity; //$NON-NLS-1$
 			logOrderStatus(order, OrderHistoryAction.ADDMEDI, details); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logOrder(IOrder order) {
 			logOrderStatus(order, OrderHistoryAction.ORDERED, null); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logDelete(IOrder order) {
 			logOrderStatus(order, OrderHistoryAction.DELETED, null); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logChangedAmount(IOrder order, IOrderEntry entry, int oldAmount, int newAmount) {
 			if (oldAmount == newAmount) {
 				return;
@@ -84,6 +90,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		}
 
 
+		@Override
 		public void logCompleteDelivery(IOrder order) {
 			if (order == null) {
 				return;
@@ -93,6 +100,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 			logOrderStatus(order, OrderHistoryAction.COMPLETEDELIVERY, details); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logRemove(IOrder order, IOrderEntry entry) {
 			if (order == null || entry == null)
 				return;
@@ -101,6 +109,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 			logOrderStatus(order, OrderHistoryAction.REMOVEDMEDI, details); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logOrderSent(IOrder order, boolean sent) {
 			if (order == null)
 				return;
@@ -109,6 +118,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 			logOrderStatus(order, OrderHistoryAction.ORDERED, method); // $NON-NLS-1$
 		}
 
+		@Override
 		public void logSupplierAdded(IOrder order, IOrderEntry entry, String supplier) {
 			if (order == null || entry == null || supplier == null || supplier.isEmpty())
 				return;
