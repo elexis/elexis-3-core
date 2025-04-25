@@ -159,32 +159,30 @@ public class HistoryDialog extends Dialog {
             OrderHistoryEntry entry = entries[i];
             String timestamp = LocalDateTime.parse(entry.getTimestamp()).format(displayFormat);
             String userId = entry.getUserId();
-			OrderHistoryAction enumAction = OrderHistoryAction.from(entry.getAction());
-			String icon = (enumAction != null) ? enumAction.getIcon() : StringUtils.EMPTY;
-			String actionText = (enumAction != null) ? enumAction.getTranslation() : entry.getAction().name();
-
+			OrderHistoryAction action = entry.getAction(); // kann null sein bei alten Daten
+			String icon = StringUtils.EMPTY;
+			String actionText = StringUtils.EMPTY;
+			if (action != null) {
+				icon = action.getIcon();
+				actionText = action.getTranslation();
+			} else {
+				// fallback auf Enum-Name, falls alte Daten
+				actionText = (entry.getAction() != null) ? entry.getAction().name() : ch.elexis.core.l10n.Messages.UNKNOWN;
+			}
 			String details = (entry.getDetails() != null)
 					? entry.getDetails().replace(StringUtils.LF, StringUtils.SPACE)
 					: StringUtils.EMPTY;
 			String extraInfo = (entry.getExtraInfo() != null)
 					? entry.getExtraInfo().replace(StringUtils.LF, StringUtils.SPACE)
 					: StringUtils.EMPTY;
-
 			String rowColor = (i % 2 == 0) ? "#f2f2f2" : ""; //$NON-NLS-1$ //$NON-NLS-2$
-
             Element row = table.appendElement("tr") //$NON-NLS-1$
                     .attr("style", "background-color: " + rowColor + ";"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
 			row.appendElement("td").html(icon + " <b>" + actionText + "</b>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
 			String detailsText = details + (!extraInfo.isEmpty() ? " (" + extraInfo + ")" : StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
             row.appendElement("td").text(detailsText); //$NON-NLS-1$
-
             row.appendElement("td").html("<b>" + timestamp + "</b>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
             row.appendElement("td").text(userId); //$NON-NLS-1$
         }
     }
-
-
 }

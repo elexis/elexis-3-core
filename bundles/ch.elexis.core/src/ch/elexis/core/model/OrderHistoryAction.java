@@ -25,16 +25,4 @@ public enum OrderHistoryAction {
 		return translation;
 	}
 
-	public static OrderHistoryAction from(OrderHistoryAction value) {
-		if (value == null) {
-			return null;
-		}
-		for (OrderHistoryAction action : values()) {
-			if (action.name().equalsIgnoreCase(value.name())) {
-				return action;
-			}
-		}
-		return null;
-	}
-
 }
