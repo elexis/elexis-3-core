@@ -1,6 +1,5 @@
-package ch.elexis.core.services.eenv;
+package ch.elexis.core.services.oauth2;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,10 +7,6 @@ import java.util.Optional;
 import java.util.TimerTask;
 
 import org.apache.commons.lang3.StringUtils;
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.ServerRequest;
-import org.keycloak.adapters.ServerRequest.HttpFailure;
-import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,16 +14,15 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
 
 public class RefreshAccessTokenTimerTask extends TimerTask {
 
-	private final KeycloakDeployment keycloakDeployment;
 	private final IContextService contextService;
 	private final Logger logger;
 
-	public RefreshAccessTokenTimerTask(KeycloakDeployment keycloakDeployment, IContextService contextService) {
-		this.keycloakDeployment = keycloakDeployment;
+	public RefreshAccessTokenTimerTask(IContextService contextService) {
 		this.contextService = contextService;
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
@@ -64,17 +58,13 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 			Date refreshTokenExpiration = accessToken.getAccessTokenExpiration();
 			if (refreshTokenExpiration != null) {
 				if (refreshTokenExpiration.getTime() > new Date().getTime()) {
-					try {
-						AccessTokenResponse invokeRefresh = ServerRequest.invokeRefresh(keycloakDeployment,
-								accessToken.getRefreshToken());
-						AccessToken _accessToken = AccessTokenUtil.load(invokeRefresh);
-						contextService.setTyped(_accessToken);
+					ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken);
+					if (_accessToken.isOK()) {
+						contextService.setTyped(_accessToken.getObject());
 						logger.info("RT Refreshed access-token for [{}], valid until [{}], refresh until [{}]",
-								activeUserId, TimeUtil.toLocalDateTime(_accessToken.getAccessTokenExpiration()),
-								TimeUtil.toLocalDateTime(_accessToken.refreshTokenExpiration()));
+								activeUserId, TimeUtil.toLocalDateTime(_accessToken.get().getAccessTokenExpiration()),
+								TimeUtil.toLocalDateTime(_accessToken.get().refreshTokenExpiration()));
 						return;
-					} catch (IOException | HttpFailure e) {
-						logger.warn("Failed to refresh access-token via refresh-token", e);
 					}
 				}
 			}

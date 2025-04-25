@@ -46,11 +46,6 @@
               </requirement>
               <requirement>
                 <type>eclipse-plugin</type>
-                <id>org.keycloak.keycloak-servlet-adapter-spi</id>
-                <versionRange>0.0.0</versionRange>
-              </requirement>
-              <requirement>
-                <type>eclipse-plugin</type>
                 <id>org.eclipse.osgi.compatibility.state</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
@@ -96,6 +91,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.registry</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -155,11 +155,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-servlet-filter-adapter</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.component.annotations</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -181,6 +176,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.text</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.client5.httpclient5</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -220,17 +220,17 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5-h2</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.external.aopalliance-repackaged</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-pool2</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -246,11 +246,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.mail-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -315,11 +310,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-spi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm.tree</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -336,11 +326,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.contenttype</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -400,11 +385,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-annotations</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>com.jcraft.jsch</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -426,11 +406,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>bcprov</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-authz-client</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -506,11 +481,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.annotation-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -611,11 +581,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.transaction-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-common</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

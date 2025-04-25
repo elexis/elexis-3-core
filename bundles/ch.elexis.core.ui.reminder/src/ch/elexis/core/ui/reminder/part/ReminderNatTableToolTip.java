@@ -9,15 +9,16 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.issue.Type;
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 
 public class ReminderNatTableToolTip extends DefaultToolTip {
 
 	private NatTable natTable;
-	private ReminderSpanningBodyDataProvider dataProvider;
+	private ReminderBodyDataProvider dataProvider;
 
-	public ReminderNatTableToolTip(NatTable natTable, ReminderSpanningBodyDataProvider dataProvider) {
+	public ReminderNatTableToolTip(NatTable natTable, ReminderBodyDataProvider dataProvider) {
 		super(natTable, ToolTip.RECREATE, false);
 		this.natTable = natTable;
 		this.dataProvider = dataProvider;
@@ -56,6 +57,10 @@ public class ReminderNatTableToolTip extends DefaultToolTip {
 				}
 				sb.append("Titel: ").append(StringUtils.defaultString(reminder.getSubject())).append("\n");
 				sb.append("Status: ").append(reminder.getStatus().getLocaleText()).append("\n");
+				if (reminder.getContact() != null && reminder.getContact().isPatient()) {
+					sb.append("Patient: ").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()))
+							.append("\n");
+				}
 				sb.append("Beschreibung: \n").append(reminder.getMessage());
 				return sb.toString();
 			}

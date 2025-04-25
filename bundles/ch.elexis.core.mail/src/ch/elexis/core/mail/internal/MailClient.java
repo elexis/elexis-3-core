@@ -345,8 +345,12 @@ public class MailClient implements IMailClient {
 				mimeMessage.setRecipients(RecipientType.CC, message.getCcAddress());
 				addressesList.addAll(Arrays.asList(message.getCcAddress()));
 
+				// use ClassLoader of transport impl. as mailcap is defined there
+				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+				Thread.currentThread().setContextClassLoader(transport.getClass().getClassLoader());
 				transport.sendMessage(mimeMessage, addressesList.toArray(new InternetAddress[addressesList.size()]));
 				transport.close();
+				Thread.currentThread().setContextClassLoader(classLoader);
 			} else {
 				logger.warn("Invalid account type for sending [" + account.getType() + "].");
 				lastError = ErrorTyp.CONFIGTYP;

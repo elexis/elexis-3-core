@@ -12,6 +12,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_FxAJYPKkEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.handledmenuitem.delete" label="L&#xf6;schen" iconURI="icon://IMG_DELETE" command="_I31XcPKkEe-2r_64q8yb2w"/>
       </menus>
       <toolbar xmi:id="_-vHyEOI8Ee-lvK2aOBOKuA" elementId="ch.elexis.core.ui.reminder.toolbar.remindertablespart">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_DPVP4AuoEfCpZcwegOUHJQ" elementId="ch.elexis.core.ui.reminder.handledtoolitem.autoSelectPatient" iconURI="icon://IMG_PERSON" type="Check" command="_LluTEAuoEfCpZcwegOUHJQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_trUcsO-LEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.handledtoolitem.0" iconURI="icon://IMG_NEW" command="_3W1AQOhaEe-wd4tFRRI7kg"/>
         <children xsi:type="menu:DirectToolItem" xmi:id="_bUdvUO7JEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.directtoolitem.refresh" iconURI="icon://IMG_REFRESH" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.menu.RefreshToolItem">
           <menu xmi:id="_b9gFQO7JEe-jV4z9qHPCmQ" elementId="ch.elexis.core.ui.reminder.menu.1">
@@ -23,14 +24,21 @@
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_tR6bMOhZEe-wd4tFRRI7kg" featurename="commands" parentElementId="xpath:/">
     <elements xsi:type="commands:Command" xmi:id="_wYKacOhZEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.editReminder" commandName="Edit Reminder"/>
-    <elements xsi:type="commands:Command" xmi:id="_3W1AQOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.createReminder" commandName="Create Reminder"/>
+    <elements xsi:type="commands:Command" xmi:id="_3W1AQOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.command.createReminder" commandName="Create Reminder">
+      <parameters xmi:id="_yJ01UBEqEfC3Z9U87QgOog" elementId="createReminder.responsible" name="createReminder.responsible"/>
+      <parameters xmi:id="_YpgOABEwEfC3Z9U87QgOog" elementId="createReminder.responsiblegroup" name="createReminder.responsiblegroup"/>
+      <parameters xmi:id="_cg59YBEwEfC3Z9U87QgOog" elementId="createReminder.patient" name="createReminder.patient"/>
+      <parameters xmi:id="_ckMh8BEwEfC3Z9U87QgOog" elementId="createReminder.popup" name="createReminder.popup"/>
+    </elements>
     <elements xsi:type="commands:Command" xmi:id="_3WY58PKjEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.command.closeReminder" commandName="Close Reminder"/>
     <elements xsi:type="commands:Command" xmi:id="_I31XcPKkEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.command.deleteReminder" commandName="Delete Reminder"/>
+    <elements xsi:type="commands:Command" xmi:id="_LluTEAuoEfCpZcwegOUHJQ" elementId="ch.elexis.core.ui.reminder.command.autoSelectPatient" commandName="Auto Select Patient"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_GogQAOhaEe-wd4tFRRI7kg" featurename="handlers" parentElementId="xpath:/">
     <elements xsi:type="commands:Handler" xmi:id="_IkXfwOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.handler.editReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.EditReminder" command="_wYKacOhZEe-wd4tFRRI7kg"/>
     <elements xsi:type="commands:Handler" xmi:id="_5vbPUOhaEe-wd4tFRRI7kg" elementId="ch.elexis.core.ui.reminder.handler.createReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.CreateReminder" command="_3W1AQOhaEe-wd4tFRRI7kg"/>
     <elements xsi:type="commands:Handler" xmi:id="_1eTW8PKjEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.handler.closeReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.CloseReminder" command="_3WY58PKjEe-2r_64q8yb2w"/>
     <elements xsi:type="commands:Handler" xmi:id="_LGuQ4PKkEe-2r_64q8yb2w" elementId="ch.elexis.core.ui.reminder.handler.deleteReminder" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.DeleteReminder" command="_I31XcPKkEe-2r_64q8yb2w"/>
+    <elements xsi:type="commands:Handler" xmi:id="_SbkJgAuoEfCpZcwegOUHJQ" elementId="ch.elexis.core.ui.reminder.handler.autoSelectPatient" contributionURI="bundleclass://ch.elexis.core.ui.reminder/ch.elexis.core.ui.reminder.commands.AutoSelectPatient" command="_LluTEAuoEfCpZcwegOUHJQ"/>
   </fragments>
 </fragment:ModelFragments>

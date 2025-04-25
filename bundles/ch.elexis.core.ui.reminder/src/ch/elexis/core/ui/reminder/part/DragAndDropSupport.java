@@ -20,20 +20,20 @@ import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn.Type;
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 
 public class DragAndDropSupport implements DragSourceListener, DropTargetListener {
 
 	private final NatTable natTable;
 	private final SelectionLayer selectionLayer;
-	private final ReminderSpanningBodyDataProvider dataProvider;
+	private final ReminderBodyDataProvider dataProvider;
 
 	private IReminder draggedReminder;
 
 	public DragAndDropSupport(NatTable natTable, SelectionLayer selectionLayer,
-			ReminderSpanningBodyDataProvider dataProvider) {
+			ReminderBodyDataProvider dataProvider) {
 		this.natTable = natTable;
 		this.selectionLayer = selectionLayer;
 		this.dataProvider = dataProvider;

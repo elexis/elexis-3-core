@@ -25,7 +25,6 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.ITraceService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.types.Gender;
@@ -104,8 +103,10 @@ public class ContextSettingFilter implements Filter {
 					if (user.isEmpty()) {
 						JsonElement elexisContactId = authenticatedUser.getClaim("elexisContactId");
 						if (elexisContactId != null) {
-							IUser dynamicCreatedUser = performDynamicUserCreationIfApplicable(preferredUsername,
-									rolesSet, elexisContactId.getAsString(), email);
+							ContextSettingFilterUtil contextSettingFilterUtil = new ContextSettingFilterUtil();
+							IUser dynamicCreatedUser = contextSettingFilterUtil.performDynamicUserCreationIfApplicable(
+									coreModelService, logger, contextService.getStationIdentifier(), preferredUsername,
+									elexisContactId.getAsString(), email);
 							user = Optional.ofNullable(dynamicCreatedUser);
 						}
 					}
@@ -185,39 +186,6 @@ public class ContextSettingFilter implements Filter {
 			});
 		}
 		contextService.setActiveUser(disabledWebSecurityContextUser);
-	}
-
-	/**
-	 * Dynamically creates user if applicable
-	 * 
-	 * @param email
-	 */
-	private IUser performDynamicUserCreationIfApplicable(String preferredUsername, Set<String> roles,
-			String elexisContactId, String email) {
-		boolean isElexisUser = roles.contains("bot") || roles.contains("user");
-		if (!isElexisUser) {
-			return null;
-		}
-		// if an elexisContactId is set, and it is valid - dynamically create user
-		Optional<IContact> assignedContact = coreModelService.load(elexisContactId, IContact.class);
-		if (!assignedContact.isPresent()) {
-			logger.warn("[{}] Dynamic user create failed. Invalid or missing attribute elexisContactId [{}]",
-					preferredUsername, elexisContactId);
-			return null;
-		}
-		logger.info("[{}] Dynamic user/bot create with assigned contact [{}]", preferredUsername, elexisContactId);
-		IUser _user = new IUserBuilder(coreModelService, preferredUsername, assignedContact.get()).buildAndSave();
-
-		ITraceService traceService = OsgiServiceUtil.getService(ITraceService.class).orElse(null);
-		if (traceService != null) {
-			traceService.addTraceEntry(preferredUsername, contextService.getRootContext().getStationIdentifier(),
-					" Dynamic user creation [" + email + "] via ContextSettingFilter");
-			OsgiServiceUtil.ungetService(traceService);
-		} else {
-			logger.warn("TraceService not available. Could not trace dynamic user creation [" + email + "]");
-		}
-
-		return _user;
 	}
 
 	/**

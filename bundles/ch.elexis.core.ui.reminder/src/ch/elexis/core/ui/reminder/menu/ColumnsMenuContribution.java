@@ -11,9 +11,11 @@ import org.eclipse.e4.ui.model.application.ui.menu.ItemType;
 import org.eclipse.e4.ui.model.application.ui.menu.MDirectMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuFactory;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuSeparator;
 
 import ch.elexis.core.ui.reminder.part.ReminderTablesPart;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn.Type;
 
 public class ColumnsMenuContribution {
 
@@ -24,10 +26,31 @@ public class ColumnsMenuContribution {
 			activeColumns = ((ReminderTablesPart) mpart.getObject()).getColumns();
 		}
 
-		for (ReminderColumn column : ReminderColumn.getAllAvailable()) {
+		List<ReminderColumn> allColumns = ReminderColumn.getAllAvailable();
+		List<ReminderColumn> customColumns = allColumns.stream()
+				.filter(c -> c.getType() != Type.USER && c.getType() != Type.GROUP).toList();
+		List<ReminderColumn> groupColumns = allColumns.stream().filter(c -> c.getType() == Type.GROUP).toList();
+		List<ReminderColumn> userColumns = allColumns.stream().filter(c -> c.getType() == Type.USER).toList();
+
+		addColumns(customColumns, activeColumns, items);
+		addSeparator("groups", items);
+		addColumns(groupColumns, activeColumns, items);
+		addSeparator("users", items);
+		addColumns(userColumns, activeColumns, items);
+	}
+
+	private void addSeparator(String idPostfix, List<MMenuElement> items) {
+		MMenuSeparator separator = MMenuFactory.INSTANCE.createMenuSeparator();
+		separator.setElementId("ch.elexis.core.ui.reminder.separator." + idPostfix);
+		items.add(separator);
+	}
+
+	private void addColumns(List<ReminderColumn> columns, List<ReminderColumn> activeColumns,
+			List<MMenuElement> items) {
+		for (ReminderColumn column : columns) {
 			MDirectMenuItem dynamicItem = MMenuFactory.INSTANCE.createDirectMenuItem();
 			dynamicItem.setType(ItemType.CHECK);
-			dynamicItem.setLabel(column.getName());
+			dynamicItem.setLabel(column.getFullName());
 			dynamicItem.setContributionURI("bundleclass://ch.elexis.core.ui.reminder/" + getClass().getName()); //$NON-NLS-1$
 			dynamicItem.setSelected(activeColumns.contains(column));
 			dynamicItem.getTransientData().put("column", column);

@@ -658,18 +658,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.keycloak.keycloak-authz-client"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.keycloak.keycloak-common"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.keycloak.keycloak-core"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.jetty.client"
          version="0.0.0"/>
 
@@ -791,10 +779,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.keycloak.keycloak-adapter-core"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.equinox.security.win32"
          os="win32"
          arch="x86_64"
@@ -806,18 +790,6 @@
 
    <plugin
          id="ch.qos.logback.core"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-annotations"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-core"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.fasterxml.jackson.core.jackson-databind"
          version="0.0.0"/>
 
    <plugin
@@ -840,6 +812,36 @@
 
    <plugin
          id="org.eclipse.osgi.compatibility.state"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.cocoa.macosx.aarch64"
+         os="macosx"
+         arch="aarch64"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.gtk.linux.aarch64"
+         os="linux"
+         arch="aarch64"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.equinox.launcher.win32.win32.x86_64"
+         os="win32"
+         arch="x86_64"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.swt.gtk.linux.aarch64"
+         os="linux"
+         arch="aarch64"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.core.filesystem.linux.aarch64"
+         os="linux"
+         arch="aarch64"
          version="0.0.0"/>
 
 </feature>

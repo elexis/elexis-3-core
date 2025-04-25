@@ -179,4 +179,71 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
 	</insert>
 </changeSet>
 
+<changeSet id="craete_mediorderMailSent_sticker" author="pdenzler">
+	<insert tableName="ETIKETTEN">
+		<column name="ID" value="mediorderMailSent" />
+		<column name="LASTUPDATE" valueComputed="${timestamp}" />
+		<column name="IMAGE" value="NULL" />
+		<column name="DELETED" value="0" />
+		<column name="IMPORTANCE" value="1001" />
+		<column name="NAME" value="Mediorder Mail Sent" />
+		<column name="FOREGROUND" value="000000" />
+		<column name="BACKGROUND" value="ffffff" />
+	</insert>
+</changeSet>
+
+<changeSet id="create_mediorderMailTemplate" author="pdenzler">
+	<insert tableName="CH_ELEXIS_CORE_TEXTTEMPLATE">
+		<column name="ID" valueComputed="${elexisid}" />
+		<column name="LASTUPDATE" valueComputed="${timestamp}" />
+		<column name="DELETED" value="0" />
+		<column name="MANDATORID" value="NULL" />
+		<column name="CATEGORY" value="MAIL" />
+		<column name="NAME" value="Medikamentenbestellung abholbereit" />
+		<column name="TEMPLATE"
+			value="Guten Tag [Patient.Anrede] [Patient.Name]&#10;&#10;Ihre online bestellten Medikamente stehen ab sofort in unserer Praxis zur Abholung bereit.&#10;Wir freuen uns, Sie bald bei uns begrüssen zu dürfen.&#10;&#10;Freundliche Grüsse&#10;Ihr Praxis Team" />
+		<column name="EXTINFO" valueComputed="NULL" />
+	</insert>
+</changeSet>
+
+	<changeSet id="add_delivered_count_to_bestellung_entry" author="dalibor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="bestellung_entry" columnName="DELIVERED_COUNT"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="bestellung_entry">
+            <column name="DELIVERED_COUNT" type="INT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet id="modify_output_log_objectid" author="dalibor">
+    	<preConditions onFail="MARK_RAN">
+        	<and>
+            	<tableExists tableName="OUTPUT_LOG"/>
+            	<columnExists tableName="OUTPUT_LOG" columnName="OBJECTID"/>
+        	</and>
+    	</preConditions>
+    	<modifyDataType tableName="OUTPUT_LOG" columnName="OBJECTID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	<changeSet id="add_creatorid_to_output_log" author="dalibor">
+    	<preConditions onFail="MARK_RAN">
+        	<not>
+            	<columnExists tableName="OUTPUT_LOG" columnName="CREATORID"/>
+        	</not>
+    	</preConditions>
+	    <addColumn tableName="OUTPUT_LOG">
+        	<column name="CREATORID" type="VARCHAR(80)"/>
+    	</addColumn>
+	</changeSet>
+	<changeSet id="add_outputter_status_to_output_log" author="dalibor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="OUTPUT_LOG" columnName="OUTPUTTERSTATUS"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="OUTPUT_LOG">
+            <column name="OUTPUTTERSTATUS" type="LONGTEXT"/>
+        </addColumn>
+	</changeSet>
+
 </databaseChangeLog>

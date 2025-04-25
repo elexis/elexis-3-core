@@ -4,8 +4,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IReminder;
-import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.issue.Priority;
 
 public class RemiderRichTextUtil {
@@ -17,14 +17,39 @@ public class RemiderRichTextUtil {
 			sb.append(" !! ");
 			sb.append("</span></strong>");
 		}
-		sb.append("<strong>" + getSubject(reminder) + "</strong>");
-		if (addDate && reminder.getDue() != null) {
-			sb.append(" " + DateTimeFormatter.ofPattern("dd.MM.yyyy").format(reminder.getDue()));
-		}
+		sb.append("<strong>" + getSubject(reminder) + "</strong>").append("<br />");
 		if (reminder.getContact() != null && reminder.getContact().isPatient()) {
-			sb.append("<br />").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()));
+			sb.append(getPersonalia(reminder.getContact().asIPerson()));
 		}
+		sb.append("<addition>");
+		if (addDate && reminder.getDue() != null) {
+			sb.append(DateTimeFormatter.ofPattern("dd.MM").format(reminder.getDue()));
+		}
+		sb.append("</addition>");
 		return sb.toString();
+	}
+
+	private static String getPersonalia(IPerson person) {
+		if (person != null) {
+			StringBuilder sb = new StringBuilder(64);
+			if (StringUtils.isNoneEmpty(person.getLastName())) {
+				sb.append(person.getLastName());
+			}
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.append(StringUtils.SPACE);
+			}
+			if (StringUtils.isNoneEmpty(person.getFirstName())) {
+				sb.append(person.getFirstName());
+			}
+			if (person.getDateOfBirth() != null) {
+				if (StringUtils.isNotBlank(sb.toString())) {
+					sb.append(StringUtils.SPACE);
+				}
+				sb.append(DateTimeFormatter.ofPattern("dd.MM.yy").format(person.getDateOfBirth()));
+			}
+			return sb.toString();
+		}
+		return StringUtils.EMPTY;
 	}
 
 	private static String getSubject(IReminder reminder) {

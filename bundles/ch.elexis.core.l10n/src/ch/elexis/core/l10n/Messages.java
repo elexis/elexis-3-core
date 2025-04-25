@@ -3001,6 +3001,8 @@ public class Messages extends NLS {
 	public static String Mediorder_approved_Tooltip;
 	public static String Mediorder_order_date;
 	public static String Mediorder_order_date_Tooltip;
+	public static String Mediorder_from_stock;
+	public static String Mediorder_from_stock_Tooltip;
 	public static String Mediorder_filter_by_status;
 	public static String Mediorder_Billing_Text;
 	public static String Mediorder_Questionnaire_active_and_up_to_date;
@@ -5219,7 +5221,11 @@ public class Messages extends NLS {
 	public static String OrderHistory_Added;
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
-
+	public static String HttpOrderTransportService_OrderAlreadySent_Title;
+	public static String HttpOrderTransportService_OrderAlreadySent_Message;
+	public static String HttpOrderTransportService_LinkText;
+	public static String HttpOrderTransportService_LinkTooltip;
+	public static String UserCasePreferences_StammarztAutoMandant;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

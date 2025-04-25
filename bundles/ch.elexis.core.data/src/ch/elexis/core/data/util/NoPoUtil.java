@@ -12,7 +12,6 @@ import java.util.StringJoiner;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
@@ -42,21 +41,23 @@ public class NoPoUtil {
 	 * @param clazz
 	 * @return
 	 */
-	public static PersistentObject loadAsPersistentObject(Identifiable identifiable, Class<?> clazz) {
+	@SuppressWarnings("unchecked")
+	public static <T> T loadAsPersistentObject(Identifiable identifiable, Class<T> clazz) {
 		PersistentObject loaded = loadAsPersistentObject(identifiable);
 		if (loaded != null && !clazz.isAssignableFrom(loaded.getClass())) {
 			return load(loaded, clazz);
 		}
-		return loaded;
+		return (T) loaded;
 	}
 
-	private static PersistentObject load(PersistentObject loaded, Class<?> clazz) {
+	@SuppressWarnings("unchecked")
+	private static <T> T load(PersistentObject loaded, Class<T> clazz) {
 		try {
 			Method load = clazz.getMethod("load", new Class[] { String.class }); //$NON-NLS-1$
-			return (PersistentObject) (load.invoke(null, new Object[] { loaded.getId() }));
+			return (T) (load.invoke(null, new Object[] { loaded.getId() }));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
-			LoggerFactory.getLogger(ElexisEventDispatcher.class)
+			LoggerFactory.getLogger(NoPoUtil.class)
 					.warn("Could not load [" + loaded + "] as [" + clazz + "]", e);
 		}
 		return null;

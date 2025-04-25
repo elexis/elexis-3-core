@@ -51,13 +51,9 @@
         <setEntry value="bcprov@default:default"/>
         <setEntry value="ch.qos.logback.classic@default:default"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
-        <setEntry value="com.equo.chromium.cef.cocoa.macosx.aarch64@default:false"/>
         <setEntry value="com.equo.chromium.cef.gtk.linux.x86_64@default:false"/>
         <setEntry value="com.equo.chromium@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
-        <setEntry value="com.google.gson@default:default"/>
+        <setEntry value="com.google.gson*2.12.1@default:default"/>
         <setEntry value="com.google.guava.failureaccess@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.h2database@default:default"/>
@@ -77,6 +73,7 @@
         <setEntry value="jakarta.interceptor-api@default:default"/>
         <setEntry value="jakarta.mail-api@default:default"/>
         <setEntry value="jakarta.persistence-api@default:default"/>
+        <setEntry value="jakarta.servlet-api*6.1.0@default:default"/>
         <setEntry value="jakarta.transaction-api@default:default"/>
         <setEntry value="jakarta.ws.rs-api*3.1.99@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
@@ -104,6 +101,9 @@
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
+        <setEntry value="org.apache.httpcomponents.client5.httpclient5@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5-h2@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.apache.poi.ooxml@default:default"/>
@@ -140,7 +140,6 @@
         <setEntry value="org.eclipse.e4.ui.swt.gtk@default:false"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.addons.swt@default:default"/>
-        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.cocoa@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_de@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_fr@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.nl_it@default:false"/>
@@ -185,14 +184,12 @@
         <setEntry value="org.eclipse.persistence.core@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa.jpql@default:default"/>
         <setEntry value="org.eclipse.persistence.jpa@default:default"/>
-        <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:false"/>
         <setEntry value="org.eclipse.swt.gtk.linux.x86_64@default:false"/>
         <setEntry value="org.eclipse.swt.nl_de@default:false"/>
         <setEntry value="org.eclipse.swt.nl_fr@default:false"/>
         <setEntry value="org.eclipse.swt.nl_it@default:false"/>
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.eclipse.swtchart@default:default"/>
-        <setEntry value="org.eclipse.ui.cocoa@default:false"/>
         <setEntry value="org.eclipse.ui.forms@default:default"/>
         <setEntry value="org.eclipse.ui.nl_de@default:false"/>
         <setEntry value="org.eclipse.ui.nl_fr@default:false"/>
@@ -221,11 +218,6 @@
         <setEntry value="org.jfree.jcommon@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
-        <setEntry value="org.keycloak.keycloak-adapter-core@default:default"/>
-        <setEntry value="org.keycloak.keycloak-adapter-spi@default:default"/>
-        <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
-        <setEntry value="org.keycloak.keycloak-common@default:default"/>
-        <setEntry value="org.keycloak.keycloak-core@default:default"/>
         <setEntry value="org.objectweb.asm*9.7.1@default:default"/>
         <setEntry value="org.objectweb.asm.commons*9.7.1@default:default"/>
         <setEntry value="org.objectweb.asm.tree*9.7.1@default:default"/>
@@ -252,14 +244,19 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.application@default:default"/>
+        <setEntry value="ch.elexis.core.data.tests@default:false"/>
         <setEntry value="ch.elexis.core.data@default:default"/>
         <setEntry value="ch.elexis.core.documents@default:default"/>
+        <setEntry value="ch.elexis.core.hl7.v2x.tests@default:false"/>
         <setEntry value="ch.elexis.core.hl7.v2x@default:default"/>
         <setEntry value="ch.elexis.core.importer.div@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
+        <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
@@ -267,12 +264,14 @@
         <setEntry value="ch.elexis.core.model@default:default"/>
         <setEntry value="ch.elexis.core.serial@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
+        <setEntry value="ch.elexis.core.tasks.test@default:false"/>
         <setEntry value="ch.elexis.core.tasks@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.ui.contacts@default:default"/>
         <setEntry value="ch.elexis.core.ui.e4@default:default"/>
         <setEntry value="ch.elexis.core.ui.icons@default:default"/>
+        <setEntry value="ch.elexis.core.ui.importer.div.native64@default:false"/>
         <setEntry value="ch.elexis.core.ui.importer.div.tests@default:false"/>
         <setEntry value="ch.elexis.core.ui.importer.div@default:default"/>
         <setEntry value="ch.elexis.core.ui.laboratory@default:default"/>
@@ -280,7 +279,11 @@
         <setEntry value="ch.elexis.core.ui@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
+        <setEntry value="ch.medelexis.medication.ui@default:false"/>
+        <setEntry value="ch.rgw.utility.tests@default:false"/>
         <setEntry value="ch.rgw.utility@default:default"/>
+        <setEntry value="es.gogo.shell@default:false"/>
+        <setEntry value="info.elexis.server.core.logging@default:false"/>
         <setEntry value="org.iatrix.help.wiki@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="true"/>

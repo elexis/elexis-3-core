@@ -3,6 +3,7 @@ package ch.elexis.core.ui.reminder.composites;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.nebula.widgets.cdatetime.CDT;
 import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -51,9 +54,10 @@ import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.e4.fieldassist.AsyncContentProposalProvider;
-import ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.proposals.IdentifiableContentProposal;
+import ch.elexis.core.ui.proposals.IdentifiableProposalProvider;
 import jakarta.inject.Inject;
 
 public class ReminderComposite extends Composite {
@@ -183,38 +187,54 @@ public class ReminderComposite extends Composite {
 		userSearchText = new Text(userSearchComposite, SWT.SEARCH | SWT.ICON_SEARCH);
 		userSearchText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		userSearchText.setMessage("Zugewiesen User");
-		AsyncContentProposalProvider<IUser> aoppu = new AsyncContentProposalProvider<IUser>("id") { //$NON-NLS-1$
-			@Override
-			public IQuery<IUser> createBaseQuery() {
-				IQuery<IUser> query = CoreModelServiceHolder.get().getQuery(IUser.class);
-				query.and("kontakt", COMPARATOR.NOT_EQUALS, null);
-				query.and("active", COMPARATOR.EQUALS, true);
-				return query;
-			}
+		IdentifiableProposalProvider<IUser> userProposalProvider = new IdentifiableProposalProvider<IUser>(
+				CoreModelServiceHolder.get().getQuery(IUser.class).and("kontakt", COMPARATOR.NOT_EQUALS, null) //$NON-NLS-1$
+						.and("active", COMPARATOR.EQUALS, true)) {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public IContentProposal[] getProposals(String contents, int position) {
-				List<IContentProposal> ret = new ArrayList<>();
-				ret.add(new ContentProposal(Messages.Core_All));
-				IContentProposal[] contentProposals = super.getProposals(contents, position);
-				if (contentProposals != null) {
-					ret.addAll(Arrays.asList(contentProposals));
+				List<IContentProposal> list = new ArrayList<>(Arrays.asList(super.getProposals(contents, position)));
+				Collections.sort(list, (l, r) -> {
+					IdentifiableContentProposal<IUser> lip = (IdentifiableContentProposal<IUser>) l;
+					IdentifiableContentProposal<IUser> rip = (IdentifiableContentProposal<IUser>) r;
+					if (lip.getIdentifiable().getId().startsWith(contents)
+							&& !rip.getIdentifiable().getId().startsWith(contents)) {
+						return -1;
+					} else if (rip.getIdentifiable().getId().startsWith(contents)
+							&& !lip.getIdentifiable().getId().startsWith(contents)) {
+						return 1;
+					}
+					return lip.getIdentifiable().getId().compareTo(rip.getIdentifiable().getId());
+				});
+				if (Messages.Core_All.toLowerCase().contains(contents.toLowerCase()) || StringUtils.isBlank(contents)) {
+					list.add(0, new ContentProposal(Messages.Core_All));
 				}
-				return ret.toArray(new ContentProposal[] {});
+				return list.toArray(new IContentProposal[list.size()]);
 			}
 
 			@Override
-			public Text getWidget() {
-				return userSearchText;
+			public String getLabelForObject(IUser user) {
+				return getUserLabel(user);
 			}
 		};
+		userProposalProvider.allowNoContent();
+		userProposalProvider.matchContained();
 		userSearchText.setData(null);
 		userSearchText.setTextLimit(80);
 
-		ContentProposalAdapter cppau = new ContentProposalAdapter(userSearchText, new TextContentAdapter(), aoppu, null,
-				null);
-		aoppu.configureContentProposalAdapter(cppau);
-
+		ContentProposalAdapter cppau = new ContentProposalAdapter(userSearchText, new TextContentAdapter(),
+				userProposalProvider, null, null);
+		userSearchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ARROW_DOWN) {
+					cppau.openProposalPopup();
+				}
+			}
+		});
+		cppau.setAutoActivationDelay(250);
+		cppau.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		cppau.addContentProposalListener(new IContentProposalListener() {
 
 			@SuppressWarnings("unchecked")
@@ -223,16 +243,19 @@ public class ReminderComposite extends Composite {
 				if (proposal instanceof IdentifiableContentProposal) {
 					IdentifiableContentProposal<IUser> prop = (IdentifiableContentProposal<IUser>) proposal;
 					item.getValue().setGroup(null);
+					item.getValue().getResponsible().forEach(c -> {
+						item.getValue().removeResponsible(c);
+					});
 					item.getValue().addResponsible(prop.getIdentifiable().getAssignedContact());
 					item.getValue().setResponsibleAll(false);
-					updateResponsibleFields();
+					updateUserResponsibleFields();
 				} else {
 					item.getValue().setGroup(null);
 					item.getValue().setResponsibleAll(true);
 					item.getValue().getResponsible().forEach(c -> {
 						item.getValue().removeResponsible(c);
 					});
-					updateResponsibleFields();
+					updateUserResponsibleFields();
 				}
 			}
 		});
@@ -243,35 +266,24 @@ public class ReminderComposite extends Composite {
 		groupSearchText = new Text(groupSearchComposite, SWT.SEARCH | SWT.ICON_SEARCH);
 		groupSearchText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		groupSearchText.setMessage("Zugewiesen Gruppe");
-		AsyncContentProposalProvider<IUserGroup> aoppg = new AsyncContentProposalProvider<IUserGroup>("id") { //$NON-NLS-1$
-			@Override
-			public IQuery<IUserGroup> createBaseQuery() {
-				IQuery<IUserGroup> query = CoreModelServiceHolder.get().getQuery(IUserGroup.class);
-				return query;
-			}
-
-			@Override
-			public IContentProposal[] getProposals(String contents, int position) {
-				List<IContentProposal> ret = new ArrayList<>();
-				IContentProposal[] contentProposals = super.getProposals(contents, position);
-				if (contentProposals != null) {
-					ret.addAll(Arrays.asList(contentProposals));
-				}
-				return ret.toArray(new ContentProposal[] {});
-			}
-
-			@Override
-			public Text getWidget() {
-				return groupSearchText;
-			}
-		};
+		IdentifiableProposalProvider<IUserGroup> groupProposalProvider = new IdentifiableProposalProvider<IUserGroup>(
+				CoreModelServiceHolder.get().getQuery(IUserGroup.class));
+		groupProposalProvider.allowNoContent();
 		groupSearchText.setData(null);
 		groupSearchText.setTextLimit(80);
 
-		ContentProposalAdapter cppag = new ContentProposalAdapter(groupSearchText, new TextContentAdapter(), aoppg,
-				null, null);
-		aoppg.configureContentProposalAdapter(cppag);
-
+		ContentProposalAdapter cppag = new ContentProposalAdapter(groupSearchText, new TextContentAdapter(),
+				groupProposalProvider, null, null);
+		groupSearchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ARROW_DOWN) {
+					cppag.openProposalPopup();
+				}
+			}
+		});
+		cppag.setAutoActivationDelay(250);
+		cppag.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		cppag.addContentProposalListener(new IContentProposalListener() {
 
 			@SuppressWarnings("unchecked")
@@ -281,7 +293,7 @@ public class ReminderComposite extends Composite {
 					IdentifiableContentProposal<IUserGroup> prop = (IdentifiableContentProposal<IUserGroup>) proposal;
 					item.getValue().setGroup(prop.getIdentifiable());
 					item.getValue().setResponsibleAll(false);
-					updateResponsibleFields();
+					updateGroupResponsibleFields();
 				}
 			}
 		});
@@ -383,9 +395,11 @@ public class ReminderComposite extends Composite {
 		item.setValue(reminder);
 
 		updatePatientField();
-		updateResponsibleFields();
+		updateUserResponsibleFields();
+		updateGroupResponsibleFields();
 
 		dueExpandable.setSelection(reminder.getDue() != null);
+		dueExpandable.setExpanded(reminder.getDue() != null);
 		notifyExpandable.setSelection(reminder.getVisibility() == Visibility.POPUP_ON_PATIENT_SELECTION
 				|| reminder.getVisibility() == Visibility.POPUP_ON_LOGIN);
 		important.setSelection(reminder.getPriority() == Priority.HIGH);
@@ -402,7 +416,16 @@ public class ReminderComposite extends Composite {
 		}
 	}
 
-	private void updateResponsibleFields() {
+	private String getUserLabel(IUser user) {
+		StringBuilder sb = new StringBuilder(user.getLabel());
+		if (user.getAssignedContact() != null) {
+			sb.append(" (" + user.getAssignedContact().getDescription1() + StringUtils.SPACE
+					+ user.getAssignedContact().getDescription2() + ")");
+		}
+		return sb.toString();
+	}
+
+	private void updateGroupResponsibleFields() {
 		IReminder reminder = item.getValue();
 		if (reminder.getGroup() != null) {
 			groupSearchText.setText(reminder.getGroup().getLabel());
@@ -411,10 +434,14 @@ public class ReminderComposite extends Composite {
 			groupSearchText.setText(StringUtils.EMPTY);
 			groupSearchText.setData(null);
 		}
-		if(reminder.getResponsible() != null && !reminder.getResponsible().isEmpty()) {
+	}
+
+	private void updateUserResponsibleFields() {
+		IReminder reminder = item.getValue();
+		if (reminder.getResponsible() != null && !reminder.getResponsible().isEmpty()) {
 			List<IUser> user = userService.getUsersByAssociatedContact(reminder.getResponsible().get(0));
 			if (!user.isEmpty()) {
-				userSearchText.setText(user.get(0).getLabel());
+				userSearchText.setText(getUserLabel(user.get(0)));
 				userSearchText.setData(user.get(0));
 			}
 		} else if (reminder.isResponsibleAll()) {

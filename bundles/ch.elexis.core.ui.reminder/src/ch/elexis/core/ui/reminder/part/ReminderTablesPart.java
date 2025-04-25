@@ -3,7 +3,9 @@ package ch.elexis.core.ui.reminder.part;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -20,13 +22,15 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.painter.layer.NatGridLayerPainter;
+import org.eclipse.nebula.widgets.nattable.resize.MaxCellBoundsHelper;
+import org.eclipse.nebula.widgets.nattable.resize.command.MultiRowResizeCommand;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.action.SelectCellAction;
 import org.eclipse.nebula.widgets.nattable.selection.event.CellSelectionEvent;
@@ -36,6 +40,8 @@ import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.ui.action.IMouseAction;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
 import org.eclipse.nebula.widgets.nattable.ui.matcher.MouseEventMatcher;
+import org.eclipse.nebula.widgets.nattable.util.GCFactory;
+import org.eclipse.nebula.widgets.nattable.util.ObjectUtils;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -53,6 +59,8 @@ import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
@@ -61,8 +69,8 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
-import ch.elexis.core.ui.reminder.part.nattable.ReminderSpanningBodyDataProvider;
 import ch.elexis.core.ui.views.IRefreshable;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -70,8 +78,8 @@ import jakarta.inject.Inject;
 public class ReminderTablesPart implements IRefreshable {
 
 	private NatTable natTable;
-	private ReminderSpanningBodyDataProvider dataProvider;
-	private SpanningDataLayer dataLayer;
+	private ReminderBodyDataProvider dataProvider;
+	private DataLayer dataLayer;
 
 	@Inject
 	private ECommandService commandService;
@@ -86,7 +94,7 @@ public class ReminderTablesPart implements IRefreshable {
 
 	@Inject
 	public ReminderTablesPart() {
-		dataProvider = new ReminderSpanningBodyDataProvider();
+		dataProvider = new ReminderBodyDataProvider();
 	}
 	
 	@Optional
@@ -165,7 +173,6 @@ public class ReminderTablesPart implements IRefreshable {
 		natTable = new NatTable(parent, NatTable.DEFAULT_STYLE_OPTIONS | SWT.BORDER, viewportLayer, false);
 		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		natTable.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		natTable.setLayerPainter(new NatGridLayerPainter(natTable, DataLayer.DEFAULT_ROW_HEIGHT));
 
 		natTable.addConfiguration(new ReminderTablesStyleConfiguration());
 
@@ -212,14 +219,20 @@ public class ReminderTablesPart implements IRefreshable {
 	}
 
 	private void saveColumnsPreference() {
-		String columns = getColumns().stream().map(c -> c.getName()).collect(Collectors.joining("|"));
+		String columns = getColumns().stream().map(c -> c.getId()).collect(Collectors.joining("|"));
 		ConfigServiceHolder.get().setActiveUserContact("ch.elexis.core.ui.reminder.part/columns", columns);
 	}
 
 	private List<ReminderColumn> loadColumnsPreference() {
-		String names = ConfigServiceHolder.get().getActiveUserContact("ch.elexis.core.ui.reminder.part/columns", "Meine|Patient|Alle");
-		List<String> nameParts = Arrays.asList(names.split("\\|")); 
-		return ReminderColumn.getAllAvailable().stream().filter(c -> nameParts.contains(c.getName())).toList();
+		String names = ConfigServiceHolder.get().getActiveUserContact("ch.elexis.core.ui.reminder.part/columns", "");
+		List<String> idParts = Arrays.asList(names.split("\\|"));
+		List<ReminderColumn> ret = new ArrayList<>();
+		List<ReminderColumn> available = ReminderColumn.getAllAvailable();
+		// keep order of saved columns
+		for (String id : idParts) {
+			available.stream().filter(c -> c.getId().equals(id)).findFirst().ifPresent(c -> ret.add(c));
+		}
+		return ret;
 	}
 
 	private void addTooltip() {
@@ -241,16 +254,22 @@ public class ReminderTablesPart implements IRefreshable {
 					Integer columnPosition = natTable.getColumnIndexByPosition(cellEvent.getColumnPosition());
 					Integer rowPosition = natTable.getRowIndexByPosition(cellEvent.getRowPosition());
 					if (columnPosition >= 0 && rowPosition >= 0) {
-						List<Integer> rowPositions = dataProvider.getDataSpanningRowPositions(columnPosition,
-								rowPosition);
-						// use the row position of the row with data not the spanned afterwards
-						rowPosition = rowPositions.get(0);
 						Object data = dataProvider.getData(columnPosition, rowPosition);
 						if (data instanceof IReminder) {
 //							System.out.println("Selected cell: [" + cellEvent.getRowPosition() + ", "
 //									+ cellEvent.getColumnPosition() + "], "
 //									+ ((IReminder) data).getSubject());
 							ContextServiceHolder.get().setTyped(data);
+							if (ConfigServiceHolder.get()
+									.getActiveUserContact(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false)) {
+								IContact patient = ((IReminder) data).getContact();
+								IContact creator = ((IReminder) data).getCreator();
+								if (patient != null && patient.isPatient()) {
+									if (!patient.getId().equals(creator.getId())) {
+										ContextServiceHolder.get().setActivePatient(patient.asIPatient());
+									}
+								}
+							}
 						} else {
 							ContextServiceHolder.get().removeTyped(IReminder.class);
 						}
@@ -296,6 +315,42 @@ public class ReminderTablesPart implements IRefreshable {
 											}
 										}
 									}
+								} else {
+									int columnPosition = natTable.getColumnPositionByX(event.x);
+									if (columnPosition > -1) {
+										Map<String, Object> parameters = new HashMap<>();
+										ReminderColumn column = dataProvider.getColumns().get(columnPosition);
+										switch (column.getType()) {
+										case USER:
+											parameters.put("createReminder.responsible",
+													column.getResponsible().getId());
+											break;
+										case ALL:
+											parameters.put("createReminder.responsible", "Alle");
+											break;
+										case GROUP:
+											parameters.put("createReminder.responsiblegroup",
+													column.getGroup().getId());
+											break;
+										case PATIENT:
+											if (column.getPatient() != null) {
+												parameters.put("createReminder.patient", column.getPatient().getId());
+											}
+											break;
+										case POPUP:
+											parameters.put("createReminder.popup", Boolean.TRUE.toString());
+											break;
+										default:
+											break;
+										}
+										ParameterizedCommand command = commandService.createCommand(
+												"ch.elexis.core.ui.reminder.command.createReminder", parameters);//$NON-NLS-1$
+										if (command != null) {
+											handlerService.executeHandler(command);
+										} else {
+											LoggerFactory.getLogger(getClass()).error("Command not found"); //$NON-NLS-1$
+										}
+									}
 								}
 							}
 						});
@@ -313,7 +368,7 @@ public class ReminderTablesPart implements IRefreshable {
 			columnStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
 					CoreUiUtil.getColorForString(reminderColumn.getColor()));
 			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnStyle,
-					DisplayMode.NORMAL, "BG_" + reminderColumn.getName());
+					DisplayMode.NORMAL, "BG_" + reminderColumn.getId());
 		}
 
 		resetColumns();
@@ -337,10 +392,52 @@ public class ReminderTablesPart implements IRefreshable {
 				if (CoreUiUtil.isActiveControl(natTable)) {
 					if (updateColumns) {
 						updateColumns();
+					} else {
+						updateRowHeights();
 					}
+					PositionCoordinate[] selectedPositions = selectionLayer.getSelectedCellPositions();
 					natTable.refresh();
+					for(PositionCoordinate pos : selectedPositions) {
+						selectionLayer.setSelectedCell(pos.columnPosition, pos.rowPosition);
+					}
 				}
 			});
+		}
+	}
+
+	private void updateRowHeights() {
+		final List<Integer> positions = new ArrayList<>();
+		final List<Integer> heights = new ArrayList<>();
+		int rowCount = this.viewportLayer.getRowCount();
+		if (rowCount > 0) {
+			for (int i = 0; i < rowCount; i++) {
+				int[] rowPos = new int[1];
+				int[] rowHeights = new int[1];
+				rowPos[0] = this.viewportLayer.getRowIndexByPosition(i);
+				rowHeights[0] = this.viewportLayer.getRowHeightByPosition(i);
+
+				if (dataProvider.getData(0, rowPos[0]) instanceof String && rowPos[0] > 0) {
+					int[] calculatedRowHeights = MaxCellBoundsHelper.getPreferredRowHeights(
+							this.natTable.getConfigRegistry(), new GCFactory(this.natTable), dataLayer, rowPos);
+					if (calculatedRowHeights != null && calculatedRowHeights.length > 0) {
+						if (calculatedRowHeights[0] >= 0) {
+							// on scaling there could be a difference of 1
+							// pixel because of rounding issues.
+							// in that case we do not trigger a resize to
+							// avoid endless useless resizing
+							int diff = rowHeights[0] - calculatedRowHeights[0];
+							if (diff < -1 || diff > 1) {
+								positions.add(rowPos[0]);
+								heights.add(calculatedRowHeights[0]);
+							}
+						}
+					}
+				}
+			}
+		}
+		if (!positions.isEmpty()) {
+			dataLayer.doCommand(new MultiRowResizeCommand(dataLayer, ObjectUtils.asIntArray(positions),
+					ObjectUtils.asIntArray(heights), true));
 		}
 	}
 

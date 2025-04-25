@@ -193,8 +193,21 @@ public class ReminderColumn {
 		return query.execute();
 	}
 
+	public String getId() {
+		return name + "::" + getType().name();
+	}
+
 	public String getName() {
 		return name;
+	}
+
+	public String getFullName() {
+		if (type == Type.USER) {
+			IContact responsible = getResponsible();
+			return getName() + " (" + responsible.getDescription1() + StringUtils.SPACE + responsible.getDescription2()
+					+ ")";
+		}
+		return getName();
 	}
 
 	public String getColor() {

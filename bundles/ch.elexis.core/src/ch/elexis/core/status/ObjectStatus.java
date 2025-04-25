@@ -123,6 +123,10 @@ public class ObjectStatus<T> extends Status {
 		return new ObjectStatus<>(INFO, unknownId, INFO, "info", null, object);
 	}
 
+	public static <T> ObjectStatus<T> INFO(String message) {
+		return new ObjectStatus<>(INFO, unknownId, ERROR, message, null, null);
+	}
+
 	public static <T> ObjectStatus<T> WARNING(T object) {
 		return new ObjectStatus<>(WARNING, unknownId, WARNING, "warn", null, object);
 	}

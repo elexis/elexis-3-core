@@ -11,6 +11,7 @@
 
 package ch.elexis.core.ui;
 
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +51,6 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
@@ -111,8 +111,6 @@ public class Hub extends AbstractUIPlugin {
 		Display.getDefault().syncExec(() -> {
 			Hub.setWindowText(pat);
 		});
-
-		commandService.refreshElements(ToggleCurrentPatientLockHandler.COMMAND_ID, null);
 
 		PatientSelectionStatus provider = (PatientSelectionStatus) sps
 				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
@@ -196,6 +194,9 @@ public class Hub extends AbstractUIPlugin {
 		log.debug("Starting " + this.getClass().getName()); //$NON-NLS-1$
 		plugin = this;
 
+		// set unique chromium cache path to support multiple running instances #27014
+		System.setProperty("chromium.cache_path", Files.createTempDirectory("chromium").toFile().getAbsolutePath());
+		
 		CoreUiUtil.injectServicesWithContext(this);
 
 		// add UI ClassLoader to default Script Interpreter
@@ -281,7 +282,9 @@ public class Hub extends AbstractUIPlugin {
 		if (mainActions.mainWindow != null) {
 			Shell shell = mainActions.mainWindow.getShell();
 			if ((shell != null) && (!shell.isDisposed())) {
-				mainActions.mainWindow.getShell().setText(sb.toString());
+				Display.getDefault().asyncExec(() -> {
+					mainActions.mainWindow.getShell().setText(sb.toString());
+				});
 			}
 		}
 	}

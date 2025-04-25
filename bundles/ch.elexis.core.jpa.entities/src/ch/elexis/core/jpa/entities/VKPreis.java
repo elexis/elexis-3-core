@@ -7,7 +7,6 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -20,7 +19,6 @@ public class VKPreis extends AbstractEntityWithId implements EntityWithId {
 	protected Long lastupdate;
 
 	@Id
-	@GeneratedValue(generator = "system-uuid")
 	@Column(length = 25)
 	private String id = ElexisIdGenerator.generateId();
 

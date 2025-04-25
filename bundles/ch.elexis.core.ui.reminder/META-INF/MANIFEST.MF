@@ -3,30 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Reminder UI
 Bundle-SymbolicName: ch.elexis.core.ui.reminder;singleton:=true
 Bundle-Version: 3.13.0.qualifier
-Import-Package: org.eclipse.nebula.widgets.nattable;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.config;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.data;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.extension.nebula.richtext;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.grid;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.layer;version="2.5.0",
- org.eclipse.nebula.widgets.nattable.layer.cell;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.layer.event;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.painter.cell;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.painter.cell.decorator;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.painter.layer;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.selection;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.selection.action;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.selection.event;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.style;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.ui.action;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.ui.binding;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.ui.matcher;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.ui.util;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.util;version="[2.5.0,3.0.0)",
- org.eclipse.nebula.widgets.nattable.viewport;version="[2.5.0,3.0.0)"
 Bundle-Vendor: medevit.at
 Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
  ch.elexis.core.ui;bundle-version="3.13.0",
- ch.elexis.core.ui.e4;bundle-version="3.13.0"
+ ch.elexis.core.ui.e4;bundle-version="3.13.0",
+ org.eclipse.nebula.widgets.nattable.core;bundle-version="2.5.0",
+ org.eclipse.nebula.widgets.nattable.extension.nebula;bundle-version="2.5.0",
+ org.eclipse.nebula.widgets.richtext;bundle-version="1.5.1",
+ org.jsoup;bundle-version="1.18.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: ch.elexis.core.ui.reminder

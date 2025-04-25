@@ -97,8 +97,10 @@ public class TestPathologicDescription {
 				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
-				assertEquals(Description.PATHO_IMPORT, description.getDescription());
-				assertEquals("H", description.getReference());
+				// default use local ref is true for numeric
+				assertEquals(LabItemTyp.NUMERIC, qrr.get(j).getItem().getTyp());
+				assertEquals(Description.PATHO_REF_ITEM, description.getDescription());
+				assertEquals("4.0-9.4", description.getReference());
 				foundpatho2 = true;
 			}
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
@@ -197,9 +199,10 @@ public class TestPathologicDescription {
 				assertTrue(qrr.get(j).isFlag(LabResultConstants.PATHOLOGIC));
 				PathologicDescription description = qrr.get(j).getPathologicDescription();
 				assertNotNull(description);
-				// default use local ref is true
-				assertEquals(Description.PATHO_IMPORT, description.getDescription());
-				assertEquals("H", description.getReference());
+				// default use local ref is true for numeric
+				assertEquals(LabItemTyp.NUMERIC, qrr.get(j).getItem().getTyp());
+				assertEquals(Description.PATHO_REF, description.getDescription());
+				assertEquals("4.0-9.4", description.getReference());
 				foundpatho2 = true;
 			}
 			if (qrr.get(j).getItem().getName().equalsIgnoreCase("Progesteron")) {
@@ -288,11 +291,12 @@ public class TestPathologicDescription {
 				assertEquals(LabItemTyp.TEXT, labResult.getItem().getTyp());
 				break;
 			case "BBIG":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("HH", pathologicDescription.getReference());
+				// default use local ref is true for numeric
+				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
+				assertEquals("< 6", pathologicDescription.getReference());
 				assertEquals(1, labResult.getFlags());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
-				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
 				break;
 			case "PHEN":
 				assertEquals(Description.PATHO_REF_ITEM, pathologicDescription.getDescription());
@@ -346,10 +350,11 @@ public class TestPathologicDescription {
 				assertEquals("1.69", labResult.getResult());
 				break;
 			case "TCHO-P":
-				assertEquals(Description.PATHO_IMPORT, pathologicDescription.getDescription());
-				assertEquals("HH", pathologicDescription.getReference());
-				assertEquals(1, labResult.getFlags());
+				// default use local ref is true for numeric
 				assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+				assertEquals(Description.PATHO_REF, pathologicDescription.getDescription());
+				assertEquals("3.88-5.66", pathologicDescription.getReference());
+				assertEquals(1, labResult.getFlags());
 				assertFalse(labResult.isPathologicFlagIndetermined(null));
 				assertEquals("6.19", labResult.getResult());
 				assertEquals("3.88-5.66", labResult.getItem().getReferenceFemale());

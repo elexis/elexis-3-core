@@ -66,6 +66,7 @@
       <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.glassfish.jersey.core.jersey-client" autoStart="true" startLevel="2" />
    </configurations>
 
    <repositories>
