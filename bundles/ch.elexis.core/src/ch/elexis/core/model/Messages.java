@@ -62,5 +62,16 @@ public final class Messages {
 	public static String InvoiceState_STOP_LEGAL_PROCEEDING = ch.elexis.core.l10n.Messages.InvoiceState_STOP_LEGAL_PROCEEDING;
 	public static String InvoiceState_DEPRECIATED = ch.elexis.core.l10n.Messages.InvoiceState_DEPRECIATED;
 	public static String InvoiceState_REJECTED = ch.elexis.core.l10n.Messages.InvoiceState_REJECTED;
-
+	public static String OrderHistory_Created = ch.elexis.core.l10n.Messages.OrderHistory_Created;
+	public static String OrderHistory_AddMedi = ch.elexis.core.l10n.Messages.OrderHistory_AddMedi;
+	public static String OrderHistory_Edited = ch.elexis.core.l10n.Messages.OrderHistory_Edited;
+	public static String OrderHistory_Delivered = ch.elexis.core.l10n.Messages.OrderHistory_Delivered;
+	public static String OrderHistory_Ordered = ch.elexis.core.l10n.Messages.OrderHistory_Ordered;
+	public static String OrderHistory_Deleted = ch.elexis.core.l10n.Messages.OrderHistory_Deleted;
+	public static String OrderHistory_RemovedMedi = ch.elexis.core.l10n.Messages.OrderHistory_RemovedMedi;
+	public static String OrderHistory_SupplierAdded = ch.elexis.core.l10n.Messages.OrderHistory_SupplierAdded;
+	public static String OrderHistory_CompleteDelivery = ch.elexis.core.l10n.Messages.OrderHistory_CompleteDelivery;
+	public static String OrderHistory_Added = ch.elexis.core.l10n.Messages.OrderHistory_Added;
+	public static String OrderHistory_Increased = ch.elexis.core.l10n.Messages.OrderHistory_Increased;
+	public static String OrderHistory_Decreased = ch.elexis.core.l10n.Messages.OrderHistory_Decreased;
 }
