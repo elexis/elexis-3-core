@@ -17,18 +17,20 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  org.jfree.chart,
  org.jfree.jcommon;bundle-version="1.0.24",
  org.hamcrest;bundle-version="2.2.0",
- org.eclipse.swt
+ org.eclipse.swt,
+ ch.elexis.core.hl7.v2x,
+ ch.elexis.core.importer.div
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.jpa.entities,
  ch.elexis.core.services.holder,
- javax.inject;version="1.0.0",
+ javax.inject,
  org.apache.commons.lang3;version="3.12.0",
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.model.application.ui.basic,
  org.eclipse.swtchart,
- org.jdom2;version="2.0.6",
- org.jdom2.output;version="2.0.6",
+ org.jdom2,
+ org.jdom2.output,
  org.jfree.chart.swt
 Export-Package: ch.elexis.core.ui.laboratory.actions,
  ch.elexis.core.ui.laboratory.controls,
