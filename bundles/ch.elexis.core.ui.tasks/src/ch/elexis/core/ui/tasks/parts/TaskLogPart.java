@@ -341,6 +341,9 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		ITask selectedTask = (ITask) ((StructuredSelection) event.getSelection()).getFirstElement();
+		if (selectedTask == null) {
+			return;
+		}
 		MPart taskDetailPart = partService.createPart("ch.elexis.core.ui.tasks.partdescriptor.taskdetail"); //$NON-NLS-1$
 		taskDetailPart.getTransientData().put("task", selectedTask); //$NON-NLS-1$
 

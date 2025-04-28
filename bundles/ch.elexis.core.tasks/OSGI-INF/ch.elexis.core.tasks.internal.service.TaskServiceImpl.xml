@@ -4,6 +4,7 @@
       <provide interface="ch.elexis.core.tasks.model.ITaskService"/>
    </service>
    <reference bind="setModelService" interface="ch.elexis.core.services.IModelService" name="ModelService" target="(service.model.name=ch.elexis.core.tasks.model)"/>
+   <reference cardinality="1..1" field="accessControl" interface="ch.elexis.core.services.IAccessControlService" name="accessControl"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="messageService" interface="ch.elexis.core.services.IMessageService" name="messageService"/>
    <reference cardinality="1..1" field="virtualFilesystemService" interface="ch.elexis.core.services.IVirtualFilesystemService" name="virtualFilesystemService"/>

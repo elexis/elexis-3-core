@@ -66,4 +66,9 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 			<column name="GROUPID" />
 		</createIndex>
 	</changeSet>
+	
+	<changeSet id="manual_update_agntermine_deleted_is_char1" author="marco">
+		<modifyDataType tableName="AGNTERMINE" columnName="DELETED" newDataType="CHAR(1)"/>
+	</changeSet>
+	
 </databaseChangeLog>

@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.mediorder.MediorderEntryState;
+import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -28,8 +30,6 @@ import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStockService;
-import ch.elexis.core.ui.mediorder.MediorderEntryState;
-import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -68,7 +68,7 @@ public class CreatePatientOrderHandler {
 			for (Iterator<IStockEntry> iterator = stockEntries.iterator(); iterator.hasNext();) {
 				IStockEntry stockEntry = iterator.next();
 				if (orderService.findOpenOrderEntryForStockEntry(stockEntry) != null
-						|| MediorderEntryState.AWAITING_REQUEST.equals(MediorderPartUtil.determineState(stockEntry))) {
+						|| MediorderEntryState.AWAITING_REQUEST.equals(MediorderUtil.determineState(stockEntry))) {
 					iterator.remove();
 				}
 			}
@@ -96,9 +96,9 @@ public class CreatePatientOrderHandler {
 		}
 		eventBroker.post(ElexisEventTopics.EVENT_RELOAD, IStock.class);
 
-		MPart orderPart = partService.findPart("ch.elexis.BestellenView");
+		MPart orderPart = partService.findPart("ch.elexis.OrderManagementView");
 		if (orderPart == null) {
-			orderPart = partService.createPart("ch.elexis.BestellenView");
+			orderPart = partService.createPart("ch.elexis.OrderManagementView");
 		}
 		partService.showPart(orderPart, PartState.VISIBLE);
 		contextService.setTyped(order);

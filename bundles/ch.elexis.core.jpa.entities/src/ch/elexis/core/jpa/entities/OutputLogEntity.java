@@ -11,7 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
@@ -29,7 +28,6 @@ import jakarta.persistence.Table;
 public class OutputLogEntity extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	@Id
-	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
 
@@ -180,11 +178,8 @@ public class OutputLogEntity extends AbstractEntityWithId implements EntityWithI
 	 * @param outputterStatus The new outputter status.
 	 */
 	public void setOutputterStatus(String outputterStatus) {
-		if (this.outputterStatus == null || this.outputterStatus.isEmpty()) {
-			this.outputterStatus = outputterStatus;
-		} else {
-			this.outputterStatus += "; " + outputterStatus;
-		}
+		this.outputterStatus = outputterStatus;
+
 	}
 
 	@Override
