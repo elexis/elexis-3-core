@@ -17,7 +17,9 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  org.jfree.chart,
  org.jfree.jcommon;bundle-version="1.0.24",
  org.hamcrest;bundle-version="2.2.0",
- org.eclipse.swt
+ org.eclipse.swt,
+ ch.elexis.core.hl7.v2x,
+ ch.elexis.core.importer.div
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.jpa.entities,
