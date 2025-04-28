@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.uhn.hl7v2.model.Message;
 import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILaboratory;
@@ -27,6 +28,7 @@ import ch.elexis.hl7.model.IValueType;
 import ch.elexis.hl7.model.LabResultData;
 import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.util.HL7Helper;
+import ch.elexis.hl7.v2x.labitem.HL7ImportLabItemReader;
 
 
 public class HL7AutoGroupImporter {
@@ -95,8 +97,19 @@ public class HL7AutoGroupImporter {
 		myLab = LabImportUtilHolder.get().getOrCreateLabor(profile);
 
 		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(fixedFile);
-		List<HL7Reader> readerList = HL7Helper.parseImportReaders(fileHandle);
-
+		List<HL7Reader> readerList = new ArrayList<>();
+		try {
+			byte[] fileBytes = fileHandle.readAllBytes();
+			String fileContent = new String(fileBytes, HL7Helper.getEncoding(new String(fileBytes)));
+			try {
+				Message message = HL7Helper.parseMessage(fileContent);
+				readerList.add(new HL7ImportLabItemReader(message));
+			} catch (Exception ex) {
+				logger.warn("Error when parsing HL7 message:\\n{}", fileContent, ex); //$NON-NLS-1$
+			}
+		} catch (Exception e) {
+			logger.error("Error parsing the HL7 file", e); //$NON-NLS-1$
+		}
 		if (readerList.isEmpty()) {
 			logger.info("No HL7 messages found in {}", filePath); //$NON-NLS-1$
 			return;
@@ -109,7 +122,6 @@ public class HL7AutoGroupImporter {
 			processReader(reader, groupInfo);
 		}
 	}
-
 
 	private File fixHL7File(File originalFile) throws IOException {
 		List<String> lines = Files.readAllLines(originalFile.toPath(), StandardCharsets.ISO_8859_1);
