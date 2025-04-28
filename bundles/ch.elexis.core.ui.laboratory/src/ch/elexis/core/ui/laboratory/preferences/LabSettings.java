@@ -238,8 +238,9 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 						}
 
 						Display.getDefault().asyncExec(() -> {
+							String msg = MessageFormat.format(Messages.LabSettings_importDoneMessage, anzahl.get());
 							MessageDialog.openInformation(getShell(), Messages.LabSettings_importDoneTitle,
-									Messages.LabSettings_importDoneMessage);
+									msg);
 						});
 					});
 
