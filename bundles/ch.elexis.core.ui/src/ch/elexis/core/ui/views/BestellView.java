@@ -602,11 +602,6 @@ public class BestellView extends ViewPart {
 								SWTHelper.showInfo(Messages.BestellView_OrderSentCaption,
 										Messages.BestellView_OrderSentBody);
 								tv.refresh();
-								orderableItems.forEach(oe -> {
-									oe.setState(OrderEntryState.ORDERED);
-									CoreModelServiceHolder.get().save(oe);
-								});
-
 							} catch (CoreException ex) {
 								ExHandler.handle(ex);
 							} catch (XChangeException xx) {

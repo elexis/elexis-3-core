@@ -63,6 +63,7 @@ import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.OrderManagementView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Bestellung;
+import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 public class OrderManagementActionFactory {
@@ -342,23 +343,18 @@ public class OrderManagementActionFactory {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
 						try {
+							sender.canHandle((Class<? extends PersistentObject>) actOrder.getClass());
 							sender.store(actOrder);
 							sender.finalizeExport();
 						} catch (XChangeException xe) {
 							logger.error("Error saving or exporting the order: ", xe); //$NON-NLS-1$
 							SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
 									Messages.OrderManagement_ExportError_Message);
-							return;
+							continue;
 						}
 						SWTHelper.showInfo(ch.elexis.core.ui.views.Messages.BestellView_OrderSentCaption,
 								ch.elexis.core.ui.views.Messages.BestellView_OrderSentBody);
 						view.refresh();
-						orderableItems.forEach(oe -> {
-							if (oe.getState() == OrderEntryState.OPEN) {
-								oe.setState(OrderEntryState.ORDERED);
-								CoreModelServiceHolder.get().save(oe);
-							}
-						});
 						orderService.getHistoryService().logOrderSent(actOrder, true);
 						view.reload();
 					} catch (CoreException ex) {
@@ -369,8 +365,7 @@ public class OrderManagementActionFactory {
 			}
 
 			if (!handlerFound) {
-				logger.warn(
-						"No valid supplier plugin found! Please install one or contact support."); //$NON-NLS-1$
+				logger.warn("No valid supplier plugin found! Please install one or contact support."); //$NON-NLS-1$
 				SWTHelper.showError(Messages.OrderManagement_MissingSupplierPlugin_Title,
 						Messages.OrderManagement_MissingSupplierPlugin_Message);
 			}

@@ -850,39 +850,48 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private void updateOrderStatus(IOrder order) {
 		if (order == null)
 			return;
+
 		boolean hasEntries = !order.getEntries().isEmpty();
 		boolean allDone = hasEntries && order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 		boolean anyOrdered = order.getEntries().stream().anyMatch(
 				e -> e.getState() == OrderEntryState.ORDERED || e.getState() == OrderEntryState.PARTIAL_DELIVER);
 		boolean allEntriesHaveSupplier = order.getEntries().stream().allMatch(e -> e.getProvider() != null);
+		boolean hasOpenEntries = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.OPEN);
+
 		dispatchedLabelIcon.setImage((allDone || anyOrdered) ? TICKIMAGE : IMGCLEAR);
 		dispatchedLabelState.setText((allDone || anyOrdered) ? Messages.Core_Yes : Messages.Corr_No);
 		bookedLabelIcon.setImage(allDone ? TICKIMAGE : IMGCLEAR);
 		bookedLabelState.setText(allDone ? Messages.Core_Yes : Messages.Corr_No);
+
 		if (allDone || order.getEntries().isEmpty()) {
 			orderButton.setText(StringUtils.EMPTY);
 			orderButton.setImage(TICKIMAGE);
 			orderButton.setEnabled(false);
 		} else {
 			orderButton.setEnabled(true);
-			if (anyOrdered) {
+			if (!hasOpenEntries && anyOrdered) {
+
 				orderButton.setText(Messages.OrderManagement_Button_Book);
 				orderButton.setImage(EINBUCHEN);
 			} else if (allEntriesHaveSupplier) {
 				orderButton.setText(Messages.OrderManagement_Button_Order);
 				orderButton.setImage(DELIVERY_TRUCK);
 			} else {
+
 				orderButton.setText(Messages.OrderManagement_Button_MissingSupplier);
 				orderButton.setImage(LIFERANT);
 			}
 		}
-		if (anyOrdered || allDone) {
-			tableViewer.getControl().setMenu(null);
-		} else {
+
+		if (hasOpenEntries) {
 			actionFactory.createContextMenu(tableViewer, orderTable);
+		} else {
+			tableViewer.getControl().setMenu(null);
 		}
+
 		updateCheckIn();
 	}
+
 
 	private void updateUI() {
 		if (isUIUpdating)
