@@ -63,7 +63,6 @@ import ch.elexis.core.ui.views.Messages;
 import ch.elexis.core.ui.views.OrderManagementView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.data.Bestellung;
-import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.ExHandler;
 
 public class OrderManagementActionFactory {
@@ -343,7 +342,6 @@ public class OrderManagementActionFactory {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
 						try {
-							sender.canHandle((Class<? extends PersistentObject>) actOrder.getClass());
 							sender.store(actOrder);
 							sender.finalizeExport();
 						} catch (XChangeException xe) {
