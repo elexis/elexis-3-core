@@ -14,6 +14,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
@@ -36,6 +37,11 @@ public class LaborAttachmentAction extends Action implements IAction {
 	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return Images.IMG_VIEW_LABORATORY.getImageDescriptor();
+	}
+
+	@Override
+	public String getToolTipText() {
+		return Messages.Create_Lab_attachment;
 	}
 
 	@Override

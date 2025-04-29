@@ -820,6 +820,7 @@ public class Messages extends NLS {
 	public static String Core_Description;
 	public static String Core_Description_1;
 	public static String Core_Description_2;
+	public static String Core_Deselect_all;
 	public static String Core_Device_Timout;
 	public static String Core_Diagnosis;
 	public static String Core_Direction_Right;
@@ -1063,6 +1064,7 @@ public class Messages extends NLS {
 	public static String Core_Save_External;
 	public static String Core_Save_request_but_path_not_valid;
 	public static String Core_Search_Contact_by_name_etc;
+	public static String Core_Select_all;
 	public static String Core_Select_Contact;
 	public static String Core_Select_File;
 	public static String Core_Select_Laboratory;
@@ -1153,6 +1155,7 @@ public class Messages extends NLS {
 	public static String Core_loading;
 	public static String Corr_No;
 	public static String CreateChart;
+	public static String Create_Lab_attachment;
 	public static String CreateLicenseJob_Creating;
 	public static String CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate;
 	public static String CreatePrescriptionHelper_InfoDispensationArtikelstammTitel;
