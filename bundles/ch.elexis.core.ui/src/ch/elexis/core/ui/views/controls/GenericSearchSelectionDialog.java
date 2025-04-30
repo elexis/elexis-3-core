@@ -23,6 +23,8 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -43,6 +45,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 	private String shellTitle, title, message;
 	private Image image;
 	private int style;
+	private Text text;
 
 	private AbstractTableViewer structuredViewer;
 	private SearchDataDialog filter;
@@ -88,7 +91,7 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 
 		Composite ret = (Composite) super.createDialogArea(parent);
 
-		Text text = new Text(ret, SWT.BORDER);
+		text = new Text(ret, SWT.BORDER);
 		GridData textGridData = new GridData();
 		textGridData.grabExcessVerticalSpace = false;
 		textGridData.grabExcessHorizontalSpace = true;
@@ -119,7 +122,13 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		if (style == SWT.SINGLE) {
 			structuredViewer = new TableViewer(ret, SWT.VIRTUAL);
 		} else {
-			structuredViewer = CheckboxTableViewer.newCheckList(ret, SWT.VIRTUAL);
+			structuredViewer = CheckboxTableViewer.newCheckList(ret, SWT.NONE);
+
+			Composite btnComposite = new Composite(parent, SWT.NONE);
+			btnComposite.setLayout(new GridLayout(2, false));
+
+			createButton(btnComposite, Messages.Core_Select_all, true);
+			createButton(btnComposite, Messages.Core_Deselct_all, false);
 		}
 
 		GridData viewerGridData = new GridData(GridData.FILL_BOTH);
@@ -182,13 +191,36 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
+	private void createButton(Composite parent, String text, boolean selectAll) {
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(text);
+		button.addListener(SWT.Selection, e -> {
+			((CheckboxTableViewer) structuredViewer).setAllChecked(selectAll);
+		});
+	}
+
 	private void isLastElement(StructuredViewer structuredViewer) {
-		if (((TableViewer) structuredViewer).getTable().getItems().length == 1) {
-			((TableViewer) structuredViewer).getTable().getItem(0).setChecked(true);
+		int itemCount = ((TableViewer) structuredViewer).getTable().getItemCount();
+
+		if (itemCount == 1) {
+			if (structuredViewer instanceof CheckboxTableViewer checkboxTableViewer) {
+				Object element = checkboxTableViewer.getElementAt(0);
+				if (element != null) {
+					checkboxTableViewer.setChecked(element, true);
+					checkboxTableViewer.setSelection(new StructuredSelection(element));
+					selection.add(element);
+				}
+			}
 			((TableViewer) structuredViewer).getTable().setSelection(0);
-		} else {
-			if (style != SWT.SINGLE) {
-				((CheckboxTableViewer) structuredViewer).setAllChecked(false);
+		} else if (text.getText().trim().isEmpty()) {
+			if (structuredViewer instanceof CheckboxTableViewer checkboxTableViewer) {
+				for (int i = 0; i < itemCount; i++) {
+					Object element = checkboxTableViewer.getElementAt(i);
+					if (element != null && selection.contains(element)) {
+						checkboxTableViewer.setChecked(element, true);
+						checkboxTableViewer.setSelection(new StructuredSelection(element));
+					}
+				}
 			}
 			structuredViewer.setSelection(null);
 		}
@@ -260,10 +292,10 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 				if (input != null) {
 					filter.setSearchText(text);
 					structuredViewer.refresh();
-					isLastElement(structuredViewer);
+					Display.getCurrent().asyncExec(() -> isLastElement(structuredViewer));
 				} else if (inputFunction != null) {
 					structuredViewer.setInput(inputFunction.apply(text));
-					isLastElement(structuredViewer);
+					Display.getCurrent().asyncExec(() -> isLastElement(structuredViewer));
 				}
 			}
 		}
