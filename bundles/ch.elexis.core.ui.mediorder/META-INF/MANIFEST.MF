@@ -6,7 +6,9 @@ Bundle-Vendor: ch.elexis
 Bundle-Version: 3.12.0.qualifier
 Require-Bundle: ch.elexis.core.ui;bundle-version="3.12.0",
  ch.elexis.core.ui.e4;bundle-version="3.12.0",
- ch.elexis.core.ui.icons;bundle-version="3.12.0"
+ ch.elexis.core.ui.icons;bundle-version="3.12.0",
+ ch.elexis.core.mail.ui,
+ ch.elexis.core.mail
 Model-Fragment: fragment.e4xmi
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin

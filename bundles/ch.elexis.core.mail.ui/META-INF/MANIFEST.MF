@@ -34,4 +34,5 @@ Service-Component: OSGI-INF/ch.elexis.core.mail.ui.archive.OmnivoreDocumentStore
  OSGI-INF/ch.elexis.core.mail.ui.client.MailClientComponent.xml,
  OSGI-INF/ch.elexis.core.mail.ui.handlers.BriefeDocumentStoreHolder.xml,
  OSGI-INF/ch.elexis.core.mail.ui.handlers.TaskServiceHolder.xml
-Export-Package: ch.elexis.core.mail.ui.client
+Export-Package: ch.elexis.core.mail.ui.client,
+ ch.elexis.core.mail.ui.handlers

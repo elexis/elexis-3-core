@@ -24,6 +24,8 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IStickerService;
+import ch.elexis.core.services.IStockService;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
@@ -33,10 +35,13 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 	private IContextService contextService;
 	private ICoverageService coverageService;
 	private IBillingService billingService;
+	private IStockService stockService;
+	private IStickerService stickerService;
 
 	private boolean removeStockEntry;
 
 	protected IStatus billAndClose(IModelService coreModelService, IContextService contextService,
+			IStockService stockService, IStickerService stickerService,
 			ICoverageService coverageService, IBillingService billingService, List<IStockEntry> stockEntries,
 			boolean removeStockEntry) {
 
@@ -45,6 +50,8 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		this.coverageService = coverageService;
 		this.billingService = billingService;
 		this.removeStockEntry = removeStockEntry;
+		this.stockService = stockService;
+		this.stickerService = stickerService;
 
 		if (stockEntries.isEmpty()) {
 			return Status.OK_STATUS;
@@ -155,6 +162,9 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 					stockEntry.setMaximumStock(0);
 					coreModelService.save(stockEntry);
 				}
+
+				MediorderPartUtil.removeMailSticker(coreModelService, stockService, stickerService,
+						encounter.getPatient());
 			}
 		}
 		return Status.OK_STATUS;

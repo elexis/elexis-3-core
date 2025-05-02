@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.mediorder.MediorderPart;
-import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 import ch.elexis.core.ui.mediorder.MediorderStockState;
 
 public class FilterByOrderStatusHandler {
@@ -82,7 +82,7 @@ public class FilterByOrderStatusHandler {
 	private List<IStock> filterPatientStock(List<Integer> values) {
 		List<IStock> stocks = StockServiceHolder.get().getAllPatientStock();
 		return stocks.stream().filter(stock -> {
-			Integer state = MediorderPartUtil.calculateStockState(stock);
+			Integer state = MediorderUtil.calculateStockState(stock);
 			return state != null && values.contains(state);
 		}).toList();
 		
