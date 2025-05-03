@@ -116,9 +116,9 @@
       <unit id="ca.odell.glazedlists" version="1.11.0"/>
       <unit id="org.eclipse.collections" version="11.1.0.v20220705-1455"/>
       <unit id="org.eclipse.swtchart.feature.feature.group" version="1.0.0.202412021530"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="128.0.8"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.8"/>
-      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="128.0.8"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="128.0.10"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.10"/>
+      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="128.0.10"/>
       <unit id="info.elexis.target.jetty.additions.feature.group" version="12.0.16"/>
       <unit id="org.junit" version="4.13.2.v20240929-1000"/>
       <unit id="org.hamcrest" version="3.0.0"/>
