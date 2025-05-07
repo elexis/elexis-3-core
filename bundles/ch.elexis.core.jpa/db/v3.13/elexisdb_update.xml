@@ -69,6 +69,7 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 	
 	<changeSet id="manual_update_agntermine_deleted_is_char1" author="marco">
 		<modifyDataType tableName="AGNTERMINE" columnName="DELETED" newDataType="CHAR(1)"/>
+		<addDefaultValue tableName="AGNTERMINE" columnName="DELETED" defaultValue="0"/>
 	</changeSet>
 	
 </databaseChangeLog>
