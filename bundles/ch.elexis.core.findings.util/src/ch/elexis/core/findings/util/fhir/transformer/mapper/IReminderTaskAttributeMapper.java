@@ -91,11 +91,17 @@ public class IReminderTaskAttributeMapper
 				Reference patientReference = new Reference(
 						new IdDt(Patient.class.getSimpleName(), source.getContact().getId()));
 				target.setFor(patientReference);
-			} else if (source.getContact().isMandator()) {
+			} else if (source.getContact().isUser()) {
 				Reference practitionerReference = new Reference(
 						new IdDt(Practitioner.class.getSimpleName(), source.getContact().getId()));
 				target.setFor(practitionerReference);
 			}
+		}
+		
+		if (source.getCreator() != null && source.getCreator().isUser()) {
+			Reference practitionerReference = new Reference(
+					new IdDt(Practitioner.class.getSimpleName(), source.getCreator().getId()));
+			target.setRequester(practitionerReference);
 		}
 	}
 
@@ -152,6 +158,15 @@ public class IReminderTaskAttributeMapper
 					IContact.class);
 			if (forContact.isPresent()) {
 				target.setContact(forContact.get());
+			}
+		}
+		if(source.hasRequester()) {
+			if (Practitioner.class.getSimpleName().equals(source.getRequester().getType())) {
+				Optional<IContact> requesterContact = CoreModelServiceHolder.get()
+						.load(source.getFor().getReferenceElement().getIdPart(), IContact.class);
+				if (requesterContact.isPresent()) {
+					target.setCreator(requesterContact.get());
+				}
 			}
 		}
 	}
