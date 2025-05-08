@@ -46,7 +46,7 @@
 		"ch.elexis.core.findings.IFamilyMemberHistory": "cruvdx",
 		"ch.elexis.core.findings.ILocalCoding": "cruvdx",
 		"ch.elexis.core.findings.IObservation": "cruvdx",
-		"ch.elexis.core.findings.IObservationLink": "cruvdx",
+		"ch.elexis.core.findings.IObservationLink": "cruvdxz",
 		"ch.elexis.core.findings.IProcedureRequest": "cruvdx",
 		"ch.elexis.core.model.IAccountTransaction": "cruvdx",
 		"ch.elexis.core.model.IAddress": "cruvdx",
