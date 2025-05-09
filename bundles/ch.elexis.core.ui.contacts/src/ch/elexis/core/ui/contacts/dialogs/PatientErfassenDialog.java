@@ -257,8 +257,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 
 			String formattedAHV = tAHV.getText();
 			if (!formattedAHV.isEmpty()) {
-				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
-				patient.addXid(DOMAIN_AHV, formattedAHV, true);
+				patient.addXid(DOMAIN_AHV, formattedAHV.replace(".", ""), true);
 			}
 
 			super.okPressed();
