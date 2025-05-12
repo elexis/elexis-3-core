@@ -1069,6 +1069,7 @@ public class Messages extends NLS {
 	public static String Core_Select_File;
 	public static String Core_Select_Laboratory;
 	public static String Core_Select_Mandator;
+	public static String Core_Select_Mandator_Tooltip;
 	public static String Core_Select_Patient;
 	public static String Core_Select_Zoom_Factor;
 	public static String Core_Sender;
