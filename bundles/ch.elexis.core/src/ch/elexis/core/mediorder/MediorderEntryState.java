@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.mediorder;
+package ch.elexis.core.mediorder;
 
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IOrderEntry;
