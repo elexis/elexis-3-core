@@ -21,8 +21,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -33,6 +33,7 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -56,15 +57,18 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.e4.dialog.MandantSelectorDialog;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListContentProvider;
@@ -86,9 +90,9 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	private InvoiceListBottomComposite invoiceListBottomComposite;
 	private InvoiceListContentProvider invoiceListContentProvider;
 
-	public InvoiceListView() {
-
-	}
+	@Inject
+	@Service(filterExpression = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	private IModelService coreModelService;
 
 	@Optional
 	@Inject
@@ -120,25 +124,33 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 
 		@Override
 		public void run() {
-			String idList = ConfigServiceHolder.get().get(ContextServiceHolder.get().getActiveUserContact().get(),
-					CFG_MANDATORFILTER, StringUtils.EMPTY);
-			MandantSelectorDialog dialog = new MandantSelectorDialog(getSite().getShell(), idList);
+			GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(getSite().getShell(),
+					coreModelService.getQuery(IUser.class)
+							.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true).execute(),
+					Messages.Core_Select_Mandator, Messages.Core_Select_Mandator, Messages.Core_Select_Mandator_Tooltip,
+					null, SWT.CHECK);
 
 			dialog.open();
 			applyMandatorsFilter(dialog);
+			refresh();
 		}
 
-		private void applyMandatorsFilter(MandantSelectorDialog dialog) {
-			List<IMandator> selMandators = dialog.getSelectedMandators();
-			List<String> idList = new ArrayList<String>();
-			
-			if (selMandators != null) {
-				for (IMandator m : selMandators) {
-					idList.add(m.getId());
+		private void applyMandatorsFilter(GenericSearchSelectionDialog dialog) {
+			Object selection = dialog.getSelection();
+
+			if (selection instanceof IStructuredSelection structuredSelection) {
+				List<String> idList = new ArrayList<>();
+				for (Object obj : structuredSelection.toList()) {
+					if (obj instanceof IUser user) {
+						idList.add(user.getId());
+					}
 				}
-				String r = String.join(",", idList); //$NON-NLS-1$
-				ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
-						CFG_MANDATORFILTER, r);
+
+				if (!idList.isEmpty()) {
+					String joinedIds = String.join(",", idList); //$NON-NLS-1$
+					ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+							CFG_MANDATORFILTER, joinedIds);
+				}
 			}
 		}
 	};
@@ -178,7 +190,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			StructuredSelection ss = (StructuredSelection) selection.getSelection();
 			if (!ss.isEmpty()) {
 				InvoiceEntry firstElement = (InvoiceEntry) ss.getFirstElement();
-				IInvoice invoice = CoreModelServiceHolder.get().load(firstElement.getInvoiceId(), IInvoice.class)
+				IInvoice invoice = coreModelService.load(firstElement.getInvoiceId(), IInvoice.class)
 						.orElse(null);
 				ContextServiceHolder.get().setTyped(invoice);
 				if (invoice.getCoverage() != null) {
