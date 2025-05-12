@@ -222,6 +222,8 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 					}
 				}
 			}
+			// clears the visual row selection (gray highlight) without affecting the
+			// checkbox selection
 			structuredViewer.setSelection(null);
 		}
 	}
