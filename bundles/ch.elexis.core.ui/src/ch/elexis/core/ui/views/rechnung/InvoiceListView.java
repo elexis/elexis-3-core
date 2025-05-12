@@ -93,10 +93,6 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 	@Service(filterExpression = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
-	public InvoiceListView() {
-		CoreUiUtil.injectServices(this);
-	}
-
 	@Optional
 	@Inject
 	public void activeMandator(IMandator mandator) {
