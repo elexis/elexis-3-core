@@ -15,7 +15,8 @@ import ch.elexis.core.services.IModelService;
 @Component
 @RunWith(Suite.class)
 @SuiteClasses({ CoverageICoverageTransformerTest.class, OrganizationIOrganizationTransformerTest.class,
-		AppointmentTerminTransformerTest.class, SlotTerminTransformerTest.class, TaskReminderTransformerTest.class })
+		AppointmentTerminTransformerTest.class, SlotTerminTransformerTest.class, TaskReminderTransformerTest.class,
+		CareTeamIUserGroupTransformerTest.class })
 public class AllTransformerTests {
 
 	private static IFhirTransformerRegistry transformerRegistry;

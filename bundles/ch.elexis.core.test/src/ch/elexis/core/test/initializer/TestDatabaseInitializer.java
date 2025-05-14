@@ -28,6 +28,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
@@ -35,6 +36,7 @@ import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.model.builder.ILabResultBuilder;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
+import ch.elexis.core.model.builder.IUserGroupBuilder;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
@@ -62,6 +64,9 @@ public class TestDatabaseInitializer {
 
 	private static boolean isMandantInitialized = false;
 	private static IMandator mandant;
+
+	private static boolean isUserGrouüInitialized = false;
+	private static IUserGroup userGroup;
 
 	private ILaboratory laboratory;
 	private ILaboratory laboratory2;
@@ -392,6 +397,19 @@ public class TestDatabaseInitializer {
 		return user;
 	}
 
+	public void initializeUserGroup() throws IOException, SQLException {
+		if (!isMandantInitialized) {
+			initializeMandant();
+		}
+
+		if (!isUserGrouüInitialized) {
+			userGroup = new IUserGroupBuilder(modelService, "TestGroup").build();
+			userGroup.addUser(user);
+			modelService.save(userGroup);
+			isUserGrouüInitialized = true;
+		}
+	}
+
 	/**
 	 * Initialize an test Prescription.
 	 *
@@ -635,4 +653,7 @@ public class TestDatabaseInitializer {
 		return article;
 	}
 
+	public IUserGroup getUserGroup() {
+		return userGroup;
+	}
 }
