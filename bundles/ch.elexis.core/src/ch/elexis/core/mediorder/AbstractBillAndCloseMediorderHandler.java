@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.mediorder;
+package ch.elexis.core.mediorder;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +15,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.ICoverageBuilder;
@@ -65,8 +66,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 
 		IPatient patient = person.asIPatient();
 
-		List<IStockEntry> entries = stock.getStockEntries();
-		Map<Boolean, List<IStockEntry>> mapEntries = entries.stream()
+		Map<Boolean, List<IStockEntry>> mapEntries = stockEntries.stream()
 				.collect(Collectors.partitioningBy(entry -> entry.getArticle().isObligation()));
 		for (Map.Entry<Boolean, List<IStockEntry>> entry : mapEntries.entrySet()) {
 			IStatus status = processArticles(entry.getValue(), patient, entry.getKey());
@@ -147,26 +147,20 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 			if (!result.isOK()) {
 				return Status.error(result.getCombinedMessages());
 			}
-
-			int currentStock = stockEntry.getCurrentStock();
-			int maximumStock = stockEntry.getMaximumStock();
-			int minimumStock = stockEntry.getMinimumStock();
-			boolean isBalanced = currentStock == maximumStock && maximumStock == minimumStock;
-
-			if (isBalanced) {
-				if (removeStockEntry) {
-					coreModelService.remove(stockEntry);
-				} else {
-					stockEntry.setMinimumStock(0);
-					stockEntry.setCurrentStock(0);
-					stockEntry.setMaximumStock(0);
-					coreModelService.save(stockEntry);
-				}
-
-				MediorderPartUtil.removeMailSticker(coreModelService, stockService, stickerService,
-						encounter.getPatient());
-			}
+			removeMailSticker(encounter.getPatient());
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected void removeMailSticker(IPatient patient) {
+		if (stickerService.hasSticker(patient,
+				coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class).get())) {
+			Optional<IStock> stock = stockService.getPatientStock(patient);
+			if (stock.isEmpty()
+					|| MediorderUtil.calculateStockState(stockService.getPatientStock(patient).get()) != 1) {
+				stickerService.removeSticker(
+						coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class).get(), patient);
+			}
+		}
 	}
 }
