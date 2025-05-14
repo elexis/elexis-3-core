@@ -19,6 +19,7 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Task;
 import org.hl7.fhir.r4.model.Task.TaskIntent;
+import org.hl7.fhir.r4.model.Task.TaskPriority;
 import org.hl7.fhir.r4.model.Task.TaskStatus;
 
 import ca.uhn.fhir.model.api.Include;
@@ -28,7 +29,9 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
+import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -51,7 +54,9 @@ public class IReminderTaskAttributeMapper
 		target.addIdentifier(getElexisObjectIdentifier(source));
 
 		target.setStatus(getTaskStatus(source));
+		target.setPriority(getTaskPriority(source));
 		target.getCode().addCoding(getVisibilityCoding(source));
+		target.getCode().addCoding(getTypeCoding(source));
 
 		target.setDescription(source.getSubject());
 		if (StringUtils.isNotBlank(source.getMessage())) {
@@ -109,7 +114,9 @@ public class IReminderTaskAttributeMapper
 	public void fhirToElexis(Task source, IReminder target) {
 
 		target.setStatus(getProcessStatus(source));
+		target.setPriority(getPriority(source));
 		target.setVisibility(getVisibility(source));
+		target.setType(getType(source));
 		target.setSubject(source.getDescription());
 		if (source.hasNote()) {
 			target.setMessage(getMessage(source));
@@ -159,6 +166,8 @@ public class IReminderTaskAttributeMapper
 			if (forContact.isPresent()) {
 				target.setContact(forContact.get());
 			}
+		} else {
+			target.setContact(null);
 		}
 		if(source.hasRequester()) {
 			if (Practitioner.class.getSimpleName().equals(source.getRequester().getType())) {
@@ -175,6 +184,17 @@ public class IReminderTaskAttributeMapper
 		return source.getNote().stream().map(n -> n.getText()).collect(Collectors.joining("\n\n"));
 	}
 
+	private Type getType(Task source) {
+		if (source.hasCode()) {
+			Optional<String> typeCode = FhirUtil.getCodeFromCodingList("http://www.elexis.info/task/type",
+					source.getCode().getCoding());
+			if (typeCode.isPresent()) {
+				return Type.valueOf(typeCode.get());
+			}
+		}
+		return Type.COMMON;
+	}
+
 	private Visibility getVisibility(Task source) {
 		if (source.hasCode()) {
 			Optional<String> visibilityCode = FhirUtil.getCodeFromCodingList("http://www.elexis.info/task/visibility",
@@ -184,6 +204,36 @@ public class IReminderTaskAttributeMapper
 			}
 		}
 		return Visibility.ALWAYS;
+	}
+
+	private TaskPriority getTaskPriority(IReminder source) {
+		if (source.getPriority() != null) {
+			switch (source.getPriority()) {
+			case HIGH:
+				return TaskPriority.URGENT;
+			case MEDIUM:
+				return TaskPriority.ROUTINE;
+			default:
+				break;
+			}
+		}
+		return TaskPriority.ROUTINE;
+	}
+
+	private Priority getPriority(Task source) {
+		if (source.getPriority() != null) {
+			switch (source.getPriority()) {
+			case STAT:
+			case ASAP:
+			case URGENT:
+				return Priority.HIGH;
+			case ROUTINE:
+				return Priority.MEDIUM;
+			default:
+				break;
+			}
+		}
+		return Priority.MEDIUM;
 	}
 
 	private TaskStatus getTaskStatus(IReminder source) {
@@ -230,6 +280,14 @@ public class IReminderTaskAttributeMapper
 	private Coding getVisibilityCoding(IReminder source) {
 		return new Coding("http://www.elexis.info/task/visibility", source.getVisibility().name(),
 				source.getVisibility().getLocaleText());
+	}
+
+	private Coding getTypeCoding(IReminder source) {
+		if (source.getType() != null) {
+			return new Coding("http://www.elexis.info/task/type", source.getType().name(),
+					source.getType().getLocaleText());
+		}
+		return null;
 	}
 
 	private Annotation getMessageNote(IReminder source) {
