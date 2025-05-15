@@ -5,21 +5,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import ch.elexis.core.mediorder.Constants;
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
-import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -166,18 +162,5 @@ public class MediorderPartUtil {
 		entry.setCurrentStock(amount);
 		coreModelService.save(article);
 		coreModelService.save(entry);
-	}
-
-	public static void removeMailSticker(IModelService coreModelService, IStockService stockService,
-			IStickerService stickerService, IPatient patient) {
-		if (stickerService.hasSticker(patient,
-				coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class).get())) {
-			Optional<IStock> stock = stockService.getPatientStock(patient);
-			if (stock.isEmpty()
-					|| MediorderUtil.calculateStockState(stockService.getPatientStock(patient).get()) != 1) {
-				stickerService.removeSticker(
-						coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class).get(), patient);
-			}
-		}
 	}
 }

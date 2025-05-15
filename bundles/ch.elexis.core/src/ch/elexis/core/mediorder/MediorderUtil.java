@@ -1,9 +1,14 @@
 package ch.elexis.core.mediorder;
 
+import java.util.List;
+import java.util.Optional;
+
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStickerService;
@@ -72,15 +77,27 @@ public class MediorderUtil {
 					state = MediorderEntryState.PARTIALLY_ORDERED;
 				}
 				state.setOrderEntry(order);
+			}
 
+			ICoverageService coverageService = OsgiServiceUtil.getService(ICoverageService.class)
+					.orElseThrow(() -> new IllegalStateException("no coverage service found"));
+			Optional<IEncounter> encounter = coverageService
+					.getLatestOpenCoverage(stockEntry.getStock().getOwner().asIPatient())
+					.flatMap(coverageService::getLatestEncounter);
+			OsgiServiceUtil.ungetService(coverageService);
+
+			boolean alreadyBilled = encounter.map(IEncounter::getBilled).orElse(List.of()).stream()
+					.anyMatch(bill -> stockEntry.getArticle().getId().equals(bill.getBillable().getId()));
+			if (alreadyBilled) {
+				return state = MediorderEntryState.IN_STOCK;
+			}
+
+			if (minimumStock == maximumStock) {
+				state = MediorderEntryState.REQUESTED;
+			} else if (minimumStock > maximumStock) {
+				state = MediorderEntryState.PARTIALLY_REQUESTED;
 			} else {
-				if (minimumStock == maximumStock) {
-					state = MediorderEntryState.REQUESTED;
-				} else if (minimumStock > maximumStock) {
-					state = MediorderEntryState.PARTIALLY_REQUESTED;
-				} else {
-					state = MediorderEntryState.INVALID;
-				}
+				state = MediorderEntryState.INVALID;
 			}
 		} else if (minimumStock == 0 && maximumStock > 0 && currentStock == 0) {
 			state = MediorderEntryState.AWAITING_REQUEST;
