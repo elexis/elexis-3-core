@@ -102,7 +102,7 @@ DROP TABLE duplicate_documentreference_id;
 		<sql>
 <![CDATA[
 UPDATE BRIEFE B 
-SET B.keywords = CONCAT(COALESCE(B.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE B.ID = D.DOCUMENTID), ''))
+SET B.keywords = SUBSTRING(CONCAT(COALESCE(B.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE B.ID = D.DOCUMENTID), '')), 1, 255)
 ]]>
 	    </sql>
 	</changeSet>
@@ -114,7 +114,7 @@ SET B.keywords = CONCAT(COALESCE(B.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM
 		<sql>
 <![CDATA[
 UPDATE BRIEFE 
-SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference AS D, BRIEFE AS B WHERE B.ID = D.DOCUMENTID), ''));
+SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference AS D, BRIEFE AS B WHERE B.ID = D.DOCUMENTID), '')), 1, 255);
 ]]>
 	    </sql>
 	</changeSet>
@@ -126,7 +126,7 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
 		<sql>
 <![CDATA[
 UPDATE ch_elexis_omnivore_data O 
-SET O.keywords = CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE O.ID = D.DOCUMENTID), ''))
+SET O.keywords = SUBSTRING(CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE O.ID = D.DOCUMENTID), '')), 1, 255)
 ]]>
 	    </sql>
 	</changeSet>
@@ -138,7 +138,7 @@ SET O.keywords = CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEYWORDS FROM
 		<sql>
 <![CDATA[
 UPDATE ch_elexis_omnivore_data
-SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference D, ch_elexis_omnivore_data AS O WHERE O.ID = D.DOCUMENTID LIMIT 1), ''))
+SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference D, ch_elexis_omnivore_data AS O WHERE O.ID = D.DOCUMENTID LIMIT 1), '')), 1, 255)
 ]]>
 	    </sql>
 	</changeSet>
