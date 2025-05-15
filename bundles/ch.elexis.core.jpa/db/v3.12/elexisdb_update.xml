@@ -245,5 +245,15 @@ SET KEYWORDS = CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM c
             <column name="OUTPUTTERSTATUS" type="LONGTEXT"/>
         </addColumn>
 	</changeSet>
+	
+	<changeSet id="clean_domain_id_ssn" author="pdenzler">
+	<sql>
+	<![CDATA[
+		UPDATE xid
+        SET domain_id = REPLACE(domain_id, '.', '')
+        WHERE domain = 'www.ahv.ch/xid'; 
+       ]]>
+	</sql>
+</changeSet>
 
 </databaseChangeLog>
