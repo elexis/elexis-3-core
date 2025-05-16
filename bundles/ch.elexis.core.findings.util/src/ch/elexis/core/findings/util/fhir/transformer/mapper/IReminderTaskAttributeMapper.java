@@ -73,7 +73,7 @@ public class IReminderTaskAttributeMapper
 					Reference organizationReference = new Reference(
 							new IdDt(Organization.class.getSimpleName(), contact.getId()));
 					target.setOwner(organizationReference);
-				} else if (contact.isMandator()) {
+				} else if (contact.isUser()) {
 					Reference practitionerReference = new Reference(
 							new IdDt(Practitioner.class.getSimpleName(), contact.getId()));
 					target.setOwner(practitionerReference);
@@ -124,6 +124,8 @@ public class IReminderTaskAttributeMapper
 		if (source.hasExecutionPeriod() && source.getExecutionPeriod().hasEnd()) {
 			target.setDue(
 					LocalDate.ofInstant(source.getExecutionPeriod().getEnd().toInstant(), ZoneId.systemDefault()));
+		} else {
+			target.setDue(null);
 		}
 		if (source.hasOwner()) {
 			if (CareTeam.class.getSimpleName().equals(source.getOwner().getReferenceElement().getResourceType())) {
@@ -278,8 +280,11 @@ public class IReminderTaskAttributeMapper
 	}
 
 	private Coding getVisibilityCoding(IReminder source) {
-		return new Coding("http://www.elexis.info/task/visibility", source.getVisibility().name(),
-				source.getVisibility().getLocaleText());
+		if (source.getVisibility() != null) {
+			return new Coding("http://www.elexis.info/task/visibility", source.getVisibility().name(),
+					source.getVisibility().getLocaleText());
+		}
+		return null;
 	}
 
 	private Coding getTypeCoding(IReminder source) {
