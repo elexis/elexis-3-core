@@ -141,7 +141,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				List<String> idList = new ArrayList<>();
 				for (Object obj : structuredSelection.toList()) {
 					if (obj instanceof IUser user) {
-						idList.add(user.getId());
+						idList.add(user.getAssignedContact().getId());
 					}
 				}
 
