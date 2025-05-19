@@ -280,7 +280,7 @@ public class MediorderPart implements IRefreshablePart {
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		cStockTable.setLayout(tcLayout);
 
-		tableViewer = new TableViewer(cStockTable, SWT.FULL_SELECTION | SWT.SINGLE | SWT.NONE);
+		tableViewer = new TableViewer(cStockTable, SWT.FULL_SELECTION | SWT.MULTI | SWT.NONE);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -922,6 +922,11 @@ public class MediorderPart implements IRefreshablePart {
 	@SuppressWarnings("unchecked")
 	public List<IStockEntry> getSelectedStockEntries() {
 		return tableViewerDetails.getStructuredSelection().toList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<IStock> getSelectedStocks() {
+		return tableViewer.getStructuredSelection().toList();
 	}
 
 	public IStock getSelectedStock() {
