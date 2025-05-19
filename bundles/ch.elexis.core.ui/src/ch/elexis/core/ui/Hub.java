@@ -12,6 +12,8 @@
 package ch.elexis.core.ui;
 
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -47,6 +48,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
@@ -107,9 +109,8 @@ public class Hub extends AbstractUIPlugin {
 
 	@Inject
 	public void activePatient(@Optional IPatient patient) {
-		Patient pat = (Patient) NoPoUtil.loadAsPersistentObject(patient);
 		Display.getDefault().syncExec(() -> {
-			Hub.setWindowText(pat);
+			Hub.setWindowText(patient);
 		});
 
 		PatientSelectionStatus provider = (PatientSelectionStatus) sps
@@ -118,9 +119,9 @@ public class Hub extends AbstractUIPlugin {
 			return;
 		}
 
-		showPatientChangeReminders(pat);
+		showPatientChangeReminders(NoPoUtil.loadAsPersistentObject(patient, Patient.class));
 
-		provider.setState(pat != null);
+		provider.setState(patient != null);
 	}
 
 	private void showPatientChangeReminders(Patient patient) {
@@ -242,7 +243,7 @@ public class Hub extends AbstractUIPlugin {
 	 * Sets the window title to a nicely formatted string containt the family name,
 	 * name, age and its code
 	 */
-	public static void setWindowText(Patient pat) {
+	public static void setWindowText(IPatient patient) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Elexis ").append(Elexis.VERSION).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
 		if (CoreHub.getLoggedInContact() == null) {
@@ -256,25 +257,26 @@ public class Hub extends AbstractUIPlugin {
 		} else {
 			sb.append(" / ").append(ContextServiceHolder.getActiveMandatorOrNull().getLabel()); //$NON-NLS-1$
 		}
-		if (pat == null) {
-			pat = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+		if (patient == null) {
+			patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		}
-		if (pat == null) {
+		if (patient == null) {
 			sb.append(Messages.Hub_nopatientselected);
 		} else {
-			String nr = pat.getPatCode();
-			String alter = pat.getAlter();
-			sb.append("  / ").append(pat.getLabel()).append(" (").append(alter).append(") - ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String nr = patient.getPatientNr();
+			String alter = Integer.toString(patient.getAgeInYears());
+			sb.append("  / ").append(patient.getLabel()).append(" (").append(alter).append(") - ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					.append("[").append(nr).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			if (!Reminder.findForPatient(pat, CoreHub.getLoggedInContact()).isEmpty()) {
+			if (!Reminder.findForPatient(NoPoUtil.loadAsPersistentObject(patient, Patient.class),
+					CoreHub.getLoggedInContact()).isEmpty()) {
 				sb.append(Messages.Hub_message_reminders);
 			}
 			String act = new TimeTool().toString(TimeTool.DATE_COMPACT);
-			TimeTool ttPatg = new TimeTool();
-			if (ttPatg.set(pat.getGeburtsdatum())) {
-				String patg = ttPatg.toString(TimeTool.DATE_COMPACT);
-				if (act.substring(4).equals(patg.substring(4))) {
+			LocalDateTime ttPatg = patient.getDateOfBirth();
+			if (ttPatg != null) {
+				String patg = TimeUtil.formatSafe(ttPatg.toLocalDate());
+				if (LocalDate.now().equals(ttPatg.toLocalDate().withYear(LocalDate.now().getYear()))) {
 					sb.append(Messages.Hub_message_birthday);
 				}
 			}
