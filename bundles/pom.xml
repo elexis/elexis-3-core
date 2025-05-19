@@ -55,6 +55,7 @@
     <module>ch.elexis.core.spotlight</module>
     <module>ch.elexis.core.spotlight.ui</module>
     <module>ch.elexis.core.tasks</module>
+     <module>ch.elexis.core.mediorder.mail.task</module>
     <module>ch.elexis.core.ui.tasks</module>
     <module>ch.elexis.core.ui.contacts</module>
     <module>ch.elexis.core.ui.dbcheck</module>
