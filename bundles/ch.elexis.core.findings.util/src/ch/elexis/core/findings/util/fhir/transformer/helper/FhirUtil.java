@@ -13,7 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Money;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -196,5 +198,26 @@ public class FhirUtil {
 			return ret;
 		}
 		return Collections.emptyList();
+	}
+
+	/**
+	 * Lookup an {@link Identifier} with matching system from the patient. If none
+	 * is found a new {@link Identifier} with matching system is created and added
+	 * to the identifier list of the {@link Patient}.
+	 * 
+	 * @param system
+	 * @param fhirPatient
+	 * @return
+	 */
+	public static Identifier getOrCreateIdentifier(String system, Patient fhirPatient) {
+		Optional<Identifier> existing = fhirPatient.getIdentifier().stream().filter(i -> i.getSystem().equals(system))
+				.findAny();
+		if (existing.isEmpty()) {
+			Identifier ret = new Identifier().setSystem(system);
+			fhirPatient.getIdentifier().add(ret);
+			return ret;
+		} else {
+			return existing.get();
+		}
 	}
 }

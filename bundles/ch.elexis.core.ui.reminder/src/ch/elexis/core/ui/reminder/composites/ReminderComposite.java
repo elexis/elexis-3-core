@@ -161,7 +161,7 @@ public class ReminderComposite extends Composite {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void proposalAccepted(IContentProposal proposal) {
-				IdentifiableContentProposal<IPatient> prop = (IdentifiableContentProposal<IPatient>) proposal;
+				ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal<IPatient> prop = (ch.elexis.core.ui.e4.fieldassist.IdentifiableContentProposal<IPatient>) proposal;
 				patSearchText.setText(prop.getLabel());
 				patSearchText.setData(prop.getIdentifiable());
 				item.getValue().setContact(prop.getIdentifiable());
@@ -291,8 +291,11 @@ public class ReminderComposite extends Composite {
 			public void proposalAccepted(IContentProposal proposal) {
 				if (proposal instanceof IdentifiableContentProposal) {
 					IdentifiableContentProposal<IUserGroup> prop = (IdentifiableContentProposal<IUserGroup>) proposal;
-					item.getValue().setGroup(prop.getIdentifiable());
+					item.getValue().getResponsible().forEach(c -> {
+						item.getValue().removeResponsible(c);
+					});
 					item.getValue().setResponsibleAll(false);
+					item.getValue().setGroup(prop.getIdentifiable());
 					updateGroupResponsibleFields();
 				}
 			}
@@ -364,10 +367,24 @@ public class ReminderComposite extends Composite {
 		popupOnPatient = new Button(notifyExpandable, SWT.CHECK);
 		popupOnPatient.setText("Bei Patientenauswahl");
 		popupOnPatient.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		popupOnPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				item.getValue().setVisibility(Visibility.POPUP_ON_PATIENT_SELECTION);
+				popupOnLogin.setSelection(false);
+			}
+		});
 
 		popupOnLogin = new Button(notifyExpandable, SWT.CHECK);
 		popupOnLogin.setText("Bei Login");
 		popupOnLogin.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		popupOnLogin.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				item.getValue().setVisibility(Visibility.POPUP_ON_LOGIN);
+				popupOnPatient.setSelection(false);
+			}
+		});
 
 		notifyExpandable.setExpanded(false);
 

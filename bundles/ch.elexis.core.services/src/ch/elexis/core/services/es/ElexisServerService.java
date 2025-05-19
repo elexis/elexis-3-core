@@ -38,6 +38,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator;
 import ch.elexis.core.services.internal.Bundle;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -76,7 +77,9 @@ public class ElexisServerService implements IElexisServerService {
 	@Activate
 	public void activate() {
 		if (StringUtils.equals(contextService.getStationIdentifier(),
-				IElexisEnvironmentService.ES_STATION_ID_DEFAULT)) {
+				IElexisEnvironmentService.ES_STATION_ID_DEFAULT)
+				&& !(CoreUtil.isTestMode() && System
+						.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL) != null)) {
 			// this is ES do not activate
 			// ES does feature its own lock service in
 			// info.elexis.server.core.connector.elexis.internal.services.locking.LockService,

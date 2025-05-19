@@ -36,6 +36,7 @@ import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
+import ch.elexis.core.jpa.model.util.OtherModelUtil;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IXid;
@@ -209,6 +210,10 @@ public abstract class AbstractModelService implements IModelService {
 	@Override
 	public void save(Identifiable identifiable) {
 		if (identifiable != null && evaluateRight(identifiable.getClass(), Right.UPDATE)) {
+			if (OtherModelUtil.isOtherModelPackage(identifiable)) {
+				OtherModelUtil.save(identifiable);
+				return;
+			}
 			if (identifiable.getChanged() != null) {
 				save(Collections.singletonList(identifiable));
 				return;

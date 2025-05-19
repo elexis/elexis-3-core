@@ -118,7 +118,6 @@ public class DragAndDropSupport implements DragSourceListener, DropTargetListene
 						reminder.setVisibility(Visibility.POPUP_ON_PATIENT_SELECTION);
 					}
 				}
-
 				CoreModelServiceHolder.get().save(reminder);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, reminder);
 			}

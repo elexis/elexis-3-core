@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import ch.elexis.core.jpa.model.util.OtherModelUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -318,6 +319,11 @@ public class PredicateHandler {
 		Object ret = value;
 		if (value instanceof AbstractIdModelAdapter) {
 			ret = ((AbstractIdModelAdapter<?>) value).getEntity();
+		} else if (OtherModelUtil.isOtherModelPackage(value)) {
+			Optional<AbstractIdModelAdapter<?>> entityModel = OtherModelUtil.getEntityModelAdapter(value);
+			if (entityModel.isPresent()) {
+				ret = (entityModel.get()).getEntity();
+			}
 		}
 		return ret;
 	}

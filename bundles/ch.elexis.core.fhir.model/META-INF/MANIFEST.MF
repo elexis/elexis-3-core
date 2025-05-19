@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FHIR core model
+Bundle-SymbolicName: ch.elexis.core.fhir.model
+Bundle-Version: 1.0.0.qualifier
+Export-Package: ch.elexis.core.fhir.model
+Bundle-Vendor: medevit.at
+Automatic-Module-Name: ch.elexis.core.fhir.model
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: info.elexis.target.hapi.fhir;visibility:=reexport,
+ ch.elexis.core
+Import-Package: ch.elexis.core.findings,
+ ch.elexis.core.findings.util.fhir.transformer.helper,
+ ch.elexis.core.services.holder,
+ org.apache.commons.lang3;version="[3.17.0,4.0.0)"
+Service-Component: OSGI-INF/ch.elexis.core.fhir.model.service.FhirModelService.xml
+Bundle-ActivationPolicy: lazy

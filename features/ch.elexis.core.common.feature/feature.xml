@@ -172,4 +172,8 @@
          id="ch.elexis.core.mediorder.mail.task"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.fhir.model"
+         version="0.0.0"/>
+
 </feature>

@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FHIR model test
+Bundle-SymbolicName: ch.elexis.core.fhir.model.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: medevit.at
+Fragment-Host: ch.elexis.core.fhir.model;bundle-version="1.0.0"
+Require-Bundle: org.junit;bundle-version="4.13.2",
+ ch.elexis.core.findings.util,
+ ch.elexis.core.jpa;bundle-version="3.13.0",
+ ch.elexis.core.jpa.datasource;bundle-version="3.13.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.13.0",
+ ch.elexis.core.model;bundle-version="3.13.0",
+ ch.elexis.core.findings.fhir.model;bundle-version="3.13.0",
+ info.elexis.server.fhir.rest.core;bundle-version="3.13.0",
+ info.elexis.server.findings.fhir.jpa.service;bundle-version="3.13.0",
+ info.elexis.server.core.connector.elexis;bundle-version="3.13.0",
+ org.glassfish.jersey.inject.jersey-hk2;bundle-version="3.1.10",
+ jakarta.validation.jakarta.validation-api;bundle-version="3.0.2",
+ com.sun.xml.bind.jaxb-osgi;bundle-version="4.0.5",
+ org.glassfish.jersey.media.jersey-media-jaxb;bundle-version="3.1.10"
+Automatic-Module-Name: ch.elexis.core.fhir.model.test
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-21

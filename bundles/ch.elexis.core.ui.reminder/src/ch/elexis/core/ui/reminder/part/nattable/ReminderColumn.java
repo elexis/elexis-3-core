@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Color;
@@ -13,19 +14,15 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
-import ch.elexis.core.model.IReminderResponsibleLink;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.model.issue.ProcessStatus;
-import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.ISubQuery;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.data.UiMandant;
+import ch.elexis.core.ui.reminder.supplier.ReminderSupplierFactory;
 
 public class ReminderColumn {
 
@@ -113,84 +110,28 @@ public class ReminderColumn {
 	}
 
 	private List<IReminder> loadPopup() {
-		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-		query.startGroup();
-		query.and("visibility", COMPARATOR.EQUALS, Visibility.POPUP_ON_PATIENT_SELECTION);
-		query.or("visibility", COMPARATOR.EQUALS, Visibility.POPUP_ON_LOGIN);
-		query.andJoinGroups();
-
-		if (hasSearch()) {
-			addSearchToQuery(query);
-		}
-
-		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
-		query.limit(500);
-		return query.execute();
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.POPUP, search, 500);
+		return supplier.get();
 	}
 
 	private List<IReminder> loadAll() {
-		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-		query.and("responsibleValue", COMPARATOR.EQUALS, "ALL");
-		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_PATIENT_SELECTION);
-		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_LOGIN);
-
-		if (hasSearch()) {
-			addSearchToQuery(query);
-		}
-
-		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
-		query.limit(500);
-		return query.execute();
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.ALL, search, 500);
+		return supplier.get();
 	}
 
 	private List<IReminder> loadGroup() {
-		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-
-		query.and("userGroup", COMPARATOR.EQUALS, group);
-
-		if (hasSearch()) {
-			addSearchToQuery(query);
-		}
-
-		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
-		query.limit(500);
-		return query.execute();
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(group, search, 500);
+		return supplier.get();
 	}
 
 	private List<IReminder> loadContact(IContact contact) {
-		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-
-		ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
-				CoreModelServiceHolder.get());
-		subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-		subQuery.and("responsible", COMPARATOR.EQUALS, contact);
-		query.exists(subQuery);
-
-		if (hasSearch()) {
-			addSearchToQuery(query);
-		}
-
-		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
-		query.limit(500);
-		return query.execute();
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(contact, search, 500);
+		return supplier.get();
 	}
 
 	private List<IReminder> loadPatient(IPatient patient) {
-		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-
-		if (hasSearch()) {
-			addSearchToQuery(query);
-		}
-
-		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
-		query.limit(500);
-		return query.execute();
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(patient, search, 500);
+		return supplier.get();
 	}
 
 	public String getId() {
