@@ -119,11 +119,14 @@ public class LocalLockService implements ILocalLockService {
 	@Override
 	public LockResponse releaseLock(String storeToString) {
 		IUser user = ContextServiceHolder.get().getActiveUser().orElse(null);
-		LockInfo lil = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
-				contextService.getStationIdentifier(),
-				configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
-		LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
-		return acquireOrReleaseLocks(lockRequest);
+		if (user != null) {
+			LockInfo lil = new LockInfo(storeToString, user.getId(), elexisServerService.getSystemUuid().toString(),
+					contextService.getStationIdentifier(),
+					configService.getLocal(Preferences.STATION_IDENT_TEXT, StringUtils.EMPTY));
+			LockRequest lockRequest = new LockRequest(LockRequest.Type.RELEASE, lil);
+			return acquireOrReleaseLocks(lockRequest);
+		}
+		return LockResponse.ERROR;
 	}
 
 	private String getId(Object object) {
