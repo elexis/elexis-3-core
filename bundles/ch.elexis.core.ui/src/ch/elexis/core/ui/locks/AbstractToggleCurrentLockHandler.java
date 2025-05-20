@@ -42,6 +42,24 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler i
 		}
 	}
 
+	@Inject
+	@Optional
+	public void acquireLock(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) Object object) {
+		if (commandService == null) {
+			commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		}
+		commandService.refreshElements(getCommandId(), null);
+	}
+
+	@Inject
+	@Optional
+	public void releaseLock(@UIEventTopic(ElexisEventTopics.EVENT_LOCK_RELEASED) Object object) {
+		if (commandService == null) {
+			commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		}
+		commandService.refreshElements(getCommandId(), null);
+	}
+
 	public AbstractToggleCurrentLockHandler() {
 		CoreUiUtil.injectServices(this);
 	}
@@ -67,8 +85,6 @@ public abstract class AbstractToggleCurrentLockHandler extends AbstractHandler i
 				LockResponseHelper.showInfo(lr, po, null);
 			}
 		}
-
-		commandService.refreshElements(getCommandId(), null);
 
 		return null;
 	}

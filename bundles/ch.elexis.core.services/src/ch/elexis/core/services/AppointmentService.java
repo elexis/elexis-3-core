@@ -84,6 +84,9 @@ public class AppointmentService implements IAppointmentService {
 	@Reference
 	private IContextService contextService;
 
+	@Reference
+	private IAppointmentHistoryManagerService appointmentHistoryManagerService;
+
 	private LoadingCache<String, Map<String, Area>> cache;
 
 	@Override
@@ -91,9 +94,12 @@ public class AppointmentService implements IAppointmentService {
 		String contactOrSubjectId = appointment.getContact() != null ? appointment.getContact().getId()
 				: appointment.getSubjectOrPatient();
 
-		return new IAppointmentBuilder(coreModelService, appointment.getSchedule(), appointment.getStartTime(),
-				appointment.getEndTime(), appointment.getType(), appointment.getState(), appointment.getPriority(),
-				contactOrSubjectId).buildAndSave();
+		IAppointment newAppointment = new IAppointmentBuilder(coreModelService, appointment.getSchedule(),
+				appointment.getStartTime(), appointment.getEndTime(), appointment.getType(), appointment.getState(),
+				appointment.getPriority(), contactOrSubjectId).buildAndSave();
+		appointmentHistoryManagerService.logAppointmentCopyFromTo(newAppointment, appointment.getId(),
+				newAppointment.getId());
+		return newAppointment;
 	}
 
 	@Activate
@@ -149,6 +155,10 @@ public class AppointmentService implements IAppointmentService {
 		if (!StringTool.isNothing(appointment.getLinkgroup())) {
 			List<IAppointment> linked = getLinkedAppoinments(appointment);
 			if (whole) {
+				// Log deletion for each appointment before deleting
+				for (IAppointment linkedAppointment : linked) {
+					appointmentHistoryManagerService.logAppointmentDeletion(linkedAppointment);
+				}
 				// delete whole series
 				coreModelService.delete(linked);
 			} else {
@@ -174,10 +184,12 @@ public class AppointmentService implements IAppointmentService {
 						coreModelService.save(linked);
 					}
 				}
+				appointmentHistoryManagerService.logAppointmentDeletion(appointment);
 				// delete this
 				coreModelService.delete(appointment);
 			}
 		} else {
+			appointmentHistoryManagerService.logAppointmentDeletion(appointment);
 			coreModelService.delete(appointment);
 		}
 		return true;
@@ -711,7 +723,7 @@ public class AppointmentService implements IAppointmentService {
 				return CoreModelServiceHolder.get().load(contactId, IContact.class);
 			}
 		}
-
+		
 		return Optional.empty();
 	}
 

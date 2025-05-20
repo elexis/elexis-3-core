@@ -201,4 +201,51 @@ public class CodesSelectionComposite extends Composite implements ISelectionProv
 					currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
 		}
 	}
+
+	public void selectAllFilters() {
+		int currentSelectionSize = currentSelection.size();
+		currentSelection.clear();
+		IContributionItem[] items = manager.getItems();
+		// clear if all items (exclude "Alle"-Item) are already selected
+		if (currentSelectionSize == (items.length - 1)) {
+			for (IContributionItem iContributionItem : items) {
+				if (iContributionItem instanceof ActionContributionItem) {
+					IAction action = ((ActionContributionItem) iContributionItem).getAction();
+					if (action instanceof CodeSelectionAction) {
+						CodeSelectionAction csAction = (CodeSelectionAction) action;
+						csAction.setChecked(false);
+					}
+				}
+			}
+		} else {
+			for (IContributionItem iContributionItem : items) {
+				if (iContributionItem instanceof ActionContributionItem) {
+					IAction action = ((ActionContributionItem) iContributionItem).getAction();
+					if (action instanceof CodeSelectionAction) {
+						CodeSelectionAction csAction = (CodeSelectionAction) action;
+						csAction.setChecked(true);
+						currentSelection.add(csAction);
+					}
+				}
+			}
+		}
+		fireSelectionChanged();
+		manager.update(true);
+		FindingsUiUtil
+				.saveSelectedCodings(currentSelection.stream().map(a -> a.getiCoding()).collect(Collectors.toList()));
+	}
+
+	public boolean isAnyFilterDeselected() {
+		IContributionItem[] items = manager.getItems();
+		for (IContributionItem item : items) {
+			if (item instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem) item).getAction();
+				if (action instanceof CodeSelectionAction && !action.isChecked()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }

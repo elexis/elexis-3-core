@@ -50,14 +50,17 @@ public class Context implements IContext {
 
 	protected void setTyped(Object object, boolean ignoreModifier) {
 		if (object != null) {
+			Object previous = null;
 			Optional<Class<?>> modelInterface = getModelInterface(object);
 			if (modelInterface.isPresent()) {
 				if (object.equals(context.get(modelInterface.get().getName()))) {
 					// object is already in the context do nothing otherwise loop happens
 					return;
 				}
+				previous = context.get(modelInterface.get().getName());
 				context.put(modelInterface.get().getName(), object);
 			} else {
+				previous = context.get(object.getClass().getName());
 				context.put(object.getClass().getName(), object);
 			}
 			if (eclipseContext != null) {
@@ -67,8 +70,11 @@ public class Context implements IContext {
 					eclipseContext.set(object.getClass().getName(), object);
 				}
 			}
-			if (typedModifier != null && !ignoreModifier) {
-				typedModifier.modifyFor(object);
+			if (typedModifier != null) {
+				typedModifier.releaseAndRefreshLock(previous);
+				if (!ignoreModifier) {
+					typedModifier.modifyFor(object);
+				}
 			}
 		} else {
 			throw new IllegalArgumentException("object must not be null, use #removeTyped"); //$NON-NLS-1$
@@ -92,11 +98,15 @@ public class Context implements IContext {
 	}
 
 	protected void removeTyped(Class<?> clazz, boolean ignoreModifier) {
-		context.remove(clazz.getName());
+		Object previous = context.remove(clazz.getName());
 		if (eclipseContext != null) {
 			eclipseContext.remove(clazz.getName());
 		}
-		if (typedModifier != null && !ignoreModifier) {
+
+		if (typedModifier != null) {
+			if (!ignoreModifier) {
+				typedModifier.releaseAndRefreshLock(previous);
+			}
 			typedModifier.modifyRemove(clazz);
 		}
 	}

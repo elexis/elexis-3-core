@@ -129,7 +129,7 @@ public class TransientLabResult {
 		setFieldsAndInterpret(labResult);
 
 		// pathologic check takes place in labResult if it is numeric
-		if (labItem.getTyp() == LabItemTyp.NUMERIC) {
+		if (isNumeric()) {
 			flags = labResult.isPathologic() ? LabResultConstants.PATHOLOGIC : 0;
 		} else {
 			if (flags != null) {
@@ -159,19 +159,25 @@ public class TransientLabResult {
 		setFieldsAndInterpret(labResult);
 
 		if (flags != null) {
-			// if the pathologic flag is already set during import
-			// keep it
-			labResult.setPathologic(flags > 0 ? true : false);
-			labResult.setPathologicDescription(new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+			// if the pathologic flag is already set during import, keep it for non numeric
+			// values, or for numeric if the numeric ref values could not be used
+			if (!isNumeric()) {
+				labResult.setPathologic(flags > 0 ? true : false);
+				labResult.setPathologicDescription(
+						new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+			} else if (labResult.getPathologicDescription() != null
+					&& labResult.getPathologicDescription().getDescription() == Description.PATHO_NOREF) {
+				labResult.setPathologic(flags > 0 ? true : false);
+				labResult.setPathologicDescription(
+						new PathologicDescription(Description.PATHO_IMPORT, rawAbnormalFlags));
+			}
 		} else {
-
 			// if not, at last for numeric values keep the evaluation done in
 			// setFieldsAndInterpret
-			if (!(LabItemTyp.NUMERIC == labItem.getTyp())) {
+			if (!isNumeric()) {
 				labResult.setPathologicDescription(
 						new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
-
 			// MPF Rule #11231
 			if (origin != null) {
 				List<String> mpfRuleContactIds = ConfigServiceHolder.get().getAsList(
@@ -186,6 +192,14 @@ public class TransientLabResult {
 		}
 		CoreModelServiceHolder.get().save(labResult);
 		return labResult;
+	}
+
+	private boolean isNumeric() {
+		return LabItemTyp.NUMERIC == labItem.getTyp();
+	}
+
+	private boolean isNormalAndNumeric() {
+		return "n".equalsIgnoreCase(rawAbnormalFlags) && LabItemTyp.NUMERIC == labItem.getTyp();
 	}
 
 	public String getLabel() {

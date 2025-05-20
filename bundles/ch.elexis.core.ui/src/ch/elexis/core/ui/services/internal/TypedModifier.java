@@ -15,6 +15,7 @@ import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -28,6 +29,8 @@ public class TypedModifier {
 	private IEncounterService encounterService;
 
 	private ICoverageService coverageService;
+
+	private ILocalLockService localLockService;
 
 	private Context context;
 
@@ -109,6 +112,19 @@ public class TypedModifier {
 		return coverageService;
 	}
 
+	private ILocalLockService getLocalLockService() {
+		if (localLockService == null) {
+			localLockService = OsgiServiceUtil.getService(ILocalLockService.class).get();
+		}
+		return localLockService;
+	}
+
+	public void releaseAndRefreshLock(Object object) {
+		if (object != null && getLocalLockService().isLockedLocal(object)) {
+			getLocalLockService().releaseLock(object);
+    }
+  }
+
 	/**
 	 * Sets the active {@link IMandator} based on the assigned "Stammarzt" of the
 	 * given {@link IPatient}, but only if the following conditions are met:
@@ -144,5 +160,5 @@ public class TypedModifier {
 				});
 			}
 		}
-	}
+  }
 }

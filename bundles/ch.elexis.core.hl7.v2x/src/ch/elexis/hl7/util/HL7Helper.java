@@ -1,6 +1,9 @@
 package ch.elexis.hl7.util;
 
-import org.apache.commons.lang3.StringUtils;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -10,8 +13,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class HL7Helper {
+import org.apache.commons.lang3.StringUtils;
 
+import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.validation.impl.NoValidation;
+
+public class HL7Helper {
 	private static final SimpleDateFormat SDF_DATE_TIME_PATTERN;
 	private static final String DTM_DATE_TIME_PATTERN = "yyyyMMddHHmmss"; //$NON-NLS-1$
 
@@ -79,5 +87,37 @@ public class HL7Helper {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Detects encoding from MSH line. Defaults to UTF-8.
+	 *
+	 * @param message HL7 message as string
+	 * @return charset name (e.g. ISO-8859-1 or UTF-8)
+	 */
+	public static String getEncoding(String message) {
+		try (BufferedReader reader = new BufferedReader(new StringReader(message))) {
+			String firstLine = reader.readLine();
+			if (firstLine != null && firstLine.startsWith("MSH") //$NON-NLS-1$
+					&& (firstLine.contains("8859-1") || firstLine.contains("8859/1"))) { //$NON-NLS-1$ //$NON-NLS-2$
+				return StandardCharsets.ISO_8859_1.name();
+			}
+		} catch (IOException ignored) {
+			// fallback below
+		}
+		return StandardCharsets.UTF_8.name();
+	}
+
+	/**
+	 * Parses a raw HL7 string into a HAPI Message object.
+	 *
+	 * @param raw HL7 message
+	 * @return parsed HL7 Message
+	 * @throws Exception if parsing fails
+	 */
+	public static Message parseMessage(String raw) throws Exception {
+		PipeParser parser = new PipeParser();
+		parser.setValidationContext(new NoValidation());
+		return parser.parse(raw);
 	}
 }
