@@ -320,7 +320,7 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 				taskQuery.and(ch.elexis.core.tasks.model.ModelPackage.Literals.ITASK__SYSTEM, COMPARATOR.EQUALS, false);
 			}
 
-			List<ITask> results = taskQuery.execute();
+			List<ITask> results = taskQuery.limit(500).execute();
 			inputModel.set(results.toArray());
 		});
 		job.schedule();
