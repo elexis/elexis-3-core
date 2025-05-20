@@ -4,6 +4,7 @@
       <provide interface="ch.elexis.core.fhir.model.IFhirModelService"/>
       <provide interface="ch.elexis.core.services.IStoreToStringContribution"/>
    </service>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="elexisServer" interface="ch.elexis.core.services.IElexisServerService" name="elexisServer"/>
    <implementation class="ch.elexis.core.fhir.model.service.FhirModelService"/>
 </scr:component>

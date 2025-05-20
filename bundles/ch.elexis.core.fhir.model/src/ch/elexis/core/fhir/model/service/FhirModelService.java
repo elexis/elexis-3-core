@@ -11,18 +11,22 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ElexisTypeMap;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactory;
 import ch.elexis.core.fhir.model.impl.AbstractFhirModelAdapter;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IStoreToStringContribution;
@@ -35,6 +39,9 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 
 	@Reference
 	private IElexisServerService elexisServer;
+
+	@Reference
+	private IContextService contextService;
 
 	private IGenericClient client;
 
@@ -55,6 +62,10 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 				loggingInterceptor.setLogRequestBody(true);
 				client.registerInterceptor(loggingInterceptor);
 			}
+			contextService.getTyped(AccessToken.class).ifPresent(accessToken -> {
+				BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken.getToken());
+				client.registerInterceptor(authInterceptor);
+			});
 		}
 		return client;
 	}
@@ -127,7 +138,18 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 
 	@Override
 	public ConnectionStatus getConnectionStatus() {
-		return elexisServer.getConnectionStatus();
+		ConnectionStatus status = elexisServer.getConnectionStatus();
+		if (CoreUtil.isTestMode() || elexisServer.getConnectionUrl().contains("localhost")) {
+			return status;
+		} else {
+			Optional<AccessToken> accessToken = contextService.getTyped(AccessToken.class);
+			if (accessToken.isPresent()) {
+				return status;
+			} else {
+				LoggerFactory.getLogger(getClass()).warn("Elexis Server connected but no access token available");
+				return ConnectionStatus.LOCAL;
+			}
+		}
 	}
 
 	@Override
