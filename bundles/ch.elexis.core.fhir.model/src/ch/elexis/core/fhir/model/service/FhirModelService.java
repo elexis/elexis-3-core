@@ -139,17 +139,20 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	@Override
 	public ConnectionStatus getConnectionStatus() {
 		ConnectionStatus status = elexisServer.getConnectionStatus();
-		if (CoreUtil.isTestMode() || elexisServer.getConnectionUrl().contains("localhost")) {
-			return status;
-		} else {
-			Optional<AccessToken> accessToken = contextService.getTyped(AccessToken.class);
-			if (accessToken.isPresent()) {
+		if (status != null) {
+			if (CoreUtil.isTestMode() || (elexisServer.getConnectionUrl() == null
+					|| elexisServer.getConnectionUrl().contains("localhost"))) {
 				return status;
 			} else {
-				LoggerFactory.getLogger(getClass()).warn("Elexis Server connected but no access token available");
-				return ConnectionStatus.LOCAL;
+				Optional<AccessToken> accessToken = contextService.getTyped(AccessToken.class);
+				if (accessToken.isPresent()) {
+					return status;
+				} else {
+					LoggerFactory.getLogger(getClass()).warn("Elexis Server connected but no access token available");
+				}
 			}
 		}
+		return ConnectionStatus.LOCAL;
 	}
 
 	@Override
