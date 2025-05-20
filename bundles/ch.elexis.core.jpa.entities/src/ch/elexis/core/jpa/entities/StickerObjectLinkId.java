@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class StickerObjectLinkId implements Serializable {
 
@@ -32,4 +33,22 @@ public class StickerObjectLinkId implements Serializable {
 	public void setEtikette(String etikette) {
 		this.etikette = etikette;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(etikette, obj);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StickerObjectLinkId other = (StickerObjectLinkId) obj;
+		return Objects.equals(etikette, other.etikette) && Objects.equals(this.obj, other.obj);
+	}
+
 }

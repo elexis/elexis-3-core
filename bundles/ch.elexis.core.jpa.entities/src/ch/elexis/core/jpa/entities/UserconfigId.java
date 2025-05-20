@@ -1,6 +1,7 @@
 package ch.elexis.core.jpa.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class UserconfigId implements Serializable {
 
@@ -32,4 +33,22 @@ public class UserconfigId implements Serializable {
 	public void setParam(String param) {
 		this.param = param;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(ownerId, param);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserconfigId other = (UserconfigId) obj;
+		return Objects.equals(ownerId, other.ownerId) && Objects.equals(param, other.param);
+	}
+
 }
