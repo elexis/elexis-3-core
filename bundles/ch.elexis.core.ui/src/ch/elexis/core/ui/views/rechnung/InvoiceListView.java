@@ -58,6 +58,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -123,11 +124,13 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 
 		@Override
 		public void run() {
+			IQuery<IUser> query = coreModelService.getQuery(IUser.class);
+			query.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true);
+			query.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.NOT_EQUALS, null);
+
 			GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(getSite().getShell(),
-					coreModelService.getQuery(IUser.class)
-							.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true).execute(),
-					Messages.Core_Select_Mandator, Messages.Core_Select_Mandator, Messages.Core_Select_Mandator_Tooltip,
-					null, SWT.CHECK);
+					query.execute(), Messages.Core_Select_Mandator, Messages.Core_Select_Mandator,
+					Messages.Core_Select_Mandator_Tooltip, null, SWT.CHECK);
 
 			dialog.open();
 			applyMandatorsFilter(dialog);
@@ -141,7 +144,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 				List<String> idList = new ArrayList<>();
 				for (Object obj : structuredSelection.toList()) {
 					if (obj instanceof IUser user) {
-						idList.add(user.getId());
+						idList.add(user.getAssignedContact().getId());
 					}
 				}
 
