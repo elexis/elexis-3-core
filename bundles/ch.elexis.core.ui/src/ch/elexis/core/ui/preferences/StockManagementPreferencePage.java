@@ -56,17 +56,22 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
+import jakarta.inject.Inject;
 
 public class StockManagementPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	
+	@Inject
+	private IConfigService configService;
+
 	private Table tableStocks;
 	private Text txtCode;
 	private Text txtDescription;
@@ -87,6 +92,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	private Label lblDefaultArticleProvider;
 	private Button btnMachineOutlayPartialPackages;
 	private Button btnMachineStoreOnlyStockArticles;
+	private Button btnMachineOutlayByPatient;
 
 	private Button btnStoreBelow;
 	private Button btnStoreAtMin;
@@ -96,6 +102,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 	 */
 	public StockManagementPreferencePage() {
 		setTitle(Messages.Core_Inventory_control);
+		CoreUiUtil.injectServices(this);
 	}
 
 	/**
@@ -413,8 +420,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		btnMachineOutlayPartialPackages.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		btnMachineOutlayPartialPackages
 				.setText(Messages.StockManagementPreferencePage_btnMachineOutlayPartialPackages_text);
-		boolean outlayPartialPackages = ConfigServiceHolder.getGlobal(
-				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
+		boolean outlayPartialPackages = configService.get(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES_DEFAULT);
 		btnMachineOutlayPartialPackages.setSelection(outlayPartialPackages);
 
@@ -422,11 +428,17 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		btnMachineStoreOnlyStockArticles.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
 		btnMachineStoreOnlyStockArticles
 				.setText(Messages.StockManagementPreferencePage_btnStoreOnlyStockeArticles_text);
-		boolean storeOnlyStockedArticles = ConfigServiceHolder.getGlobal(
-				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
+		boolean storeOnlyStockedArticles = configService.get(Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
 				Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES_DEFAULT);
 		btnMachineStoreOnlyStockArticles.setSelection(storeOnlyStockedArticles);
 
+		btnMachineOutlayByPatient = new Button(compositeDetail, SWT.CHECK);
+		btnMachineOutlayByPatient.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		btnMachineOutlayByPatient.setText(Messages.StockManagementPreferencePage_btnMachineOutlayByPatient_text);
+		boolean outputByPatient = configService.get(Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT,
+				Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT_DEFAULT);
+		btnMachineOutlayByPatient.setSelection(outputByPatient);
+		
 		btnIgnoreOrderedArticlesOnNextOrder = new Button(container, SWT.CHECK);
 		btnIgnoreOrderedArticlesOnNextOrder.setText(Messages.LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder);
 		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
@@ -445,7 +457,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		btnStoreAtMin = new Button(group1, SWT.RADIO);
 		btnStoreAtMin.setText(Messages.LagerverwaltungPrefs_orderWhenAtMin);
 
-		int valInventoryOrderTrigger = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_ORDER_TRIGGER,
+		int valInventoryOrderTrigger = configService.get(Preferences.INVENTORY_ORDER_TRIGGER,
 				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
 		boolean isInventoryOrderEqualValue = Preferences.INVENTORY_ORDER_TRIGGER_EQUAL == valInventoryOrderTrigger;
 		btnStoreAtMin.setSelection(isInventoryOrderEqualValue);
@@ -472,11 +484,11 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				if (ret == Window.OK) {
 					Kontakt p = (Kontakt) ks.getSelection();
 					if (p != null) {
-						ConfigServiceHolder.get().set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, p.getId());
+						configService.set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, p.getId());
 						lblDefaultArticleProvider.setText(p.getLabel());
 					}
 				} else {
-					ConfigServiceHolder.get().set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+					configService.set(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 					lblDefaultArticleProvider.setText(StringUtils.EMPTY);
 				}
 			}
@@ -484,7 +496,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 		lblDefaultArticleProvider = new Label(compDefaultProvider, SWT.NONE);
 		lblDefaultArticleProvider.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		String id = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+		String id = configService.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 		lblDefaultArticleProvider.setText(StringUtils.EMPTY);
 		new Label(compDefaultProvider, SWT.NONE);
 		if (id != null) {
@@ -561,6 +573,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_TRIGGER,
 				btnStoreBelow.getSelection() ? Preferences.INVENTORY_ORDER_TRIGGER_BELOW
 						: Preferences.INVENTORY_ORDER_TRIGGER_EQUAL);
+		getPreferenceStore().setValue(Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT,
+				btnMachineOutlayByPatient.getSelection());
 
 		return super.performOk();
 	}

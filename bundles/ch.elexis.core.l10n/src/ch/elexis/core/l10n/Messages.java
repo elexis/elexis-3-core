@@ -4171,6 +4171,7 @@ public class Messages extends NLS {
 	public static String RochePreferencePage_showColumnCode;
 	public static String RochePreferencePage_showColumnDescription;
 	public static String RochePreferencePage_showMaxColumns;
+	public static String Rowa_Article_Medic_Label;
 	public static String RowDisplay_overview;
 	public static String SERVICES_DESCRIPTION;
 	public static String SERVICES_HEADING_AMOUNT;
@@ -4323,6 +4324,7 @@ public class Messages extends NLS {
 	public static String StockDetailComposite_availableInStock;
 	public static String StockManagementPreferencePage_btnMachineOutlayPartialPackages_text;
 	public static String StockManagementPreferencePage_btnStoreOnlyStockeArticles_text;
+	public static String StockManagementPreferencePage_btnMachineOutlayByPatient_text;
 	public static String StockManagementPreferencePage_btnPreferMandatorOwnedStocks_text;
 	public static String StockManagementPreferencePage_group_text;
 	public static String StockManagementPreferencePage_lblCode_toolTipText;
