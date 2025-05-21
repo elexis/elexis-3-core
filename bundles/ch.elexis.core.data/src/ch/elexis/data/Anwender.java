@@ -28,10 +28,9 @@ import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
-import ch.elexis.core.model.builder.IContactBuilder;
-import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
@@ -82,6 +81,7 @@ public class Anwender extends Person {
 
 		User user = new User(this, username, password);
 		if (isExecutiveDoctor) {
+			user.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_USER), true);
 			user.setAssignedRole(Role.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_PRACTITIONER), true);
 		}
 	}
@@ -228,6 +228,9 @@ public class Anwender extends Person {
 			Optional<IUser> user = coreModelService.load(ADMINISTRATOR, IUser.class);
 			if (user.isPresent()) {
 				user.get().setAssignedContact(coreModelService.load(admin.getId(), IContact.class).orElse(null));
+				user.get().removeRole(
+						coreModelService.load(RoleConstants.ACCESSCONTROLE_ROLE_MEDICAL_USER, IRole.class).get());
+				coreModelService.save(user.get());
 			} else {
 				throw new IllegalStateException("Incorrect DB state - No admin user found!");
 			}
@@ -248,6 +251,7 @@ public class Anwender extends Person {
 	 * @deprecated initial {@link IMandator} is set by the {@link IContextService}
 	 *             impl.
 	 */
+	@Deprecated
 	public void setInitialMandator() {
 		Mandant initialMandator = null;
 		List<Mandant> workingFor = getExecutiveDoctorsWorkingFor();
