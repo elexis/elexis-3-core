@@ -14,10 +14,12 @@ package ch.elexis.core.ui.dialogs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -60,6 +62,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
@@ -78,8 +82,8 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ElexisText;
@@ -100,8 +104,21 @@ public class OrderImportDialog extends TitleAreaDialog {
 	public static int ACTION_MODE_REGISTER = 0; // Einbuchungsmodus
 	public static int ACTION_MODE_INVENTORY = 1; // Inventurmodus
 
+	public static final String ROWA_ARTICLE_MEDICATION_LABEL_ID = "ch.itmed.fop.printing.command.RowaArticleMedicationLabelHandler";
+	public static final String ROWA_ARTICL_MEDICATION_LABEL_PATIENT = "rowa_article_medication_label_patient";
+	public static final String ROWA_ARTICL_MEDICATION_LABEL_ARTICLE = "rowa_article_medication_label_article";
+
 	@Inject
 	private IContextService contextService;
+
+	@Inject
+	private ICommandService commandService;
+
+	@Inject
+	private IHandlerService handlerService;
+
+	@Inject
+	private IConfigService configService;
 
 	private String previousBarcodeInputConsumer;
 
@@ -361,6 +378,10 @@ public class OrderImportDialog extends TitleAreaDialog {
 					if (value instanceof Boolean) {
 						Boolean bValue = (Boolean) value;
 						orderElement.setVerified(bValue.booleanValue());
+						if (bValue && configService.get(Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT,
+								Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT_DEFAULT)) {
+							executeMediorderPrintLabel(orderElement, orderElement.getArticle().getGtin());
+						}
 					}
 					viewer.update(orderElement, null);
 				}
@@ -506,9 +527,13 @@ public class OrderImportDialog extends TitleAreaDialog {
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 
 		OrderElement orderElement = findOrderElementByEAN(gtin);
-		if (orderElement != null) {
+		if (orderElement != null && !orderElement.isVerified()) {
 			int newAmount = orderElement.getAmount() + diff;
 			updateOrderElement(orderElement, newAmount);
+			if (configService.get(Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT,
+					Preferences.INVENTORY_CHECK_OUTLAY_BY_PATIENT_DEFAULT)) {
+				executeMediorderPrintLabel(orderElement, gtin);
+			}
 		} else {
 			if (actionMode == ACTION_MODE_INVENTORY) {
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().get().getId();
@@ -542,7 +567,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 
 		for (OrderElement orderElement : orderElements) {
-			if (orderElement.getArticle().getGtin().equals(ean)) {
+			if (orderElement.getArticle().getGtin().equals(ean) && !orderElement.isVerified()) {
 				return orderElement;
 			}
 		}
@@ -633,6 +658,20 @@ public class OrderImportDialog extends TitleAreaDialog {
 		}
 
 		viewer.refresh();
+	}
+
+	private void executeMediorderPrintLabel(OrderElement orderElement, String gtin) {
+		try {
+			HashMap<String, String> params = new HashMap<>();
+			params.put(ROWA_ARTICL_MEDICATION_LABEL_PATIENT,
+					orderElement.getStockEntry().getStock().getOwner().getId());
+			params.put(ROWA_ARTICL_MEDICATION_LABEL_ARTICLE, gtin);
+			ParameterizedCommand parameterizedCommand = ParameterizedCommand
+					.generateCommand(commandService.getCommand(ROWA_ARTICLE_MEDICATION_LABEL_ID), params);
+			handlerService.executeCommand(parameterizedCommand, null);
+		} catch (Exception e) {
+			throw new RuntimeException(ROWA_ARTICLE_MEDICATION_LABEL_ID + " command not found", e);
+		}
 	}
 
 	private class ViewerContentProvider implements IStructuredContentProvider {
@@ -873,7 +912,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 		@Override
 		public IContact getProvider() {
-			String providerId = ConfigServiceHolder.getGlobal(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+			String providerId = configService.get(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 			if (providerId != null) {
 				Optional<IContact> defProvider = CoreModelServiceHolder.get().load(providerId, IContact.class);
 				return defProvider.orElse(null);
