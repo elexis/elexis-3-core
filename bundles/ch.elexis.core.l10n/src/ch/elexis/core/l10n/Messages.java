@@ -5221,7 +5221,6 @@ public class Messages extends NLS {
 	public static String OrderManagement_RightTitle;
 	public static String OrderManagement_BookedLabel;
 	public static String OrderManagement_StatusLabel;
-	public static String OrderManagement_Column_Abbreviation;
 	public static String OrderManagement_Column_Status;
 	public static String OrderManagement_Column_Ordered;
 	public static String OrderManagement_Column_Delivered;
@@ -5243,6 +5242,8 @@ public class Messages extends NLS {
 	public static String HttpOrderTransportService_LinkText;
 	public static String HttpOrderTransportService_LinkTooltip;
 	public static String UserCasePreferences_StammarztAutoMandant;
+	public static String OrderManagement_Error_NegativeDeliveredAmount;
+	public static String OrderManagement_StockOrder_DefaultName;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

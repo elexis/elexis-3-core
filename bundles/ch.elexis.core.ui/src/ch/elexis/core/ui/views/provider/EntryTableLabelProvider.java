@@ -2,21 +2,27 @@ package ch.elexis.core.ui.views.provider;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.ui.util.OrderManagementUtil;
+import ch.elexis.core.ui.views.OrderManagementView;
 
 public class EntryTableLabelProvider extends ColumnLabelProvider {
 
 	private final boolean showDeliveredColumn;
 	private final int columnIndex;
+	private OrderManagementView orderManagementView;
 
-	public EntryTableLabelProvider(int columnIndex, boolean showDeliveredColumn) {
+	public EntryTableLabelProvider(int columnIndex, boolean showDeliveredColumn,
+			OrderManagementView orderManagementView) {
 		this.columnIndex = columnIndex;
 		this.showDeliveredColumn = showDeliveredColumn;
+		this.orderManagementView = orderManagementView;
 	}
 
 	@Override
@@ -40,10 +46,16 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 			case 2:
 				return deliveredText;
 			case 3:
-				return articleName;
+				if (orderManagementView != null) {
+					Integer pendingValue = orderManagementView.getPendingDeliveredValues().get(entry);
+					return pendingValue != null ? String.valueOf(pendingValue) : StringUtils.EMPTY;
+				}
+				return StringUtils.EMPTY;
 			case 4:
-				return providerLabel;
+				return articleName;
 			case 5:
+				return providerLabel;
+			case 6:
 				return stockCode;
 			default:
 				return StringUtils.EMPTY;
@@ -65,6 +77,14 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public Color getBackground(Object element) {
+		if (element instanceof IOrderEntry entry) {
+			if (columnIndex == 3 && orderManagementView.isDeliveryEditMode()) {
+				if (entry.getState() == OrderEntryState.ORDERED
+						|| entry.getState() == OrderEntryState.PARTIAL_DELIVER) {
+					return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+				}
+			}
+		}
 		return null;
 	}
 }
