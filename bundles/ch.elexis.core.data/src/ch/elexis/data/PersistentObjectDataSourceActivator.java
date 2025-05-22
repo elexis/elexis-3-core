@@ -14,16 +14,13 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
-import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
-import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.ISettingChangedListener;
-import ch.rgw.tools.ExHandler;
 
 /**
  * Connect PersistentObject after NoPo was properly initialized and liquibase
@@ -96,38 +93,7 @@ public class PersistentObjectDataSourceActivator {
 	 * @return
 	 */
 	private boolean legacyPostInitDB() {
-		// globalCfg is null for the firstStart
-		// created is null after aborted firstStart
-
 		DBConnection defaultConnection = PersistentObject.getDefaultConnection();
-
-		if (CoreHub.globalCfg == null || CoreHub.globalCfg.get("created", null) == null) {
-
-			log.info("PO data initialization");
-			try {
-				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
-				Mandant.initializeAdministratorUser(accessControlService, coreModelService);
-				Mandant bypassMandator = PersistentObjectUtil
-						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch() || CoreUtil.isTestMode());
-
-				if (bypassMandator == null) {
-					coreOperationAdvisor.requestInitialMandatorConfiguration();
-					MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
-							"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
-				} else {
-					// When running from Scratch or bypassing the first mandant we
-					// do not want to pop up any message dialog before
-					// Elexis finished the startup. A log entry is okay
-					log.info("Bypassed mandator initialization dialog, auto-created Mandator [{}] {}", //$NON-NLS-1$
-							bypassMandator.getId(), bypassMandator.getPersonalia());
-				}
-				CoreHub.globalCfg.flush();
-				CoreHub.localCfg.flush();
-			} catch (Throwable ex) {
-				ExHandler.handle(ex);
-				return false;
-			}
-		}
 
 		CoreHub.globalCfg.setSettingChangedListener(new ISettingChangedListener() {
 
