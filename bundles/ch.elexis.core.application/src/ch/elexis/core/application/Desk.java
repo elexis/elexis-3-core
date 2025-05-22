@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,9 +33,11 @@ import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.status.StatusUtil;
@@ -113,6 +117,12 @@ public class Desk implements IApplication {
 		// close splash
 		context.applicationRunning();
 
+		if (isNoMandator()) {
+			cod.requestInitialMandatorConfiguration();
+			MessageEvent.fireInformation("Neue Datenbank", //$NON-NLS-1$
+					"Es wurde eine neue Datenbank angelegt."); //$NON-NLS-1$
+		}
+
 		// perform login
 		cod.performLogin(new Shell(UiDesk.getDisplay()));
 		if ((CoreHub.getLoggedInContact() == null) || !CoreHub.getLoggedInContact().isValid()) {
@@ -145,6 +155,21 @@ public class Desk implements IApplication {
 			Thread.sleep(100);
 			UiDesk.getDisplay().dispose();
 		}
+	}
+
+	private boolean isNoMandator() {
+		List<IMandator> existing = new ArrayList<IMandator>();
+		IAccessControlService accessControlService = OsgiServiceUtil.getServiceWait(IAccessControlService.class, 5000)
+				.orElseThrow();
+		accessControlService.doPrivileged(() -> {
+			IModelService modelService = OsgiServiceUtil
+					.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+					.orElseThrow();
+			existing.addAll(modelService.getQuery(IMandator.class).execute());
+			OsgiServiceUtil.ungetService(modelService);
+		});
+		OsgiServiceUtil.ungetService(accessControlService);
+		return existing.isEmpty();
 	}
 
 	protected void initIdentifiers() {
