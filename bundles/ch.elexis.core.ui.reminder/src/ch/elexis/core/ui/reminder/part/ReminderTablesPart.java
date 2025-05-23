@@ -307,7 +307,11 @@ public class ReminderTablesPart implements IRefreshable {
 											if (SelectionUtil.isHoverCheck(natTable, dataProvider, cell, event.x,
 													event.y)) {
 												IReminder reminder = (IReminder) data;
-												reminder.setStatus(ProcessStatus.CLOSED);
+												if (reminder.getStatus() != ProcessStatus.CLOSED) {
+													reminder.setStatus(ProcessStatus.CLOSED);
+												} else {
+													reminder.setStatus(ProcessStatus.OPEN);
+												}
 												CoreModelServiceHolder.get().save(reminder);
 												ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE,
 														reminder);

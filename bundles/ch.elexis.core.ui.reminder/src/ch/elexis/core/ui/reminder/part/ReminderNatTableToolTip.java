@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Event;
 
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.format.PersonFormatUtil;
+import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 
@@ -46,7 +47,12 @@ public class ReminderNatTableToolTip extends DefaultToolTip {
 	protected String getText(Event event) {
 		ILayerCell cell = SelectionUtil.getCell(natTable, dataProvider, event.x, event.y);
 		if (SelectionUtil.isHoverCheck(natTable, dataProvider, cell, event.x, event.y)) {
-			return "Erledigt mit Doppelklick.";
+			Object data = SelectionUtil.getData(natTable, dataProvider, event.x, event.y);
+			if (data instanceof IReminder) {
+				IReminder reminder = (IReminder) data;
+				return reminder.getStatus() == ProcessStatus.CLOSED ? "Wieder aktivieren mit Doppelklick."
+						: "Erledigt mit Doppelklick.";
+			}
 		} else {
 			Object data = SelectionUtil.getData(natTable, dataProvider, event.x, event.y);
 			if(data instanceof IReminder) {
