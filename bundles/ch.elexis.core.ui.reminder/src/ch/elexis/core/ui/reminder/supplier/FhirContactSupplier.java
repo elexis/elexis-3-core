@@ -15,11 +15,13 @@ public class FhirContactSupplier implements Supplier<List<IReminder>> {
 
 	private IContact contact;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public FhirContactSupplier(IContact contact, String search, int limit) {
+	public FhirContactSupplier(IContact contact, String search, boolean showCompleted, int limit) {
 		this.contact = contact;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -27,7 +29,7 @@ public class FhirContactSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?owner=" + contact.getId() + "&status:not=COMPLETED");
+				.getQuery("Task?owner=" + contact.getId() + "&status" + (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);

@@ -200,4 +200,8 @@ public class ReminderBodyDataProvider implements ISpanningDataProvider {
 		}
 		return 1;
 	}
+
+	public void setShowCompleted(Boolean value) {
+		columns.stream().forEach(c -> c.setShowCompleted(value));
+	}
 }

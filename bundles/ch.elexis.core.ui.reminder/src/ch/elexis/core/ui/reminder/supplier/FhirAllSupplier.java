@@ -13,10 +13,12 @@ import ch.elexis.core.model.IReminder;
 public class FhirAllSupplier implements Supplier<List<IReminder>> {
 
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public FhirAllSupplier(String search, int limit) {
+	public FhirAllSupplier(String search, boolean showCompleted, int limit) {
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -24,7 +26,8 @@ public class FhirAllSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?owner=ALL&code:not=http://www.elexis.info/task/visibility|popup&status:not=COMPLETED");
+				.getQuery("Task?owner=ALL&code:not=http://www.elexis.info/task/visibility|popup&status"
+						+ (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);

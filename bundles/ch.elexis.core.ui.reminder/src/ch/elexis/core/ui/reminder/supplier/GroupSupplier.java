@@ -19,11 +19,13 @@ public class GroupSupplier implements Supplier<List<IReminder>> {
 
 	private IUserGroup group;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public GroupSupplier(IUserGroup group, String search, int limit) {
+	public GroupSupplier(IUserGroup group, String search, boolean showCompleted, int limit) {
 		this.group = group;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -31,7 +33,8 @@ public class GroupSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+		query.and(ModelPackage.Literals.IREMINDER__STATUS, showCompleted ? COMPARATOR.EQUALS : COMPARATOR.NOT_EQUALS,
+				ProcessStatus.CLOSED);
 
 		query.and("userGroup", COMPARATOR.EQUALS, group);
 

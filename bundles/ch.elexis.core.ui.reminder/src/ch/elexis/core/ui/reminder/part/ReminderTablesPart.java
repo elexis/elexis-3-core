@@ -127,6 +127,13 @@ public class ReminderTablesPart implements IRefreshable {
 		refresh(false);
 	}
 
+	@Optional
+	@Inject
+	void showCompleted(@UIEventTopic("reminder/showCompleted") Boolean value) {
+		dataProvider.setShowCompleted(value);
+		refresh(false);
+	}
+
 	@PostConstruct
 	public void postConstruct(Composite parent, EMenuService menuService) {
 		parent.setLayout(new GridLayout());

@@ -19,11 +19,13 @@ public class PatientSupplier implements Supplier<List<IReminder>> {
 
 	private IPatient patient;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public PatientSupplier(IPatient patient, String search, int limit) {
+	public PatientSupplier(IPatient patient, String search, boolean showCompleted, int limit) {
 		this.patient = patient;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -33,7 +35,8 @@ public class PatientSupplier implements Supplier<List<IReminder>> {
 
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
 		query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, patient);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+		query.and(ModelPackage.Literals.IREMINDER__STATUS, showCompleted ? COMPARATOR.EQUALS : COMPARATOR.NOT_EQUALS,
+				ProcessStatus.CLOSED);
 
 		if (StringUtils.isNotBlank(search)) {
 			addSearchToQuery(query);

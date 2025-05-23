@@ -15,11 +15,13 @@ public class FhirGroupSupplier implements Supplier<List<IReminder>> {
 
 	private IUserGroup group;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public FhirGroupSupplier(IUserGroup group, String search, int limit) {
+	public FhirGroupSupplier(IUserGroup group, String search, boolean showCompleted, int limit) {
 		this.group = group;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -27,7 +29,7 @@ public class FhirGroupSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?owner=" + group.getId() + "&status:not=COMPLETED");
+				.getQuery("Task?owner=" + group.getId() + "&status" + (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);

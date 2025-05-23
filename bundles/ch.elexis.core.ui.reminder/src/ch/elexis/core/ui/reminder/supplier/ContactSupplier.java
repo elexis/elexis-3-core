@@ -21,11 +21,13 @@ public class ContactSupplier implements Supplier<List<IReminder>> {
 
 	private IContact contact;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public ContactSupplier(IContact contact, String search, int limit) {
+	public ContactSupplier(IContact contact, String search, boolean showCompleted, int limit) {
 		this.contact = contact;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -33,7 +35,8 @@ public class ContactSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+		query.and(ModelPackage.Literals.IREMINDER__STATUS, showCompleted ? COMPARATOR.EQUALS : COMPARATOR.NOT_EQUALS,
+				ProcessStatus.CLOSED);
 
 		ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
 				CoreModelServiceHolder.get());

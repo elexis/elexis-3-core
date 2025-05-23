@@ -15,11 +15,13 @@ public class FhirPatientSupplier implements Supplier<List<IReminder>> {
 
 	private IPatient patient;
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public FhirPatientSupplier(IPatient patient, String search, int limit) {
+	public FhirPatientSupplier(IPatient patient, String search, boolean showCompleted, int limit) {
 		this.patient = patient;
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -27,7 +29,7 @@ public class FhirPatientSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?patient=" + patient.getId() + "&status:not=COMPLETED");
+				.getQuery("Task?patient=" + patient.getId() + "&status" + (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);

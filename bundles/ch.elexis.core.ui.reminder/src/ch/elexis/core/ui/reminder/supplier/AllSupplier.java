@@ -18,10 +18,12 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 public class AllSupplier implements Supplier<List<IReminder>> {
 
 	private String search;
+	private boolean showCompleted;
 	private int limit;
 
-	public AllSupplier(String search, int limit) {
+	public AllSupplier(String search, boolean showCompleted, int limit) {
 		this.search = search;
+		this.showCompleted = showCompleted;
 		this.limit = limit;
 	}
 
@@ -30,7 +32,7 @@ public class AllSupplier implements Supplier<List<IReminder>> {
 		long start = System.currentTimeMillis();
 
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
-		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+		query.and(ModelPackage.Literals.IREMINDER__STATUS, showCompleted ? COMPARATOR.EQUALS : COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 		query.and("responsibleValue", COMPARATOR.EQUALS, "ALL");
 		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_PATIENT_SELECTION);
 		query.and("visibility", COMPARATOR.NOT_EQUALS, Visibility.POPUP_ON_LOGIN);

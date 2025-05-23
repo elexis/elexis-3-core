@@ -17,7 +17,6 @@ import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -38,6 +37,8 @@ public class ReminderColumn {
 
 	private IUserGroup group;
 	private String search;
+
+	private boolean showCompleted;
 
 	public static List<ReminderColumn> getAllAvailable() {
 		List<ReminderColumn> available = new ArrayList<ReminderColumn>();
@@ -110,27 +111,27 @@ public class ReminderColumn {
 	}
 
 	private List<IReminder> loadPopup() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.POPUP, search, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.POPUP, search, showCompleted, 500);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadAll() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.ALL, search, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.ALL, search, showCompleted, 500);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadGroup() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(group, search, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(group, search, showCompleted, 500);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadContact(IContact contact) {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(contact, search, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(contact, search, showCompleted, 500);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadPatient(IPatient patient) {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(patient, search, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(patient, search, showCompleted, 500);
 		return supplier.get();
 	}
 
@@ -208,8 +209,7 @@ public class ReminderColumn {
 		return StringUtils.isNotBlank(this.search);
 	}
 
-	private void addSearchToQuery(IQuery<IReminder> query) {
-		String likeSearch = "%" + search + "%";
-		query.and(ModelPackage.Literals.IREMINDER__SUBJECT, COMPARATOR.LIKE, likeSearch, true);
+	public void setShowCompleted(Boolean value) {
+		this.showCompleted = value;
 	}
 }
