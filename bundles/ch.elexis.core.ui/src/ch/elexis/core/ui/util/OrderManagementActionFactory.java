@@ -186,12 +186,13 @@ public class OrderManagementActionFactory {
 
 	private void handleAutomaticOrder() {
 		if (actOrder == null) {
-			actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic, orderService);
+			actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName, orderService);
 		} else {
 			if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
 				if (MessageDialog.openQuestion(view.getSite().getShell(), Messages.Core_Areas,
 						Messages.BestellView_WizardAskNewOrder)) {
-					actOrder = OrderManagementUtil.createOrder(Messages.Core_Automatic, orderService);
+					actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName,
+							orderService);
 				}
 			}
 		}
@@ -224,9 +225,7 @@ public class OrderManagementActionFactory {
 						+ " of stock entry " + stockEntry.getId()); //$NON-NLS-1$
 			}
 		}
-
-		view.refresh();
-
+		view.reload();
 		view.updateCheckIn();
 	}
 
@@ -418,7 +417,6 @@ public class OrderManagementActionFactory {
 		orderTableViewer.getTable().setMenu(menu);
 	}
 
-
 	private void handleRemoveItem() {
 		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
 		IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
@@ -445,7 +443,6 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-
 	private void handleShowOrderHistory(TableViewer viewer) {
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		Object selectedElement = selection.getFirstElement();
@@ -459,7 +456,6 @@ public class OrderManagementActionFactory {
 			new HistoryDialog(UiDesk.getTopShell(), order).open();
 		}
 	}
-
 
 	public void handleAddItem() {
 		try {
@@ -480,31 +476,14 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-	public void handleOrderSelection(IOrder order) {
-		if (order != null) {
-			view.setActOrder(order);
-			view.refresh();
-			if (order.getEntries().isEmpty()) {
-				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LeistungenView.ID);
-				} catch (Exception e) {
-					logger.error("Error opening LeistungenView", e);
-				}
-			} else if (view.dropTarget != null) {
-				view.dropTarget.registered(false);
-			}
-		}
-	}
-
-
 	public void handleCompletedOrderSelection(IOrder order) {
 		if (order != null) {
+			view.resetEditMode();
 			view.setActOrder(order);
 			view.setShowDeliveredColumn(true);
 			view.refresh();
 		}
 	}
-
 
 	private void handleEditItem() {
 		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
@@ -514,14 +493,12 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-
 	private void editOrderEntry(IOrderEntry entry, boolean isDoubleClick) {
 		int editableColumn = view.determineEditableColumn(entry);
 		if (editableColumn != -1) {
 			view.tableViewer.editElement(entry, editableColumn);
 		}
 	}
-
 
 	public void handleMouseWheelScroll(Event event, ScrolledComposite scrollComposite) {
 		event.doit = false;

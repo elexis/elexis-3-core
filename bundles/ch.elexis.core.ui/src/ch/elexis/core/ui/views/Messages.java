@@ -633,7 +633,6 @@ public class Messages {
 	public static String OrderManagement_RightTitle = ch.elexis.core.l10n.Messages.OrderManagement_RightTitle;
 	public static String OrderManagement_BookedLabel = ch.elexis.core.l10n.Messages.OrderManagement_BookedLabel;
 	public static String OrderManagement_StatusLabel = ch.elexis.core.l10n.Messages.OrderManagement_StatusLabel;
-	public static String OrderManagement_Column_Abbreviation = ch.elexis.core.l10n.Messages.OrderManagement_Column_Abbreviation;
 	public static String OrderManagement_Column_Status = ch.elexis.core.l10n.Messages.OrderManagement_Column_Status;
 	public static String OrderManagement_Column_Ordered = ch.elexis.core.l10n.Messages.OrderManagement_Column_Ordered;
 	public static String OrderManagement_Column_Delivered = ch.elexis.core.l10n.Messages.OrderManagement_Column_Delivered;
@@ -645,5 +644,8 @@ public class Messages {
 	public static String OrderManagement_ShowOrderHistory = ch.elexis.core.l10n.Messages.OrderManagement_ShowOrderHistory;
 	public static String OrderManagement_Overdelivery_Title = ch.elexis.core.l10n.Messages.OrderManagement_Overdelivery_Title;
 	public static String OrderManagement_Overdelivery_Message = ch.elexis.core.l10n.Messages.OrderManagement_Overdelivery_Message;
-
+	public static String MedicationComposite_btnConfirm = ch.elexis.core.l10n.Messages.MedicationComposite_btnConfirm;
+	public static String Cst_Text_ungueltiger_Wert = ch.elexis.core.l10n.Messages.Cst_Text_ungueltiger_Wert;
+	public static String OrderManagement_Error_NegativeDeliveredAmount = ch.elexis.core.l10n.Messages.OrderManagement_Error_NegativeDeliveredAmount;
+	public static String OrderManagement_StockOrder_DefaultName = ch.elexis.core.l10n.Messages.OrderManagement_StockOrder_DefaultName;
 }
