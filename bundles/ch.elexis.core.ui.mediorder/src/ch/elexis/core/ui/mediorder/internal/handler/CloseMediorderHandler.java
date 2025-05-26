@@ -9,6 +9,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.ui.mediorder.MediorderCanExecuteUtil;
 import ch.elexis.core.ui.mediorder.MediorderPart;
@@ -21,9 +22,12 @@ public class CloseMediorderHandler {
 	@Service(filterExpression = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	IModelService coreModelService;
 
+	@Inject
+	ICoverageService coverageService;
+
 	@CanExecute
 	public boolean canExecute(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) IStock stock) {
-		return MediorderCanExecuteUtil.canExecute(stock.getStockEntries());
+		return MediorderCanExecuteUtil.canExecute(stock.getStockEntries(), coverageService);
 	}
 
 	@Execute
