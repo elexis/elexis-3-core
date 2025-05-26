@@ -200,22 +200,12 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>jcl.over.slf4j</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.glassfish.jersey.containers.jersey-container-servlet-core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -265,11 +255,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-spi</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.objectweb.asm.tree</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -286,11 +271,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.contenttype</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-adapter-core</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -360,11 +340,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-annotations</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.apache.commons.commons-io</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -386,11 +361,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>bcprov</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-authz-client</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -461,11 +431,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.annotation-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>com.fasterxml.jackson.core.jackson-databind</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -566,11 +531,6 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>jakarta.transaction-api</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>org.keycloak.keycloak-common</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

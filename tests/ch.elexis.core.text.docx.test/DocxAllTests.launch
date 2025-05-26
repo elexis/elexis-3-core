@@ -47,9 +47,6 @@
     <setAttribute key="selected_target_bundles">
         <setEntry value="ch.qos.logback.classic@2:true"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>

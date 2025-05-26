@@ -379,11 +379,6 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>org.keycloak.keycloak-core</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>org.w3c.css.sac</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -464,11 +459,6 @@
 						</dependency>
 						<dependency>
 							<type>eclipse-plugin</type>
-							<artifactId>org.keycloak.keycloak-authz-client</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
 							<artifactId>org.eclipse.equinox.common</artifactId>
 							<version>0.0.0</version>
 						</dependency>
@@ -530,11 +520,6 @@
 						<dependency>
 							<type>eclipse-plugin</type>
 							<artifactId>org.apache-extras.beanshell.bsh</artifactId>
-							<version>0.0.0</version>
-						</dependency>
-						<dependency>
-							<type>eclipse-plugin</type>
-							<artifactId>org.keycloak.keycloak-common</artifactId>
 							<version>0.0.0</version>
 						</dependency>
 						<dependency>

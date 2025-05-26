@@ -65,9 +65,6 @@
         <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="com.equo.chromium.cef.win32.win32.x86_64@default:false"/>
         <setEntry value="com.equo.chromium@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
         <setEntry value="com.google.gson*2.10.1@default:default"/>
         <setEntry value="com.google.guava.failureaccess@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
@@ -231,9 +228,6 @@
         <setEntry value="org.jfree.swtgraphics2d@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
-        <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
-        <setEntry value="org.keycloak.keycloak-common@default:default"/>
-        <setEntry value="org.keycloak.keycloak-core@default:default"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
         <setEntry value="org.osgi.service.device@default:default"/>

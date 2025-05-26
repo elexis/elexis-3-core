@@ -53,9 +53,6 @@
         <setEntry value="bcprov@default:default"/>
         <setEntry value="ch.qos.logback.classic@2:true"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-annotations@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-core@default:default"/>
-        <setEntry value="com.fasterxml.jackson.core.jackson-databind@default:default"/>
         <setEntry value="com.github.kirviq.dumbster@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.google.guava.failureaccess@default:default"/>
@@ -137,11 +134,6 @@
         <setEntry value="org.jdom.2@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
-        <setEntry value="org.keycloak.keycloak-adapter-core@default:default"/>
-        <setEntry value="org.keycloak.keycloak-adapter-spi@default:default"/>
-        <setEntry value="org.keycloak.keycloak-authz-client@default:default"/>
-        <setEntry value="org.keycloak.keycloak-common@default:default"/>
-        <setEntry value="org.keycloak.keycloak-core@default:default"/>
         <setEntry value="org.objectweb.asm*9.7.1@default:default"/>
         <setEntry value="org.objectweb.asm.commons*9.7.1@default:default"/>
         <setEntry value="org.objectweb.asm.tree*9.7.1@default:default"/>
