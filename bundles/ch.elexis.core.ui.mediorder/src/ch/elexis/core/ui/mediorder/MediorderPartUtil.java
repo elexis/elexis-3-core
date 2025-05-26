@@ -153,7 +153,7 @@ public class MediorderPartUtil {
 
 		int difference = amount - entry.getCurrentStock();
 		if (difference > 0) {
-			stockService.performSingleDisposal(article.getArticle(), difference, mandatorId);
+			stockService.performSingleDisposal(article.getArticle(), difference, mandatorId, null);
 		} else if (difference < 0) {
 			difference *= -1;
 			stockService.performSingleReturn(article.getArticle(), difference, mandatorId);

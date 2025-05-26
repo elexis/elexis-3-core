@@ -5131,6 +5131,7 @@ public class Messages extends NLS {
 	public static String MedicationSettings_EnablePredefinedSymptomDays;
 	public static String MedicationSettings_NumberOfStopDays;
 	public static String MedicationSettings_ShowCommentOnEMediplan;
+	public static String Mediorder_bill_reserved_articles;
 	public static String LaborResultsComposite_documentSelectionErrorMessage;
 	public static String LaborResultsComposite_documentSelectionErrorTitle;
 	public static String LaborResultsComposite_selectionLimitErrorMessage;
