@@ -6,9 +6,9 @@ Containing the core files of the Elexis Application.
 - Use precompiled binaries
 - Build from source
 ### Binaries
-- [Windows](http://download.elexis.info/elexis/3.10/products/Elexis3-win32.win32.x86_64.zip)
-- [Apple OS X](http://download.elexis.info/elexis/3.10/products/Elexis3-macosx.cocoa.x86_64.zip)
-- [Linux](http://download.elexis.info/elexis/3.10/products/Elexis3-linux.gtk.x86_64.zip)
+- [Windows](https://download.elexis.info/elexis/3.10/products/Elexis3-win32.win32.x86_64.zip)
+- [Apple OS X](https://download.elexis.info/elexis/3.10/products/Elexis3-macosx.cocoa.x86_64.zip)
+- [Linux](https://download.elexis.info/elexis/3.10/products/Elexis3-linux.gtk.x86_64.zip)
 
 ### From source
 
