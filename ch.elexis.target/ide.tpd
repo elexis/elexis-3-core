@@ -69,6 +69,8 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	ch.qos.logback.classic
 	ch.qos.logback.core
 	//ch.qos.logback.slf4j
+	org.apache.logging.log4j.api
+	org.apache.logging.log4j.core
 	
 	// JAXB
 	jakarta.xml.bind-api
