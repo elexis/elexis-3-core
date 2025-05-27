@@ -89,6 +89,7 @@ public class ReminderRichTextCellPainter extends RichTextCellPainter {
 
 	private String abbreviateText(String htmlText, GC gc, ILayerCell cell, int maxWidth) {
 		String ret = FilterNonPrintableModifyListener.filterNonPrintable(htmlText);
+		ret = ret.trim().replaceAll("\r\n", " ");
 		ret = ret.trim().replaceAll(" +", " ");
 		while (getPreferredSize(ret, gc, cell).x > maxWidth) {
 			String maxText = getMaxText(ret);
