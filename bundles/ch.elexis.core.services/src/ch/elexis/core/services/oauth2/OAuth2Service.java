@@ -43,8 +43,8 @@ public class OAuth2Service {
 		params.add(new BasicNameValuePair("grant_type", "password"));
 		params.add(new BasicNameValuePair("client_id", clientId));
 		params.add(new BasicNameValuePair("client_secret", clientSecret));
-		params.add(new BasicNameValuePair("username", clientSecret));
-		params.add(new BasicNameValuePair("username", String.valueOf(password)));
+		params.add(new BasicNameValuePair("username", username));
+		params.add(new BasicNameValuePair("password", String.valueOf(password)));
 		httpPost.setEntity(new UrlEncodedFormEntity(params));
 
 		try (CloseableHttpClient client = HttpClients.createDefault()) {

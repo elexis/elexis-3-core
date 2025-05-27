@@ -89,8 +89,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 	public void loadAccessToken(String username, char[] password) {
 		String rcpClientSecret = getProperty(IElexisEnvironmentService.EE_RCP_OPENID_SECRET);
 		ObjectStatus<AccessToken> accessToken = new OAuth2Service().performDirectAccessGrantFlow(
-				URI.create(getKeycloakRealmEndpoint()), "elexis-rcp-openid", rcpClientSecret, "elexis-rcp-openid",
-				password);
+				URI.create(getKeycloakRealmEndpoint()), "elexis-rcp-openid", rcpClientSecret, username, password);
 		if (accessToken.isOK()) {
 			contextService.getRootContext().setTyped(accessToken.getObject());
 			logger.info("Loaded access-token for [{}], valid until [{}], refresh until [{}]",

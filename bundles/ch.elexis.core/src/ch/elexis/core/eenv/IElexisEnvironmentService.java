@@ -72,7 +72,7 @@ public interface IElexisEnvironmentService {
 	}
 
 	default String getKeycloakRealmEndpoint() {
-		return getBaseUrl() + "/keycloak/auth/realms/" + EE_KEYCLOAK_REALM_ID;
+		return getBaseUrl() + "/keycloak/auth/realms/" + EE_KEYCLOAK_REALM_ID + "/";
 	}
 
 	default String getOcrMyPdfBaseUrl() {
