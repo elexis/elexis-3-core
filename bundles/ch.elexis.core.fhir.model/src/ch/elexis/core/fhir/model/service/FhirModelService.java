@@ -90,10 +90,15 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	@Override
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) throws AccessControlException {
 		if (StringUtils.isNotBlank(id)) {
-			BaseResource fhirObject = getGenericClient().read()
-					.resource(adapterFactory.getFhirType((Class<? extends Identifiable>) clazz)).withId(id).execute();
-			if (fhirObject != null) {
-				return adapt(fhirObject, clazz);
+			try {
+				BaseResource fhirObject = getGenericClient().read()
+						.resource(adapterFactory.getFhirType((Class<? extends Identifiable>) clazz)).withId(id)
+						.execute();
+				if (fhirObject != null) {
+					return adapt(fhirObject, clazz);
+				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).warn(e.getMessage());
 			}
 		}
 		return Optional.empty();
