@@ -1,6 +1,8 @@
 package ch.elexis.core.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
@@ -13,8 +15,15 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.mediorder.Constants;
+import ch.elexis.core.mediorder.MediorderEntryState;
+import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -27,7 +36,6 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
-import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
@@ -45,6 +53,12 @@ public class StockService implements IStockService {
 
 	@Reference
 	private IStoreToStringService storeToStringService;
+
+	@Reference
+	private IStockCommissioningSystemService stockCommissioningSystemService;
+
+	@Reference
+	private ICoverageService coverageService;
 
 	@Override
 	public Long getCumulatedStockForArticle(IArticle article) {
@@ -64,11 +78,15 @@ public class StockService implements IStockService {
 
 	public void performSingleDisposal(IArticle article, int count) {
 		Optional<IMandator> mandator = ContextServiceHolder.get().getActiveMandator();
-		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null);
+		performSingleDisposal(article, count, (mandator.isPresent()) ? mandator.get().getId() : null, null);
+	}
+	
+	public void performSingleDisposal(IArticle article, int count, String mandatorId) {
+		performSingleDisposal(article, count, mandatorId, null);
 	}
 
 	@Override
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId) {
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IPatient patient) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -82,6 +100,10 @@ public class StockService implements IStockService {
 			return new Status(Status.WARNING, "ch.elexis.core.services", "No stock entry for article found");
 		}
 
+		if (!isValidForBilling(article, patient, se)) {
+			return new Status(Status.WARNING, getClass(), Messages.Mediorder_bill_reserved_articles);
+		}
+		
 		if (se.getStock().isCommissioningSystem()) {
 
 			boolean suspendOutlay = configService.getLocal(Preferences.INVENTORY_MACHINE_SUSPEND_OUTLAY,
@@ -99,7 +121,20 @@ public class StockService implements IStockService {
 					return Status.OK_STATUS;
 				}
 			}
-			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
+
+			Map<String, Object> params = new HashMap<String, Object>();
+			if (patient != null) {
+				Optional<IStock> stock = getPatientStock(patient);
+				if (stock.isPresent()) {
+					for (IStockEntry entry : stock.get().getStockEntries()) {
+						if (entry.getArticle().equals(article)) {
+							params.put(Constants.MEDIORDER_SELECTED_PATIENT_NR, patient.getPatientNr());
+							break;
+						}
+					}
+				}
+			}
+			return stockCommissioningSystemService.performArticleOutlay(se, count, params.isEmpty() ? null : params);
 
 		} else {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1, new NullProgressMonitor());
@@ -138,6 +173,79 @@ public class StockService implements IStockService {
 		}
 
 		return new Status(Status.WARNING, "ch.elexis.core.services", "Could not acquire lock");
+	}
+
+	/**
+	 * checks whether the output of ordered articles via mediorder can be
+	 * guaranteed.
+	 * 
+	 * @param article
+	 * @param patient
+	 * @param stockEntry
+	 * @return
+	 */
+	private boolean isValidForBilling(IArticle article, IPatient patient, IStockEntry stockEntry) {
+		if (getTotalInPatientStocks(stockEntry, article) <= 0) {
+			return true;
+		}
+
+		if (stockEntry.getCurrentStock() <= getTotalInPatientStocks(stockEntry, article)) {
+			return isBillingWithinLimit(patient, article);
+		}
+
+		Optional<IStock> patientStock = this.getPatientStock(patient);
+		if (patientStock.isEmpty()) {
+			return true;
+		}
+
+		return isBillingWithinLimit(patient, article);
+	}
+
+	protected int getTotalInPatientStocks(IStockEntry stockEntry, IArticle article) {
+		int total = 0;
+		for (IStock stock : getAllPatientStock()) {
+			for (IStockEntry entry : stock.getStockEntries()) {
+				if (entry.getArticle().equals(stockEntry.getArticle())
+						&& MediorderEntryState.IN_STOCK.equals(MediorderUtil.determineState(entry))) {
+					if (!hasMatchingBilling(stock.getOwner().asIPatient(), article, entry.getMaximumStock(), false)) {
+						total += entry.getCurrentStock();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	protected boolean isBillingWithinLimit(IPatient patient, IArticle article) {
+		Optional<IStock> patientStock = getPatientStock(patient);
+		if (patientStock.isPresent()) {
+			for (IStockEntry entry : patientStock.get().getStockEntries()) {
+				if (entry.getArticle().equals(article)) {
+					if (hasMatchingBilling(patient, article, entry.getMaximumStock(), true)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	protected boolean hasMatchingBilling(IPatient patient, IArticle article, int limit, boolean lessOrEqual) {
+		Optional<ICoverage> coverage = coverageService.getLatestOpenCoverage(patient);
+		if (coverage.isPresent()) {
+			Optional<IEncounter> encounter = coverageService.getLatestEncounter(coverage.get());
+			if (encounter.isPresent()) {
+				for (IBilled billed : encounter.get().getBilled()) {
+					if (billed.getBillable().getId().equals(article.getId())) {
+						double amount = billed.getAmount();
+						if (lessOrEqual ? amount <= limit : amount >= limit) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -412,7 +520,7 @@ public class StockService implements IStockService {
 	public IStatus performSingleDisposal(String articleStoreToString, int count, String mandatorId) {
 		Optional<Identifiable> article = StoreToStringServiceHolder.get().loadFromString(articleStoreToString);
 		if (article.isPresent()) {
-			return performSingleDisposal((IArticle) article.get(), count, mandatorId);
+			return performSingleDisposal((IArticle) article.get(), count, mandatorId, null);
 		}
 		return new Status(Status.WARNING, "ch.elexis.core.services", "No article found [" + articleStoreToString + "]");
 	}
@@ -476,5 +584,5 @@ public class StockService implements IStockService {
 				storeToStringService.storeToString(entry.getArticle()).get()));
 		coreModelService.remove(patientStock);
 	}
-
+	
 }
