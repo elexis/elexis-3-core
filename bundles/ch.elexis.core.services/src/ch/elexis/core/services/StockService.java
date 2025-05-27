@@ -36,6 +36,7 @@ import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
@@ -53,9 +54,6 @@ public class StockService implements IStockService {
 
 	@Reference
 	private IStoreToStringService storeToStringService;
-
-	@Reference
-	private IStockCommissioningSystemService stockCommissioningSystemService;
 
 	@Reference
 	private ICoverageService coverageService;
@@ -134,7 +132,7 @@ public class StockService implements IStockService {
 					}
 				}
 			}
-			return stockCommissioningSystemService.performArticleOutlay(se, count, params.isEmpty() ? null : params);
+			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count,params.isEmpty() ? null : params);
 
 		} else {
 			LockResponse lr = LocalLockServiceHolder.get().acquireLockBlocking(se, 1, new NullProgressMonitor());
