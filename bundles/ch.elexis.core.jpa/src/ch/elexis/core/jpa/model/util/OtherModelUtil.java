@@ -62,4 +62,29 @@ public class OtherModelUtil {
 			}
 		}
 	}
+
+	public static void delete(Identifiable identifiable) {
+		if (identifiable != null) {
+			try {
+				Method method = Arrays.asList(identifiable.getClass().getMethods()).stream()
+						.filter(m -> "getModelServiceClass".equals(m.getName())).findFirst().orElse(null);
+				if (method != null) {
+					Class<?> modelSerivceClass = (Class<?>) method.invoke(identifiable);
+					Method saveMethod = Arrays.asList(modelSerivceClass.getMethods()).stream()
+							.filter(m -> "delete".equals(m.getName())
+									&& Arrays.asList(m.getParameterTypes()).contains(Identifiable.class))
+							.findFirst().orElse(null);
+					if (modelSerivceClass != null && saveMethod != null) {
+						Optional<?> modelService = OsgiServiceUtil.getService(modelSerivceClass);
+						if (modelService.isPresent()) {
+							saveMethod.invoke(modelService.get(), identifiable);
+						}
+					}
+				}
+			} catch (SecurityException | IllegalAccessException | InvocationTargetException e) {
+				LoggerFactory.getLogger(OtherModelUtil.class).error("Exception getting entity model adapter", e);
+			}
+		}
+
+	}
 }

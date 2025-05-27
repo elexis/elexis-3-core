@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.reminder.part;
 
+import java.time.format.DateTimeFormatter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.jface.window.ToolTip;
@@ -65,6 +67,10 @@ public class ReminderNatTableToolTip extends DefaultToolTip {
 				sb.append("Status: ").append(reminder.getStatus().getLocaleText()).append("\n");
 				if (reminder.getContact() != null && reminder.getContact().isPatient()) {
 					sb.append("Patient: ").append(PersonFormatUtil.getPersonalia(reminder.getContact().asIPerson()))
+							.append("\n");
+				}
+				if (reminder.getDue() != null) {
+					sb.append("Fällig: ").append(DateTimeFormatter.ofPattern("dd.MM.yyyy").format(reminder.getDue()))
 							.append("\n");
 				}
 				sb.append("Beschreibung: \n").append(reminder.getMessage());

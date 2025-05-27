@@ -111,27 +111,27 @@ public class ReminderColumn {
 	}
 
 	private List<IReminder> loadPopup() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.POPUP, search, showCompleted, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.POPUP, search, showCompleted, 100);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadAll() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.ALL, search, showCompleted, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(Type.ALL, search, showCompleted, 100);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadGroup() {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(group, search, showCompleted, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(group, search, showCompleted, 100);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadContact(IContact contact) {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(contact, search, showCompleted, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(contact, search, showCompleted, 100);
 		return supplier.get();
 	}
 
 	private List<IReminder> loadPatient(IPatient patient) {
-		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(patient, search, showCompleted, 500);
+		Supplier<List<IReminder>> supplier = ReminderSupplierFactory.get(patient, search, showCompleted, 100);
 		return supplier.get();
 	}
 

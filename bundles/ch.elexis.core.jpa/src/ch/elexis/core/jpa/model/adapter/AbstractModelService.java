@@ -480,6 +480,12 @@ public abstract class AbstractModelService implements IModelService {
 
 	@Override
 	public void delete(Deleteable deletable) {
+		if (OtherModelUtil.isOtherModelPackage(deletable)) {
+			if (Identifiable.class.isInstance(deletable)) {
+				OtherModelUtil.delete((Identifiable) deletable);
+			}
+			return;
+		}
 		if (evaluateRight(deletable.getClass(), Right.DELETE)) {
 			deletable.setDeleted(true);
 			deleteXids((Identifiable) deletable);

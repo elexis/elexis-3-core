@@ -35,7 +35,7 @@ public class FhirContactSupplier implements Supplier<List<IReminder>> {
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);
 
 		if (StringUtils.isNoneBlank(search)) {
-			ret = ret.stream().filter(r -> r.getSubject().contains(search)).toList();
+			ret = ret.stream().filter(r -> r.getSubject() != null && r.getSubject().contains(search)).toList();
 		}
 		LoggerFactory.getLogger(getClass())
 				.info("Supply [" + contact + "] took " + (System.currentTimeMillis() - start) + "[ms]");

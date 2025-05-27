@@ -92,7 +92,7 @@ public class ReminderRichTextCellPainter extends RichTextCellPainter {
 		ret = ret.trim().replaceAll("\r\n", " ");
 		ret = ret.trim().replaceAll(" +", " ");
 		while (getPreferredSize(ret, gc, cell).x > maxWidth) {
-			String maxText = getMaxText(ret);
+			String maxText = getMaxText(ret).replaceAll("§", "'&sect;'").replaceAll("&", "&amp;");
 			if (maxText.length() < 5) {
 				break;
 			}
@@ -128,6 +128,6 @@ public class ReminderRichTextCellPainter extends RichTextCellPainter {
 		if (StringUtils.isNotBlank(text) && text.indexOf("<addition>") > -1) {
 			text = text.substring(0, text.indexOf("<addition>"));
 		}
-		return text;
+		return text.replaceAll("§", "'&sect;'").replaceAll("&", "&amp;");
 	}
 }

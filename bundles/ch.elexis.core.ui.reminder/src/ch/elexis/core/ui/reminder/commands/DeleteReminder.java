@@ -10,6 +10,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -25,6 +26,8 @@ public class DeleteReminder {
 				if (MessageDialog.openQuestion(shell, Messages.Core_Really_delete_caption,
 						MessageFormat.format(Messages.Core_Really_delete_0, "Pendenz '" + r.getSubject() + "'"))) {
 					CoreModelServiceHolder.get().delete(r);
+					// refresh if cancelled to reset changes
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, r);
 				}
 			});
 		});
