@@ -9,6 +9,7 @@ import ch.elexis.core.jpa.entities.Behandlung;
 import ch.elexis.core.jpa.entities.Bestellung;
 import ch.elexis.core.jpa.entities.BestellungEntry;
 import ch.elexis.core.jpa.entities.Brief;
+import ch.elexis.core.jpa.entities.DbImage;
 import ch.elexis.core.jpa.entities.DocHandle;
 import ch.elexis.core.jpa.entities.Eigenleistung;
 import ch.elexis.core.jpa.entities.EntityWithId;
@@ -57,6 +58,7 @@ public class ElexisTypeMap {
 	public static final String TYPE_ARTIKEL = "ch.elexis.data.Artikel";
 	public static final String TYPE_ARTIKELSTAMM = "ch.artikelstamm.elexis.common.ArtikelstammItem";
 	public static final String TYPE_BRIEF = "ch.elexis.data.Brief";
+	public static final String TYPE_DBIMAGE = "ch.elexis.data.DBImage";
 	public static final String TYPE_DOCHANDLE = "ch.elexis.omnivore.data.DocHandle";
 	public static final String TYPE_EIGENARTIKEL_LEGACY = "ch.elexis.eigenartikel.Eigenartikel";
 	public static final String TYPE_EIGENARTIKEL = "ch.elexis.core.eigenartikel.Eigenartikel";
@@ -104,6 +106,8 @@ public class ElexisTypeMap {
 		classToStsMap.put(ArtikelstammItem.class, TYPE_ARTIKELSTAMM);
 		stsToClassMap.put(TYPE_BRIEF, Brief.class);
 		classToStsMap.put(Brief.class, TYPE_BRIEF);
+		stsToClassMap.put(TYPE_DBIMAGE, DbImage.class);
+		classToStsMap.put(DbImage.class, TYPE_DBIMAGE);
 		stsToClassMap.put(TYPE_DOCHANDLE, DocHandle.class);
 		classToStsMap.put(DocHandle.class, TYPE_DOCHANDLE);
 		stsToClassMap.put(TYPE_EIGENLEISTUNG, Eigenleistung.class);
