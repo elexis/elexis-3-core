@@ -167,10 +167,10 @@ public class BillingService implements IBillingService {
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
 							contextService.getActiveMandator().map(m -> m.getId()).orElse(null),
-							encounter.getPatient());
+							encounter.getPatient().asIPatient());
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
-						optifierResult.add(SEVERITY.WARNING, 0, status.getMessage(), optifierResult.get(), false);
+						optifierResult.add(SEVERITY.WARNING, 0, status.getMessage(), null, false);
 					}
 				}
 
@@ -205,7 +205,9 @@ public class BillingService implements IBillingService {
 						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
-				return optifierResult;
+
+				return optifierResult.getSeverity().equals(SEVERITY.OK) ? optifierResult
+						: translateWarningOnly(optifierResult);
 			} else {
 				return translateResult(verificationResult);
 			}
@@ -215,6 +217,13 @@ public class BillingService implements IBillingService {
 							+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
 					null, false);
 		}
+	}
+
+	private Result<IBilled> translateWarningOnly(Result<?> result) {
+		Result<IBilled> ret = new Result<>(SEVERITY.WARNING, null);
+		result.getMessages().stream().filter(msg -> SEVERITY.WARNING.equals(msg.getSeverity()))
+				.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
+		return ret;
 	}
 
 	/**

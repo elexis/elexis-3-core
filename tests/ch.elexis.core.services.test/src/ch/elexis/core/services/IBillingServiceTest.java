@@ -197,8 +197,7 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		coreModelService.save(customArticle_2);
 
 		Result<IBilled> billed = billingService.bill(customArticle_2, encounter, 1.0);
-		assertTrue("Expected OK or WARNING but was: " + billed.getSeverity(),
-				billed.getSeverity() == Result.SEVERITY.OK || billed.getSeverity() == Result.SEVERITY.WARNING);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		double billed_amount = billed.get().getAmount();
 		double billed_price = billed.get().getPrice().getCents();
 
