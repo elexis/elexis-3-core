@@ -1,9 +1,6 @@
 package ch.elexis.core.ui.views.provider;
 
-import java.text.MessageFormat;
-
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
@@ -21,7 +18,6 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
-import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
 
 public class GenericOrderEditingSupport extends EditingSupport {
@@ -49,12 +45,10 @@ public class GenericOrderEditingSupport extends EditingSupport {
     protected CellEditor getCellEditor(Object element) {
         switch (columnType) {
             case SUPPLIER:
-
                 return new ContactSelectionDialogCellEditor(
                     viewer.getTable(),
 						Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message
                 );
-
             case DELIVERED:
             case ORDERED:
             default:
@@ -64,9 +58,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					@Override
 					public void keyTraversed(TraverseEvent e) {
 						if (e.detail == SWT.TRAVERSE_RETURN) {
-
 							e.doit = true;
-
 							text.getDisplay().asyncExec(() -> {
 								int currentRow = viewer.getTable().getSelectionIndex();
 								int nextRow = currentRow + 1;
@@ -79,7 +71,6 @@ public class GenericOrderEditingSupport extends EditingSupport {
 						}
 					}
 				});
-
 				return textCellEditor;
         }
     }
@@ -91,8 +82,10 @@ public class GenericOrderEditingSupport extends EditingSupport {
         }
 		return switch (columnType) {
 		case ORDERED -> entry.getState() == OrderEntryState.OPEN;
-		case DELIVERED ->
-			entry.getState() == OrderEntryState.ORDERED || entry.getState() == OrderEntryState.PARTIAL_DELIVER;
+		case DELIVERED -> {
+			boolean editableState = entry.getState() != OrderEntryState.OPEN;
+			yield editableState && orderManagementView.isDeliveryEditMode();
+		}
 		case SUPPLIER -> true;
 		};
     }
@@ -107,7 +100,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
                 int amount = entry.getAmount();
 			yield amount > 0 ? String.valueOf(amount) : StringUtils.EMPTY;
 		}
-		case DELIVERED -> String.valueOf(entry.getDelivered());
+		case DELIVERED -> String.valueOf(StringUtils.EMPTY);
 		case SUPPLIER -> entry.getProvider();
 		};
     }
@@ -133,29 +126,8 @@ public class GenericOrderEditingSupport extends EditingSupport {
 			}
 			case DELIVERED -> {
 				int part = Integer.parseInt(value.toString().trim());
-				int oldDelivered = entry.getDelivered();
-				int newTotalDelivery = oldDelivered + part;
-				int ordered = entry.getAmount();
-
-				if (newTotalDelivery > ordered) {
-					boolean confirm = MessageDialog.openQuestion(viewer.getControl().getShell(),
-							Messages.OrderManagement_Overdelivery_Title,
-							MessageFormat.format(Messages.OrderManagement_Overdelivery_Message, oldDelivered, part,
-									newTotalDelivery, ordered));
-					if (!confirm) {
-						viewer.refresh(entry);
-						return;
-					}
-				}
-				if (orderService.getHistoryService() != null && order != null) {
-					orderService.getHistoryService().logDelivery(order, entry, part, ordered);
-				}
-				OrderManagementUtil.saveSingleDelivery(entry, part, orderService);
-				boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
-				if (allDelivered) {
-					orderManagementView.reload();
-				}
-				viewer.refresh(entry);
+				orderManagementView.getPendingDeliveredValues().put(entry, part);
+				viewer.update(entry, null);
 			}
 				case SUPPLIER -> {
                     if (value instanceof IContact contact) {
@@ -165,6 +137,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
                         }
                         CoreModelServiceHolder.get().save(entry);
                         viewer.refresh(entry);
+						orderManagementView.refresh();
                     }
 				}
             }

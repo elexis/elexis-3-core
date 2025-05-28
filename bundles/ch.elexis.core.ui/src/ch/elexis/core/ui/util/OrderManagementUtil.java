@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +36,7 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.OrderManagementView;
 
 public class OrderManagementUtil {
 
@@ -39,10 +46,8 @@ public class OrderManagementUtil {
 	private static final Image SHOPPING_CART = Images.IMG_SHOPPING_CART.getImage(ImageSize._75x66_TitleDialogIconSize);
 	private static final Image DELIVERY_TRUCK = Images.IMG_DELIVERY_TRUCK
 			.getImage(ImageSize._75x66_TitleDialogIconSize);
-	private static final Image TICK_IMAGE = Images.IMG_TICK.getImage();
+	private static final Image THICK_CHECK = Images.IMG_THICK_CHECK.getImage(ImageSize._75x66_TitleDialogIconSize);
 	private static final Image SHOPPING = Images.IMG_SHOPPING_CART_WHITE.getImage(ImageSize._75x66_TitleDialogIconSize);
-
-
 
 	public static List<IOrder> getOpenOrders() {
 		return getOrders(false, true);
@@ -87,13 +92,12 @@ public class OrderManagementUtil {
 
 		if (isShoping)
 			return SHOPPING;
+		if (isDone)
+			return THICK_CHECK;
 		if (anyDelivered)
 			return DELIVERY_TRUCK;
 		if (isPartial || allOrdered)
 			return DELIVERY_TRUCK;
-
-		if (isDone)
-			return TICK_IMAGE;
 		return SHOPPING_CART;
 	}
 
@@ -116,13 +120,18 @@ public class OrderManagementUtil {
 	}
 
 	public static void saveSingleDelivery(IOrderEntry entry, int partialDelivery, IOrderService orderService) {
-		if (entry == null || partialDelivery <= 0) {
+		if (entry == null || partialDelivery == 0) {
 			return;
 		}
 
 		try {
 			int orderAmount = entry.getAmount();
-			int newDelivered = entry.getDelivered() + partialDelivery;
+			int currentDelivered = entry.getDelivered();
+			int newDelivered = currentDelivered + partialDelivery;
+
+			if (newDelivered < 0) {
+				newDelivered = 0;
+			}
 
 			IStock stock = entry.getStock();
 			if (stock != null) {
@@ -130,7 +139,13 @@ public class OrderManagementUtil {
 			}
 			orderService.getHistoryService().logDelivery(entry.getOrder(), entry, newDelivered, orderAmount);
 			entry.setDelivered(newDelivered);
-			entry.setState(newDelivered >= entry.getAmount() ? OrderEntryState.DONE : OrderEntryState.PARTIAL_DELIVER);
+			if (newDelivered >= entry.getAmount()) {
+				entry.setState(OrderEntryState.DONE);
+			} else if (newDelivered > 0) {
+				entry.setState(OrderEntryState.PARTIAL_DELIVER);
+			} else {
+				entry.setState(OrderEntryState.ORDERED);
+			}
 			CoreModelServiceHolder.get().save(entry);
 			IOrder order = entry.getOrder();
 			boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
@@ -187,6 +202,7 @@ public class OrderManagementUtil {
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().map(IMandator::getId).orElse(null);
 				IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
 				IOrderEntry newOrderEntry = actOrder.addEntry(article, stock, null, quantity);
+				orderService.getHistoryService().logChangedAmount(actOrder, newOrderEntry, 0, quantity);
 				CoreModelServiceHolder.get().save(newOrderEntry);
 			}
 		}
@@ -240,15 +256,47 @@ public class OrderManagementUtil {
 
 		if (existingStockEntry.isPresent()) {
 			IStockEntry se = existingStockEntry.get();
-			se.setCurrentStock(se.getCurrentStock() + amountToAdd);
+			int current = se.getCurrentStock();
+			int newStock = current + amountToAdd;
+			if (newStock < 0) {
+				newStock = 0;
+			}
+			se.setCurrentStock(newStock);
 			CoreModelServiceHolder.get().save(se);
-
 		} else {
+			int startStock = Math.max(0, amountToAdd);
 			IStockEntry newStockEntry = CoreModelServiceHolder.get().create(IStockEntry.class);
 			newStockEntry.setArticle(entry.getArticle());
 			newStockEntry.setStock(stock);
-			newStockEntry.setCurrentStock(amountToAdd);
+			newStockEntry.setCurrentStock(startStock);
 			CoreModelServiceHolder.get().save(newStockEntry);
+		}
+	}
+
+	public static void activateBarcodeScannerAndFocus() {
+		String COMMAND_ID = "ch.elexis.base.barcode.scanner.ListenerProcess";
+		try {
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					.getService(IHandlerService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getService(ICommandService.class);
+
+			Command scannerCommand = commandService.getCommand(COMMAND_ID);
+			Boolean isActive = false;
+			if (scannerCommand.getState("org.eclipse.jface.commands.ToggleState") != null) {
+				isActive = (Boolean) scannerCommand.getState("org.eclipse.jface.commands.ToggleState").getValue();
+			}
+
+			if (!isActive) {
+				handlerService.executeCommand(COMMAND_ID, null);
+				OrderManagementView.setBarcodeScannerActivated(true);
+
+			} else {
+				OrderManagementView.setBarcodeScannerActivated(true);
+			}
+		} catch (Exception e) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Barcode-Scanner Fehler",
+					"Barcode-Scanner konnte nicht aktiviert werden:\n" + e.getMessage());
 		}
 	}
 }
