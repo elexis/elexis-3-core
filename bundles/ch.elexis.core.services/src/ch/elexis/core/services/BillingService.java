@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableOptifier;
@@ -170,7 +171,9 @@ public class BillingService implements IBillingService {
 							encounter.getPatient());
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
-						optifierResult.add(SEVERITY.WARNING, 0, status.getMessage(), optifierResult.get(), false);
+						if (status.getMessage().equals(Messages.Mediorder_bill_reserved_articles)) {
+							optifierResult.add(SEVERITY.WARNING, 0, status.getMessage(), optifierResult.get(), false);
+						}
 					}
 				}
 
@@ -205,7 +208,9 @@ public class BillingService implements IBillingService {
 						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
-				return optifierResult;
+
+				return optifierResult.getSeverity().equals(SEVERITY.OK) ? optifierResult
+						: translateWarningOnly(optifierResult);
 			} else {
 				return translateResult(verificationResult);
 			}
@@ -215,6 +220,13 @@ public class BillingService implements IBillingService {
 							+ "' konnte im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.",
 					null, false);
 		}
+	}
+
+	private Result<IBilled> translateWarningOnly(Result<?> result) {
+		Result<IBilled> ret = new Result<>(SEVERITY.WARNING, null);
+		result.getMessages().stream().filter(msg -> SEVERITY.WARNING.equals(msg.getSeverity()))
+				.forEach(msg -> ret.addMessage(msg.getSeverity(), msg.getText()));
+		return ret;
 	}
 
 	/**
