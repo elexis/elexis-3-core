@@ -68,7 +68,8 @@ public class IReminderTaskAttributeMapper
 		}
 
 		if (!source.getResponsible().isEmpty()) {
-			source.getResponsible().forEach(contact -> {
+			IContact contact = source.getResponsible().get(0);
+			if (contact != null) {
 				if (contact.isOrganization()) {
 					Reference organizationReference = new Reference(
 							new IdDt(Organization.class.getSimpleName(), contact.getId()));
@@ -81,7 +82,7 @@ public class IReminderTaskAttributeMapper
 					Reference personReference = new Reference(new IdDt(Person.class.getSimpleName(), contact.getId()));
 					target.setOwner(personReference);
 				}
-			});
+			}
 		} else if (source.getGroup() != null) {
 			IUserGroup userGroup = source.getGroup();
 			Reference groupReference = new Reference(new IdDt(CareTeam.class.getSimpleName(), userGroup.getId()));
