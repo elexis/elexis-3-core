@@ -132,17 +132,13 @@ public interface IStockService {
 	/**
 	 * Perform a single disposal of an article. The article will be withdrawn from
 	 * the Stock with the highest priority owning this article (if multiple).
-	 * 
-	 * The patient is used for the disposal of mediorder articles via the wwks2
-	 * system.
-	 * 
+	 *
 	 * @param article
-	 * @param count
 	 * @param mandatorId may be <code>null</code> to not consider the mandator
-	 * @param patient
+	 * @param count
 	 * @return
 	 */
-	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId, IPatient patient);
+	public IStatus performSingleDisposal(IArticle article, int count, String mandatorId);
 
 	/**
 	 * Perform a single disposal of an article. Use this method if only the store to
