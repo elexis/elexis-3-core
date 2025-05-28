@@ -69,6 +69,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.reminder.part.nattable.RemiderRichTextUtil;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderBodyDataProvider;
 import ch.elexis.core.ui.reminder.part.nattable.ReminderColumn;
 import ch.elexis.core.ui.views.IRefreshable;
@@ -112,6 +113,7 @@ public class ReminderTablesPart implements IRefreshable {
 	@Optional
 	@Inject
 	void updateReminder(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IReminder reminder) {
+		RemiderRichTextUtil.invalidateCache(reminder);
 		refresh(false);
 	}
 

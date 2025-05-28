@@ -41,6 +41,7 @@ public class AllSupplier implements Supplier<List<IReminder>> {
 			addSearchToQuery(query);
 		}
 
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		query.orderBy(ModelPackage.Literals.IREMINDER__DUE, ORDER.DESC);
 		query.limit(limit);
 

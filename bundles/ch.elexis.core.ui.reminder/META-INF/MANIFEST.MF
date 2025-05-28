@@ -15,4 +15,5 @@ Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: ch.elexis.core.ui.reminder
 Import-Package: ch.elexis.core.fhir.model,
+ com.google.common.cache;version="[33.4.0,34.0.0)",
  org.apache.commons.text;version="[1.13.0,2.0.0)"
