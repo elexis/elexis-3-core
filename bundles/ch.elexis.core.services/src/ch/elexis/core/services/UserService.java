@@ -307,6 +307,9 @@ public class UserService implements IUserService {
 
 	@Override
 	public boolean hasRole(IUser user, Set<String> roleIds) {
+		if (user == null) {
+			return false;
+		}
 		return getUserRoles(user).stream().anyMatch(role -> roleIds.contains(role.getId()));
 	}
 }
