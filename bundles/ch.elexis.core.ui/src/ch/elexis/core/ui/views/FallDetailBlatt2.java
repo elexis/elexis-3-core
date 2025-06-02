@@ -86,7 +86,6 @@ import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -180,11 +179,11 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 
 	public FallDetailBlatt2(final Composite parent) {
 		this(parent, null, false);
-		CoreUiUtil.injectServices(this);
 	}
 
 	public FallDetailBlatt2(final Composite parent, IFall fall, boolean invoiceCorrection) {
 		super(parent, SWT.NONE);
+		CoreUiUtil.injectServices(this);
 
 		this.invoiceCorrection = invoiceCorrection;
 		actFall = fall;
@@ -297,7 +296,7 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 										if (!result.isOK()) {
 											SWTHelper.alert(behandlung.getLabel(), result.toString());
 										}
-										ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+										contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 									}
 									setFall(fall);
 									return;
