@@ -32,8 +32,9 @@ public class OrderTableLabelProvider extends ColumnLabelProvider implements ITab
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof IOrder order && columnIndex == 0) {
-			return OrderManagementUtil.getStatusIcon(order);
+			return OrderManagementUtil.getStatusIcon(order, true);
 		}
 		return null;
 	}
+
 }
