@@ -33,8 +33,8 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
-import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.OrderManagementView;
 
@@ -42,12 +42,6 @@ public class OrderManagementUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderManagementUtil.class);
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
-
-	private static final Image SHOPPING_CART = Images.IMG_SHOPPING_CART.getImage(ImageSize._75x66_TitleDialogIconSize);
-	private static final Image DELIVERY_TRUCK = Images.IMG_DELIVERY_TRUCK
-			.getImage(ImageSize._75x66_TitleDialogIconSize);
-	private static final Image THICK_CHECK = Images.IMG_THICK_CHECK.getImage(ImageSize._75x66_TitleDialogIconSize);
-	private static final Image SHOPPING = Images.IMG_SHOPPING_CART_WHITE.getImage(ImageSize._75x66_TitleDialogIconSize);
 
 	public static List<IOrder> getOpenOrders() {
 		return getOrders(false, true);
@@ -82,7 +76,7 @@ public class OrderManagementUtil {
 		return order;
 	}
 
-	public static Image getStatusIcon(IOrder order) {
+	public static Image getStatusIcon(IOrder order, boolean forTable) {
 		boolean isDone = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 		boolean isPartial = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.PARTIAL_DELIVER);
 		boolean allOrdered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.ORDERED);
@@ -91,14 +85,16 @@ public class OrderManagementUtil {
 		boolean anyDelivered = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.DONE);
 
 		if (isShoping)
-			return SHOPPING;
+			return forTable ? OrderConstants.OrderImages.SHOPPING : OrderConstants.OrderImages.SHOPPING_64x64;
 		if (isDone)
-			return THICK_CHECK;
+			return OrderConstants.OrderImages.THICK_CHECK;
 		if (anyDelivered)
-			return DELIVERY_TRUCK;
+			return forTable ? OrderConstants.OrderImages.DELIVERY_TRUCK
+					: OrderConstants.OrderImages.DELIVERY_TRUCK_64x64;
 		if (isPartial || allOrdered)
-			return DELIVERY_TRUCK;
-		return SHOPPING_CART;
+			return forTable ? OrderConstants.OrderImages.DELIVERY_TRUCK
+					: OrderConstants.OrderImages.DELIVERY_TRUCK_64x64;
+		return forTable ? OrderConstants.OrderImages.SHOPPING_CART : OrderConstants.OrderImages.SHOPPING_CART_64x64;
 	}
 
 	public static String getStatusText(IOrder order) {

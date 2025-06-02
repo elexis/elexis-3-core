@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
 
@@ -39,23 +40,23 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 			String stockCode = (entry.getStock() != null) ? entry.getStock().getCode() : "N/A";
 
 			switch (columnIndex) {
-			case 0:
+			case OrderConstants.OrderTable.STATUS:
 				return String.format("%12s", missingText);
-			case 1:
+			case OrderConstants.OrderTable.ORDERED:
 				return String.valueOf(ordered);
-			case 2:
+			case OrderConstants.OrderTable.DELIVERED:
 				return deliveredText;
-			case 3:
+			case OrderConstants.OrderTable.ADD:
 				if (orderManagementView != null) {
 					Integer pendingValue = orderManagementView.getPendingDeliveredValues().get(entry);
 					return pendingValue != null ? String.valueOf(pendingValue) : StringUtils.EMPTY;
 				}
 				return StringUtils.EMPTY;
-			case 4:
+			case OrderConstants.OrderTable.ARTICLE:
 				return articleName;
-			case 5:
+			case OrderConstants.OrderTable.SUPPLIER:
 				return providerLabel;
-			case 6:
+			case OrderConstants.OrderTable.STOCK:
 				return stockCode;
 			default:
 				return StringUtils.EMPTY;
@@ -67,7 +68,7 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IOrderEntry entry) {
-			if (columnIndex == 0 && entry.getState() != OrderEntryState.OPEN) {
+			if (columnIndex == OrderConstants.OrderTable.STATUS && entry.getState() != OrderEntryState.OPEN) {
 				Image icon = OrderManagementUtil.getEntryStatusIcon(entry);
 				return icon;
 			}
@@ -78,7 +79,7 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 	@Override
 	public Color getBackground(Object element) {
 		if (element instanceof IOrderEntry entry) {
-			if (columnIndex == 3 && orderManagementView.isDeliveryEditMode()) {
+			if (columnIndex == OrderConstants.OrderTable.ADD && orderManagementView.isDeliveryEditMode()) {
 				if (entry.getState() == OrderEntryState.ORDERED
 						|| entry.getState() == OrderEntryState.PARTIAL_DELIVER) {
 					return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);

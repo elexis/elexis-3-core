@@ -59,9 +59,9 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.events.RefreshingPartListener;
-import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.OrderManagementActionFactory;
@@ -130,11 +130,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private boolean hasFocus = false;
 	private boolean showAllYears = false;
 
-	private final Image IMGCLEAR = Images.IMG_CLEAR.getImage();
-	private final Image TICKIMAGE = Images.IMG_TICK.getImage();
-	private final Image DELIVERY_TRUCK = Images.IMG_DELIVERY_TRUCK.getImage(ImageSize._75x66_TitleDialogIconSize);
-	private final Image EINBUCHEN = Images.IMG_IMPORT.getImage();
-	private final Image LIFERANT = Images.IMG_ACHTUNG.getImage();
+
 
 	private static final GridData FILL_HORIZONTAL = new GridData(SWT.FILL, SWT.CENTER, true, false);
 	private static final GridData FILL_BOTH = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -307,7 +303,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			for (IOrderEntry entry : actOrder.getEntries()) {
 				if (entry.getState() == OrderEntryState.ORDERED
 						|| entry.getState() == OrderEntryState.PARTIAL_DELIVER) {
-					tableViewer.editElement(entry, 3);
+					tableViewer.editElement(entry, OrderConstants.OrderTable.ADD);
 					orderButton.setText(Messages.MedicationComposite_btnConfirm);
 					orderButton.setImage(Images.IMG_TICK.getImage());
 					break;
@@ -358,9 +354,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	public int determineEditableColumn(IOrderEntry entry) {
 		if (entry.getState() == OrderEntryState.OPEN)
-			return 1;
+			return OrderConstants.OrderTable.ORDERED;
 		if (entry.getState() == OrderEntryState.ORDERED || entry.getState() == OrderEntryState.PARTIAL_DELIVER)
-			return 2;
+			return OrderConstants.OrderTable.DELIVERED;
 		return -1;
 	}
 
@@ -499,7 +495,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		rightComposite.setLayout(new GridLayout());
 		orderButton = new Button(rightComposite, SWT.PUSH);
 		orderButton.setText(Messages.OrderManagement_Button_Order);
-		orderButton.setLayoutData(new GridData(120, 64));
+		orderButton.setLayoutData(new GridData(140, 64));
 		orderButton.setEnabled(false);
 	}
 
@@ -615,16 +611,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			loadOrderDetails(actOrder);
 			updateOrderDetails(actOrder);
 		}
-		refreshOrderTableWithIconUpdate();
 		updateTableBackground(actOrder);
 		updateUI();
-	}
-
-	private void refreshOrderTableWithIconUpdate() {
-		if (orderTable.getLabelProvider() instanceof OrderTableLabelProvider labelProvider) {
-			labelProvider.clearCache();
-		}
-		orderTable.refresh();
 	}
 
 	public void reload() {
@@ -887,34 +875,38 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private void addEditingSupportForSupplierColumn() {
-		TableColumn existingSupplierColumn = tableViewer.getTable().getColumn(5);
+		TableColumn existingSupplierColumn = tableViewer.getTable().getColumn(OrderConstants.OrderTable.SUPPLIER);
 		TableViewerColumn supplierColumn = new TableViewerColumn(tableViewer, existingSupplierColumn);
-		supplierColumn.setLabelProvider(new EntryTableLabelProvider(5, showDeliveredColumn, this));
+		supplierColumn.setLabelProvider(
+				new EntryTableLabelProvider(OrderConstants.OrderTable.SUPPLIER, showDeliveredColumn, this));
 		supplierColumn.setEditingSupport(
 				new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.SUPPLIER, actOrder,
-						5, orderService));
+						OrderConstants.OrderTable.SUPPLIER, orderService));
 	}
 
 	private void addEditingSupportForAddColumn() {
-		TableColumn existingDeliveredColumn = tableViewer.getTable().getColumn(3);
+		TableColumn existingDeliveredColumn = tableViewer.getTable().getColumn((OrderConstants.OrderTable.ADD));
 		TableViewerColumn deliveredColumn = new TableViewerColumn(tableViewer, existingDeliveredColumn);
-		deliveredColumn.setLabelProvider(new EntryTableLabelProvider(3, showDeliveredColumn, this));
+		deliveredColumn.setLabelProvider(
+				new EntryTableLabelProvider(OrderConstants.OrderTable.ADD, showDeliveredColumn, this));
 		deliveredColumn.setEditingSupport(new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.DELIVERED,
-				actOrder, 3, orderService));
+				actOrder, OrderConstants.OrderTable.ADD, orderService));
 	}
 
 	private void addEditingSupportForDeliveredColumn() {
-		TableColumn existingDeliveredColumn = tableViewer.getTable().getColumn(2);
+		TableColumn existingDeliveredColumn = tableViewer.getTable().getColumn(OrderConstants.OrderTable.DELIVERED);
 		TableViewerColumn deliveredColumn = new TableViewerColumn(tableViewer, existingDeliveredColumn);
-		deliveredColumn.setLabelProvider(new EntryTableLabelProvider(2, showDeliveredColumn, this));
+		deliveredColumn.setLabelProvider(
+				new EntryTableLabelProvider(OrderConstants.OrderTable.DELIVERED, showDeliveredColumn, this));
 	}
 
 	private void addEditingSupportForOrderColumn() {
-		TableColumn existingOrderColumn = tableViewer.getTable().getColumn(1);
+		TableColumn existingOrderColumn = tableViewer.getTable().getColumn(OrderConstants.OrderTable.ORDERED);
 		TableViewerColumn orderColumn = new TableViewerColumn(tableViewer, existingOrderColumn);
-		orderColumn.setLabelProvider(new EntryTableLabelProvider(1, showDeliveredColumn, this));
+		orderColumn.setLabelProvider(
+				new EntryTableLabelProvider(OrderConstants.OrderTable.ORDERED, showDeliveredColumn, this));
 		orderColumn.setEditingSupport(new GenericOrderEditingSupport(this, tableViewer, EditingColumnType.ORDERED, actOrder,
-				1, orderService
+				OrderConstants.OrderTable.ORDERED, orderService
 		));
 	}
 
@@ -924,7 +916,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		}
 		String createdStr = OrderManagementUtil.formatDate(order.getTimestamp());
 		IOutputLog usierID = OrderManagementUtil.getOrderLogEntry(order);
-		Image statusImage = OrderManagementUtil.getStatusIcon(order);
+		Image statusImage = OrderManagementUtil.getStatusIcon(order, false);
 		cartIcon.setImage(statusImage);
 		titleLabel.setText(order.getName());
 		String creatorId = (usierID != null && usierID.getCreatorId() != null) ? usierID.getCreatorId()
@@ -977,12 +969,12 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		boolean allEntriesHaveSupplier = order.getEntries().stream().allMatch(e -> e.getProvider() != null);
 		boolean hasOpenEntries = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.OPEN);
 
-		dispatchedLabelIcon.setImage((allDone || anyOrdered) ? TICKIMAGE : IMGCLEAR);
+		dispatchedLabelIcon.setImage((allDone || anyOrdered) ? OrderConstants.OrderImages.TICK : OrderConstants.OrderImages.CLEAR);
 		dispatchedLabelState.setText((allDone || anyOrdered)
 				? defaultString(orderedDate) + ", (" + defaultString(orderedUser) + ")" //$NON-NLS-1$ //$NON-NLS-2$
 				: Messages.Corr_No);
 
-		bookedLabelIcon.setImage(allDone ? TICKIMAGE : IMGCLEAR);
+		bookedLabelIcon.setImage(allDone ? OrderConstants.OrderImages.TICK : OrderConstants.OrderImages.CLEAR);
 		bookedLabelState.setText(allDone
 				? defaultString(completedDate) + ", (" + defaultString(completedUser) + ")" //$NON-NLS-1$ //$NON-NLS-2$
 				: Messages.Corr_No);
@@ -994,23 +986,23 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 		if (allDone || order.getEntries().isEmpty()) {
 			orderButton.setText(StringUtils.EMPTY);
-			orderButton.setImage(TICKIMAGE);
+			orderButton.setImage(OrderConstants.OrderImages.TICK);
 			orderButton.setEnabled(false);
 		} else {
 			orderButton.setEnabled(true);
 			if (!hasOpenEntries && anyOrdered) {
 
 				orderButton.setText(Messages.OrderManagement_Button_Book);
-				orderButton.setImage(EINBUCHEN);
+				orderButton.setImage(OrderConstants.OrderImages.IMPORT );
 			} else if (allEntriesHaveSupplier) {
 				orderButton.setText(Messages.OrderManagement_Button_Order);
-				orderButtonCustomImage = new Image(DELIVERY_TRUCK.getDevice(),
-						DELIVERY_TRUCK.getImageData().scaledTo(32, 32));
-				orderButton.setImage(orderButtonCustomImage);
+//				orderButtonCustomImage = new Image(DELIVERY_TRUCK.getDevice(),
+//						DELIVERY_TRUCK.getImageData().scaledTo(32, 32));
+				orderButton.setImage(OrderConstants.OrderImages.DELIVERY_TRUCK_64x64);
 			} else {
 
 				orderButton.setText(Messages.OrderManagement_Button_MissingSupplier);
-				orderButton.setImage(LIFERANT);
+				orderButton.setImage(OrderConstants.OrderImages.WARNING);
 			}
 		}
 
