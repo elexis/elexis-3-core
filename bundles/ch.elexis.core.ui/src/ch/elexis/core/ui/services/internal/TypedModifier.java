@@ -11,6 +11,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
@@ -21,6 +22,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.data.PersistentObject;
 
 public class TypedModifier {
 
@@ -120,10 +122,12 @@ public class TypedModifier {
 	}
 
 	public void releaseAndRefreshLock(Object object) {
-		if (object != null && getLocalLockService().isLockedLocal(object)) {
-			getLocalLockService().releaseLock(object);
-    }
-  }
+		if (object instanceof Identifiable || object instanceof PersistentObject) {
+			if (getLocalLockService().isLockedLocal(object)) {
+				getLocalLockService().releaseLock(object);
+			}
+		}
+	}
 
 	/**
 	 * Sets the active {@link IMandator} based on the assigned "Stammarzt" of the
