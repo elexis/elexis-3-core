@@ -48,7 +48,7 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 		}
 
 		String activeUserId = activeUser.get().getId();
-		if (!StringUtils.equals(activeUserId, accessToken.getUsername())) {
+		if (!StringUtils.equalsIgnoreCase(activeUserId, accessToken.getUsername())) {
 			contextService.removeTyped(AccessToken.class);
 			logger.warn("Found access-token for user [{}] but active user id [{}]. Removed access-token.",
 					accessToken.getUsername(), activeUserId);
