@@ -92,6 +92,7 @@ import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
 import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.text.EnhancedTextField;
+import ch.elexis.core.ui.util.BillingSystemColorHelper;
 import ch.elexis.core.ui.util.CoverageComparator;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.util.IKonsMakro;
@@ -151,7 +152,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private ComboFallSelectionListener comboFallSelectionListener;
 
 	private boolean created = false;
-
+	private Color lastCustomBg = null;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
 
 		@Override
@@ -411,6 +412,19 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 		comboFallSelectionListener = new ComboFallSelectionListener();
 		comboViewerFall.addSelectionChangedListener(comboFallSelectionListener);
+		comboViewerFall.addSelectionChangedListener(event -> {
+			StructuredSelection sel = (StructuredSelection) event.getSelection();
+			ICoverage selected = (ICoverage) sel.getFirstElement();
+			updateComboViewerBackground(selected);
+		});
+		comboViewerFall.getCombo().addListener(SWT.Activate, e -> {
+			comboViewerFall.getCombo().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		});
+		comboViewerFall.getCombo().addListener(SWT.Deactivate, e -> {
+			StructuredSelection sel = (StructuredSelection) comboViewerFall.getSelection();
+			ICoverage selected = (ICoverage) sel.getFirstElement();
+			updateComboViewerBackground(selected);
+		});
 
 		GridData gdFall = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		comboViewerFall.getCombo().setLayoutData(gdFall);
@@ -473,6 +487,25 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
+	private void updateComboViewerBackground(ICoverage coverage) {
+		Display display = Display.getDefault();
+		if (lastCustomBg != null && !lastCustomBg.isDisposed()) {
+			lastCustomBg.dispose();
+			lastCustomBg = null;
+		}
+
+		if (coverage != null) {
+			String billingSystemName = coverage.getBillingSystem().getName();
+			lastCustomBg = BillingSystemColorHelper.getBlendedBillingSystemColor(billingSystemName, 80, display);
+
+			comboViewerFall.getCombo().setBackground(lastCustomBg);
+			comboViewerFall.getCombo().setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+		} else {
+			comboViewerFall.getCombo().setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+			comboViewerFall.getCombo().setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+		}
+	}
+
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 
@@ -505,6 +538,10 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	 */
 	@Override
 	public void dispose() {
+		if (lastCustomBg != null && !lastCustomBg.isDisposed()) {
+			lastCustomBg.dispose();
+			lastCustomBg = null;
+		}
 		created = false;
 		getSite().getPage().removePartListener(udpateOnVisible);
 		if (text != null) {
