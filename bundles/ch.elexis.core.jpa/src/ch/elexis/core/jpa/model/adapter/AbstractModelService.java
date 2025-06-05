@@ -72,6 +72,8 @@ public abstract class AbstractModelService implements IModelService {
 
 	private List<String> blockEventTopics;
 
+	private EntityWithId entity;
+
 	/**
 	 * Get the core model service to perform delete of XID. Can return null if model
 	 * does not use XID.
@@ -110,6 +112,15 @@ public abstract class AbstractModelService implements IModelService {
 			}
 		}
 		return Optional.empty();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Optional<T> cast(Identifiable identifiable, Class<T> clazz) {
+		@SuppressWarnings("rawtypes")
+		EntityWithId _entity = ((AbstractIdModelAdapter) identifiable).getEntity();
+		Optional<Identifiable> modelObject = adapterFactory.getModelAdapter(_entity, clazz, true);
+		return (Optional<T>) modelObject;
 	}
 
 	@Override

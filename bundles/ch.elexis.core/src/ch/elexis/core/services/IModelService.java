@@ -46,6 +46,18 @@ public interface IModelService {
 	}
 
 	/**
+	 * Try to cast the {@link Identifiable} to the given class. Use this with
+	 * caution, this method should be only used for very limited edge-cases.
+	 * 
+	 * @param <T>
+	 * @param identifiable
+	 * @param clazz
+	 * @return
+	 * @since 3.13
+	 */
+	public <T> Optional<T> cast(Identifiable identifiable, Class<T> clazz);
+
+	/**
 	 * Load all model objects of type clazz. Deleted entries are not loaded.
 	 *
 	 * @param clazz

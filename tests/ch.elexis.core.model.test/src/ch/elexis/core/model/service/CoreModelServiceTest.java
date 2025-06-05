@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -106,6 +107,34 @@ public class CoreModelServiceTest {
 		assertEquals(patient, loadedPatient.get());
 		assertTrue(patient.isPerson());
 		assertTrue(patient.isPatient());
+	}
+
+	@Test
+	public void castPatientToPerson() {
+		IPatient patient = modelService.create(IPatient.class);
+		assertNotNull(patient);
+		assertTrue(patient instanceof IPatient);
+
+		patient.setLastName("test lastname");
+		patient.setFirstName("test first name");
+		modelService.save(patient);
+
+
+		Optional<IPerson> asPerson = modelService.cast(patient, IPerson.class);
+		assertEquals("test lastname", asPerson.get().getLastName());
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void castFailPatientToICoverage() {
+		IPatient patient = modelService.create(IPatient.class);
+		assertNotNull(patient);
+		assertTrue(patient instanceof IPatient);
+
+		patient.setLastName("test lastname");
+		patient.setFirstName("test first name");
+		modelService.save(patient);
+
+		modelService.cast(patient, ICoverage.class);
 	}
 
 	@Test
