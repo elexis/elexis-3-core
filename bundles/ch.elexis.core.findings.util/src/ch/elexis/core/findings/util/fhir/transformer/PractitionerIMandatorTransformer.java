@@ -51,7 +51,7 @@ public class PractitionerIMandatorTransformer implements IFhirTransformer<Practi
 		practitioner.setIdentifier(identifiers);
 
 		if (localObject.isPerson()) {
-			IPerson mandatorPerson = modelService.load(localObject.getId(), IPerson.class).get();
+			IPerson mandatorPerson = modelService.cast(localObject, IPerson.class).get();
 			practitioner.setName(personHelper.getHumanNames(mandatorPerson));
 			practitioner.setGender(personHelper.getGender(mandatorPerson.getGender()));
 			practitioner.setBirthDate(personHelper.getBirthDate(mandatorPerson));
