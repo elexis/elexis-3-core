@@ -249,12 +249,18 @@
     <requirement
         name="org.eclipse.m2e.feature.feature.group"/>
     <requirement
+        name="com.essiembre.eclipse.rbe.feature.group"/>
+    <requirement
         name="org.eclipse.wb.rcp.feature.feature.group"/>
     <requirement
         name="net.jeeeyul.pdetools.feature.feature.group"
         filter=""/>
     <requirement
+        name="com.essiembre.eclipse.rbe.feature.group"/>
+    <requirement
         name="at.medbits.tools.launchtopom.feature.feature.group"/>
+    <repository
+        url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
         url="https://download.eclipse.org/technology/m2e/releases/latest/"/>
     <repository
@@ -263,6 +269,8 @@
         url="https://eclipse.jeeeyul.net/update/"/>
     <repository
         url="https://download.medelexis.ch/public/at.medbits.tools.launchtopom/"/>
+    <repository
+        url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
