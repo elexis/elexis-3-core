@@ -113,8 +113,8 @@ SET B.keywords = SUBSTRING(CONCAT(COALESCE(B.KEYWORDS, ''), COALESCE((SELECT KEY
 		</preConditions>
 		<sql>
 <![CDATA[
-UPDATE BRIEFE 
-SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference AS D, BRIEFE AS B WHERE B.ID = D.DOCUMENTID), '')), 1, 255);
+UPDATE BRIEFE AS B
+SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference AS D WHERE B.ID = D.DOCUMENTID), '')), 1, 255);
 ]]>
 	    </sql>
 	</changeSet>
@@ -137,8 +137,8 @@ SET O.keywords = SUBSTRING(CONCAT(COALESCE(O.KEYWORDS, ''), COALESCE((SELECT KEY
 		</preConditions>
 		<sql>
 <![CDATA[
-UPDATE ch_elexis_omnivore_data
-SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference D, ch_elexis_omnivore_data AS O WHERE O.ID = D.DOCUMENTID LIMIT 1), '')), 1, 255)
+UPDATE ch_elexis_omnivore_data AS O
+SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS FROM ch_elexis_core_findings_documentreference D WHERE O.ID = D.DOCUMENTID LIMIT 1), '')), 1, 255)
 ]]>
 	    </sql>
 	</changeSet>
