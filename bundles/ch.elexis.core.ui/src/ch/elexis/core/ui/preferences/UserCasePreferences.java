@@ -14,14 +14,18 @@ package ch.elexis.core.ui.preferences;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,7 +42,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -46,14 +49,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.SortedList;
+import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.BillingSystemColorHelper;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.tools.StringTool;
@@ -68,17 +73,16 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	private static final String PREFSDELIMITER = "`^"; //$NON-NLS-1$
 	private static final String PREFSDELIMITER_REGEX = "\\`\\^"; //$NON-NLS-1$
 	public static final String USR_AUTOMATIC_STAMMARZT_MANDANT = "usr/automaticStammarztMandant";
-	private static final String COLOR_KEY_PREFIX = "billingSystemColor_";
 
 	Text diagnoseTxt;
-	Table sorterList2;
+	TableViewer sorterList2Viewer;
 	Button btnToManual;
 	Button btnToNotPresorted;
 	Button btnUp;
 	Button btnDown;
 
 	LinkedList<String> topItemsLinkedList = new LinkedList<>();
-	Map<String, Color> colorMap = new HashMap<>();
+
 
 	public UserCasePreferences() {
 		super(GRID);
@@ -274,26 +278,38 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		sorterListLayout.numColumns = 2;
 		sorterListComp.setLayout(sorterListLayout);
 
-		sorterList2 = new Table(sorterListComp, SWT.BORDER | SWT.FULL_SELECTION);
-		sorterList2.setHeaderVisible(false);
-		sorterList2.setLinesVisible(true);
+		sorterList2Viewer = new TableViewer(sorterListComp, SWT.BORDER | SWT.FULL_SELECTION);
+		Table sorterTable = sorterList2Viewer.getTable();
+		sorterTable.setHeaderVisible(false);
+		sorterTable.setLinesVisible(true);
 
-		TableColumn nameCol = new TableColumn(sorterList2, SWT.LEFT);
-		nameCol.setWidth(160);
-		TableColumn colorCol = new TableColumn(sorterList2, SWT.CENTER);
-		colorCol.setWidth(40);
+		TableColumn nameCol = new TableColumn(sorterTable, SWT.LEFT);
+		nameCol.setWidth(180);
+		sorterList2Viewer.setContentProvider(ArrayContentProvider.getInstance());
+		sorterList2Viewer.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return element == null ? StringUtils.EMPTY : element.toString();
+			}
+
+			@Override
+			public Color getBackground(Object element) {
+				String name = (String) element;
+				if (UserCasePreferences.MENUSEPARATOR.equals(name)) {
+					return sorterList2Viewer.getTable().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+				}
+				String hex = BillingSystemColorHelper.getMixedHexColorForBillingSystem(name, 80);
+				return UiDesk.getColorFromRGB(hex);
+			}
+		});
+
+		sorterList2Viewer.getTable().addListener(SWT.MouseDoubleClick, event -> {
+			BillingSystemColorHelper.handleColorCellClick(sorterList2Viewer, event);
+		});
+
 		setupTableWithColors();
 
-		sorterList2.addListener(SWT.EraseItem, event -> {
-			BillingSystemColorHelper.paintColorCell(event, colorMap, sorterList2);
-		});
-
-		sorterList2.addListener(SWT.MouseDown, event -> {
-			BillingSystemColorHelper.handleColorCellClick(event, sorterList2, colorMap);
-		});
-
-
-		sorterList2.addSelectionListener(new SelectionListener() {
+		sorterTable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setButtonEnabling();
@@ -384,56 +400,50 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	}
 
 	private void setupTableWithColors() {
-		colorMap.values().forEach(c -> {
-			if (c != null && !c.isDisposed())
-				c.dispose();
-		});
-		colorMap.clear();
-
-		sorterList2.removeAll();
-		String[] entries = sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true);
-		for (String name : entries) {
-			TableItem item = new TableItem(sorterList2, SWT.NONE);
-			item.setText(0, name);
-			Color color = BillingSystemColorHelper.loadColor(name, sorterList2.getDisplay());
-			colorMap.put(name, color);
-	    }
+		List<IBillingSystem> allSystems = BillingSystemServiceHolder.get().getBillingSystems();
+		List<String> systemNames = allSystems.stream().map(IBillingSystem::getName).toList();
+		String[] entries = sortBillingSystems(systemNames.toArray(new String[0]), topItemsLinkedList, true);
+		sorterList2Viewer.setInput(entries);
 	}
 
 	private int indexOfTableItem(String name) {
-		for (int i = 0; i < sorterList2.getItemCount(); i++) {
-			if (sorterList2.getItem(i).getText(0).equals(name))
+		Table table = sorterList2Viewer.getTable();
+		for (int i = 0; i < table.getItemCount(); i++) {
+			if (table.getItem(i).getText(0).equals(name)) {
 				return i;
+			}
 		}
 		return -1;
 	}
 
 	void moveItemToPresorted() {
-		TableItem[] selItems = sorterList2.getSelection();
-		if (selItems.length == 0)
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
 			return;
-		String selStr = selItems[0].getText(0);
+		String selStr = (String) sel.getFirstElement();
 		topItemsLinkedList.add(selStr);
 		topItemsLinkedList.remove(StringUtils.EMPTY);
 		setupTableWithColors();
-		sorterList2.setSelection(sorterList2.getItemCount() - 1);
+		sorterList2Viewer.setSelection(new StructuredSelection(selStr));
 		setButtonEnabling();
 	}
 
 	void moveItemToNotPresorted() {
-		TableItem[] selItems = sorterList2.getSelection();
-		if (selItems.length == 0)
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
 			return;
-		String selStr = selItems[0].getText(0);
+		String selStr = (String) sel.getFirstElement();
 		topItemsLinkedList.remove(selStr);
 		topItemsLinkedList.remove(StringUtils.EMPTY);
 		setupTableWithColors();
 		int newSel = indexOfTableItem(selStr);
-		if (newSel >= 0)
-			sorterList2.setSelection(newSel);
+		if (newSel >= 0) {
+			Table table = sorterList2Viewer.getTable();
+			String newSelStr = table.getItem(newSel).getText(0);
+			sorterList2Viewer.setSelection(new StructuredSelection(newSelStr));
+		}
 		setButtonEnabling();
 	}
-
 	void moveItemUpInPresorted() {
 		moveItemInPresorted(-1);
 	}
@@ -443,10 +453,13 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	}
 
 	void moveItemInPresorted(int step) {
-		int selIx = sorterList2.getSelectionIndex();
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
+			return;
+		String selStr = (String) sel.getFirstElement();
+		int selIx = topItemsLinkedList.indexOf(selStr);
 		if (selIx < 0)
 			return;
-		String selStr = sorterList2.getItem(selIx).getText(0);
 		int newIx = selIx + step;
 		if (newIx < 0 || newIx >= topItemsLinkedList.size())
 			return;
@@ -454,20 +467,27 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		topItemsLinkedList.add(newIx, selStr);
 		topItemsLinkedList.remove(StringConstants.EMPTY); // remove any empty items
 		setupTableWithColors();
-		sorterList2.setSelection(newIx);
+		sorterList2Viewer.setSelection(new StructuredSelection(selStr));
 		setButtonEnabling();
 	}
 
 	void setButtonEnabling() {
-		// get separator and current sel position
 		int separatorPos;
 		if ((!topItemsLinkedList.isEmpty()) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
 			separatorPos = topItemsLinkedList.size();
 		else
 			separatorPos = -1;
-		int selIx = sorterList2.getSelectionIndex();
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty()) {
+			btnToManual.setEnabled(false);
+			btnToNotPresorted.setEnabled(false);
+			btnUp.setEnabled(false);
+			btnDown.setEnabled(false);
+			return;
+		}
 
-		// enable/disable presorting buttons
+		String selStr = (String) sel.getFirstElement();
+		int selIx = indexOfTableItem(selStr);
 		if (selIx < 0) {
 			btnToManual.setEnabled(false);
 			btnToNotPresorted.setEnabled(false);
@@ -481,11 +501,10 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 			btnToManual.setEnabled(false);
 			btnToNotPresorted.setEnabled(false);
 		}
-
-		// enable/disable up/down buttons
-		btnUp.setEnabled(((selIx <= 0) || (selIx >= (topItemsLinkedList.size()))) ? false : true);
-		btnDown.setEnabled((selIx >= (topItemsLinkedList.size() - 1)) ? false : ((selIx >= 0) ? true : false));
+		btnUp.setEnabled((selIx > 0) && (selIx < topItemsLinkedList.size()));
+		btnDown.setEnabled((selIx >= 0) && (selIx < topItemsLinkedList.size() - 1));
 	}
+
 
 	public static int getBillingSystemsMenuSeparatorPos(String[] input) {
 		// read the sorting for this user form prefs, convert to LinkedList for editing
@@ -573,16 +592,6 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	@Override
 	protected void performDefaults() {
 		this.initialize();
-	}
-
-	@Override
-	public void dispose() {
-		colorMap.values().forEach(c -> {
-			if (c != null && !c.isDisposed() && c != sorterList2.getDisplay().getSystemColor(SWT.COLOR_WHITE)) {
-				c.dispose();
-			}
-		});
-		colorMap.clear();
 	}
 
 }
