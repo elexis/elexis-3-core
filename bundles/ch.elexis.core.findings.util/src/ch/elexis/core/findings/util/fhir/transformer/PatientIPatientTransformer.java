@@ -2,6 +2,7 @@ package ch.elexis.core.findings.util.fhir.transformer;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.hl7.fhir.r4.model.Patient;
 import org.osgi.service.component.annotations.Activate;
@@ -29,16 +30,25 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 
 	private IPatientPatientAttributeMapper attributeMapper;
 
+	private FhirTransformerCache<Patient> cache;
+
 	@Activate
 	private void activate() {
 		attributeMapper = new IPatientPatientAttributeMapper(modelService, xidService);
+
+		cache = new FhirTransformerCache<Patient>();
 	}
 
 	@Override
 	public Optional<Patient> getFhirObject(IPatient localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		Patient patient = new Patient();
-		attributeMapper.elexisToFhir(localObject, patient, summaryEnum, includes);
-		return Optional.of(patient);
+		return cache.get(localObject, summaryEnum, includes, new Callable<Patient>() {
+			@Override
+			public Patient call() throws Exception {
+				Patient ret = new Patient();
+				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
+				return ret;
+			}
+		});
 	}
 
 	@Override
@@ -70,6 +80,7 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 
 	@Override
 	public Optional<IPatient> updateLocalObject(Patient fhirObject, IPatient localObject) {
+		cache.invalidate(localObject);
 		attributeMapper.fhirToElexis(fhirObject, localObject);
 		modelService.save(localObject);
 		return Optional.of(localObject);

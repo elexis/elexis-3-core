@@ -4,15 +4,11 @@ package ch.elexis.core.findings.util.fhir.transformer;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import org.hl7.fhir.r4.model.Task;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
@@ -30,13 +26,13 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 
 	private IReminderTaskAttributeMapper attributeMapper;
 
-	private Cache<String, Task> fhirObjectCache;
+	private FhirTransformerCache<Task> cache;
 
 	@Activate
 	private void activate() {
 		attributeMapper = new IReminderTaskAttributeMapper(coreModelService);
 
-		fhirObjectCache = CacheBuilder.newBuilder().maximumSize(1000).build();
+		cache = new FhirTransformerCache<Task>();
 	}
 
 	@Override
@@ -67,31 +63,19 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 
 	@Override
 	public Optional<Task> getFhirObject(IReminder localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		Task ret = null;
-		try {
-			ret = fhirObjectCache.get(getCacheKey(localObject),
-					new Callable<Task>() {
-						@Override
-						public Task call() throws Exception {
-							Task ret = new Task();
-							attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
-							return ret;
-						}
-					});
-		} catch (ExecutionException e) {
-			LoggerFactory.getLogger(getClass()).error("Error transform to FHIR", e);
-			return Optional.empty();
-		}
-		return Optional.of(ret);
-	}
-
-	private String getCacheKey(IReminder localObject) {
-		return localObject.getId() + "|" + localObject.getLastupdate();
+		return cache.get(localObject, summaryEnum, includes, new Callable<Task>() {
+			@Override
+			public Task call() throws Exception {
+				Task ret = new Task();
+				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
+				return ret;
+			}
+		});
 	}
 
 	@Override
 	public Optional<IReminder> updateLocalObject(Task fhirObject, IReminder localObject) {
-		fhirObjectCache.invalidate(getCacheKey(localObject));
+		cache.invalidate(localObject);
 		attributeMapper.fhirToElexis(fhirObject, localObject);
 		coreModelService.save(localObject);
 		return Optional.of(localObject);
