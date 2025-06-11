@@ -15,25 +15,38 @@ package ch.elexis.core.ui.preferences;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -41,13 +54,17 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.SortedList;
+import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.BillingSystemColorHelper;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Fall;
 import ch.rgw.io.InMemorySettings;
 import ch.rgw.tools.StringTool;
@@ -64,13 +81,14 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	public static final String USR_AUTOMATIC_STAMMARZT_MANDANT = "usr/automaticStammarztMandant";
 
 	Text diagnoseTxt;
-	List sorterList2;
+	TableViewer sorterList2Viewer;
 	Button btnToManual;
 	Button btnToNotPresorted;
 	Button btnUp;
 	Button btnDown;
 
 	LinkedList<String> topItemsLinkedList = new LinkedList<>();
+
 
 	public UserCasePreferences() {
 		super(GRID);
@@ -266,9 +284,53 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		sorterListLayout.numColumns = 2;
 		sorterListComp.setLayout(sorterListLayout);
 
-		sorterList2 = new List(sorterListComp, SWT.BORDER);
-		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
-		sorterList2.addSelectionListener(new SelectionListener() {
+		sorterList2Viewer = new TableViewer(sorterListComp, SWT.BORDER | SWT.FULL_SELECTION);
+		Table sorterTable = sorterList2Viewer.getTable();
+		sorterTable.setHeaderVisible(false);
+		sorterTable.setLinesVisible(true);
+
+		TableColumn nameCol = new TableColumn(sorterTable, SWT.LEFT);
+		nameCol.setWidth(180);
+		sorterList2Viewer.setContentProvider(ArrayContentProvider.getInstance());
+		sorterList2Viewer.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return element == null ? StringUtils.EMPTY : ((IBillingSystem) element).getName();
+			}
+
+			@Override
+			public Color getBackground(Object element) {
+				IBillingSystem bs = (IBillingSystem) element;
+				if (bs instanceof SeparatorIBillingSystem) {
+					return sorterList2Viewer.getTable().getDisplay().getSystemColor(SWT.COLOR_WHITE);
+				}
+				String hex = BillingSystemColorHelper.getMixedHexColorForBillingSystem(bs.getName(), 80);
+				return UiDesk.getColorFromRGB(hex);
+			}
+		});
+
+		sorterList2Viewer.getTable().addListener(SWT.MouseDoubleClick, event -> {
+			Table table = sorterList2Viewer.getTable();
+			Point pt = new Point(event.x, event.y);
+			TableItem item = table.getItem(pt);
+			if (item != null) {
+				String name = item.getText(0);
+				if (!UserCasePreferences.MENUSEPARATOR.equals(name)) {
+					ColorDialog dlg = new ColorDialog(table.getShell());
+					org.eclipse.swt.graphics.RGB rgb = dlg.open();
+					if (rgb != null) {
+						String value = rgb.red + "," + rgb.green + "," + rgb.blue;
+						ConfigServiceHolder.get().set("billingSystemColor_" + name, value);
+						sorterList2Viewer.setSelection(new StructuredSelection());
+						sorterList2Viewer.refresh();
+					}
+				}
+			}
+		});
+
+		setupTableWithColors();
+
+		sorterTable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setButtonEnabling();
@@ -358,25 +420,51 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		return suParent;
 	}
 
+	private void setupTableWithColors() {
+		List<IBillingSystem> allSystems = BillingSystemServiceHolder.get().getBillingSystems();
+		List<IBillingSystem> sortedList = new LinkedList<>();
+		List<IBillingSystem> alphabeticallySortedList = new LinkedList<>();
+		for (String topName : topItemsLinkedList) {
+			allSystems.stream().filter(bs -> bs.getName().equals(topName)).findFirst().ifPresent(sortedList::add);
+		}
+		SeparatorIBillingSystem separator = new SeparatorIBillingSystem();
+		sortedList.add(separator);
+		for (IBillingSystem bs : allSystems) {
+			if (!topItemsLinkedList.contains(bs.getName())) {
+				alphabeticallySortedList.add(bs);
+			}
+		}
+		alphabeticallySortedList.sort(Comparator.comparing(IBillingSystem::getName, String.CASE_INSENSITIVE_ORDER));
+		sortedList.addAll(alphabeticallySortedList);
+		sorterList2Viewer.setInput(sortedList);
+		sorterList2Viewer.setComparator(billingSystemComparator);
+	}
+
 	void moveItemToPresorted() {
-		String[] selStr = sorterList2.getSelection();
-		topItemsLinkedList.add(selStr[0]);
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
+			return;
+		IBillingSystem selected = (IBillingSystem) sel.getFirstElement();
+		String selName = selected.getName();
+		topItemsLinkedList.add(selName);
 		topItemsLinkedList.remove(StringUtils.EMPTY);
-		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
-		sorterList2.select(topItemsLinkedList.size() - 1);
+		setupTableWithColors();
+		sorterList2Viewer.setSelection(new StructuredSelection(selected));
 		setButtonEnabling();
 	}
 
 	void moveItemToNotPresorted() {
-		String[] selStr = sorterList2.getSelection();
-		topItemsLinkedList.remove(selStr[0]);
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
+			return;
+		IBillingSystem selected = (IBillingSystem) sel.getFirstElement();
+		String selName = selected.getName();
+		topItemsLinkedList.remove(selName);
 		topItemsLinkedList.remove(StringUtils.EMPTY);
-		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
-		int newSel = sorterList2.indexOf(selStr[0]);
-		sorterList2.select(newSel);
+		setupTableWithColors();
+		sorterList2Viewer.setSelection(new StructuredSelection(selected));
 		setButtonEnabling();
 	}
-
 	void moveItemUpInPresorted() {
 		moveItemInPresorted(-1);
 	}
@@ -386,47 +474,51 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	}
 
 	void moveItemInPresorted(int step) {
-		int selIx = sorterList2.getSelectionIndex();
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty())
+			return;
+		IBillingSystem selected = (IBillingSystem) sel.getFirstElement();
+		String selName = selected.getName();
+		int selIx = topItemsLinkedList.indexOf(selName);
 		if (selIx < 0)
 			return;
-		String[] selStr = sorterList2.getSelection();
 		int newIx = selIx + step;
+		if (newIx < 0 || newIx >= topItemsLinkedList.size())
+			return;
 		topItemsLinkedList.remove(selIx);
-		topItemsLinkedList.add(newIx, selStr[0]);
-		topItemsLinkedList.remove(StringConstants.EMPTY); // remove any empty items
-		sorterList2.setItems(sortBillingSystems(BillingSystem.getAbrechnungsSysteme(), topItemsLinkedList, true));
-		sorterList2.select(newIx);
+		topItemsLinkedList.add(newIx, selName);
+		topItemsLinkedList.remove(StringConstants.EMPTY);
+		setupTableWithColors();
+		sorterList2Viewer.setSelection(new StructuredSelection(selected));
 		setButtonEnabling();
 	}
 
 	void setButtonEnabling() {
-		// get separator and current sel position
-		int separatorPos;
-		if ((!topItemsLinkedList.isEmpty()) && (!topItemsLinkedList.get(0).equalsIgnoreCase(StringUtils.EMPTY)))
-			separatorPos = topItemsLinkedList.size();
-		else
-			separatorPos = -1;
-		int selIx = sorterList2.getSelectionIndex();
-
-		// enable/disable presorting buttons
-		if (selIx < 0) {
+		IStructuredSelection sel = sorterList2Viewer.getStructuredSelection();
+		if (sel.isEmpty()) {
 			btnToManual.setEnabled(false);
 			btnToNotPresorted.setEnabled(false);
-		} else if (selIx < separatorPos) {
+			btnUp.setEnabled(false);
+			btnDown.setEnabled(false);
+			return;
+		}
+		IBillingSystem selected = (IBillingSystem) sel.getFirstElement();
+		String selName = selected.getName();
+		int selIx = topItemsLinkedList.indexOf(selName);
+		if (selected instanceof SeparatorIBillingSystem) {
+			btnToManual.setEnabled(false);
+			btnToNotPresorted.setEnabled(false);
+		} else if (selIx >= 0) {
 			btnToManual.setEnabled(false);
 			btnToNotPresorted.setEnabled(true);
-		} else if (selIx > separatorPos) {
+		} else {
 			btnToManual.setEnabled(true);
 			btnToNotPresorted.setEnabled(false);
-		} else {
-			btnToManual.setEnabled(false);
-			btnToNotPresorted.setEnabled(false);
 		}
-
-		// enable/disable up/down buttons
-		btnUp.setEnabled(((selIx <= 0) || (selIx >= (topItemsLinkedList.size()))) ? false : true);
-		btnDown.setEnabled((selIx >= (topItemsLinkedList.size() - 1)) ? false : ((selIx >= 0) ? true : false));
+		btnUp.setEnabled(selIx > 0);
+		btnDown.setEnabled(selIx >= 0 && selIx < topItemsLinkedList.size() - 1);
 	}
+
 
 	public static int getBillingSystemsMenuSeparatorPos(String[] input) {
 		// read the sorting for this user form prefs, convert to LinkedList for editing
@@ -514,5 +606,43 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 	@Override
 	protected void performDefaults() {
 		this.initialize();
+	}
+
+	private ViewerComparator billingSystemComparator = new ViewerComparator() {
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			IBillingSystem bs1 = (IBillingSystem) e1;
+			IBillingSystem bs2 = (IBillingSystem) e2;
+			int pos1 = topItemsLinkedList.indexOf(bs1.getName());
+			int pos2 = topItemsLinkedList.indexOf(bs2.getName());
+			if (pos1 != -1 && pos2 != -1) {
+				return Integer.compare(pos1, pos2);
+			} else if (pos1 != -1) {
+				return -1;
+			} else if (pos2 != -1) {
+				return 1;
+			} else if (bs1 instanceof SeparatorIBillingSystem) {
+				return -1;
+			} else if (bs2 instanceof SeparatorIBillingSystem) {
+				return 1;
+			} else {
+				return bs1.getName().compareToIgnoreCase(bs2.getName());
+			}
+		}
+	};
+
+	public class SeparatorIBillingSystem implements IBillingSystem {
+
+		@Override
+		public String getName() {
+			return UserCasePreferences.MENUSEPARATOR;
+		}
+
+		@Override
+		public BillingLaw getLaw() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 }

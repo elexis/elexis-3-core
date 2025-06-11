@@ -31,13 +31,12 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.nebula.jface.tablecomboviewer.TableComboViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -102,6 +101,7 @@ import ch.elexis.core.ui.util.IKonsMakro;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.views.controls.StickerComposite;
+import ch.elexis.core.ui.views.provider.CoverageColorLabelProvider;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
 import ch.rgw.tools.Result;
@@ -129,7 +129,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	Hashtable<String, IKonsExtension> hXrefs;
 	EnhancedTextField text;
 	private Hyperlink hlMandant, hlDate;
-	ComboViewer comboViewerFall;
+	TableComboViewer tableComboViewerFall;
 	private IEncounter actEncounter;
 	FormToolkit tk;
 	Form form;
@@ -153,7 +153,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	private ComboFallSelectionListener comboFallSelectionListener;
 
 	private boolean created = false;
-
+	private Color lastCustomBg = null;
 	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this) {
 
 		@Override
@@ -331,7 +331,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		boolean cbFallEnabled = actEncounter != null && BillingServiceHolder.get().isEditable(actEncounter).isOK()
 				&& unlocked;
 		hlDate.setEnabled(cbFallEnabled);
-		comboViewerFall.getCombo().setEnabled(cbFallEnabled);
+		tableComboViewerFall.getTableCombo().setEnabled(cbFallEnabled);
 		text.setEditable(unlocked);
 
 		// update the UI
@@ -402,21 +402,16 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		});
 		hlMandant.setBackground(p.getBackground());
 
-		comboViewerFall = new ComboViewer(form.getBody(), SWT.SINGLE);
-		comboViewerFall.setContentProvider(ArrayContentProvider.getInstance());
-		comboViewerFall.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ((ICoverage) element).getLabel();
-			}
-		});
+		tableComboViewerFall = new TableComboViewer(form.getBody(), SWT.SINGLE | SWT.BORDER);
+		tableComboViewerFall.setContentProvider(ArrayContentProvider.getInstance());
+		tableComboViewerFall.setLabelProvider(new CoverageColorLabelProvider());
 
 		comboFallSelectionListener = new ComboFallSelectionListener();
-		comboViewerFall.addSelectionChangedListener(comboFallSelectionListener);
-
+		tableComboViewerFall.addSelectionChangedListener(comboFallSelectionListener);
 		GridData gdFall = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		comboViewerFall.getCombo().setLayoutData(gdFall);
-
+		tableComboViewerFall.getTableCombo().setLayoutData(gdFall);
+		tableComboViewerFall.getTableCombo().setTableVisible(true);
+		tableComboViewerFall.getTableCombo().setTableVisible(false);
 		text = new EnhancedTextField(form.getBody());
 		hXrefs = new Hashtable<>();
 		@SuppressWarnings("unchecked")
@@ -507,6 +502,10 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	 */
 	@Override
 	public void dispose() {
+		if (lastCustomBg != null && !lastCustomBg.isDisposed()) {
+			lastCustomBg.dispose();
+			lastCustomBg = null;
+		}
 		created = false;
 		getSite().getPage().removePartListener(udpateOnVisible);
 		if (text != null) {
@@ -536,16 +535,20 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	}
 
 	private void updateFallCombo() {
-		IPatient pat = ContextServiceHolder.get().getRootContext().getTyped(IPatient.class).orElse(null);
-		if (pat != null && comboViewerFall != null) {
-			List<ICoverage> coverages = pat.getCoverages();
-			Collections.sort(coverages, new CoverageComparator());
-			comboViewerFall.setInput(coverages);
-			if (actEncounter != null) {
-				comboFallSelectionListener.ignoreSelectionEventOnce();
-				comboViewerFall.setSelection(new StructuredSelection(actEncounter.getCoverage()));
-			}
-		}
+	    IPatient pat = ContextServiceHolder.get().getRootContext().getTyped(IPatient.class).orElse(null);
+	    if (pat != null && tableComboViewerFall != null) {
+	        List<ICoverage> coverages = pat.getCoverages();
+	        Collections.sort(coverages, new CoverageComparator());
+	        tableComboViewerFall.setInput(coverages);
+	        if (actEncounter != null) {
+	            comboFallSelectionListener.ignoreSelectionEventOnce();
+	            tableComboViewerFall.setSelection(new StructuredSelection(actEncounter.getCoverage()));
+	        }
+			// needed for initial background colours
+			tableComboViewerFall.getTableCombo().setTableVisible(true);
+			tableComboViewerFall.getTableCombo().setTableVisible(false);
+			tableComboViewerFall.refresh();
+	    }
 	}
 
 	@Override
@@ -572,8 +575,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 			setKonsText(encounter, encounter.getVersionedEntry().getHeadVersion());
 
 			comboFallSelectionListener.ignoreSelectionEventOnce();
-			comboViewerFall.setSelection(new StructuredSelection(coverage));
-			comboViewerFall.getCombo().setEnabled(coverage.isOpen());
+			tableComboViewerFall.setSelection(new StructuredSelection(coverage));
+			tableComboViewerFall.getTableCombo().setEnabled(coverage.isOpen());
 			IMandator mandator = encounter.getMandator();
 			String encounterDate = TimeUtil.formatSafe(encounter.getDate());
 			hlDate.setText(encounterDate + " (" //$NON-NLS-1$
@@ -838,7 +841,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 								} else {
 									ignoreSelectionEventOnce();
-									comboViewerFall.setSelection(new StructuredSelection(actCoverage));
+									tableComboViewerFall.setSelection(new StructuredSelection(actCoverage));
 								}
 							}
 						}
