@@ -12,6 +12,19 @@ Require-Bundle: info.elexis.target.hapi.fhir;visibility:=reexport,
 Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.util.fhir.transformer.helper,
  ch.elexis.core.services.holder,
- org.apache.commons.lang3;version="[3.17.0,4.0.0)"
+ org.apache.commons.lang3;version="[3.17.0,4.0.0)",
+ org.apache.http;version="[4.4.0,5.0.0)",
+ org.apache.http.auth;version="[4.5.0,5.0.0)",
+ org.apache.http.client;version="[4.5.0,5.0.0)",
+ org.apache.http.client.config;version="[4.5.0,5.0.0)",
+ org.apache.http.conn;version="[4.5.0,5.0.0)",
+ org.apache.http.impl.client;version="[4.5.0,5.0.0)"
 Service-Component: OSGI-INF/ch.elexis.core.fhir.model.service.FhirModelService.xml
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/hapi-fhir-client-okhttp-8.2.0.jar,
+ lib/kotlin-stdlib-2.1.21.jar,
+ lib/kotlin-stdlib-jdk8-1.8.21.jar,
+ lib/okhttp-4.12.0.jar,
+ lib/okio-3.6.0.jar,
+ lib/okio-jvm-3.12.0.jar,
+ .

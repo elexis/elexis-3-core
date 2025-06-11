@@ -54,6 +54,8 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 
 	private IGenericClient getGenericClient() {
 		if (client == null) {
+			context.setRestfulClientFactory(new CustomOkHttpRestfulClientFactory(context));
+
 			client = context.newRestfulGenericClient(elexisServer.getConnectionUrl().replace("/services", "/fhir"));
 			if (CoreUtil.isTestMode()) {
 				// Create a logging interceptor
