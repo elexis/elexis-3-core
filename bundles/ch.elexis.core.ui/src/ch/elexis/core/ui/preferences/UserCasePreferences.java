@@ -33,17 +33,20 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -307,7 +310,22 @@ public class UserCasePreferences extends FieldEditorPreferencePage implements IW
 		});
 
 		sorterList2Viewer.getTable().addListener(SWT.MouseDoubleClick, event -> {
-			BillingSystemColorHelper.handleColorCellClick(sorterList2Viewer, event);
+			Table table = sorterList2Viewer.getTable();
+			Point pt = new Point(event.x, event.y);
+			TableItem item = table.getItem(pt);
+			if (item != null) {
+				String name = item.getText(0);
+				if (!UserCasePreferences.MENUSEPARATOR.equals(name)) {
+					ColorDialog dlg = new ColorDialog(table.getShell());
+					org.eclipse.swt.graphics.RGB rgb = dlg.open();
+					if (rgb != null) {
+						String value = rgb.red + "," + rgb.green + "," + rgb.blue;
+						ConfigServiceHolder.get().set("billingSystemColor_" + name, value);
+						sorterList2Viewer.setSelection(new StructuredSelection());
+						sorterList2Viewer.refresh();
+					}
+				}
+			}
 		});
 
 		setupTableWithColors();

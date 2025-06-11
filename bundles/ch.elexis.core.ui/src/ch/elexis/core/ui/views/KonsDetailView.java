@@ -30,12 +30,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.nebula.jface.tablecomboviewer.TableComboViewer;
-import org.eclipse.nebula.widgets.tablecombo.TableCombo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -410,6 +408,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		tableComboViewerFall.addSelectionChangedListener(comboFallSelectionListener);
 		GridData gdFall = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		tableComboViewerFall.getTableCombo().setLayoutData(gdFall);
+		tableComboViewerFall.getTableCombo().setTableVisible(true);
+		tableComboViewerFall.getTableCombo().setTableVisible(false);
 		text = new EnhancedTextField(form.getBody());
 		hXrefs = new Hashtable<>();
 		@SuppressWarnings("unchecked")
@@ -542,20 +542,11 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 	            comboFallSelectionListener.ignoreSelectionEventOnce();
 	            tableComboViewerFall.setSelection(new StructuredSelection(actEncounter.getCoverage()));
 	        }
+			// needed for initial background colours
+			tableComboViewerFall.getTableCombo().setTableVisible(true);
+			tableComboViewerFall.getTableCombo().setTableVisible(false);
+			tableComboViewerFall.refresh();
 	    }
-	    tableComboViewerFall.refresh();
-
-		final TableCombo combo = tableComboViewerFall.getTableCombo();
-		Display.getDefault().asyncExec(() -> {
-			if (!combo.isDisposed()) {
-				ITableColorProvider colorProvider = (ITableColorProvider) tableComboViewerFall.getLabelProvider();
-				for (int i = 0; i < combo.getTable().getItemCount(); i++) {
-					combo.getTable().getItem(i)
-							.setBackground(colorProvider.getBackground(combo.getTable().getItem(i).getData(), 0));
-				}
-				combo.getTable().redraw();
-			}
-		});
 	}
 
 	@Override
