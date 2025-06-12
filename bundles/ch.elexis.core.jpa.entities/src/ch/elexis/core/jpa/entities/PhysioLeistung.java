@@ -52,6 +52,9 @@ public class PhysioLeistung extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 255)
 	private String titel;
 
+	@Column(length = 3)
+	private String law;
+
 	@Lob
 	private String description;
 
@@ -147,5 +150,13 @@ public class PhysioLeistung extends AbstractEntityWithId implements EntityWithId
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public String getLaw() {
+		return law;
+	}
+
+	public void setLaw(String law) {
+		this.law = law;
 	}
 }
