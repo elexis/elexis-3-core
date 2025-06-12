@@ -246,4 +246,14 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
         </addColumn>
 	</changeSet>
 
+	<changeSet id="manual_update_CH_ELEXIS_ARZTTARIFE_CH_PHYSIO_law" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO" columnName="LAW" />
+			</not>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
+			<column name="LAW" type="VARCHAR(3)" defaultValue=""/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
