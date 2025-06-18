@@ -20,14 +20,21 @@ import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.tasks.model.ITaskService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
+@Singleton
 @Component(immediate = true)
 public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnableFactory {
 
+	@Inject
 	@Reference
-	private ITaskService taskService;
+	ITaskService taskService;
 
-	private IModelService coreModelService;
+	@Inject
+	IModelService coreModelService;
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private void setModelService(IModelService modelService) {
@@ -37,14 +44,17 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 	@Reference
 	private ILabImportUtil labimportUtil;
 
+	@Inject
 	@Reference
-	private IVirtualFilesystemService vfsService;
+	IVirtualFilesystemService vfsService;
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@PostConstruct
 	@Activate
-	private void activate() {
+	void activate() {
 		accessControlService.doPrivileged(() -> {
 			try {
 				HL7ImporterTemplateTaskDescriptor.assertTemplate(taskService);
@@ -57,6 +67,7 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 		});
 	}
 
+	@PreDestroy
 	@Deactivate
 	public void deactivate() {
 		taskService.unbindIIdentifiedRunnableFactory(this);
