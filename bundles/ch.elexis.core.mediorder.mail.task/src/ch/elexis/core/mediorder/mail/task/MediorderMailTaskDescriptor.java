@@ -25,7 +25,7 @@ public class MediorderMailTaskDescriptor {
 			taskDescriptor.setTriggerType(TaskTriggerType.CRON);
 			taskDescriptor.setSystem(true);
 			taskDescriptor.setSingleton(true);
-			taskDescriptor.setActive(true);
+			taskDescriptor.setActive(false);
 			
 			CronBuilder cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
 			String cronString = cron.withSecond(on(0)).withMinute(on(0)).withHour(always()).withDoM(questionMark())
