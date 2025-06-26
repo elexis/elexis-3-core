@@ -2574,7 +2574,7 @@ WHERE kontakt.id IN (
 			</not>
 		</preConditions>
 		<createTable tableName="ESRRECORDS">
-			<column name="ID" type="VARCHAR(8)">
+			<column name="ID" type="VARCHAR(25)">
 				<constraints primaryKey="true"
 					primaryKeyName="CONSTRAINT_ID_ESRRECORDS" />
 			</column>
