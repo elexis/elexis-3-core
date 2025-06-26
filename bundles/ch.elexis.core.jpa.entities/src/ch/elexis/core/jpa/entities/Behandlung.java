@@ -36,11 +36,11 @@ import jakarta.persistence.Table;
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
 @NamedQuery(name = "Behandlung.fall", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall")
-@NamedQuery(name = "Behandlung.fall.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall AND (b.mandant IN :aoboids OR b.mandant is null)")
+@NamedQuery(name = "Behandlung.fall.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall AND (b.mandant.id IN :aoboids OR b.mandant is null)")
 @NamedQuery(name = "Behandlung.patient", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient ORDER BY b.datum desc")
-@NamedQuery(name = "Behandlung.patient.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient AND (b.mandant IN :aoboids OR b.mandant is null) ORDER BY b.datum desc, b.time desc")
+@NamedQuery(name = "Behandlung.patient.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient AND (b.mandant.id IN :aoboids OR b.mandant is null) ORDER BY b.datum desc, b.time desc")
 @NamedQuery(name = "Behandlung.patient.last", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient ORDER BY b.datum desc, b.time desc")
-@NamedQuery(name = "Behandlung.patient.last.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient AND (b.mandant IN :aoboids OR b.mandant is null) ORDER BY b.datum desc, b.time desc")
+@NamedQuery(name = "Behandlung.patient.last.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient AND (b.mandant.id IN :aoboids OR b.mandant is null) ORDER BY b.datum desc, b.time desc")
 public class Behandlung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

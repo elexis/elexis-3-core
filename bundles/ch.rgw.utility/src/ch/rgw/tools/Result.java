@@ -217,7 +217,7 @@ public class Result<T> {
 	 */
 	public String toString() {
 		return "Result (" + severity + ") msgs: "
-				+ list.stream().map(x -> x.text + "/" + x.code).reduce((x, y) -> x + " , " + y).get();
+				+ list.stream().map(x -> x.text + "/" + x.code + "/" + x.object).reduce((x, y) -> x + " , " + y).get();
 	}
 
 	/**

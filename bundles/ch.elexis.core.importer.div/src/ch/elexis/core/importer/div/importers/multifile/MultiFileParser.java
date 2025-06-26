@@ -108,7 +108,8 @@ public class MultiFileParser implements IMultiFileParser {
 				strategyMap = importStrategyFactory.createImportStrategyMap(fileHandle);
 			} catch (IllegalStateException ise) {
 				// file was invalid
-				return new Result<>(SEVERITY.ERROR, 1, Messages.MultiFileParser_InvalidFile, fileHandle, true);
+				return new Result<>(SEVERITY.ERROR, 1, Messages.MultiFileParser_InvalidFile + ": " + ise.getMessage(),
+						fileHandle, true);
 			}
 
 			List<IVirtualFilesystemHandle> keys = sortStrategyList(fileHandle, strategyMap);

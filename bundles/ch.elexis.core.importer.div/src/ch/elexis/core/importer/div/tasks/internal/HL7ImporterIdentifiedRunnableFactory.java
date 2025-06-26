@@ -41,8 +41,9 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 		coreModelService = modelService;
 	}
 
+	@Inject
 	@Reference
-	private ILabImportUtil labimportUtil;
+	ILabImportUtil labimportUtil;
 
 	@Inject
 	@Reference

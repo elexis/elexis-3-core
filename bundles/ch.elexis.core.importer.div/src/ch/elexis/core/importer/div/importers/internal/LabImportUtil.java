@@ -37,18 +37,20 @@ import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IDocumentStore;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Utility class that provides basic functionality a Lab importer implementation
@@ -57,17 +59,23 @@ import ch.rgw.tools.TimeTool;
  * @author thomashu
  *
  */
+@Singleton
 @Component
 public class LabImportUtil implements ILabImportUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(LabImportUtil.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
 	private IDocumentStore documentStore;
 
+	@Inject
+	@Reference
+	IEncounterService encounterService;
+	
 	/**
 	 * Searches for a Labor matching the identifier as part of the Kuerzel or Name
 	 * attribute. If no matching Labor is found, a new Labor is created with
@@ -323,7 +331,7 @@ public class LabImportUtil implements ILabImportUtil {
 			if (iPatient != null) {
 				Optional<IPatient> patient = CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
 				if (patient.isPresent()) {
-					Optional<IEncounter> konsultation = EncounterServiceHolder.get().getLatestEncounter(patient.get());
+					Optional<IEncounter> konsultation = encounterService.getLatestEncounter(patient.get());
 					if (konsultation.isPresent()) {
 						IMandator mandant = konsultation.get().getMandator();
 						if (mandant != null && mandant.getId() != null) {
@@ -537,7 +545,8 @@ public class LabImportUtil implements ILabImportUtil {
 				order.setOrderId(orderId);
 			}
 			ContextServiceHolder.get().getActiveUserContact().ifPresent(uc -> order.setUser(uc));
-			modelService.save(order);
+			labOrder = order;
+
 		} else {
 			labOrder.setResult(labResult);
 		}
@@ -547,6 +556,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 
 		modelService.save(labResult);
+		modelService.save(labOrder);
 		return labResult;
 	}
 

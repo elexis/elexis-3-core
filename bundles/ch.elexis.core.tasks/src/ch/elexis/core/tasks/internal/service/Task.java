@@ -256,49 +256,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				}
 			}
 
-			getEntity().setRunAt(System.currentTimeMillis());
-			setState(TaskState.READY);
-
-			String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
-
-			IIdentifiedRunnable runnableWithContext = TaskServiceHolder.get()
-					.instantiateRunnableById(runnableWithContextId);
-
-			Map<String, Serializable> effectiveRunContext = new HashMap<>();
-			effectiveRunContext.putAll(runnableWithContext.getDefaultRunContext());
-			effectiveRunContext.putAll(originTaskDescriptor.getRunContext());
-			effectiveRunContext.putAll(getRunContext());
-
-			assertRequiredRunContextParameters(effectiveRunContext);
-
-			getEntity().setRunContext(GSON.toJson(effectiveRunContext));
-			setState(TaskState.IN_PROGRESS);
-			// TODO what if it runs forever?
-			// TODO progressMonitor handling
-			try {
-				Map<String, Serializable> result = runnableWithContext.run(effectiveRunContext, progressMonitor,
-						logger);
-				if (result == null) {
-					result = Collections.emptyMap();
-				}
-
-				setResult(result);
-				getEntity().setFinishedAt(System.currentTimeMillis());
-				TaskState exitState = (result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
-						: TaskState.COMPLETED;
-				setState(exitState);
-
-				if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
-						|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
-					// only if completion was successful
-					removeTaskRecord();
-				}
-			} catch (OperationCanceledException oce) {
-				setState(TaskState.CANCELLED);
-				getEntity().setFinishedAt(System.currentTimeMillis());
-				setResult(Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.RESULT_DATA, oce.getMessage()));
-			}
-			progressMonitor.done();
+			_doRun(originTaskDescriptor);
 
 		} catch (Exception | Error e) {
 			// if we end up here, there is most certainly a bug in the IIdentifiedRunnable
@@ -315,6 +273,52 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				ContextServiceHolder.get().setActiveMandator(null);
 			}
 		}
+	}
+
+	private void _doRun(ITaskDescriptor originTaskDescriptor) throws TaskException {
+		getEntity().setRunAt(System.currentTimeMillis());
+		setState(TaskState.READY);
+
+		String runnableWithContextId = originTaskDescriptor.getIdentifiedRunnableId();
+
+		IIdentifiedRunnable runnableWithContext = TaskServiceHolder.get()
+				.instantiateRunnableById(runnableWithContextId);
+
+		Map<String, Serializable> effectiveRunContext = new HashMap<>();
+		effectiveRunContext.putAll(runnableWithContext.getDefaultRunContext());
+		effectiveRunContext.putAll(originTaskDescriptor.getRunContext());
+		effectiveRunContext.putAll(getRunContext());
+
+		assertRequiredRunContextParameters(effectiveRunContext);
+
+		getEntity().setRunContext(GSON.toJson(effectiveRunContext));
+		setState(TaskState.IN_PROGRESS);
+		// TODO what if it runs forever?
+		// TODO progressMonitor handling
+		try {
+			Map<String, Serializable> result = runnableWithContext.run(effectiveRunContext, progressMonitor, logger);
+			if (result == null) {
+				result = Collections.emptyMap();
+			}
+
+			setResult(result);
+			getEntity().setFinishedAt(System.currentTimeMillis());
+			TaskState exitState = (result.containsKey(ReturnParameter.MARKER_WARN)) ? TaskState.COMPLETED_WARN
+					: TaskState.COMPLETED;
+			setState(exitState);
+
+			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
+					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
+				// only if completion was successful
+				removeTaskRecord();
+			}
+		} catch (OperationCanceledException oce) {
+			setState(TaskState.CANCELLED);
+			getEntity().setFinishedAt(System.currentTimeMillis());
+			setResult(Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.RESULT_DATA, oce.getMessage()));
+		}
+		progressMonitor.done();
+
 	}
 
 	/**

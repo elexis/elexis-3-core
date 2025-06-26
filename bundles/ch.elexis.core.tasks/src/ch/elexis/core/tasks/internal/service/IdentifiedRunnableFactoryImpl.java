@@ -39,7 +39,9 @@ public class IdentifiedRunnableFactoryImpl implements IIdentifiedRunnableFactory
 
 	@Activate
 	public void activate() {
-		taskService.bindIIdentifiedRunnableFactory(this);
+		accessControlService.doPrivileged(() -> {
+			taskService.bindIIdentifiedRunnableFactory(this);
+		});
 	}
 
 	@Deactivate
