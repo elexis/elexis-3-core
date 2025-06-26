@@ -84,7 +84,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 		String config = serienTerminConfigurationString.split("\\|\\|", 2)[0];
 		String[] terms = config.split(";");
 		if (terms.length < 6) {
-			logger.debug("Kein gültiger Serientermin-String, skip parsing: {}", serienTerminConfigurationString);
+			logger.debug("No valid series appointment string, skip parsing: {}", serienTerminConfigurationString);
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 			endTime = LocalTime.parse(termin[1], timeFormatter);
 			startDate = LocalDate.parse(terms[3], dateFormatter);
 		} catch (Exception e) {
-			logger.error("Fehler beim Parsen von Zeit/Daten", e);
+			logger.error("Error when parsing time/data", e);
 			return;
 		}
 
@@ -110,7 +110,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 			try {
 				endsOnDate = LocalDate.parse(endingPatternString, dateFormatter);
 			} catch (Exception e) {
-				logger.error("Fehler beim Parsen des Endedatums", e);
+				logger.error("Error when parsing the end date", e);
 			}
 		}
 	}
