@@ -5246,6 +5246,28 @@ public class Messages extends NLS {
 	public static String UserCasePreferences_StammarztAutoMandant;
 	public static String OrderManagement_Error_NegativeDeliveredAmount;
 	public static String OrderManagement_StockOrder_DefaultName;
+	public static String GoogleCalPreferences_PluginActivate;
+	public static String GoogleCalPreferences_SyncActive;
+	public static String GoogleCalPreferences_Range;
+	public static String GoogleCalPreferences_DisplayMode;
+	public static String GoogleCalPreferences_ModeBlank;
+	public static String GoogleCalPreferences_ModeShort;
+	public static String GoogleCalPreferences_ModeFull;
+	public static String GoogleCalPreferences_Interval;
+	public static String GoogleCalPreferences_OAuth;
+	public static String GoogleCalPreferences_OAuthReset;
+	public static String GoogleCalPreferences_Calendar;
+	public static String GoogleCalPreferences_CreateTask;
+	public static String GoogleCalPreferences_SyncNow;
+	public static String GoogleCalPreferences_Error;
+	public static String GoogleCalPreferences_SyncError;
+	public static String GoogleCalPreferences_TaskCreated;
+	public static String GoogleCalPreferences_ReferenceIdPrompt;
+	public static String GoogleCalPreferences_ReferenceIdEmpty;
+	public static String GoogleCalPreferences_RunnerPrompt;
+	public static String GoogleCalPreferences_CronPrompt;
+	public static String GoogleCalPreferences_IntervalMustBePositive;
+	public static String GoogleCalPreferences_InvalidNumber;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
