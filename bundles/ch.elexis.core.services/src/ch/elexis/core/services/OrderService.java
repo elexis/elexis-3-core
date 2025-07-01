@@ -16,6 +16,7 @@ import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
@@ -206,6 +207,22 @@ public class OrderService implements IOrderService {
 			differences.put(entry.getKey(), diff);
 		}
 		return differences;
+	}
+
+	@Override
+	public boolean containsSupplier(IOrder order, IContact supplier) {
+		if (order == null || supplier == null) {
+			return false;
+		}
+
+		String supplierId = supplier.getId();
+		for (IOrderEntry entry : order.getEntries()) {
+			IContact provider = entry.getProvider();
+			if (provider != null && supplierId.equals(provider.getId())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

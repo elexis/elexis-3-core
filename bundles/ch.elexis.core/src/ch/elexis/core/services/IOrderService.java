@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -121,5 +122,21 @@ public interface IOrderService {
 	 * @return instance of IOrderHistoryService
 	 */
 	public IOrderHistoryService getHistoryService();
+
+	/**
+	 * Checks whether the given order contains at least one entry assigned to the
+	 * specified supplier.
+	 * <p>
+	 * This method iterates over all entries in the given order and compares the
+	 * supplier (provider) of each entry with the given {@code supplier}. If at
+	 * least one match is found, the method returns {@code true}.
+	 * </p>
+	 *
+	 * @param order    the order to check (may be {@code null})
+	 * @param supplier the supplier to look for (may be {@code null})
+	 * @return {@code true} if the order contains at least one entry with the given
+	 *         supplier; {@code false} otherwise
+	 */
+	boolean containsSupplier(IOrder order, IContact supplier);
 
 }
