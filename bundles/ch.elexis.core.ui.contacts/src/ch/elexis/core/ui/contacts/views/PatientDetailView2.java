@@ -79,6 +79,9 @@ public class PatientDetailView2 extends ViewPart {
 
 	@Override
 	public void setFocus() {
+		if (pb != null && !pb.isDisposed()) {
+			pb.setFocus();
+		}
 	}
 
 	@Override
