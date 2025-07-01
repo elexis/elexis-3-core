@@ -340,20 +340,23 @@ public class OrderManagementActionFactory {
 					try {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
-						try {
-							sender.store(actOrder);
-							sender.finalizeExport();
-						} catch (XChangeException xe) {
-							logger.error("Error saving or exporting the order: ", xe); //$NON-NLS-1$
-							SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
-									Messages.OrderManagement_ExportError_Message);
-							continue;
+
+						if (sender.canHandle(actOrder)) {
+							try {
+								sender.store(actOrder);
+								sender.finalizeExport();
+							} catch (XChangeException xe) {
+								logger.error("Error saving or exporting the order: ", xe);
+								SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
+										Messages.OrderManagement_ExportError_Message);
+								continue;
+							}
+							SWTHelper.showInfo(Messages.BestellView_OrderSentCaption,
+									Messages.BestellView_OrderSentBody);
+							view.refresh();
+							orderService.getHistoryService().logOrderSent(actOrder, true);
+							view.reload();
 						}
-						SWTHelper.showInfo(ch.elexis.core.ui.views.Messages.BestellView_OrderSentCaption,
-								ch.elexis.core.ui.views.Messages.BestellView_OrderSentBody);
-						view.refresh();
-						orderService.getHistoryService().logOrderSent(actOrder, true);
-						view.reload();
 					} catch (CoreException ex) {
 						ExHandler.handle(ex);
 						logger.error("Error sending the order: ", ex); //$NON-NLS-1$
