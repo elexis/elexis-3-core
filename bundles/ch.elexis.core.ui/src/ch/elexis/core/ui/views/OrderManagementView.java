@@ -46,7 +46,6 @@ import org.eclipse.ui.part.ViewPart;
 import com.google.gson.Gson;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.model.IArticle;
@@ -61,6 +60,7 @@ import ch.elexis.core.model.OrderHistoryEntry;
 import ch.elexis.core.serial.Connection;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.constants.OrderConstants;
@@ -299,7 +299,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private boolean isBarcodePortAvailable(){
-	    String port = CoreHub.localCfg.get(BarcodeScanner_COMPORT, "");
+		String port = LocalConfigService.get(BarcodeScanner_COMPORT, "");
 	    if(StringUtils.isBlank(port)){
 	        return false;
 	    }
