@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,9 @@ import org.eclipse.ui.part.ViewPart;
 import com.google.gson.Gson;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
+import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
@@ -55,6 +58,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.OrderHistoryAction;
 import ch.elexis.core.model.OrderHistoryEntry;
+import ch.elexis.core.serial.Connection;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -130,8 +134,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private boolean hasFocus = false;
 	private boolean showAllYears = false;
 
+	private static final String BARCODE_CONSUMER_KEY = "barcodeInputConsumer.OrderManagementView";
 
-
+	public static final String BarcodeScanner_COMPORT = "barcode/Symbol/port"; //$NON-NLS-1$
 	private static final GridData FILL_HORIZONTAL = new GridData(SWT.FILL, SWT.CENTER, true, false);
 	private static final GridData FILL_BOTH = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private static final GridData FIXED_WIDTH_50 = new GridData(50, SWT.DEFAULT);
@@ -177,7 +182,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (isMatchingPart(partRef)) {
 				hasFocus = true;
 				String valueToSet = OrderManagementView.class.getName();
-				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet); //$NON-NLS-1$
+				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, valueToSet); // $NON-NLS-1$
 
 			}
 		}
@@ -186,8 +191,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			if (isMatchingPart(partRef)) {
 				hasFocus = false;
-				String valueToSet = OrderManagementView.class.getName();
-				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet); //$NON-NLS-1$
+				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, null);
 			}
 		}
 	};
@@ -199,36 +203,61 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		if (!hasFocus) {
 			return;
 		}
-		if (event instanceof IArticle scannedArticle && StringUtils.equals(OrderManagementView.class.getName(),
-				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) { //$NON-NLS-1$
+		if (event instanceof IArticle scannedArticle && OrderManagementView.class.getName()
+				.equals(contextService.getNamed(BARCODE_CONSUMER_KEY).orElse(null))) {
+			if (actOrder == null) {
 
-			if (actOrder == null)
 				return;
+			}
 			Optional<IOrderEntry> matchingEntry = actOrder.getEntries().stream()
 					.filter(entry -> entry.getArticle() != null
 							&& entry.getArticle().getCode().equals(scannedArticle.getCode()))
 					.findFirst();
-
 			if (matchingEntry.isPresent()) {
 				IOrderEntry entry = matchingEntry.get();
-				int currentPending = pendingDeliveredValues.getOrDefault(entry, 0);
-				int newPending = currentPending + 1;
-				int ordered = entry.getAmount();
-				int delivered = entry.getDelivered();
-				int sumDelivered = delivered + newPending;
-				if (sumDelivered > ordered) {
-					boolean confirm = MessageDialog.openQuestion(getSite().getShell(),
-							Messages.OrderManagement_Overdelivery_Title,
-							MessageFormat.format(Messages.OrderManagement_Overdelivery_Message, delivered, newPending,
-									sumDelivered, ordered));
-					if (!confirm) {
-						return;
+				if (entry.getState() == OrderEntryState.OPEN) {
+					int oldAmount = entry.getAmount();
+					int newAmount = oldAmount + 1;
+					updateOrderEntry(entry, newAmount);
+				} else {
+					int currentPending = pendingDeliveredValues.getOrDefault(entry, 0);
+					int newPending = currentPending + 1;
+					int ordered = entry.getAmount();
+					int delivered = entry.getDelivered();
+					int sumDelivered = delivered + newPending;
+					if (sumDelivered > ordered) {
+						boolean confirm = MessageDialog.openQuestion(getSite().getShell(),
+								Messages.OrderManagement_Overdelivery_Title,
+								MessageFormat.format(Messages.OrderManagement_Overdelivery_Message, delivered,
+										newPending, sumDelivered, ordered));
+						if (!confirm) {
+							return;
+						}
 					}
+					pendingDeliveredValues.put(entry, newPending);
 				}
-				pendingDeliveredValues.put(entry, newPending);
-				tableViewer.refresh();
-				updateOrderStatus(actOrder);
+
+			}else {
+
+				boolean isOrderOpen = actOrder.getEntries().stream()
+						.allMatch(e -> e.getState() == OrderEntryState.OPEN);
+
+				if (isOrderOpen) {
+					IStock stock = StockServiceHolder.get()
+							.getMandatorDefaultStock(ContextServiceHolder.get().getActiveMandator().get().getId());
+					IOrderEntry newEntry = actOrder.addEntry(scannedArticle, stock, null, 1);
+					newEntry.setOrder(actOrder);
+					newEntry.setArticle(scannedArticle);
+					newEntry.setAmount(1);
+					newEntry.setState(OrderEntryState.OPEN);
+					actOrder.getEntries().add(newEntry);
+					CoreModelServiceHolder.get().save(newEntry);
+					orderService.getHistoryService().logEdit(actOrder, newEntry, 0, 1);
+				}
 			}
+			tableViewer.refresh();
+			refresh();
+			updateOrderStatus(actOrder);
 		}
 	}
 
@@ -257,6 +286,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		actionFactory.createContextMenu(tableViewer, orderTable);
 		loadCompletedOrders(completedContainer);
 		updateUI();
+
 		sashForm.setWeights(new int[] { 2, 1 });
 	}
 
@@ -268,7 +298,16 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		this.showDeliveredColumn = showDeliveredColumn;
 	}
 
-	private void handleOrderButtonClick() {
+	private boolean isBarcodePortAvailable(){
+	    String port = CoreHub.localCfg.get(BarcodeScanner_COMPORT, "");
+	    if(StringUtils.isBlank(port)){
+	        return false;
+	    }
+		String[] available = Connection.getComPorts();
+	    return Arrays.asList(available).contains(port);
+	}
+	
+	public void handleOrderButtonClick() {
 		String buttonText = orderButton.getText();
 		if (buttonText.equals(Messages.OrderManagement_Button_Order)) {
 			if (buttonText.equals(Messages.OrderManagement_Button_Order)) {
@@ -297,7 +336,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				refreshTables();
 			}
 		} else if (buttonText.equals(Messages.OrderManagement_Button_Book)) {
-			OrderManagementUtil.activateBarcodeScannerAndFocus();
+			if (isBarcodePortAvailable()) {
+				OrderManagementUtil.activateBarcodeScannerAndFocus();
+			}
 			setDeliveryEditMode(true);
 			tableViewer.refresh();
 			for (IOrderEntry entry : actOrder.getEntries()) {
@@ -336,8 +377,12 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				orderService.getHistoryService().logDelivery(orderEntry.getOrder(), orderEntry, part, ordered);
 				OrderManagementUtil.saveSingleDelivery(orderEntry, part, orderService);
 			}
-			OrderManagementUtil.activateBarcodeScannerAndFocus();
-			barcodeScannerActivated = false;
+
+			if (isBarcodePortAvailable()) {
+				OrderManagementUtil.activateBarcodeScannerAndFocus();
+				barcodeScannerActivated = false;
+			}
+
 			pendingDeliveredValues.clear();
 			setDeliveryEditMode(false);
 			tableViewer.refresh();
@@ -509,6 +554,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tableControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableControl.setHeaderVisible(true);
 		tableControl.setLinesVisible(true);
+
 		dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", tableViewer.getControl(), //$NON-NLS-1$
 				new OrderDropReceiver(this, orderService));
 		CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
@@ -518,7 +564,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				Messages.OrderManagement_Column_Delivered, Messages.Core_Add, Messages.OrderManagement_Column_Article,
 				Messages.OrderManagement_Column_Supplier, Messages.OrderManagement_Column_Stock };
 		int[] columnWidths = { 80, 50, 60, 80, 190, 160, 50 };
-
+		if (isBarcodePortAvailable()) {
+			OrderManagementUtil.activateBarcodeScannerAndFocus();
+		}
 		createTableColumns(tableViewer, columnHeaders, columnWidths, showDeliveredColumn);
 	}
 
@@ -991,22 +1039,18 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		} else {
 			orderButton.setEnabled(true);
 			if (!hasOpenEntries && anyOrdered) {
-
 				orderButton.setText(Messages.OrderManagement_Button_Book);
 				orderButton.setImage(OrderConstants.OrderImages.IMPORT );
 			} else if (allEntriesHaveSupplier) {
 				orderButton.setText(Messages.OrderManagement_Button_Order);
-//				orderButtonCustomImage = new Image(DELIVERY_TRUCK.getDevice(),
-//						DELIVERY_TRUCK.getImageData().scaledTo(32, 32));
 				orderButton.setImage(OrderConstants.OrderImages.DELIVERY_TRUCK_64x64);
 			} else {
-
 				orderButton.setText(Messages.OrderManagement_Button_MissingSupplier);
 				orderButton.setImage(OrderConstants.OrderImages.WARNING);
 			}
 		}
 
-		if (hasOpenEntries) {
+		if (hasOpenEntries || !hasEntries) {
 			actionFactory.createContextMenu(tableViewer, orderTable);
 		} else {
 			tableViewer.getControl().setMenu(null);
