@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import ch.elexis.core.model.ICodeElementBlock;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.exchange.elements.ServiceBlockElement;
 import ch.elexis.core.ui.exchange.elements.ServiceBlocksElement;
@@ -33,6 +35,11 @@ public class BlockExporter extends XChangeExporter {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean canHandle(Identifiable identifiable) {
+		return identifiable instanceof ICodeElementBlock;
 	}
 
 	public void finalizeExport() throws XChangeException {
