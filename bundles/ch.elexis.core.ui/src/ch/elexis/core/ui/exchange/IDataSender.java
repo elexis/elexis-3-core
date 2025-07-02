@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.exchange;
 
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.data.PersistentObject;
 
@@ -48,4 +49,19 @@ public interface IDataSender {
 	 * @return true if it can handle objects of that class.
 	 */
 	public boolean canHandle(Class<? extends PersistentObject> clazz);
+
+	/**
+	 * Checks whether this {@link IDataSender} is able to handle the given
+	 * {@link Identifiable} object.
+	 * <p>
+	 * This method is typically used to determine at runtime whether a specific
+	 * object instance can be processed by this {@code IDataSender}, regardless of
+	 * its concrete class.
+	 *
+	 * @param identifiable the object to check
+	 * @return {@code true} if this {@code IDataSender} can handle the given object;
+	 *         {@code false} otherwise
+	 */
+	public boolean canHandle(Identifiable identifiable);
+
 }
