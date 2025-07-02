@@ -19,22 +19,53 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
-import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Patient;
 
-public class PatientDetailView2 extends ViewPart implements IActivationListener {
+public class PatientDetailView2 extends ViewPart {
+
+	@Inject
+	IContextService contextService;
+
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 	Patientenblatt2 pb;
+
+	private RefreshingPartListener patientUpdateListener = new RefreshingPartListener(this) {
+		public void partVisible(IWorkbenchPartReference partRef) {
+			if (pb != null && !pb.isDisposed()) {
+				contextService.getActivePatient().ifPresent(selectedPatient -> {
+					if (pb.actPatient != null && !selectedPatient.equals(pb.actPatient.toIPatient())) {
+						pb.setPatient((Patient) NoPoUtil.loadAsPersistentObject(selectedPatient));
+						pb.refresh();
+					}
+				});
+			}
+		}
+
+		public void partActivated(IWorkbenchPartReference partRef) {
+			if (pb != null && !pb.isDisposed()) {
+				pb.refreshUi();
+			}
+		}
+
+		public void partDeactivated(IWorkbenchPartReference partRef) {
+			if (pb != null && !pb.isDisposed() &&
+				    ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
+					pb.save();
+				}
+		}
+	};
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -44,22 +75,13 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 		parent.setLayout(new FillLayout());
 		pb = new Patientenblatt2(parent, getViewSite());
 
-		GlobalEventDispatcher.addActivationListener(this, this);
-	}
-
-	public void refresh() {
-		pb.setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
-		pb.refresh();
+		getSite().getPage().addPartListener(patientUpdateListener);
 	}
 
 	@Override
 	public void setFocus() {
 		if (pb != null && !pb.isDisposed()) {
-			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
-			if (selectedPatient != null && !selectedPatient.equals(pb.actPatient)) {
-				pb.setPatient((Patient) ElexisEventDispatcher.getSelected(Patient.class));
-				pb.refresh();
-			}
+			pb.setFocus();
 		}
 	}
 
@@ -68,6 +90,7 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 		if (pb != null) {
 			pb.dispose();
 		}
+		getSite().getPage().removePartListener(patientUpdateListener);
 		super.dispose();
 	}
 
@@ -75,21 +98,5 @@ public class PatientDetailView2 extends ViewPart implements IActivationListener 
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
-	}
-
-	@Override
-	public void activation(boolean mode) {
-		if (!mode) {
-			// save does not happen via locking in standalone mode
-			if (ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
-				pb.save();
-			}
-		} else {
-			pb.refreshUi();
-		}
-	}
-
-	@Override
-	public void visible(boolean mode) {
 	}
 }
