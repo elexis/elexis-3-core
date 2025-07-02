@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.exchange.elements.ContactElement;
 import ch.elexis.core.ui.exchange.elements.ContactRefElement;
 import ch.elexis.core.ui.exchange.elements.ContactsElement;
@@ -30,7 +31,14 @@ import ch.elexis.data.PersistentObject;
 public abstract class XChangeExporter implements IDataSender {
 	private final XChangeContainer container = new XChangeContainer();
 
+	@Override
 	public boolean canHandle(Class<? extends PersistentObject> clazz) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canHandle(Identifiable identifiable) {
 		// TODO Auto-generated method stub
 		return false;
 	}
