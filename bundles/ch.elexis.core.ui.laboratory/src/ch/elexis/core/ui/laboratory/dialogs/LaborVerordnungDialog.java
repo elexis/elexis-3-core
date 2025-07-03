@@ -33,19 +33,17 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.ILabOrder;
-import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.Group;
 import ch.elexis.core.ui.laboratory.controls.LabItemTreeSelectionComposite.GroupItem;
 import ch.elexis.core.ui.laboratory.laborlink.LaborLink;
 import ch.elexis.core.ui.laboratory.views.LabOrderView;
-import ch.elexis.core.ui.util.IExternLaborOrder;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.LabOrder;
@@ -57,7 +55,7 @@ import ch.rgw.tools.TimeTool;
 public class LaborVerordnungDialog extends TitleAreaDialog {
 	private static final String LAST_SELECTED_USER = LaborLink.PROVIDER_ID + "/last_selected_user"; //$NON-NLS-1$
 	private static final String PREV_PRINT_SETTING = LaborLink.PROVIDER_ID + "/prev_print_setting"; //$NON-NLS-1$
-
+	public static final String OUTPUTLOG_EXTERNES_LABOR = "Externes Labor"; //$NON-NLS-1$
 	private Patient patient = null;
 	private TimeTool date = null;
 
@@ -65,7 +63,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 
 	private ComboViewer userViewer = null;
 
-	private ComboViewer externViewer = null;
+
 
 	private DateTime observationTime;
 	private DateTime observationDate;
@@ -73,6 +71,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	private Text orderId;
 
 	private Button btnPrint;
+	private Button btnExternLabor;
 
 	public LaborVerordnungDialog(Shell parentShell, Patient patient, TimeTool date) {
 		super(parentShell);
@@ -129,28 +128,10 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 
 		selectLastSelectedUser();
 
-		label = new Label(composite, SWT.NONE);
-		label.setText("Extern verordnen"); //$NON-NLS-1$
 
-		externViewer = new ComboViewer(composite,
-				SWT.SINGLE | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		externViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		externViewer.setContentProvider(new ArrayContentProvider());
-
-		externViewer.setLabelProvider(new LabelProvider() {
-			@Override
-			public String getText(Object element) {
-				if (element instanceof IExternLaborOrder) {
-					IExternLaborOrder extern = (IExternLaborOrder) element;
-					return extern.getLabel();
-				} else {
-					return "???"; //$NON-NLS-1$
-				}
-			}
-		});
-
-		externViewer.setInput(getExternLaborOrder());
+		btnExternLabor = new Button(composite, SWT.CHECK);
+		btnExternLabor.setText(Messages.LaborVerordnungDialog_externesLaborCheckbox);
+		btnExternLabor.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		label = new Label(composite, SWT.NONE);
 		label.setText("Entnahme-/Beobachtungszeitpunkt");
@@ -187,13 +168,6 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 	@Override
 	protected boolean isResizable() {
 		return true;
-	}
-
-	private List<IExternLaborOrder> getExternLaborOrder() {
-		List<IExternLaborOrder> externLaborOrders = Extensions.getClasses(
-				Extensions.getExtensions(ExtensionPointConstantsUi.LABORORDER), "class", //$NON-NLS-1$ //$NON-NLS-2$
-				false);
-		return externLaborOrders;
 	}
 
 	private void updateSelectionMessage() {
@@ -300,16 +274,14 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		}
 		saveLastSelectedUser();
 
-		StructuredSelection externSelection = (StructuredSelection) externViewer.getSelection();
-		if (!externSelection.isEmpty()) {
-			IExternLaborOrder extern = (IExternLaborOrder) externSelection.getFirstElement();
-			extern.order(patient, orders);
-		}
-
 		// save print settings
 		boolean doPrint = btnPrint.getSelection();
 		ConfigServiceHolder.setUser(PREV_PRINT_SETTING, doPrint);
-
+		if (btnExternLabor.getSelection()) {
+			for (LabOrder order : orders) {
+				logExternLaborToOutputLog(order);
+			}
+		}
 		if (doPrint) {
 			UiDesk.getDisplay().asyncExec(new Runnable() {
 				@Override
@@ -354,6 +326,17 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 			}
 			return label;
 		}
+	}
+
+	private void logExternLaborToOutputLog(LabOrder order) {
+		IOutputLog outputLog = CoreModelServiceHolder.get().create(IOutputLog.class);
+		outputLog.setObjectId(order.getId());
+		outputLog.setObjectType(order.getClass().getName());
+		outputLog.setCreatorId(ContextServiceHolder.get().getActiveUser().map(user -> user.getId()).orElse("Unknown"));
+		outputLog.setOutputter(getClass().getName());
+		outputLog.setDate(java.time.LocalDate.now());
+		outputLog.setOutputterStatus(OUTPUTLOG_EXTERNES_LABOR);
+		CoreModelServiceHolder.get().save(outputLog);
 	}
 
 	private static class NoAnwender extends Anwender {
