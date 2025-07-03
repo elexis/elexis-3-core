@@ -5268,6 +5268,7 @@ public class Messages extends NLS {
 	public static String GoogleCalPreferences_CronPrompt;
 	public static String GoogleCalPreferences_IntervalMustBePositive;
 	public static String GoogleCalPreferences_InvalidNumber;
+	public static String LaborVerordnungDialog_externesLaborCheckbox;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

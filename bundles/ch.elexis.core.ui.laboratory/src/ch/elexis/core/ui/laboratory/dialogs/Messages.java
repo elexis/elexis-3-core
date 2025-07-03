@@ -86,4 +86,5 @@ public class Messages {
 	public static String EditLabItem_OriginLaboratoryLabel = ch.elexis.core.l10n.Messages.EditLabItem_OriginLaboratoryLabel;
 
 	public static String Laboratory_Please_Select_Origin = ch.elexis.core.l10n.Messages.Laboratory_Please_Select_Origin;
+	public static String LaborVerordnungDialog_externesLaborCheckbox = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_externesLaborCheckbox;
 }
