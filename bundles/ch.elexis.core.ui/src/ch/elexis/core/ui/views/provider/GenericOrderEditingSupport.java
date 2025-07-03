@@ -6,8 +6,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.data.service.CoreModelServiceHolder;
@@ -41,54 +40,82 @@ public class GenericOrderEditingSupport extends EditingSupport {
 		this.columnIndex = columnIndex;
     }
 
-    @Override
-    protected CellEditor getCellEditor(Object element) {
-        switch (columnType) {
-            case SUPPLIER:
-                return new ContactSelectionDialogCellEditor(
-                    viewer.getTable(),
-						Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message
-                );
-            case DELIVERED:
-            case ORDERED:
-            default:
-				TextCellEditor textCellEditor = new TextCellEditor(viewer.getTable(), SWT.NONE);
-				final Text text = (Text) textCellEditor.getControl();
-				text.addTraverseListener(new TraverseListener() {
-					@Override
-					public void keyTraversed(TraverseEvent e) {
-						if (e.detail == SWT.TRAVERSE_RETURN) {
-							e.doit = true;
-							text.getDisplay().asyncExec(() -> {
-								int currentRow = viewer.getTable().getSelectionIndex();
-								int nextRow = currentRow + 1;
-								int totalRows = viewer.getTable().getItemCount();
-								if (nextRow < totalRows) {
-									viewer.getTable().setSelection(nextRow);
-									viewer.editElement(viewer.getElementAt(nextRow), columnIndex);
-								}
-							});
-						}
-					}
-				});
-				return textCellEditor;
-        }
-    }
+	@Override
+	protected CellEditor getCellEditor(Object element) {
+		switch (columnType) {
+		case SUPPLIER:
+			return new ContactSelectionDialogCellEditor(viewer.getTable(),
+					Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message);
 
-    @Override
-    protected boolean canEdit(Object element) {
-        if (!(element instanceof IOrderEntry entry)) {
-            return false;
-        }
+		case DELIVERED:
+		case ORDERED:
+		default:
+			TextCellEditor textCellEditor = new TextCellEditor(viewer.getTable(), SWT.NONE);
+			Text text = (Text) textCellEditor.getControl();
+			text.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+
+			Runnable goNext = () -> {
+				int total = viewer.getTable().getItemCount();
+				int row = viewer.getTable().getSelectionIndex();
+				do {
+					row++;
+				} while (row < total && !canEdit(viewer.getElementAt(row)));
+				if (row < total) {
+					viewer.getTable().setSelection(row);
+					viewer.editElement(viewer.getElementAt(row), columnIndex);
+				} else {
+					orderManagementView.handleOrderButtonClick();
+				}
+			};
+			Runnable goPrev = () -> {
+				int row = viewer.getTable().getSelectionIndex();
+				do {
+					row--;
+				} while (row >= 0 && !canEdit(viewer.getElementAt(row)));
+				if (row >= 0) {
+					viewer.getTable().setSelection(row);
+					viewer.editElement(viewer.getElementAt(row), columnIndex);
+				}
+			};
+
+			text.addTraverseListener(e -> {
+				if (e.detail == SWT.TRAVERSE_RETURN || e.detail == SWT.TRAVERSE_TAB_NEXT) {
+					e.doit = false;
+					Display.getDefault().asyncExec(goNext);
+				} else if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+					e.doit = false;
+					Display.getDefault().asyncExec(goPrev);
+				}
+			});
+			text.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+				@Override
+				public void keyPressed(org.eclipse.swt.events.KeyEvent e) {
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						goNext.run();
+					} else if (e.keyCode == SWT.ARROW_UP) {
+						goPrev.run();
+					}
+				}
+			});
+
+			return textCellEditor;
+		}
+	}
+
+
+	@Override
+	protected boolean canEdit(Object element) {
+		if (!(element instanceof IOrderEntry entry)) {
+			return false;
+		}
 		return switch (columnType) {
 		case ORDERED -> entry.getState() == OrderEntryState.OPEN;
-		case DELIVERED -> {
-			boolean editableState = entry.getState() != OrderEntryState.OPEN;
-			yield editableState && orderManagementView.isDeliveryEditMode();
-		}
+		case DELIVERED -> orderManagementView.isDeliveryEditMode()
+				&& (entry.getState() == OrderEntryState.ORDERED || entry.getState() == OrderEntryState.PARTIAL_DELIVER);
 		case SUPPLIER -> true;
 		};
-    }
+	}
+
 
     @Override
     protected Object getValue(Object element) {

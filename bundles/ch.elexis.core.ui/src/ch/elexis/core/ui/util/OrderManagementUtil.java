@@ -42,7 +42,7 @@ public class OrderManagementUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderManagementUtil.class);
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //$NON-NLS-1$
-
+	public static final String BarcodeScanner_COMPORT = "barcode/Symbol/port"; //$NON-NLS-1$
 	public static List<IOrder> getOpenOrders() {
 		return getOrders(false, true);
 	}

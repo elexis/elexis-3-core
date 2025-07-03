@@ -25,7 +25,10 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexpor
  org.eclipse.nebula.widgets.nattable.extension.nebula,
  org.eclipse.nebula.widgets.richtext,
  org.jdom.2;bundle-version="2.0.6",
- com.google.gson
+ com.google.gson,
+ org.eclipse.jface,
+ ch.elexis.core,
+ ch.elexis.core.serial;bundle-version="3.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
