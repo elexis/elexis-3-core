@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -31,9 +32,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.IOutputLog;
+import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultOrderDeleteAction;
@@ -60,6 +68,7 @@ public class LaborOrdersComposite extends Composite {
 	private Patient actPatient;
 	private Composite toolComposite;
 	private ToolBarManager toolbar;
+	public static final String OUTPUTLOG_EXTERNES_LABOR = "Externes Labor"; //$NON-NLS-1$
 
 	public LaborOrdersComposite(Composite parent, int style) {
 		super(parent, style);
@@ -127,6 +136,32 @@ public class LaborOrdersComposite extends Composite {
 		viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+		column.getColumn().setWidth(28);
+		column.getColumn().setText(StringUtils.EMPTY);
+		column.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public Image getImage(Object element) {
+				if (element instanceof LaborOrderViewerItem item) {
+
+					ILabOrder order = CoreModelServiceHolder.get().load(item.getLabOrder().getId(), ILabOrder.class)
+							.orElse(null);
+					if (order != null) {
+						IOutputLog log = getOrderLogEntry(order);
+						if (log != null && OUTPUTLOG_EXTERNES_LABOR.equals(log.getOutputterStatus())) {
+							return Images.IMG_BLOOD_TEST.getImage();
+						}
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public String getText(Object element) {
+				return StringUtils.EMPTY;
+			}
+		});
+
+		column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(100);
 		column.getColumn().setText(Messages.Core_Status);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(0, this));
@@ -424,5 +459,12 @@ public class LaborOrdersComposite extends Composite {
 			}
 		}
 	}
-
+	public static IOutputLog getOrderLogEntry(ILabOrder order) {
+		if (order == null) {
+			return null;
+		}
+		IQuery<IOutputLog> query = CoreModelServiceHolder.get().getQuery(IOutputLog.class);
+		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, order.getId());
+		return query.execute().isEmpty() ? null : query.execute().get(0);
+	}
 }
