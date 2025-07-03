@@ -536,7 +536,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		try {
 			boolean mandatorEditGuard = kontakt.istMandant();
 
-			List<ISticker> lSticker = stickerService.getStickers(kontakt.toIContact().asIPatient());
+			List<ISticker> lSticker = stickerService.getStickers(kontakt.toIContact());
 			boolean hasSticker = lSticker.stream().anyMatch(
 					sticker -> StickerConstants.PEA_MEDIORDER_STICKER_ID.equals(sticker.getId()));
 			for (int i = 0; i < def.length; i++) {
