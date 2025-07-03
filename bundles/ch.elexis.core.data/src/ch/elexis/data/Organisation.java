@@ -40,6 +40,8 @@ public class Organisation extends Kontakt {
 
 	//@formatter:off
 	static {
+		// make sure Patient.FLD_ALLERGIES mapping is available
+		addMapping(Kontakt.TABLENAME, Patient.FLD_ALLERGIES);
 		addMapping(
 			Kontakt.TABLENAME,
 			FLD_NAME +	"="+	Kontakt.FLD_NAME1,
