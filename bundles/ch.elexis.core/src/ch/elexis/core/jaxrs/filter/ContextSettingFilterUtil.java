@@ -25,7 +25,7 @@ public class ContextSettingFilterUtil {
 	IUser performDynamicUserCreationIfApplicable(IModelService coreModelService, Logger logger,
 			String stationIdentifier, String preferredUsername, String elexisContactId, String email) {
 
-		if (preferredUsername == null || preferredUsername.length() > 24) {
+		if (preferredUsername == null || preferredUsername.length() > 80) {
 			logger.warn("[{}] REFUSE dynamic user creation - Invalid username", preferredUsername);
 			return null;
 		}
