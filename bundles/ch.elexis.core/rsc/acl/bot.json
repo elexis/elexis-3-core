@@ -3,6 +3,7 @@
 		"bot"
 	],
 	"object": {
-		"ch.elexis.core.model.IContact": "crude"
+		"ch.elexis.core.model.IContact": "crude",
+		"ch.elexis.core.model.IAppointment": "crude"
 	}
 }
