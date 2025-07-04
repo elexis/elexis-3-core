@@ -75,4 +75,17 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 	<changeSet id="manual_update_user_id_len" author="thomas">
 		<modifyDataType tableName="USER_" columnName="ID" newDataType="VARCHAR(80)"/>
 	</changeSet>
+	<changeSet id="manual_update_userrolejoint_userid_len" author="thomas">
+		<modifyDataType tableName="USER_ROLE_JOINT" columnName="USER_ID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	<changeSet id="manual_update_taskdescriptor_userid_len" author="thomas">
+		<modifyDataType tableName="TASKDESCRIPTOR" columnName="OWNER_ID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	<changeSet id="manual_update_userconfig_userid_len" author="thomas">
+		<modifyDataType tableName="USERCONFIG" columnName="USERID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	<changeSet id="manual_update_usergroupuserjoint_userid_len" author="thomas">
+		<modifyDataType tableName="USERGROUP_USER_JOINT" columnName="ID" newDataType="VARCHAR(80)"/>
+	</changeSet>
+	
 </databaseChangeLog>
