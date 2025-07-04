@@ -35,7 +35,7 @@ public class User extends AbstractEntityWithId implements EntityWithId, EntityWi
 	protected Long lastupdate;
 
 	@Id
-	@Column(unique = true, nullable = false, length = 25)
+	@Column(unique = true, nullable = false, length = 80)
 	private String id = ElexisIdGenerator.generateId();
 
 	@Column
