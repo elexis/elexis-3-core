@@ -11,8 +11,11 @@ import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.jpa.entities.Termin;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.StringTool;
@@ -169,7 +172,8 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 		if (getEntity().getPatId() != null && !getEntity().getPatId().contains(StringUtils.SPACE)) {
 			IContact contact = getContact();
 			if (contact != null) {
-				if (contact.isPatient()) {
+				if (contact.isPatient()
+						&& AccessControlServiceHolder.get().evaluate(EvACE.of(IPatient.class, Right.READ))) {
 					contact = CoreModelServiceHolder.get().load(getEntity().getPatId(), IPatient.class, false, false)
 							.orElse(null);
 				}
