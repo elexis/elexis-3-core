@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import com.google.gson.Gson;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -60,7 +62,7 @@ public class MailMessage implements Serializable {
 
 	private String documentsString;
 
-	private String imageString;
+	private List<String> imageStrings;
 
 	/**
 	 * Set the to address.
@@ -175,20 +177,13 @@ public class MailMessage implements Serializable {
 
 	private void parseImage() {
 		if (StringUtils.isNotEmpty(text) && text.indexOf("<img src=\"") != -1) {
-			StringBuilder sb = new StringBuilder();
-			char[] characters = text.substring(text.indexOf("<img src=\"")).toCharArray();
-			for (char c : characters) {
-				sb.append(c);
-				if (c == '>') {
-					break;
+			imageStrings = Jsoup.parse(text).select("img[src]").stream().map(e -> e.attr("src"))
+					.filter(s -> StringUtils.isNotBlank(s)).toList();
+			imageStrings.forEach(s -> {
+				if (!loadImage(s).isPresent()) {
+					LoggerFactory.getLogger(getClass()).warn("Image for [" + s + "] not found");
 				}
-			}
-			if (sb.toString().endsWith(">")) {
-				imageString = sb.toString();
-				if (!loadImage().isPresent()) {
-					LoggerFactory.getLogger(getClass()).warn("Image for [" + imageString + "] not found");
-				}
-			}
+			});
 		}
 	}
 
@@ -233,25 +228,39 @@ public class MailMessage implements Serializable {
 	}
 
 	public boolean hasImage() {
-		return StringUtils.isNotBlank(imageString) && loadImage().isPresent();
+		return imageStrings != null && !imageStrings.isEmpty();
 	}
 
-	private Optional<IImage> loadImage() {
+	@SuppressWarnings("unchecked")
+	private Optional<IImage> loadImage(String imageString) {
+		Optional<IImage> ret = Optional.empty();
 		IQuery<IImage> query = CoreModelServiceHolder.get().getQuery(IImage.class);
 		query.and("prefix", COMPARATOR.EQUALS, "ch.elexis.core.mail");
-		query.and("title", COMPARATOR.LIKE, getImageContentId() + "%");
-		return query.executeSingleResult();
+		query.and("title", COMPARATOR.LIKE, getImageContentId(imageString) + "%");
+		ret = query.executeSingleResult();
+		if (ret.isEmpty()) {
+			Optional<?> value = ContextServiceHolder.get()
+					.getNamed("ch.elexis.core.mail.image." + getImageContentId(imageString));
+			if (value.isPresent() && value.get() instanceof IImage) {
+				ret = (Optional<IImage>) value;
+			}
+		}
+		return ret;
 	}
 
-	public File getImage() {
-		Optional<IImage> image = loadImage();
+	public List<String> getImageStrings() {
+		return imageStrings;
+	}
+
+	public File getImage(String imageString) {
+		Optional<IImage> image = loadImage(imageString);
 		if (image.isPresent()) {
 			return AttachmentsUtil.getAttachmentsFile(image.get());
 		}
 		return null;
 	}
 
-	public String getImageContentId() {
-		return imageString.substring(imageString.indexOf("cid:") + "cid:".length(), imageString.length() - 2);
+	public String getImageContentId(String imageString) {
+		return imageString.substring(imageString.indexOf("cid:") + "cid:".length(), imageString.length());
 	}
 }
