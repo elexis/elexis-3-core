@@ -3,6 +3,7 @@ package ch.elexis.core.test.context;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -90,6 +91,9 @@ public class TestContext implements IContext {
 		Optional<?> ret = Optional.ofNullable(context.get(name));
 		if (!ret.isPresent() && parent != null) {
 			ret = parent.getNamed(name);
+		}
+		if (ret.isPresent() && ret.get() instanceof Supplier) {
+			return Optional.ofNullable(((Supplier<?>) ret.get()).get());
 		}
 		return ret;
 	}
