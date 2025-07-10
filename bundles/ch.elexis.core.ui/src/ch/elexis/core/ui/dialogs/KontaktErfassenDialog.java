@@ -359,34 +359,12 @@ public class KontaktErfassenDialog extends TitleAreaDialog {
 				qbe.add("Bezeichnung2", "=", ret[1]); //$NON-NLS-1$ //$NON-NLS-2$
 				List<Kontakt> list = qbe.execute();
 				if ((list != null) && (!list.isEmpty())) {
-					Kontakt k = list.get(0);
-					if (bOrganisation.getSelection() && k.istOrganisation()) {
-						if (bLabor.getSelection()) {
-							k.set("istOrganisation", "1"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-						if (MessageDialog.openConfirm(getShell(),
-								Messages.KontaktErfassenDialog_organisationExistiert_title, // $NON-NLS-1$
-								Messages.KontaktErfassenDialog_organisationExistiert_msg) == false) { // $NON-NLS-1$
-							super.okPressed();
-							return;
-						}
-					}
-					if (k.istPerson()) {
-						if (bAnwender.getSelection()) {
-							k.set("istAnwender", "1"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-						if (bMandant.getSelection()) {
-							k.set("istMandant", "1"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-						if (bPatient.getSelection()) {
-							k.set("istPatient", "1"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-						if (MessageDialog.openConfirm(getShell(), Messages.KontaktErfassenDialog_personExisitiert_title, // $NON-NLS-1$
+					if (MessageDialog.openConfirm(getShell(),
+							Messages.KontaktErfassenDialog_personExisitiert_title, // $NON-NLS-1$
 								Messages.KontaktErfassenDialog_personExisitiert_msg) == false) { // $NON-NLS-1$
 							super.okPressed();
 							return;
 						}
-					}
 				}
 
 				/**
