@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.Timer;
 
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.tasks.internal.service.TaskServiceImpl;
@@ -18,6 +19,7 @@ public class FilesystemChangeWatcher {
 
 	private final TaskServiceImpl taskService;
 	private final IVirtualFilesystemService virtualFileSystemService;
+	private final IAccessControlService accessControlService;
 
 	private Timer timer;
 	private FilesystemChangeWatcherTimerTask timerTask;
@@ -28,15 +30,18 @@ public class FilesystemChangeWatcher {
 	 *
 	 * @param taskServiceImpl
 	 */
-	public FilesystemChangeWatcher(TaskServiceImpl taskService, IVirtualFilesystemService virtualFileSystemService) {
+	public FilesystemChangeWatcher(TaskServiceImpl taskService, IVirtualFilesystemService virtualFileSystemService,
+			IAccessControlService accessControlService) {
 		this.taskService = taskService;
 		this.virtualFileSystemService = virtualFileSystemService;
+		this.accessControlService = accessControlService;
 	}
 
 	private synchronized void startPolling() {
 		if (timer == null) {
 			timer = new Timer("taskservice-filesystemchange-poller");
-			timerTask = new FilesystemChangeWatcherTimerTask(taskService, virtualFileSystemService);
+			timerTask = new FilesystemChangeWatcherTimerTask(taskService, virtualFileSystemService,
+					accessControlService);
 			long period = CoreUtil.isTestMode() ? 1 * 1000 : 30 * 1000;
 			timer.schedule(timerTask, 0, period);
 		}

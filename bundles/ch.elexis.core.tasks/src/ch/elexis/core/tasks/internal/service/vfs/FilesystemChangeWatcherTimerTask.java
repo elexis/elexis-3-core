@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskService;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
@@ -26,13 +26,16 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 
 	private final ITaskService taskService;
 	private final IVirtualFilesystemService virtualFileSystemService;
+	private final IAccessControlService accessControlService;
 
 	private final Logger logger;
 	private final Map<String, String[]> pollMap;
 
-	FilesystemChangeWatcherTimerTask(ITaskService taskService, IVirtualFilesystemService virtualFileSystemService) {
+	FilesystemChangeWatcherTimerTask(ITaskService taskService, IVirtualFilesystemService virtualFileSystemService,
+			IAccessControlService accessControlService) {
 		this.taskService = taskService;
 		this.virtualFileSystemService = virtualFileSystemService;
+		this.accessControlService = accessControlService;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.pollMap = Collections.synchronizedMap(new HashMap<String, String[]>());
 	}
@@ -82,26 +85,24 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 			}
 
 			for (IVirtualFilesystemHandle fileHandle : listHandles) {
-				try {
-					runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
-				} catch (TaskException e) {
-					logger.warn("[{}] Error triggering taskDescriptor", taskDescriptorId, e);
-				}
+				runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
 			}
 
 		}
 
 	}
 
-	private ITask runTaskForFile(String taskDescriptorId, String url) throws TaskException {
+	private void runTaskForFile(String taskDescriptorId, String url) {
 		logger.debug("[{}] Triggering for url [{}]", taskDescriptorId, url);
-		try {
+		accessControlService.doPrivileged(() -> {
 			Map<String, String> runContext = Collections.singletonMap(RunContextParameter.STRING_URL, url);
-			return taskService.trigger(taskDescriptorId, null, TaskTriggerType.FILESYSTEM_CHANGE, runContext);
+			try {
+				taskService.trigger(taskDescriptorId, null, TaskTriggerType.FILESYSTEM_CHANGE, runContext);
+			} catch (TaskException e) {
+				logger.warn("[{}] Error triggering task for url [{}]", taskDescriptorId, url, e);
+			}
+		});
 
-		} catch (IllegalStateException e) {
-			throw new TaskException(TaskException.EXECUTION_ERROR, e);
-		}
 	}
 
 	public Set<String[]> getIncurred() {
