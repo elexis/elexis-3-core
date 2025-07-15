@@ -1,7 +1,6 @@
 package ch.elexis.core.services;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -776,10 +775,8 @@ public class AppointmentService implements IAppointmentService {
 	}
 
 	private IAppointment getFreeAppointment(String schedule, LocalDateTime start, LocalDateTime end) {
-		IAppointment ret = new IAppointmentBuilder(CoreModelServiceHolder.get(), schedule, start, end,
+		return new IAppointmentBuilder(CoreModelServiceHolder.get(), schedule, start, end,
 				AppointmentServiceHolder.get().getType(AppointmentType.FREE),
-				AppointmentServiceHolder.get().getState(AppointmentState.EMPTY)).build();
-		ret.setSubjectOrPatient(String.format(Messages.MinutesFree, Duration.between(start, end).toMinutes()));
-		return ret;
+				AppointmentServiceHolder.get().getState(AppointmentState.DEFAULT)).build();
 	}
 }
