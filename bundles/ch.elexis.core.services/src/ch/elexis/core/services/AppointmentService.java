@@ -44,7 +44,6 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.AppointmentServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -736,45 +735,5 @@ public class AppointmentService implements IAppointmentService {
 			return area.map(Area::getName).orElse(null);
 		}
 		return null;
-	}
-
-	@Override
-	public List<IAppointment> getAppointments(String schedule, LocalDate day, boolean includeTransientFree) {
-		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
-		query.and("tag", COMPARATOR.EQUALS, day);
-		query.and(ModelPackage.Literals.IAPPOINTMENT__SCHEDULE, COMPARATOR.EQUALS, schedule);
-
-		List<IAppointment> existingAppointments = query.execute();
-		if (includeTransientFree) {
-			List<IAppointment> ret = new ArrayList<IAppointment>();
-			for (IAppointment existingAppointment : existingAppointments) {
-				if (ret.isEmpty()) {
-					if (existingAppointment.getStartTime().isAfter(day.atStartOfDay())) {
-						ret.add(getFreeAppointment(schedule, day.atStartOfDay(), existingAppointment.getStartTime()));
-					}
-					ret.add(existingAppointment);
-				} else {
-					if (!ret.get(ret.size() - 1).getEndTime().isEqual(existingAppointment.getStartTime())) {
-						ret.add(getFreeAppointment(schedule, ret.get(ret.size() - 1).getEndTime(),
-								existingAppointment.getStartTime()));
-					}
-					ret.add(existingAppointment);
-				}
-			}
-			if (existingAppointments.isEmpty()) {
-				ret.add(getFreeAppointment(schedule, day.atStartOfDay(), day.atTime(23, 59)));
-			}
-			if (!ret.get(ret.size() - 1).getEndTime().isEqual(day.atTime(23, 59))) {
-				ret.add(getFreeAppointment(schedule, ret.get(ret.size() - 1).getEndTime(), day.atTime(23, 59)));
-			}
-			return ret;
-		}
-		return existingAppointments;
-	}
-
-	private IAppointment getFreeAppointment(String schedule, LocalDateTime start, LocalDateTime end) {
-		return new IAppointmentBuilder(CoreModelServiceHolder.get(), schedule, start, end,
-				AppointmentServiceHolder.get().getType(AppointmentType.FREE),
-				AppointmentServiceHolder.get().getState(AppointmentState.DEFAULT)).build();
 	}
 }
