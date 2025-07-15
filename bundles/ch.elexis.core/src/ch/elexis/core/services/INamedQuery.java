@@ -46,4 +46,11 @@ public interface INamedQuery<R> {
 		}
 		return ret;
 	}
+
+	/**
+	 * Limit the maximum number of results to retrieve.
+	 *
+	 * @param limit
+	 */
+	INamedQuery<R> limit(int limit);
 }
