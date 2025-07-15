@@ -24,6 +24,11 @@ public class EmptyNamedQuery<T> implements INamedQuery<T> {
 	public Optional<T> executeWithParametersSingleResult(Map<String, Object> parameters) {
 		return Optional.empty();
 	}
+
+	@Override
+	public INamedQuery<T> limit(int limit) {
+		return this;
+	}
 	
 	private class EmptyCursor implements IQueryCursor<T> {
 

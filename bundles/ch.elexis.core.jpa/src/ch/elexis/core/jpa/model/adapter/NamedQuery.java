@@ -24,6 +24,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 	private AbstractModelAdapterFactory adapterFactory;
 	private Class<T> interfaceClazz;
 	private Class<R> returnValueClazz;
+	protected int limit;
 
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
@@ -39,7 +40,11 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		this.entityClazz = adapterFactory.getEntityClass(interfaceClazz);
 		this.entityManager = entityManager;
 
-		this.query = entityManager.createNamedQuery(queryName, entityClazz);
+		if (returnValueClazz.equals(interfaceClazz)) {
+			this.query = entityManager.createNamedQuery(queryName, entityClazz);
+		} else {
+			this.query = entityManager.createNamedQuery(queryName, returnValueClazz);
+		}
 		// update cache with results
 		// (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
@@ -134,5 +139,11 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 			return (Optional<R>) query.getResultStream().findFirst();
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public INamedQuery<R> limit(int limit) {
+		this.limit = limit;
+		return this;
 	}
 }
