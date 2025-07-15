@@ -49,8 +49,8 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * Utility class that provides basic functionality a Lab importer implementation
@@ -59,7 +59,7 @@ import jakarta.inject.Singleton;
  * @author thomashu
  *
  */
-@Singleton
+@ApplicationScoped
 @Component
 public class LabImportUtil implements ILabImportUtil {
 
@@ -69,13 +69,14 @@ public class LabImportUtil implements ILabImportUtil {
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	IModelService modelService;
 
+	@Inject
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
 	private IDocumentStore documentStore;
 
 	@Inject
 	@Reference
 	IEncounterService encounterService;
-	
+
 	/**
 	 * Searches for a Labor matching the identifier as part of the Kuerzel or Name
 	 * attribute. If no matching Labor is found, a new Labor is created with

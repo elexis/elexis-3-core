@@ -164,7 +164,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		}
 
 		myLab = LabImportUtilHolder.get()
-				.loadCoreModel((String) context.get(IMultiFileParser.CTX_LABID), ILaboratory.class).get();
+				.loadCoreModel((String) context.get(IMultiFileParser.CTX_LABID), ILaboratory.class).orElse(null);
 		if (myLab == null) {
 			sbFailed.append(Messages.Core_Laboratory);
 			sbFailed.append("; ");

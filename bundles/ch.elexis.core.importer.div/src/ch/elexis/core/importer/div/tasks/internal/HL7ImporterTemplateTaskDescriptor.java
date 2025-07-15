@@ -24,7 +24,7 @@ public class HL7ImporterTemplateTaskDescriptor {
 					.createTaskDescriptor(new HL7ImporterIIdentifiedRunnable(null, null, null));
 			taskDescriptor.setReferenceId(referenceId);
 			taskDescriptor.setOwnerNotification(OwnerTaskNotification.WHEN_FINISHED_FAILED);
-			taskDescriptor.setTriggerType(TaskTriggerType.OTHER_TASK);
+			taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 			taskDescriptor.setRunner(IElexisEnvironmentService.ES_STATION_ID_DEFAULT);
 			taskDescriptor.setSingleton(true);
 			taskService.saveTaskDescriptor(taskDescriptor);
