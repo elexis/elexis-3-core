@@ -78,24 +78,15 @@ public class AppointmentSeries implements IAppointmentSeries {
 	 * @param serienTerminConfigurationString
 	 */
 	private void parseSerienTerminConfigurationString(String serienTerminConfigurationString) {
-		if (StringUtils.isBlank(serienTerminConfigurationString)) {
-			return;
-		}
-		String config = serienTerminConfigurationString.split("\\|\\|", 2)[0];
-		String[] terms = config.split(";");
-		if (terms.length < 6) {
-			logger.debug("No valid series appointment string, skip parsing: {}", serienTerminConfigurationString);
-			return;
-		}
-
+		String[] terms = serienTerminConfigurationString.split(";");
 		String[] termin = terms[0].split(",");
+
 		try {
 			startTime = LocalTime.parse(termin[0], timeFormatter);
 			endTime = LocalTime.parse(termin[1], timeFormatter);
 			startDate = LocalDate.parse(terms[3], dateFormatter);
 		} catch (Exception e) {
-			logger.error("Error when parsing time/data", e);
-			return;
+			logger.error("unexpected exception", e);
 		}
 
 		char seriesTypeCharacter = terms[1].toUpperCase().charAt(0);
@@ -106,13 +97,18 @@ public class AppointmentSeries implements IAppointmentSeries {
 		endingType = EndingType.getForCharacter(endingTypeCharacter);
 		endingPatternString = terms[5];
 
-		if (endingType == EndingType.ON_SPECIFIC_DATE) {
+		switch (endingType) {
+		case ON_SPECIFIC_DATE:
 			try {
 				endsOnDate = LocalDate.parse(endingPatternString, dateFormatter);
 			} catch (Exception e) {
-				logger.error("Error when parsing the end date", e);
+				logger.error("unexpected exception", e);
 			}
+			break;
+		default:
+			break;
 		}
+
 	}
 
 	@Override
