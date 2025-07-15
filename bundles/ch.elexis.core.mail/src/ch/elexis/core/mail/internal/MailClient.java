@@ -72,7 +72,7 @@ public class MailClient implements IMailClient {
 		mc.addMailcap("text/html;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_html");
 		mc.addMailcap("text/xml;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_xml");
 		mc.addMailcap("text/plain;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
-		mc.addMailcap("multipart/mixed;; x-java-content-handler=org.eclipse.angus.mail.handlers.multipart_mixed");
+		mc.addMailcap("multipart/*;; x-java-content-handler=org.eclipse.angus.mail.handlers.multipart_mixed");
 		mc.addMailcap("message/rfc822;; x-java-content- handler=org.eclipse.angus.mail.handlers.message_rfc822");
 		mc.addMailcap(
 				"message/disposition-notification;;x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
@@ -306,7 +306,7 @@ public class MailClient implements IMailClient {
 				mimeMessage.setFrom(account.getFromAddress());
 				mimeMessage.setSubject(message.getSubject());
 
-				Multipart multipart = new MimeMultipart();
+				Multipart multipart = new MimeMultipart("related");
 				// create the message part
 				MimeBodyPart messageBodyPart = new MimeBodyPart();
 				messageBodyPart.setContent(message.getHtmlText(), "text/html;charset=UTF-8");
