@@ -68,7 +68,7 @@
 		"ch.elexis.core.model.IDiagnosisTree": "cruvdxie",
 		"ch.elexis.core.model.IDocumentLetter": "cruvdx",
 		"ch.elexis.core.model.IDocumentTemplate": "cruvdx",
-		"ch.elexis.core.model.IEncounter": "cruvdx:self",
+		"ch.elexis.core.model.IEncounter": "cruvdxie:self",
 		"ch.elexis.core.model.IFreeTextDiagnosis": "cruvdx",
 		"ch.elexis.core.model.IImage": "cruvdx",
 		"ch.elexis.core.model.IInvoice": "cruvdx:aobo",
