@@ -9,10 +9,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.views.AUFZeugnis;
 import ch.rgw.tools.ExHandler;
 
@@ -28,7 +26,7 @@ public class AufPrintHandler extends AbstractHandler implements IHandler {
 				ISickCertificate selectedCertificate = ContextServiceHolder.get().getTyped(ISickCertificate.class)
 						.orElse(null);
 				if (selectedCertificate != null) {
-					ElexisEventDispatcher.fireSelectionEvent(NoPoUtil.loadAsPersistentObject(selectedCertificate));
+					ContextServiceHolder.get().setTyped(selectedCertificate);
 					((AUFZeugnis) viewPart).createAUZ();
 				} else {
 					MessageDialog.openInformation(Display.getDefault().getActiveShell(), "AUF drucken",

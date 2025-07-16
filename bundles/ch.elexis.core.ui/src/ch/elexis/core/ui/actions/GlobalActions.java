@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
@@ -77,10 +76,7 @@ import ch.elexis.core.ac.SystemCommandConstants;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -90,8 +86,12 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -104,7 +104,6 @@ import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
 import ch.elexis.core.ui.locks.LockedRestrictedAction;
-import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.Importer;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TemplateDrucker;
@@ -112,10 +111,7 @@ import ch.elexis.core.ui.views.FallDetailView;
 import ch.elexis.core.ui.views.TemplatePrintView;
 import ch.elexis.core.ui.wizards.DBConnectWizard;
 import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Kontakt;
 import ch.elexis.data.Patient;
-import ch.elexis.data.Rechnung;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
@@ -217,7 +213,7 @@ public class GlobalActions {
 		cmdService = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getService(ICommandService.class);
 		mainWindow = window;
-		help = Hub.plugin.getWorkbench().getHelpSystem();
+		help = PlatformUI.getWorkbench().getHelpSystem();
 		exitAction = ActionFactory.QUIT.create(window);
 		exitAction.setText(Messages.GlobalActions_MenuExit);
 		newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
@@ -316,7 +312,7 @@ public class GlobalActions {
 			@Override
 			public void run() {
 				// String
-				String perspektive = CoreHub.localCfg.get(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, null);
+				String perspektive = LocalConfigService.get(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, null);
 				if (StringTool.isNothing(perspektive)) {
 					perspektive = UiResourceConstants.PatientPerspektive_ID;
 				}
@@ -342,7 +338,7 @@ public class GlobalActions {
 			@Override
 			public void run() {
 				IPerspectiveDescriptor p = mainWindow.getActivePage().getPerspective();
-				CoreHub.localCfg.set(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, p.getId());
+				LocalConfigService.set(CoreHub.getLoggedInContact() + DEFAULTPERSPECTIVECFG, p.getId());
 			}
 
 		};
@@ -490,9 +486,10 @@ public class GlobalActions {
 		printBlatt = new Action(Messages.GlobalActions_PrintEMR) {
 			@Override
 			public void run() {
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				String printer = CoreHub.localCfg.get("Drucker/Einzelblatt/Name", null); //$NON-NLS-1$
-				String tray = CoreHub.localCfg.get("Drucker/Einzelblatt/Schacht", null); //$NON-NLS-1$
+				Patient actPatient = (Patient) NoPoUtil
+						.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null));
+				String printer = LocalConfigService.get("Drucker/Einzelblatt/Name", null); //$NON-NLS-1$
+				String tray = LocalConfigService.get("Drucker/Einzelblatt/Schacht", null); //$NON-NLS-1$
 
 				new TemplateDrucker(TT_KG_COVER_SHEET, printer, tray).doPrint(actPatient); // $NON-NLS-1$
 			}
@@ -500,7 +497,8 @@ public class GlobalActions {
 		showBlatt = new Action(Messages.GlobalActions_ShowEMR) {
 			@Override
 			public void run() {
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+				Patient actPatient = (Patient) NoPoUtil
+						.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null));
 				try {
 					TemplatePrintView tpw = (TemplatePrintView) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 							.getActivePage().showView(TemplatePrintView.ID);
@@ -515,9 +513,10 @@ public class GlobalActions {
 		printRoeBlatt = new Action(Messages.GlobalActions_PrintXRay) {
 			@Override
 			public void run() {
-				Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
-				String printer = CoreHub.localCfg.get("Drucker/A4/Name", null); //$NON-NLS-1$
-				String tray = CoreHub.localCfg.get("Drucker/A4/Schacht", null); //$NON-NLS-1$
+				Patient actPatient = (Patient) NoPoUtil
+						.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null));
+				String printer = LocalConfigService.get("Drucker/A4/Name", null); //$NON-NLS-1$
+				String tray = LocalConfigService.get("Drucker/A4/Schacht", null); //$NON-NLS-1$
 
 				new TemplateDrucker(TT_XRAY, printer, tray).doPrint(actPatient); // $NON-NLS-1$
 			}
@@ -633,38 +632,42 @@ public class GlobalActions {
 				}
 			}
 		};
-		delFallAction = new LockedRestrictedAction<Fall>(EvACE.of(ICoverage.class, Right.DELETE),
+		delFallAction = new LockedRestrictedAction<ICoverage>(EvACE.of(ICoverage.class, Right.DELETE),
 				Messages.GlobalActions_DeleteCase) {
 			@Override
-			public void doRun(Fall element) {
-				if ((element.delete(false) == false)) {
+			public void doRun(ICoverage element) {
+				if (CoverageServiceHolder.get().canDelete(element)) {
+					CoreModelServiceHolder.get().delete(element);
+					ContextServiceHolder.get().setActiveCoverage(null);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ICoverage.class);
+				} else {
 					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteCaseMessage,
 							Messages.GlobalActions_CouldntDeleteCaseExplanation);
 				}
-				ElexisEventDispatcher.reload(Fall.class);
 			}
 
 			@Override
-			public Fall getTargetedObject() {
-				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			public ICoverage getTargetedObject() {
+				return ContextServiceHolder.get().getActiveCoverage().orElse(null);
 			}
 		};
-		delKonsAction = new LockedRestrictedAction<Konsultation>(EvACE.of(IEncounter.class, Right.DELETE),
+		delKonsAction = new LockedRestrictedAction<IEncounter>(EvACE.of(IEncounter.class, Right.DELETE),
 				Messages.GlobalActions_DeleteKons) {
 
 			@Override
-			public void doRun(Konsultation element) {
-				if (element.delete(false) == false) {
+			public void doRun(IEncounter element) {
+				if (EncounterServiceHolder.get().canDelete(element)) {
+					CoreModelServiceHolder.get().delete(element);
+					ContextServiceHolder.get().removeTyped(IEncounter.class);
+				} else {
 					SWTHelper.alert(Messages.GlobalActions_CouldntDeleteKons,
 							Messages.GlobalActions_CouldntDeleteKonsExplanation + Messages.GlobalActions_97);
 				}
-				ElexisEventDispatcher.clearSelection(Konsultation.class);
-				ElexisEventDispatcher.fireSelectionEvent(element.getFall());
 			}
 
 			@Override
-			public Konsultation getTargetedObject() {
-				return (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+			public IEncounter getTargetedObject() {
+				return ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null);
 			}
 		};
 		openFallaction = new Action(Messages.Core_Edit_Case) {
@@ -672,7 +675,7 @@ public class GlobalActions {
 			@Override
 			public void run() {
 				try {
-					Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(FallDetailView.ID);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(FallDetailView.ID);
 					// getViewSite().getPage().showView(FallDetailView.ID);
 				} catch (Exception ex) {
 					ExHandler.handle(ex);
@@ -680,22 +683,22 @@ public class GlobalActions {
 			}
 
 		};
-		closeFallAction = new LockedAction<Fall>(Messages.GlobalActions_CloseCase) {
+		closeFallAction = new LockedAction<ICoverage>(Messages.GlobalActions_CloseCase) {
 
 			@Override
-			public Fall getTargetedObject() {
-				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			public ICoverage getTargetedObject() {
+				return ContextServiceHolder.get().getActiveCoverage().orElse(null);
 			}
 
 			@Override
-			public void doRun(Fall fall) {
-				if (hasUnbilledConsultations(fall)) {
+			public void doRun(ICoverage element) {
+				if (hasUnbilledConsultations(element)) {
 					Display display = Display.getDefault();
 					Shell shell = new Shell(display);
 					MessageBox dialog = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
 					dialog.setText(Messages.GlobalActions_CloseCaseDialogTitel);
 					dialog.setMessage(
-							((String) Messages.GlobalActions_CloseCaseDialog).replace("{0}", fall.getLabel()));
+							((String) Messages.GlobalActions_CloseCaseDialog).replace("{0}", element.getLabel()));
 					int response = dialog.open();
 					if (response == SWT.NO) {
 						return;
@@ -706,24 +709,25 @@ public class GlobalActions {
 				int retVal = dsd.open();
 				if (Dialog.OK == retVal) {
 					TimeTool endDate = dsd.getSelectedDate();
-					fall.setEndDatum(new TimeTool(endDate.getTime()).toString(TimeTool.DATE_GER));
-					ElexisEventDispatcher.getInstance()
-							.fire(new ElexisEvent(fall, Fall.class, ElexisEvent.EVENT_UPDATE));
+					element.setDateTo(endDate.toLocalDate());
+					CoreModelServiceHolder.get().save(element);
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 				}
 			}
 		};
-		reopenFallAction = new LockedRestrictedAction<Fall>(EvACE.of(ICoverage.class, Right.DELETE).and(Right.EXECUTE),
+		reopenFallAction = new LockedRestrictedAction<ICoverage>(
+				EvACE.of(ICoverage.class, Right.DELETE).and(Right.EXECUTE),
 				Messages.GlobalActions_ReopenCase) {
 			@Override
-			public void doRun(Fall element) {
-				element.setEndDatum(StringConstants.EMPTY);
-				ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(element, Fall.class, ElexisEvent.EVENT_UPDATE));
+			public void doRun(ICoverage element) {
+				element.setDateTo(null);
+				CoreModelServiceHolder.get().save(element);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 			}
 
 			@Override
-			public Fall getTargetedObject() {
-				return (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+			public ICoverage getTargetedObject() {
+				return ContextServiceHolder.get().getActiveCoverage().orElse(null);
 			}
 		};
 		neuerFallAction = new Action(Messages.Core_New_Case) {
@@ -734,8 +738,9 @@ public class GlobalActions {
 
 			@Override
 			public void run() {
-				Patient pat = ElexisEventDispatcher.getSelectedPatient();
-				if (pat != null) {
+				Patient actPatient = (Patient) NoPoUtil
+						.loadAsPersistentObject(ContextServiceHolder.get().getActivePatient().orElse(null));
+				if (actPatient != null) {
 					NeuerFallDialog nfd = new NeuerFallDialog(mainWindow.getShell(), null);
 					if (nfd.open() == Dialog.OK) {
 
@@ -751,11 +756,11 @@ public class GlobalActions {
 		};
 	}
 
-	public boolean hasUnbilledConsultations(Fall fall) {
-		Konsultation[] konsultationen = fall.getBehandlungen(false);
-		for (Konsultation kons : konsultationen) {
-			Rechnung rechnung = kons.getRechnung();
-			if (rechnung == null || rechnung.getInvoiceState() == InvoiceState.CANCELLED) {
+	private boolean hasUnbilledConsultations(ICoverage fall) {
+		List<IEncounter> encounters = fall.getEncounters();
+		for (IEncounter encounter : encounters) {
+			IInvoice rechnung = encounter.getInvoice();
+			if (rechnung == null || rechnung.getState() == InvoiceState.CANCELLED) {
 				return true;
 			}
 		}
@@ -769,7 +774,7 @@ public class GlobalActions {
 			// driver is not handled correctly (we always get porttrait
 			// even when the printer settings have landscape stored)
 			Integer iOrientation = -1;
-			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
+			String sOrientation = LocalConfigService.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
 			try {
 				iOrientation = Integer.parseInt(sOrientation);
 			} catch (NumberFormatException ex) {
@@ -813,7 +818,7 @@ public class GlobalActions {
 			// driver is not handled correctly (we always get porttrait
 			// even when the printer settings have landscape stored)
 			Integer iOrientation = -1;
-			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
+			String sOrientation = LocalConfigService.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
 			try {
 				iOrientation = Integer.parseInt(sOrientation);
 			} catch (NumberFormatException ex) {
@@ -851,50 +856,6 @@ public class GlobalActions {
 		}
 	}
 
-	protected void printAdr(final Kontakt k) {
-		// 25.01.2010 patch tschaller: there was always the printer selection
-		// dialog. With printEtikette it wasn't so I copied the hardcoded string
-		// from there
-		// PrinterData pd =
-		// getPrinterData(Messages.getString("GlobalActions.printersticker"));
-		PrinterData pd = getPrinterData("Etiketten"); //$NON-NLS-1$
-		if (pd != null) {
-			// 25.01.2010 patch tschaller: page orientation of printer driver is
-			// not handled correctly (we always get porttrait even when the
-			// printer settings have landscape stored)
-			Integer iOrientation = -1;
-			String sOrientation = CoreHub.localCfg.get("Drucker/Etiketten/Ausrichtung", null); //$NON-NLS-1$
-			try {
-				iOrientation = Integer.parseInt(sOrientation);
-			} catch (NumberFormatException ex) {
-			}
-			if (iOrientation != -1)
-				pd.orientation = iOrientation;
-			Printer prn = new Printer(pd);
-			if (prn.startJob("Etikette drucken") == true) { //$NON-NLS-1$
-				GC gc = new GC(prn);
-				int y = 0;
-				prn.startPage();
-				FontMetrics fmt = gc.getFontMetrics();
-				String pers = k.getPostAnschrift(true);
-				String[] lines = pers.split(StringUtils.LF);
-				for (String line : lines) {
-					gc.drawString(line, 0, y);
-					y += fmt.getHeight();
-				}
-				gc.dispose();
-				prn.endPage();
-				prn.endJob();
-				prn.dispose();
-			} else {
-				MessageDialog.openError(mainWindow.getShell(), Messages.GlobalActions_PrinterErrorTitle,
-						Messages.GlobalActions_PrinterErrorMessage);
-
-			}
-
-		}
-	}
-
 	/**
 	 * Return a PrinterData object according to the given type (e. g. "Etiketten")
 	 * and the user settings. Shows a printer selection dialog if required.
@@ -906,9 +867,9 @@ public class GlobalActions {
 		String cfgPrefix = "Drucker/" + type + "/"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 
 		PrinterData pd = null;
-		String printer = CoreHub.localCfg.get(cfgPrefix + "Name", null); //$NON-NLS-1$
-		String driver = CoreHub.localCfg.get(cfgPrefix + "Driver", null); //$NON-NLS-1$
-		boolean choose = CoreHub.localCfg.get(cfgPrefix + "Choose", false); //$NON-NLS-1$
+		String printer = LocalConfigService.get(cfgPrefix + "Name", null); //$NON-NLS-1$
+		String driver = LocalConfigService.get(cfgPrefix + "Driver", null); //$NON-NLS-1$
+		boolean choose = LocalConfigService.get(cfgPrefix + "Choose", false); //$NON-NLS-1$
 		if (choose || StringTool.isNothing(printer) || StringTool.isNothing(driver)) {
 			Shell shell = UiDesk.getTopShell();
 			PrintDialog pdlg = new PrintDialog(shell);
@@ -918,14 +879,6 @@ public class GlobalActions {
 		}
 
 		return pd;
-	}
-
-	/**
-	 * Return true if direct printing on defined printer. If false, the user has to
-	 * choose the printer and print himself
-	 */
-	private boolean isDirectPrint() {
-		return !CoreHub.localCfg.get("Drucker/Etiketten/Choose", true);
 	}
 
 	/**

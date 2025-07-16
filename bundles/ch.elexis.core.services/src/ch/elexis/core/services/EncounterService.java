@@ -425,4 +425,12 @@ public class EncounterService implements IEncounterService {
 		}
 		return ret;
 	}
+
+	@Override
+	public boolean canDelete(IEncounter element) {
+		if (element != null) {
+			return element.getBilled().isEmpty() && element.getDiagnoses().isEmpty();
+		}
+		return false;
+	}
 }

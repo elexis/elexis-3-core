@@ -150,4 +150,13 @@ public interface IEncounterService {
 	 * @param text      text to insert
 	 */
 	void addXRef(IEncounter encounter, String provider, String id, int pos, String text);
+
+	/**
+	 * Test if the {@link IEncounter} can be deleted. Should have no references from
+	 * {@link IBilled}.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public boolean canDelete(IEncounter element);
 }

@@ -16,7 +16,9 @@ import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -301,5 +303,18 @@ public class CoverageService implements ICoverageService {
 			}
 		}
 		return Optional.ofNullable(bestMatch);
+	}
+
+	@Override
+	public boolean canDelete(ICoverage element) {
+		if (element != null) {
+			IQuery<ISickCertificate> sickCertQuery = CoreModelServiceHolder.get().getQuery(ISickCertificate.class)
+					.and("fall", COMPARATOR.EQUALS, element);
+			IQuery<IInvoice> invoiceQuery = CoreModelServiceHolder.get().getQuery(IInvoice.class)
+					.and("fall", COMPARATOR.EQUALS, element);
+			return element.getEncounters().isEmpty() && sickCertQuery.execute().isEmpty()
+					&& invoiceQuery.execute().isEmpty();
+		}
+		return false;
 	}
 }

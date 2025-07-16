@@ -20,7 +20,9 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IReminder;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.IUser;
+import ch.elexis.data.AUF;
 import ch.elexis.data.AccountTransaction;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Brief;
@@ -81,6 +83,8 @@ public class CoreElexisClassToModelInterfaceContribution implements ElexisClassT
 			return Optional.of(IOrganization.class);
 		} else if (elexisClazz == Labor.class) {
 			return Optional.of(ILaboratory.class);
+		} else if (elexisClazz == AUF.class) {
+			return Optional.of(ISickCertificate.class);
 		}
 		return Optional.empty();
 	}

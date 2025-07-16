@@ -5,7 +5,9 @@ import java.util.Optional;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.ch.BillingLaw;
 
 public interface ICoverageService {
@@ -116,4 +118,13 @@ public interface ICoverageService {
 	 * @since 3.12
 	 */
 	Optional<ICoverage> getCoverageWithLaw(IPatient patient, BillingLaw... laws);
+
+	/**
+	 * Test if the {@link ICoverage} can be deleted. Should have no references from
+	 * {@link IEncounter}s, {@link ISickCertificate}s or {@link IInvoice}s.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public boolean canDelete(ICoverage element);
 }
