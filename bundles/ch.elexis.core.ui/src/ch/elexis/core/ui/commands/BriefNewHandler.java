@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.commands;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,9 +14,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.DocumentSelectDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
@@ -24,10 +32,7 @@ import ch.elexis.core.ui.views.BriefAuswahl;
 import ch.elexis.core.ui.views.TextView;
 import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -37,19 +42,20 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Patient pat = ElexisEventDispatcher.getSelectedPatient();
+		IPatient pat = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (pat == null) {
 			MessageDialog.openInformation(UiDesk.getTopShell(), Messages.Core_No_patient_selected,
 					Messages.Core_No_patient_selected);
 			return null;
 		}
 
-		Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+		ICoverage selectedFall = ContextServiceHolder.get().getActiveCoverage().orElse(null);
 		if (selectedFall == null) {
 			SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
 			sfd.open();
 			if (sfd.result != null) {
-				ElexisEventDispatcher.fireSelectionEvent(sfd.result);
+				selectedFall = NoPoUtil.loadAsIdentifiable(sfd.result, ICoverage.class).orElse(null);
+				ContextServiceHolder.get().setActiveCoverage(selectedFall);
 			} else {
 				MessageDialog.openInformation(UiDesk.getTopShell(), Messages.TextView_NoCaseSelected, // $NON-NLS-1$
 						Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); // $NON-NLS-1$
@@ -57,14 +63,18 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 			}
 		}
 
-		Konsultation selectedKonsultation = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+		IEncounter selectedKonsultation = ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null);
 		if (selectedKonsultation == null) {
-			Konsultation k = pat.getLetzteKons(false);
-			if (k == null) {
-				k = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
-				k.setMandant(ContextServiceHolder.getActiveMandatorOrNull());
+			selectedKonsultation = EncounterServiceHolder.get().getLatestEncounter(pat).orElse(null);
+			if (selectedKonsultation == null) {
+				Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
+				if (activeMandator.isPresent()) {
+					selectedKonsultation = new IEncounterBuilder(CoreModelServiceHolder.get(), selectedFall,
+							activeMandator.get()).buildAndSave();
+					EncounterServiceHolder.get().addDefaultDiagnosis(selectedKonsultation);
+				}
 			}
-			ElexisEventDispatcher.fireSelectionEvent(k);
+			ContextServiceHolder.get().setTyped(selectedKonsultation);
 		}
 
 		TextView tv = null;
@@ -73,7 +83,8 @@ public class BriefNewHandler extends AbstractHandler implements IHandler {
 			qbe.add(Brief.FLD_TYPE, Query.EQUALS, Brief.TEMPLATE);
 			qbe.add(Brief.FLD_KONSULTATION_ID, Query.NOT_EQUAL, "SYS"); //$NON-NLS-1$
 			qbe.startGroup();
-			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, ElexisEventDispatcher.getSelectedMandator().getId());
+			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS,
+					ContextServiceHolder.get().getActiveMandator().get().getId());
 			qbe.or();
 			qbe.add(Brief.FLD_DESTINATION_ID, Query.EQUALS, StringTool.leer);
 			qbe.endGroup();
