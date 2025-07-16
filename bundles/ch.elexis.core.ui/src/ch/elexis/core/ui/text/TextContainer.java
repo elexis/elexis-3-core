@@ -62,19 +62,26 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.text.ITextResolver;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.data.util.ScriptUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
@@ -141,7 +148,7 @@ public class TextContainer {
 	 */
 	public TextContainer() {
 		if (plugin == null) {
-			String ExtensionToUse = CoreHub.localCfg.get(Preferences.P_TEXTMODUL, null);
+			String ExtensionToUse = LocalConfigService.get(Preferences.P_TEXTMODUL, null);
 			IExtensionRegistry exr = Platform.getExtensionRegistry();
 			IExtensionPoint exp = exr.getExtensionPoint(ExtensionPointConstantsUi.TEXTPROCESSINGPLUGIN);
 			if (exp != null) {
@@ -191,7 +198,7 @@ public class TextContainer {
 	}
 
 	private Brief loadTemplate(String name) {
-		Mandant mandator = ElexisEventDispatcher.getSelectedMandator();
+		IMandator mandator = ContextServiceHolder.getActiveMandatorOrNull();
 		return TextTemplate.findExistingTemplate(name, (mandator != null ? mandator.getId() : null));
 	}
 
@@ -210,7 +217,7 @@ public class TextContainer {
 
 	public Brief createFromTemplateName(final Konsultation kons, final String templatenameRaw, final String typ,
 			final Kontakt adressat, final String subject) {
-		String suffix = CoreHub.localCfg.get(TextTemplatePreferences.SUFFIX_STATION, StringUtils.EMPTY);
+		String suffix = LocalConfigService.get(TextTemplatePreferences.SUFFIX_STATION, StringUtils.EMPTY);
 		Brief template = loadTemplate(templatenameRaw + suffix);
 		if (template == null && suffix.length() > 0) {
 			template = loadTemplate(templatenameRaw);
@@ -684,7 +691,7 @@ public class TextContainer {
 		} else {
 			try {
 				String fqname = "ch.elexis.data." + kl; //$NON-NLS-1$
-				ret = ElexisEventDispatcher.getSelected(Class.forName(fqname));
+				ret = NoPoUtil.getSelected(Class.forName(fqname));
 			} catch (Throwable ex) {
 				log.warn(Messages.TextContainer_UnrecognizedFieldType + kl);
 				ret = null;
@@ -997,7 +1004,7 @@ public class TextContainer {
 
 			brief.save(contents, plugin.getMimeType());
 			log.info(String.format("saveBrief %s", brief.getLabel())); //$NON-NLS-1$
-			ElexisEventDispatcher.reload(Brief.class);
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 		}
 	}
 
@@ -1025,7 +1032,7 @@ public class TextContainer {
 			// text.clear();
 			// set sticker for this template if not to ask for addressee
 			DocumentSelectDialog.setDontAskForAddresseeForThisTemplate(brief, std.dontShowAddresseeSelection);
-			ElexisEventDispatcher.getInstance().fire(new ElexisEvent(null, Brief.class, ElexisEvent.EVENT_RELOAD));
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 		}
 	}
 
@@ -1402,22 +1409,27 @@ public class TextContainer {
 	 * @return
 	 */
 	public Konsultation getAktuelleKons() {
-		Konsultation ret = Konsultation.getAktuelleKons();
-		if (ret == null) {
+		IEncounter selectedKonsultation = ContextServiceHolder.get().getTyped(IEncounter.class).orElse(null);
+		if (selectedKonsultation == null) {
 			SelectFallDialog sfd = new SelectFallDialog(UiDesk.getTopShell());
 			sfd.open();
 			if (sfd.result != null) {
-				ElexisEventDispatcher.fireSelectionEvent(sfd.result);
+				ICoverage selectedFall = NoPoUtil.loadAsIdentifiable(sfd.result, ICoverage.class).orElse(null);
+				ContextServiceHolder.get().setActiveCoverage(selectedFall);
 			} else {
 				MessageDialog.openInformation(UiDesk.getTopShell(),
 						ch.elexis.core.ui.views.Messages.TextView_NoCaseSelected, // $NON-NLS-1$
 						ch.elexis.core.ui.views.Messages.TextView_SaveNotPossibleNoCaseAndKonsSelected); // $NON-NLS-1$
 				return null;
 			}
-			ret = ((Fall) ElexisEventDispatcher.getSelected(Fall.class)).neueKonsultation();
-			ret.setMandant(Mandant.load(ContextServiceHolder.getActiveMandatorOrNull().getId()));
-			ElexisEventDispatcher.fireSelectionEvent(ret);
+			Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
+			if (activeMandator.isPresent() && ContextServiceHolder.get().getActiveCoverage().isPresent()) {
+				selectedKonsultation = new IEncounterBuilder(CoreModelServiceHolder.get(),
+						ContextServiceHolder.get().getActiveCoverage().get(), activeMandator.get()).buildAndSave();
+				EncounterServiceHolder.get().addDefaultDiagnosis(selectedKonsultation);
+			}
+			ContextServiceHolder.get().setTyped(selectedKonsultation);
 		}
-		return ret;
+		return NoPoUtil.loadAsPersistentObject(selectedKonsultation, Konsultation.class);
 	}
 }

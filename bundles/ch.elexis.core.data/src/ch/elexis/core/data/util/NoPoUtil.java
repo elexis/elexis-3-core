@@ -12,11 +12,17 @@ import java.util.StringJoiner;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.events.ClassToModelInterfaceService;
+import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
 
@@ -30,6 +36,7 @@ import ch.elexis.data.PersistentObjectFactory;
 public class NoPoUtil {
 
 	private static PersistentObjectFactory poFactory = new PersistentObjectFactory();
+	private static ClassToModelInterfaceService classToModelInterfaceService;
 
 	/**
 	 * Load {@link PersistentObject} implementation for the provided
@@ -247,5 +254,43 @@ public class NoPoUtil {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Find the last selected object of a given type, selection will be fetched from
+	 * {@link IContextService}.
+	 *
+	 * @param template tha class defining the object to find
+	 * @return the last object of the given type or null if no such object is
+	 *         selected
+	 */
+	public static IPersistentObject getSelected(final Class<?> template) {
+		Optional<Class<?>> ciOpt = getClassToModelInterfaceService().getCoreModelInterfaceForElexisClass(template);
+		if (ciOpt.isPresent()) {
+			Optional<?> selected = Optional.empty();
+			if (Anwender.class == template) {
+				selected = ContextServiceHolder.get().getActiveUserContact();
+			} else {
+				selected = ContextServiceHolder.get().getTyped(ciOpt.get());
+			}
+			if (selected.isPresent() && selected.get() instanceof Identifiable) {
+				return (IPersistentObject) NoPoUtil.loadAsPersistentObject((Identifiable) selected.get(), template);
+			}
+		} else {
+			LoggerFactory.getLogger(NoPoUtil.class).warn("Unknown code model interface for [" + template + "]");
+			Optional<?> selected = ContextServiceHolder.get().getTyped(template);
+			if (selected.isPresent() && selected.get() instanceof IPersistentObject) {
+				return (IPersistentObject) selected.get();
+			}
+		}
+		return null;
+	}
+
+	private static ClassToModelInterfaceService getClassToModelInterfaceService() {
+		if (classToModelInterfaceService == null) {
+			classToModelInterfaceService = OsgiServiceUtil.getService(ClassToModelInterfaceService.class)
+					.orElseThrow(() -> new IllegalStateException("No ClassToModelInterfaceService"));
+		}
+		return classToModelInterfaceService;
 	}
 }
