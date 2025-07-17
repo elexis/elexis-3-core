@@ -15,14 +15,12 @@ package ch.elexis.core.ui.views.codesystems;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -50,7 +48,6 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IUser;
@@ -63,7 +60,6 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.DelegatingSelectionProvider;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ContentType;
 import ch.elexis.core.ui.views.FavoritenCTabItem;
@@ -371,12 +367,6 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			cv.getViewerWidget().getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 			vc.getContentProvider().startListening();
 
-			// add double click listener for PersistentObject CodeSelectorTarget, added
-			// after create of CommonViewer
-			if (vc.getContentType() == ContentType.PERSISTENTOBJECT) {
-				cv.addDoubleClickListener(description.getCodeSelectorFactory().getPoDoubleClickListener());
-			}
-
 			try {
 				sash.setWeights(sashWeights);
 			} catch (Throwable t) {
@@ -454,53 +444,6 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			selectionProvider.setSelectionProviderDelegate(getSelectionProvider());
 			site.registerContextMenu(viewId + "." + getCodeSystemName(), getMenuManager(), selectionProvider); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * Returns the {@link PoDoubleClickListener} used on the Viewer of this
-	 * {@link CodeSelectorFactory}. Default implementation passes the selected
-	 * {@link PersistentObject} directly to the code selector target (manage via
-	 * {@link CodeSelectorHandler}). If a {@link Leistungsblock} is selected it will
-	 * pass its contained elements to the code selector target. </br>
-	 * </br>
-	 * Should be overridden by subclasses for special behaviour.
-	 *
-	 * @return
-	 */
-	protected PoDoubleClickListener getPoDoubleClickListener() {
-		return new PoDoubleClickListener() {
-			@Override
-			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
-				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
-				if (target != null) {
-					if (obj instanceof Leistungsblock) {
-						Leistungsblock block = (Leistungsblock) obj;
-						java.util.List<ICodeElement> elements = block.getElements();
-						for (ICodeElement codeElement : elements) {
-							if (codeElement instanceof PersistentObject) {
-								PersistentObject po = (PersistentObject) codeElement;
-								target.codeSelected(po);
-							}
-						}
-						java.util.List<ICodeElement> diff = block.getDiffToReferences(elements);
-						if (!diff.isEmpty()) {
-							StringBuilder sb = new StringBuilder();
-							diff.forEach(r -> {
-								if (sb.length() > 0) {
-									sb.append(StringUtils.LF);
-								}
-								sb.append(r);
-							});
-							MessageDialog.openWarning(Display.getDefault().getActiveShell(), "Warnung",
-									"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-											+ sb.toString());
-						}
-					} else {
-						target.codeSelected(obj);
-					}
-				}
-			}
-		};
 	}
 
 	/**

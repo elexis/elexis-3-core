@@ -16,7 +16,11 @@ import java.util.List;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -46,7 +50,6 @@ import ch.elexis.core.ui.actions.ToggleVerrechenbarFavoriteAction;
 import ch.elexis.core.ui.locks.LockResponseHelper;
 import ch.elexis.core.ui.selectors.FieldDescriptor;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
-import ch.elexis.core.ui.util.viewers.CommonViewer.PoDoubleClickListener;
 import ch.elexis.core.ui.util.viewers.SelectorPanelProvider;
 import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
@@ -120,22 +123,30 @@ public class EigenartikelSelector extends CodeSelectorFactory {
 	}
 
 	@Override
-	protected PoDoubleClickListener getPoDoubleClickListener() {
-		return new PoDoubleClickListener() {
-			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
-				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
-				if (target != null) {
-					if (obj instanceof IArticle) {
-						IArticle article = (IArticle) obj;
-						// translate to first package if product selected
-						if (article.isProduct()) {
-							@SuppressWarnings("unchecked")
-							List<IArticle> packages = (List<IArticle>) (List<?>) article.getPackages();
-							if (!packages.isEmpty()) {
-								article = packages.get(0);
+	public IDoubleClickListener getDoubleClickListener() {
+		return new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					if (!structuredSelection.isEmpty()) {
+						ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+						if (target != null) {
+							Object obj = structuredSelection.getFirstElement();
+							if (obj instanceof IArticle) {
+								IArticle article = (IArticle) obj;
+								// translate to first package if product selected
+								if (article.isProduct()) {
+									@SuppressWarnings("unchecked")
+									List<IArticle> packages = (List<IArticle>) (List<?>) article.getPackages();
+									if (!packages.isEmpty()) {
+										article = packages.get(0);
+									}
+								}
+								target.codeSelected(article);
 							}
 						}
-						target.codeSelected(article);
 					}
 				}
 			}

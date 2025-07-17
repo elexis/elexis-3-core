@@ -95,7 +95,6 @@ import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ac.EvACEs;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -121,7 +120,6 @@ import ch.elexis.core.ui.views.codesystems.LeistungenView;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 import ch.elexis.data.Artikel;
 import ch.elexis.data.Eigenleistung;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
@@ -644,63 +642,6 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			billedLabel.setText(StringUtils.EMPTY);
 		}
 		layout();
-	}
-
-	/**
-	 * Add a {@link PersistentObject} to the encounter.
-	 *
-	 * @param o
-	 * @deprecated for {@link ch.elexis.core.model.ICodeElement} instances direct
-	 *             use of {@link IBillingService} is recommended
-	 */
-	@Deprecated
-	public void addPersistentObject(PersistentObject o) {
-		if (actEncounter != null) {
-			if (o instanceof Leistungsblock) {
-				Leistungsblock block = (Leistungsblock) o;
-				List<ch.elexis.core.data.interfaces.ICodeElement> elements = block.getElements();
-				for (ch.elexis.core.data.interfaces.ICodeElement element : elements) {
-					if (element instanceof PersistentObject) {
-						addPersistentObject((PersistentObject) element);
-					}
-				}
-				List<ch.elexis.core.data.interfaces.ICodeElement> diff = block.getDiffToReferences(elements);
-				if (!diff.isEmpty()) {
-					StringBuilder sb = new StringBuilder();
-					diff.forEach(r -> {
-						if (sb.length() > 0) {
-							sb.append(StringUtils.LF);
-						}
-						sb.append(r);
-					});
-					MessageDialog.openWarning(getShell(), "Warnung",
-							"Warnung folgende Leistungen konnten im aktuellen Kontext (Fall, Konsultation, Gesetz) nicht verrechnet werden.\n"
-									+ sb.toString());
-				}
-			}
-			if (o instanceof Prescription) {
-				Prescription presc = (Prescription) o;
-				o = presc.getArtikel();
-			}
-			if (o instanceof IVerrechenbar) {
-				if (AccessControlServiceHolder.get().evaluate(EvACEs.LSTG_VERRECHNEN) == false) {
-					SWTHelper.alert(Messages.Core_Missing_rights, // $NON-NLS-1$
-							Messages.VerrechnungsDisplay_missingRightsBody); // $NON-NLS-1$
-				} else {
-					Result<IVerrechenbar> result = Konsultation.load(actEncounter.getId())
-							.addLeistung((IVerrechenbar) o);
-
-					if (!result.isOK()) {
-						SWTHelper.alert(Messages.VerrechnungsDisplay_imvalidBilling, result.toString()); // $NON-NLS-1$
-					}
-				}
-			} else if (o instanceof IDiagnose) {
-				Konsultation.load(actEncounter.getId()).addDiagnose((IDiagnose) o);
-			}
-			// refresh the modified billed object from the db
-			actEncounter.getBilled().forEach(b -> CoreModelServiceHolder.get().refresh(b));
-			setEncounter(actEncounter);
-		}
 	}
 
 	private void updatePartDisposalColumn(List<IBilled> list) {
