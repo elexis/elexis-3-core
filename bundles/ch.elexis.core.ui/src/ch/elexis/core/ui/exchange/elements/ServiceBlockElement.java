@@ -12,27 +12,15 @@
 
 package ch.elexis.core.ui.exchange.elements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.ICodeElement;
-import ch.elexis.core.data.interfaces.IPersistentObject;
 import ch.elexis.core.data.interfaces.IVerrechenbar;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.exchange.XChangeExporter;
-import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.codesystems.CodeSelectorFactory;
-import ch.elexis.data.Eigenleistung;
 import ch.elexis.data.Leistungsblock;
-import ch.elexis.data.PersistentObject;
-import ch.elexis.data.PersistentObjectFactory;
 import ch.elexis.data.dto.CodeElementDTO;
 import ch.rgw.tools.StringTool;
 
@@ -40,38 +28,6 @@ public class ServiceBlockElement extends XChangeElement {
 	public static final String XMLNAME = "serviceblock"; //$NON-NLS-1$
 	public static final String ENCLOSING = "serviceblocks"; //$NON-NLS-1$
 	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
-	static java.util.List<IConfigurationElement> codesystems;
-
-	static List<ICodeElement> codeElements;
-	static HashMap<ICodeElement, CodeSelectorFactory> factories;
-
-	static {
-		codesystems = Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE);
-		codeElements = new ArrayList<>(codesystems.size());
-		factories = new HashMap<>(codesystems.size());
-		for (IConfigurationElement ic : codesystems) {
-			try {
-				PersistentObjectFactory po = (PersistentObjectFactory) ic
-						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-
-				CodeSelectorFactory cs = (CodeSelectorFactory) ic
-						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_CSF);
-				if (cs == null) {
-					SWTHelper.alert("Fehler", "CodeSelectorFactory is null");
-				} else {
-					ICodeElement ics = (ICodeElement) po.createTemplate(cs.getElementClass());
-					if (ics == null) {
-						SWTHelper.alert("Fehler", "CodeElement is null");
-					}
-					codeElements.add(ics);
-					factories.put(ics, cs);
-				}
-			} catch (CoreException ex) {
-				LoggerFactory.getLogger(ServiceBlockElement.class)
-						.warn("Could not create PersistentObject code element factory", ex); //$NON-NLS-1$
-			}
-		}
-	}
 
 	public ServiceBlockElement asExporter(XChangeExporter p, Leistungsblock lb) {
 		asExporter(p);
@@ -98,63 +54,9 @@ public class ServiceBlockElement extends XChangeElement {
 					ServiceElement.class);
 			for (ServiceElement se : lService) {
 				if (!importCodeElement(block, se)) {
-					importXidElement(block, se);
+					LoggerFactory.getLogger(getClass()).warn("Could not import code element ["
+							+ se.getAttr("contractName") + " / " + se.getAttr("contractCode") + "]");
 				}
-			}
-		}
-	}
-
-	/**
-	 * Try loading using {@link XidElement}, if the {@link ICodeElement} referenced
-	 * by the {@link XidElement} is not present, the CodeSelectorFactory is used as
-	 * lookup.
-	 *
-	 * @param block
-	 * @param se
-	 *
-	 * @deprecated use
-	 *             {@link ServiceBlockElement#importCodeElement(Leistungsblock, ServiceElement)}
-	 */
-	@Deprecated
-	private void importXidElement(Leistungsblock block, ServiceElement se) {
-		XidElement xid = se.getXid();
-		List<IPersistentObject> ls = xid.findObject();
-		boolean bFound = false;
-		for (IPersistentObject po : ls) {
-			if (po instanceof IVerrechenbar) {
-				block.addElement((IVerrechenbar) po);
-				bFound = true;
-				break;
-			}
-		}
-		if (!bFound) { // we do not have a object with matching XID
-			String contract = se.getAttr("contractName"); //$NON-NLS-1$
-			String code = se.getAttr("contractCode"); //$NON-NLS-1$
-			String lname = se.getAttr("name"); //$NON-NLS-1$
-			boolean bMatched = false;
-			for (ICodeElement ice : codeElements) {
-				if (ice.getCodeSystemName().equals(contract)) {
-					CodeSelectorFactory cof = factories.get(ice);
-					if (cof != null) {
-						PersistentObject po = cof.findElement(code);
-						if (po != null && po.exists()) {
-							bMatched = true;
-							block.addElement((ICodeElement) po);
-							break;
-						} else {
-							Eigenleistung custom = Eigenleistung.load(code);
-							if (custom.exists()) {
-								block.addElement(custom);
-								bMatched = true;
-								break;
-							}
-						}
-					}
-				}
-			}
-			if (!bMatched) {
-				Eigenleistung custom = new Eigenleistung(code, lname, se.getAttr("cost"), se.getAttr("price")); //$NON-NLS-1$ //$NON-NLS-2$
-				block.addElement(custom);
 			}
 		}
 	}

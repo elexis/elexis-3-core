@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.views.codesystems;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.core.runtime.CoreException;
@@ -9,17 +8,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.PersistentObjectFactory;
 
 public class CodeSystemDescription {
 
 	private String configName;
-
-	private ICodeElement poCodeElement;
 
 	private CodeSelectorFactory codeSelectorFactory;
 
@@ -42,12 +37,6 @@ public class CodeSystemDescription {
 				CoreUiUtil.injectServicesWithContext(ret.codeSelectorFactory);
 			}
 
-			String factoryName = configuration.getAttribute(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-			if (factoryName != null && !factoryName.isEmpty()) {
-				PersistentObjectFactory poFactory = (PersistentObjectFactory) configuration
-						.createExecutableExtension(ExtensionPointConstantsUi.VERRECHNUNGSCODE_ELF);
-				ret.poCodeElement = (ICodeElement) poFactory.createTemplate(ret.codeSelectorFactory.getElementClass());
-			} else {
 				String system = configuration.getAttribute("system"); //$NON-NLS-1$
 				if (system != null && !system.isEmpty()) {
 					ret.system = system;
@@ -58,7 +47,6 @@ public class CodeSystemDescription {
 					return Optional.empty();
 				}
 				ret.elexisClassName = configuration.getAttribute("elexisClassName"); //$NON-NLS-1$
-			}
 		} catch (CoreException ex) {
 			LoggerFactory.getLogger(CodeSystemDescription.class).error("Error creating config", ex); //$NON-NLS-1$
 			return Optional.empty();
@@ -67,9 +55,7 @@ public class CodeSystemDescription {
 	}
 
 	public String getCodeSystemName() {
-		if (poCodeElement != null) {
-			return poCodeElement.getCodeSystemName();
-		} else if (system != null) {
+		if (system != null) {
 			return system;
 		}
 		throw new IllegalStateException("No system and no code element present [" + configName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -83,17 +69,7 @@ public class CodeSystemDescription {
 		return codeSelectorFactory.getSelectionDialog(parent, data);
 	}
 
-	public List<Object> getActions(Object context) {
-		if (poCodeElement != null) {
-			return poCodeElement.getActions(context);
-		}
-		return null;
-	}
-
 	public String getElexisClassName() {
-		if (poCodeElement != null) {
-			return poCodeElement.getClass().getName();
-		}
 		return elexisClassName;
 	}
 }

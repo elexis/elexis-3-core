@@ -18,7 +18,6 @@ package ch.elexis.core.ui.constants;
 public class ExtensionPointConstantsUi {
 	public static final String VERRECHNUNGSCODE = "ch.elexis.core.ui.Verrechnungscode"; //$NON-NLS-1$
 	public static final String VERRECHNUNGSCODE_CSF = "CodeSelectorFactory"; //$NON-NLS-1$
-	public static final String VERRECHNUNGSCODE_ELF = "ElementFactory"; //$NON-NLS-1$
 	public static final String VERRECHNUNGSCODE_CDD = "CodeDetailDisplay"; //$NON-NLS-1$
 	public static final String VERRECHNUNGSCODE_IMPC = "ImporterClass"; //$NON-NLS-1$
 	public static final String VIEWCONTRIBUTION = "ch.elexis.core.ui.ViewContribution"; //$NON-NLS-1$

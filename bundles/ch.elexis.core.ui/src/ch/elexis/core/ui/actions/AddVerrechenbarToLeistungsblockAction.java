@@ -12,7 +12,6 @@ import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.data.UiVerrechenbarAdapter;
 import ch.elexis.core.ui.dialogs.AddElementToBlockDialog;
 import ch.elexis.data.Leistungsblock;
 import ch.elexis.data.PersistentObject;
@@ -24,12 +23,6 @@ public class AddVerrechenbarToLeistungsblockAction extends Action {
 
 	private final Class<?> clazz;
 	private String named;
-
-	public AddVerrechenbarToLeistungsblockAction(Class<?> clazz) {
-		super("Zu Leistungsblock...");
-		this.clazz = clazz;
-		this.named = null;
-	}
 
 	public AddVerrechenbarToLeistungsblockAction(String named) {
 		super("Zu Leistungsblock...");

@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -92,6 +90,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	public CodeSelectorFactory() {
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 
@@ -358,22 +357,6 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			gAll.setText(Messages.Core_All); // $NON-NLS-1$
 			gAll.setLayout(new GridLayout());
 			cv = new CommonViewer();
-			// Add context medu to viewer, if actions are defined
-			Iterable<IAction> actions = (Iterable<IAction>) (Iterable<?>) description.getActions(null);
-			if (actions != null) {
-				MenuManager menu = new MenuManager();
-				menu.setRemoveAllWhenShown(true);
-				menu.addMenuListener(new IMenuListener() {
-					public void menuAboutToShow(IMenuManager manager) {
-						Iterable<IAction> actions = (Iterable<IAction>) (Iterable<?>) description.getActions(null);
-						for (IAction ac : actions) {
-							manager.add(ac);
-						}
-
-					}
-				});
-				cv.setContextMenu(menu);
-			}
 			vc = description.getCodeSelectorFactory().createViewerConfigurer(cv);
 			// add double click listener for generic CodeSelectorTarget, added before create
 			// of CommonViewer
@@ -486,6 +469,7 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 	 */
 	protected PoDoubleClickListener getPoDoubleClickListener() {
 		return new PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
 				if (target != null) {
