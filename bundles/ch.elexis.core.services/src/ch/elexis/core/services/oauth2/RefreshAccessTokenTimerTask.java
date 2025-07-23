@@ -53,20 +53,19 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 
 		long accessTokenTimeLeft = accessToken.getAccessTokenExpiration().getTime() - new Date().getTime();
 		if (accessTokenTimeLeft <= 60 * 1000) {
+
 			// we need to refresh the access-token
-			// 1) try via refreshToken if available and not expired
-			Date refreshTokenExpiration = accessToken.getAccessTokenExpiration();
-			if (refreshTokenExpiration != null) {
-				if (refreshTokenExpiration.getTime() > new Date().getTime()) {
-					ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken);
-					if (_accessToken.isOK()) {
-						contextService.setTyped(_accessToken.getObject());
-						logger.info("RT Refreshed access-token for [{}], valid until [{}], refresh until [{}]",
-								activeUserId, TimeUtil.toLocalDateTime(_accessToken.get().getAccessTokenExpiration()),
-								TimeUtil.toLocalDateTime(_accessToken.get().refreshTokenExpiration()));
-						return;
-					}
-				}
+			// 1) try via refreshToken
+			// FIXME does not work correctly
+			ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken);
+			if (_accessToken.isOK()) {
+				contextService.setTyped(_accessToken.getObject());
+				logger.info("RT Refreshed access-token for [{}], valid until [{}], refresh until [{}]", activeUserId,
+						TimeUtil.toLocalDateTime(_accessToken.get().getAccessTokenExpiration()),
+						TimeUtil.toLocalDateTime(_accessToken.get().refreshTokenExpiration()));
+				return;
+			} else {
+				logger.info("RT Could not refresh: {}", _accessToken.getMessage());
 			}
 
 			// 2) via re-entering username password - we ask for re-login
