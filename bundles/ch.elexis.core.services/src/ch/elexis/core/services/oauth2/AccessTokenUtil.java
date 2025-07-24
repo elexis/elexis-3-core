@@ -6,6 +6,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -59,7 +60,7 @@ public class AccessTokenUtil {
 		return keycloakAccessToken;
 	}
 
-	public static ObjectStatus<AccessToken> invokeRefresh(AccessToken accessToken) {
+	public static ObjectStatus<AccessToken> invokeRefresh(AccessToken accessToken, String clientSecret) {
 		String tokenEndpoint = accessToken.getTokenEndpoint();
 		if (tokenEndpoint != null) {
 
@@ -67,6 +68,9 @@ public class AccessTokenUtil {
 			final List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("grant_type", "refresh_token"));
 			params.add(new BasicNameValuePair("client_id", accessToken.getClientId()));
+			if (StringUtils.isNotBlank(clientSecret)) {
+				params.add(new BasicNameValuePair("client_secret", clientSecret));
+			}
 			params.add(new BasicNameValuePair("refresh_token", accessToken.getRefreshToken()));
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 

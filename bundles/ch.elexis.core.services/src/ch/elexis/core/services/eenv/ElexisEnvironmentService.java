@@ -43,7 +43,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 
 		refreshAccessTokenTimer = new Timer("Refresh EE access-token", true); //$NON-NLS-1$
-		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(contextService), 60 * 1000, 60 * 1000);
+		refreshAccessTokenTimer.schedule(new RefreshAccessTokenTimerTask(contextService, this), 60 * 1000, 60 * 1000);
 	}
 
 	@Override

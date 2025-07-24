@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.eenv.ElexisEnvironmentService;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
 
@@ -21,9 +23,11 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 
 	private final IContextService contextService;
 	private final Logger logger;
+	private final ElexisEnvironmentService eeService;
 
-	public RefreshAccessTokenTimerTask(IContextService contextService) {
+	public RefreshAccessTokenTimerTask(IContextService contextService, ElexisEnvironmentService eeService) {
 		this.contextService = contextService;
+		this.eeService = eeService;
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
 
@@ -57,7 +61,8 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 			// we need to refresh the access-token
 			// 1) try via refreshToken
 			// FIXME does not work correctly
-			ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken);
+			String rcpClientSecret = eeService.getProperty(IElexisEnvironmentService.EE_RCP_OPENID_SECRET);
+			ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken, rcpClientSecret);
 			if (_accessToken.isOK()) {
 				contextService.setTyped(_accessToken.getObject());
 				logger.info("RT Refreshed access-token for [{}], valid until [{}], refresh until [{}]", activeUserId,
