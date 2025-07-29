@@ -358,6 +358,7 @@ public class AppointmentService implements IAppointmentService {
 	public void addArea(String name) {
 		String tt = StringTool.join(getAreas().stream().map(Area::getName).toList(), ",") + "," + name;
 		configService.set(AG_BEREICHE, tt);
+		cache.invalidateAll();
 	}
 
 	@Override
