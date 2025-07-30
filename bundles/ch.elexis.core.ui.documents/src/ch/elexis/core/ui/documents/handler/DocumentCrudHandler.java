@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
@@ -37,7 +37,6 @@ import ch.elexis.core.ui.documents.views.DocumentsMetaDataDialog;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Patient;
 
 public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	private static Logger logger = LoggerFactory.getLogger(DocumentCrudHandler.class);
@@ -52,7 +51,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient != null && patient.getId() != null) {
 			Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
@@ -140,14 +139,12 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 					@Override
 					public void lockAcquired() {
 						DocumentStoreServiceHolder.getService().removeDocument(document);
-						ElexisEventDispatcher.getInstance().fire(
-								new ElexisEvent(document, IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 					}
 				});
 			} else {
 				DocumentStoreServiceHolder.getService().removeDocument(document);
-				ElexisEventDispatcher.getInstance()
-						.fire(new ElexisEvent(document, IDocument.class, eventType, ElexisEvent.PRIORITY_NORMAL));
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, document);
 			}
 		}
 	}
@@ -192,8 +189,7 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 				if (file != null) {
 					try (InputStream fin = new FileInputStream(file)) {
 						IDocument savedDocument = DocumentStoreServiceHolder.getService().saveDocument(document, fin);
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(savedDocument, IDocument.class,
-								eventType, ElexisEvent.PRIORITY_NORMAL));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, savedDocument);
 						return Optional.of(savedDocument);
 					}
 				} else {
