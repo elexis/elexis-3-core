@@ -2,6 +2,7 @@ package ch.elexis.core.ui.documents.composites;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,8 @@ public class CategorySelectionEditComposite extends Composite {
 
 	private IDocument document;
 
+	private boolean storeAvailable;
+
 	/**
 	 * @param parent
 	 * @param style
@@ -61,6 +64,7 @@ public class CategorySelectionEditComposite extends Composite {
 
 		this.document = document;
 
+		storeAvailable = DocumentStoreServiceHolder.getService().getServiceById(document.getStoreId()) != null;
 		setFocus();
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginHeight = 0;
@@ -78,8 +82,15 @@ public class CategorySelectionEditComposite extends Composite {
 				return super.getText(element);
 			}
 		});
-		List<ICategory> categories = DocumentStoreServiceHolder.getService().getCategories(document);
-		cbCategories.setInput(categories);
+		List<ICategory> categories = Collections.emptyList();
+		if (storeAvailable) {
+			categories = DocumentStoreServiceHolder.getService().getCategories(document);
+			cbCategories.setInput(categories);
+		} else {
+			cbCategories.setInput(categories);
+			cbCategories.getControl().setToolTipText(document.getStoreId() + " nicht installiert");
+			cbCategories.getControl().setEnabled(false);
+		}
 
 		Button bNewCat = new Button(this, SWT.PUSH);
 		bNewCat.setVisible(categoryCrudAllowed);
@@ -153,17 +164,19 @@ public class CategorySelectionEditComposite extends Composite {
 
 		Object cbSelection = document.getCategory() != null ? document.getCategory() : cbCategories.getElementAt(0);
 		if (cbSelection != null) {
-			if (!categories.contains(cbSelection)) {
-				String categoryName = ((ICategory) cbSelection).getName();
-				Optional<ICategory> matchingName = categories.stream()
-						.filter(cat -> cat.getName() != null && cat.getName().equals(categoryName)).findFirst();
-				if (matchingName.isPresent()) {
-					cbSelection = matchingName.get();
-				} else {
-					cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+			if (storeAvailable) {
+				if (!categories.contains(cbSelection)) {
+					String categoryName = ((ICategory) cbSelection).getName();
+					Optional<ICategory> matchingName = categories.stream()
+							.filter(cat -> cat.getName() != null && cat.getName().equals(categoryName)).findFirst();
+					if (matchingName.isPresent()) {
+						cbSelection = matchingName.get();
+					} else {
+						cbSelection = DocumentStoreServiceHolder.getService().getDefaultCategory(document);
+					}
 				}
+				cbCategories.setSelection(new StructuredSelection(cbSelection), true);				
 			}
-			cbCategories.setSelection(new StructuredSelection(cbSelection), true);
 		}
 	}
 
@@ -192,23 +205,25 @@ public class CategorySelectionEditComposite extends Composite {
 
 	@SuppressWarnings("unchecked")
 	private void addAndSelectCategory(String categoryName) {
-		if (categoryName == null) {
-			cbCategories.setSelection(new StructuredSelection());
-		} else {
-			document.setCategory(DocumentStoreServiceHolder.getService().createCategory(document, categoryName));
-			if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
-				List<ICategory> input = ((List<ICategory>) (List<?>) cbCategories.getInput());
-				if (input != null) {
-					input.add(document.getCategory());
-					input.sort((l, r) -> {
-						return l.getName().compareTo(r.getName());
-					});
-				} else {
-					cbCategories.setInput(DocumentStoreServiceHolder.getService().getCategories(document));
+		if (storeAvailable) {
+			if (categoryName == null) {
+				cbCategories.setSelection(new StructuredSelection());
+			} else {
+				document.setCategory(DocumentStoreServiceHolder.getService().createCategory(document, categoryName));
+				if (!((List<?>) cbCategories.getInput()).contains(document.getCategory())) {
+					List<ICategory> input = ((List<ICategory>) (List<?>) cbCategories.getInput());
+					if (input != null) {
+						input.add(document.getCategory());
+						input.sort((l, r) -> {
+							return l.getName().compareTo(r.getName());
+						});
+					} else {
+						cbCategories.setInput(DocumentStoreServiceHolder.getService().getCategories(document));
+					}
+					cbCategories.refresh();
 				}
-				cbCategories.refresh();
+				cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 			}
-			cbCategories.setSelection(new StructuredSelection(document.getCategory()), true);
 		}
 	}
 
