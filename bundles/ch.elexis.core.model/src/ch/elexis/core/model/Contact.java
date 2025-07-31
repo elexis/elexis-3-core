@@ -244,7 +244,7 @@ public class Contact extends AbstractIdDeleteModelAdapter<Kontakt> implements Id
 
 	@Override
 	public String getComment() {
-		return getEntity().getComment();
+		return StringUtils.defaultString(getEntity().getComment());
 	}
 
 	@Override
