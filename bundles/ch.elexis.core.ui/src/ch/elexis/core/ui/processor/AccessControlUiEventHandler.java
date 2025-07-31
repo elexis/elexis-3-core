@@ -1,8 +1,11 @@
 package ch.elexis.core.ui.processor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,8 +82,13 @@ public class AccessControlUiEventHandler implements EventHandler {
 
 	private Set<MPartDescriptor> removedDescriptors = new HashSet<>();
 
-	private static final List<IPreferenceNode> hiddenNodes = new ArrayList<>();
-	private static final String ALLOWED_PREFERENCE_PAGE_ID = "ch.elexis.preferences.UserPreferences";
+	private final Map<IPreferenceNode, List<IPreferenceNode>> originalStructure = new HashMap<>();
+	private static final Set<IPreferenceNode> hiddenNodes = new LinkedHashSet<>();
+	private static final List<String> ALLOWED_PREFERENCES_PAGE_ID = List.of("ch.elexis.preferences.UserPreferences",
+			"ch.elexis.prefs.sticker", "ch.agendaprefs.zeiten", "ch.elexis.agenda.tageseinteilung",
+			"ch.elexis.LaborPref", "ch.elexis.preferences.LabGroupPrefs", "ch.elexis.LaborParameterPrefs",
+			"at.medevit.elexis.roche.labor.page", "at.medevit.medelexis.blueevidence",
+			"ch.elexis.core.mail.ui.preference.texttemplates", "org.eclipse.ui.monitoring.page");
 
 	private void updateModel() {
 		LoggerFactory.getLogger(getClass()).info("UPDATE MODEL " + mApplication + " / " + eModelService);
@@ -172,28 +180,89 @@ public class AccessControlUiEventHandler implements EventHandler {
 
 	private void updatePreferencePages() {
 		contextService.getActiveUser().ifPresent(u -> {
-			boolean hasRole = userService.hasRole(u,
-					Set.of(RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR,
-							RoleConstants.ACCESSCONTROLE_ROLE_POWERUSER));
+			PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+			if (originalStructure.isEmpty()) {
+				captureOriginalStructure(pm);
+			}
+			boolean hasRole = userService.hasRole(u, Set.of(RoleConstants.ACCESSCONTROLE_ROLE_ICT_ADMINISTRATOR,
+					RoleConstants.ACCESSCONTROLE_ROLE_POWERUSER));
 			if (hasRole && hiddenNodes.isEmpty()) {
 				return;
 			}
-			PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
-			IPreferenceNode[] nodes = pm.getRootSubNodes();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
-				if (!hasRole) {
-					for (IPreferenceNode node : nodes) {
-						if (!node.getId().equals(ALLOWED_PREFERENCE_PAGE_ID)) {
-							hiddenNodes.add(node);
-							pm.remove(node);
-						}
-					}
+				if (hasRole) {
+					addNodes(pm);
 				} else {
-					hiddenNodes.forEach(pm::addToRoot);
-					hiddenNodes.clear();
+					removeNodes(pm);
 				}
 			});
 		});
+	}
+
+	private List<IPreferenceNode> getAllNodes(PreferenceManager pm) {
+		List<IPreferenceNode> allNodes = new ArrayList<>();
+		for (IPreferenceNode node : pm.getRootSubNodes()) {
+			allNodes.add(node);
+			Collections.addAll(allNodes, node.getSubNodes());
+		}
+		return allNodes;
+	}
+
+	private void removeNodes(PreferenceManager pm) {
+		for (IPreferenceNode node : getAllNodes(pm)) {
+			IPreferenceNode[] subs = node.getSubNodes();
+			if (ALLOWED_PREFERENCES_PAGE_ID.contains(node.getId())) {
+				continue;
+			}
+			boolean anySubAllowed = false;
+			for (IPreferenceNode child : subs) {
+				if (ALLOWED_PREFERENCES_PAGE_ID.contains(child.getId())) {
+						anySubAllowed = true;
+					} else {
+						hiddenNodes.add(child);
+						node.remove(child);
+					}
+				}
+			if (!anySubAllowed) {
+				hiddenNodes.add(node);
+				pm.remove(node);
+			}
+		}
+	}
+
+	private void addNodes(PreferenceManager pm) {
+		for (IPreferenceNode rootNode : pm.getRootSubNodes()) {
+			pm.remove(rootNode);
+			for (IPreferenceNode child : rootNode.getSubNodes()) {
+				rootNode.remove(child);
+			}
+		}
+
+		for (IPreferenceNode parent : originalStructure.keySet()) {
+			boolean exists = Arrays.stream(pm.getRootSubNodes()).anyMatch(n -> n.getId().equals(parent.getId()));
+			if (!exists) {
+				pm.addToRoot(parent);
+			}
+		}
+
+		for (Map.Entry<IPreferenceNode, List<IPreferenceNode>> entry : originalStructure.entrySet()) {
+			IPreferenceNode parent = entry.getKey();
+			if (pm.find(parent.getId()) == null) {
+				continue;
+			}
+			for (IPreferenceNode child : entry.getValue()) {
+				pm.addTo(parent.getId(), child);
+			}
+		}
+		hiddenNodes.clear();
+	}
+
+	private void captureOriginalStructure(PreferenceManager pm) {
+		originalStructure.clear();
+		for (IPreferenceNode node : pm.getRootSubNodes()) {
+			List<IPreferenceNode> subs = Arrays.asList(node.getSubNodes());
+			originalStructure.put(node, new ArrayList<>(subs));
+		}
 	}
 
 	private void sendStackSelectedElement(MStackElement mStackElement, MPartStack partStack) {
