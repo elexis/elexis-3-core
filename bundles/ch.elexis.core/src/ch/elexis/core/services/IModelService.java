@@ -47,7 +47,8 @@ public interface IModelService {
 
 	/**
 	 * Try to cast the {@link Identifiable} to the given class. Use this with
-	 * caution, this method should be only used for very limited edge-cases.
+	 * caution, this method should be only used for very limited edge-cases. This
+	 * circumvents the access control, and does cast the object without loading it.
 	 * 
 	 * @param <T>
 	 * @param identifiable

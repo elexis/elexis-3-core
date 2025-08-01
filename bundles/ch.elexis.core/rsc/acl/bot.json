@@ -4,7 +4,7 @@
 	],
 	"object": {
 		"ch.elexis.core.model.IConfig": "r",
-		"ch.elexis.core.model.IContact": "crude",
-		"ch.elexis.core.model.IAppointment": "crude"
+		"ch.elexis.core.model.IContact": "r",
+		"ch.elexis.core.model.IAppointment": "ru"
 	}
 }
