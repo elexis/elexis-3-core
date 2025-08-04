@@ -42,6 +42,7 @@ import ch.elexis.core.ac.EvaluatableACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.ExtensionPointConstantsData;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
@@ -49,6 +50,7 @@ import ch.elexis.core.services.IUserService;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.utils.Extensions;
 import jakarta.inject.Inject;
 
 @Component(property = { EventConstants.EVENT_TOPIC + "=" + ElexisEventTopics.BASE + "ui/accesscontrol/update",
@@ -84,11 +86,6 @@ public class AccessControlUiEventHandler implements EventHandler {
 
 	private final Map<IPreferenceNode, List<IPreferenceNode>> originalStructure = new HashMap<>();
 	private static final Set<IPreferenceNode> hiddenNodes = new LinkedHashSet<>();
-	private static final List<String> ALLOWED_PREFERENCES_PAGE_ID = List.of("ch.elexis.preferences.UserPreferences",
-			"ch.elexis.prefs.sticker", "ch.agendaprefs.zeiten", "ch.elexis.agenda.tageseinteilung",
-			"ch.elexis.LaborPref", "ch.elexis.preferences.LabGroupPrefs", "ch.elexis.LaborParameterPrefs",
-			"at.medevit.elexis.roche.labor.page", "at.medevit.medelexis.blueevidence",
-			"ch.elexis.core.mail.ui.preference.texttemplates", "org.eclipse.ui.monitoring.page");
 
 	private void updateModel() {
 		LoggerFactory.getLogger(getClass()).info("UPDATE MODEL " + mApplication + " / " + eModelService);
@@ -209,20 +206,36 @@ public class AccessControlUiEventHandler implements EventHandler {
 	}
 
 	private void removeNodes(PreferenceManager pm) {
+		Set<String> allowedPreferencePageIds = new HashSet<>();
+		for (IConfigurationElement element : Extensions.getExtensions(ExtensionPointConstantsData.PREFERENCE_PAGE,
+				"page")) {
+			String id = element.getAttribute("id");
+			if (id == null) {
+				continue;
+			}
+
+			for (IConfigurationElement child : element.getChildren("keywordReference")) {
+				if (ExtensionPointConstantsData.ACL_ALLOW_ALL_ID.equals(child.getAttribute("id"))) {
+					allowedPreferencePageIds.add(id);
+					break;
+				}
+			}
+		}
+
 		for (IPreferenceNode node : getAllNodes(pm)) {
 			IPreferenceNode[] subs = node.getSubNodes();
-			if (ALLOWED_PREFERENCES_PAGE_ID.contains(node.getId())) {
+			if (allowedPreferencePageIds.contains(node.getId())) {
 				continue;
 			}
 			boolean anySubAllowed = false;
 			for (IPreferenceNode child : subs) {
-				if (ALLOWED_PREFERENCES_PAGE_ID.contains(child.getId())) {
-						anySubAllowed = true;
-					} else {
-						hiddenNodes.add(child);
-						node.remove(child);
-					}
+				if (allowedPreferencePageIds.contains(child.getId())) {
+					anySubAllowed = true;
+				} else {
+					hiddenNodes.add(child);
+					node.remove(child);
 				}
+			}
 			if (!anySubAllowed) {
 				hiddenNodes.add(node);
 				pm.remove(node);

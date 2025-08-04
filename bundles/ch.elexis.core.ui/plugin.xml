@@ -451,7 +451,11 @@
       <page
             class="ch.elexis.core.ui.preferences.UserPreferences"
             id="ch.elexis.preferences.UserPreferences"
-            name="%elexis.userPrefs"/>
+            name="%elexis.userPrefs">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
+      </page>
       <page
             category="ch.elexis.preferences.UserPreferences"
             class="ch.elexis.core.ui.preferences.UserTextPref"
@@ -476,6 +480,9 @@
             class="ch.elexis.core.ui.preferences.Stickers"
             id="ch.elexis.prefs.sticker"
             name="%page.name.4">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
       </page>
       <page
             category="ch.elexis.preferences.UserPreferences"
