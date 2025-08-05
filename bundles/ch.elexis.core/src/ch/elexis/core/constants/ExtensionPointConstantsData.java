@@ -13,4 +13,6 @@ package ch.elexis.core.constants;
 public class ExtensionPointConstantsData {
 	public static final String ACL_CONTRIBUTION = "ch.elexis.core.data.ACLContribution";
 	public static final String ACL_CONTRIBUTION_PT_CONTRIBUTOR = "ACLContributor";
+	public static final String ACL_ALLOW_ALL_ID = "aclallow:all";
+	public static final String PREFERENCE_PAGE = "org.eclipse.ui.preferencePages";
 }
