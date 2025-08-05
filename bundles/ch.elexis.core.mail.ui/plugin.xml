@@ -13,6 +13,9 @@
             class="ch.elexis.core.mail.ui.preference.TextTemplates"
             id="ch.elexis.core.mail.ui.preference.texttemplates"
             name="E-Mail Vorlagen">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
       </page>
    </extension>
    <extension

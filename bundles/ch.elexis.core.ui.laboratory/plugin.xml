@@ -14,18 +14,27 @@
             class="ch.elexis.core.ui.laboratory.preferences.LabSettings"
             id="ch.elexis.LaborPref"
             name="%elexis.labPrefs">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
       </page>
       <page
             category="ch.elexis.LaborPref"
             class="ch.elexis.core.ui.laboratory.preferences.LabGroupPrefs"
             id="ch.elexis.preferences.LabGroupPrefs"
             name="%elexis.labGroupPrefs">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
       </page>
       <page
             category="ch.elexis.LaborPref"
             class="ch.elexis.core.ui.laboratory.preferences.LaborPrefs"
             id="ch.elexis.LaborParameterPrefs"
             name="%elexis.labParameterPrefs">
+         <keywordReference
+               id="aclallow:all">
+         </keywordReference>
       </page>
         <page
             category="ch.elexis.LaborPref"
