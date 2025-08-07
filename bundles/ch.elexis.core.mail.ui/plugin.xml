@@ -59,6 +59,11 @@
                name="accountid"
                optional="true">
          </commandParameter>
+         <commandParameter
+               id="ch.elexis.core.mail.ui.sendMail.patId"
+               name="patId"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="ch.elexis.core.mail.ui.handlers.SendMailNoUiHandler"

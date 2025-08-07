@@ -156,7 +156,7 @@ public class TypedModifier {
 					java.util.Optional<IUser> userOpt = ContextServiceHolder.get().getActiveUser();
 					if (userOpt.isPresent()) {
 						IUser user = userOpt.get();
-						Set<IMandator> userMandators = userService.getExecutiveDoctorsWorkingFor(user);
+						Set<IMandator> userMandators = getUserService().getExecutiveDoctorsWorkingFor(user);
 						if (userMandators.contains(mandator)) {
 							ContextServiceHolder.get().setActiveMandator(mandator);
 						}
