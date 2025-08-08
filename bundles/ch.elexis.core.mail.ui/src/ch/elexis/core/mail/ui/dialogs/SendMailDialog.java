@@ -67,6 +67,7 @@ import ch.elexis.core.model.IBlobSecondary;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -105,6 +106,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private ComboViewer templatesViewer;
 	private boolean doSend = true;
 	private LocalDateTime sentTime;
+	private String patID;
 	private ITextTemplate selectedTemplate;
 
 	public SendMailDialog(Shell parentShell) {
@@ -365,7 +367,13 @@ public class SendMailDialog extends TitleAreaDialog {
 
 			attachmentsSelection = new DocumentsSelectionComposite(container, SWT.NONE);
 			attachmentsSelection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-			attachmentsSelection.setPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
+
+			if (patID != null) {
+				attachmentsSelection.setPatient(CoreModelServiceHolder.get().load(patID, IPatient.class).orElse(null));
+			} else {
+				attachmentsSelection.setPatient(ContextServiceHolder.get().getActivePatient().orElse(null));
+			}
+
 			attachmentsSelection.addDoubleClickListener(new IDoubleClickListener() {
 				@Override
 				public void doubleClick(DoubleClickEvent event) {
@@ -376,9 +384,9 @@ public class SendMailDialog extends TitleAreaDialog {
 				}
 			});
 	
-
 			if (!doSend) {
 				lbl.setVisible(false);
+				searchField.setVisible(false);
 				templatesViewer.getCombo().setVisible(false);
 				attachments.setVisible(false);
 				attachmentsSelection.setVisible(false);
@@ -464,7 +472,11 @@ public class SendMailDialog extends TitleAreaDialog {
 	public void doSend(boolean doSend) {
 		this.doSend = doSend;
 	}
-	
+
+	public void setPatID(String patID) {
+		this.patID = patID;
+	}
+
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();

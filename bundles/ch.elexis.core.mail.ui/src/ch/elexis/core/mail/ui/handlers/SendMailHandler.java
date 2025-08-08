@@ -100,7 +100,20 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 			doSend = Boolean.valueOf(doSendString);
 			sendMailDialog.doSend(doSend);
 		}
+
+		String patId = event.getParameter("ch.elexis.core.mail.ui.sendMail.patId");
+		if (StringUtils.isNotBlank(patId)) {
+			sendMailDialog.setPatID(patId);
+		}
+
 		if (sendMailDialog.open() == Dialog.OK) {
+			if (sendMailDialog.getReturnCode() == Dialog.OK && doSend && taskDescriptor.isPresent()) {
+
+				ContextServiceHolder.get().getRootContext().setNamed("mail.alreadySent", true);
+			} else {
+				ContextServiceHolder.get().getRootContext().setNamed("mail.alreadySent", false);
+			}
+
 			MailMessage message = new MailMessage().to(sendMailDialog.getTo()).cc(sendMailDialog.getCc())
 					.subject(sendMailDialog.getSubject()).text(sendMailDialog.getText());
 			message.setAttachments(sendMailDialog.getAttachmentsString());
