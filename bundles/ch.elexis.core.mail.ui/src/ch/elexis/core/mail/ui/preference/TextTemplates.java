@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.ui.dialogs.TextTemplateDialog;
@@ -73,7 +74,7 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	private ComboViewer templatesViewer;
 
 	private TextTemplateComposite templateComposite;
-	private Button defaultBtn;
+	private Button defaultBtn, confidentialBtn;
 	private List<ITextTemplate> list;
 	private TableViewer tableViewer;
 
@@ -116,6 +117,10 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 					templateComposite.setTemplate(selectedTemplate);
 					String defaultTemplateId = ConfigServiceHolder.get().get(PreferenceConstants.PREF_DEFAULT_TEMPLATE,
 							null);
+
+					confidentialBtn.setSelection(
+							selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) instanceof Boolean b && b);
+
 					if (defaultTemplateId != null && selectedTemplate.getId().equals(defaultTemplateId)) {
 						defaultBtn.setSelection(true);
 					} else {
@@ -261,6 +266,18 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 							((ITextTemplate) selectedTemplate.getFirstElement()).getId());
 			}
 		});
+
+		confidentialBtn = new Button(buttonComposite, SWT.CHECK);
+		confidentialBtn.setText("Vertraulich");
+		confidentialBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (templatesViewer.getStructuredSelection().getFirstElement() instanceof ITextTemplate template) {
+					template.setExtInfo(MailConstants.CONFIDENTIAL_MAIL, confidentialBtn.getSelection());
+				}
+			}
+		});
+
 		return parentComposite;
 	}
 

@@ -105,6 +105,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private ComboViewer templatesViewer;
 	private boolean doSend = true;
 	private LocalDateTime sentTime;
+	private ITextTemplate selectedTemplate;
 
 	public SendMailDialog(Shell parentShell) {
 		super(parentShell);
@@ -310,10 +311,13 @@ public class SendMailDialog extends TitleAreaDialog {
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (event.getStructuredSelection() != null
 							&& event.getStructuredSelection().getFirstElement() instanceof ITextTemplate) {
-						ITextTemplate selectedTemplate = (ITextTemplate) event.getStructuredSelection()
+						selectedTemplate = (ITextTemplate) event.getStructuredSelection()
 								.getFirstElement();
 
+						confidentialCheckbox.setSelection(
+								selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) instanceof Boolean b && b);
 						setTemplateAttachments(selectedTemplate);
+						subjectString = StringUtils.EMPTY;
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
@@ -564,8 +568,14 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 
 	private String getValidation() {
-		if (getConfidentialCheckbox() != null && getConfidentialCheckbox().getSelection()) {
-			subjectString = subjectText.getText() + " (Vertraulich)";
+		boolean isConfidential = Boolean.TRUE
+				.equals(selectedTemplate != null ? selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) : null);
+		boolean isCheckboxSelected = getConfidentialCheckbox().getSelection();
+
+		if (isConfidential && isCheckboxSelected) {
+			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
+		} else if (isCheckboxSelected && !isConfidential) {
+			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
 		} else {
 			subjectString = subjectText.getText();
 		}
