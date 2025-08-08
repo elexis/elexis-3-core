@@ -103,7 +103,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 
 		String patId = event.getParameter("ch.elexis.core.mail.ui.sendMail.patId");
 		if (StringUtils.isNotBlank(patId)) {
-			sendMailDialog.patId(patId);
+			sendMailDialog.setPatID(patId);
 		}
 
 		if (sendMailDialog.open() == Dialog.OK) {
