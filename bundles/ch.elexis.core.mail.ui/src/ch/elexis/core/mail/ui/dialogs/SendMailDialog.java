@@ -469,9 +469,10 @@ public class SendMailDialog extends TitleAreaDialog {
 		this.doSend = doSend;
 	}
 
-	public void patId(String patID) {
+	public void setPatID(String patID) {
 		this.patID = patID;
 	}
+
 	private List<String> getSendMailAccounts() {
 		List<String> ret = new ArrayList<>();
 		List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
