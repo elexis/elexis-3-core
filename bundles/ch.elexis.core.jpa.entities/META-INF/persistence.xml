@@ -99,6 +99,11 @@
 		<class>ch.elexis.core.jpa.entities.StickerClassLink</class>
 		<class>ch.elexis.core.jpa.entities.Stock</class>
 		<class>ch.elexis.core.jpa.entities.StockEntry</class>
+		<class>ch.elexis.core.jpa.entities.TardocDefinitionen</class>
+		<class>ch.elexis.core.jpa.entities.TardocExtension</class>
+		<class>ch.elexis.core.jpa.entities.TardocGroup</class>
+		<class>ch.elexis.core.jpa.entities.TardocLeistung</class>
+		<class>ch.elexis.core.jpa.entities.TardocKumulation</class>
 		<class>ch.elexis.core.jpa.entities.TarmedDefinitionen</class>
 		<class>ch.elexis.core.jpa.entities.TarmedExtension</class>
 		<class>ch.elexis.core.jpa.entities.TarmedGroup</class>
