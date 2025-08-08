@@ -2868,4 +2868,219 @@ WHERE kontakt.id IN (
 		</createIndex>
 	</changeSet>
 	
+	<changeSet author="thomas" id="manual_TARDOC">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARDOC">
+            <column name="ID" type="VARCHAR(32)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="PARENT" type="VARCHAR(32)"/>
+            <column name="DIGNIQUANTI" type="CHAR(5)"/>
+            <column name="DIGNIQUALI" type="CHAR(4)"/>
+            <column name="SPARTE" type="CHAR(4)"/>
+            <column name="GUELTIGVON" type="CHAR(8)"/>
+            <column name="GUELTIGBIS" type="CHAR(8)"/>
+            <column name="NICKNAME" type="VARCHAR(25)"/>
+            <column name="TX255" type="VARCHAR(255)"/>
+            <column name="CODE" type="VARCHAR(25)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column defaultValue="0" name="ISCHAPTER" type="CHAR(1)"/>
+        </createTable>
+        <insert tableName="TARDOC">
+       		<column name="ID" value="Version"/>
+       		<column name="NICKNAME" value="1.0.0"/>
+    	</insert>
+    </changeSet>
+    <changeSet author="thomas" id="manual_TARDOC_DATEN">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC_DATEN" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARDOC_DATEN">
+            <column name="PARAMETER" type="VARCHAR(80)"/>
+            <column name="DATUMVON" type="CHAR(8)"/>
+            <column name="DATUMBIS" type="CHAR(8)"/>
+            <column name="WERT" type="VARCHAR(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_TARDOC_DEFINITIONEN">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC_DEFINITIONEN" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARDOC_DEFINITIONEN">
+            <column name="SPALTE" type="VARCHAR(20)"/>
+            <column name="KUERZEL" type="VARCHAR(5)"/>
+            <column name="TITEL" type="VARCHAR(255)"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_TARDOC_EXTENSION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC_EXTENSION" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARDOC_EXTENSION">
+            <column name="CODE" type="VARCHAR(32)"/>
+            <column name="LIMITS" type="${blob_type}"/>
+            <column name="MED_INTERPRET" type="CLOB"/>
+            <column name="TECH_INTERPRET" type="CLOB"/>
+            <column name="ID" type="VARCHAR(25)"/>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_TARDOC_KUMULATION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC_KUMULATION" />
+			</not>
+		</preConditions>
+        <createTable tableName="TARDOC_KUMULATION">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="TARDOC_KUMULATION_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="MASTERCODE" type="VARCHAR(25)"/>
+            <column name="MASTERART" type="CHAR(1)"/>
+            <column name="SLAVECODE" type="VARCHAR(25)"/>
+            <column name="SLAVEART" type="CHAR(1)"/>
+            <column name="TYP" type="CHAR(1)"/>
+            <column name="VIEW" type="CHAR(1)"/>
+            <column name="VALIDSIDE" type="CHAR(1)"/>
+            <column name="VALIDFROM" type="CHAR(10)"/>
+            <column name="VALIDTO" type="CHAR(10)"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_TARDOC_GROUP">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="TARDOC_GROUP" />
+			</not>
+		</preConditions>
+    	<createTable tableName="TARDOC_GROUP">
+    		<column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="TARDOC_GROUP_ID"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+            <column name="GROUPNAME" type="VARCHAR(32)"/>
+            <column name="SERVICES" type="CLOB"/>
+            <column name="LAW" type="VARCHAR(3)"/>
+            <column name="VALIDFROM" type="CHAR(8)"/>
+            <column name="VALIDTO" type="CHAR(8)"/>
+    	</createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC2">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC2" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC2" tableName="TARDOC">
+            <column name="PARENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC3">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC3" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC3" tableName="TARDOC_DEFINITIONEN">
+            <column name="SPALTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC4">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC4" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC4" tableName="TARDOC_EXTENSION">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC5">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC5" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC5" tableName="TARDOC_DATEN">
+            <column name="PARAMETER"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOCDEFINITIONEN">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOCDEFINITIONEN" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOCDEFINITIONEN" tableName="TARDOC_DEFINITIONEN">
+            <column name="KUERZEL"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOCDEFINITIONEN_IDX1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOCDEFINITIONEN_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOCDEFINITIONEN_IDX1" tableName="TARDOC_DEFINITIONEN">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOCKUMULATION">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOCKUMULATION" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOCKUMULATION" tableName="TARDOC_KUMULATION">
+            <column name="MASTERCODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOCKUMULATION_IDX1">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOCKUMULATION_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOCKUMULATION_IDX1" tableName="TARDOC_KUMULATION">
+            <column name="LAW"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC_ID">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC_ID" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC_ID" tableName="TARDOC">
+            <column name="ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_idx_TARDOC_CODE_IDX">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="TARDOC_CODE_IDX" />
+			</not>
+		</preConditions>
+        <createIndex indexName="TARDOC_CODE_IDX" tableName="TARDOC">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
