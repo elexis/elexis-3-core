@@ -26,7 +26,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 
 public class TardocLeistung extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
-	public static final String CODESYSTEM_NAME = "Tarmed";
+	public static final String CODESYSTEM_NAME = "TARDOC";
 
 	public static String MANDANT_TYPE_EXTINFO_KEY = "ch.elexis.data.tarmed.mandant.type";
 
