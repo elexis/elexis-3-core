@@ -31,6 +31,7 @@
 		<class>ch.elexis.core.jpa.entities.converter.auto.LocalDateTimeConverter</class>
 
 		<class>ch.elexis.core.jpa.entities.AccountTransaction</class>
+		<class>ch.elexis.core.jpa.entities.AmbulantePauschalen</class>
 		<class>ch.elexis.core.jpa.entities.ArtikelstammItem</class>
 		<class>ch.elexis.core.jpa.entities.Artikel</class>
 		<class>ch.elexis.core.jpa.entities.AUF</class>
