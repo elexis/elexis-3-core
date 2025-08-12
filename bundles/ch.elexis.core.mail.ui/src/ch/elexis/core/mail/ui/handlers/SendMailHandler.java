@@ -107,8 +107,7 @@ public class SendMailHandler extends AbstractHandler implements IHandler {
 		}
 
 		if (sendMailDialog.open() == Dialog.OK) {
-			if (sendMailDialog.getReturnCode() == Dialog.OK && doSend && taskDescriptor.isPresent()) {
-
+			if (doSend && taskDescriptor != null && taskDescriptor.isPresent()) {
 				ContextServiceHolder.get().getRootContext().setNamed("mail.alreadySent", true);
 			} else {
 				ContextServiceHolder.get().getRootContext().setNamed("mail.alreadySent", false);
