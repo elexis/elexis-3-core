@@ -3096,4 +3096,46 @@ WHERE kontakt.id IN (
             <column name="CODE"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet author="thomas" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN" />
+			</not>
+		</preConditions>
+		<createTable
+			tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_ID_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="CODE" type="VARCHAR(25)" />
+			<column name="CHAPTER" type="VARCHAR(255)" />
+			<column name="TEXT" type="VARCHAR(255)" />
+			<column name="DIGNIQUALI" type="VARCHAR(255)" />
+			<column name="VALIDFROM" type="CHAR(8)" />
+			<column name="VALIDTO" type="CHAR(8)" />
+			<column name="TP" type="CHAR(8)" />
+		</createTable>
+		<insert tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+       		<column name="ID" value="VERSION"/>
+       		<column name="CODE" value="0.0.1"/>
+    	</insert>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN"
+					indexName="ambulantepauschalen_code_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ambulantepauschalen_code_idx"
+			tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+			<column name="CODE" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>
