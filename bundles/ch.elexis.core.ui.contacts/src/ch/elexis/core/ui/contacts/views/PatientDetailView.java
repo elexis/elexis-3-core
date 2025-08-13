@@ -62,8 +62,8 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
-import ch.elexis.core.ui.actions.GlobalEventDispatcher;
 import ch.elexis.core.ui.actions.IActivationListener;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
@@ -71,12 +71,14 @@ import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.locks.ToggleCurrentPatientLockHandler;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
 import ch.elexis.core.ui.util.ListDisplay;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.core.ui.views.controls.ClientCustomTextComposite;
 import ch.elexis.core.ui.views.controls.StickerComposite;
 import ch.elexis.data.BezugsKontakt;
@@ -86,7 +88,7 @@ import ch.elexis.data.Person;
 import ch.elexis.data.ZusatzAdresse;
 import ch.rgw.tools.StringTool;
 
-public class PatientDetailView extends ViewPart implements IUnlockable, IActivationListener {
+public class PatientDetailView extends ViewPart implements IUnlockable, IActivationListener, IRefreshable {
 
 	public static final String ID = "at.medevit.elexis.contacts.views.PatientDetail"; //$NON-NLS-1$
 
@@ -111,6 +113,8 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	private ListDisplay<ZusatzAdresse> additionalAddresses;
 	private IObservableValue<Patient> patientObservable = new WritableValue<>(null, Patient.class);
 	private boolean bLocked = true;
+
+	private RefreshingPartListener udpateOnVisible = new RefreshingPartListener(this);
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
@@ -462,11 +466,12 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 
 		initDataBindings();
 
-		GlobalEventDispatcher.addActivationListener(this, this);
+		getSite().getPage().addPartListener(udpateOnVisible);
 	}
 
 	@Override
 	public void dispose() {
+		getSite().getPage().removePartListener(udpateOnVisible);
 		toolkit.dispose();
 		super.dispose();
 	}
@@ -634,6 +639,11 @@ public class PatientDetailView extends ViewPart implements IUnlockable, IActivat
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
+	}
+
+	@Override
+	public void refresh() {
+		activePatient(ContextServiceHolder.get().getActivePatient().orElse(null));
 	}
 
 }
