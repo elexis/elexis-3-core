@@ -46,8 +46,8 @@ public class PatientDetailView2 extends ViewPart {
 		public void partVisible(IWorkbenchPartReference partRef) {
 			if (pb != null && !pb.isDisposed()) {
 				contextService.getActivePatient().ifPresent(selectedPatient -> {
-					if (pb.actPatient == null || (pb.actPatient != null && !pb.actPatient.isDeleted()
-							&& !selectedPatient.equals(pb.actPatient.toIPatient()))) {
+					if (pb.actPatient == null
+							|| (pb.actPatient != null && !selectedPatient.equals(pb.actPatient.toIPatient()))) {
 						pb.setPatient((Patient) NoPoUtil.loadAsPersistentObject(selectedPatient));
 						pb.refresh();
 					}
