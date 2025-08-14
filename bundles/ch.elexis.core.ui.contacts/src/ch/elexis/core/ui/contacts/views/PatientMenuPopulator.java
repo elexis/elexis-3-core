@@ -40,6 +40,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.actions.RestrictedAction;
@@ -57,6 +58,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 	RestrictedAction delPatAction;
 	PatientenListeView mine;
 
+	@Override
 	public IAction[] fillMenu() {
 		LinkedList<IAction> ret = new LinkedList<>();
 		ret.add(stickerAction);
@@ -94,6 +96,10 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 						Messages.Core_Really_delete_caption, p.getLabel()) == true) {
 					List<ICoverage> coverages = p.getCoverages();
 					if (coverages.isEmpty()) {
+						if (ContextServiceHolder.get().getActivePatient().isPresent()
+								&& ContextServiceHolder.get().getActivePatient().get().getId().equals(p.getId())) {
+							ContextServiceHolder.get().setActivePatient(null);
+						}
 						CoreModelServiceHolder.get().delete(p);
 						mine.reload();
 					} else {
@@ -115,6 +121,7 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 				setToolTipText(Messages.PatientMenuPopulator_ExportEMRToolTip); // $NON-NLS-1$
 				setMenuCreator(new IMenuCreator() {
 
+					@Override
 					public void dispose() {
 						if (menu != null) {
 							menu.dispose();
@@ -122,12 +129,14 @@ public class PatientMenuPopulator implements IMenuPopulator, IMenuListener {
 						}
 					}
 
+					@Override
 					public Menu getMenu(Control parent) {
 						menu = new Menu(parent);
 						createMenu();
 						return menu;
 					}
 
+					@Override
 					public Menu getMenu(Menu parent) {
 						menu = new Menu(parent);
 						createMenu();
