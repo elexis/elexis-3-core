@@ -5204,6 +5204,12 @@ public class Messages extends NLS {
 	public static String GoogleCalPreferences_CronPrompt;
 	public static String GoogleCalPreferences_IntervalMustBePositive;
 	public static String GoogleCalPreferences_InvalidNumber;
+	public static String GoogleLoginDialog_Title;
+	public static String GoogleLoginDialog_Message;
+	public static String GoogleLoginDialog_LoginFailed;
+	public static String GoogleLoginDialog_Interrupted;
+	public static String GoogleLoginDialog_CallbackError;
+	public static String GoogleLoginDialog_Timeout;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
