@@ -116,6 +116,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 		java.util.List<IConfigurationElement> contributions = Extensions.getExtensions("org.eclipse.ui.menus"); //$NON-NLS-1$
 		for (IConfigurationElement contributionElement : contributions) {
 			String locationUri = contributionElement.getAttribute("locationURI"); //$NON-NLS-1$
+			if (locationUri == null) {
+				continue;
+			}
 			String[] parts = locationUri.split(":"); //$NON-NLS-1$
 			if (parts.length == 2) {
 				if (parts[0].equals("popup") && parts[1].equals(getClass().getName())) { //$NON-NLS-1$
