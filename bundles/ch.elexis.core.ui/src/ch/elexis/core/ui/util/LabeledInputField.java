@@ -540,7 +540,7 @@ public class LabeledInputField extends Composite {
 			mine.lbl.setEnabled(ed);
 			if (tFeldTyp == Typ.EXECSTRING || tFeldTyp == Typ.HYPERLINK) {
 				mine.lbl.setEnabled(true);
-				((Text) mine.ctl).setEnabled(ed);
+				mine.ctl.setEnabled(ed);
 				return;
 			}
 
@@ -641,15 +641,17 @@ public class LabeledInputField extends Composite {
 				def[i].setParent(ltf);
 				cFields[i] = ltf.getControl();
 				cFields[i].addFocusListener(new FocusListener() {
+					@Override
 					public void focusGained(FocusEvent e) {
 					}
 
+					@Override
 					@SuppressWarnings("unchecked")
 					public void focusLost(FocusEvent e) {
 						if (act != null) {
 							Control src = (Control) e.getSource();
 							InputData inp = (InputData) src.getData();
-							save(inp);
+							save(inp, true);
 						}
 					}
 				});
@@ -659,11 +661,12 @@ public class LabeledInputField extends Composite {
 
 		public void save() {
 			for (InputData id : def) {
-				save(id);
+				save(id, false);
 			}
+			postUpdateEvent();
 		}
 
-		protected void save(InputData inp) {
+		protected void save(InputData inp, boolean postUpdateEvent) {
 			if (act == null) {
 				return;
 			}
@@ -733,6 +736,12 @@ public class LabeledInputField extends Composite {
 					}
 				}
 			}
+			if (postUpdateEvent) {
+				postUpdateEvent();
+			}
+		}
+
+		public void postUpdateEvent() {
 			if (act instanceof Identifiable && modelService != null) {
 				modelService.save((Identifiable) act);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, act);
@@ -864,7 +873,7 @@ public class LabeledInputField extends Composite {
 					break;
 				case COMBO_VIEWER:
 					StructuredSelection selection = def[i].selectionResolver.resolveStructuredSelection(val);
-					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
+					(def[i].mine.getViewer()).setSelection(selection);
 					break;
 				}
 			}
@@ -937,7 +946,7 @@ public class LabeledInputField extends Composite {
 					break;
 				case COMBO_VIEWER:
 					StructuredSelection selection = def[i].selectionResolver.resolveStructuredSelection(val);
-					((StructuredViewer) (def[i].mine.getViewer())).setSelection(selection);
+					(def[i].mine.getViewer()).setSelection(selection);
 					break;
 				}
 			}
