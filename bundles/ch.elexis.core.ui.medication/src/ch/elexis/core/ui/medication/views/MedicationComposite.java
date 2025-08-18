@@ -805,7 +805,8 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	}
 
 	public void updateUi(IPatient patient, boolean forceUpdate) {
-		if ((this.patient == patient) && !forceUpdate) {
+		if ((this.patient == patient || (this.patient != null && this.patient.equals(patient)))
+				&& !forceUpdate) {
 			return;
 		}
 		this.patient = patient;
