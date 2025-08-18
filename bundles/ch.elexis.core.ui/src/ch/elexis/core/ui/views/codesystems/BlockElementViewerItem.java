@@ -72,6 +72,10 @@ public class BlockElementViewerItem {
 		return elements.size();
 	}
 
+	public ICodeElementBlock getBlock() {
+		return block;
+	}
+
 	public void setCount(int count) {
 		int diff = count - getCount();
 		if (diff > 0) {
