@@ -211,6 +211,23 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 		updateViewerInput(ContextServiceHolder.get().getTyped(ICodeElementBlock.class).orElse(null));
 
+		viewer.addSelectionChangedListener(e -> {
+			IStructuredSelection sel = (IStructuredSelection) e.getSelection();
+			ICodeElementBlock b = null;
+			Object first = sel.getFirstElement();
+			if (first instanceof BlockElementViewerItem bei) {
+				b = bei.getBlock();
+			} else if (first instanceof BlockTreeViewerItem tvi) {
+				b = tvi.getBlock();
+			}
+			if (b != null) {
+				ContextServiceHolder.get().setTyped(b);
+			} else {
+				ContextServiceHolder.get().removeTyped(ICodeElementBlock.class);
+			}
+			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, b);
+		});
+
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		Transfer[] types = new Transfer[] { textTransfer };
 		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
