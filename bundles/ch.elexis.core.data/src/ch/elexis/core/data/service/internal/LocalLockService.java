@@ -245,15 +245,15 @@ public class LocalLockService implements ILocalLockService {
 			// if yes, this has to be dependent upon the strategy
 			try {
 				if (LockRequest.Type.RELEASE == lockRequest.getRequestType()) {
-					PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
-					if (po != null) {
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
-								ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
+					Optional<Identifiable> identifiable = storeToStringService
+							.loadFromString(lockInfo.getElementStoreToString());
+					if (identifiable.isPresent()) {
+						postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, identifiable.get(), true);
 					} else {
-						Optional<Identifiable> identifiable = storeToStringService
-								.loadFromString(lockInfo.getElementStoreToString());
-						if (identifiable.isPresent()) {
-							postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, identifiable.get(), true);
+						PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+						if (po != null) {
+							ElexisEventDispatcher.getInstance().fire(new ElexisEvent(po, po.getClass(),
+									ElexisEvent.EVENT_LOCK_PRERELEASE, ElexisEvent.PRIORITY_SYNC));
 						}
 					}
 				}
@@ -269,19 +269,18 @@ public class LocalLockService implements ILocalLockService {
 					locks.put(lockInfo.getElementId(), lockInfo);
 					incrementLockCount(lockInfo);
 
-					// PersistentObject compatibility
-					PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
-					if (po != null) {
-						ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
-						return lr;
-					}
 					// End
-
 					Optional<Identifiable> identifiable = storeToStringService
 							.loadFromString(lockInfo.getElementStoreToString());
 					if (identifiable.isPresent()) {
 						postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, identifiable.get(), false);
+					} else {
+						// PersistentObject compatibility
+						PersistentObject po = CoreHub.poFactory.createFromString(lockInfo.getElementStoreToString());
+						if (po != null) {
+							ElexisEventDispatcher.getInstance()
+									.fire(new ElexisEvent(po, po.getClass(), ElexisEvent.EVENT_LOCK_AQUIRED));
+						}
 					}
 
 				}
