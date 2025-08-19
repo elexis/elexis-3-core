@@ -205,6 +205,11 @@ public final class ElexisEventDispatcher implements Runnable {
 			// Those are single events
 			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC && ee.getType() != ElexisEvent.EVENT_SELECTED) {
 				doDispatch(ee);
+
+				accessControlService.doPrivileged(() -> {
+					transalteAndPostOsgiEvent(ee.getType(),
+							ee.getObject() != null ? ee.getObject() : ee.getGenericObject(), ee.getObjectClass());
+				});
 				continue;
 			}
 
@@ -274,7 +279,7 @@ public final class ElexisEventDispatcher implements Runnable {
 					} else if (eventType == ElexisEvent.EVENT_LOCK_AQUIRED) {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_AQUIRED, identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_LOCK_PRERELEASE) {
-						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
+						ContextServiceHolder.get().sendEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE,
 								identifiable.get());
 					} else if (eventType == ElexisEvent.EVENT_LOCK_RELEASED) {
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_LOCK_RELEASED, identifiable.get());
