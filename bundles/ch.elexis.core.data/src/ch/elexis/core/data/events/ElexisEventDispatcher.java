@@ -195,7 +195,7 @@ public final class ElexisEventDispatcher implements Runnable {
 			if (ee.getPriority() == ElexisEvent.PRIORITY_SYNC && ee.getType() != ElexisEvent.EVENT_SELECTED) {
 				doDispatch(ee);
 
-				accessControlService.doPrivileged(() -> {
+				AccessControlServiceHolder.get().doPrivileged(() -> {
 					transalteAndPostOsgiEvent(ee.getType(),
 							ee.getObject() != null ? ee.getObject() : ee.getGenericObject(), ee.getObjectClass());
 				});
