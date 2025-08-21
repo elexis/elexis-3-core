@@ -3125,6 +3125,21 @@ WHERE kontakt.id IN (
        		<column name="CODE" value="0.0.1"/>
     	</insert>
 	</changeSet>
+	<changeSet author="thomas"
+		id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN_TYP">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN" />
+				<not>
+					<columnExists tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN"
+						columnName="TYP" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
+			<column name="TYP" type="VARCHAR(15)" />
+		</addColumn>
+	</changeSet>
 	<changeSet author="thomas" id="manual_idx_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
 		<preConditions onFail="MARK_RAN">
 			<not>

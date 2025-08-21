@@ -16,8 +16,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "AmbulantePauschalen.code", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.code = :code")
-@NamedQuery(name = "AmbulantePauschalen.code.validFrom", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.code = :code AND tp.validFrom = :validFrom")
+@NamedQuery(name = "AmbulantePauschalen.typ.code", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.typ = :typ AND tp.code = :code")
+@NamedQuery(name = "AmbulantePauschalen.typ.code.validFrom", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.typ = :typ AND tp.code = :code AND tp.validFrom = :validFrom")
 public class AmbulantePauschalen extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	public static final String CODESYSTEM_NAME = "Ambulantepauschalen";
@@ -53,6 +53,9 @@ public class AmbulantePauschalen extends AbstractEntityWithId implements EntityW
 
 	@Column(length = 255)
 	private String text;
+
+	@Column(length = 15)
+	private String typ;
 
 	public String getCode() {
 		return code;
@@ -138,5 +141,13 @@ public class AmbulantePauschalen extends AbstractEntityWithId implements EntityW
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public String getTyp() {
+		return typ;
+	}
+
+	public void setTyp(String typ) {
+		this.typ = typ;
 	}
 }
