@@ -55,6 +55,8 @@ public class PatientCameraCaptureDialog {
 	private final AtomicReference<CompletableFuture<?>> grabberFuture = new AtomicReference<>(null);
 
 	private volatile Rectangle liveFaceRect = null;
+	private static final int FRAME_DELAY_MS = 33; // ~30 FPS
+	private static final int CAMERA_COUNT_POLL_INTERVAL_MS = 40;
 
 	public byte[] openAndCaptureImage(Shell parentShell) {
 		Shell realParent = (parentShell != null ? parentShell : Display.getDefault().getActiveShell());
@@ -208,18 +210,15 @@ public class PatientCameraCaptureDialog {
 								});
 							}
 						}
-						Thread.sleep(33);
+						Thread.sleep(FRAME_DELAY_MS);
 					} catch (Exception ignored) {
 					}
 				}
 
 			});
-
 			grabberFuture.set(future);
 		};
-
 		shell.open();
-
 		Runnable afterCount = () -> {
 			if (shell.isDisposed() || camCombo.isDisposed())
 				return;
@@ -269,7 +268,7 @@ public class PatientCameraCaptureDialog {
 				if (cameraCountingInProgress()) {
 					while (cachedCameraCount == null) {
 						try {
-							Thread.sleep(40);
+							Thread.sleep(CAMERA_COUNT_POLL_INTERVAL_MS);
 						} catch (InterruptedException ignored) {
 						}
 					}
