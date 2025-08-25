@@ -3,9 +3,9 @@ package ch.elexis.core.ui.contacts.dialogs;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -38,54 +38,53 @@ import ch.elexis.core.ui.contacts.views.util.ImageDataFactory;
 /**
  * Dialog for capturing a patient photo from a webcam device. Displays live
  * preview, detects faces, and returns the cropped PNG image as a byte array.
- * <p>
- * Uses JavaCV for video capture and SWT for UI.
  */
 public class PatientCameraCaptureDialog {
 
 	private static final Logger logger = LoggerFactory.getLogger(PatientCameraCaptureDialog.class);
 
 	private VideoInputFrameGrabber grabber;
-	private Frame currentFrame;
-	private Java2DFrameConverter converter = new Java2DFrameConverter();
+	private volatile Frame currentFrame;
+	private final Java2DFrameConverter converter = new Java2DFrameConverter();
 	private BufferedImage capturedImage;
+
 	private static final String CAMERA_DEFAULT_KEY = "camera.default.index";
 	private static Integer cachedCameraCount = null;
 	private static String[] cachedCameraNames = null;
-	private static final AtomicBoolean cameraCountingInProgress = new AtomicBoolean(false);
+	private final AtomicInteger streamGeneration = new AtomicInteger(0);
+	private final AtomicReference<CompletableFuture<?>> grabberFuture = new AtomicReference<>(null);
 
 	private volatile Rectangle liveFaceRect = null;
 
-	/**
-	 * Opens the camera capture dialog, lets the user take a photo, and returns the
-	 * cropped image as PNG bytes.
-	 *
-	 * @param parentShell the parent SWT shell
-	 * @return PNG byte array of the cropped face image, or null if canceled or no
-	 *         face detected
-	 */
 	public byte[] openAndCaptureImage(Shell parentShell) {
-		Shell shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+		Shell realParent = (parentShell != null ? parentShell : Display.getDefault().getActiveShell());
+		Shell shell = new Shell(realParent, SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL | SWT.RESIZE);
 		shell.setText(Messages.PatientCameraCaptureDialog_Title);
 		shell.setLayout(new GridLayout(1, false));
+
 		Composite top = new Composite(shell, SWT.NONE);
 		top.setLayout(new GridLayout(3, false));
 		top.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
 		Label camLabel = new Label(top, SWT.NONE);
 		camLabel.setText(Messages.PatientCameraCaptureDialog_CameraLabel);
+
 		Combo camCombo = new Combo(top, SWT.DROP_DOWN | SWT.READ_ONLY);
 		camCombo.setEnabled(false);
 		GridData comboGD = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		comboGD.widthHint = 250;
 		camCombo.setLayoutData(comboGD);
+
 		Button chkDefault = new Button(top, SWT.BUTTON3);
 		chkDefault.setText(Messages.PatientCameraCaptureDialog_UseAsDefaultCamera);
 		chkDefault.setEnabled(false);
+
 		Canvas canvas = new Canvas(shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		GridData canvasData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		canvasData.minimumWidth = 320;
 		canvasData.minimumHeight = 240;
 		canvas.setLayoutData(canvasData);
+
 		final Image[] previewImage = new Image[1];
 		canvas.addPaintListener(e -> {
 			if (previewImage[0] != null) {
@@ -132,51 +131,60 @@ public class PatientCameraCaptureDialog {
 			e.gc.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
 			e.gc.fillRoundRectangle(r.x, r.y, r.width - 1, r.height - 1, r.height, r.height);
 			e.gc.drawRoundRectangle(r.x, r.y, r.width - 1, r.height - 1, r.height, r.height);
-
-			e.gc.setFont(customFont);
 			String txt = Messages.PatientCameraCaptureDialog_CaptureButtonText;
 			org.eclipse.swt.graphics.Point ts = e.gc.textExtent(txt);
 			e.gc.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 			e.gc.drawText(txt, (r.width - ts.x) / 2, (r.height - ts.y) / 2, true);
 		});
-		shell.setSize(660, 610);
-		shell.setLocation(parentShell.getLocation().x + 40, parentShell.getLocation().y + 40);
 
-		final boolean[] running = { true };
-		final Thread[] grabberThread = { null };
+		shell.setSize(660, 610);
+		shell.setLocation(realParent.getLocation().x + 40, realParent.getLocation().y + 40);
+
 		final Display display = shell.getDisplay();
+		shell.addListener(SWT.Dispose, e -> {
+			try {
+				streamGeneration.incrementAndGet();
+				stopGrabberQuietly();
+			} catch (Exception ex) {
+				logger.error("Cleanup error (grabber): {}", ex.getMessage(), ex);
+			}
+			try {
+				if (previewImage[0] != null) {
+					previewImage[0].dispose();
+					previewImage[0] = null;
+				}
+			} catch (Exception ex) {
+				logger.error("Cleanup error (preview): {}", ex.getMessage(), ex);
+			}
+			if (customFont != null && !customFont.isDisposed()) {
+				customFont.dispose();
+			}
+		});
 
 		Runnable startGrabber = () -> {
+			if (shell.isDisposed() || camCombo.isDisposed())
+				return;
+
+			final int myGen = streamGeneration.incrementAndGet();
 			final int cameraIndex = camCombo.getSelectionIndex();
 
-			running[0] = false;
-			if (grabberThread[0] != null && grabberThread[0].isAlive()) {
-				try {
-					grabberThread[0].join(400);
-				} catch (InterruptedException ignored) {
-				}
-			}
-			running[0] = true;
+			stopGrabberQuietly();
 
-			grabberThread[0] = new Thread(() -> {
-
+			CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
 				try {
-					System.setOut(new PrintStream(OutputStream.nullOutputStream()));
-					System.setErr(new PrintStream(OutputStream.nullOutputStream()));
 					grabber = new VideoInputFrameGrabber(cameraIndex);
 					grabber.start();
 				} catch (Exception ex) {
 					logger.error("Error starting video grabber: {}", ex.getMessage(), ex);
 					display.asyncExec(() -> {
-						showError(shell, Messages.PatientCameraCaptureDialog_CameraErrorTitle + ex.getMessage());
-						running[0] = false;
-						if (!shell.isDisposed())
-							shell.close();
+						if (!shell.isDisposed()) {
+							showError(shell, Messages.PatientCameraCaptureDialog_CameraErrorTitle + ex.getMessage());
+						}
 					});
 					return;
 				}
 
-				while (!shell.isDisposed() && running[0]) {
+				while (!shell.isDisposed() && streamGeneration.get() == myGen) {
 					try {
 						currentFrame = grabber.grab();
 						if (currentFrame != null) {
@@ -184,50 +192,48 @@ public class PatientCameraCaptureDialog {
 							if (bufImg != null) {
 								bufImg = flipHorizontal(bufImg);
 								Rectangle faceRect = FaceDetectionUtil.detectFace(bufImg);
-								if (faceRect != null) {
-									liveFaceRect = addPadding(faceRect, bufImg, 0.45);
-								} else {
-									liveFaceRect = null;
-								}
-								try {
-									Image swtImg = new Image(display, ImageDataFactory.createFromAwt(bufImg));
-									display.asyncExec(() -> {
-										if (!canvas.isDisposed()) {
-											Image old = previewImage[0];
-											previewImage[0] = swtImg;
-											canvas.redraw();
-											if (old != null && !old.isDisposed())
-												old.dispose();
-										} else {
-											swtImg.dispose();
-										}
-									});
-								} catch (Exception e) {
-									logger.error("Error updating live preview image: {}", e.getMessage(), e);
-								}
+								liveFaceRect = (faceRect != null) ? addPadding(faceRect, bufImg, 0.45) : null;
+
+								Image swtImg = new Image(display, ImageDataFactory.createFromAwt(bufImg));
+								display.asyncExec(() -> {
+									if (!canvas.isDisposed()) {
+										Image old = previewImage[0];
+										previewImage[0] = swtImg;
+										canvas.redraw();
+										if (old != null && !old.isDisposed())
+											old.dispose();
+									} else {
+										swtImg.dispose();
+									}
+								});
 							}
 						}
 						Thread.sleep(33);
 					} catch (Exception ignored) {
 					}
 				}
-			}, "CameraGrabber-" + cameraIndex);
-			grabberThread[0].setDaemon(true);
-			grabberThread[0].start();
+
+			});
+
+			grabberFuture.set(future);
 		};
 
 		shell.open();
+
 		Runnable afterCount = () -> {
 			if (shell.isDisposed() || camCombo.isDisposed())
 				return;
 
-			int cameraCount = cachedCameraCount;
+			int cameraCount = cachedCameraCount != null ? cachedCameraCount : 0;
 			if (cameraCount == 0) {
 				logger.warn("No camera found on this system.");
 				showError(shell, Messages.PatientCameraCaptureDialog_NoCameraFound);
-				shell.dispose();
+				camCombo.setEnabled(false);
+				chkDefault.setEnabled(false);
+				btnCapture.setEnabled(false);
 				return;
 			}
+
 			try {
 				String[] cameraNames = VideoInputFrameGrabber.getDeviceDescriptions();
 				for (String name : cameraNames) {
@@ -244,8 +250,9 @@ public class PatientCameraCaptureDialog {
 			if (camCombo.isDisposed())
 				return;
 
-			camCombo.select(Math.max(0,
-					Math.min(loadDefaultCameraIndex() != null ? loadDefaultCameraIndex() : 0, cameraCount - 1)));
+			int def = Math.max(0,
+					Math.min(loadDefaultCameraIndex() != null ? loadDefaultCameraIndex() : 0, cameraCount - 1));
+			camCombo.select(def);
 			camCombo.setEnabled(true);
 			chkDefault.setEnabled(true);
 			btnCapture.setEnabled(true);
@@ -257,62 +264,47 @@ public class PatientCameraCaptureDialog {
 
 		if (cachedCameraCount != null) {
 			display.asyncExec(afterCount);
-		} else if (cameraCountingInProgress.get()) {
-			new Thread(() -> {
-				while (cachedCameraCount == null) {
-					try {
-						Thread.sleep(40);
-					} catch (InterruptedException ignored) {
-					}
-				}
-				display.asyncExec(afterCount);
-			}).start();
 		} else {
-			cameraCountingInProgress.set(true);
-			new Thread(() -> {
-				int count = getCameraCount();
-				cachedCameraCount = count;
-				cameraCountingInProgress.set(false);
-				display.asyncExec(afterCount);
-			}).start();
+			CompletableFuture.runAsync(() -> {
+				if (cameraCountingInProgress()) {
+					while (cachedCameraCount == null) {
+						try {
+							Thread.sleep(40);
+						} catch (InterruptedException ignored) {
+						}
+					}
+				} else {
+					setCameraCountingInProgress(true);
+					int count = getCameraCount();
+					cachedCameraCount = count;
+					setCameraCountingInProgress(false);
+				}
+			}).thenRunAsync(() -> display.asyncExec(afterCount));
 		}
 
 		btnCapture.addListener(SWT.MouseUp, e -> {
 			if (e.button == 1) {
 				BufferedImage original = converter.getBufferedImage(currentFrame);
-				BufferedImage flipped = flipHorizontal(original);
-				capturedImage = flipped;
-				running[0] = false;
+				if (original != null) {
+					BufferedImage flipped = flipHorizontal(original);
+					capturedImage = flipped;
+				}
 				if (chkDefault.getSelection()) {
 					LocalConfigService.set(CAMERA_DEFAULT_KEY, String.valueOf(camCombo.getSelectionIndex()));
 				}
-				shell.close();
+
+				shell.setVisible(false);
+				display.asyncExec(() -> {
+					if (!shell.isDisposed())
+						shell.dispose();
+				});
 			}
 		});
-		btnCapture.addDisposeListener(e -> customFont.dispose());
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		if (customFont != null && !customFont.isDisposed()) {
-			customFont.dispose();
-		}
-		running[0] = false;
-		if (grabberThread[0] != null && grabberThread[0].isAlive()) {
-			try {
-				grabberThread[0].join(400);
-			} catch (InterruptedException ignored) {
-			}
-		}
-		try {
-			if (grabber != null)
-				grabber.stop();
-		} catch (Exception ex) {
-			logger.error("Error stopping video grabber: {}", ex.getMessage(), ex);
-		}
-		if (previewImage[0] != null)
-			previewImage[0].dispose();
-
 		if (capturedImage == null)
 			return null;
 
@@ -324,7 +316,7 @@ public class PatientCameraCaptureDialog {
 			cropped = capturedImage.getSubimage(faceRect.x, faceRect.y, faceRect.width, faceRect.height);
 		} else {
 			logger.warn("No face detected during photo capture.");
-			showError(parentShell, Messages.PatientCameraCaptureDialog_NoFaceDetected);
+			showError(realParent, Messages.PatientCameraCaptureDialog_NoFaceDetected);
 			return null;
 		}
 
@@ -334,21 +326,11 @@ public class PatientCameraCaptureDialog {
 			return baos.toByteArray();
 		} catch (IOException ex) {
 			logger.error("Error saving patient photo to PNG: {}", ex.getMessage(), ex);
-			showError(parentShell, Messages.PatientCameraCaptureDialog_SaveError + ex.getMessage());
+			showError(realParent, Messages.PatientCameraCaptureDialog_SaveError + ex.getMessage());
 		}
-
 		return null;
 	}
 
-	/**
-	 * Resizes a BufferedImage to the specified width and height using bilinear
-	 * interpolation.
-	 *
-	 * @param src    the source BufferedImage
-	 * @param width  target width in pixels
-	 * @param height target height in pixels
-	 * @return resized BufferedImage
-	 */
 	private static BufferedImage resizeImage(BufferedImage src, int width, int height) {
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		var g2 = resized.createGraphics();
@@ -359,12 +341,6 @@ public class PatientCameraCaptureDialog {
 		return resized;
 	}
 
-	/**
-	 * Horizontally flips a BufferedImage (mirror image).
-	 *
-	 * @param img the original BufferedImage
-	 * @return the horizontally flipped image
-	 */
 	public static BufferedImage flipHorizontal(BufferedImage img) {
 		int w = img.getWidth();
 		int h = img.getHeight();
@@ -375,14 +351,6 @@ public class PatientCameraCaptureDialog {
 		return d;
 	}
 
-	/**
-	 * Adds padding to a detected face rectangle, staying within image bounds.
-	 *
-	 * @param faceRect the original detected face rectangle
-	 * @param img      the source image
-	 * @param percent  padding percentage (e.g., 0.45 = 45% of face size)
-	 * @return expanded Rectangle with padding, clipped to the image
-	 */
 	public static Rectangle addPadding(Rectangle faceRect, BufferedImage img, double percent) {
 		int paddingX = (int) (faceRect.width * percent);
 		int paddingY = (int) (faceRect.height * percent);
@@ -393,11 +361,6 @@ public class PatientCameraCaptureDialog {
 		return new Rectangle(x, y, width, height);
 	}
 
-	/**
-	 * Loads the saved default camera index from the local configuration.
-	 *
-	 * @return the default camera index, or null if not set or invalid
-	 */
 	private Integer loadDefaultCameraIndex() {
 		String val = LocalConfigService.get(CAMERA_DEFAULT_KEY, null);
 		try {
@@ -408,38 +371,22 @@ public class PatientCameraCaptureDialog {
 		}
 	}
 
-	/**
-	 * Probes available cameras using OpenCV. Returns the number of detected video
-	 * devices (max 6).
-	 *
-	 * @return number of available camera devices
-	 */
 	private int getCameraCount() {
-		int count = 0, maxTry = 6;
-		while (count < maxTry) {
-			try (var g = new OpenCVFrameGrabber(count)) {
-				g.start();
-				g.grab();
-				g.stop();
-				count++;
-			} catch (Exception e) {
-				break;
-			}
+		try {
+			String[] names = VideoInputFrameGrabber.getDeviceDescriptions();
+			cachedCameraNames = names;
+			return (names != null) ? names.length : 0;
+		} catch (Exception e) {
+			logger.warn("Could not read camera device descriptions: {}", e.getMessage(), e);
+			return 0;
 		}
-		return count;
 	}
 
-	/**
-	 * Asynchronously initializes and caches the number of connected camera devices.
-	 * Useful for faster startup of the camera dialog.
-	 *
-	 * @param display the SWT display (for thread-safety)
-	 */
 	public static void initCameraCacheAsync(Display display) {
-		if (cachedCameraCount != null || cameraCountingInProgress.get())
+		if (cachedCameraCount != null || cameraCountingInProgress())
 			return;
-		cameraCountingInProgress.set(true);
-		new Thread(() -> {
+		setCameraCountingInProgress(true);
+		CompletableFuture.runAsync(() -> {
 			int count = 0, maxTry = 6;
 			String[] names = new String[maxTry];
 			while (count < maxTry) {
@@ -453,23 +400,47 @@ public class PatientCameraCaptureDialog {
 					break;
 				}
 			}
-			final int cameraCountResult = count;
-			cachedCameraCount = cameraCountResult;
-			cachedCameraNames = new String[cameraCountResult];
-			System.arraycopy(names, 0, cachedCameraNames, 0, cameraCountResult);
-			cameraCountingInProgress.set(false);
+			cachedCameraCount = count;
+			cachedCameraNames = new String[count];
+			System.arraycopy(names, 0, cachedCameraNames, 0, count);
+			setCameraCountingInProgress(false);
+		}).thenRunAsync(() -> {
 			if (display != null && !display.isDisposed()) {
-				display.asyncExec(() -> logger.info("Camera cache loaded: {} devices.", cameraCountResult));
+				display.asyncExec(() -> logger.info("Camera cache loaded: {} devices.", cachedCameraCount));
 			}
-		}, "InitCameraCache").start();
+		});
 	}
 
-	/**
-	 * Shows an SWT error dialog with the given message.
-	 *
-	 * @param shell parent shell
-	 * @param msg   error message to display
-	 */
+	private static volatile boolean cameraCountingFlag = false;
+
+	private static boolean cameraCountingInProgress() {
+		return cameraCountingFlag;
+	}
+
+	private static void setCameraCountingInProgress(boolean v) {
+		cameraCountingFlag = v;
+	}
+
+	private void stopGrabberQuietly() {
+		try {
+			if (grabber != null) {
+				try {
+					grabber.stop();
+				} catch (Exception ignored) {
+				}
+				try {
+					grabber.release();
+				} catch (Exception ignored) {
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("Error stopping video grabber: {}", ex.getMessage(), ex);
+		} finally {
+			grabber = null;
+		}
+		grabberFuture.set(null);
+	}
+
 	private void showError(Shell shell, String msg) {
 		logger.error("Camera dialog error: {}", msg);
 		MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
