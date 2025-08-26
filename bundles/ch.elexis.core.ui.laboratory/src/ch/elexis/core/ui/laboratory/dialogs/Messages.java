@@ -87,4 +87,5 @@ public class Messages {
 
 	public static String Laboratory_Please_Select_Origin = ch.elexis.core.l10n.Messages.Laboratory_Please_Select_Origin;
 	public static String LaborVerordnungDialog_externesLaborCheckbox = ch.elexis.core.l10n.Messages.LaborVerordnungDialog_externesLaborCheckbox;
+	public static String LaborOrdersComposite_columnObservationTime = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnObservationTime;
 }
