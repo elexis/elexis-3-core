@@ -4598,6 +4598,7 @@ public class Messages extends NLS {
 	public static String TarmedOptifier_perPatient;
 	public static String TarmedOptifier_perSession;
 	public static String TarmedOptifier_perSide;
+	public static String TarmedOptifier_perDays;
 	public static String TarmedOptifier_perWeeks;
 	public static String TarmedOptifier_perYears;
 	public static String TarmedPrefs_TPIV;
