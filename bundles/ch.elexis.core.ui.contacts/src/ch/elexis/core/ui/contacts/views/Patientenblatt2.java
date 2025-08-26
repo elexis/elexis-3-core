@@ -20,6 +20,8 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 
 import java.awt.Desktop;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -59,6 +63,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -68,7 +74,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -100,16 +109,19 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
+import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
+import ch.elexis.core.ui.contacts.views.util.PatientImageUtil;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
@@ -117,6 +129,7 @@ import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
+import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.medication.views.FixMediDisplay;
@@ -158,7 +171,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private final FormToolkit tk;
 	private InputPanel ipp;
 	private IAction removeZAAction, showZAAction, showBKAction, copySelectedContactInfosToClipboardAction,
-			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction, showAdditionalAddressAction;
+			copySelectedAddressesToClipboardAction, removeAdditionalAddressAction, showAdditionalAddressAction,
+			createFoto;
 	// MenuItem delZA;
 	public final static String CFG_BEZUGSKONTAKTTYPEN = "views/patientenblatt/Bezugskontakttypen"; //$NON-NLS-1$
 	public final static String CFG_EXTRAFIELDS = "views/patientenblatt/extrafelder"; //$NON-NLS-1$
@@ -216,14 +230,16 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		recreateUserpanel();
 	}
 
-	private ArrayList<String> lbExpandable = new ArrayList<>(
-			Arrays.asList(Messages.Core_Diagnosis, Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_famAnamnesisLbl, Messages.Allergies,
-					Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
+	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
+			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_famAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(
-			Arrays.asList(Patient.FLD_DIAGNOSES, Patient.FLD_PERS_ANAMNESE, Patient.FLD_FAM_ANAMNESE, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					Patient.FLD_ALLERGIES, Patient.FLD_RISKS, Kontakt.FLD_REMARK //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-	));
+			Arrays.asList(Patient.FLD_DIAGNOSES, Patient.FLD_PERS_ANAMNESE, Patient.FLD_FAM_ANAMNESE, // $NON-NLS-1$
+																										// //$NON-NLS-2$
+																										// //$NON-NLS-3$
+					Patient.FLD_ALLERGIES, Patient.FLD_RISKS, Kontakt.FLD_REMARK // $NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication; // $NON-NLS-1$
 	private static final int COLUMNCOUNT = 3;
@@ -236,6 +252,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	IViewSite viewsite;
 	private final Hyperlinkreact hr = new Hyperlinkreact();
 	private final ScrolledForm form;
+
+	private final Label photoLabel;
+	private Image currentPhoto;
+	private final Image defaultMale = Images.IMG_DEFAULT_MAN.getImage(ImageSize._75x66_TitleDialogIconSize);
+	private final Image defaultFemale = Images.IMG_DEFAULT_WOMEN.getImage(ImageSize._75x66_TitleDialogIconSize);
+
 	private final ViewMenus viewmenu;
 	private final ExpandableComposite ecdm, ecZA, compAdditionalAddresses;
 	private boolean bLocked = true;
@@ -250,6 +272,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	@Inject
 	private IStickerService stickerService;
+	private Label titleLabel;
 
 	void recreateUserpanel() {
 		// cUserfields.setRedraw(false);
@@ -518,6 +541,57 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		form.getBody().setLayout(new GridLayout());
 
+		Composite headComposite = new Composite(form.getForm().getHead(), SWT.NONE);
+		GridLayout gl = new GridLayout(2, false);
+		gl.marginHeight = 0;
+		gl.marginWidth = 0;
+		headComposite.setLayout(gl);
+
+		titleLabel = tk.createLabel(headComposite, StringUtils.EMPTY, SWT.NONE);
+		Font font = new Font(Display.getCurrent(), "Segoe UI", 13, SWT.BOLD);
+		titleLabel.setFont(font);
+
+		GridData gdTitle = new GridData(SWT.LEFT, SWT.CENTER, true, true);
+		gdTitle.widthHint = 300;
+		titleLabel.setLayoutData(gdTitle);
+
+		photoLabel = tk.createLabel(headComposite, "");
+		GridData gdPhoto = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+		gdPhoto.widthHint = defaultMale.getBounds().width;
+		gdPhoto.heightHint = defaultMale.getBounds().height;
+		photoLabel.setLayoutData(gdPhoto);
+		photoLabel.setImage(defaultMale);
+		photoLabel.addListener(SWT.MouseUp, e -> {
+			if (e.button != 1) {
+				return;
+			}
+			if (actPatient != null) {
+				Image patientImage = PatientImageUtil.getPatientImage(actPatient.getId());
+				if (patientImage != null) {
+					try {
+						BufferedImage awtImage = PatientImageUtil.swtImageToBufferedImage(actPatient.getId());
+						if (awtImage == null) {
+							MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_Title,
+									Messages.Patientenblatt2_PhotoOpen_Error);
+							return;
+						}
+						File tempFile = File.createTempFile(actPatient.getLabel(), "." + MimeType.png.name());
+						ImageIO.write(awtImage, MimeType.png.name(), tempFile);
+						Desktop.getDesktop().open(tempFile);
+						tempFile.deleteOnExit();
+					} catch (Exception ex) {
+						MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_GenericError_Title,
+								Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
+					}
+				} else {
+					PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+							this.getShell());
+				}
+			}
+		});
+
+		form.setHeadClient(headComposite);
+
 		parent.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
@@ -740,7 +814,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		// inpZusatzAdresse.setMenu(createZusatzAdressMenu());
 		inpZusatzAdresse.setMenu(removeZAAction, showZAAction, showBKAction, copySelectedContactInfosToClipboardAction,
-				copySelectedAddressesToClipboardAction);
+				copySelectedAddressesToClipboardAction, createFoto);
 
 		ecZA.setClient(inpZusatzAdresse);
 
@@ -861,10 +935,36 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ec.setClient(ret);
 		}
 
+		Menu popup = new Menu(photoLabel);
+		photoLabel.setMenu(popup);
+
+		MenuItem miDelete = new MenuItem(popup, SWT.NONE);
+		miDelete.setText(Messages.Patientenblatt2_DeletePhoto);
+		miDelete.addListener(SWT.Selection, ev -> {
+			if (actPatient != null) {
+				PatientImageUtil.deletePatientImage(actPatient.getId());
+				Image replacement = actPatient.get(Patient.FLD_SEX).equals(Patient.FEMALE) ? defaultFemale
+						: defaultMale;
+				photoLabel.setImage(replacement);
+				if (currentPhoto != null && !currentPhoto.isDisposed() && currentPhoto != defaultMale
+						&& currentPhoto != defaultFemale) {
+					currentPhoto.dispose();
+				}
+				currentPhoto = replacement;
+			}
+		});
+
+		photoLabel.addListener(SWT.MenuDetect, e -> {
+			boolean hasPhoto = actPatient != null && PatientImageUtil.getPatientImage(actPatient.getId()) != null;
+			if (!hasPhoto) {
+				e.doit = false;
+			}
+		});
+
 		viewmenu = new ViewMenus(viewsite);
 		viewmenu.createMenu(GlobalActions.printEtikette, GlobalActions.printAdresse, GlobalActions.printBlatt,
 				GlobalActions.showBlatt, GlobalActions.printRoeBlatt, copySelectedContactInfosToClipboardAction,
-				copySelectedAddressesToClipboardAction);
+				copySelectedAddressesToClipboardAction, createFoto);
 
 		viewmenu.createToolbar(copySelectedContactInfosToClipboardAction);
 		viewmenu.createToolbar(copySelectedAddressesToClipboardAction);
@@ -932,11 +1032,41 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	public void setPatient(final Patient p) {
 		actPatient = p;
+		Image previousPhoto = currentPhoto;
+		Image patientImage = null;
+		if (p != null) {
+			patientImage = PatientImageUtil.getPatientImage(p.getId());
+		}
+		if (patientImage != null) {
+			Image scaledImage = PatientImageUtil.scaleSwtImage(patientImage, 130, 130, photoLabel.getDisplay());
+			photoLabel.setImage(scaledImage);
+			currentPhoto = scaledImage;
+			patientImage.dispose();
+		} else {
+			String sex = (p != null) ? StringTool.unNull(p.get(Patient.FLD_SEX)) : StringUtils.EMPTY;
+			Gender gender = Gender.fromValue(sex);
+			switch (gender) {
+			case FEMALE:
+				photoLabel.setImage(defaultFemale);
+				currentPhoto = defaultFemale;
+				break;
+			case MALE:
+				photoLabel.setImage(defaultMale);
+				currentPhoto = defaultMale;
+				break;
+			default:
+				photoLabel.setImage(defaultMale);
+				currentPhoto = defaultMale;
+				break;
+			}
+		}
 
+		if (previousPhoto != null && previousPhoto != defaultMale && previousPhoto != defaultFemale
+				&& !previousPhoto.isDisposed()) {
+			previousPhoto.dispose();
+		}
 		refreshUi();
-
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(p));
-
 		if (ipp != null) {
 			Control control = fields.get(9).getWidget().getControl();
 			for (Listener listener : control.getListeners(SWT.KeyDown)) {
@@ -970,7 +1100,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		buttonTabContributions.forEach(dc -> dc.setDetailObject(actPatient, null));
 
 		if (actPatient == null) {
-			form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
+			titleLabel.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
 			increasedTreatmentBtn.setSelection(false);
@@ -1002,7 +1132,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 
 		stickerComposite.setPatient(CoreModelServiceHolder.get().load(actPatient.getId(), IPatient.class).orElse(null));
-		form.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
+		titleLabel.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
 				+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
@@ -1552,6 +1682,22 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					clipboard.dispose();
 				} // if sel not empty
 			}; // copySelectedAddressesToClipboardAction.run()
+
+		};
+
+		createFoto = new Action(Messages.Patientenblatt2_TakePhoto_Action) { // $NON-NLS-1$
+			{
+				setImageDescriptor(Images.IMG_USER_SILHOUETTE.getImageDescriptor());
+				setToolTipText(Messages.Patientenblatt2_TakePhoto_Tooltip); // $NON-NLS-1$
+			}
+
+			@Override
+			public void run() {
+				if (actPatient != null) {
+					PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+							getShell());
+				}
+			}
 
 		};
 	}
