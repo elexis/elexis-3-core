@@ -5275,6 +5275,7 @@ public class Messages extends NLS {
 	public static String GoogleLoginDialog_Interrupted;
 	public static String GoogleLoginDialog_CallbackError;
 	public static String GoogleLoginDialog_Timeout;
+	public static String LaborOrdersComposite_columnObservationTime;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

@@ -162,7 +162,7 @@ public class LaborOrdersComposite extends Composite {
 		});
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
-		column.getColumn().setWidth(100);
+		column.getColumn().setWidth(80);
 		column.getColumn().setText(Messages.Core_Status);
 		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(0, this));
 		column.setLabelProvider(new ColumnLabelProvider() {
@@ -186,6 +186,27 @@ public class LaborOrdersComposite extends Composite {
 			public String getText(Object element) {
 				if (element instanceof LaborOrderViewerItem) {
 					TimeTool time = ((LaborOrderViewerItem) element).getTime();
+					if (time != null) {
+						return time.toString(TimeTool.FULL_GER);
+					} else {
+						return "???"; //$NON-NLS-1$
+					}
+				}
+				return StringUtils.EMPTY;
+			}
+		});
+
+		column = new TableViewerColumn(viewer, SWT.NONE);
+		column.getColumn().setWidth(140);
+		column.getColumn()
+				.setText(Messages.LaborOrdersComposite_columnObservationTime);
+		column.getColumn().addSelectionListener(new LaborOrdersSortSelection(1, this));
+		column.setLabelProvider(new ColumnLabelProvider() {
+
+			@Override
+			public String getText(Object element) {
+				if (element instanceof LaborOrderViewerItem) {
+					TimeTool time = ((LaborOrderViewerItem) element).getObservationTime();
 					if (time != null) {
 						return time.toString(TimeTool.FULL_GER);
 					} else {

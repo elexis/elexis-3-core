@@ -134,7 +134,7 @@ public class LaborVerordnungDialog extends TitleAreaDialog {
 		btnExternLabor.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Entnahme-/Beobachtungszeitpunkt");
+		label.setText(Messages.LaborOrdersComposite_columnObservationTime);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		Composite dateComposite = new Composite(composite, SWT.NONE);
 		dateComposite.setLayout(new GridLayout(2, true));

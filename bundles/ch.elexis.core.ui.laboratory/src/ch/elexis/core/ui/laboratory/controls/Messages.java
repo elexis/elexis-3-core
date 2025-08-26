@@ -31,4 +31,5 @@ public class Messages {
 	public static String LaborResultsComposite_documentSelectionErrorTitle = ch.elexis.core.l10n.Messages.LaborResultsComposite_documentSelectionErrorTitle;
 	public static String LaborResultsComposite_selectionLimitErrorMessage = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorMessage;
 	public static String LaborResultsComposite_selectionLimitErrorTitle = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorTitle;
+	public static String LaborOrdersComposite_columnObservationTime = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnObservationTime;
 }
