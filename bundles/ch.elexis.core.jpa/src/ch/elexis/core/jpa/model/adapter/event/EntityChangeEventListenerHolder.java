@@ -19,4 +19,8 @@ public class EntityChangeEventListenerHolder {
 		}
 		return entityChangeListener;
 	}
+
+	public static boolean isAvailable() {
+		return entityChangeListener != null;
+	}
 }

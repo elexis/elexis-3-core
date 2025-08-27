@@ -149,7 +149,7 @@ public abstract class AbstractModelAdapterFactory {
 						return Optional.empty();
 					}
 				}
-				if (registerEntityChangeEvent) {
+				if (registerEntityChangeEvent && EntityChangeEventListenerHolder.isAvailable()) {
 					EntityChangeEventListenerHolder.get().add((AbstractIdModelAdapter<?>) adapter);
 				}
 				return Optional.of(adapter);
