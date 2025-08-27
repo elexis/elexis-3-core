@@ -8,6 +8,7 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
+import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
@@ -25,7 +26,12 @@ public interface IdentifiableDomainResourceAttributeMapper<T extends Identifiabl
 	default void mapNarrative(Identifiable source, DomainResource target) {
 		Narrative narrative = new Narrative();
 		narrative.setStatus(NarrativeStatus.GENERATED);
-		narrative.setDivAsString(source.getLabel());
+		try {
+			narrative.setDivAsString(source.getLabel());
+		} catch (Exception ex) {
+			LoggerFactory.getLogger(getClass()).warn("Error setting narrative {} {}: {}", source.getClass(),
+					source.getId(), ex.getMessage());
+		}
 		target.setText(narrative);
 	}
 
