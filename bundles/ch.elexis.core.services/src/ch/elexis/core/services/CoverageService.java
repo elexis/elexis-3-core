@@ -8,8 +8,11 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.ObjectEvaluatableACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.FallConstants;
@@ -19,6 +22,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
@@ -32,6 +36,12 @@ import ch.rgw.tools.StringTool;
 
 @Component
 public class CoverageService implements ICoverageService {
+
+	@Reference
+	private IAccessControlService accessControlService;
+
+	@Reference
+	private IStoreToStringService storeToStringService;
 
 	@Override
 	public boolean isValid(ICoverage coverage) {
@@ -256,7 +266,8 @@ public class CoverageService implements ICoverageService {
 
 	@Override
 	public Optional<IEncounter> getLatestEncounter(ICoverage coverage) {
-		List<IEncounter> encounters = coverage.getEncounters();
+		List<IEncounter> encounters = new ArrayList<>(
+				coverage.getEncounters().stream().filter(e -> hasReadRight(IEncounter.class, e)).toList());
 		if (encounters != null && !encounters.isEmpty()) {
 			if (encounters.size() > 1) {
 				Collections.sort(encounters, (l, r) -> {
@@ -270,6 +281,14 @@ public class CoverageService implements ICoverageService {
 			return Optional.of(encounters.get(0));
 		}
 		return Optional.empty();
+	}
+
+	private boolean hasReadRight(Class<?> clazz, Identifiable identifiable) {
+		if (identifiable != null) {
+			return accessControlService.evaluate(new ObjectEvaluatableACE(clazz, Right.READ,
+					storeToStringService.storeToString(identifiable).orElse(null)));
+		}
+		return false;
 	}
 
 	@Override

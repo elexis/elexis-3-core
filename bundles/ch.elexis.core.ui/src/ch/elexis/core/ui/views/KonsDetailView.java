@@ -287,15 +287,19 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		if (created) {
 			if (encounter != null && Objects.equals(encounter, actEncounter)) {
 				IEncounter db_encounter = CoreModelServiceHolder.get()
-						.load(encounter.getId(), IEncounter.class, false, true).get();
-				long db_lastupdate = db_encounter.getLastupdate();
-				if (db_lastupdate > actEncounter.getLastupdate()) {
-					log.info("[{}] reloading Encounter as changed in db", encounter.getId());
-					text.setDirty(false);
-					LocalLockServiceHolder.get().releaseLock(encounter);
-					setKons(encounter);
+						.load(encounter.getId(), IEncounter.class, false, true).orElse(null);
+				if (db_encounter != null) {
+					long db_lastupdate = db_encounter.getLastupdate();
+					if (db_lastupdate > actEncounter.getLastupdate()) {
+						log.info("[{}] reloading Encounter as changed in db", encounter.getId());
+						text.setDirty(false);
+						LocalLockServiceHolder.get().releaseLock(encounter);
+						setKons(encounter);
+					} else {
+						setUnlocked(true);
+					}
 				} else {
-					setUnlocked(true);
+					log.info("Lock aquired could not load encounter [" + encounter.getId() + "]");
 				}
 			}
 		}
