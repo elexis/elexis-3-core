@@ -34,7 +34,7 @@ public class ScheduleStringTransformer implements IFhirTransformer<Schedule, Str
 	public Optional<Schedule> getFhirObject(String localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 
 		Area areaByNameOrId = appointmentService.getAreaByNameOrId(localObject);
-		Schedule schedule = transformToFhir(areaByNameOrId);
+		Schedule schedule = (areaByNameOrId != null) ? transformToFhir(areaByNameOrId) : null;
 
 		return Optional.ofNullable(schedule);
 	}
