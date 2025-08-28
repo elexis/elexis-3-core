@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.bytedeco.javacv.VideoInputFrameGrabber;
@@ -43,7 +44,7 @@ public class PatientCameraCaptureDialog {
 
 	private static final Logger logger = LoggerFactory.getLogger(PatientCameraCaptureDialog.class);
 
-	private VideoInputFrameGrabber grabber;
+	private FrameGrabber grabber;
 	private volatile Frame currentFrame;
 	private final Java2DFrameConverter converter = new Java2DFrameConverter();
 	private BufferedImage capturedImage;
@@ -174,7 +175,9 @@ public class PatientCameraCaptureDialog {
 
 			CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
 				try {
-					grabber = new VideoInputFrameGrabber(cameraIndex);
+					grabber = createGrabber(cameraIndex);
+					if (grabber == null)
+						return;
 					grabber.start();
 				} catch (Exception ex) {
 					logger.error("Error starting video grabber: {}", ex.getMessage(), ex);
@@ -234,7 +237,12 @@ public class PatientCameraCaptureDialog {
 			}
 
 			try {
-				String[] cameraNames = VideoInputFrameGrabber.getDeviceDescriptions();
+				String[] cameraNames;
+				if (System.getProperty("os.name").toLowerCase().contains("win")) {
+					cameraNames = VideoInputFrameGrabber.getDeviceDescriptions();
+				} else {
+					cameraNames = cachedCameraNames;
+				}
 				for (String name : cameraNames) {
 					if (!camCombo.isDisposed())
 						camCombo.add(name);
@@ -372,9 +380,13 @@ public class PatientCameraCaptureDialog {
 
 	private int getCameraCount() {
 		try {
-			String[] names = VideoInputFrameGrabber.getDeviceDescriptions();
-			cachedCameraNames = names;
-			return (names != null) ? names.length : 0;
+			if (System.getProperty("os.name").toLowerCase().contains("win")) {
+				String[] names = VideoInputFrameGrabber.getDeviceDescriptions();
+				cachedCameraNames = names;
+				return (names != null) ? names.length : 0;
+			} else {
+				return (cachedCameraNames != null) ? cachedCameraNames.length : 0;
+			}
 		} catch (Exception e) {
 			logger.warn("Could not read camera device descriptions: {}", e.getMessage(), e);
 			return 0;
@@ -445,5 +457,19 @@ public class PatientCameraCaptureDialog {
 		MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
 		box.setMessage(msg);
 		box.open();
+	}
+
+	private FrameGrabber createGrabber(int cameraIndex) {
+		String os = System.getProperty("os.name").toLowerCase();
+		try {
+			if (os.contains("win")) {
+				return new VideoInputFrameGrabber(cameraIndex);
+			} else {
+				return new OpenCVFrameGrabber(cameraIndex);
+			}
+		} catch (Exception e) {
+			logger.error("Error creating grabber for camera {}: {}", cameraIndex, e.getMessage(), e);
+			return null;
+		}
 	}
 }

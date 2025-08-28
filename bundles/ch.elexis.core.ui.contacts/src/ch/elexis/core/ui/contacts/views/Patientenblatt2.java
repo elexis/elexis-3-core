@@ -555,7 +555,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		gdTitle.widthHint = 300;
 		titleLabel.setLayoutData(gdTitle);
 
-		photoLabel = tk.createLabel(headComposite, "");
+		photoLabel = tk.createLabel(headComposite, StringUtils.EMPTY);
 		GridData gdPhoto = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		gdPhoto.widthHint = defaultMale.getBounds().width;
 		gdPhoto.heightHint = defaultMale.getBounds().height;
