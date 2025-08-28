@@ -47,7 +47,6 @@ class TransparentTextModificationLockHandler implements VerifyKeyListener {
 		final IEncounter encounter = enhancedTextField.getEncounter();
 		if (!enhancedTextField.isUnlocked() && encounter != null && !LocalLockServiceHolder.get().isLocked(encounter)) {
 			BusyIndicator.showWhile(enhancedTextField.getDisplay(), () -> {
-
 				final LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(encounter, 1,
 						new NullProgressMonitor());
 				if (!lockResponse.isOk()) {
@@ -56,26 +55,20 @@ class TransparentTextModificationLockHandler implements VerifyKeyListener {
 					LockResponseHelper.showInfo(lockResponse, encounter, logger);
 					return;
 				}
-
-				// unlock the text field, so we can directly execute the modification
-				enhancedTextField.setEditable(true);
-
+				// lock event unlocks the text field, so we can directly execute the
+				// modification
 				executor.schedule(() -> {
 					// maybe it was already released
 					if (LocalLockServiceHolder.get().isLocked(encounter)) {
 						LockResponse releaseLock = LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
 						if (!releaseLock.isOk()) {
-
 							LockResponseHelper.showInfo(releaseLock, encounter, logger);
 						}
 					}
 				}, LOCK_WINDOW_SECS, TimeUnit.SECONDS);
 
 			});
-
 		}
-
 		event.doit = true;
 	}
-
 }
