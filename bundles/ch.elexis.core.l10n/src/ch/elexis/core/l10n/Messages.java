@@ -5294,6 +5294,11 @@ public class Messages extends NLS {
 	public static String GoogleLoginDialog_CallbackError;
 	public static String GoogleLoginDialog_Timeout;
 	public static String LaborOrdersComposite_columnObservationTime;
+	public static String PatientPhotoDialog_Title_Default;
+	public static String PatientPhotoDialog_ZoomOut;
+	public static String PatientPhotoDialog_ZoomReset;
+	public static String PatientPhotoDialog_ZoomIn;
+	public static String PatientPhotoDialog_FitToWidth;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

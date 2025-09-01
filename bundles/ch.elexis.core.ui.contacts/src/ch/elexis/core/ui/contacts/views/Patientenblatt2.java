@@ -20,8 +20,6 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 
 import java.awt.Desktop;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -65,6 +61,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -109,7 +106,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
-import ch.elexis.core.model.MimeType;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
@@ -121,6 +117,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
+import ch.elexis.core.ui.contacts.dialogs.PatientPhotoDialog;
 import ch.elexis.core.ui.contacts.views.util.PatientImageUtil;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
@@ -562,31 +559,26 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		photoLabel.setLayoutData(gdPhoto);
 		photoLabel.setImage(defaultMale);
 		photoLabel.addListener(SWT.MouseUp, e -> {
-			if (e.button != 1) {
+			if (e.button != 1)
 				return;
-			}
-			if (actPatient != null) {
-				Image patientImage = PatientImageUtil.getPatientImage(actPatient.getId());
-				if (patientImage != null) {
-					try {
-						BufferedImage awtImage = PatientImageUtil.swtImageToBufferedImage(actPatient.getId());
-						if (awtImage == null) {
-							MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_Title,
-									Messages.Patientenblatt2_PhotoOpen_Error);
-							return;
-						}
-						File tempFile = File.createTempFile(actPatient.getLabel(), "." + MimeType.png.name());
-						ImageIO.write(awtImage, MimeType.png.name(), tempFile);
-						Desktop.getDesktop().open(tempFile);
-						tempFile.deleteOnExit();
-					} catch (Exception ex) {
-						MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_GenericError_Title,
-								Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
-					}
-				} else {
-					PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
-							this.getShell());
+			if (actPatient == null)
+				return;
+
+			Image swtImg = PatientImageUtil.getPatientImage(actPatient.getId());
+			if (swtImg != null && !swtImg.isDisposed()) {
+				try {
+					ImageData data = swtImg.getImageData();
+					swtImg.dispose();
+					swtImg = null;
+					new PatientPhotoDialog(getShell(), actPatient.getPatCode() + " " + actPatient.getLabel(false), data)
+							.open();
+				} catch (Exception ex) {
+					MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_GenericError_Title,
+							Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
 				}
+			} else {
+				PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+						this.getShell());
 			}
 		});
 
