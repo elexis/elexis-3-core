@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.util.fhir.transformer.PractitionerIMandatorTransformer">
-   <property name="transformer.id" value="Practitioner.IMandator"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.util.fhir.transformer.PractitionerIPersonTransformer">
+   <property name="transformer.id" value="Practitioner.IPerson"/>
    <service>
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
    </service>
    <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
-   <reference cardinality="1..1" field="userService" interface="ch.elexis.core.services.IUserService" name="userService"/>
    <reference cardinality="1..1" field="xidService" interface="ch.elexis.core.services.IXidService" name="xidService"/>
-   <implementation class="ch.elexis.core.findings.util.fhir.transformer.PractitionerIMandatorTransformer"/>
+   <implementation class="ch.elexis.core.findings.util.fhir.transformer.PractitionerIPersonTransformer"/>
 </scr:component>

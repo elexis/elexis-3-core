@@ -34,6 +34,7 @@
 		"ch.elexis.core.model.IOrganization":"crudxveiz",
 		"ch.elexis.core.model.IOutputLog": "cruvdx",
 		"ch.elexis.core.model.IPerson": "crudxveiz",
+		"ch.elexis.core.model.IPractitioner":"crudxveiz",
 		"ch.elexis.core.model.IRight":"cruvdx",
 		"ch.elexis.core.model.IRole":"cruvdx",
 		"ch.elexis.core.model.ISticker":"cruvdx",

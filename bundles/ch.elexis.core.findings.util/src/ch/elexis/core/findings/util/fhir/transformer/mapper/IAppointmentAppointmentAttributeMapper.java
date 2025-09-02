@@ -95,13 +95,13 @@ public class IAppointmentAppointmentAttributeMapper
 			if (includes.contains(new Include("Appointment:actor"))) {
 				@SuppressWarnings("rawtypes")
 				Optional<IFhirTransformer> _practitionerTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
-						"(" + IFhirTransformer.TRANSFORMERID + "=Practitioner.IMandator)");
+						"(" + IFhirTransformer.TRANSFORMERID + "=Practitioner.IPerson)");
 				if (_practitionerTransformer.isPresent()) {
 					IMandator localMandator = coreModelService.load(assignedContact.get().getId(), IMandator.class)
 							.get();
 					@SuppressWarnings("unchecked")
 					Practitioner _practitioner = (Practitioner) _practitionerTransformer.get()
-							.getFhirObject(localMandator).get();
+							.getFhirObject(localMandator.asIPerson()).get();
 					practitionerReference.setResource(_practitioner);
 					OsgiServiceUtil.ungetService(_practitionerTransformer.get());
 				} else {
