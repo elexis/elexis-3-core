@@ -143,7 +143,7 @@ public abstract class AbstractModelService implements IModelService {
 	}
 
 	@Override
-	public void refresh(Identifiable identifiable, boolean refreshCache) {
+	public void refresh(Identifiable identifiable, boolean refreshCache, boolean reset) {
 		EntityManager em = getEntityManager(true);
 		EntityWithId dbObject = getDbObject(identifiable).orElse(null);
 		if (dbObject != null) {
@@ -153,7 +153,7 @@ public abstract class AbstractModelService implements IModelService {
 			}
 			EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
 			if (reloadedDbObject != null) {
-				setDbObject(identifiable, reloadedDbObject, false);
+				setDbObject(identifiable, reloadedDbObject, reset);
 			}
 		}
 	}
