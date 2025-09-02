@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.hl7.fhir.r4.model.Practitioner;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -32,6 +33,7 @@ public class PractitionerIPersonTransformer implements IFhirTransformer<Practiti
 
 	private IPersonPractitionerAttributeMapper attributeMapper;
 
+	@Activate
 	public PractitionerIPersonTransformer() {
 		attributeMapper = new IPersonPractitionerAttributeMapper(xidService);
 	}
