@@ -760,10 +760,12 @@ public class AppointmentService implements IAppointmentService {
 				} else {
 					IAppointment lastAppointment = ret.get(ret.size() - 1);
 
-					if (!lastAppointment.getEndTime().isEqual(existingAppointment.getStartTime())
-							&& !lastAppointment.getEndTime().isAfter(existingAppointment.getStartTime())) {
-						ret.add(getFreeAppointment(schedule, ret.get(ret.size() - 1).getEndTime(),
-								existingAppointment.getStartTime()));
+					if (lastAppointment.getEndTime() != null) {
+						if (!lastAppointment.getEndTime().isEqual(existingAppointment.getStartTime())
+								&& !lastAppointment.getEndTime().isAfter(existingAppointment.getStartTime())) {
+							ret.add(getFreeAppointment(schedule, lastAppointment.getEndTime(),
+									existingAppointment.getStartTime()));
+						}
 					}
 					ret.add(existingAppointment);
 				}
