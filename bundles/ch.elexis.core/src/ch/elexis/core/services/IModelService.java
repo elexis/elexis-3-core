@@ -343,7 +343,7 @@ public interface IModelService {
 	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or
 	 * if not loaded the database. <b>If the {@link Identifiable} has unsaved
 	 * changes, this will have no effect.</b> Reload the {@link Identifiable} to
-	 * reset changes.
+	 * reset changes. Or use refresh with reset parameter.
 	 *
 	 * @param Identifiable
 	 */
@@ -356,12 +356,28 @@ public interface IModelService {
 	 * if not loaded the database. With the refreshCache parameter the data is
 	 * always loaded from the database and the L2 cache is refreshed. <b>If the
 	 * {@link Identifiable} has unsaved changes, this will have no effect.</b>
-	 * Reload the {@link Identifiable} to reset changes.
+	 * Reload the {@link Identifiable} to reset changes. Or use refresh with reset
+	 * parameter.
 	 *
 	 * @param Identifiable
 	 * @param refreshCache
 	 */
-	public void refresh(Identifiable identifiable, boolean refreshCache);
+	default public void refresh(Identifiable identifiable, boolean refreshCache) {
+		refresh(identifiable, refreshCache, false);
+	}
+
+	/**
+	 * Refresh the entity of the {@link Identifiable} with data from the L2 cache or
+	 * if not loaded the database. With the refreshCache parameter the data is
+	 * always loaded from the database and the L2 cache is refreshed. If the
+	 * {@link Identifiable} has unsaved changes those will be reset if the parameter
+	 * is true.
+	 * 
+	 * @param identifiable
+	 * @param refreshCache
+	 * @param reset
+	 */
+	public void refresh(Identifiable identifiable, boolean refreshCache, boolean reset);
 
 	/**
 	 * Get the value from a property of the entity of the {@link Identifiable}.
