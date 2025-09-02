@@ -34,7 +34,7 @@ public class PractitionerIPersonTransformer implements IFhirTransformer<Practiti
 	private IPersonPractitionerAttributeMapper attributeMapper;
 
 	@Activate
-	public PractitionerIPersonTransformer() {
+	private void activate() {
 		attributeMapper = new IPersonPractitionerAttributeMapper(xidService);
 	}
 
