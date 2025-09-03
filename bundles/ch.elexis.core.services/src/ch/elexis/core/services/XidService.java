@@ -98,10 +98,6 @@ public class XidService implements IXidService {
 		localRegisterXIDDomainIfNotExists(DOMAIN_NIF, "IV/NIF-Nr", ASSIGNMENT_REGIONAL,
 				"ch.elexis.data.Kontakt,ch.elexis.data.Person,ch.elexis.data.Organisation");
 
-		localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ANREDE, "Anrede", ASSIGNMENT_REGIONAL);
-		localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_KANTON, "Kanton", ASSIGNMENT_REGIONAL);
-		localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_SPEZ, "Spezialität", ASSIGNMENT_REGIONAL);
-		localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_ROLLE, "Rolle", ASSIGNMENT_REGIONAL);
 		localRegisterXIDDomainIfNotExists(XidConstants.XID_KONTAKT_LAB_SENDING_FACILITY, "Sendende Institution",
 				ASSIGNMENT_REGIONAL);
 	}

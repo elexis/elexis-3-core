@@ -34,10 +34,7 @@ public class XidConstants {
 	 * Elexis INTERAL types
 	 */
 	public static final String DOMAIN_KONTAKT = XidConstants.DOMAIN_ELEXIS + "/kontakt/";
-	public static final String XID_KONTAKT_ANREDE = DOMAIN_KONTAKT + "anrede";
-	public static final String XID_KONTAKT_KANTON = DOMAIN_KONTAKT + "kanton";
-	public static final String XID_KONTAKT_SPEZ = DOMAIN_KONTAKT + "spez";
-	public static final String XID_KONTAKT_ROLLE = DOMAIN_KONTAKT + "rolle";
+	// Identification of a laboratory contact
 	public static final String XID_KONTAKT_LAB_SENDING_FACILITY = DOMAIN_KONTAKT + "lab/sendingfacility";
 
 	/**

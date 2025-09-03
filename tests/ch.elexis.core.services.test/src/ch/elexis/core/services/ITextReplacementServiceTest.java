@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.constants.ExtInfoConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IEncounter;
@@ -136,7 +137,7 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("test@test.tst", replaced);
 
-		AllServiceTests.getMandator().setExtInfo("TarmedSpezialität", "Allgemein");
+		AllServiceTests.getMandator().setExtInfo(ExtInfoConstants.TARMED_SPEZIALITAET, "Allgemein");
 		CoreModelServiceHolder.get().save(AllServiceTests.getMandator());
 		template = "[Mandant.TarmedSpezialität]";
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
