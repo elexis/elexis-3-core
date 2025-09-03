@@ -57,7 +57,6 @@ public class IPatientPatientAttributeMapper implements IdentifiableDomainResourc
 		}
 
 		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
-		identifiers.add(getElexisObjectIdentifier(source));
 		identifiers.add(getPatientNumberIdentifier(source));
 		target.setIdentifier(identifiers);
 

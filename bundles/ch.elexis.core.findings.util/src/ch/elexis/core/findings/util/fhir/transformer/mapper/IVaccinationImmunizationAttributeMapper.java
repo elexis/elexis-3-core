@@ -39,8 +39,6 @@ public class IVaccinationImmunizationAttributeMapper
 			Set<Include> includes) {
 		FhirUtil.setVersionedIdPartLastUpdatedMeta(Immunization.class, target, source);
 
-		target.addIdentifier(getElexisObjectIdentifier(source));
-
 		target.setStatus(ImmunizationStatus.COMPLETED);
 
 		target.setPatient(FhirUtil.getReference(source.getPatient()));

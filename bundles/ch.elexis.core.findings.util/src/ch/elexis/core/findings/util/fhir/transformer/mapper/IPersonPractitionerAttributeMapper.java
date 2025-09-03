@@ -39,10 +39,9 @@ public class IPersonPractitionerAttributeMapper
 		}
 
 		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
-		identifiers.add(getElexisObjectIdentifier(source));
-		target.setActive(!source.isDeleted());
 		target.setIdentifier(identifiers);
 
+		target.setActive(!source.isDeleted());
 		target.setName(personHelper.getHumanNames(source));
 		target.setGender(personHelper.getGender(source.getGender()));
 		target.setBirthDate(personHelper.getBirthDate(source));

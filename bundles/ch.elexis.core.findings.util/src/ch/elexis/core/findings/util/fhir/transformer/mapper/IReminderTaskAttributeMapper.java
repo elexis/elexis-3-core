@@ -51,7 +51,6 @@ public class IReminderTaskAttributeMapper
 		FhirUtil.setVersionedIdPartLastUpdatedMeta(Task.class, target, source);
 
 		target.setIntent(TaskIntent.UNKNOWN);
-		target.addIdentifier(getElexisObjectIdentifier(source));
 
 		target.setStatus(getTaskStatus(source));
 		target.setPriority(getTaskPriority(source));

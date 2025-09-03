@@ -42,8 +42,6 @@ public class ICoverageCoverageAttributeMapper
 			return;
 		}
 
-		target.addIdentifier(getElexisObjectIdentifier(source));
-
 		// Bezeichnung
 		coverageHelper.setNarrative(target, coverageHelper.getFallText(source));
 

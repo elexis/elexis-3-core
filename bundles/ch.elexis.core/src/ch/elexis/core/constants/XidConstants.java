@@ -62,6 +62,9 @@ public class XidConstants {
 	public static final int CH_AHV_QUALITY = ASSIGNMENT_REGIONAL;
 	public static final String DOMAIN_BSVNUM = "www.xid.ch/id/kknum";
 	public static final String DOMAIN_KSK = "www.xid.ch/id/ksk";
+	// IV: Identifikationsnummer des Leistungserbringers
+	public static final String DOMAIN_NIF = "www.xid.ch/id/nif";
+	public static final String DOMAIN_SUVA = "www.xid.ch/id/suva";
 
 	/**
 	 * AUSTRIA

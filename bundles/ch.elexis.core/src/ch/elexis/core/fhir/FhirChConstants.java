@@ -33,6 +33,21 @@ public class FhirChConstants {
 	public static final String OID_AHV13_SYSTEM = PREFIX_URN_OID + OID_AHV13;
 
 	/**
+	 * Identifier holding a number for ZSR (Zahlstellenregister), RCC (Registre des
+	 * codes-créanciers), RCC (Registro dei codici creditori)
+	 * 
+	 * OID of the ZSR/RCC
+	 * 
+	 * @see https://fhir.ch/ig/ch-core/StructureDefinition-ch-core-zsr-identifier.profile.json.html
+	 */
+	public static final String OID_ZSR = "2.16.756.5.30.1.123.100.2.1.1";
+
+	/**
+	 * The full system String
+	 */
+	public static final String OID_ZSR_SYSTEM = PREFIX_URN_OID + OID_ZSR;
+
+	/**
 	 * OID for Swiss Versichertennummer
 	 * 
 	 * @see http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-coverage.html
@@ -53,9 +68,10 @@ public class FhirChConstants {
 	 * @see http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode
 	 */
 	public static final String HEALTHCARE_FACILITY_TYPE_CODE_SYSTEM = "http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode";
-	
+
 	/**
 	 * SNOMED CT Code for a Laboratory environment
+	 * 
 	 * @see https://browser.ihtsdotools.org/?perspective=full&conceptId1=261904005&edition=MAIN/SNOMEDCT-CH/2022-12-07&release=&languages=en,fr,de,it
 	 */
 	public static final String SCTID_LABORATORY_ENVIRONMENT = "261904005";

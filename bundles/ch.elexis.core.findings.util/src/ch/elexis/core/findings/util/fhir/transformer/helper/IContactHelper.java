@@ -15,8 +15,6 @@ import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
-import ch.elexis.core.constants.XidConstants;
-import ch.elexis.core.fhir.FhirChConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
@@ -25,6 +23,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 
 public class IContactHelper extends AbstractHelper {
@@ -118,31 +117,28 @@ public class IContactHelper extends AbstractHelper {
 		List<Identifier> ret = new ArrayList<>();
 		List<IXid> xids = xidService.getXids(contact);
 		for (IXid xid : xids) {
-			Identifier identifier = new Identifier();
-			identifier.setSystem(xid.getDomain());
-			identifier.setValue(xid.getDomainId());
-			ret.add(identifier);
+			String system = IdentifierDomainMapper.ELEXIS_TO_FHIR(xid.getDomain());
+			if (StringUtils.isNotEmpty(system)) {
+				Identifier identifier = new Identifier();
+				identifier.setSystem(system);
+				identifier.setValue(xid.getDomainId());
+				ret.add(identifier);
+			}
 		}
 		return ret;
 	}
 
 	public void mapIdentifiers(List<Identifier> identifiers, IContact target) {
 		for (Identifier identifier : identifiers) {
-			if (StringUtils.isNotBlank(identifier.getValue())) {
-				switch (identifier.getSystem()) {
-				case XidConstants.CH_AHV:
-				case FhirChConstants.OID_AHV13_SYSTEM:
-					target.addXid(XidConstants.CH_AHV, identifier.getValue(), true);
-					break;
-				case XidConstants.EAN:
-				case FhirChConstants.OID_GLN_SYSTEM:
-					target.addXid(XidConstants.EAN, identifier.getValue(), true);
-					break;
-				case FhirChConstants.BSV_NUMMER_SYSTEM:
-					target.addXid(XidConstants.DOMAIN_BSVNUM, identifier.getValue(), true);
-					break;
-				default:
-					break;
+			String domain = IdentifierDomainMapper.FHIR_TO_ELEXIS(identifier.getSystem());
+			if (StringUtils.isNotBlank(domain)) {
+				if (identifier.getValue() != null) {
+					target.addXid(domain, identifier.getValue(), true);
+				} else {
+					IXid xid = target.getXid(domain);
+					if (xid != null) {
+						CoreModelServiceHolder.get().delete(xid);
+					}
 				}
 			}
 		}
@@ -167,7 +163,7 @@ public class IContactHelper extends AbstractHelper {
 				if (AddressType.PHYSICAL.equals(address.getType())) {
 					target.setCity(address.getCity());
 					target.setZip(address.getPostalCode());
-					if(address.hasLine()) {
+					if (address.hasLine()) {
 						StringBuilder sb = new StringBuilder();
 						address.getLine().forEach(e -> sb.append(e));
 						target.setStreet(sb.toString());

@@ -46,7 +46,6 @@ public class IOrganizationOrganizationAttributeMapper
 		}
 		
 		List<Identifier> identifiers = contactHelper.getIdentifiers(source, xidService);
-		identifiers.add(getElexisObjectIdentifier(source));
 		target.setIdentifier(identifiers);
 
 		target.setName(contactHelper.getOrganizationName(source));

@@ -45,7 +45,6 @@ public class IPersonPersonAttributeMapper implements IdentifiableDomainResourceA
 		}
 
 		List<Identifier> identifiers = personHelper.getIdentifiers(source, xidService);
-		identifiers.add(getElexisObjectIdentifier(source));
 		target.setIdentifier(identifiers);
 		
 		target.setName(personHelper.getHumanNames(source));
