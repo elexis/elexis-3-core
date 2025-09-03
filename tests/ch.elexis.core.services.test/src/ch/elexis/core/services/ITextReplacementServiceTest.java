@@ -137,7 +137,7 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("test@test.tst", replaced);
 
-		AllServiceTests.getMandator().setExtInfo(ExtInfoConstants.TARMED_SPEZIALITAET, "Allgemein");
+		AllServiceTests.getMandator().setExtInfo("TarmedSpezialität", "Allgemein");
 		CoreModelServiceHolder.get().save(AllServiceTests.getMandator());
 		template = "[Mandant.TarmedSpezialität]";
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
