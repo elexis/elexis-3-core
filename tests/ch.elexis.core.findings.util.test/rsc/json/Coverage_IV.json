@@ -8,12 +8,6 @@
         "status": "generated",
         "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">IV: Krankheit - Label_IV(28.01.2022-offen)</div>"
     },
-    "identifier": [
-        {
-            "system": "www.elexis.info/objid",
-            "value": "IV6830bbadb4b09980f3d84b"
-        }
-    ],
     "status": "active",
     "type": {
         "coding": [
