@@ -37,7 +37,7 @@ Import-Package: com.opencsv.exceptions;version="[5.9.0,6.0.0)",
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/snakeyaml-2.4.jar,
- lib/liquibase-core-4.31.1.jar,
+ lib/liquibase-core-4.33.0.jar,
  .
 Export-Package: ch.elexis.core.jpa.entitymanager.ui,
  ch.elexis.core.jpa.model.adapter,
