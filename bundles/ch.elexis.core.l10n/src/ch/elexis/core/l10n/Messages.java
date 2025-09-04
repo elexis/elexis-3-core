@@ -5078,7 +5078,7 @@ public class Messages extends NLS {
 	public static String DocumentMetaDataDialog_deleteCategoryComboConfirm;
 	public static String Statistics_Info;
 	public static String GlobalActions_CloseCaseDialogTitel;
-	public static Object GlobalActions_CloseCaseDialog;
+	public static String GlobalActions_CloseCaseDialog;
 	public static String Error_StartDateAfterEndDate;
 	public static String Error_EndDateInFuture;
 	public static String Button_UpdateCharts;
@@ -5092,7 +5092,7 @@ public class Messages extends NLS {
 	public static String AddCombiTerminErstellenDescription;
 	public static String AddCombiTerminBearbeitenDescription;
 	public static String AppointmentLinkOptionsDialogDescription;
-	public static Object AppointmentLinkOptionsDialogTitel;
+	public static String AppointmentLinkOptionsDialogTitel;
 	public static String AppointmentLinkOptionsDialogMove;
 	public static String AppointmentLinkOptionsDialogCopy;
 	public static String AppointmentLinkOptionsDialogDelete;
