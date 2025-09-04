@@ -752,6 +752,10 @@ public class AppointmentService implements IAppointmentService {
 		if (includeTransientFree) {
 			List<IAppointment> ret = new ArrayList<IAppointment>();
 			for (IAppointment existingAppointment : existingAppointments) {
+				// skip all day appointments for calculation of free
+				if (existingAppointment.isAllDay()) {
+					continue;
+				}
 				if (ret.isEmpty()) {
 					if (existingAppointment.getStartTime().isAfter(day.atStartOfDay())) {
 						ret.add(getFreeAppointment(schedule, day.atStartOfDay(), existingAppointment.getStartTime()));
@@ -760,12 +764,10 @@ public class AppointmentService implements IAppointmentService {
 				} else {
 					IAppointment lastAppointment = ret.get(ret.size() - 1);
 
-					if (lastAppointment.getEndTime() != null) {
-						if (!lastAppointment.getEndTime().isEqual(existingAppointment.getStartTime())
-								&& !lastAppointment.getEndTime().isAfter(existingAppointment.getStartTime())) {
-							ret.add(getFreeAppointment(schedule, lastAppointment.getEndTime(),
-									existingAppointment.getStartTime()));
-						}
+					if (!lastAppointment.getEndTime().isEqual(existingAppointment.getStartTime())
+							&& !lastAppointment.getEndTime().isAfter(existingAppointment.getStartTime())) {
+						ret.add(getFreeAppointment(schedule, lastAppointment.getEndTime(),
+								existingAppointment.getStartTime()));
 					}
 					ret.add(existingAppointment);
 				}
