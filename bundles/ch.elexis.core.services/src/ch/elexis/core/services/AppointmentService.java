@@ -751,12 +751,11 @@ public class AppointmentService implements IAppointmentService {
 					}
 					ret.add(existingAppointment);
 				} else {
-					IAppointment lastAppointment = ret.get(ret.size() - 1);
+					LocalDateTime highestEnd = getHighestEnd(ret);
 
-					if (!lastAppointment.getEndTime().isEqual(existingAppointment.getStartTime())
-							&& !lastAppointment.getEndTime().isAfter(existingAppointment.getStartTime())) {
-						ret.add(getFreeAppointment(schedule, lastAppointment.getEndTime(),
-								existingAppointment.getStartTime()));
+					if (!highestEnd.isEqual(existingAppointment.getStartTime())
+							&& !highestEnd.isAfter(existingAppointment.getStartTime())) {
+						ret.add(getFreeAppointment(schedule, highestEnd, existingAppointment.getStartTime()));
 					}
 					ret.add(existingAppointment);
 				}
@@ -770,6 +769,10 @@ public class AppointmentService implements IAppointmentService {
 			return ret;
 		}
 		return existingAppointments;
+	}
+
+	private LocalDateTime getHighestEnd(List<IAppointment> appointments) {
+		return appointments.stream().map(a -> a.getEndTime()).max(LocalDateTime::compareTo).get();
 	}
 
 	private IAppointment getFreeAppointment(String schedule, LocalDateTime start, LocalDateTime end) {

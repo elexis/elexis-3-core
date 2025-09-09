@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -239,4 +240,70 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		}
 	}
 
+	@Test
+	public void getTransientFree() {
+		LocalDate nextMonday = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY)).plusWeeks(1);
+		// day limit default "0000-0800\n1800-2359" see
+		// ch.elexis.core.constants.Preferences#AG_DAYPREFERENCES_DAYLIMIT_DEFAULT
+		appointmentService.assertBlockTimes(nextMonday, "Notfall");
+		List<IAppointment> appointments = appointmentService.getAppointments("Notfall", nextMonday, true);
+		assertNotNull(appointments);
+		assertEquals(3, appointments.size());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(0).getType());
+		assertEquals(appointmentService.getType(AppointmentType.FREE), appointments.get(1).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(2).getType());
+		assertFalse(appointmentService.isColliding(appointments.get(1)));
+
+		// test with overlapping events
+		IAppointment first = new IAppointmentBuilder(coreModelService, "Notfall", nextMonday.atTime(9, 0),
+				nextMonday.atTime(10, 0),
+				appointmentService.getType(AppointmentType.BOOKED),
+				appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
+		IAppointment second = new IAppointmentBuilder(coreModelService, "Notfall", nextMonday.atTime(9, 30),
+				nextMonday.atTime(10, 30), appointmentService.getType(AppointmentType.BOOKED),
+				appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
+
+		appointments = appointmentService.getAppointments("Notfall", nextMonday, true);
+		assertNotNull(appointments);
+		assertEquals(6, appointments.size());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(0).getType());
+		assertEquals(appointmentService.getType(AppointmentType.FREE), appointments.get(1).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(2).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(3).getType());
+		assertEquals(appointmentService.getType(AppointmentType.FREE), appointments.get(4).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(5).getType());
+		assertFalse(appointmentService.isColliding(appointments.get(1)));
+		assertFalse(appointmentService.isColliding(appointments.get(4)));
+
+		// test with overlapping series events
+		// create series
+		LocalDateTime seriesStart = nextMonday.atTime(6, 00);
+		LocalTime seriesEnd = LocalTime.of(6, 30);
+
+		IAppointmentSeries series = appointmentService.createAppointmentSeries();
+		series.setSeriesStartTime(seriesStart.toLocalTime());
+		series.setSeriesEndTime(seriesEnd);
+		series.setSchedule("Notfall");
+		series.setReason("test");
+
+		series.setSeriesType(SeriesType.WEEKLY);
+		series.setSeriesPatternString("1," + Calendar.MONDAY);
+		series.setEndingType(EndingType.AFTER_N_OCCURENCES);
+		series.setEndingPatternString("2");
+		List<IAppointment> seriesAppointments = appointmentService.saveAppointmentSeries(series);
+		assertTrue(seriesAppointments.get(1).getStartTime().toLocalDate().equals(nextMonday));
+
+		appointments = appointmentService.getAppointments("Notfall", nextMonday, true);
+		assertNotNull(appointments);
+		assertEquals(7, appointments.size());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(0).getType());
+		assertEquals("series", appointments.get(1).getType());
+		assertEquals(appointmentService.getType(AppointmentType.FREE), appointments.get(2).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(3).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(4).getType());
+		assertEquals(appointmentService.getType(AppointmentType.FREE), appointments.get(5).getType());
+		assertEquals(appointmentService.getType(AppointmentType.BOOKED), appointments.get(6).getType());
+		assertFalse(appointmentService.isColliding(appointments.get(2)));
+		assertFalse(appointmentService.isColliding(appointments.get(5)));
+	}
 }
