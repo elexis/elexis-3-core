@@ -185,6 +185,16 @@ public interface IAppointmentService {
 	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries);
 
 	/**
+	 * Test if the appointment is colliding with other appointments on the same day,
+	 * or in case of an {@link IAppointmentSeries} with other appointments of type
+	 * {@link AppointmentType#BOOKED} on all days of the series.
+	 * 
+	 * @param appointment
+	 * @return
+	 */
+	public boolean isColliding(IAppointment appointment);
+
+	/**
 	 * Get a map with the configured preferred durations with appointment type as
 	 * key.
 	 *

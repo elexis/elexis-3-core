@@ -158,12 +158,12 @@ public class AppointmentService implements IAppointmentService {
 		if (!StringTool.isNothing(appointment.getLinkgroup())) {
 			List<IAppointment> linked = getLinkedAppoinments(appointment);
 			if (whole) {
-				// Log deletion for each appointment before deleting
-				for (IAppointment linkedAppointment : linked) {
-					appointmentHistoryManagerService.logAppointmentDeletion(linkedAppointment);
+				Optional<IAppointmentSeries> series = getAppointmentSeries(appointment);
+				if (series.isPresent()) {
+					// Log deletion of root appointment before deleting
+					appointmentHistoryManagerService.logAppointmentDeletion(series.get().getRootAppointment());
+					deleteAppointmentSeries(series.get());
 				}
-				// delete whole series
-				coreModelService.delete(linked);
 			} else {
 				if (appointment.getId().equals(appointment.getLinkgroup())) {
 					if (linked.size() > 1) {
@@ -492,18 +492,7 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public List<IAppointment> saveAppointmentSeries(IAppointmentSeries appointmentSeries) {
-		List<IAppointment> series = new ArrayList<>();
-		IAppointment root = appointmentSeries.getRootAppointment();
-		root.setType("series");
-		LocalDate rootStartDate = getRootTerminStartTime(appointmentSeries).toLocalDate();
-		appointmentSeries.setSeriesStartDate(rootStartDate);
-		root.setStartTime(
-				LocalDateTime.of(appointmentSeries.getSeriesStartDate(), appointmentSeries.getSeriesStartTime()));
-		root.setEndTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(), appointmentSeries.getSeriesEndTime()));
-		root.setExtension(appointmentSeries.getAsSeriesExtension());
-
-		series.add(root);
-		series.addAll(createSubSequentDates(appointmentSeries));
+		List<IAppointment> series = getAppointmentsOfSeries(appointmentSeries);
 		CoreModelServiceHolder.get().save(series);
 		return series;
 	}
@@ -668,7 +657,7 @@ public class AppointmentService implements IAppointmentService {
 	@Override
 	public void deleteAppointmentSeries(IAppointmentSeries appointmentSeries) {
 		if (appointmentSeries != null && appointmentSeries.isPersistent()) {
-			IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
+			IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class, true, false);
 			query.and("linkgroup", COMPARATOR.EQUALS, appointmentSeries.getRootAppointment().getId());
 			List<IAppointment> appointments = query.execute();
 			CoreModelServiceHolder.get().delete(appointments);
@@ -786,5 +775,99 @@ public class AppointmentService implements IAppointmentService {
 				AppointmentServiceHolder.get().getState(AppointmentState.EMPTY)).build();
 		ret.setSubjectOrPatient(String.format(Messages.MinutesFree, Duration.between(start, end).toMinutes()));
 		return ret;
+	}
+
+	@Override
+	public boolean isColliding(IAppointment appointment) {
+		if (appointment instanceof IAppointmentSeries) {
+			IAppointmentSeries appointmentSeries = (IAppointmentSeries) appointment;
+			List<IAppointment> series = getAppointmentsOfSeries(appointmentSeries);
+			for (IAppointment appointmentOfSeries : series) {
+				if (isCollidingWith(appointmentOfSeries, AppointmentType.BOOKED)) {
+					return true;
+				}
+			}
+		} else {
+			List<IAppointment> list = getAppointments(appointment.getSchedule(),
+					appointment.getStartTime().toLocalDate(), false);
+			if (list.isEmpty()) {
+				assertBlockTimes(appointment.getStartTime().toLocalDate(), appointment.getSchedule());
+				list = getAppointments(appointment.getSchedule(), appointment.getStartTime().toLocalDate(), false);
+			}
+			list = list.stream().filter(a -> isNotAllDay(a)).collect(Collectors.toList());
+			for (IAppointment iAppointment : list) {
+				if (!iAppointment.getId().equals(appointment.getId())) {
+					// skip all day appointments for collision detection
+					if (iAppointment.isAllDay()) {
+						continue;
+					}
+					if (isOverlapping(appointment.getStartTime(), appointment.getEndTime(), iAppointment.getStartTime(),
+							iAppointment.getEndTime())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean isCollidingWith(IAppointment appointment, AppointmentType filterType) {
+		List<IAppointment> list = getAppointments(appointment.getSchedule(), appointment.getStartTime().toLocalDate(),
+				false);
+		if (list.isEmpty()) {
+			assertBlockTimes(appointment.getStartTime().toLocalDate(), appointment.getSchedule());
+			list = getAppointments(appointment.getSchedule(), appointment.getStartTime().toLocalDate(), false);
+		}
+		list = list.stream().filter(a -> isNotAllDay(a)).filter(a -> getType(filterType).equals(a.getType()))
+				.collect(Collectors.toList());
+		for (IAppointment iAppointment : list) {
+			if (!iAppointment.getId().equals(appointment.getId())) {
+				// skip all day appointments for collision detection
+				if (iAppointment.isAllDay()) {
+					continue;
+				}
+				if (isOverlapping(appointment.getStartTime(), appointment.getEndTime(), iAppointment.getStartTime(),
+						iAppointment.getEndTime())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private List<IAppointment> getAppointmentsOfSeries(IAppointmentSeries appointmentSeries) {
+		List<IAppointment> series = new ArrayList<>();
+		IAppointment root = appointmentSeries.getRootAppointment();
+		root.setType("series");
+		LocalDate rootStartDate = getRootTerminStartTime(appointmentSeries).toLocalDate();
+		appointmentSeries.setSeriesStartDate(rootStartDate);
+		root.setStartTime(
+				LocalDateTime.of(appointmentSeries.getSeriesStartDate(), appointmentSeries.getSeriesStartTime()));
+		root.setEndTime(LocalDateTime.of(appointmentSeries.getSeriesStartDate(), appointmentSeries.getSeriesEndTime()));
+		root.setExtension(appointmentSeries.getAsSeriesExtension());
+
+		series.add(root);
+		series.addAll(createSubSequentDates(appointmentSeries));
+		return series;
+	}
+
+	/**
+	 * Test if the {@link IAppointment} is NOT all day.
+	 * 
+	 * @param appointment
+	 * @return
+	 */
+	private boolean isNotAllDay(IAppointment appointment) {
+		if (appointment != null) {
+			return !appointment.isAllDay();
+		}
+		return false;
+	}
+
+	private boolean isOverlapping(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
+		if (start1 != null && start2 != null && end1 != null && end2 != null) {
+			return start1.isBefore(end2) && start2.isBefore(end1);
+		}
+		return false;
 	}
 }
