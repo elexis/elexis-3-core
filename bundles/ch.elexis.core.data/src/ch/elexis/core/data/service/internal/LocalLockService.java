@@ -75,10 +75,13 @@ public class LocalLockService implements ILocalLockService {
 
 	private Timer timer;
 
+	private boolean shutdown;
+
 	@Activate
 	public void activate() {
 		timer = new Timer();
 		timer.schedule(new LockRefreshTask(), 10000, 10000);
+		shutdown = false;
 	}
 
 	@Override
@@ -352,7 +355,7 @@ public class LocalLockService implements ILocalLockService {
 
 	@Override
 	public boolean isLockedLocal(Object object) {
-		if (object == null) {
+		if (shutdown || object == null) {
 			return false;
 		}
 		// read only objects can not be locked / edited in ui
@@ -514,5 +517,6 @@ public class LocalLockService implements ILocalLockService {
 			instanceStatus.setState(STATE.SHUTTING_DOWN);
 			elexisServerService.updateInstanceStatus(instanceStatus);
 		}
+		shutdown = true;
 	}
 }
