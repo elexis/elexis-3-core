@@ -125,14 +125,21 @@ public class UserService implements IUserService {
 	@Override
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user) {
 		if (user.getAssignedContact() != null) {
-			String defaultMandatorId = (String) user.getAssignedContact().getExtInfo("StdMandant");
-			if (StringUtils.isNotEmpty(defaultMandatorId)) {
-				return modelService.load(defaultMandatorId, IMandator.class);
-			}
+			return getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
 
-			if (user.getAssignedContact().isMandator()) {
-				return modelService.load(user.getAssignedContact().getId(), IMandator.class);
-			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact) {
+		String defaultMandatorId = (String) contact.getExtInfo("StdMandant");
+		if (StringUtils.isNotEmpty(defaultMandatorId)) {
+			return modelService.load(defaultMandatorId, IMandator.class);
+		}
+
+		if (contact.isMandator()) {
+			return modelService.load(contact.getId(), IMandator.class);
 		}
 		return Optional.empty();
 	}
@@ -205,17 +212,23 @@ public class UserService implements IUserService {
 					ret.addAll(getExecutiveDoctorsWorkingFor(gr, true));
 				});
 				return ret;
-			} else if (user.getAssignedContact() != null) {
-				String mandators = (String) user.getAssignedContact().getExtInfo("Mandant");
-				if (mandators == null) {
-					return Collections.emptySet();
-				}
-				List<IMandator> allMandators = modelService.getQuery(IMandator.class).execute().stream()
-						.collect(Collectors.toList());
+			} else if (user.getAssociatedContactId() != null) {
+				IContact associatedContact = modelService.load(user.getAssociatedContactId(), IContact.class)
+						.orElse(null);
+				if (associatedContact != null) {
+					String mandators = (String) associatedContact.getExtInfo("Mandant");
+					if (mandators == null) {
+						return Collections.emptySet();
+					}
+					List<IMandator> allMandators = modelService.getQuery(IMandator.class).execute().stream()
+							.collect(Collectors.toList());
 
-				List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
-				return allMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
-						.collect(Collectors.toSet());
+					List<String> mandatorsIdList = Arrays.asList(mandators.split(","));
+					return allMandators.stream().filter(p -> mandatorsIdList.contains(p.getLabel()))
+							.collect(Collectors.toSet());
+				} else {
+					LoggerFactory.getLogger(getClass()).warn("Invalid associated contact id for user " + user.getId());
+				}
 			}
 			return Collections.emptySet();
 		}
@@ -310,6 +323,6 @@ public class UserService implements IUserService {
 		if (user == null) {
 			return false;
 		}
-		return getUserRoles(user).stream().anyMatch(role -> roleIds.contains(role.getId()));
+		return user.getRoleIds().stream().anyMatch(role -> roleIds.contains(role));
 	}
 }

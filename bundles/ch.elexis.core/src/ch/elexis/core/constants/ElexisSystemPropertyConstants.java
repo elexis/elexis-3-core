@@ -79,4 +79,26 @@ public class ElexisSystemPropertyConstants {
 	 * system property, overrides both environment variable and Config stored value.
 	 */
 	public static final String EE_HOSTNAME = "EE_HOSTNAME";
+
+	public static final String GET_EE_HOSTNAME = System.getProperty(EE_HOSTNAME);
+
+	/**
+	 * This Elexis instance is dependent of an available Elexis-Environment.
+	 * Requires {@link #EE_HOSTNAME} and {@link #EE_CLIENTSECRET} to be set. Set
+	 * <code>true</code> to activate.
+	 * 
+	 * @since 3.13
+	 */
+	public static final String EE_DEPENDENT_OPERATION_MODE = "app.operatingmode.ee-dependent";
+
+	public static final boolean IS_EE_DEPENDENT_OPERATION_MODE = Boolean.valueOf(
+			System.getProperty(ElexisSystemPropertyConstants.EE_DEPENDENT_OPERATION_MODE, Boolean.FALSE.toString()));
+
+	/**
+	 * Client secret to use with EE authentication. ClientId is hardcoded to
+	 * <code>elexis-rcp-openid</code>
+	 * 
+	 * @since 3.13
+	 */
+	public static final String EE_CLIENTSECRET = "ee.client-secret";
 }
