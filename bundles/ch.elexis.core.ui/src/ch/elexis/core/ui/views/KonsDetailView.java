@@ -293,9 +293,9 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 				if (db_encounter != null) {
 					long db_lastupdate = db_encounter.getLastupdate();
 					if (db_lastupdate > actEncounter.getLastupdate()) {
-						log.info("[{}] reloading Encounter as changed in db", encounter.getId());
+						log.info("[{}] reloading Encounter as changed in db", db_encounter.getId());
 						text.setDirty(false);
-						setKons(encounter);
+						setKons(db_encounter);
 					} else {
 						setUnlocked(true);
 					}
