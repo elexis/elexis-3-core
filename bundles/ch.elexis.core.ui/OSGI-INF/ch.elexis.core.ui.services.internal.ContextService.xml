@@ -3,7 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IContextService"/>
    </service>
-   <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
    <implementation class="ch.elexis.core.ui.services.internal.ContextService"/>
 </scr:component>
