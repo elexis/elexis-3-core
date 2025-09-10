@@ -1,4 +1,4 @@
-package ch.elexis.core.eenv;
+package ch.elexis.core.ee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,44 +10,39 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
-import ch.elexis.core.services.IModelService;
 
-public class KeycloakUser implements IUser {
-
-	private final IModelService coreModelService;
+public class OpenIdUser implements IUser {
 
 	private final String preferredUsername;
 	private final String name;
 	private final String familyName;
-	private final String assignedContactId;
+	private final String associatedContactId;
 	private final long issueTime;
 	private final long expirationTime;
 	private final Set<String> roles;
 
 	/**
-	 * Keycloak Represented User. This users data is populated via incoming JTW
-	 * token. It maps to the Elexis user world employing the core model service.
+	 * This users data is populated via incoming Json Web Token.
 	 *
 	 * @param coreModelService
-	 * @param preferredUsername jwt preferred_username
-	 * @param name              jwt name
-	 * @param familyName        jwt family_name
-	 * @param issueTime         jwt iat - time (in seconds since Unix epoch)
-	 * @param expirationTime    jwt exp - time (in seconds since Unix epoch)
+	 * @param preferredUsername   jwt preferred_username
+	 * @param name                jwt name
+	 * @param familyName          jwt family_name
+	 * @param issueTime           jwt iat - time (in seconds since Unix epoch)
+	 * @param expirationTime      jwt exp - time (in seconds since Unix epoch)
+	 * @param associatedContactId the IContact this user is associated with
 	 * @param roles
 	 */
-	public KeycloakUser(IModelService coreModelService, String preferredUsername, String name, String familyName,
-			long issueTime, long expirationTime, String assignedContactId, Set<String> roles) {
+	public OpenIdUser(String preferredUsername, String name, String familyName, long issueTime, long expirationTime,
+			String associatedContactId, Set<String> roles) {
 
 		this.preferredUsername = preferredUsername;
 		this.name = name;
 		this.familyName = familyName;
-		this.assignedContactId = assignedContactId;
+		this.associatedContactId = associatedContactId;
 		this.issueTime = issueTime;
 		this.expirationTime = expirationTime;
 		this.roles = roles;
-
-		this.coreModelService = coreModelService;
 	}
 
 	@Override
@@ -116,11 +111,13 @@ public class KeycloakUser implements IUser {
 	}
 
 	@Override
+	public String getAssociatedContactId() {
+		return associatedContactId;
+	}
+
+	@Override
 	public IContact getAssignedContact() {
-		if (assignedContactId != null) {
-			return coreModelService.load(assignedContactId, IContact.class).orElse(null);
-		}
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -129,10 +126,14 @@ public class KeycloakUser implements IUser {
 	}
 
 	@Override
+	public List<String> getRoleIds() {
+		return new ArrayList<String>(roles);
+	}
+
+	@Deprecated
+	@Override
 	public List<IRole> getRoles() {
-		List<IRole> _roles = new ArrayList<>();
-		roles.forEach(rs -> coreModelService.load(rs, IRole.class).ifPresent(r -> _roles.add(r)));
-		return _roles;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -157,8 +158,7 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public boolean isAdministrator() {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -183,12 +183,12 @@ public class KeycloakUser implements IUser {
 
 	@Override
 	public boolean isInternal() {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + ": " + getLabel() + " assignedContactId=" + assignedContactId + ", roles="
+		return getClass().getName() + ": " + getLabel() + " assignedContactId=" + associatedContactId + ", roles="
 				+ roles;
 	}
 
@@ -197,4 +197,9 @@ public class KeycloakUser implements IUser {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public List<String> getExecutiveDoctorsWorkingForIds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

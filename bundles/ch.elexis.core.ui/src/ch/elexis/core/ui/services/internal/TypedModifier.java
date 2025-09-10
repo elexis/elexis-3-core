@@ -17,6 +17,7 @@ import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.ILocalLockService;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -25,6 +26,8 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 
 public class TypedModifier {
+
+	private IModelService coreModelService;
 
 	private IUserService userService;
 
@@ -41,9 +44,8 @@ public class TypedModifier {
 	}
 
 	public void modifyFor(Object object) {
-		if (object instanceof IPatient) {
-			IPatient patient = (IPatient) object;
-			Optional<IEncounter> latestEncounter = getEncounterService().getLatestEncounter((IPatient) object);
+		if (object instanceof IPatient patient) {
+			Optional<IEncounter> latestEncounter = getEncounterService().getLatestEncounter(patient);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
 				context.setTyped(latestEncounter.get().getCoverage(), true);
@@ -53,25 +55,24 @@ public class TypedModifier {
 			}
 			setMandatorFromStammarztIfAllowed(patient);
 		}
-		if (object instanceof ICoverage) {
-			Optional<IEncounter> latestEncounter = getCoverageService().getLatestEncounter((ICoverage) object);
+		if (object instanceof ICoverage coverage) {
+			Optional<IEncounter> latestEncounter = getCoverageService().getLatestEncounter(coverage);
 			if (latestEncounter.isPresent()) {
 				context.setTyped(latestEncounter.get(), true);
 			} else {
 				context.removeTyped(IEncounter.class);
 			}
 		}
-		if (object instanceof IEncounter) {
-			context.setTyped(((IEncounter) object).getCoverage(), true);
+		if (object instanceof IEncounter encounter) {
+			context.setTyped(encounter.getCoverage(), true);
 		}
-		if (object instanceof IUser) {
-			IUser user = (IUser) object;
-
+		if (object instanceof IUser user) {
 			// also set active user contact
-			IContact userContact = ((IUser) object).getAssignedContact();
+			String associatedContactId = user.getAssociatedContactId();
+			IContact userContact = getCoreModelService().load(associatedContactId, IContact.class).orElse(null);
 			context.setNamed(IContext.ACTIVE_USERCONTACT, userContact);
 
-			Optional<IMandator> defaultWorkingFor = getUserService().getDefaultExecutiveDoctorWorkingFor(user);
+			Optional<IMandator> defaultWorkingFor = getUserService().getDefaultExecutiveDoctorWorkingFor(userContact);
 			if (defaultWorkingFor.isPresent()) {
 				ContextServiceHolder.get().setActiveMandator(defaultWorkingFor.get());
 			} else {
@@ -114,6 +115,15 @@ public class TypedModifier {
 		return coverageService;
 	}
 
+	private IModelService getCoreModelService() {
+		if (coreModelService == null) {
+			coreModelService = OsgiServiceUtil
+					.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+					.orElse(null);
+		}
+		return coreModelService;
+	}
+	
 	private Optional<ILocalLockService> getLocalLockService() {
 		if (localLockService == null) {
 			localLockService = OsgiServiceUtil.getService(ILocalLockService.class).orElse(null);
@@ -166,5 +176,5 @@ public class TypedModifier {
 				});
 			}
 		}
-  }
+	}
 }

@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2024 MEDEVIT &lt;office@medevit.at>.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    MEDEVIT &lt;office@medevit.at> - initial API and implementation"
     modelDirectory="/ch.elexis.core/src-gen" modelPluginID="ch.elexis.core" modelName="Model"
     rootExtendsInterface="" rootExtendsClass="" suppressEMFTypes="true" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="17.0" copyrightFields="false" language="" usedGenPackages="types.genmodel#//types"
+    complianceLevel="21.0" copyrightFields="false" language="" usedGenPackages="types.genmodel#//types"
     runtimePlatform="RCP">
   <foreignModel>model.ecore</foreignModel>
   <genPackages prefix="Model" basePackage="ch.elexis.core" disposableProviderFactory="true"
@@ -134,6 +134,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/active"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/allowExternal"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/administrator"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/associatedContactId"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/roleIds"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/executiveDoctorsWorkingForIds"/>
       <genOperations ecoreOperation="model.ecore#//IUser/addRole">
         <genParameters ecoreParameter="model.ecore#//IUser/addRole/role"/>
       </genOperations>
