@@ -125,14 +125,21 @@ public class UserService implements IUserService {
 	@Override
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user) {
 		if (user.getAssignedContact() != null) {
-			String defaultMandatorId = (String) user.getAssignedContact().getExtInfo("StdMandant");
-			if (StringUtils.isNotEmpty(defaultMandatorId)) {
-				return modelService.load(defaultMandatorId, IMandator.class);
-			}
+			return getDefaultExecutiveDoctorWorkingFor(user.getAssignedContact());
 
-			if (user.getAssignedContact().isMandator()) {
-				return modelService.load(user.getAssignedContact().getId(), IMandator.class);
-			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact) {
+		String defaultMandatorId = (String) contact.getExtInfo("StdMandant");
+		if (StringUtils.isNotEmpty(defaultMandatorId)) {
+			return modelService.load(defaultMandatorId, IMandator.class);
+		}
+
+		if (contact.isMandator()) {
+			return modelService.load(contact.getId(), IMandator.class);
 		}
 		return Optional.empty();
 	}
