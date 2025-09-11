@@ -114,18 +114,20 @@ public class TypedModifier {
 		return coverageService;
 	}
 
-	private ILocalLockService getLocalLockService() {
+	private Optional<ILocalLockService> getLocalLockService() {
 		if (localLockService == null) {
-			localLockService = OsgiServiceUtil.getService(ILocalLockService.class).get();
+			localLockService = OsgiServiceUtil.getService(ILocalLockService.class).orElse(null);
 		}
-		return localLockService;
+		return Optional.ofNullable(localLockService);
 	}
 
 	public void releaseAndRefreshLock(Object object) {
 		if (object instanceof Identifiable || object instanceof PersistentObject) {
-			if (getLocalLockService().isLockedLocal(object)) {
-				getLocalLockService().releaseLock(object);
-			}
+			getLocalLockService().ifPresent(lockService -> {
+				if (lockService.isLockedLocal(object)) {
+					lockService.releaseLock(object);
+				}
+			});
 		}
 	}
 
