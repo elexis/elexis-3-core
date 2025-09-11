@@ -50,7 +50,7 @@ public class VirtualFilesystemServiceTest {
 
 	@Test
 	public void of_davs_Notation() throws IOException {
-		AccessToken accessToken = new AccessToken("token", new Date(), "username", null, null);
+		AccessToken accessToken = new AccessToken("token", new Date(), new Date(), "username", null, null);
 		ContextServiceHolder.get().setTyped(accessToken);
 
 		IVirtualFilesystemHandle handle = service.of(
