@@ -115,13 +115,11 @@ public class Hub extends AbstractUIPlugin {
 
 		PatientSelectionStatus provider = (PatientSelectionStatus) sps
 				.getSourceProvider(PatientSelectionStatus.PATIENTACTIVE);
-		if (provider == null) {
-			return;
+		if (provider != null) {
+			provider.setState(patient != null);
 		}
 
 		showPatientChangeReminders(NoPoUtil.loadAsPersistentObject(patient, Patient.class));
-
-		provider.setState(patient != null);
 	}
 
 	private void showPatientChangeReminders(Patient patient) {

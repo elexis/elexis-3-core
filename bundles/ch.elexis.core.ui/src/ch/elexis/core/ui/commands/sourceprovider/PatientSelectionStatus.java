@@ -17,14 +17,15 @@ import java.util.Map;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.ui.Hub;
+
 
 /**
  * This class provides a sourceProvider for Eclipse command evaluation. It can
  * be used to check whether a Patient is currently selected in the system.
  * According to this command contributions can be toggled on/off.
  *
- * The value is set within the {@link ElexisEventDispatcher} class.
+ * The value is set within the {@link Hub} class.
  *
  * @author Marco Descher
  */
