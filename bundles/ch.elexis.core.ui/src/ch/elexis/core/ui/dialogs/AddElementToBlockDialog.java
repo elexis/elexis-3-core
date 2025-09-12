@@ -17,16 +17,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.elexis.core.model.ICodeElementBlock;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.views.codesystems.BlockSelector;
-import ch.elexis.data.Leistungsblock;
+import ch.elexis.core.ui.views.codesystems.BlockTreeViewerItem;
 
 public class AddElementToBlockDialog extends TitleAreaDialog {
 	CommonViewer cv;
-	Leistungsblock result;
+	ICodeElementBlock result;
 
 	public AddElementToBlockDialog(Shell shell) {
 		super(shell);
@@ -50,15 +51,15 @@ public class AddElementToBlockDialog extends TitleAreaDialog {
 		getShell().setText(Messages.AddElementToBlockDialog_block); // $NON-NLS-1$
 	}
 
-	public Leistungsblock getResult() {
+	public ICodeElementBlock getResult() {
 		return result;
 	}
 
 	@Override
 	protected void okPressed() {
 		Object[] lb = cv.getSelection();
-		if ((lb != null) && (lb.length > 0) && (lb[0] instanceof Leistungsblock)) {
-			result = (Leistungsblock) lb[0];
+		if ((lb != null) && (lb.length > 0) && (lb[0] instanceof BlockTreeViewerItem)) {
+			result = ((BlockTreeViewerItem) lb[0]).getBlock();
 		}
 		super.okPressed();
 	}
