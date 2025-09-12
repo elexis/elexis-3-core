@@ -18,9 +18,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.PlatformUI;
 
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.EtiketteDruckenDialog;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Patient;
@@ -29,17 +31,18 @@ public final class PrintPatientLabelHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Patient actPatient = (Patient) ElexisEventDispatcher.getSelected(Patient.class);
+		IPatient actPatient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (actPatient == null) {
 			SWTHelper.showInfo("Kein Patient ausgewählt", "Bitte wählen Sie vor dem Drucken einen Patient!");
 			return null;
 		}
 
 		EtiketteDruckenDialog dlg = new EtiketteDruckenDialog(
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), actPatient, TT_PATIENT_LABEL);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				NoPoUtil.loadAsPersistentObject(actPatient, Patient.class), TT_PATIENT_LABEL);
 		dlg.setTitle(Messages.Core_Print_Patient_Label);
 		dlg.setMessage(Messages.Core_Print_Patient_Label);
-		if (!CoreHub.localCfg.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
+		if (!LocalConfigService.get("Drucker/Etiketten/Choose", true)) { //$NON-NLS-1$
 			dlg.setBlockOnOpen(false);
 			dlg.open();
 			if (dlg.doPrint()) {

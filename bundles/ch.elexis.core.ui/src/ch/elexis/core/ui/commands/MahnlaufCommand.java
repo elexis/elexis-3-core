@@ -19,14 +19,15 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.InvoiceState;
-import ch.elexis.data.Mandant;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.Query;
 import ch.elexis.data.Rechnung;
-import ch.elexis.data.Rechnungssteller;
-import ch.rgw.io.Settings;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.TimeTool;
@@ -37,20 +38,21 @@ public class MahnlaufCommand extends AbstractHandler {
 	private static final String STR_RN_STATUS = "RnStatus"; //$NON-NLS-1$
 	public final static String ID = "bill.reminder"; //$NON-NLS-1$
 
-	private Settings rnsSettings;
+	private IContact biller;
 
 	@Override
 	public Object execute(ExecutionEvent arg0) throws ExecutionException {
-		Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
-		Rechnungssteller rechnungssteller = mandant.getRechnungssteller();
-		rnsSettings = CoreHub.getUserSetting(rechnungssteller);
+		IMandator mandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
+		if (mandant != null) {
+			biller = mandant.getBiller();
 
-		Query<Mandant> qbe = new Query<>(Mandant.class);
-		List<Mandant> allMandants = qbe.execute();
+			IQuery<IMandator> qbe = CoreModelServiceHolder.get().getQuery(IMandator.class);
+			List<IMandator> allMandants = qbe.execute();
 
-		for (Mandant m : allMandants) {
-			if (m.getRechnungssteller().equals(rechnungssteller))
-				performMahnlaufForMandant(m.getId());
+			for (IMandator m : allMandants) {
+				if (m.getBiller().equals(biller))
+					performMahnlaufForMandant(m.getId());
+			}
 		}
 		return null;
 	}
@@ -62,10 +64,10 @@ public class MahnlaufCommand extends AbstractHandler {
 
 		TimeTool tt = new TimeTool();
 		// Rechnung zu 1. Mahnung
-		int days = rnsSettings.get(Preferences.RNN_DAYSUNTIL1ST, 30);
+		int days = ConfigServiceHolder.get().get(biller, Preferences.RNN_DAYSUNTIL1ST, 30);
 		Money betrag = new Money();
 		try {
-			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT1ST, "0.00")); //$NON-NLS-1$
+			betrag = new Money(ConfigServiceHolder.get().get(biller, Preferences.RNN_AMOUNT1ST, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 
@@ -84,9 +86,9 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.DEMAND_NOTE_1_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
-		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL2ND, 10);
+		days = ConfigServiceHolder.get().get(biller, Preferences.RNN_DAYSUNTIL2ND, 10);
 		try {
-			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT2ND, "0.00")); //$NON-NLS-1$
+			betrag = new Money(ConfigServiceHolder.get().get(biller, Preferences.RNN_AMOUNT2ND, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 			betrag = new Money();
@@ -105,9 +107,9 @@ public class MahnlaufCommand extends AbstractHandler {
 		qbe.add(STR_RN_STATUS, "=", Integer.toString(InvoiceState.DEMAND_NOTE_2_PRINTED.getState())); //$NON-NLS-1$
 		qbe.add(STR_MANDANT_I_D, "=", mandantId); //$NON-NLS-1$
 		tt = new TimeTool();
-		days = rnsSettings.get(Preferences.RNN_DAYSUNTIL3RD, 10);
+		days = ConfigServiceHolder.get().get(biller, Preferences.RNN_DAYSUNTIL3RD, 10);
 		try {
-			betrag = new Money(rnsSettings.get(Preferences.RNN_AMOUNT3RD, "0.00")); //$NON-NLS-1$
+			betrag = new Money(ConfigServiceHolder.get().get(biller, Preferences.RNN_AMOUNT3RD, "0.00")); //$NON-NLS-1$
 		} catch (ParseException ex) {
 			ExHandler.handle(ex);
 			betrag = new Money();

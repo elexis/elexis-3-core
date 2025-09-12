@@ -16,24 +16,23 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.data.Patient;
 
 public class SendHandler extends AbstractHandler implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event)
+		ICommandService commandService = HandlerUtil.getActiveWorkbenchWindow(event)
 				.getService(ICommandService.class);
 		try {
 			Command sendMailCommand = commandService.getCommand("ch.elexis.core.mail.ui.sendMail"); //$NON-NLS-1$
 
 			HashMap<String, String> params = new HashMap<>();
-			Patient patient = ElexisEventDispatcher.getSelectedPatient();
+			IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 			if (patient != null) {
 				params.put("ch.elexis.core.mail.ui.sendMail.subject", "Patient: " + patient.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 			}

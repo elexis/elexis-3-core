@@ -31,12 +31,14 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IFormattedOutput;
 import ch.elexis.core.services.IFormattedOutputFactory;
 import ch.elexis.core.services.IFormattedOutputFactory.ObjectType;
 import ch.elexis.core.services.IFormattedOutputFactory.OutputType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Prescription;
 import ch.elexis.data.Query;
@@ -129,13 +131,14 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 	}
 
 	public Optional<MedicationHistoryLetter> getToPrint() {
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		if (patient != null) {
 			Query<Prescription> qbe = new Query<>(Prescription.class);
 			qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, patient.getId());
 			List<Prescription> list = qbe.execute();
 			if (!list.isEmpty()) {
-				return Optional.of(MedicationHistoryLetter.of(patient, list));
+				return Optional
+						.of(MedicationHistoryLetter.of(NoPoUtil.loadAsPersistentObject(patient, Patient.class), list));
 			}
 		}
 		return Optional.empty();

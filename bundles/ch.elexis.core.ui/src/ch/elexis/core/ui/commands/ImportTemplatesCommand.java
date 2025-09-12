@@ -16,9 +16,11 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.MimeTypeUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.TextTemplateImportConflictDialog;
@@ -26,7 +28,6 @@ import ch.elexis.core.ui.text.ITextPlugin;
 import ch.elexis.core.ui.views.textsystem.TextTemplateView;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
-import ch.elexis.data.Mandant;
 import ch.rgw.tools.ExHandler;
 
 public class ImportTemplatesCommand extends AbstractHandler {
@@ -35,7 +36,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Mandant mandant = ElexisEventDispatcher.getSelectedMandator();
+		IMandator mandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
 		if (mandant == null) {
 			return null;
 		}
@@ -122,8 +123,7 @@ public class ImportTemplatesCommand extends AbstractHandler {
 			ExHandler.handle(ex);
 			logger.error("Error during import of text templates", ex); //$NON-NLS-1$
 		}
-		ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 		return null;
 	}
 

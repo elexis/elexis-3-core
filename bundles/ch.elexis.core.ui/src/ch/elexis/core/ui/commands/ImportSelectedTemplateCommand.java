@@ -18,9 +18,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.MimeTypeUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.text.ITextPlugin;
@@ -92,8 +93,7 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 		} catch (Throwable ex) {
 			ExHandler.handle(ex);
 		}
-		ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(Brief.class, null, ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 		return null;
 	}
 

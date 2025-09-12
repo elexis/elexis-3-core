@@ -11,8 +11,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
 import ch.elexis.data.Brief;
 
@@ -36,8 +37,7 @@ public class DeleteTemplateCommand extends AbstractHandler {
 					if (template != null) {
 						template.delete();
 
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(Brief.class, null,
-								ElexisEvent.EVENT_RELOAD, ElexisEvent.PRIORITY_NORMAL));
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 					}
 				}
 			}
