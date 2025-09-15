@@ -291,20 +291,13 @@ public class PatientCameraCaptureDialog {
 
 		btnCapture.addListener(SWT.MouseUp, e -> {
 			if (e.button == 1) {
-				BufferedImage original = converter.getBufferedImage(currentFrame);
-				if (original != null) {
-					BufferedImage flipped = flipHorizontal(original);
-					capturedImage = flipped;
-				}
-				if (chkDefault.getSelection()) {
-					LocalConfigService.set(CAMERA_DEFAULT_KEY, String.valueOf(camCombo.getSelectionIndex()));
-				}
+				captureAndClose(shell, display, camCombo, chkDefault);
+			}
+		});
 
-				shell.setVisible(false);
-				display.asyncExec(() -> {
-					if (!shell.isDisposed())
-						shell.dispose();
-				});
+		display.addFilter(SWT.KeyDown, e -> {
+			if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR || e.keyCode == SWT.SPACE) {
+				captureAndClose(shell, display, camCombo, chkDefault);
 			}
 		});
 
@@ -457,6 +450,31 @@ public class PatientCameraCaptureDialog {
 		MessageBox box = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
 		box.setMessage(msg);
 		box.open();
+	}
+
+	private void captureAndClose(Shell shell, Display display, Combo camCombo, Button chkDefault) {
+		if (currentFrame != null) {
+			BufferedImage original = converter.getBufferedImage(currentFrame);
+			if (original != null) {
+				BufferedImage flipped = flipHorizontal(original);
+				capturedImage = flipped;
+			}
+		}
+
+		if (chkDefault != null && !chkDefault.isDisposed() && camCombo != null && !camCombo.isDisposed()) {
+			if (chkDefault.getSelection()) {
+				LocalConfigService.set(CAMERA_DEFAULT_KEY, String.valueOf(camCombo.getSelectionIndex()));
+			}
+		}
+
+		if (shell != null && !shell.isDisposed()) {
+			shell.setVisible(false);
+			display.asyncExec(() -> {
+				if (!shell.isDisposed()) {
+					shell.dispose();
+				}
+			});
+		}
 	}
 
 	private FrameGrabber createGrabber(int cameraIndex) {
