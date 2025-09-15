@@ -242,7 +242,13 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 
 	@Test
 	public void getTransientFree() {
-		LocalDate nextMonday = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY)).plusWeeks(1);
+		LocalDate nextMonday = null;
+
+		if (LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY) {
+			nextMonday = LocalDate.now().plusWeeks(1);
+		} else {
+			nextMonday = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY)).plusWeeks(1);
+		}
 		// day limit default "0000-0800\n1800-2359" see
 		// ch.elexis.core.constants.Preferences#AG_DAYPREFERENCES_DAYLIMIT_DEFAULT
 		appointmentService.assertBlockTimes(nextMonday, "Notfall");
@@ -256,8 +262,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 
 		// test with overlapping events
 		IAppointment first = new IAppointmentBuilder(coreModelService, "Notfall", nextMonday.atTime(9, 0),
-				nextMonday.atTime(10, 0),
-				appointmentService.getType(AppointmentType.BOOKED),
+				nextMonday.atTime(10, 0), appointmentService.getType(AppointmentType.BOOKED),
 				appointmentService.getState(AppointmentState.DEFAULT)).buildAndSave();
 		IAppointment second = new IAppointmentBuilder(coreModelService, "Notfall", nextMonday.atTime(9, 30),
 				nextMonday.atTime(10, 30), appointmentService.getType(AppointmentType.BOOKED),
