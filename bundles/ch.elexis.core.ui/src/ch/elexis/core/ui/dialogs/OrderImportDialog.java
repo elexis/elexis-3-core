@@ -75,6 +75,7 @@ import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -82,8 +83,11 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ElexisText;
@@ -526,6 +530,14 @@ public class OrderImportDialog extends TitleAreaDialog {
 		eanText.setText(StringUtils.EMPTY);
 		diffSpinner.setSelection(DIFF_SPINNER_DEFAULT);
 
+		if (article == null && StringUtils.isNotBlank(gtin)) {
+			article = findArticleByGtin(gtin).orElse(null);
+			if (article == null) {
+				SWTHelper.alert("Artikel nicht gefunden", "Dieser Artikel konnte nicht gefunden werden.");
+				return;
+			}
+		}
+
 		OrderElement orderElement = findOrderElementByEAN(gtin);
 		if (orderElement != null && !orderElement.isVerified()) {
 			int newAmount = orderElement.getAmount() + diff;
@@ -590,6 +602,13 @@ public class OrderImportDialog extends TitleAreaDialog {
 				IStock stock = orderElement.getStockEntry().getStock();
 				IStockEntry realEntry = StockServiceHolder.get().findStockEntryForArticleInStock(stock,
 						orderElement.getStockEntry().getArticle());
+				if (realEntry == null) {
+					IStockEntry stockEntry = orderElement.getStockEntry();
+					if (stockEntry instanceof TransientStockEntry) {
+						// create a non transient stock entry for the article
+						realEntry = ((TransientStockEntry) stockEntry).create(orderElement);
+					}
+				}
 				if (realEntry != null) {
 					LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(realEntry, 1,
 							new NullProgressMonitor());
@@ -832,6 +851,20 @@ public class OrderImportDialog extends TitleAreaDialog {
 			}
 			return null;
 		}
+	}
+
+	private Optional<IArticle> findArticleByGtin(String scanCode) {
+		List<ICodeElementServiceContribution> articleContributions = CodeElementServiceHolder.get()
+				.getContributionsByTyp(CodeElementTyp.ARTICLE);
+		for (ICodeElementServiceContribution contribution : articleContributions) {
+			Optional<ICodeElement> loadFromCode = contribution.loadFromCode(scanCode);
+			if (loadFromCode.isPresent()) {
+				if (loadFromCode.get() instanceof IArticle) {
+					return loadFromCode.map(IArticle.class::cast);
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	private class TransientStockEntry implements IStockEntry {
