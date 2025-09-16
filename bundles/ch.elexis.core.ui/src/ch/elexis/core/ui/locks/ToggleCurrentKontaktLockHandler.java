@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.locks;
 
-import ch.elexis.data.Kontakt;
+import ch.elexis.core.model.IContact;
 
 public class ToggleCurrentKontaktLockHandler extends AbstractToggleCurrentLockHandler {
 
@@ -13,6 +13,6 @@ public class ToggleCurrentKontaktLockHandler extends AbstractToggleCurrentLockHa
 
 	@Override
 	public Class<?> getTemplateClass() {
-		return Kontakt.class;
+		return IContact.class;
 	}
 }

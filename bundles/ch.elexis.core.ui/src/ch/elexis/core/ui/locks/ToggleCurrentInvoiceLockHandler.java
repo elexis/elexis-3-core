@@ -3,7 +3,7 @@ package ch.elexis.core.ui.locks;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-import ch.elexis.data.Rechnung;
+import ch.elexis.core.model.IInvoice;
 
 public class ToggleCurrentInvoiceLockHandler extends AbstractToggleCurrentLockHandler {
 
@@ -16,7 +16,7 @@ public class ToggleCurrentInvoiceLockHandler extends AbstractToggleCurrentLockHa
 
 	@Override
 	public Class<?> getTemplateClass() {
-		return Rechnung.class;
+		return IInvoice.class;
 	}
 
 	@Override

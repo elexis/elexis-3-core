@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.locks;
 
-import ch.elexis.data.Fall;
+import ch.elexis.core.model.ICoverage;
 
 public class ToggleCurrentCaseLockHandler extends AbstractToggleCurrentLockHandler {
 
@@ -13,7 +13,7 @@ public class ToggleCurrentCaseLockHandler extends AbstractToggleCurrentLockHandl
 
 	@Override
 	public Class<?> getTemplateClass() {
-		return Fall.class;
+		return ICoverage.class;
 	}
 
 }

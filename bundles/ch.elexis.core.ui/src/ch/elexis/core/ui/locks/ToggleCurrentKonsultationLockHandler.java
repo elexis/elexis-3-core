@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.locks;
 
-import ch.elexis.data.Konsultation;
+import ch.elexis.core.model.IEncounter;
 
 public class ToggleCurrentKonsultationLockHandler extends AbstractToggleCurrentLockHandler {
 
@@ -13,6 +13,6 @@ public class ToggleCurrentKonsultationLockHandler extends AbstractToggleCurrentL
 
 	@Override
 	public Class<?> getTemplateClass() {
-		return Konsultation.class;
+		return IEncounter.class;
 	}
 }

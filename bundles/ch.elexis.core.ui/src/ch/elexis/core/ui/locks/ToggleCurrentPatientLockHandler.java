@@ -1,6 +1,6 @@
 package ch.elexis.core.ui.locks;
 
-import ch.elexis.data.Patient;
+import ch.elexis.core.model.IPatient;
 
 public class ToggleCurrentPatientLockHandler extends AbstractToggleCurrentLockHandler {
 
@@ -13,6 +13,6 @@ public class ToggleCurrentPatientLockHandler extends AbstractToggleCurrentLockHa
 
 	@Override
 	public Class<?> getTemplateClass() {
-		return Patient.class;
+		return IPatient.class;
 	}
 }
