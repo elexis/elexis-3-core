@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Elexis 2025-03-java21" sequenceNumber="1748257625">
+<target name="Elexis 2025-03-java21" sequenceNumber="1758008349">
   <locations>
     <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
@@ -107,10 +107,10 @@
       <unit id="org.jfree.swtgraphics2d" version="1.1.0"/>
       <unit id="xerces.Impl" version="2.12.2"/>
       <unit id="org.apache.solr.solrj" version="9.8.0"/>
-      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202402011804"/>
-      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202402011804"/>
-      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202402011804"/>
-      <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202402011804"/>
+      <unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.1.0.202509131601"/>
+      <unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.5.0.202509131601"/>
+      <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.2.0.202509131601"/>
+      <unit id="org.eclipse.nebula.widgets.floatingtext.feature.feature.group" version="1.0.0.202509131601"/>
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="2.5.0.202411280718"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.nebula" version="2.5.0.202411280718"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.glazedlists" version="2.5.0.202411280718"/>
@@ -118,9 +118,9 @@
       <unit id="ca.odell.glazedlists" version="1.11.0"/>
       <unit id="org.eclipse.collections" version="11.1.0.v20220705-1455"/>
       <unit id="org.eclipse.swtchart.feature.feature.group" version="1.0.0.202412021530"/>
-      <unit id="com.equo.chromium.feature.feature.group" version="128.0.10"/>
-      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.10"/>
-      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="128.0.10"/>
+      <unit id="com.equo.chromium.feature.feature.group" version="128.0.18"/>
+      <unit id="com.equo.chromium.cef.feature.feature.group" version="128.0.18"/>
+      <unit id="com.equo.chromium.cef.arm.feature.feature.group" version="128.0.18"/>
       <unit id="info.elexis.target.jetty.additions.feature.group" version="12.0.16"/>
       <unit id="org.junit" version="4.13.2.v20240929-1000"/>
       <unit id="org.hamcrest" version="3.0.0"/>
