@@ -258,7 +258,7 @@ public class ConfigService implements IConfigService {
 				ret.setKey(key);
 				ret.setValue(value);
 				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] *> value [" + value + "]");
-				modelService.save(loaded.get());
+				modelService.save(ret);
 				return true;
 			}
 
