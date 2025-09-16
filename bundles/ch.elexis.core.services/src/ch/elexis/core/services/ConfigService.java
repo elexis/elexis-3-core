@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -230,24 +231,37 @@ public class ConfigService implements IConfigService {
 				}
 				loaded = Optional.of(configs.get(0));
 			}
-			if (value != null) {
-				IUserConfig config = loaded.orElseGet(() -> {
-					IUserConfig ret = modelService.create(IUserConfig.class);
-					ret.setOwner(contact);
-					ret.setKey(key);
-					return ret;
-				});
-				config.setValue(value);
-				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] => value [" + value + "]");
-				modelService.save(config);
-				return true;
-			} else {
-				if (loaded.isPresent()) {
+
+			if (loaded.isPresent()) {
+				if (value == null) {
 					addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] => removed");
 					modelService.remove(loaded.get());
 					return true;
 				}
+
+				String _value = loaded.get().getValue();
+				if (Objects.equals(value, _value)) {
+					return true;
+				}
+
+				loaded.get().setValue(value);
+				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] => value [" + value + "]");
+				modelService.save(loaded.get());
+				return true;
+			} else {
+				if (value == null) {
+					return true;
+				}
+
+				IUserConfig ret = modelService.create(IUserConfig.class);
+				ret.setOwner(contact);
+				ret.setKey(key);
+				ret.setValue(value);
+				addTraceEntry("W userCfg [" + contact.getId() + "] key [" + key + "] *> value [" + value + "]");
+				modelService.save(loaded.get());
+				return true;
 			}
+
 		}
 		return false;
 	}
