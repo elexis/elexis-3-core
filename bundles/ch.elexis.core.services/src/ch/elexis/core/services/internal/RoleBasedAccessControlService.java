@@ -42,9 +42,11 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
 public class RoleBasedAccessControlService implements IAccessControlService {
@@ -66,6 +68,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private Map<Integer, AccessControlList> combinedRolesAclMap;
 	private Map<String, AccessControlList> roleAclMap;
+
+	private IUserService userService;
 
 	private final String[] aoboObjects = { "IEncounter", "IInvoice" };
 
@@ -107,8 +111,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public void refresh(IUser user) {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -189,10 +192,10 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private void loadRoleAccessControlListDependent(String roleId) {
 		String accessToken = contextService.getTyped(AccessToken.class).get().getToken();
-		var request = HttpRequest.newBuilder(URI.create(
-				"https://" + ElexisSystemPropertyConstants.GET_EE_HOSTNAME + "/api/v1/ops/elexis-rcp/acl/" + roleId))
-				.header("Authorization", "Bearer " + accessToken)
-				.header("accept", "application/json").build();
+		var request = HttpRequest
+				.newBuilder(URI.create("https://" + ElexisSystemPropertyConstants.GET_EE_HOSTNAME
+						+ "/api/v1/ops/elexis-rcp/acl/" + roleId))
+				.header("Authorization", "Bearer " + accessToken).header("accept", "application/json").build();
 		try {
 			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 			if (204 == response.statusCode()) {
@@ -321,8 +324,15 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	}
 
 	public List<String> getAoboMandatorIds() {
-		throw new UnsupportedOperationException();
-//		return contextService.getAoboMandatorIds();
+		if (userService == null) {
+			userService = OsgiServiceUtil.getService(IUserService.class).get();
+		}
+		List<String> ret = new ArrayList<>();
+		contextService.getActiveUser().ifPresent(user -> {
+			ret.add(user.getAssociatedContactId());
+			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
+		});
+		return ret;
 	}
 
 	@Override
