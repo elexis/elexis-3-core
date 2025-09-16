@@ -1705,7 +1705,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	 * @param controls array of {@code Control} elements to configure
 	 */
 	private void setupFieldWidthsAndListeners(Control[] controls) {
-		int fieldWidth = 0;
+		int fieldWidth = -1;
+		
+		boolean minWidthState = ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false);
 		for (Control ctrl : controls) {
 			if (ctrl instanceof LabeledInputField) {
 				LabeledInputField field = (LabeledInputField) ctrl;
@@ -1714,10 +1716,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					if (data == null) {
 						data = new ColumnLayoutData();
 					}
-					if (ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH_STATE, false)) {
-						fieldWidth = ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 100);
+					if (minWidthState) {
+						if (fieldWidth == -1) {
+							fieldWidth = ConfigServiceHolder.getUser(Preferences.USR_PATDETAIL_MINWIDTH, 100);
+						}
 					} else {
 						Point labelSize = CoreUiUtil.getStringExtent(field, field.getLabelComponent().getText());
+						fieldWidth = 0;
 						int extraWidth = 0;
 						if (field.getLayout() instanceof GridLayout) {
 							extraWidth = ((GridLayout) field.getLayout()).marginWidth
