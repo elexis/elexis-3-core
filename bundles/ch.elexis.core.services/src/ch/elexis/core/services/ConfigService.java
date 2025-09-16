@@ -250,7 +250,7 @@ public class ConfigService implements IConfigService {
 				return true;
 			} else {
 				if (value == null) {
-					return true;
+					return false;
 				}
 
 				IUserConfig ret = modelService.create(IUserConfig.class);
