@@ -28,36 +28,37 @@ import org.eclipse.ui.PlatformUI;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
-import ch.elexis.data.PersistentObject;
 import jakarta.inject.Inject;
 
 public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 
-	private Patient patient;
+	private IPatient patient;
 	private ComboViewer fallCombo;
 	private ComboViewer openKonsCombo;
 
-	private Konsultation konsultation;
+	private IEncounter konsultation;
 	private String title;
 
-	public SelectOrCreateOpenKonsDialog(Patient patient) {
+	public SelectOrCreateOpenKonsDialog(IPatient patient) {
 		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		this.patient = patient;
 		CoreUiUtil.injectServicesWithContext(this);
 	}
 
-	public SelectOrCreateOpenKonsDialog(Patient patient, String title) {
+	public SelectOrCreateOpenKonsDialog(IPatient patient, String title) {
 		this(patient);
 		this.title = title;
 		CoreUiUtil.injectServicesWithContext(this);
@@ -93,27 +94,33 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 
 			@Override
 			public void doRun() {
-				Konsultation kons = null;
-				Fall fall = null;
-				StructuredSelection selection = (StructuredSelection) fallCombo.getSelection();
+				IEncounter kons = null;
+				ICoverage fall = null;
+				IStructuredSelection selection = fallCombo.getStructuredSelection();
 				if (selection.isEmpty()) {
-					List<Fall> openFall = getOpenFall();
+					List<ICoverage> openFall = getOpenFall();
 					if (openFall.isEmpty()) {
-						fall = patient.neuerFall(Fall.getDefaultCaseLabel(), Fall.getDefaultCaseReason(),
-								Fall.getDefaultCaseLaw());
+						fall = CoverageServiceHolder.get().createDefaultCoverage(patient);
 					}
 				} else {
-					fall = (Fall) selection.getFirstElement();
+					fall = (ICoverage) selection.getFirstElement();
 				}
 
 				if (fall != null) {
-					kons = fall.neueKonsultation();
+					kons = new IEncounterBuilder(CoreModelServiceHolder.get(), fall,
+							ContextServiceHolder.get().getActiveMandator().orElse(null)).buildAndSave();
+					EncounterServiceHolder.get().addDefaultDiagnosis(kons);
 				}
 
-				if (kons != null && kons.exists()) {
+				if (kons != null) {
 					LocalLockServiceHolder.get().acquireLock(kons);
 					LocalLockServiceHolder.get().releaseLock(kons);
 				}
+				fallCombo.setInput(getOpenFall());
+				if (!selection.isEmpty()) {
+					fallCombo.setSelection(selection);
+				}
+				openKonsCombo.setInput(getOpenKons());
 			}
 		});
 		ToolBar toolbar = tbManager.createControl(areaComposite);
@@ -136,7 +143,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		fallCombo.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((Fall) element).getLabel();
+				return ((ICoverage) element).getLabel();
 			}
 		});
 		fallCombo.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -145,11 +152,11 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection selection = (StructuredSelection) fallCombo.getSelection();
 				if (!selection.isEmpty()) {
-					ElexisEventDispatcher.fireSelectionEvent((PersistentObject) selection.getFirstElement());
+					ContextServiceHolder.get().setTyped(selection.getFirstElement());
 				}
 			}
 		});
-		Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);
+		ICoverage selectedFall = ContextServiceHolder.get().getTyped(ICoverage.class).orElse(null);
 		if (selectedFall != null) {
 			fallCombo.setSelection(new StructuredSelection(selectedFall));
 		}
@@ -170,7 +177,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		openKonsCombo.setLabelProvider(new LabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((Konsultation) element).getLabel();
+				return ((IEncounter) element).getLabel();
 			}
 		});
 
@@ -188,10 +195,10 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		return areaComposite;
 	}
 
-	private List<Fall> getOpenFall() {
-		ArrayList<Fall> ret = new ArrayList<>();
-		Fall[] faelle = patient.getFaelle();
-		for (Fall f : faelle) {
+	private List<ICoverage> getOpenFall() {
+		ArrayList<ICoverage> ret = new ArrayList<>();
+		List<ICoverage> faelle = patient.getCoverages();
+		for (ICoverage f : faelle) {
 			if (f.isOpen()) {
 				ret.add(f);
 			}
@@ -199,14 +206,14 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		return ret;
 	}
 
-	protected List<Konsultation> getOpenKons() {
-		ArrayList<Konsultation> ret = new ArrayList<>();
-		Fall[] faelle = patient.getFaelle();
-		for (Fall f : faelle) {
+	protected List<IEncounter> getOpenKons() {
+		ArrayList<IEncounter> ret = new ArrayList<>();
+		List<ICoverage> faelle = patient.getCoverages();
+		for (ICoverage f : faelle) {
 			if (f.isOpen()) {
-				Konsultation[] consultations = f.getBehandlungen(false);
-				for (Konsultation konsultation : consultations) {
-					if (konsultation.isEditable(false)) {
+				List<IEncounter> consultations = f.getEncounters();
+				for (IEncounter konsultation : consultations) {
+					if (EncounterServiceHolder.get().isEditable(konsultation)) {
 						ret.add(konsultation);
 					}
 				}
@@ -218,8 +225,8 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 	@Override
 	public void okPressed() {
 		Object obj = ((IStructuredSelection) openKonsCombo.getSelection()).getFirstElement();
-		if (obj instanceof Konsultation) {
-			konsultation = (Konsultation) obj;
+		if (obj instanceof IEncounter) {
+			konsultation = (IEncounter) obj;
 			super.okPressed();
 		}
 		if (this.getShell() != null && !this.getShell().isDisposed())
@@ -227,7 +234,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 		return;
 	}
 
-	public Konsultation getKonsultation() {
+	public IEncounter getKonsultation() {
 		return konsultation;
 	}
 

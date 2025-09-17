@@ -12,6 +12,8 @@
 
 package ch.elexis.core.ui.dialogs;
 
+import java.util.ArrayList;
+
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.ToolBarManager;
@@ -24,17 +26,18 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.data.Fall;
-import ch.elexis.data.Patient;
 import jakarta.inject.Inject;
 
 public class SelectFallDialog extends TitleAreaDialog {
-	Fall[] faelle;
+	java.util.List<ICoverage> faelle;
 	public Fall result;
 	List list;
 
@@ -78,7 +81,7 @@ public class SelectFallDialog extends TitleAreaDialog {
 		if (sel == -1) {
 			result = null;
 		} else {
-			result = faelle[sel];
+			result = NoPoUtil.loadAsPersistentObject(faelle.get(sel), Fall.class);
 		}
 		super.okPressed();
 	}
@@ -90,10 +93,12 @@ public class SelectFallDialog extends TitleAreaDialog {
 
 	private void reloadFaelleList() {
 		list.removeAll();
-		Patient sp = ElexisEventDispatcher.getSelectedPatient();
-		faelle = (sp != null) ? sp.getFaelle() : new Fall[] {};
-		for (Fall f : faelle) {
-			list.add(f.getLabel());
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
+		if (patient != null) {
+			faelle = (patient != null) ? patient.getCoverages() : new ArrayList<>();
+			for (ICoverage f : faelle) {
+				list.add(f.getLabel());
+			}
 		}
 	}
 

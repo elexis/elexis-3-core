@@ -39,14 +39,15 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.interfaces.IPersistentObject;
+import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.ILocalDocumentService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Brief;
 import ch.elexis.data.Person;
 
 /**
@@ -203,7 +204,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 	}
 
 	private void endLocalEdit(StructuredSelection selection) {
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.endLocalDocument"); //$NON-NLS-1$
 
 		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"), //$NON-NLS-1$
@@ -218,7 +219,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 	}
 
 	private void abortLocalEdit(StructuredSelection selection) {
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command = commandService.getCommand("ch.elexis.core.ui.command.abortLocalDocument"); //$NON-NLS-1$
 
 		PlatformUI.getWorkbench().getService(IEclipseContext.class).set(command.getId().concat(".selection"), //$NON-NLS-1$
@@ -234,7 +235,7 @@ public class LocalDocumentsDialog extends TitleAreaDialog {
 
 	@Override
 	public boolean close() {
-		ElexisEventDispatcher.reload(Brief.class);
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 		return super.close();
 	}
 

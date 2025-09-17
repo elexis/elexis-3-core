@@ -67,12 +67,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.service.StockServiceHolder;
-import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
@@ -88,6 +82,11 @@ import ch.elexis.core.services.ICodeElementServiceContribution;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.actions.ScannerEvents;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.text.ElexisText;
@@ -178,7 +177,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 					// check if a stock entry was created since the order was created
 					IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
 							StoreToStringServiceHolder.getStoreToString(entry.getArticle()),
-							ElexisEventDispatcher.getSelectedMandator().getId());
+							ContextServiceHolder.get().getActiveMandator().map(m -> m.getId()).orElse(null));
 					if (stockEntry != null) {
 						OrderElement orderElement = new OrderElement(entry, stockEntry, entry.getAmount());
 						orderElements.add(orderElement);

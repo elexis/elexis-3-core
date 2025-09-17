@@ -30,11 +30,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -142,6 +142,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 		btnDoseSwitch.setToolTipText(Messages.Core_change_freetext_activation);
 		btnDoseSwitch.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stackLayoutDosage.topControl == compositeDayTimeDosage) {
 					stackLayoutDosage.topControl = compositeFreeTextDosage;
@@ -245,9 +246,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 						MedicationServiceHolder.get().stopPrescription(oldPrescription, LocalDateTime.now(),
 								"Geändert durch " + CoreHub.getLoggedInContact().getLabel()); //$NON-NLS-1$
 						CoreModelServiceHolder.get().save(oldPrescription);
-						ElexisEventDispatcher.getInstance()
-								.fire(new ElexisEvent(newPrescription, Prescription.class, ElexisEvent.EVENT_UPDATE));
-
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, newPrescription);
 					} else {
 						// no history entry for example recipe
 						prescription.setDosageInstruction(dosis);
@@ -307,6 +306,7 @@ public class MediDetailDialog extends TitleAreaDialog {
 	 * @param dosage
 	 * @return
 	 */
+	@Deprecated
 	public String[] getDosageArray(String dosage) {
 		String[] retVal = new String[4];
 		Arrays.fill(retVal, StringUtils.EMPTY);

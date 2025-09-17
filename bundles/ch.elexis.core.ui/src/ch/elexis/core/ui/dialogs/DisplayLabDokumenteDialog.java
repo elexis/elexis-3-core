@@ -31,11 +31,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.text.IOpaqueDocument;
 import ch.elexis.core.data.services.GlobalServiceDescriptors;
 import ch.elexis.core.data.services.IDocumentManager;
 import ch.elexis.core.data.util.Extensions;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
@@ -118,10 +120,11 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	 * @param document
 	 */
 	private void openDocument(String docName) {
-		Patient patient = ElexisEventDispatcher.getSelectedPatient();
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		try {
-			if (this.docManager != null) {
-				java.util.List<IOpaqueDocument> documentList = this.docManager.listDocuments(patient, null, docName,
+			if (patient != null && this.docManager != null) {
+				java.util.List<IOpaqueDocument> documentList = this.docManager.listDocuments(
+						NoPoUtil.loadAsPersistentObject(patient, Patient.class), null, docName,
 						null, new TimeSpan(this.date, this.date), null);
 				if (documentList == null || documentList.isEmpty()) {
 					throw new IOException(MessageFormat.format("Dokument {0} nicht vorhanden!", docName)); //$NON-NLS-1$
@@ -178,8 +181,8 @@ public class DisplayLabDokumenteDialog extends TitleAreaDialog {
 	public void create() {
 		super.create();
 		getShell().setText(this.title);
-		Patient sp = ElexisEventDispatcher.getSelectedPatient();
-		setTitle((sp != null) ? sp.getLabel() : "missing patient name"); //$NON-NLS-1$
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
+		setTitle((patient != null) ? patient.getLabel() : "missing patient name"); //$NON-NLS-1$
 		setTitleImage(Images.IMG_LOGO.getImage(ImageSize._75x66_TitleDialogIconSize));
 		SWTHelper.center(getShell());
 	}

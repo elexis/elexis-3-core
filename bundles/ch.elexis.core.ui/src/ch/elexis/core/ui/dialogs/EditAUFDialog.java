@@ -32,15 +32,15 @@ import org.eclipse.swt.widgets.Text;
 
 import com.tiff.common.ui.datepicker.DatePicker;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -145,8 +145,8 @@ public class EditAUFDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		Patient sp = ElexisEventDispatcher.getSelectedPatient();
-		String patLabel = (sp != null) ? sp.getLabel() : "missing patient name"; //$NON-NLS-1$
+		IPatient patient = ContextServiceHolder.get().getActivePatient().orElse(null);
+		String patLabel = (patient != null) ? patient.getLabel() : "missing patient name"; //$NON-NLS-1$
 		setTitle(Messages.EditAUFDialog_auf + " - " + patLabel);
 		if (auf == null) {
 			setMessage(Messages.EditAUFDialog_enterNewAUF); // $NON-NLS-1$

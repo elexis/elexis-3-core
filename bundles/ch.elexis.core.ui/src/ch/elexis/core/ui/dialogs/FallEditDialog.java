@@ -17,8 +17,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.views.FallDetailBlatt2;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Patient;
@@ -56,7 +58,7 @@ public class FallEditDialog extends TitleAreaDialog {
 			fdb.save();
 			LocalLockServiceHolder.get().releaseLock(fall);
 		}
-		ElexisEventDispatcher.reload(Fall.class);
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, ICoverage.class);
 		super.okPressed();
 	}
 

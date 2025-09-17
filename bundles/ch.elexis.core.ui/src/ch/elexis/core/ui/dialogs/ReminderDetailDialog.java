@@ -40,8 +40,9 @@ import com.tiff.common.ui.datepicker.DatePickerCombo;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
@@ -52,13 +53,13 @@ import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.controls.ReminderVisibilityAndPopupComposite;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.Anwender;
-import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 import ch.rgw.tools.TimeTool;
 
@@ -67,7 +68,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 	private static final String TX_ALL = Messages.Core_All; // $NON-NLS-1$
 
 	private Reminder reminder = null;
-	private Patient patient = null;
+	private IPatient patient = null;
 
 	private Priority priority = Priority.MEDIUM;
 	private ProcessStatus processStatus = ProcessStatus.OPEN;
@@ -314,7 +315,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 					lblRelatedPatient.setText(Messages.EditReminderDialog_noPatient);
 					patient = null;
 				} else {
-					patient = ElexisEventDispatcher.getSelectedPatient();
+					patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 					if (patient == null) {
 						lblRelatedPatient.setText(Messages.Core_No_patient_selected);
 						btnNotPatientRelated.setSelection(true);
@@ -361,7 +362,7 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 		SelectionListener processStatusListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				processStatus = (ProcessStatus) ((Button) e.widget).getData();
+				processStatus = (ProcessStatus) e.widget.getData();
 			}
 		};
 
@@ -487,9 +488,9 @@ public class ReminderDetailDialog extends TitleAreaDialog {
 
 	private void initialize() {
 		if (reminder == null) {
-			patient = ElexisEventDispatcher.getSelectedPatient();
+			patient = ContextServiceHolder.get().getActivePatient().orElse(null);
 		} else {
-			patient = reminder.getKontakt();
+			patient = NoPoUtil.loadAsIdentifiable(reminder.getKontakt(), IPatient.class).orElse(null);
 			dateDue = reminder.getDateDue();
 			priority = reminder.getPriority();
 			processStatus = reminder.getProcessStatus();
