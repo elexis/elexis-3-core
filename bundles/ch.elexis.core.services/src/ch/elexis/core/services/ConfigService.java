@@ -96,21 +96,32 @@ public class ConfigService implements IConfigService {
 	@Override
 	public boolean set(String key, String value, boolean addTraceEntry) {
 		Optional<IConfig> entry = modelService.load(key, IConfig.class);
+
 		if (value != null) {
 			// never update an existing key, may differ due to mysql ignoring case on load,
 			// JPA would create update and throw exception on update of primary key
 			if (entry.isPresent()) {
-				key = entry.get().getKey();
+				IConfig existing = entry.get();
+				key = existing.getKey();
+				if (Objects.equals(existing.getValue(), value)) {
+					return false;
+				}
+				existing.setValue(value);
+				if (addTraceEntry) {
+					addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
+				}
+				modelService.save(existing);
+				return true;
+			} else {
+				IConfig newEntry = modelService.create(IConfig.class);
+				newEntry.setKey(key);
+				newEntry.setValue(value);
+				if (addTraceEntry) {
+					addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
+				}
+				modelService.save(newEntry);
+				return true;
 			}
-			IConfig _entry = entry.orElse(modelService.create(IConfig.class));
-			_entry.setKey(key);
-			_entry.setValue(value);
-			if (addTraceEntry) {
-				addTraceEntry("W globalCfg key [" + key + "] => value [" + value + "]");
-			}
-
-			modelService.save(_entry);
-			return true;
 		} else {
 			if (entry.isPresent()) {
 				if (addTraceEntry) {
