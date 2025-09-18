@@ -5299,6 +5299,7 @@ public class Messages extends NLS {
 	public static String PatientPhotoDialog_ZoomReset;
 	public static String PatientPhotoDialog_ZoomIn;
 	public static String PatientPhotoDialog_FitToWidth;
+	public static String Laborverordnungen_ShowPatientImage;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
