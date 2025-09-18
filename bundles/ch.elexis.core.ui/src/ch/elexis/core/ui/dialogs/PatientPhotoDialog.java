@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.contacts.dialogs;
+package ch.elexis.core.ui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
