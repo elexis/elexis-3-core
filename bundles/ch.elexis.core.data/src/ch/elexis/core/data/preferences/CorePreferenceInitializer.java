@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.DBConnection;
 
 /**
@@ -42,7 +43,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, StringUtils.EMPTY);
 		CoreHub.localCfg.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
 		// Ablauf
-		File userhome = new File(System.getProperty("user.home") + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
+		File userhome = new File(CoreUtil.getWritableUserDir() + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!userhome.exists()) {
 			userhome.mkdirs();
 		}
@@ -79,7 +80,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 			if (base == null) {
 				base = System.getenv("TMP"); //$NON-NLS-1$
 				if (base == null) {
-					base = System.getProperty("user.home"); //$NON-NLS-1$
+					base = CoreUtil.getWritableUserDir().toString(); // $NON-NLS-1$
 				}
 			}
 			base += "/elexisdata"; //$NON-NLS-1$

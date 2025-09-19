@@ -240,12 +240,12 @@ public class CoreUtil {
 	public static File getWritableUserDir() {
 		String homeProp = System.getProperty(HOME_MODE); // $NON-NLS-1$
 		File userDir;
-		if (!StringTool.isNothing(homeProp)) {
+		if (StringUtils.isNotBlank(homeProp)) {
 			File baseDir = new File(System.getProperty("user.dir")); //$NON-NLS-1$
 			userDir = new File(baseDir, homeProp);
 		} else {
 			String userhome = System.getProperty("user.home"); //$NON-NLS-1$
-			if (StringTool.isNothing(userhome)) {
+			if (StringUtils.isNotBlank(userhome)) {
 				userhome = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 			}
 			userDir = new File(userhome, "elexis"); //$NON-NLS-1$
