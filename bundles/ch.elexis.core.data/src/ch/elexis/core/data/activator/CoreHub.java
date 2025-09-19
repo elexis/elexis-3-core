@@ -50,6 +50,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -185,7 +186,7 @@ public class CoreHub implements BundleActivator {
 				userhome = localCfg.get("elexis-userDir", null); //$NON-NLS-1$
 			}
 			if (userhome == null) {
-				userhome = System.getProperty("user.home"); //$NON-NLS-1$
+				userhome = CoreUtil.getWritableUserDir().toString(); // $NON-NLS-1$
 			}
 			if (StringTool.isNothing(userhome)) {
 				userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
