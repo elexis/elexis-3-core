@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -48,15 +50,21 @@ public class AuthorizationCodeFlowWithPKCE {
 
 	private Thread redirectServerThread;
 
+	private String clientId;
+	private String redirectUri;
 	private String pkceChallenge;
 	private String pkceVerifier;
 
+	public AuthorizationCodeFlowWithPKCE(String clientId) {
+		this.clientId = clientId;
+	}
+
 	// Initiate the flow. Opens a server endpoint to handle the redirect and
 	// provides the URI to hand over to the browser
-	public URI initiateFlowGetBrowserUrl(URI authorizationUri, String clientId, String clientSecret)
+	public URI initiateFlowGetBrowserUrl(URI authorizationUri, String clientSecret)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		int port = startClientRedirectUriServer();
-		String redirectUri = "http://localhost:" + port + "/callback";
+		redirectUri = "http://localhost:" + port + "/callback";
 
 		PKCEUtil pkceUtil = new PKCEUtil();
 		pkceVerifier = pkceUtil.generateCodeVerifier();
@@ -80,7 +88,7 @@ public class AuthorizationCodeFlowWithPKCE {
 	 * @return
 	 */
 	public ObjectStatus<AccessToken> fetchAccessTokenAfterAuthorizationCode(Gson gson, String tokenEndpoint,
-			String clientId, String clientSecret) {
+			String clientSecret) {
 		while (authorizationCode.get() == null) {
 			try {
 				Thread.sleep(50);
@@ -89,9 +97,7 @@ public class AuthorizationCodeFlowWithPKCE {
 			}
 		}
 
-		if (redirectServerThread != null) {
-			redirectServerThread.interrupt();
-		}
+		shutdownServerThread();
 
 		final HttpPost httpPost = new HttpPost(tokenEndpoint);
 		final List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -101,7 +107,7 @@ public class AuthorizationCodeFlowWithPKCE {
 		params.add(new BasicNameValuePair("state", "state"));
 		params.add(new BasicNameValuePair("client_id", clientId));
 		params.add(new BasicNameValuePair("client_secret", clientSecret));
-		params.add(new BasicNameValuePair("redirect_uri", "redirect_uri"));
+		params.add(new BasicNameValuePair("redirect_uri", redirectUri));
 		httpPost.setEntity(new UrlEncodedFormEntity(params));
 
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
@@ -133,51 +139,60 @@ public class AuthorizationCodeFlowWithPKCE {
 		AtomicReference<Integer> localPort = new AtomicReference<>();
 
 		redirectServerThread = new Thread(() -> {
-			try (ServerSocket serverSocket = new ServerSocket()) {
+			try (ServerSocket serverSocket = new ServerSocket(0)) {
+				serverSocket.setSoTimeout(500);
 				localPort.set(serverSocket.getLocalPort());
-				while (true) {
+				logger.debug("Listening on port " + localPort.get());
+				while (!Thread.currentThread().isInterrupted()) {
 					try (Socket accept = serverSocket.accept()) {
 						boolean done = false;
 						try (BufferedReader in = new BufferedReader(new InputStreamReader(accept.getInputStream()))) {
-							String line = in.readLine();
-							if (line.startsWith("GET /callback")) {
-								// We retrieve the authorizationcode and have to use
-								// it to get the access token
-								// GET /callback?code=23423 HTTP/1.1
-								String callbackUri = line.split(" ")[1];
-								Map<String, String> queryParameters = getQueryParameters(callbackUri);
-								String _authorizationCode = queryParameters.get("code");
-								// TODO is state equal to the challenge?
-								authorizationCode.set(_authorizationCode);
-								done = true; // TODO ?
-							} else {
-								System.out.println(line);
+							try (BufferedWriter out = new BufferedWriter(
+									new OutputStreamWriter(accept.getOutputStream()))) {
+
+								String line = in.readLine();
+								logger.debug("REQ " + line);
+								if (line.startsWith("GET /callback")) {
+									// We retrieve the authorizationcode and have to use
+									// it to get the access token
+									// GET /callback?code=23423 HTTP/1.1
+									String callbackUri = line.split(" ")[1];
+									Map<String, String> queryParameters = getQueryParameters(callbackUri);
+									String _authorizationCode = queryParameters.get("code");
+									if (StringUtils.isNotBlank(_authorizationCode)) {
+										logger.debug("Authorization code is [" + _authorizationCode + "]");
+										authorizationCode.set(_authorizationCode);
+										done = true; // TODO ?
+									}
+									// TODO is state equal to the challenge?
+
+								}
+
+								int code = done ? 200 : 500;
+								String body = "<HTML>" + code + "</HTML>";
+								out.write("HTTP/1.0 " + code + "\r\n");
+								out.write("Date: " + LocalDateTime.now() + "\r\n");
+								out.write("Server: Custom Server\r\n");
+								out.write("Content-Type: text/html\r\n");
+								out.write("Content-Length: " + body.length() + "\r\n");
+								out.write("\r\n");
+								out.write(body);
+								out.close();
+
 							}
 						}
 
-						try (BufferedWriter out = new BufferedWriter(
-								new OutputStreamWriter(accept.getOutputStream()))) {
-							int code = done ? 200 : 500;
-							String body = "<HTML>ok</HTML>";
-							out.write("HTTP/1.0 200 OK\r\n");
-							out.write("Date: " + LocalDateTime.now() + "\r\n");
-							out.write("Server: Custom Server\r\n");
-							out.write("Content-Type: text/html\r\n");
-							out.write("Content-Length: " + body.length() + "\r\n");
-							out.write("\r\n");
-							out.write(body);
-							out.close();
-						}
-
 						if (done) {
-							logger.debug("Finishing Thread");
 							continue;
 						}
 
 					} catch (URISyntaxException e) {
 						logger.error("Error in redirect call uri", e);
+					} catch (SocketTimeoutException sote) {
+						// do nothing
 					}
 				}
+				logger.debug("Stopped listening on port " + localPort.get());
 			} catch (ClosedByInterruptException e) {
 				logger.debug("Closing connection due to interrupt");
 			} catch (SocketException e) {
@@ -207,6 +222,17 @@ public class AuthorizationCodeFlowWithPKCE {
 		return new URIBuilder(new URI(url), StandardCharsets.UTF_8).getQueryParams().stream()
 				.collect(Collectors.toMap(NameValuePair::getName,
 						nameValuePair -> URLDecoder.decode(nameValuePair.getValue(), StandardCharsets.UTF_8)));
+	}
+
+	private void shutdownServerThread() {
+		if (redirectServerThread != null) {
+			redirectServerThread.interrupt();
+		}
+		redirectServerThread = null;
+	}
+
+	public void abort() {
+		shutdownServerThread();
 	}
 
 }
