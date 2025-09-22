@@ -126,7 +126,7 @@ public class LocalConfigService {
 		localConfig.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
 
 		// create default elexis homedir
-		File userhome = new File(CoreUtil.getWritableUserDir() + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
+		File userhome = CoreUtil.getWritableUserDir();
 		if (!userhome.exists()) {
 			userhome.mkdirs();
 		}

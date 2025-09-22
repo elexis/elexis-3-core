@@ -50,7 +50,6 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.LocalConfigService;
-import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
 import ch.elexis.data.Mandant;
@@ -73,7 +72,7 @@ public class CoreHub implements BundleActivator {
 	 */
 	public static String Version = Elexis.VERSION;
 	public static final String APPLICATION_NAME = Elexis.APPLICATION_NAME; // $NON-NLS-1$
-
+	public static final String HOME_MODE = "ch.elexis.home"; //$NON-NLS-1$
 	protected static Logger log = LoggerFactory.getLogger(CoreHub.class.getName());
 
 	private static String LocalCfgFile = null;
@@ -180,18 +179,23 @@ public class CoreHub implements BundleActivator {
 	 */
 	private static void initUserDir() {
 		if (CoreHub.userDir == null) {
+			String homeProp = System.getProperty(HOME_MODE);
 			String userhome = null;
-
-			if (localCfg != null) {
-				userhome = localCfg.get("elexis-userDir", null); //$NON-NLS-1$
+			if (StringUtils.isNotBlank(homeProp)) {
+				File baseDir = new File(System.getProperty("user.dir")); //$NON-NLS-1$
+				userDir = new File(baseDir, homeProp);
+			} else {
+				if (localCfg != null) {
+					userhome = localCfg.get("elexis-userDir", null); //$NON-NLS-1$
+				}
+				if (userhome == null) {
+					userhome = System.getProperty("user.home"); //$NON-NLS-1$
+				}
+				if (StringTool.isNothing(userhome)) {
+					userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
+				}
+				CoreHub.userDir = new File(userhome, "elexis"); //$NON-NLS-1$
 			}
-			if (userhome == null) {
-				userhome = CoreUtil.getWritableUserDir().toString(); // $NON-NLS-1$
-			}
-			if (StringTool.isNothing(userhome)) {
-				userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
-			}
-			CoreHub.userDir = new File(userhome, "elexis"); //$NON-NLS-1$
 		}
 		if (!CoreHub.userDir.exists()) {
 			if (!CoreHub.userDir.mkdirs()) {

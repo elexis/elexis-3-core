@@ -43,7 +43,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 		CoreHub.localCfg.set(Preferences.DB_PWD + SETTINGS_PREFERENCE_STORE_DEFAULT, StringUtils.EMPTY);
 		CoreHub.localCfg.set(Preferences.DB_TYP + SETTINGS_PREFERENCE_STORE_DEFAULT, "mysql"); //$NON-NLS-1$
 		// Ablauf
-		File userhome = new File(CoreUtil.getWritableUserDir() + File.separator + "elexis"); //$NON-NLS-1$ //$NON-NLS-2$
+		File userhome = CoreUtil.getWritableUserDir();
 		if (!userhome.exists()) {
 			userhome.mkdirs();
 		}
