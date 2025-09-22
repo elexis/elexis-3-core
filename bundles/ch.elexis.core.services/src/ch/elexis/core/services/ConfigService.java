@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public class ConfigService implements IConfigService {
 
 	private Map<Object, LocalLock> managedLocks;
 
-	// lazy initialized
+	@Reference
 	private ITraceService traceService;
 
 	@Activate
@@ -66,13 +65,6 @@ public class ConfigService implements IConfigService {
 			managedLocks = new HashMap<>();
 
 		});
-	}
-
-	@Deactivate
-	public void deactivate() {
-		if (traceService != null) {
-			OsgiServiceUtil.ungetService(traceService);
-		}
 	}
 
 	/**
@@ -135,9 +127,6 @@ public class ConfigService implements IConfigService {
 	}
 
 	private void addTraceEntry(String action) {
-		if (traceService == null) {
-			traceService = OsgiServiceUtil.getService(ITraceService.class).get();
-		}
 		String userId = contextService.getActiveUser().map(IUser::getId).orElse("unknown");
 		traceService.addTraceEntry(userId, NetTool.hostname, action);
 	}
