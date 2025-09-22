@@ -30,7 +30,6 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IUser#isAdministrator <em>Administrator</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getAssociatedContactId <em>Associated Contact Id</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#getRoleIds <em>Role Ids</em>}</li>
- *   <li>{@link ch.elexis.core.model.IUser#getExecutiveDoctorsWorkingForIds <em>Executive Doctors Working For Ids</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -254,18 +253,6 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @generated
 	 */
 	List<String> getRoleIds();
-
-	/**
-	 * Returns the value of the '<em><b>Executive Doctors Working For Ids</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Executive Doctors Working For Ids</em>' attribute list.
-	 * @see ch.elexis.core.model.ModelPackage#getIUser_ExecutiveDoctorsWorkingForIds()
-	 * @model changeable="false"
-	 * @generated
-	 */
-	List<String> getExecutiveDoctorsWorkingForIds();
 
 	/**
 	 * <!-- begin-user-doc --> Add a role to the user. Do not use
