@@ -57,6 +57,7 @@
       <feature id="ch.elexis.core.persistence.feature" installMode="root"/>
       <feature id="ch.elexis.core.tasks.feature" installMode="root"/>
       <feature id="at.medevit.elexis.text.docx.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.eenv.feature" installMode="root"/>
    </features>
 
    <configurations>
