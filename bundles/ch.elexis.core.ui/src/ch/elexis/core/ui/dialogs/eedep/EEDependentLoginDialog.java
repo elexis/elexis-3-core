@@ -1,16 +1,20 @@
-package ch.elexis.core.ui.e4.dialog;
+package ch.elexis.core.ui.dialogs.eedep;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -21,15 +25,20 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ee.json.OpenIdConfiguration;
 import ch.elexis.core.ee.json.WellKnownEE;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
+import ch.elexis.core.ui.ILoginNews;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.SWTHelper;
+import ch.rgw.tools.ExHandler;
 import jakarta.inject.Inject;
 
 public class EEDependentLoginDialog extends TitleAreaDialog {
@@ -50,6 +59,7 @@ public class EEDependentLoginDialog extends TitleAreaDialog {
 	private WellKnownEE wellKnownEE;
 	private OpenIdConfiguration openidConfiguration;
 	private AccessToken accessToken;
+	private Button btnOidcLogin;
 
 	/**
 	 * Create the dialog.
@@ -73,9 +83,10 @@ public class EEDependentLoginDialog extends TitleAreaDialog {
 		setTitleImage(Images.IMG_EE_TITLE_BANNER.getImage(ImageSize._75x66_TitleDialogIconSize));
 		setTitle("Elexis-Environment Anmeldung");
 		setMessage("Überprüfe EE Verbindung ...");
+
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
+		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		txtUsername = new Text(container, SWT.BORDER);
@@ -83,12 +94,42 @@ public class EEDependentLoginDialog extends TitleAreaDialog {
 		txtUsername.setMessage("Benutzername");
 		txtUsername.setEnabled(false);
 
+		btnOidcLogin = new Button(container, SWT.FLAT);
+		btnOidcLogin.setText("OIDC Login");
+		btnOidcLogin.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 2));
+		btnOidcLogin.setImage(Images.IMG_OIDC.getImage(ImageSize._75x66_TitleDialogIconSize));
+		btnOidcLogin.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new OidcBrowserLoginDialog(getShell(), openidConfiguration.authorizationEndpoint).open();
+			}
+		});
+
 		txtPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
-		txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		txtPassword.setMessage("Passwort");
 		txtPassword.setEnabled(false);
 
 		loadWellKnownEEInfo();
+
+		@SuppressWarnings("unchecked")
+		List<ILoginNews> newsModules = Extensions.getClasses(ExtensionPointConstantsUi.LOGIN_NEWS, "class"); //$NON-NLS-1$
+
+		if (!newsModules.isEmpty()) {
+			Composite cNews = new Composite(area, SWT.NONE);
+			cNews.setLayoutData(SWTHelper.getFillGridData(2, true, 1, true));
+			cNews.setLayout(new GridLayout());
+			for (ILoginNews lm : newsModules) {
+				try {
+					Composite comp = lm.getComposite(cNews);
+					comp.setLayoutData(SWTHelper.getFillGridData());
+				} catch (Exception ex) {
+					// Note: This is NOT a fatal error. It just means, that the Newsmodule could not
+					// load. Maybe we are offline.
+					ExHandler.handle(ex);
+				}
+			}
+		}
 
 		return area;
 	}

@@ -28,7 +28,7 @@ import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.oauth2.AccessTokenUtil;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.e4.dialog.EEDependentLoginDialog;
+import ch.elexis.core.ui.dialogs.eedep.EEDependentLoginDialog;
 import jakarta.inject.Inject;
 
 public class Application implements IApplication {

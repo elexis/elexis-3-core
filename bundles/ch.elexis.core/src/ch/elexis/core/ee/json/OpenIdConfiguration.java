@@ -9,4 +9,7 @@ public class OpenIdConfiguration {
 	@SerializedName("token_endpoint")
 	public String tokenEndpoint;
 
+	@SerializedName("authorization_endpoint")
+	public String authorizationEndpoint;
+
 }
