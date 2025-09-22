@@ -197,9 +197,4 @@ public class OpenIdUser implements IUser {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public List<String> getExecutiveDoctorsWorkingForIds() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

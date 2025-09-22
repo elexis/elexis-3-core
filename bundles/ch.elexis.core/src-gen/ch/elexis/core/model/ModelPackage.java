@@ -2317,22 +2317,13 @@ public interface ModelPackage extends EPackage {
 	int IUSER__ROLE_IDS = DELETEABLE_FEATURE_COUNT + 10;
 
 	/**
-	 * The feature id for the '<em><b>Executive Doctors Working For Ids</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IUSER__EXECUTIVE_DOCTORS_WORKING_FOR_IDS = DELETEABLE_FEATURE_COUNT + 11;
-
-	/**
 	 * The number of structural features of the '<em>IUser</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
+	int IUSER_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}' class.
@@ -9151,17 +9142,6 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIUser_RoleIds();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link ch.elexis.core.model.IUser#getExecutiveDoctorsWorkingForIds <em>Executive Doctors Working For Ids</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Executive Doctors Working For Ids</em>'.
-	 * @see ch.elexis.core.model.IUser#getExecutiveDoctorsWorkingForIds()
-	 * @see #getIUser()
-	 * @generated
-	 */
-	EAttribute getIUser_ExecutiveDoctorsWorkingForIds();
-
-	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14189,14 +14169,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IUSER__ROLE_IDS = eINSTANCE.getIUser_RoleIds();
-
-		/**
-		 * The meta object literal for the '<em><b>Executive Doctors Working For Ids</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IUSER__EXECUTIVE_DOCTORS_WORKING_FOR_IDS = eINSTANCE.getIUser_ExecutiveDoctorsWorkingForIds();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IUserGroup <em>IUser Group</em>}' class.

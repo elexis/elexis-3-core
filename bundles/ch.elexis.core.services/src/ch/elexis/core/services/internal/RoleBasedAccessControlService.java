@@ -94,8 +94,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			if (!combinedRolesAclMap.containsKey(combinedRolesHashCode)) {
 				refresh(activeUserId, contextService.getActiveUser().map(IUser::getRoleIds).get());
 			}
-			List<String> aoboMandatorIds = Collections.emptyList();
-			boolean result = evaluateACE(aoboMandatorIds, combinedRolesAclMap.get(combinedRolesHashCode),
+
+			boolean result = evaluateACE(combinedRolesAclMap.get(combinedRolesHashCode),
 					evaluatableAce);
 			if (logDenials && !result) {
 				logger.info("User %s denied %s ", activeUserId, evaluatableAce.toString());
@@ -111,7 +111,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public void refresh(IUser user) {
-		throw new UnsupportedOperationException();
+		refresh(user.getId(), user.getRoleIds());
 	}
 
 	/**
@@ -183,8 +183,10 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			if (ElexisSystemPropertyConstants.IS_EE_DEPENDENT_OPERATION_MODE) {
 				loadRoleAccessControlListDependent(roleId);
 			} else {
-				IRole role = CoreModelServiceHolder.get().load(roleId, IRole.class).orElseThrow();
-				loadRoleAccessControlListLegacy(role);
+				doPrivileged(() -> {
+					IRole role = CoreModelServiceHolder.get().load(roleId, IRole.class).orElseThrow();
+					loadRoleAccessControlListLegacy(role);
+				});
 			}
 		}
 		return roleAclMap.get(roleId);
@@ -251,7 +253,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return Optional.empty();
 	}
 
-	private boolean evaluateACE(List<String> aoboMandatorIds, AccessControlList acl, EvaluatableACE ace) {
+	private boolean evaluateACE(AccessControlList acl, EvaluatableACE ace) {
 		if (ace instanceof ObjectEvaluatableACE) {
 			ObjectEvaluatableACE _ace = (ObjectEvaluatableACE) ace;
 			ACEAccessBitMap useracebm = acl.getObject().get(_ace.getObject());
@@ -271,6 +273,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 						flattenedbitmap |= 1 << i;
 					} else if (aceBitMap[i] == (byte) 2 || aceBitMap[i] == (byte) 1) {
 						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
+							List<String> aoboMandatorIds = getAoboMandatorIds();
 							if (evaluateAobo(aoboMandatorIds, _ace)) {
 								aceBitMap[i] = (byte) 1;
 								flattenedbitmap |= 1 << i;
