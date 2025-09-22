@@ -4,34 +4,53 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.workbench.swt.DisplayUISynchronize;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.equo.chromium.swt.Browser;
+import com.google.gson.Gson;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.services.oauth2.AuthorizationCodeFlowWithPKCE;
+import ch.elexis.core.status.ObjectStatus;
+import ch.elexis.core.status.StatusUtil;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import jakarta.inject.Inject;
 
 public class OidcBrowserLoginDialog extends Dialog {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Inject
-	IElexisEnvironmentService elexisEnvironmentService;
+	Gson gson;
 
-	String authorizationEndpoint;
-	AuthorizationCodeFlowWithPKCE acfwpkce;
+	UISynchronize uiSynchronizer;
 
-	public OidcBrowserLoginDialog(Shell shell, String authorizationEndpoint) {
+	private String tokenEndpoint;
+	private String authorizationEndpoint;
+	private AuthorizationCodeFlowWithPKCE acfwpkce;
+	private ObjectStatus<AccessToken> accessToken;
+
+	private Browser browser;
+
+	public OidcBrowserLoginDialog(Shell shell, String authorizationEndpoint, String tokenEndpoint) {
 		super(shell);
-		acfwpkce = new AuthorizationCodeFlowWithPKCE();
+		this.tokenEndpoint = tokenEndpoint;
+		acfwpkce = new AuthorizationCodeFlowWithPKCE("elexis-rcp-openid");
 		this.authorizationEndpoint = authorizationEndpoint;
+		uiSynchronizer = new DisplayUISynchronize(shell.getDisplay());
+		CoreUiUtil.injectServices(this);
 	}
 
 	/**
@@ -48,19 +67,11 @@ public class OidcBrowserLoginDialog extends Dialog {
 		// FHV has coupled windows login with sso (samlsso) -> redirect to saml sso html
 		// page
 		// with javascript to confirm
-		Browser browser = new Browser(parent, SWT.None);
+		browser = new Browser(parent, SWT.None);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		browser.setText("<HTML>Initiating login ...</HTML>");
 
-		String clientSecret = System.getProperty(ElexisSystemPropertyConstants.EE_CLIENTSECRET);
-		try {
-			URI initiateFlowGetBrowserUrl = acfwpkce.initiateFlowGetBrowserUrl(URI.create(authorizationEndpoint),
-					"elexis-rcp-openid", clientSecret);
-			browser.setUrl(initiateFlowGetBrowserUrl.toString());
-
-		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
-			browser.setText("<HTML>" + e.getMessage() + "</HTML>");
-			LoggerFactory.getLogger(getClass()).warn("Authorization Flow Error", e);
-		}
+		new Thread(handleFlowRunnable).start();
 
 		return parent;
 	}
@@ -72,16 +83,45 @@ public class OidcBrowserLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
-//	/**
-//	 * Return the initial size of the dialog.
-//	 */
-//	@Override
-//	protected Point getInitialSize() {
-//		return new Point(450, 300);
-//	}
+	public AccessToken getAccessToken() {
+		return accessToken.get();
+	}
+
+	@Override
+	protected void cancelPressed() {
+		acfwpkce.abort();
+		super.cancelPressed();
+	}
+
+	/**
+	 * Return the initial size of the dialog.
+	 */
+	@Override
+	protected Point getInitialSize() {
+		return new Point(1024, 768);
+	}
+
+	private Runnable handleFlowRunnable = () -> {
+
+		String clientSecret = System.getProperty(ElexisSystemPropertyConstants.EE_CLIENTSECRET);
+		try {
+
+			URI initiateFlowGetBrowserUrl = acfwpkce.initiateFlowGetBrowserUrl(URI.create(authorizationEndpoint),
+					clientSecret);
+			uiSynchronizer.asyncExec(() -> browser.setUrl(initiateFlowGetBrowserUrl.toString()));
+			logger.debug("Initiated flow, waiting for authorization code ...");
+			accessToken = acfwpkce.fetchAccessTokenAfterAuthorizationCode(gson, tokenEndpoint, clientSecret);
+			StatusUtil.logStatus("Terminating", logger, accessToken, true, true);
+			uiSynchronizer.asyncExec(() -> okPressed());
+
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+			logger.warn("Aborting Authorization Flow", e);
+			acfwpkce.abort();
+			uiSynchronizer.asyncExec(() -> browser.setText("<HTML>" + e.getMessage() + "</HTML>"));
+		}
+	};
 
 }
