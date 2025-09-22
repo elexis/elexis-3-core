@@ -85,7 +85,7 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>macosx</id>
+			<id>macosx-x86_64</id>
 			<activation>
 				<os>
 					<family>mac</family>
@@ -93,6 +93,18 @@
 			</activation>
 			<properties>
 				<classifier>macosx/cocoa/x86_64</classifier>
+				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
+			</properties>
+		</profile>
+		<profile>
+			<id>macosx-aarch64</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<classifier>macosx/cocoa/aarch64</classifier>
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
 		</profile>
@@ -138,6 +150,11 @@
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
 						</environment>
 					</environments>
 					<dependency-resolution>
