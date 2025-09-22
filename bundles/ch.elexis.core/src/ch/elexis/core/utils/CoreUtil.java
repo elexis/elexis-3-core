@@ -40,20 +40,20 @@ public class CoreUtil {
 	 * </ul>
 	 * Requires boolean parameter.
 	 */
-	public static final String TEST_MODE = "elexis.test.mode";
-
+	public static final String TEST_MODE = "elexis.test.mode"; //$NON-NLS-1$
+	public static final String HOME_MODE = "ch.elexis.home"; //$NON-NLS-1$
 	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 
 	private static final OS osType;
 	private static final boolean testMode;
 
 	static {
-		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Linux")) {
+		String osName = System.getProperty("os.name"); //$NON-NLS-1$
+		if (osName.startsWith("Linux")) { //$NON-NLS-1$
 			osType = OS.LINUX;
-		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
+		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) { //$NON-NLS-1$ //$NON-NLS-2$
 			osType = OS.MAC;
-		} else if (osName.startsWith("Windows")) {
+		} else if (osName.startsWith("Windows")) { //$NON-NLS-1$
 			osType = OS.WINDOWS;
 		} else {
 			osType = OS.UNSPECIFIED;
@@ -67,8 +67,8 @@ public class CoreUtil {
 	}
 
 	public static Path getElexisServerHomeDirectory() {
-		String userHomeProp = System.getProperty("user.home");
-		File homedir = new File(new File(userHomeProp), "elexis-server");
+		String userHomeProp = System.getProperty("user.home"); //$NON-NLS-1$
+		File homedir = new File(new File(userHomeProp), "elexis-server"); //$NON-NLS-1$
 		if (!homedir.exists()) {
 			homedir.mkdir();
 		}
@@ -113,10 +113,10 @@ public class CoreUtil {
 				StringBuilder sb = new StringBuilder();
 				for (Object object : hConn.keySet()) {
 					if (object instanceof String) {
-						sb.append(StringUtils.LF).append(object).append("->").append(hConn.get(object));
+						sb.append(StringUtils.LF).append(object).append("->").append(hConn.get(object)); //$NON-NLS-1$
 					}
 				}
-				logger.error("Could not get a valid DBConnection from connection setting:" + sb.toString());
+				logger.error("Could not get a valid DBConnection from connection setting:" + sb.toString()); //$NON-NLS-1$
 			}
 		}
 		return Optional.empty();
@@ -128,13 +128,13 @@ public class CoreUtil {
 	 *        adding this parameter if not yet included
 	 */
 	private static String applyMySqlTimeZoneWorkaround(String dbConnectString) {
-		if (dbConnectString.startsWith("jdbc:mysql:") && !dbConnectString.contains("serverTimezone")) {
-			if (dbConnectString.contains("?")) {
-				dbConnectString += "&serverTimezone=Europe/Zurich";
+		if (dbConnectString.startsWith("jdbc:mysql:") && !dbConnectString.contains("serverTimezone")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (dbConnectString.contains("?")) { //$NON-NLS-1$
+				dbConnectString += "&serverTimezone=Europe/Zurich"; //$NON-NLS-1$
 			} else {
-				dbConnectString += "?serverTimezone=Europe/Zurich";
+				dbConnectString += "?serverTimezone=Europe/Zurich"; //$NON-NLS-1$
 			}
-			logger.info("MySQL dbConnection string correction [{}]", dbConnectString);
+			logger.info("MySQL dbConnection string correction [{}]", dbConnectString); //$NON-NLS-1$
 		}
 		return dbConnectString;
 	}
@@ -222,7 +222,7 @@ public class CoreUtil {
 				return null;
 			}
 		} catch (Exception ex) {
-			logger.error("Error unfolding object", ex);
+			logger.error("Error unfolding object", ex); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -238,18 +238,22 @@ public class CoreUtil {
 	 *         Windows it is normally %USERPROFILE%\elexis, in Linux ~./elexis
 	 */
 	public static File getWritableUserDir() {
-		String userhome = null;
+		String homeProp = System.getProperty(HOME_MODE); // $NON-NLS-1$
+		File userDir;
+		if (StringUtils.isNotBlank(homeProp)) {
+			File baseDir = new File(System.getProperty("user.dir")); //$NON-NLS-1$
+			userDir = new File(baseDir, homeProp);
+		} else {
+			String userhome = System.getProperty("user.home"); //$NON-NLS-1$
+			if (StringUtils.isNotBlank(userhome)) {
+				userhome = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+			}
+			userDir = new File(userhome, "elexis"); //$NON-NLS-1$
+		}
 
-		if (userhome == null) {
-			userhome = System.getProperty("user.home"); //$NON-NLS-1$
-		}
-		if (StringTool.isNothing(userhome)) {
-			userhome = System.getProperty("java.io.tempdir"); //$NON-NLS-1$
-		}
-		File userDir = new File(userhome, "elexis"); //$NON-NLS-1$
 		if (!userDir.exists()) {
 			if (!userDir.mkdirs()) {
-				logger.error("Panic exit, could not create userdir " + userDir.getAbsolutePath());
+				logger.error("Panic exit, could not create userdir " + userDir.getAbsolutePath()); //$NON-NLS-1$
 				System.exit(-5);
 			}
 		}
@@ -280,7 +284,7 @@ public class CoreUtil {
 	}
 
 	public static String getDefaultDBPath() {
-		String base = System.getProperty("user.home") + "/elexisdata";
+		String base = System.getProperty("user.home") + "/elexisdata"; //$NON-NLS-1$ //$NON-NLS-2$
 		File f = new File(base);
 		if (!f.exists()) {
 			f.mkdirs();
@@ -315,7 +319,7 @@ public class CoreUtil {
 	 * @since 3.10
 	 */
 	public static String getDatabaseProductName() {
-		Optional<DataSource> defaultDataSource = OsgiServiceUtil.getService(DataSource.class, "(id=default)");
+		Optional<DataSource> defaultDataSource = OsgiServiceUtil.getService(DataSource.class, "(id=default)"); //$NON-NLS-1$
 		if (defaultDataSource.isPresent()) {
 			try {
 				Connection connection = defaultDataSource.get().getConnection();
@@ -325,7 +329,7 @@ public class CoreUtil {
 			}
 			OsgiServiceUtil.ungetService(DataSource.class);
 		}
-		return "unknown";
+		return "unknown"; //$NON-NLS-1$
 	}
 
 }
