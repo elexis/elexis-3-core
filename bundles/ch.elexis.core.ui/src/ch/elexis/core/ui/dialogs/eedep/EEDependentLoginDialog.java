@@ -101,7 +101,14 @@ public class EEDependentLoginDialog extends TitleAreaDialog {
 		btnOidcLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new OidcBrowserLoginDialog(getShell(), openidConfiguration.authorizationEndpoint).open();
+				OidcBrowserLoginDialog oidcBrowserLoginDialog = new OidcBrowserLoginDialog(getShell(),
+						openidConfiguration.authorizationEndpoint, openidConfiguration.tokenEndpoint);
+				int open = oidcBrowserLoginDialog.open();
+				if (IDialogConstants.OK_ID == open) {
+					accessToken = oidcBrowserLoginDialog.getAccessToken();
+					setReturnCode(OK);
+					close();
+				}
 			}
 		});
 
