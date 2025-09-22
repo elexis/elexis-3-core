@@ -207,9 +207,4 @@ public class CsvUser implements IUser {
 
 	}
 
-	@Override
-	public List<String> getExecutiveDoctorsWorkingForIds() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
