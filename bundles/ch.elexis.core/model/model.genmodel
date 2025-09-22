@@ -136,7 +136,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/administrator"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/associatedContactId"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/roleIds"/>
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IUser/executiveDoctorsWorkingForIds"/>
       <genOperations ecoreOperation="model.ecore#//IUser/addRole">
         <genParameters ecoreParameter="model.ecore#//IUser/addRole/role"/>
       </genOperations>
