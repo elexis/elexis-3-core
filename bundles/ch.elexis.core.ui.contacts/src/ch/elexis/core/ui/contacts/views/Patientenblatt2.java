@@ -116,7 +116,7 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
-import ch.elexis.core.ui.contacts.views.util.PatientImageUtil;
+import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
@@ -137,7 +137,7 @@ import ch.elexis.core.ui.util.LabeledInputField.IStructuredSelectionResolver;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.ListDisplay;
-import ch.elexis.core.ui.util.PatientImageUtilCore;
+import ch.elexis.core.ui.util.PatientImageUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
@@ -565,7 +565,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			if (actPatient == null)
 				return;
 
-			Image swtImg = PatientImageUtilCore.getPatientImage(actPatient.getId());
+			Image swtImg = PatientImageUtil.getPatientImage(actPatient.getId());
 			if (swtImg != null && !swtImg.isDisposed()) {
 				try {
 					ImageData data = swtImg.getImageData();
@@ -578,7 +578,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
 				}
 			} else {
-				PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+				CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
 						this.getShell());
 			}
 		});
@@ -935,7 +935,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		miDelete.setText(Messages.Patientenblatt2_DeletePhoto);
 		miDelete.addListener(SWT.Selection, ev -> {
 			if (actPatient != null) {
-				PatientImageUtilCore.deletePatientImage(actPatient.getId());
+				PatientImageUtil.deletePatientImage(actPatient.getId());
 				Image replacement = actPatient.get(Patient.FLD_SEX).equals(Patient.FEMALE) ? defaultFemale
 						: defaultMale;
 				photoLabel.setImage(replacement);
@@ -948,7 +948,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 
 		photoLabel.addListener(SWT.MenuDetect, e -> {
-			boolean hasPhoto = actPatient != null && PatientImageUtilCore.getPatientImage(actPatient.getId()) != null;
+			boolean hasPhoto = actPatient != null && PatientImageUtil.getPatientImage(actPatient.getId()) != null;
 			if (!hasPhoto) {
 				e.doit = false;
 			}
@@ -1028,10 +1028,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		Image previousPhoto = currentPhoto;
 		Image patientImage = null;
 		if (p != null) {
-			patientImage = PatientImageUtilCore.getPatientImage(p.getId());
+			patientImage = PatientImageUtil.getPatientImage(p.getId());
 		}
 		if (patientImage != null) {
-			Image scaledImage = PatientImageUtilCore.scaleSwtImage(patientImage, 130, 130, photoLabel.getDisplay());
+			Image scaledImage = PatientImageUtil.scaleSwtImage(patientImage, 130, 130, photoLabel.getDisplay());
 			photoLabel.setImage(scaledImage);
 			currentPhoto = scaledImage;
 			patientImage.dispose();
@@ -1688,7 +1688,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			@Override
 			public void run() {
 				if (actPatient != null) {
-					PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+					CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
 							getShell());
 				}
 			}

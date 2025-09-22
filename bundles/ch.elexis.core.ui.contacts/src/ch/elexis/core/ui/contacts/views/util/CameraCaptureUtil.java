@@ -12,16 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.MimeType;
 import ch.elexis.core.ui.contacts.dialogs.PatientCameraCaptureDialog;
-import ch.elexis.core.ui.util.PatientImageUtilCore;
+import ch.elexis.core.ui.util.PatientImageUtil;
 import ch.elexis.data.Patient;
 
 /**
  * Utility class for handling patient image loading, saving, conversion, and
  * scaling in SWT and AWT environments.
  */
-public class PatientImageUtil {
+public class CameraCaptureUtil {
 
-	private static Logger logger = LoggerFactory.getLogger(PatientImageUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(CameraCaptureUtil.class);
 
 	/**
 	 * Opens the camera dialog for capturing a new patient photo, saves the photo,
@@ -38,10 +38,10 @@ public class PatientImageUtil {
 			logger.warn("No photo captured or photo data is empty for patientId {}", patient);
 			return;
 		}
-		PatientImageUtilCore.savePatientImage(patient.getId(), imageBytes, patientName, MimeType.png);
+		PatientImageUtil.savePatientImage(patient.getId(), imageBytes, patientName, MimeType.png);
 		Display.getDefault().asyncExec(() -> {
 			try {
-				Image scaledImage = PatientImageUtilCore.scaleSwtImage(
+				Image scaledImage = PatientImageUtil.scaleSwtImage(
 						new Image(Display.getDefault(), new ImageData(new ByteArrayInputStream(imageBytes))), 130, 130,
 						photoLabel.getDisplay());
 				photoLabel.setImage(scaledImage);

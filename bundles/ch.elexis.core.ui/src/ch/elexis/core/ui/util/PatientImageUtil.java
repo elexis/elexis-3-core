@@ -1,6 +1,5 @@
 package ch.elexis.core.ui.util;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 
@@ -9,8 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +21,9 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
  * Utility class for handling patient image loading, saving, conversion, and
  * scaling in SWT and AWT environments.
  */
-public class PatientImageUtilCore {
+public class PatientImageUtil {
 
-	private static Logger logger = LoggerFactory.getLogger(PatientImageUtilCore.class);
+	private static Logger logger = LoggerFactory.getLogger(PatientImageUtil.class);
 
 	/**
 	 * Loads and returns the patient image as SWT {@link Image}.
@@ -81,58 +78,6 @@ public class PatientImageUtilCore {
 			}
 		} catch (Exception e) {
 			logger.error("Error saving patient image for patientId {}: {}", patientId, e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * Loads the patient image as SWT Image and converts it to a
-	 * {@link BufferedImage}.
-	 *
-	 * @param patId the patient/contact ID
-	 * @return BufferedImage or null if no image is available or an error occurs
-	 */
-	public static BufferedImage swtImageToBufferedImage(String patId) {
-		if (patId == null) {
-			return null;
-		}
-
-		IContact contact = CoreModelServiceHolder.get().load(patId, IContact.class).orElse(null);
-		if (contact == null) {
-			return null;
-		}
-		IImage image = contact.getImage();
-
-		if (image == null) {
-			return null;
-		}
-		byte[] imgBytes = image.getImage();
-		if (imgBytes == null || imgBytes.length == 0) {
-			return null;
-		}
-
-		Image swtImg = null;
-		try (ByteArrayInputStream bais = new ByteArrayInputStream(imgBytes)) {
-			swtImg = new Image(Display.getDefault(), bais);
-			ImageData data = swtImg.getImageData();
-			PaletteData palette = data.palette;
-			BufferedImage buf = new BufferedImage(data.width, data.height, BufferedImage.TYPE_INT_RGB);
-			for (int y = 0; y < data.height; y++) {
-				for (int x = 0; x < data.width; x++) {
-					int pixel = data.getPixel(x, y);
-					RGB rgb = palette.getRGB(pixel);
-					int rgbInt = (rgb.red << 16) | (rgb.green << 8) | rgb.blue;
-					buf.setRGB(x, y, rgbInt);
-				}
-			}
-			return buf;
-		} catch (Exception ex) {
-			logger.error("Error converting SWT image to BufferedImage for patientId {}: {}", patId, ex.getMessage(),
-					ex);
-			return null;
-		} finally {
-			if (swtImg != null && !swtImg.isDisposed()) {
-				swtImg.dispose();
-			}
 		}
 	}
 

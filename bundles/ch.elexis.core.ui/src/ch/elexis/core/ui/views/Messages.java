@@ -648,4 +648,6 @@ public class Messages {
 	public static String Cst_Text_ungueltiger_Wert = ch.elexis.core.l10n.Messages.Cst_Text_ungueltiger_Wert;
 	public static String OrderManagement_Error_NegativeDeliveredAmount = ch.elexis.core.l10n.Messages.OrderManagement_Error_NegativeDeliveredAmount;
 	public static String OrderManagement_StockOrder_DefaultName = ch.elexis.core.l10n.Messages.OrderManagement_StockOrder_DefaultName;
+	public static String Patientenblatt2_PhotoOpen_GenericError_Title = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError_Title;
+	public static String Patientenblatt2_PhotoOpen_GenericError = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError;
 }
