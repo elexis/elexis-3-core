@@ -80,7 +80,7 @@ public class CorePreferenceInitializer extends AbstractPreferenceInitializer {
 			if (base == null) {
 				base = System.getenv("TMP"); //$NON-NLS-1$
 				if (base == null) {
-					base = CoreUtil.getWritableUserDir().toString(); // $NON-NLS-1$
+					base = System.getProperty("user.home"); //$NON-NLS-1$
 				}
 			}
 			base += "/elexisdata"; //$NON-NLS-1$
