@@ -62,6 +62,8 @@
 	<logger name="ch.elexis.data" level="WARN" />
 	<logger name="ch.elexis.core" level="INFO" />
 	<logger name="jcifs" level="INFO" />
+	<logger name="ch.elexis.core.services.oauth2" level="DEBUG" />
+	<logger name="ch.elexis.core.ui.dialogs.eedep" level="DEBUG" />
 
 	<root level="${root.level:-DEBUG}">
 		<appender-ref ref="STDOUT" />
