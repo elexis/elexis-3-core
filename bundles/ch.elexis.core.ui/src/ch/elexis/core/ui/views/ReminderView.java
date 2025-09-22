@@ -361,10 +361,16 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_AUTO_SELECT_PATIENT, false));
 
 		// get state from user's configuration
-		showOthersRemindersAction.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false));
-
+	    boolean savedShowAll = ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS, false);
+	    showOthersRemindersAction.setChecked(savedShowAll);
 		// update action's access rights
 		showOthersRemindersAction.reflectRight();
+
+	    if (savedShowAll) {
+	        showOthersRemindersAction.setImageDescriptor(null);
+	    } else {
+	        showOthersRemindersAction.setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
+	    }
 
 		reminderLabelProvider.updateUserConfiguration();
 	}
@@ -514,6 +520,11 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 				showAllReminders = showOthersRemindersAction.isChecked();
 				ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS, showAllReminders);
 				cv.notify(CommonViewer.Message.update_keeplabels);
+				if (showAllReminders) {
+					setImageDescriptor(null);
+				} else {
+					setImageDescriptor(Images.IMG_ACHTUNG.getImageDescriptor());
+				}
 			}
 		};
 
