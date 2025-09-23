@@ -59,7 +59,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -117,13 +116,13 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
-import ch.elexis.core.ui.contacts.dialogs.PatientPhotoDialog;
-import ch.elexis.core.ui.contacts.views.util.PatientImageUtil;
+import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
+import ch.elexis.core.ui.dialogs.PatientPhotoDialog;
 import ch.elexis.core.ui.dialogs.ZusatzAdresseEingabeDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.ImageSize;
@@ -138,6 +137,7 @@ import ch.elexis.core.ui.util.LabeledInputField.IStructuredSelectionResolver;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
 import ch.elexis.core.ui.util.ListDisplay;
+import ch.elexis.core.ui.util.PatientImageUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.ViewMenus;
 import ch.elexis.core.ui.util.WidgetFactory;
@@ -545,12 +545,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		headComposite.setLayout(gl);
 
 		titleLabel = tk.createLabel(headComposite, StringUtils.EMPTY, SWT.NONE);
-		Font font = new Font(Display.getCurrent(), "Segoe UI", 13, SWT.BOLD);
-		titleLabel.setFont(font);
+		titleLabel.setFont(UiDesk.getFont("Segoe UI", 13, SWT.BOLD));
 
-		GridData gdTitle = new GridData(SWT.LEFT, SWT.CENTER, true, true);
-		gdTitle.widthHint = 300;
+		GridData gdTitle = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gdTitle.horizontalAlignment = SWT.FILL;
+		gdTitle.grabExcessHorizontalSpace = true;
 		titleLabel.setLayoutData(gdTitle);
+
 
 		photoLabel = tk.createLabel(headComposite, StringUtils.EMPTY);
 		GridData gdPhoto = new GridData(SWT.LEFT, SWT.CENTER, false, false);
@@ -577,7 +578,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 							Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
 				}
 			} else {
-				PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+				CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
 						this.getShell());
 			}
 		});
@@ -1125,7 +1126,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		stickerComposite.setPatient(CoreModelServiceHolder.get().load(actPatient.getId(), IPatient.class).orElse(null));
 		titleLabel.setText(StringTool.unNull(actPatient.getName()) + StringConstants.SPACE
-				+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
+				+ StringTool.unNull(actPatient.getVorname()) + StringConstants.SPACE
+				+ StringTool.unNull(actPatient.getGeburtsdatum()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
 		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
@@ -1686,7 +1688,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			@Override
 			public void run() {
 				if (actPatient != null) {
-					PatientImageUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
+					CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
 							getShell());
 				}
 			}
