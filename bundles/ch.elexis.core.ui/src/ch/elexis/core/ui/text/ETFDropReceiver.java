@@ -17,13 +17,16 @@ import java.util.List;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.graphics.Point;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.GenericObjectDropTarget.IReceiver;
 import ch.elexis.core.ui.util.IKonsExtension;
-import ch.elexis.data.Konsultation;
 import ch.elexis.data.PersistentObject;
 
 public class ETFDropReceiver implements IReceiver {
@@ -77,14 +80,16 @@ public class ETFDropReceiver implements IReceiver {
 			if (rec != null) {
 				rec.insert(object, pos);
 			} else {
-				Konsultation actKons = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
-				if (actKons != null) {
-					if (LocalLockServiceHolder.get().acquireLock(actKons).isOk()) {
+				ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(encounter -> {
+					if (LocalLockServiceHolder.get().acquireLock(encounter).isOk()) {
 						etf.text.insert(getLabel(object));
-						actKons.updateEintrag(etf.getContentsAsXML(), false);
-						LocalLockServiceHolder.get().releaseLock(actKons);
+						EncounterServiceHolder.get().updateVersionedEntry(encounter,
+								new Samdas(etf.getContentsAsXML()));
+
+						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+						LocalLockServiceHolder.get().releaseLock(encounter);
 					}
-				}
+				});
 			}
 		}
 	}
