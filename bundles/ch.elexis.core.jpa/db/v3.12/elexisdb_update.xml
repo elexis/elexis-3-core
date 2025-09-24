@@ -179,17 +179,23 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 	</insert>
 </changeSet>
 
-<changeSet id="craete_mediorderMailSent_sticker" author="pdenzler">
-	<insert tableName="ETIKETTEN">
-		<column name="ID" value="mediorderMailSent" />
-		<column name="LASTUPDATE" valueComputed="${timestamp}" />
-		<column name="IMAGE" value="NULL" />
-		<column name="DELETED" value="0" />
-		<column name="IMPORTANCE" value="1001" />
-		<column name="NAME" value="Mediorder Mail Sent" />
-		<column name="FOREGROUND" value="000000" />
-		<column name="BACKGROUND" value="ffffff" />
-	</insert>
+<changeSet id="create_mediorderMailSent_sticker" author="pdenzler">
+    <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM ETIKETTEN WHERE ID = 'mediorderMailSent'
+            </sqlCheck>
+    </preConditions>
+
+    <insert tableName="ETIKETTEN">
+        <column name="ID" value="mediorderMailSent"/>
+        <column name="LASTUPDATE" valueComputed="${timestamp}"/>
+        <column name="IMAGE" value="NULL"/>
+        <column name="DELETED" value="0"/>
+        <column name="IMPORTANCE" value="1001"/>
+        <column name="NAME" value="Mediorder Mail Sent"/>
+        <column name="FOREGROUND" value="000000"/>
+        <column name="BACKGROUND" value="ffffff"/>
+    </insert>
 </changeSet>
 
 <changeSet id="create_mediorderMailTemplate" author="pdenzler">
