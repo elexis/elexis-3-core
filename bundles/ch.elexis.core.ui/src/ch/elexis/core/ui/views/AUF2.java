@@ -40,6 +40,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -221,7 +222,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 
 			@Override
 			public void run() {
-				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+				IHandlerService handlerService = PlatformUI.getWorkbench()
 						.getService(IHandlerService.class);
 				try {
 					Object createdAuf = handlerService.executeCommand(AufNewHandler.CMD_ID, null);
@@ -313,7 +314,7 @@ public class AUF2 extends ViewPart implements IRefreshable {
 
 			@Override
 			public void run() {
-				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+				IHandlerService handlerService = PlatformUI.getWorkbench()
 						.getService(IHandlerService.class);
 				try {
 					handlerService.executeCommand(AufPrintHandler.CMD_ID, null);
@@ -368,9 +369,9 @@ public class AUF2 extends ViewPart implements IRefreshable {
 
 	@Override
 	public void refresh() {
-		if (CoreUiUtil.isActiveControl(tv.getControl())) {
+		Display.getDefault().asyncExec(() -> {
 			tv.refresh();
-		}
+		});
 	}
 
 	public TableViewer getViewer() {

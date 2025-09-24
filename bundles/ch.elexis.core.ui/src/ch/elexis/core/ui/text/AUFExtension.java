@@ -1,19 +1,25 @@
 package ch.elexis.core.ui.text;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.PartInitException;
 
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.ISickCertificate;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.XRefExtensionConstants;
+import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.services.EncounterServiceHolder;
 import ch.elexis.core.ui.util.IKonsExtension;
 import ch.elexis.core.ui.views.AUF2;
-import ch.elexis.data.AUF;
-import ch.elexis.data.Konsultation;
 import ch.rgw.tools.ExHandler;
 
 public class AUFExtension implements IKonsExtension {
@@ -22,10 +28,11 @@ public class AUFExtension implements IKonsExtension {
 	@Override
 	public String connect(IRichTextDisplay tf) {
 		tx = tf;
-		tx.addDropReceiver(AUF.class, this);
+		tx.addDropReceiver(ISickCertificate.class, this);
 		return XRefExtensionConstants.providerAUFID;
 	}
 
+	@Override
 	public boolean doLayout(StyleRange n, String provider, String id) {
 
 		n.background = UiDesk.getColor(UiDesk.COL_LIGHTBLUE);
@@ -33,9 +40,10 @@ public class AUFExtension implements IKonsExtension {
 		return true;
 	}
 
+	@Override
 	public boolean doXRef(String refProvider, String refID) {
-		AUF auf = AUF.load(refID);
-		if (auf != null && auf.exists()) {
+		Optional<ISickCertificate> loaded = CoreModelServiceHolder.get().load(refID, ISickCertificate.class);
+		if (loaded.isPresent()) {
 			// new EditAUFDialog(Hub.getActiveShell(), auf, auf.getFall()).open();
 			try {
 				AUF2 aufView = (AUF2) Hub.plugin.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -51,14 +59,14 @@ public class AUFExtension implements IKonsExtension {
 
 	@Override
 	public void insert(Object o, int pos) {
-		if (o instanceof AUF) {
-			AUF auf = (AUF) o;
-			final Konsultation k = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);
+		if (o instanceof ISickCertificate) {
+			ISickCertificate auf = (ISickCertificate) o;
+			ContextServiceHolder.get().getTyped(IEncounter.class).ifPresent(e -> {
+				tx.insertXRef(pos, "AUF: " + auf.getLabel(), XRefExtensionConstants.providerAUFID, auf.getId()); //$NON-NLS-1$
+				EncounterServiceHolder.get().updateVersionedEntry(e, new Samdas(tx.getContentsAsXML()));
 
-			tx.insertXRef(pos, "AUF: " + auf.getLabel(), XRefExtensionConstants.providerAUFID, auf.getId()); //$NON-NLS-1$
-
-			k.updateEintrag(tx.getContentsAsXML(), false);
-			ElexisEventDispatcher.update(k);
+				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, e);
+			});
 		}
 	}
 
