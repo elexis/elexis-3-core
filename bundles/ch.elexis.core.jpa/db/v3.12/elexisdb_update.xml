@@ -144,6 +144,11 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 	</changeSet>
 	
 	<changeSet author="pdenzler" id="mediorder_sticker">
+	    <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM ETIKETTEN WHERE ID = 'activate_mediorder'
+            </sqlCheck>
+    	</preConditions>
 	<insert tableName="ETIKETTEN">
 		<column name="ID" value="activate_mediorder" />
 		<column name="LASTUPDATE" valueComputed="${timestamp}" />
@@ -172,6 +177,11 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 </changeSet>
 
 <changeSet author="pdenzler" id="mediorder_sticker_objclass">
+	    <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM ETIKETTEN_OBJCLASS_LINK WHERE OBJCLASS = 'ch.elexis.data.Patient' AND STICKER = 'activate_mediorder'
+            </sqlCheck>
+    	</preConditions>
 	<insert tableName="ETIKETTEN_OBJCLASS_LINK">
 		<column name="OBJCLASS" value="ch.elexis.data.Patient" />
 		<column name="STICKER" value="activate_mediorder" />

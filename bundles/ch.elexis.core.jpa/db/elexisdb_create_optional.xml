@@ -2382,6 +2382,11 @@ WHERE kontakt.id IN (
 	<changeSet id="taskdescriptor_renreswordsystem" author="marco">
 		<preConditions onFail="MARK_RAN">
 			<columnExists tableName="TASKDESCRIPTOR" columnName="SYSTEM" />
+			<and>
+				<not>
+					<columnExists tableName="TASKDESCRIPTOR" columnName="IS_SYSTEM" />
+				</not>
+			</and>
 		</preConditions>
 		<renameColumn tableName="TASKDESCRIPTOR" oldColumnName="SYSTEM"
 			newColumnName="IS_SYSTEM" columnDataType="CHAR(1)" />
