@@ -219,6 +219,11 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
 	</changeSet>
 	
 	<changeSet author="thomas" id="manual_create_USERGROUP_table">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="USERGROUP"/>
+			</not>
+		</preConditions>
         <createTable tableName="USERGROUP">
             <column name="ID" type="VARCHAR(25)">
                 <constraints primaryKey="true" primaryKeyName="USERGROUP_CONSTRAINT_ID"/>
@@ -229,6 +234,11 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
         </createTable>
     </changeSet>
     <changeSet author="thomas" id="manual_create_USERGROUP_ROLE_JOINT_table">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="USERGROUP_ROLE_JOINT"/>
+			</not>
+		</preConditions>
         <createTable tableName="USERGROUP_ROLE_JOINT">
             <column name="ID" type="VARCHAR(25)">
                 <constraints primaryKey="true" primaryKeyName="USERGROUP_ROLE_JOINT_CONSTRAINT_ID"/>
@@ -240,7 +250,12 @@ INSERT INTO USER_ROLE_JOINT (USER_ID, ID, DELETED) SELECT DISTINCT(USER_ID), 'me
             </column>
         </createTable>
     </changeSet>
-        <changeSet author="thomas" id="manual_create_USERGROUP_USER_JOINT_table">
+    <changeSet author="thomas" id="manual_create_USERGROUP_USER_JOINT_table">
+        <preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="USERGROUP_USER_JOINT"/>
+			</not>
+		</preConditions>
         <createTable tableName="USERGROUP_USER_JOINT">
             <column name="ID" type="VARCHAR(25)">
                 <constraints primaryKey="true" primaryKeyName="USERGROUP_USER_JOINT_CONSTRAINT_ID"/>
