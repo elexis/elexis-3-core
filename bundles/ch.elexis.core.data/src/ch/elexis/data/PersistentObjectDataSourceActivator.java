@@ -13,13 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IXidService;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.io.ISettingChangedListener;
 import ch.rgw.tools.ExHandler;
@@ -57,6 +58,12 @@ public class PersistentObjectDataSourceActivator {
 	@Reference
 	private IConfigService configService;
 
+	@Reference
+	private IAccessControlService accessControlService;
+
+	@Reference
+	private IXidService xidService;
+
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 	@Activate
@@ -75,7 +82,7 @@ public class PersistentObjectDataSourceActivator {
 		}
 
 		log.debug("PersistentObject#legacyPostInitDB");
-		boolean legacyPostInitDB = legacyPostInitDB(coreOperationAdvisor);
+		boolean legacyPostInitDB = legacyPostInitDB();
 		if (!legacyPostInitDB) {
 			throw new IllegalStateException("legacyPostInitDB failed", new Throwable());
 		}
@@ -88,7 +95,7 @@ public class PersistentObjectDataSourceActivator {
 	 * @param coreOperationAdvisor
 	 * @return
 	 */
-	private boolean legacyPostInitDB(ICoreOperationAdvisor coreOperationAdvisor) {
+	private boolean legacyPostInitDB() {
 		// globalCfg is null for the firstStart
 		// created is null after aborted firstStart
 
@@ -99,7 +106,7 @@ public class PersistentObjectDataSourceActivator {
 			log.info("PO data initialization");
 			try {
 				PersistentObjectUtil.initializeGlobalCfg(defaultConnection);
-				Mandant.initializeAdministratorUser();
+				Mandant.initializeAdministratorUser(accessControlService, coreModelService);
 				Mandant bypassMandator = PersistentObjectUtil
 						.autoCreateFirstMandant(defaultConnection.isRunningFromScratch() || CoreUtil.isTestMode());
 
@@ -148,7 +155,7 @@ public class PersistentObjectDataSourceActivator {
 						"Your locale [%1s] does not match the required database locale [%2s] as specified in config table. Ignore?",
 						locale.toString(), dbStoredLocale);
 				log.error(msg);
-				if (!CoreOperationAdvisorHolder.get().openQuestion("Difference in locale setting ", msg)) {
+				if (!coreOperationAdvisor.openQuestion("Difference in locale setting ", msg)) {
 					System.exit(2);
 				} else {
 					log.error("User continues with difference locale set");
