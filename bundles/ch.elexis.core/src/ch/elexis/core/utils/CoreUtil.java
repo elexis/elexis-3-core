@@ -245,7 +245,7 @@ public class CoreUtil {
 			userDir = new File(baseDir, homeProp);
 		} else {
 			String userhome = System.getProperty("user.home"); //$NON-NLS-1$
-			if (StringUtils.isNotBlank(userhome)) {
+			if (StringUtils.isBlank(userhome)) {
 				userhome = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 			}
 			userDir = new File(userhome, "elexis"); //$NON-NLS-1$
