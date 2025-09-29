@@ -11,7 +11,6 @@
 
 package ch.elexis.core.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.NumberFormat;
@@ -19,11 +18,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.TimeTool;
 
@@ -37,9 +41,16 @@ import ch.rgw.tools.TimeTool;
  * @author Gerry
  *
  */
+@Component
 public class ExcelWrapper {
 	private Class<?>[] types;
 	private Sheet sheet;
+
+	@Activate
+	public void activate() {
+		// init static XSSFWorkbookFactory using current classloader
+		WorkbookFactory.addProvider(new XSSFWorkbookFactory());
+	}
 
 	/**
 	 * Load a specific page of the given Excel Spreadsheet
@@ -56,6 +67,7 @@ public class ExcelWrapper {
 			sheet = wb.getSheetAt(page);
 			return true;
 		} catch (Exception ex) {
+			LoggerFactory.getLogger(getClass()).error("Error loading from input", ex);
 			return false;
 		}
 	}
@@ -73,6 +85,7 @@ public class ExcelWrapper {
 			sheet = wb.getSheetAt(page);
 			return true;
 		} catch (Exception ex) {
+			LoggerFactory.getLogger(getClass()).error("Error loading from input", ex);
 			return false;
 		}
 	}
