@@ -38,9 +38,6 @@ public class DocumentLetterUtil {
 		if (document == null) {
 			return null;
 		}
-		if (!ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			return null;
-		}
 		String path;
 		String demoBrief = System.getProperty("ch.elexis.brief"); //$NON-NLS-1$
 		if (StringUtils.isNotEmpty(demoBrief)) {
@@ -66,6 +63,9 @@ public class DocumentLetterUtil {
 
 			path = f.getAbsolutePath();
 		} else {
+			if (!ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
+				return null;
+			}
 			path = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
 					ConfigServiceHolder.get());
 		}
