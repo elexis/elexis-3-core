@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>ch.elexis.core.ee.openapi</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<version>3.13.0-SNAPSHOT</version>
+
+	<parent>
+		<groupId>ch.elexis.core</groupId>
+		<artifactId>ch.elexis.core.bundles</artifactId>
+		<version>3.13.0-SNAPSHOT</version>
+	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<!-- RELEASE_VERSION -->
+				<version>7.16.0</version>
+				<!-- /RELEASE_VERSION -->
+				<!-- https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-maven-plugin/README.md-->
+				<!-- https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/java.md -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/rsc/openapi.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<templateDirectory>rsc-gen/generator-templates</templateDirectory>
+							<configOptions>
+								<sourceFolder>/</sourceFolder>
+								<library>native</library>
+								<useJakartaEe>true</useJakartaEe>
+							</configOptions>
+
+							<invokerPackage>ch.myelexis.server.client</invokerPackage>
+							<apiPackage>ch.myelexis.server.api</apiPackage>
+							<modelPackage>ch.myelexis.server.model</modelPackage>
+							<output>${project.basedir}/src-gen</output>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

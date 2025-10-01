@@ -37,7 +37,7 @@ import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
 
-@Component
+@Component(name = ConfigServiceActivator.LEGACY, enabled = false)
 public class ConfigService implements IConfigService {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")

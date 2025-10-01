@@ -73,6 +73,11 @@ public class Application implements IApplication {
 			AccessToken accessToken = eeDependentLoginDialog.getAccessToken();
 			IUser user = AccessTokenUtil.validateCreateIUser(accessToken);
 
+			// user is validated, provide access token to context
+			// for other web related activities
+			// set user to context only after model service is ready!
+			contextService.setTyped(accessToken);
+			
 			// requires clientSecret for elexis-rcp-openid via license or manual add
 			// eleixs-rcp-openid should not work from outside too
 
@@ -91,7 +96,7 @@ public class Application implements IApplication {
 			}
 
 			// accessToken is required during activation of user
-			contextService.setTyped(accessToken);
+
 			contextService.setActiveUser(user);
 
 //		}).start();
