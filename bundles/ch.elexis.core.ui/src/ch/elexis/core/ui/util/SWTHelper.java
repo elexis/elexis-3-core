@@ -46,6 +46,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -589,7 +590,7 @@ public class SWTHelper {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
 			} catch (PartInitException e) {
-				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e);
+				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
 		}
@@ -611,5 +612,25 @@ public class SWTHelper {
 			gd.marginWidth = 0;
 		}
 		return gd;
+	}
+
+	/**
+	 * Creates a bold informational label used to indicate demo mode or restricted
+	 * functionality within a preference or settings page.
+	 * <p>
+	 * The label is created with word wrap enabled, uses a bold "Lucida Grande" font
+	 * (size 10) and is laid out to span 3 columns in a grid layout.
+	 * </p>
+	 *
+	 * @param parent the parent composite to add the label to
+	 * @param text   the message text to display inside the label
+	 * @return the created {@link Label} instance
+	 */
+	public static Label createDemoInfoLabel(Composite parent, String text) {
+		Label demoInfo = new Label(parent, SWT.WRAP);
+		demoInfo.setText(text);
+		demoInfo.setFont(SWTResourceManager.getFont("Lucida Grande", 10, SWT.BOLD)); //$NON-NLS-1$
+		demoInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		return demoInfo;
 	}
 }

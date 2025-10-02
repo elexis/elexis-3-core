@@ -5210,6 +5210,8 @@ public class Messages extends NLS {
 	public static String GoogleLoginDialog_Interrupted;
 	public static String GoogleLoginDialog_CallbackError;
 	public static String GoogleLoginDialog_Timeout;
+	public static String Omnivore_demo_outsource_disabled;
+	public static String Texterstellung_demo_browse_disabled;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
