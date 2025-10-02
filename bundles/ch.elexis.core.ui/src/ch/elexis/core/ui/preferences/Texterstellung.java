@@ -173,8 +173,8 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			storePath.setPreferenceName(PreferencesUtil.getOsSpecificPreferenceName(selection, Preferences.P_TEXT_EXTERN_FILE_PATH));
 			storePath.load();
 		});
-		String debugPath = System.getProperty("ch.elexis.brief");
-		if (StringUtils.isNotEmpty(debugPath)) {
+		String demoBrief = System.getProperty("ch.elexis.brief");
+		if (StringUtils.isNotEmpty(demoBrief)) {
 			storePath.setEnabled(false, comp);
 			SWTHelper.createDemoInfoLabel(comp, Messages.Texterstellung_demo_browse_disabled);
 		}
