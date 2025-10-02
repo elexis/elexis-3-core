@@ -19,10 +19,6 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -65,6 +61,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -182,7 +179,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID);
 	@SuppressWarnings("unchecked")
 	private final List<IViewContribution> buttonTabContributions = Extensions.getClasses(VIEWCONTRIBUTION,
-			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID + ":buttonTab");
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, PatientDetailView2.ID + ":buttonTab"); //$NON-NLS-1$
 
 	@Inject
 	void lockedPatient(@Optional @UIEventTopic(ElexisEventTopics.EVENT_LOCK_AQUIRED) IPatient patient) {
@@ -340,18 +337,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				new LabeledInputField.IExecLinkProvider() {
 					@Override
 					public void executeString(InputData ltf) {
-						if (ltf.getText().length() == 0)
+						if (ltf.getText().length() == 0) {
 							return;
+						}
 						try {
-							URI uriMailTo = new URI("mailto", ltf.getText(), null); //$NON-NLS-1$
-							Desktop.getDesktop().mail(uriMailTo);
-						} catch (URISyntaxException e1) {
+							String mailAddress = ltf.getText().trim();
+							Program.launch("mailto:" + mailAddress); //$NON-NLS-1$
+						} catch (Exception ex) {
 							Status status = new Status(IStatus.WARNING, Hub.PLUGIN_ID,
-									"Error in using mail address " + ltf);
-							StatusManager.getManager().handle(status, StatusManager.SHOW);
-						} catch (IOException e2) {
-							Status status = new Status(IStatus.WARNING, Hub.PLUGIN_ID,
-									"Error in using mail address " + ltf);
+									"Error while opening mail address: " + ltf.getText(), ex); //$NON-NLS-1$
 							StatusManager.getManager().handle(status, StatusManager.SHOW);
 						}
 					}
@@ -570,12 +564,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				try {
 					String target = e.text;
 					if (target.startsWith("tel:")) { //$NON-NLS-1$
-						String num = target.substring(4);
-						num = num.replaceAll("[^+\\d]", StringUtils.EMPTY); //$NON-NLS-1$
-						num = num.replaceFirst("^00", "+"); //$NON-NLS-1$ //$NON-NLS-2$
+						String num = target.substring(4).replaceAll("[^+\\d]", StringUtils.EMPTY).replaceFirst("^00", //$NON-NLS-1$ //$NON-NLS-2$
+								"+"); //$NON-NLS-1$
 						target = "tel:" + num; //$NON-NLS-1$
 					}
-					Desktop.getDesktop().browse(new URI(target));
+					Program.launch(target);
 				} catch (Exception ex) {
 					SWTHelper.alert(Messages.Core_Error, Messages.Patientenblatt2_CannotOpenPhone + ex.getMessage());
 				}
@@ -634,12 +627,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		stickerComposite = StickerComposite.createWrappedStickerComposite(form.getBody(), tk);
 		((ColumnLayout) stickerComposite.getLayout()).maxNumColumns = 2;
 
-		ExpandableComposite ecStammdaten = WidgetFactory.createExpandableComposite(tk, form, "Stammdaten");
-		UserSettings.setExpandedState(ecStammdaten, KEY_PATIENTENBLATT + "Stammdaten");
+		ExpandableComposite ecStammdaten = WidgetFactory.createExpandableComposite(tk, form, "Stammdaten"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecStammdaten, KEY_PATIENTENBLATT + "Stammdaten"); //$NON-NLS-1$
 		ecStammdaten.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanging(ExpansionEvent e) {
-				UserSettings.saveExpandedState(KEY_PATIENTENBLATT + "Stammdaten", e.getState());
+				UserSettings.saveExpandedState(KEY_PATIENTENBLATT + "Stammdaten", e.getState()); //$NON-NLS-1$
 			}
 		});
 
@@ -767,7 +760,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			// MacOs specific redraw bug workaround since 3.9
-			if (CoreUtil.isMac() && ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) {
+			if (CoreUtil.isMac() && ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
 				form.getVerticalBar().addListener(SWT.Selection, e -> ret.redraw());
 			}
 			// end
@@ -911,11 +904,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
 			FilterNonPrintableModifyListener.addTo(text);
-			text.setData("index", Integer.valueOf(i));
+			text.setData("index", Integer.valueOf(i)); //$NON-NLS-1$
 			text.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					saveExpandable((Integer) text.getData("index"));
+					saveExpandable((Integer) text.getData("index")); //$NON-NLS-1$
 				}
 			});
 			txExpandable.add(text);
