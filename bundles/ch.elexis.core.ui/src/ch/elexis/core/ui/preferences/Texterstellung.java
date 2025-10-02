@@ -173,7 +173,13 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 			storePath.setPreferenceName(PreferencesUtil.getOsSpecificPreferenceName(selection, Preferences.P_TEXT_EXTERN_FILE_PATH));
 			storePath.load();
 		});
+		String demoBrief = System.getProperty("ch.elexis.brief");
+		if (StringUtils.isNotEmpty(demoBrief)) {
+			storePath.setEnabled(false, comp);
+			SWTHelper.createDemoInfoLabel(comp, Messages.Texterstellung_demo_browse_disabled);
+		}
 
+		Label seperator = new Label(comp, SWT.WRAP);
 		allExtern = new Label(compExtern, SWT.WRAP);
 		allExtern.setText(Messages.Texterstellung_save_all_letters_externally);
 		allExtern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));

@@ -1,5 +1,6 @@
 package ch.elexis.core.model.util;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
@@ -37,13 +38,38 @@ public class DocumentLetterUtil {
 		if (document == null) {
 			return null;
 		}
+		String path;
+		String demoBrief = System.getProperty("ch.elexis.brief"); //$NON-NLS-1$
+		if (StringUtils.isNotEmpty(demoBrief)) {
+			File f = new File(demoBrief);
+			if (!f.isAbsolute()) {
+				f = new File(System.getProperty("user.dir"), demoBrief);
+			}
+			try {
+				f = f.getCanonicalFile();
+			} catch (IOException e) {
+				f = f.getAbsoluteFile();
+			}
 
-		if (!ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
-			return null;
+			if (!f.exists()) {
+				if (f.mkdirs()) {
+					LoggerFactory.getLogger(DocumentLetterUtil.class).info("Created missing demo path for Briefe: {}",
+							f.getAbsolutePath());
+				} else {
+					LoggerFactory.getLogger(DocumentLetterUtil.class).warn("Could not create demo path for Briefe: {}",
+							f.getAbsolutePath());
+				}
+			}
+
+			path = f.getAbsolutePath();
+		} else {
+			if (!ConfigServiceHolder.getGlobal(Preferences.P_TEXT_EXTERN_FILE, false)) {
+				return null;
+			}
+			path = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
+					ConfigServiceHolder.get());
 		}
 
-		String path = PreferencesUtil.getOsSpecificPreference(Preferences.P_TEXT_EXTERN_FILE_PATH,
-				ConfigServiceHolder.get());
 		if (path == null) {
 			logger.error("External storage path is [null]");
 			return null;
