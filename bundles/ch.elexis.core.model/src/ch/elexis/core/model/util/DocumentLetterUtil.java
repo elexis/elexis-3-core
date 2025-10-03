@@ -60,6 +60,8 @@ public class DocumentLetterUtil {
 							f.getAbsolutePath());
 				}
 			}
+			LoggerFactory.getLogger(DocumentLetterUtil.class).info("Demo mode enabled – Letters are saved under: {}",
+					f.getAbsolutePath());
 
 			path = f.getAbsolutePath();
 		} else {
