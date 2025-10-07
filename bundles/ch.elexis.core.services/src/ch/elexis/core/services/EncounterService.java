@@ -1,6 +1,7 @@
 package ch.elexis.core.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
@@ -394,30 +396,33 @@ public class EncounterService implements IEncounterService {
 		CoreModelServiceHolder.get().save(encounter);
 
 		Result<IEncounter> ret = new Result<IEncounter>(encounter);
-		IBillableVerifier verifier = null;
+		List<IBillableVerifier> verifiers = new ArrayList<>();
 		// get an optifier for the tarmed code system
 		for (IBilled billed : encounter.getBilled()) {
 			IBillable billable = billed.getBillable();
-			// TODO there should be a central codeSystemName registry
-			if ("Tarmed".equals(billable.getCodeSystemName())) {
-				verifier = billable.getVerifier();
-				break;
+			if (billable != null && billable.getVerifier() != null
+					&& !(billable.getVerifier() instanceof DefaultVerifier)) {
+				if (!verifiers.stream().anyMatch(v -> v.getClass().equals(billable.getVerifier().getClass()))) {
+					verifiers.add(billable.getVerifier());
+				}
 			}
 		}
-		if (verifier != null) {
-			Result<IBilled> result = verifier.verify(encounter);
-			if (!result.isOK()) {
-				// remove invalid billed on new date
-				List<Result<IBilled>.msg> messages = result.getMessages();
-				for (msg msg : messages) {
-					if (msg.getObject() instanceof IBilled) {
-						IBilled billed = (IBilled) msg.getObject();
-						IBillable billable = billed.getBillable();
-						if (billable != null) {
-							encounter.removeBilled(billed);
-							String message = "Achtung: durch die Änderung wurde die Position " + billable.getCode()
-									+ " automatisch entfernt.\nLimitation: " + msg.getText();
-							ret.addMessage(SEVERITY.WARNING, message, encounter);
+		if (!verifiers.isEmpty()) {
+			for (IBillableVerifier verifier : verifiers) {
+				Result<IBilled> result = verifier.verify(encounter);
+				if (!result.isOK()) {
+					// remove invalid billed on new date
+					List<Result<IBilled>.msg> messages = result.getMessages();
+					for (msg msg : messages) {
+						if (msg.getObject() instanceof IBilled) {
+							IBilled billed = (IBilled) msg.getObject();
+							IBillable billable = billed.getBillable();
+							if (billable != null) {
+								encounter.removeBilled(billed);
+								String message = "Achtung: durch die Änderung wurde die Position " + billable.getCode()
+										+ " automatisch entfernt.\nLimitation: " + msg.getText();
+								ret.addMessage(SEVERITY.WARNING, message, encounter);
+							}
 						}
 					}
 				}
