@@ -29,6 +29,8 @@ public class ConfigService implements IConfigService {
 	@Reference
 	IContextService contextService;
 
+	// FIXME set operation should invalidate cache
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public static final String LIST_SEPARATOR = ",";
@@ -156,16 +158,22 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean set(String key, String value) {
-		// TODO just try - leave remote to decide?!
-
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		try {
+			if (value == null) {
+				throw new UnsupportedOperationException();
+			}
+			userApi.setGlobalConfigurationValueByKey(key, value);
+			return true;
+		} catch (ApiException e) {
+			logger.error("Could not set global key " + key, e);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean set(String key, String value, boolean addTraceEntry) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		// addTraceEntry is determined by server
+		return set(key, value);
 	}
 
 	@Override
@@ -180,13 +188,14 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean set(IContact contact, String key, int value) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return set(contact, key, Integer.toString(value));
 	}
 
 	@Override
 	public boolean set(IContact contact, String key, String value) {
-		// TODO Auto-generated method stub
+		if (Objects.equals(contact.getId(), contextService.getActiveUserContact().map(IContact::getId).orElse(null))) {
+			return setActiveUserContact(key, value);
+		}
 		throw new UnsupportedOperationException();
 	}
 
@@ -225,8 +234,7 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean set(IContact contact, String key, boolean value) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return set(contact, key, Boolean.valueOf(value));
 	}
 
 	@Override
