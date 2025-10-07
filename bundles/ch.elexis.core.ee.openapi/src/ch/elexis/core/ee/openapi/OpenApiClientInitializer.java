@@ -27,8 +27,9 @@ public class OpenApiClientInitializer {
 	@Activate
 	public void activate() {
 
-		ApiClient defaultApiClient = Configuration.getDefaultApiClient();
+		// TODO use http client that supports caching
 
+		ApiClient defaultApiClient = Configuration.getDefaultApiClient();
 		defaultApiClient.setHost(elexisEnvironmentService.getHostname());
 		defaultApiClient.setScheme("https");
 		defaultApiClient.setConnectTimeout(Duration.ofSeconds(1));

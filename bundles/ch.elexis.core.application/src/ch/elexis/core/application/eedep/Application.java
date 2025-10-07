@@ -145,6 +145,7 @@ public class Application implements IApplication {
 			String body = httpClient.send(request, BodyHandlers.ofString()).body();
 			return new Gson().fromJson(body, DBConnection.class);
 		} catch (Exception e) {
+			// TODO show error dialog
 			throw new IllegalStateException("Can not fetch database connection settings", e);
 		}
 	}

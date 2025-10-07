@@ -299,8 +299,10 @@ components:
       openIdConnectUrl: https://marcos-mbp-2025.myelexis.ch/keycloak/auth/realms/ElexisEnvironment/.well-known/openid-configuration
       description: Authentication
 info:
-  description: Created from Annotated Buildtime filter with 19155 known indexed classes
-  title: server API
+  license:
+    name: Eclipse Public License - v 2.0
+    url: https://www.eclipse.org/legal/epl-2.0/
+  title: myElexis-Server API
   version: 1.0.0-SNAPSHOT
 tags:
 - name: management
@@ -313,23 +315,15 @@ tags:
   description: "Legacy API, will be removed in future versions"
 - name: config
   description: System configuration
-- name: Legacy Event Service
-  description: Legacy Event Service for Elexis 3
-- name: Legacy Instance Service
-  description: Legacy Instance Service for Elexis 3
-- name: Legacy Lock Service
-  description: Legacy Lock Service for Elexis 3
 - name: entity management
   description: Low-level operations for managing entities
-- name: user Management
+- name: user management
   description: Operations to manage users and upstream sync with Keycloak. Only EER3
     - Data primary store is Elexis database.
-- name: Message Service v1
-- name: Task Service v1
+- name: message service v1
+- name: task service v1
   description: Service to handle Task execution
-- name: Virtual Filesystem Service v1
-- name: User Service v1
-  description: Operations about the current user
+- name: virtual filesystem service v1
 paths:
   /api/v1/management/config/contact/{contactid}:
     post:
@@ -365,7 +359,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     get:
       operationId: getContactConfigurationEntries
       tags:
@@ -395,7 +389,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/management/config/global:
     put:
       operationId: updateGlobalConfigByJson
@@ -422,7 +416,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     get:
       summary: Return the global configuration tree
       operationId: getGlobalConfiguration
@@ -449,7 +443,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/management/config/usercontact:
     get:
       summary: "Return the configuration tree of a user contact. If no param provided,\
@@ -481,7 +475,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/management/entity/{entityType}/{entityId}/extinfo:
     put:
       summary: Set a single key/value pair on an entities extinfo
@@ -519,7 +513,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     post:
       summary: Set multiple key/value pairs on an entities extinfo
       operationId: setMultipleEntityExtInfoKeyValue
@@ -558,7 +552,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     delete:
       summary: Remove a single key/value pair on an entities extinfo
       operationId: removeEntityExtInfoKeyValue
@@ -591,7 +585,7 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     get:
       summary: Return the extinfo stored values of an entity
       operationId: getEntityExtInfo
@@ -626,15 +620,15 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/management/user:
     get:
       summary: List all users
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>Lists all\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>Lists all\
         \ users in the system."
       operationId: getUsers
       tags:
-      - user Management
+      - user management
       - management
       responses:
         "200":
@@ -655,12 +649,12 @@ paths:
         - ict-administrator
     post:
       summary: Create a new user
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>Creates\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>Creates\
         \ a new user and, if no assocatiedContactId is provided, an associated contact\
         \ in the database"
       operationId: createUser
       tags:
-      - user Management
+      - user management
       - management
       requestBody:
         content:
@@ -686,11 +680,11 @@ paths:
   /api/v1/management/user/list-available-groups:
     get:
       summary: List available groups
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>The user\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>The user\
         \ groups a user may be a member of."
       operationId: listAvailableGroups
       tags:
-      - user Management
+      - user management
       - management
       responses:
         "200":
@@ -712,11 +706,11 @@ paths:
   /api/v1/management/user/list-available-roles:
     get:
       summary: List available roles
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>The access\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>The access\
         \ roles assignable to a user."
       operationId: listAvailableRoles
       tags:
-      - user Management
+      - user management
       - management
       responses:
         "200":
@@ -738,12 +732,12 @@ paths:
   /api/v1/management/user/sync-to-keycloak:
     put:
       summary: Upstream keycloak sync user data
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>Synchronizes\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>Synchronizes\
         \ the user to the Keycloak server. Creates the user if it does not exist.\
         \ Updates the user if it exists."
       operationId: upstreamSyncToKeycloak
       tags:
-      - user Management
+      - user management
       - management
       parameters:
       - name: username
@@ -766,11 +760,11 @@ paths:
   /api/v1/management/user/{id}:
     put:
       summary: Update an existing user
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>Requires\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>Requires\
         \ the associatedContactId to be set. Updates the user and the associated contact."
       operationId: updateUser
       tags:
-      - user Management
+      - user management
       - management
       parameters:
       - name: id
@@ -800,7 +794,7 @@ paths:
     get:
       operationId: getUser
       tags:
-      - user Management
+      - user management
       - management
       parameters:
       - name: id
@@ -824,14 +818,14 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
     delete:
       summary: Remove user from database
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>Removes\
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>Removes\
         \ the user from the database, does not remove the associated contact"
       operationId: deleteUser
       tags:
-      - user Management
+      - user management
       - management
       parameters:
       - name: id
@@ -856,12 +850,12 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-  /api/v1/message:
+  /api/v1/services/message:
     post:
       summary: Send a message using an available transporter scheme
       operationId: sendMessage
       tags:
-      - Message Service v1
+      - message service v1
       requestBody:
         content:
           application/json:
@@ -880,13 +874,13 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/message/schemes:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/message/schemes:
     get:
       summary: Get supported URI schemes for messaging
       operationId: getSupportedUriSchemes
       tags:
-      - Message Service v1
+      - message service v1
       responses:
         "200":
           description: OK
@@ -897,13 +891,13 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/runnable:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/runnable:
     get:
       summary: List available runnables
       operationId: listRunnables
       tags:
-      - Task Service v1
+      - task service v1
       responses:
         "200":
           description: OK
@@ -920,13 +914,13 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/runnable/{runnableId}/$trigger:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/runnable/{runnableId}/$trigger:
     post:
       summary: Trigger asynchronous execution of a runnable
       operationId: triggerRunnable
       tags:
-      - Task Service v1
+      - task service v1
       parameters:
       - name: runnableId
         in: path
@@ -957,13 +951,13 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/runnable/{runnableId}/$trigger-sync:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/runnable/{runnableId}/$trigger-sync:
     post:
       summary: Trigger synchronous execution of a runnable by its id
       operationId: triggerRunnableSync
       tags:
-      - Task Service v1
+      - task service v1
       parameters:
       - name: runnableId
         in: path
@@ -994,13 +988,13 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/runnable/{runnableId}/executions:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/runnable/{runnableId}/executions:
     get:
       summary: Find all current and past executions of a runnable
       operationId: findRunnableExecutions
       tags:
-      - Task Service v1
+      - task service v1
       parameters:
       - name: runnableId
         in: path
@@ -1023,13 +1017,278 @@ paths:
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/service/vfs/delete:
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task:
+    get:
+      summary: List tasks
+      operationId: findTasks
+      tags:
+      - task service v1
+      parameters:
+      - name: system
+        in: query
+        schema:
+          type: boolean
+          default: "false"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+    post:
+      summary: Create a new task
+      operationId: createTask
+      tags:
+      - task service v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+        "400":
+          description: Bad Request
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}:
+    put:
+      summary: Update task
+      operationId: updateTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+        "400":
+          description: Bad Request
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+    get:
+      summary: Get task and its state
+      operationId: findTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+    delete:
+      summary: Delete task
+      operationId: deleteTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}/$activate:
+    put:
+      summary: Activate and possibly incur task
+      operationId: activateTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}/$deactivate:
+    put:
+      summary: Deactivate task
+      operationId: deactivateTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}/$refresh:
+    put:
+      summary: "Refreshes the info on this task, and acts on it"
+      operationId: refreshTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}/$trigger:
+    put:
+      summary: Trigger task
+      operationId: triggerTask
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResult"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/{id}/executions:
+    get:
+      summary: Get all task executions ordered by create time descending (limit 25)
+      operationId: findTaskExecutions
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskResult"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/vfs/delete:
     delete:
       summary: Delete a file or directory from the virtual filesystem
       operationId: deleteVfsUrl
       tags:
-      - Virtual Filesystem Service v1
+      - virtual filesystem service v1
       parameters:
       - name: vfsUrl
         in: query
@@ -1046,13 +1305,13 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
-  /api/v1/service/vfs/download:
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/vfs/download:
     get:
       summary: Download a file from the virtual filesystem
       operationId: downloadFileByVfsUrl
       tags:
-      - Virtual Filesystem Service v1
+      - virtual filesystem service v1
       parameters:
       - name: vfsUrl
         in: query
@@ -1074,13 +1333,13 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
-  /api/v1/service/vfs/list:
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/vfs/list:
     get:
       summary: List the contents of a directory
       operationId: listVfsUrl
       tags:
-      - Virtual Filesystem Service v1
+      - virtual filesystem service v1
       parameters:
       - name: vfsUrl
         in: query
@@ -1103,13 +1362,13 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
-  /api/v1/service/vfs/mkdirs:
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/vfs/mkdirs:
     put:
       summary: Create a directory and all intermediates
       operationId: mkdirsVfsUrl
       tags:
-      - Virtual Filesystem Service v1
+      - virtual filesystem service v1
       parameters:
       - name: vfsUrl
         in: query
@@ -1126,13 +1385,13 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
-  /api/v1/service/vfs/upload:
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/vfs/upload:
     post:
       summary: Upload a file to the virtual filesystem
       operationId: uploadFileToVfsUrl
       tags:
-      - Virtual Filesystem Service v1
+      - virtual filesystem service v1
       parameters:
       - name: vfsUrl
         in: query
@@ -1156,280 +1415,53 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
-  /api/v1/task:
-    get:
-      summary: List tasks
-      operationId: findTasks
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/user/config/contact:
+    put:
+      operationId: setUserContactConfigurationValueByKey
       tags:
-      - Task Service v1
+      - user
+      - config
       parameters:
-      - name: system
+      - required: true
+        name: key
         in: query
         schema:
-          type: boolean
-          default: "false"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Task"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-    post:
-      summary: Create a new task
-      operationId: createTask
-      tags:
-      - Task Service v1
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Task"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-        "400":
-          description: Bad Request
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}:
-    put:
-      summary: Update task
-      operationId: updateTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
           type: string
       requestBody:
         content:
-          application/json:
+          text/plain:
             schema:
-              $ref: "#/components/schemas/Task"
+              type: string
         required: true
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
+        "204":
+          description: No Content
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
-        "400":
-          description: Bad Request
+      summary: Set User Contact Configuration Value By Key
       security:
       - ElexisEnvironment:
         - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-    get:
-      summary: Get task and its state
-      operationId: findTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-    delete:
-      summary: Delete task
-      operationId: deleteTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}/$activate:
-    put:
-      summary: Activate and possibly incur task
-      operationId: activateTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}/$deactivate:
-    put:
-      summary: Deactivate task
-      operationId: deactivateTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}/$refresh:
-    put:
-      summary: "Refreshes the info on this task, and acts on it"
-      operationId: refreshTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}/$trigger:
-    put:
-      summary: Trigger task
-      operationId: triggerTask
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TaskResult"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/task/{id}/executions:
-    get:
-      summary: Get all task executions ordered by create time descending (limit 25)
-      operationId: findTaskExecutions
-      tags:
-      - Task Service v1
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/TaskResult"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      security:
-      - ElexisEnvironment:
-        - api-access
-      description: 🔓 **Roles Required:** api-access<br>
-  /api/v1/user/config/contact:
+        - user
+      description: "<b>Roles Required:</b> api-access,user<br>"
     get:
       operationId: getUserContactConfigurationValueByKey
       tags:
       - user
       - config
       parameters:
-      - name: key
+      - description: Target contact to fetch value for. Limited to self and contact
+          user is aobo
+        required: false
+        name: contact-id
+        in: query
+        schema:
+          type: string
+      - required: true
+        name: key
         in: query
         schema:
           type: string
@@ -1449,7 +1481,31 @@ paths:
       - ElexisEnvironment:
         - api-access
         - user
-      description: "🔓 **Roles Required:** api-access,user<br>"
+      description: "<b>Roles Required:</b> api-access,user<br>"
+    delete:
+      operationId: deleteUserContactConfigurationEntryByKey
+      tags:
+      - user
+      - config
+      parameters:
+      - required: true
+        name: key
+        in: query
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Delete User Contact Configuration Entry By Key
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - user
+      description: "<b>Roles Required:</b> api-access,user<br>"
   /api/v1/user/config/global:
     put:
       operationId: setGlobalConfigurationValueByKey
@@ -1457,7 +1513,8 @@ paths:
       - user
       - config
       parameters:
-      - name: key
+      - required: true
+        name: key
         in: query
         schema:
           type: string
@@ -1483,14 +1540,15 @@ paths:
       - ElexisEnvironment:
         - api-access
         - user
-      description: "🔓 **Roles Required:** api-access,user<br>"
+      description: "<b>Roles Required:</b> api-access,user<br>"
     get:
       operationId: getGlobalConfigurationValueByKey
       tags:
       - user
       - config
       parameters:
-      - name: key
+      - required: true
+        name: key
         in: query
         schema:
           type: string
@@ -1510,15 +1568,47 @@ paths:
       - ElexisEnvironment:
         - api-access
         - user
-      description: "🔓 **Roles Required:** api-access,user<br>"
+      description: "<b>Roles Required:</b> api-access,user<br>"
+  /api/v1/user/config/global-subnodekeys:
+    get:
+      summary: Find the direct subnode keys for a given entry branch. Programmatically
+        limited to specific branches.
+      operationId: findGlobalConfigurationDirectSubnodeKeysForGivenKey
+      tags:
+      - user
+      - config
+      parameters:
+      - required: true
+        name: key
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - user
+      description: "<b>Roles Required:</b> api-access,user<br>"
   /api/v1/user/executive-doctors-working-for:
     get:
       summary: Get executive doctors user is working for
-      description: Retrieves the contact ids of the executive doctors the current
-        user is working for
+      description: "<b>Roles Required:</b> api-access,user<br>Retrieves the contact\
+        \ ids of the executive doctors the current user is working for"
       operationId: getExecutiveDoctorsWorkingFor
       tags:
-      - User Service v1
+      - user
       responses:
         "200":
           description: OK
@@ -1529,13 +1619,21 @@ paths:
                 uniqueItems: true
                 items:
                   type: string
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - user
   /api/v1/user/info:
     get:
       summary: Get user information
       description: User information as contained in the token
       operationId: getUserInfo
       tags:
-      - User Service v1
+      - user
       parameters:
       - name: resolve-via-keycloak
         in: query
@@ -1553,7 +1651,7 @@ paths:
     post:
       operationId: postEvent
       tags:
-      - Legacy Event Service
+      - legacy
       requestBody:
         content:
           application/xml:
@@ -1568,7 +1666,6 @@ paths:
       deprecated: true
       operationId: getStatusJson
       tags:
-      - Legacy Instance Service
       - legacy
       responses:
         "200":
@@ -1588,12 +1685,12 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
-      description: "🔓 **Roles Required:** api-access,ict-administrator<br>"
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /services/elexis/lockservice/acquireOrReleaseLocks:
     post:
       operationId: acquireOrReleaseLocks
       tags:
-      - Legacy Lock Service
+      - legacy
       requestBody:
         content:
           application/xml:
@@ -1611,7 +1708,7 @@ paths:
     post:
       operationId: isLocked
       tags:
-      - Legacy Lock Service
+      - legacy
       requestBody:
         content:
           application/xml:
@@ -1629,7 +1726,7 @@ paths:
     get:
       operationId: getLockInfo
       tags:
-      - Legacy Lock Service
+      - legacy
       parameters:
       - name: objectId
         in: query
