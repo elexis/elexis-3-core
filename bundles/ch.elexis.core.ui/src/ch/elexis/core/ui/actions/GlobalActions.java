@@ -100,6 +100,7 @@ import ch.elexis.core.ui.constants.UiPreferenceConstants;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.dialogs.DateSelectorDialog;
 import ch.elexis.core.ui.dialogs.NeuerFallDialog;
+import ch.elexis.core.ui.dialogs.ResultDialog;
 import ch.elexis.core.ui.dialogs.SelectFallDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.LockedAction;
@@ -626,7 +627,7 @@ public class GlobalActions {
 					Result<IEncounter> result = EncounterServiceHolder.get().setEncounterDate(element,
 							date.toLocalDate());
 					if (!result.isOK()) {
-						SWTHelper.alert("Warnung", result.toString());
+						SWTHelper.alert("Warnung", ResultDialog.getResultMessage(result));
 					}
 					// notify listeners about change
 					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
