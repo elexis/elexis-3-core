@@ -28,6 +28,7 @@ public class IdentifierDomainMapper {
 		MAP_ELEXIS_TO_FHIR.put(XidConstants.DOMAIN_KSK, FhirChConstants.OID_ZSR_SYSTEM);
 		MAP_ELEXIS_TO_FHIR.put(XidConstants.DOMAIN_NIF, XidConstants.DOMAIN_NIF);
 		MAP_ELEXIS_TO_FHIR.put(XidConstants.DOMAIN_SUVA, XidConstants.DOMAIN_SUVA);
+		MAP_ELEXIS_TO_FHIR.put(XidConstants.DOMAIN_RECIPIENT_EAN, FhirChConstants.BSV_NUMMER_SYSTEM);
 
 		// -- inwards
 
@@ -39,6 +40,7 @@ public class IdentifierDomainMapper {
 
 		MAP_FHIR_TO_ELEXIS.put(FhirChConstants.BSV_NUMMER_SYSTEM, XidConstants.DOMAIN_BSVNUM);
 		MAP_FHIR_TO_ELEXIS.put(XidConstants.DOMAIN_BSVNUM, XidConstants.DOMAIN_BSVNUM);
+		MAP_FHIR_TO_ELEXIS.put(XidConstants.DOMAIN_RECIPIENT_EAN, XidConstants.DOMAIN_RECIPIENT_EAN);
 
 		MAP_FHIR_TO_ELEXIS.put(FhirChConstants.OID_ZSR_SYSTEM, XidConstants.DOMAIN_KSK);
 		MAP_FHIR_TO_ELEXIS.put(XidConstants.DOMAIN_KSK, XidConstants.DOMAIN_KSK);

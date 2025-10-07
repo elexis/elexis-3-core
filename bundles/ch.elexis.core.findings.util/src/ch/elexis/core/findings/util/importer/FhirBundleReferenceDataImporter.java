@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.BaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Identifier;
@@ -50,7 +51,7 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 	}
 
 	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion,
-			Consumer<Object> updateLocalObjectConsumer) {
+			BiConsumer<Object, BaseResource> updateLocalObjectConsumer) {
 		if(input != null) {
 			try {
 				String jsonString = IOUtils.toString(input, "UTF-8");
@@ -76,7 +77,7 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 									.warn("Unknown entry resource type [" + entryResource + "]");
 						}
 						if (localObject.isPresent() && updateLocalObjectConsumer != null) {
-							updateLocalObjectConsumer.accept(localObject.get());
+							updateLocalObjectConsumer.accept(localObject.get(), entryResource);
 						}
 					}
 				}
@@ -133,6 +134,8 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 		case XidConstants.DOMAIN_BSVNUM:
 		case FhirChConstants.BSV_NUMMER_SYSTEM:
 			return XidConstants.DOMAIN_BSVNUM;
+		case XidConstants.DOMAIN_RECIPIENT_EAN:
+			return XidConstants.DOMAIN_RECIPIENT_EAN;
 		default:
 			break;
 		}

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Organization;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -16,6 +18,7 @@ import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StickerServiceHolder;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=insurances", service = IReferenceDataImporter.class)
@@ -53,9 +56,17 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 
 		// perform import with update consumer
 		IStatus ret = ((FhirBundleReferenceDataImporter) fhirBundleImporter).performImport(ipm, input, newVersion,
-				(o) -> {
-					if (o instanceof IOrganization) {
+				(o, f) -> {
+					if (o instanceof IOrganization && f instanceof Organization) {
 						IOrganization insurance = (IOrganization) o;
+						Organization fhirInsurance = (Organization) f;
+						if (fhirInsurance.hasMeta() && fhirInsurance.getMeta()
+								.hasExtension("http://fhir.ch/ig/ch-orf/CodeSystem/ch-orf-cs-coveragetype")) {
+							Extension extension = fhirInsurance.getMeta()
+									.getExtensionByUrl("http://fhir.ch/ig/ch-orf/CodeSystem/ch-orf-cs-coveragetype");
+							insurance.setInsuranceLawCode(extension.getValue().toString());
+							CoreModelServiceHolder.get().save(insurance);
+						}
 						if (!stickerService.hasSticker(insurance, sticker)) {
 							stickerService.addSticker(sticker, insurance);
 						}
