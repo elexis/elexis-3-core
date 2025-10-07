@@ -3,6 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.services.IConfigService"/>
    </service>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="userApi" interface="ch.myelexis.server.api.UserApi" name="userApi"/>
    <implementation class="ch.elexis.core.services.eedep.ConfigService"/>
 </scr:component>

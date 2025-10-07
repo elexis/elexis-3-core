@@ -23,8 +23,8 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;
@@ -36,6 +36,9 @@ public class PatientDetailView2 extends ViewPart {
 
 	@Inject
 	IContextService contextService;
+
+	@Inject
+	IElexisServerService elexisServerService;
 
 	public static final String ID = "ch.elexis.PatDetail_v2"; //$NON-NLS-1$
 	Patientenblatt2 pb;
@@ -64,7 +67,7 @@ public class PatientDetailView2 extends ViewPart {
 		@Override
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			if (pb != null && !pb.isDisposed() &&
-				    ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
+					elexisServerService.getConnectionStatus() == ConnectionStatus.STANDALONE) {
 					pb.save();
 				}
 		}

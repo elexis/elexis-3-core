@@ -55,6 +55,13 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return value;
 		}
 
+		value = System.getProperty(key);
+		if (StringUtils.isNotEmpty(value)) {
+			return value;
+		}
+
+		System.out.println("trying to fetch key " + key);
+
 		throw new UnsupportedOperationException();
 		// TODO first try via LocalProperties?
 		// THEN Config DB Table ?

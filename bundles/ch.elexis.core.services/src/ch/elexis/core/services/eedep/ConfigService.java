@@ -1,5 +1,6 @@
 package ch.elexis.core.services.eedep;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.ConfigServiceActivator;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContextService;
 import ch.myelexis.server.api.UserApi;
 import ch.myelexis.server.client.ApiException;
 
@@ -23,6 +25,9 @@ public class ConfigService implements IConfigService {
 
 	@Reference
 	UserApi userApi;
+
+	@Reference
+	IContextService contextService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -34,7 +39,7 @@ public class ConfigService implements IConfigService {
 			String _value = userApi.getGlobalConfigurationValueByKey(key);
 			return Objects.toString(_value, defaultValue);
 		} catch (ApiException e) {
-			logger.error("Could not fetch key " + key, e);
+			logger.error("Could not get key " + key, e);
 		}
 		return defaultValue;
 	}
@@ -64,10 +69,10 @@ public class ConfigService implements IConfigService {
 	@Override
 	public String getActiveUserContact(String key, String defaultValue, boolean refreshCache) {
 		try {
-			String _value = userApi.getUserContactConfigurationValueByKey(key);
+			String _value = userApi.getUserContactConfigurationValueByKey(key, null);
 			return Objects.toString(_value, defaultValue);
 		} catch (ApiException e) {
-			logger.error("Could not fetch key " + key, e);
+			logger.error("Could not getActiveUserContact " + key, e);
 		}
 		return defaultValue;
 	}
@@ -85,137 +90,167 @@ public class ConfigService implements IConfigService {
 	}
 
 	@Override
-	public boolean set(String key, String value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(String key, String value, boolean addTraceEntry) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(String key, boolean value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(String key, int value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(IContact contact, String key, int value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(IContact contact, String key, String value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setActiveMandator(String key, String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setActiveMandator(String key, boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean setActiveUserContact(String key, String value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setActiveUserContact(String key, int value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setActiveUserContact(String key, boolean value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean set(IContact contact, String key, boolean value) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setFromList(String key, List<String> values) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setFromList(IContact contact, String key, List<String> values) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setActiveUserContact(Map<Object, Object> map) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getActiveMandator(String key, String defaultValue, boolean refreshCache) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean getActiveMandator(String key, boolean defaultValue) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int getActiveMandator(String key, int defaultValue) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public String get(IContact contact, String key, String defaultValue, boolean refreshCache) {
+		if (Objects.equals(contact.getId(), contextService.getActiveUserContact().map(IContact::getId).orElse(null))) {
+			return getActiveUserContact(key, defaultValue, refreshCache);
+		}
+
+		try {
+			String _value = userApi.getUserContactConfigurationValueByKey(contact.getId(), null);
+			return Objects.toString(_value, defaultValue);
+		} catch (ApiException e) {
+			logger.error("Could not get " + contact.getId() + " " + key, e);
+		}
+
 		throw new UnsupportedOperationException("requires ict-adminstrator if non self");
 	}
 
 	@Override
 	public boolean get(IContact contact, String key, boolean defaultValue) {
-		throw new UnsupportedOperationException("requires ict-adminstrator if non self");
+		String v = get(contact, key, Boolean.toString(defaultValue), false);
+		return "1".equals(v) || "true".equals(v);
 	}
 
 	@Override
 	public int get(IContact contact, String key, int defaultValue) {
-		throw new UnsupportedOperationException("requires ict-adminstrator if non self");
+		String v = get(contact, key, Integer.toString(defaultValue), false);
+		return Integer.parseInt(v);
 	}
 
 	@Override
 	public List<String> getAsList(IContact contact, String key, List<String> defaultValue) {
-		throw new UnsupportedOperationException("requires ict-adminstrator if non self");
+		String val = get(contact, key, null);
+		if (val == null) {
+			return defaultValue;
+		}
+		String[] split = val.split(LIST_SEPARATOR);
+		return Stream.of(split).toList();
+	}
+
+	@Override
+	public List<String> getSubNodes(String key, boolean refreshCache) {
+		try {
+			return userApi.findGlobalConfigurationDirectSubnodeKeysForGivenKey(key);
+		} catch (ApiException e) {
+			logger.error("Could not getSubNodes " + key, e);
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public String getActiveMandator(String key, String defaultValue, boolean refreshCache) {
+		return get(contextService.getActiveMandator().orElse(null), key, defaultValue, refreshCache);
+	}
+
+	@Override
+	public boolean getActiveMandator(String key, boolean defaultValue) {
+		String v = getActiveMandator(key, Boolean.toString(defaultValue), false);
+		return "1".equals(v) || "true".equals(v);
+	}
+
+	@Override
+	public int getActiveMandator(String key, int defaultValue) {
+		String v = getActiveMandator(key, Integer.toString(defaultValue), false);
+		return Integer.parseInt(v);
+	}
+
+	@Override
+	public boolean set(String key, String value) {
+		// TODO just try - leave remote to decide?!
+
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean set(String key, String value, boolean addTraceEntry) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean set(String key, boolean value) {
+		return set(key, Boolean.toString(value), false);
+	}
+
+	@Override
+	public boolean set(String key, int value) {
+		return set(key, Integer.toString(value), false);
+	}
+
+	@Override
+	public boolean set(IContact contact, String key, int value) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean set(IContact contact, String key, String value) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setActiveMandator(String key, String value) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setActiveMandator(String key, boolean value) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean setActiveUserContact(String key, String value) {
+		try {
+			userApi.setUserContactConfigurationValueByKey(key, value);
+		} catch (ApiException e) {
+			logger.error("Could not setActiveUserContact " + key, e);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean setActiveUserContact(String key, int value) {
+		return setActiveUserContact(key, value);
+	}
+
+	@Override
+	public boolean setActiveUserContact(String key, boolean value) {
+		return setActiveUserContact(key, value);
+	}
+
+	@Override
+	public boolean set(IContact contact, String key, boolean value) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean setFromList(String key, List<String> values) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean setFromList(IContact contact, String key, List<String> values) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setActiveUserContact(Map<Object, Object> map) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -226,31 +261,25 @@ public class ConfigService implements IConfigService {
 	@Override
 	public Map<Object, Object> getActiveUserContactAsMap() {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void setFromMap(IContact person, Map<Object, Object> map) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<String> getSubNodes(String key, boolean refreshCache) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public ILocalLock getLocalLock(Object object) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Optional<ILocalLock> getManagedLock(Object object) {
 		// TODO Auto-generated method stub
-		return Optional.empty();
+		throw new UnsupportedOperationException();
 	}
 
 }
