@@ -159,9 +159,12 @@ public abstract class ImporterPage implements IExecutableExtension {
 	 */
 	public static class FileBasedImporter extends Composite {
 
+		private Label lFile;
 		public Text tFname;
 		private String[] filterExts = { "*" }; //$NON-NLS-1$
 		private String[] filterNames = { Messages.Core_All_Files };
+
+		private String result;
 
 		public FileBasedImporter(final Composite parent, final ImporterPage home) {
 			this(parent, home, false);
@@ -173,7 +176,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 		public FileBasedImporter(final Composite parent, final ImporterPage home, boolean supportMultiFileSelection) {
 			super(parent, SWT.BORDER);
 			setLayout(new GridLayout(1, false));
-			final Label lFile = new Label(this, SWT.NONE);
+			lFile = new Label(this, SWT.NONE);
 			tFname = new Text(this, SWT.BORDER);
 			tFname.setText(CoreHub.localCfg.get("ImporterPage/" + home.getTitle() + "/filename", StringUtils.EMPTY)); //$NON-NLS-1$ //$NON-NLS-2$
 			home.results = new String[1];
@@ -214,6 +217,7 @@ public abstract class ImporterPage implements IExecutableExtension {
 						home.results = new String[fileNames.length];
 						for (int i = 0; i < fileNames.length; i++) {
 							home.results[i] = fdl.getFilterPath() + File.separator + fileNames[i];
+							result = home.results[i];
 						}
 
 						CoreHub.localCfg.set("ImporterPage/" + home.getTitle() + "/filename", fileNames[0]); //$NON-NLS-1$ //$NON-NLS-2$
@@ -226,6 +230,19 @@ public abstract class ImporterPage implements IExecutableExtension {
 		public void setFilter(final String[] extensions, final String[] names) {
 			filterExts = extensions;
 			filterNames = names;
+		}
+
+		public void setText(String text) {
+			lFile.setText(text);
+		}
+
+		/**
+		 * Get filename including path for single file selection result.
+		 * 
+		 * @return
+		 */
+		public String getResult() {
+			return result;
 		}
 	}
 

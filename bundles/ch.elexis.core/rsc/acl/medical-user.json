@@ -24,6 +24,7 @@
 		"at.medevit.elexis.inbox.model.IInboxElement": "cruvdx",
 		"at.medevit.elexis.outbox.model.IOutboxElement": "cruvdx",
 		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung": "cruvdxie",
+		"ch.elexis.base.ch.arzttarife.ambulatory.IAmbulatoryAllowance": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.complementary.IComplementaryLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.nutrition.INutritionLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.occupational.IOccupationalLeistung": "cruvdxie",
