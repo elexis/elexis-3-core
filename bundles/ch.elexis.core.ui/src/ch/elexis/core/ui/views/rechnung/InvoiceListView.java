@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -106,6 +107,9 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 			}
 		});
 	}
+
+	@Inject
+	private UISynchronize uiSync;
 
 	private Action reloadViewAction = new Action(Messages.Core_Reload) {
 		{
@@ -421,7 +425,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 						ContextServiceHolder.get().setTyped(invoice.getCoverage());
 						ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
 					}
-					Display.getDefault().asyncExec(() -> {
+					uiSync.asyncExec(() -> {
 						try {
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 									.showView(RnDetailView.ID);
