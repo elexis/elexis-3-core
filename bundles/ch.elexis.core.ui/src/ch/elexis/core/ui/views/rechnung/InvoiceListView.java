@@ -49,7 +49,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IInvoice;
@@ -402,6 +405,34 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		tbm.add(invoiceListContentProvider.rnFilterAction);
 		tbm.add(new Separator());
 		tbm.add(invoiceActions.rnExportAction);
+
+		tableViewerInvoiceList.getTable().addListener(SWT.MouseDoubleClick, e -> {
+			IStructuredSelection selection = tableViewerInvoiceList.getStructuredSelection();
+			if (selection == null || selection.isEmpty()) {
+				return;
+			}
+
+			Object firstElement = selection.getFirstElement();
+			if (firstElement instanceof InvoiceListContentProvider.InvoiceEntry entry) {
+				IInvoice invoice = coreModelService.load(entry.getInvoiceId(), IInvoice.class).orElse(null);
+				if (invoice != null) {
+					ContextServiceHolder.get().setTyped(invoice);
+					if (invoice.getCoverage() != null) {
+						ContextServiceHolder.get().setTyped(invoice.getCoverage());
+						ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
+					}
+					Display.getDefault().asyncExec(() -> {
+						try {
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+									.showView(RnDetailView.ID);
+						} catch (PartInitException ex) {
+							LoggerFactory.getLogger(InvoiceListView.class)
+									.warn("Error opening the invoice detail view", ex);
+						}
+					});
+				}
+			}
+		});
 
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
