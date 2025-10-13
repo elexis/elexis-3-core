@@ -21,7 +21,12 @@ import java.util.Map;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -31,6 +36,8 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -50,10 +57,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IInvoice;
@@ -84,7 +88,7 @@ import ch.rgw.tools.Money;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-public class InvoiceListView extends ViewPart implements IRefreshablePart {
+public class InvoiceListView extends ViewPart implements IRefreshablePart, IDoubleClickListener {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.InvoiceListView"; //$NON-NLS-1$
 
 	private static final String CFG_MANDATORFILTER = "rechnungsliste/mandantenfiltered"; //$NON-NLS-1$
@@ -110,6 +114,15 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 
 	@Inject
 	private UISynchronize uiSync;
+
+	@Inject
+	private EPartService partService;
+
+	@Inject
+	private EModelService modelService;
+
+	@Inject
+	private MApplication application;
 
 	private Action reloadViewAction = new Action(Messages.Core_Reload) {
 		{
@@ -399,7 +412,7 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		invoiceListContentProvider = new InvoiceListContentProvider(tableViewerInvoiceList, invoiceListHeaderComposite,
 				invoiceListBottomComposite);
 		tableViewerInvoiceList.setContentProvider(invoiceListContentProvider);
-
+		tableViewerInvoiceList.addDoubleClickListener(this);
 		InvoiceActions invoiceActions = new InvoiceActions(tableViewerInvoiceList, getViewSite());
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();
 		tbm.add(reloadViewAction);
@@ -409,34 +422,6 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		tbm.add(invoiceListContentProvider.rnFilterAction);
 		tbm.add(new Separator());
 		tbm.add(invoiceActions.rnExportAction);
-
-		tableViewerInvoiceList.getTable().addListener(SWT.MouseDoubleClick, e -> {
-			IStructuredSelection selection = tableViewerInvoiceList.getStructuredSelection();
-			if (selection == null || selection.isEmpty()) {
-				return;
-			}
-
-			Object firstElement = selection.getFirstElement();
-			if (firstElement instanceof InvoiceListContentProvider.InvoiceEntry entry) {
-				IInvoice invoice = coreModelService.load(entry.getInvoiceId(), IInvoice.class).orElse(null);
-				if (invoice != null) {
-					ContextServiceHolder.get().setTyped(invoice);
-					if (invoice.getCoverage() != null) {
-						ContextServiceHolder.get().setTyped(invoice.getCoverage());
-						ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
-					}
-					uiSync.asyncExec(() -> {
-						try {
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-									.showView(RnDetailView.ID);
-						} catch (PartInitException ex) {
-							LoggerFactory.getLogger(InvoiceListView.class)
-									.warn("Error opening the invoice detail view", ex);
-						}
-					});
-				}
-			}
-		});
 
 		IMenuManager viewMenuManager = getViewSite().getActionBars().getMenuManager();
 		viewMenuManager.add(invoiceActions.printListeAction);
@@ -494,6 +479,41 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart {
 		}
 
 	};
+
+	@Override
+	public void doubleClick(DoubleClickEvent event) {
+		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+		if (selection == null || selection.isEmpty()) {
+			return;
+		}
+
+		Object firstElement = selection.getFirstElement();
+		if (firstElement instanceof InvoiceListContentProvider.InvoiceEntry entry) {
+			IInvoice invoice = coreModelService.load(entry.getInvoiceId(), IInvoice.class).orElse(null);
+			if (invoice != null) {
+				ContextServiceHolder.get().setTyped(invoice);
+				if (invoice.getCoverage() != null) {
+					ContextServiceHolder.get().setTyped(invoice.getCoverage());
+					ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
+				}
+
+				uiSync.asyncExec(() -> {
+					MPart invoicePart = partService.createPart(RnDetailView.ID);
+					invoicePart.getTransientData().put("invoice", invoice);
+					MPartStack detailStack = (MPartStack) modelService.find("ch.elexis.core.ui.partstack.details",
+							application);
+					if (detailStack != null && detailStack.isVisible()
+							&& detailStack.getWidget() instanceof org.eclipse.swt.widgets.Control
+							&& ((org.eclipse.swt.widgets.Control) detailStack.getWidget()).getVisible()) {
+						detailStack.getChildren().add(invoicePart);
+						partService.activate(invoicePart);
+					} else {
+						partService.showPart(invoicePart, PartState.VISIBLE);
+					}
+				});
+			}
+		}
+	}
 
 	private SelectionAdapter sortViewerAdapter = new SelectionAdapter() {
 		@Override
