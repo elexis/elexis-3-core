@@ -26,40 +26,42 @@ import ch.myelexis.server.client.ApiException;
 import ch.myelexis.server.client.BaseApi;
 import ch.myelexis.server.client.Configuration;
 import ch.myelexis.server.client.Pair;
-import ch.myelexis.server.model.Message;
+import ch.myelexis.server.model.InstanceStatus;
 
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class MessageServiceV1Api extends BaseApi {
+public class InstanceServiceV1Api extends BaseApi {
 
-  public MessageServiceV1Api() {
+  public InstanceServiceV1Api() {
     super(Configuration.getDefaultApiClient());
   }
 
-  public MessageServiceV1Api(ApiClient apiClient) {
+  public InstanceServiceV1Api(ApiClient apiClient) {
     super(apiClient);
   }
 
   /**
-   * Get supported URI schemes for messaging
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * Get Instance Status
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
+   * @return List&lt;InstanceStatus&gt;
    * @throws ApiException if fails to make API call
    */
-  public void getSupportedUriSchemes() throws ApiException {
-    this.getSupportedUriSchemes(Collections.emptyMap());
+  public List<InstanceStatus> getInstanceStatus() throws ApiException {
+    return this.getInstanceStatus(Collections.emptyMap());
   }
 
 
   /**
-   * Get supported URI schemes for messaging
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * Get Instance Status
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param additionalHeaders additionalHeaders for this call
+   * @return List&lt;InstanceStatus&gt;
    * @throws ApiException if fails to make API call
    */
-  public void getSupportedUriSchemes(Map<String, String> additionalHeaders) throws ApiException {
+  public List<InstanceStatus> getInstanceStatus(Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
     
     // create path and map variables
-    String localVarPath = "/api/v1/services/message/schemes";
+    String localVarPath = "/api/v1/services/instance";
 
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
@@ -75,7 +77,7 @@ public class MessageServiceV1Api extends BaseApi {
     
     
     final String[] localVarAccepts = {
-      
+      "application/json"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
@@ -86,7 +88,8 @@ public class MessageServiceV1Api extends BaseApi {
 
     String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
 
-    apiClient.invokeAPI(
+    TypeReference<List<InstanceStatus>> localVarReturnType = new TypeReference<List<InstanceStatus>>() {};
+    return apiClient.invokeAPI(
         localVarPath,
         "GET",
         localVarQueryParams,
@@ -99,78 +102,7 @@ public class MessageServiceV1Api extends BaseApi {
         localVarAccept,
         localVarContentType,
         localVarAuthNames,
-        null
-    );
-  }
-
-  /**
-   * Send a message using an available transporter scheme
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param message  (required)
-   * @throws ApiException if fails to make API call
-   */
-  public void sendMessage(@jakarta.annotation.Nonnull Message message) throws ApiException {
-    this.sendMessage(message, Collections.emptyMap());
-  }
-
-
-  /**
-   * Send a message using an available transporter scheme
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param message  (required)
-   * @param additionalHeaders additionalHeaders for this call
-   * @throws ApiException if fails to make API call
-   */
-  public void sendMessage(@jakarta.annotation.Nonnull Message message, Map<String, String> additionalHeaders) throws ApiException {
-    Object localVarPostBody = message;
-    
-    // verify the required parameter 'message' is set
-    if (message == null) {
-      throw new ApiException(400, "Missing the required parameter 'message' when calling sendMessage");
-    }
-    
-    // create path and map variables
-    String localVarPath = "/api/v1/services/message";
-
-    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-    String localVarQueryParameterBaseName;
-    List<Pair> localVarQueryParams = new ArrayList<Pair>();
-    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-    Map<String, String> localVarCookieParams = new HashMap<String, String>();
-    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-    
-    localVarHeaderParams.putAll(additionalHeaders);
-
-    
-    
-    final String[] localVarAccepts = {
-      
-    };
-    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-    final String[] localVarContentTypes = {
-      "application/json"
-    };
-    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
-
-    apiClient.invokeAPI(
-        localVarPath,
-        "POST",
-        localVarQueryParams,
-        localVarCollectionQueryParams,
-        localVarQueryStringJoiner.toString(),
-        localVarPostBody,
-        localVarHeaderParams,
-        localVarCookieParams,
-        localVarFormParams,
-        localVarAccept,
-        localVarContentType,
-        localVarAuthNames,
-        null
+        localVarReturnType
     );
   }
 
@@ -187,12 +119,12 @@ public class MessageServiceV1Api extends BaseApi {
     localVarHeaderParams.putAll(additionalHeaders);
 
     final String[] localVarAccepts = {
-      
+      "application/json"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
     final String[] localVarContentTypes = {
-      "application/json"
+      
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 

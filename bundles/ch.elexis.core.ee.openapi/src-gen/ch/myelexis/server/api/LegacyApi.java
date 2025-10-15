@@ -12,148 +12,34 @@
 
 package ch.myelexis.server.api;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ch.myelexis.server.client.ApiClient;
 import ch.myelexis.server.client.ApiException;
-import ch.myelexis.server.client.ApiResponse;
+import ch.myelexis.server.client.BaseApi;
 import ch.myelexis.server.client.Configuration;
 import ch.myelexis.server.client.Pair;
-
 import ch.myelexis.server.model.ElexisEvent;
-import ch.myelexis.server.model.InstanceStatus;
 import ch.myelexis.server.model.LockInfo;
 import ch.myelexis.server.model.LockRequest;
 import ch.myelexis.server.model.LockResponse;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Locale;
-import java.util.function.Consumer;
-
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class LegacyApi {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
-  private static class HttpRequestBuilderExtensions {
-    /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
-     *
-     * @param builder the HttpRequest.Builder to which headers will be added
-     * @param headers a map of header names and values to add; may be null
-     * @return the same HttpRequest.Builder instance with the additional headers set
-     */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder;
-    }
-  }
-  private final HttpClient memberVarHttpClient;
-  private final ObjectMapper memberVarObjectMapper;
-  private final String memberVarBaseUri;
-  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
-  private final Duration memberVarReadTimeout;
-  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+public class LegacyApi extends BaseApi {
 
   public LegacyApi() {
-    this(Configuration.getDefaultApiClient());
+    super(Configuration.getDefaultApiClient());
   }
 
   public LegacyApi(ApiClient apiClient) {
-    memberVarHttpClient = apiClient.getHttpClient();
-    memberVarObjectMapper = apiClient.getObjectMapper();
-    memberVarBaseUri = apiClient.getBaseUri();
-    memberVarInterceptor = apiClient.getRequestInterceptor();
-    memberVarReadTimeout = apiClient.getReadTimeout();
-    memberVarResponseInterceptor = apiClient.getResponseInterceptor();
-    memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
-  }
-
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
-    String body = response.body() == null ? null : new String(response.body().readAllBytes());
-    String message = formatExceptionMessage(operationId, response.statusCode(), body);
-    return new ApiException(response.statusCode(), message, response.headers(), body);
-  }
-
-  private String formatExceptionMessage(String operationId, int statusCode, String body) {
-    if (body == null || body.isEmpty()) {
-      body = "[no body]";
-    }
-    return operationId + " call failed with: " + statusCode + " - " + body;
-  }
-
-  /**
-   * Download file from the given response.
-   *
-   * @param response Response
-   * @return File
-   * @throws ApiException If fail to read file content from response and write to disk
-   */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response) throws ApiException {
-    try {
-      File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(response.body(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-      return file;
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-  }
-
-  /**
-   * <p>Prepare the file for download from the response.</p>
-   *
-   * @param response a {@link java.net.http.HttpResponse} object.
-   * @return a {@link java.io.File} object.
-   * @throws java.io.IOException if any.
-   */
-  private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
-    String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
-    if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
-      // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
-    }
-    File file = null;
-    if (filename != null) {
-      java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
-      java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
-      file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
-      file.deleteOnExit(); // best effort cleanup
-    } else {
-      file = java.nio.file.Files.createTempFile("download-", "").toFile();
-      file.deleteOnExit(); // best effort cleanup
-    }
-    return file;
+    super(apiClient);
   }
 
   /**
@@ -164,115 +50,70 @@ public class LegacyApi {
    * @throws ApiException if fails to make API call
    */
   public LockResponse acquireOrReleaseLocks(@jakarta.annotation.Nonnull LockRequest lockRequest) throws ApiException {
-    return acquireOrReleaseLocks(lockRequest, null);
+    return this.acquireOrReleaseLocks(lockRequest, Collections.emptyMap());
   }
+
 
   /**
    * 
    * 
    * @param lockRequest  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return LockResponse
    * @throws ApiException if fails to make API call
    */
-  public LockResponse acquireOrReleaseLocks(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
-    ApiResponse<LockResponse> localVarResponse = acquireOrReleaseLocksWithHttpInfo(lockRequest, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * 
-   * 
-   * @param lockRequest  (required)
-   * @return ApiResponse&lt;LockResponse&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<LockResponse> acquireOrReleaseLocksWithHttpInfo(@jakarta.annotation.Nonnull LockRequest lockRequest) throws ApiException {
-    return acquireOrReleaseLocksWithHttpInfo(lockRequest, null);
-  }
-
-  /**
-   * 
-   * 
-   * @param lockRequest  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;LockResponse&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<LockResponse> acquireOrReleaseLocksWithHttpInfo(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = acquireOrReleaseLocksRequestBuilder(lockRequest, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("acquireOrReleaseLocks", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<LockResponse>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        LockResponse responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<LockResponse>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<LockResponse>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder acquireOrReleaseLocksRequestBuilder(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
+  public LockResponse acquireOrReleaseLocks(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = lockRequest;
+    
     // verify the required parameter 'lockRequest' is set
     if (lockRequest == null) {
       throw new ApiException(400, "Missing the required parameter 'lockRequest' when calling acquireOrReleaseLocks");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/services/elexis/lockservice/acquireOrReleaseLocks";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/xml");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(lockRequest);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/xml"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {  };
+
+    TypeReference<LockResponse> localVarReturnType = new TypeReference<LockResponse>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -283,233 +124,66 @@ public class LegacyApi {
    * @throws ApiException if fails to make API call
    */
   public LockInfo getLockInfo(@jakarta.annotation.Nullable String objectId) throws ApiException {
-    return getLockInfo(objectId, null);
+    return this.getLockInfo(objectId, Collections.emptyMap());
   }
+
 
   /**
    * 
    * 
    * @param objectId  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return LockInfo
    * @throws ApiException if fails to make API call
    */
-  public LockInfo getLockInfo(@jakarta.annotation.Nullable String objectId, Map<String, String> headers) throws ApiException {
-    ApiResponse<LockInfo> localVarResponse = getLockInfoWithHttpInfo(objectId, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * 
-   * 
-   * @param objectId  (optional)
-   * @return ApiResponse&lt;LockInfo&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<LockInfo> getLockInfoWithHttpInfo(@jakarta.annotation.Nullable String objectId) throws ApiException {
-    return getLockInfoWithHttpInfo(objectId, null);
-  }
-
-  /**
-   * 
-   * 
-   * @param objectId  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;LockInfo&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<LockInfo> getLockInfoWithHttpInfo(@jakarta.annotation.Nullable String objectId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getLockInfoRequestBuilder(objectId, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getLockInfo", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<LockInfo>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        LockInfo responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<LockInfo>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<LockInfo>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getLockInfoRequestBuilder(@jakarta.annotation.Nullable String objectId, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public LockInfo getLockInfo(@jakarta.annotation.Nullable String objectId, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/services/elexis/lockservice/lockInfo";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "objectId";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("objectId", objectId));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("objectId", objectId));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "text/plain");
+    
+    
+    final String[] localVarAccepts = {
+      "text/plain"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
-  }
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-  /**
-   * Get Status Json
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @return List&lt;InstanceStatus&gt;
-   * @throws ApiException if fails to make API call
-   * @deprecated
-   */
-  @Deprecated
-  public List<InstanceStatus> getStatusJson() throws ApiException {
-    return getStatusJson(null);
-  }
+    String[] localVarAuthNames = new String[] {  };
 
-  /**
-   * Get Status Json
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param headers Optional headers to include in the request
-   * @return List&lt;InstanceStatus&gt;
-   * @throws ApiException if fails to make API call
-   * @deprecated
-   */
-  @Deprecated
-  public List<InstanceStatus> getStatusJson(Map<String, String> headers) throws ApiException {
-    ApiResponse<List<InstanceStatus>> localVarResponse = getStatusJsonWithHttpInfo(headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get Status Json
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @return ApiResponse&lt;List&lt;InstanceStatus&gt;&gt;
-   * @throws ApiException if fails to make API call
-   * @deprecated
-   */
-  @Deprecated
-  public ApiResponse<List<InstanceStatus>> getStatusJsonWithHttpInfo() throws ApiException {
-    return getStatusJsonWithHttpInfo(null);
-  }
-
-  /**
-   * Get Status Json
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;InstanceStatus&gt;&gt;
-   * @throws ApiException if fails to make API call
-   * @deprecated
-   */
-  @Deprecated
-  public ApiResponse<List<InstanceStatus>> getStatusJsonWithHttpInfo(Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getStatusJsonRequestBuilder(headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getStatusJson", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<InstanceStatus>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<InstanceStatus> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<InstanceStatus>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<InstanceStatus>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getStatusJsonRequestBuilder(Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
-    String localVarPath = "/services/elexis/instances/statusJson";
-
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-
-    localVarRequestBuilder.header("Accept", "application/json");
-
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    TypeReference<LockInfo> localVarReturnType = new TypeReference<LockInfo>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -520,115 +194,70 @@ public class LegacyApi {
    * @throws ApiException if fails to make API call
    */
   public Boolean isLocked(@jakarta.annotation.Nonnull LockRequest lockRequest) throws ApiException {
-    return isLocked(lockRequest, null);
+    return this.isLocked(lockRequest, Collections.emptyMap());
   }
+
 
   /**
    * 
    * 
    * @param lockRequest  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Boolean
    * @throws ApiException if fails to make API call
    */
-  public Boolean isLocked(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
-    ApiResponse<Boolean> localVarResponse = isLockedWithHttpInfo(lockRequest, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * 
-   * 
-   * @param lockRequest  (required)
-   * @return ApiResponse&lt;Boolean&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Boolean> isLockedWithHttpInfo(@jakarta.annotation.Nonnull LockRequest lockRequest) throws ApiException {
-    return isLockedWithHttpInfo(lockRequest, null);
-  }
-
-  /**
-   * 
-   * 
-   * @param lockRequest  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Boolean&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Boolean> isLockedWithHttpInfo(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = isLockedRequestBuilder(lockRequest, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("isLocked", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Boolean>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Boolean responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Boolean>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Boolean>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder isLockedRequestBuilder(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> headers) throws ApiException {
+  public Boolean isLocked(@jakarta.annotation.Nonnull LockRequest lockRequest, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = lockRequest;
+    
     // verify the required parameter 'lockRequest' is set
     if (lockRequest == null) {
       throw new ApiException(400, "Missing the required parameter 'lockRequest' when calling isLocked");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/services/elexis/lockservice/isLocked";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/xml");
-    localVarRequestBuilder.header("Accept", "text/plain");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(lockRequest);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "text/plain"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/xml"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {  };
+
+    TypeReference<Boolean> localVarReturnType = new TypeReference<Boolean>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -638,103 +267,108 @@ public class LegacyApi {
    * @throws ApiException if fails to make API call
    */
   public void postEvent(@jakarta.annotation.Nonnull ElexisEvent elexisEvent) throws ApiException {
-    postEvent(elexisEvent, null);
+    this.postEvent(elexisEvent, Collections.emptyMap());
   }
+
 
   /**
    * 
    * 
    * @param elexisEvent  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void postEvent(@jakarta.annotation.Nonnull ElexisEvent elexisEvent, Map<String, String> headers) throws ApiException {
-    postEventWithHttpInfo(elexisEvent, headers);
-  }
-
-  /**
-   * 
-   * 
-   * @param elexisEvent  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> postEventWithHttpInfo(@jakarta.annotation.Nonnull ElexisEvent elexisEvent) throws ApiException {
-    return postEventWithHttpInfo(elexisEvent, null);
-  }
-
-  /**
-   * 
-   * 
-   * @param elexisEvent  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> postEventWithHttpInfo(@jakarta.annotation.Nonnull ElexisEvent elexisEvent, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = postEventRequestBuilder(elexisEvent, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("postEvent", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder postEventRequestBuilder(@jakarta.annotation.Nonnull ElexisEvent elexisEvent, Map<String, String> headers) throws ApiException {
+  public void postEvent(@jakarta.annotation.Nonnull ElexisEvent elexisEvent, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = elexisEvent;
+    
     // verify the required parameter 'elexisEvent' is set
     if (elexisEvent == null) {
       throw new ApiException(400, "Missing the required parameter 'elexisEvent' when calling postEvent");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/services/elexis/eventservice/postEvent";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/xml");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(elexisEvent);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/xml"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {  };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
+  @Override
+  public <T> T invokeAPI(String url, String method, Object request, TypeReference<T> returnType, Map<String, String> additionalHeaders) throws ApiException {
+    String localVarPath = url.replace(apiClient.getBaseURL(), "");
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/xml"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {  };
+
+    return apiClient.invokeAPI(
+      localVarPath,
+        method,
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        request,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        returnType
+    );
+  }
 }

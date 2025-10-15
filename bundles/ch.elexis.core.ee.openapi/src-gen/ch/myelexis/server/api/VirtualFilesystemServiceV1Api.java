@@ -12,145 +12,32 @@
 
 package ch.myelexis.server.api;
 
-import ch.myelexis.server.client.ApiClient;
-import ch.myelexis.server.client.ApiException;
-import ch.myelexis.server.client.ApiResponse;
-import ch.myelexis.server.client.Configuration;
-import ch.myelexis.server.client.Pair;
-
 import java.io.File;
-import ch.myelexis.server.model.VfsHandle;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
 import java.util.ArrayList;
-import java.util.StringJoiner;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Locale;
-import java.util.function.Consumer;
+import java.util.StringJoiner;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class VirtualFilesystemServiceV1Api {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
-  private static class HttpRequestBuilderExtensions {
-    /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
-     *
-     * @param builder the HttpRequest.Builder to which headers will be added
-     * @param headers a map of header names and values to add; may be null
-     * @return the same HttpRequest.Builder instance with the additional headers set
-     */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder;
-    }
-  }
-  private final HttpClient memberVarHttpClient;
-  private final ObjectMapper memberVarObjectMapper;
-  private final String memberVarBaseUri;
-  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
-  private final Duration memberVarReadTimeout;
-  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import ch.myelexis.server.client.ApiClient;
+import ch.myelexis.server.client.ApiException;
+import ch.myelexis.server.client.BaseApi;
+import ch.myelexis.server.client.Configuration;
+import ch.myelexis.server.client.Pair;
+import ch.myelexis.server.model.VfsHandle;
+
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+public class VirtualFilesystemServiceV1Api extends BaseApi {
 
   public VirtualFilesystemServiceV1Api() {
-    this(Configuration.getDefaultApiClient());
+    super(Configuration.getDefaultApiClient());
   }
 
   public VirtualFilesystemServiceV1Api(ApiClient apiClient) {
-    memberVarHttpClient = apiClient.getHttpClient();
-    memberVarObjectMapper = apiClient.getObjectMapper();
-    memberVarBaseUri = apiClient.getBaseUri();
-    memberVarInterceptor = apiClient.getRequestInterceptor();
-    memberVarReadTimeout = apiClient.getReadTimeout();
-    memberVarResponseInterceptor = apiClient.getResponseInterceptor();
-    memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
-  }
-
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
-    String body = response.body() == null ? null : new String(response.body().readAllBytes());
-    String message = formatExceptionMessage(operationId, response.statusCode(), body);
-    return new ApiException(response.statusCode(), message, response.headers(), body);
-  }
-
-  private String formatExceptionMessage(String operationId, int statusCode, String body) {
-    if (body == null || body.isEmpty()) {
-      body = "[no body]";
-    }
-    return operationId + " call failed with: " + statusCode + " - " + body;
-  }
-
-  /**
-   * Download file from the given response.
-   *
-   * @param response Response
-   * @return File
-   * @throws ApiException If fail to read file content from response and write to disk
-   */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response) throws ApiException {
-    try {
-      File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(response.body(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-      return file;
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-  }
-
-  /**
-   * <p>Prepare the file for download from the response.</p>
-   *
-   * @param response a {@link java.net.http.HttpResponse} object.
-   * @return a {@link java.io.File} object.
-   * @throws java.io.IOException if any.
-   */
-  private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
-    String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
-    if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
-      // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
-    }
-    File file = null;
-    if (filename != null) {
-      java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
-      java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
-      file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
-      file.deleteOnExit(); // best effort cleanup
-    } else {
-      file = java.nio.file.Files.createTempFile("download-", "").toFile();
-      file.deleteOnExit(); // best effort cleanup
-    }
-    return file;
+    super(apiClient);
   }
 
   /**
@@ -160,108 +47,64 @@ public class VirtualFilesystemServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void deleteVfsUrl(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    deleteVfsUrl(vfsUrl, null);
+    this.deleteVfsUrl(vfsUrl, Collections.emptyMap());
   }
+
 
   /**
    * Delete a file or directory from the virtual filesystem
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void deleteVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    deleteVfsUrlWithHttpInfo(vfsUrl, headers);
-  }
-
-  /**
-   * Delete a file or directory from the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return deleteVfsUrlWithHttpInfo(vfsUrl, null);
-  }
-
-  /**
-   * Delete a file or directory from the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = deleteVfsUrlRequestBuilder(vfsUrl, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("deleteVfsUrl", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder deleteVfsUrlRequestBuilder(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public void deleteVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/vfs/delete";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "vfsUrl";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("vfsUrl", vfsUrl));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("vfsUrl", vfsUrl));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -272,119 +115,66 @@ public class VirtualFilesystemServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public File downloadFileByVfsUrl(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return downloadFileByVfsUrl(vfsUrl, null);
+    return this.downloadFileByVfsUrl(vfsUrl, Collections.emptyMap());
   }
+
 
   /**
    * Download a file from the virtual filesystem
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return File
    * @throws ApiException if fails to make API call
    */
-  public File downloadFileByVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    ApiResponse<File> localVarResponse = downloadFileByVfsUrlWithHttpInfo(vfsUrl, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Download a file from the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @return ApiResponse&lt;File&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<File> downloadFileByVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return downloadFileByVfsUrlWithHttpInfo(vfsUrl, null);
-  }
-
-  /**
-   * Download a file from the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;File&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<File> downloadFileByVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = downloadFileByVfsUrlRequestBuilder(vfsUrl, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("downloadFileByVfsUrl", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<File>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        // Handle file downloading.
-        File responseValue = downloadFileFromResponse(localVarResponse);
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<File>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder downloadFileByVfsUrlRequestBuilder(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public File downloadFileByVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/vfs/download";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "vfsUrl";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("vfsUrl", vfsUrl));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("vfsUrl", vfsUrl));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/octet-stream");
+    
+    
+    final String[] localVarAccepts = {
+      "application/octet-stream"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<File> localVarReturnType = new TypeReference<File>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -395,120 +185,66 @@ public class VirtualFilesystemServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public List<VfsHandle> listVfsUrl(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return listVfsUrl(vfsUrl, null);
+    return this.listVfsUrl(vfsUrl, Collections.emptyMap());
   }
+
 
   /**
    * List the contents of a directory
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;VfsHandle&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<VfsHandle> listVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    ApiResponse<List<VfsHandle>> localVarResponse = listVfsUrlWithHttpInfo(vfsUrl, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * List the contents of a directory
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @return ApiResponse&lt;List&lt;VfsHandle&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<VfsHandle>> listVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return listVfsUrlWithHttpInfo(vfsUrl, null);
-  }
-
-  /**
-   * List the contents of a directory
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;VfsHandle&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<VfsHandle>> listVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = listVfsUrlRequestBuilder(vfsUrl, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("listVfsUrl", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<VfsHandle>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<VfsHandle> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<VfsHandle>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<VfsHandle>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder listVfsUrlRequestBuilder(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public List<VfsHandle> listVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/vfs/list";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "vfsUrl";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("vfsUrl", vfsUrl));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("vfsUrl", vfsUrl));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<VfsHandle>> localVarReturnType = new TypeReference<List<VfsHandle>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -518,108 +254,64 @@ public class VirtualFilesystemServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void mkdirsVfsUrl(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    mkdirsVfsUrl(vfsUrl, null);
+    this.mkdirsVfsUrl(vfsUrl, Collections.emptyMap());
   }
+
 
   /**
    * Create a directory and all intermediates
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void mkdirsVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    mkdirsVfsUrlWithHttpInfo(vfsUrl, headers);
-  }
-
-  /**
-   * Create a directory and all intermediates
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> mkdirsVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return mkdirsVfsUrlWithHttpInfo(vfsUrl, null);
-  }
-
-  /**
-   * Create a directory and all intermediates
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> mkdirsVfsUrlWithHttpInfo(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = mkdirsVfsUrlRequestBuilder(vfsUrl, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("mkdirsVfsUrl", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder mkdirsVfsUrlRequestBuilder(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public void mkdirsVfsUrl(@jakarta.annotation.Nullable String vfsUrl, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/vfs/mkdirs";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "vfsUrl";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("vfsUrl", vfsUrl));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("vfsUrl", vfsUrl));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -630,121 +322,110 @@ public class VirtualFilesystemServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void uploadFileToVfsUrl(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    uploadFileToVfsUrl(body, vfsUrl, null);
+    this.uploadFileToVfsUrl(body, vfsUrl, Collections.emptyMap());
   }
+
 
   /**
    * Upload a file to the virtual filesystem
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param body  (required)
    * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void uploadFileToVfsUrl(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    uploadFileToVfsUrlWithHttpInfo(body, vfsUrl, headers);
-  }
-
-  /**
-   * Upload a file to the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param body  (required)
-   * @param vfsUrl  (optional)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> uploadFileToVfsUrlWithHttpInfo(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl) throws ApiException {
-    return uploadFileToVfsUrlWithHttpInfo(body, vfsUrl, null);
-  }
-
-  /**
-   * Upload a file to the virtual filesystem
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param body  (required)
-   * @param vfsUrl  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> uploadFileToVfsUrlWithHttpInfo(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = uploadFileToVfsUrlRequestBuilder(body, vfsUrl, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("uploadFileToVfsUrl", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder uploadFileToVfsUrlRequestBuilder(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl, Map<String, String> headers) throws ApiException {
+  public void uploadFileToVfsUrl(@jakarta.annotation.Nonnull File body, @jakarta.annotation.Nullable String vfsUrl, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = body;
+    
     // verify the required parameter 'body' is set
     if (body == null) {
       throw new ApiException(400, "Missing the required parameter 'body' when calling uploadFileToVfsUrl");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/vfs/upload";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "vfsUrl";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("vfsUrl", vfsUrl));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("vfsUrl", vfsUrl));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Content-Type", "application/octet-stream");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(body);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      "application/octet-stream"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
+  @Override
+  public <T> T invokeAPI(String url, String method, Object request, TypeReference<T> returnType, Map<String, String> additionalHeaders) throws ApiException {
+    String localVarPath = url.replace(apiClient.getBaseURL(), "");
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/octet-stream"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    return apiClient.invokeAPI(
+      localVarPath,
+        method,
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        request,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        returnType
+    );
+  }
 }
