@@ -296,8 +296,8 @@ components:
       bearerFormat: JWT
     SecurityScheme:
       type: openIdConnect
-      openIdConnectUrl: https://marcos-mbp-2025.myelexis.ch/keycloak/auth/realms/ElexisEnvironment/.well-known/openid-configuration
       description: Authentication
+      openIdConnectUrl: http://localhost:50363/realms/ElexisEnvironment/.well-known/openid-configuration
 info:
   license:
     name: Eclipse Public License - v 2.0
@@ -320,6 +320,7 @@ tags:
 - name: user management
   description: Operations to manage users and upstream sync with Keycloak. Only EER3
     - Data primary store is Elexis database.
+- name: instance service v1
 - name: message service v1
 - name: task service v1
   description: Service to handle Task execution
@@ -850,6 +851,30 @@ paths:
       - ElexisEnvironment:
         - api-access
         - ict-administrator
+  /api/v1/services/instance:
+    get:
+      operationId: getInstanceStatus
+      tags:
+      - instance service v1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InstanceStatus"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Get Instance Status
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/services/message:
     post:
       summary: Send a message using an available transporter scheme
@@ -1525,12 +1550,8 @@ paths:
               type: string
         required: true
       responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
+        "204":
+          description: No Content
         "401":
           description: Not Authorized
         "403":
@@ -1564,6 +1585,30 @@ paths:
         "403":
           description: Not Allowed
       summary: Get Global Configuration Value By Key
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - user
+      description: "<b>Roles Required:</b> api-access,user<br>"
+    delete:
+      operationId: deleteGlobalConfigurationValueByKey
+      tags:
+      - user
+      - config
+      parameters:
+      - required: true
+        name: key
+        in: query
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Delete Global Configuration Value By Key
       security:
       - ElexisEnvironment:
         - api-access
@@ -1661,31 +1706,6 @@ paths:
       responses:
         "200":
           description: OK
-  /services/elexis/instances/statusJson:
-    get:
-      deprecated: true
-      operationId: getStatusJson
-      tags:
-      - legacy
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/InstanceStatus"
-        "401":
-          description: Not Authorized
-        "403":
-          description: Not Allowed
-      summary: Get Status Json
-      security:
-      - ElexisEnvironment:
-        - api-access
-        - ict-administrator
-      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /services/elexis/lockservice/acquireOrReleaseLocks:
     post:
       operationId: acquireOrReleaseLocks

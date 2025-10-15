@@ -13,24 +13,17 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.LocalDate;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * LockInfo
  */
@@ -44,7 +37,7 @@ import ch.myelexis.server.client.ApiClient;
   LockInfo.JSON_PROPERTY_STATION_LABEL,
   LockInfo.JSON_PROPERTY_ELEMENT_STORE_TO_STRING
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class LockInfo {
   public static final String JSON_PROPERTY_ELEMENT_ID = "elementId";
   @jakarta.annotation.Nullable
@@ -78,10 +71,11 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   private String elementStoreToString;
 
-  public LockInfo() { 
+  public LockInfo() {
   }
 
   public LockInfo elementId(@jakarta.annotation.Nullable String elementId) {
+    
     this.elementId = elementId;
     return this;
   }
@@ -93,6 +87,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ELEMENT_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getElementId() {
     return elementId;
   }
@@ -104,8 +99,8 @@ public class LockInfo {
     this.elementId = elementId;
   }
 
-
   public LockInfo elementType(@jakarta.annotation.Nullable String elementType) {
+    
     this.elementType = elementType;
     return this;
   }
@@ -117,6 +112,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ELEMENT_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getElementType() {
     return elementType;
   }
@@ -128,8 +124,8 @@ public class LockInfo {
     this.elementType = elementType;
   }
 
-
   public LockInfo user(@jakarta.annotation.Nullable String user) {
+    
     this.user = user;
     return this;
   }
@@ -141,6 +137,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_USER, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getUser() {
     return user;
   }
@@ -152,8 +149,8 @@ public class LockInfo {
     this.user = user;
   }
 
-
   public LockInfo creationDate(@jakarta.annotation.Nullable LocalDate creationDate) {
+    
     this.creationDate = creationDate;
     return this;
   }
@@ -165,6 +162,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_CREATION_DATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public LocalDate getCreationDate() {
     return creationDate;
   }
@@ -176,8 +174,8 @@ public class LockInfo {
     this.creationDate = creationDate;
   }
 
-
   public LockInfo systemUuid(@jakarta.annotation.Nullable String systemUuid) {
+    
     this.systemUuid = systemUuid;
     return this;
   }
@@ -189,6 +187,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SYSTEM_UUID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getSystemUuid() {
     return systemUuid;
   }
@@ -200,8 +199,8 @@ public class LockInfo {
     this.systemUuid = systemUuid;
   }
 
-
   public LockInfo stationId(@jakarta.annotation.Nullable String stationId) {
+    
     this.stationId = stationId;
     return this;
   }
@@ -213,6 +212,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STATION_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getStationId() {
     return stationId;
   }
@@ -224,8 +224,8 @@ public class LockInfo {
     this.stationId = stationId;
   }
 
-
   public LockInfo stationLabel(@jakarta.annotation.Nullable String stationLabel) {
+    
     this.stationLabel = stationLabel;
     return this;
   }
@@ -237,6 +237,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STATION_LABEL, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getStationLabel() {
     return stationLabel;
   }
@@ -248,8 +249,8 @@ public class LockInfo {
     this.stationLabel = stationLabel;
   }
 
-
   public LockInfo elementStoreToString(@jakarta.annotation.Nullable String elementStoreToString) {
+    
     this.elementStoreToString = elementStoreToString;
     return this;
   }
@@ -261,6 +262,7 @@ public class LockInfo {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ELEMENT_STORE_TO_STRING, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getElementStoreToString() {
     return elementStoreToString;
   }
@@ -272,10 +274,6 @@ public class LockInfo {
     this.elementStoreToString = elementStoreToString;
   }
 
-
-  /**
-   * Return true if this LockInfo object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -361,45 +359,86 @@ public class LockInfo {
 
     // add `elementId` to the URL query string
     if (getElementId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%selementId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getElementId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%selementId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getElementId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `elementType` to the URL query string
     if (getElementType() != null) {
-      joiner.add(String.format(Locale.ROOT, "%selementType%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getElementType()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%selementType%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getElementType()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `user` to the URL query string
     if (getUser() != null) {
-      joiner.add(String.format(Locale.ROOT, "%suser%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getUser()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%suser%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getUser()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `creationDate` to the URL query string
     if (getCreationDate() != null) {
-      joiner.add(String.format(Locale.ROOT, "%screationDate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCreationDate()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%screationDate%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getCreationDate()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `systemUuid` to the URL query string
     if (getSystemUuid() != null) {
-      joiner.add(String.format(Locale.ROOT, "%ssystemUuid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSystemUuid()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%ssystemUuid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSystemUuid()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `stationId` to the URL query string
     if (getStationId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sstationId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getStationId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sstationId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getStationId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `stationLabel` to the URL query string
     if (getStationLabel() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sstationLabel%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getStationLabel()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sstationLabel%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getStationLabel()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `elementStoreToString` to the URL query string
     if (getElementStoreToString() != null) {
-      joiner.add(String.format(Locale.ROOT, "%selementStoreToString%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getElementStoreToString()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%selementStoreToString%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getElementStoreToString()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 

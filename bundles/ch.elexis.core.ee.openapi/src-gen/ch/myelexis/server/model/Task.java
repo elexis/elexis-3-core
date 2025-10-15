@@ -13,27 +13,18 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Locale;
-import ch.myelexis.server.model.OwnerTaskNotification;
-import ch.myelexis.server.model.TaskTriggerType;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * Task
  */
@@ -53,7 +44,7 @@ import ch.myelexis.server.client.ApiClient;
   Task.JSON_PROPERTY_INCURRED,
   Task.JSON_PROPERTY_EXECUTION_INFO
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class Task {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nullable
@@ -111,10 +102,11 @@ public class Task {
   @jakarta.annotation.Nullable
   private String executionInfo;
 
-  public Task() { 
+  public Task() {
   }
 
   public Task id(@jakarta.annotation.Nullable String id) {
+    
     this.id = id;
     return this;
   }
@@ -126,6 +118,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getId() {
     return id;
   }
@@ -137,8 +130,8 @@ public class Task {
     this.id = id;
   }
 
-
   public Task referenceId(@jakarta.annotation.Nullable String referenceId) {
+    
     this.referenceId = referenceId;
     return this;
   }
@@ -150,6 +143,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_REFERENCE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getReferenceId() {
     return referenceId;
   }
@@ -161,8 +155,8 @@ public class Task {
     this.referenceId = referenceId;
   }
 
-
   public Task runnableId(@jakarta.annotation.Nonnull String runnableId) {
+    
     this.runnableId = runnableId;
     return this;
   }
@@ -174,6 +168,7 @@ public class Task {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_RUNNABLE_ID, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getRunnableId() {
     return runnableId;
   }
@@ -185,8 +180,8 @@ public class Task {
     this.runnableId = runnableId;
   }
 
-
   public Task triggerType(@jakarta.annotation.Nonnull TaskTriggerType triggerType) {
+    
     this.triggerType = triggerType;
     return this;
   }
@@ -198,6 +193,7 @@ public class Task {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_TRIGGER_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public TaskTriggerType getTriggerType() {
     return triggerType;
   }
@@ -209,8 +205,8 @@ public class Task {
     this.triggerType = triggerType;
   }
 
-
   public Task triggerParameters(@jakarta.annotation.Nullable Map<String, String> triggerParameters) {
+    
     this.triggerParameters = triggerParameters;
     return this;
   }
@@ -230,6 +226,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TRIGGER_PARAMETERS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Map<String, String> getTriggerParameters() {
     return triggerParameters;
   }
@@ -241,8 +238,8 @@ public class Task {
     this.triggerParameters = triggerParameters;
   }
 
-
   public Task ownerId(@jakarta.annotation.Nonnull String ownerId) {
+    
     this.ownerId = ownerId;
     return this;
   }
@@ -254,6 +251,7 @@ public class Task {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_OWNER_ID, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getOwnerId() {
     return ownerId;
   }
@@ -265,8 +263,8 @@ public class Task {
     this.ownerId = ownerId;
   }
 
-
   public Task runner(@jakarta.annotation.Nonnull String runner) {
+    
     this.runner = runner;
     return this;
   }
@@ -278,6 +276,7 @@ public class Task {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_RUNNER, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getRunner() {
     return runner;
   }
@@ -289,8 +288,8 @@ public class Task {
     this.runner = runner;
   }
 
-
   public Task runContext(@jakarta.annotation.Nullable Map<String, String> runContext) {
+    
     this.runContext = runContext;
     return this;
   }
@@ -310,6 +309,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_RUN_CONTEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Map<String, String> getRunContext() {
     return runContext;
   }
@@ -321,8 +321,8 @@ public class Task {
     this.runContext = runContext;
   }
 
-
   public Task notificationType(@jakarta.annotation.Nonnull OwnerTaskNotification notificationType) {
+    
     this.notificationType = notificationType;
     return this;
   }
@@ -334,6 +334,7 @@ public class Task {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_NOTIFICATION_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public OwnerTaskNotification getNotificationType() {
     return notificationType;
   }
@@ -345,8 +346,8 @@ public class Task {
     this.notificationType = notificationType;
   }
 
-
   public Task singleton(@jakarta.annotation.Nullable Boolean singleton) {
+    
     this.singleton = singleton;
     return this;
   }
@@ -358,6 +359,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SINGLETON, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getSingleton() {
     return singleton;
   }
@@ -369,8 +371,8 @@ public class Task {
     this.singleton = singleton;
   }
 
-
   public Task system(@jakarta.annotation.Nullable Boolean system) {
+    
     this.system = system;
     return this;
   }
@@ -382,6 +384,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SYSTEM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getSystem() {
     return system;
   }
@@ -393,8 +396,8 @@ public class Task {
     this.system = system;
   }
 
-
   public Task active(@jakarta.annotation.Nullable Boolean active) {
+    
     this.active = active;
     return this;
   }
@@ -406,6 +409,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ACTIVE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getActive() {
     return active;
   }
@@ -417,8 +421,8 @@ public class Task {
     this.active = active;
   }
 
-
   public Task incurred(@jakarta.annotation.Nullable Boolean incurred) {
+    
     this.incurred = incurred;
     return this;
   }
@@ -430,6 +434,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_INCURRED, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getIncurred() {
     return incurred;
   }
@@ -441,8 +446,8 @@ public class Task {
     this.incurred = incurred;
   }
 
-
   public Task executionInfo(@jakarta.annotation.Nullable String executionInfo) {
+    
     this.executionInfo = executionInfo;
     return this;
   }
@@ -454,6 +459,7 @@ public class Task {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_EXECUTION_INFO, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getExecutionInfo() {
     return executionInfo;
   }
@@ -465,10 +471,6 @@ public class Task {
     this.executionInfo = executionInfo;
   }
 
-
-  /**
-   * Return true if this Task object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -566,83 +568,154 @@ public class Task {
 
     // add `id` to the URL query string
     if (getId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `referenceId` to the URL query string
     if (getReferenceId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sreferenceId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getReferenceId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sreferenceId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getReferenceId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `runnableId` to the URL query string
     if (getRunnableId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%srunnableId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRunnableId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%srunnableId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getRunnableId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `triggerType` to the URL query string
     if (getTriggerType() != null) {
-      joiner.add(String.format(Locale.ROOT, "%striggerType%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTriggerType()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%striggerType%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getTriggerType()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `triggerParameters` to the URL query string
     if (getTriggerParameters() != null) {
       for (String _key : getTriggerParameters().keySet()) {
-        joiner.add(String.format(Locale.ROOT, "%striggerParameters%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
-            getTriggerParameters().get(_key), ApiClient.urlEncode(ApiClient.valueToString(getTriggerParameters().get(_key)))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%striggerParameters%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+              getTriggerParameters().get(_key), URLEncoder.encode(String.valueOf(getTriggerParameters().get(_key)), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 
     // add `ownerId` to the URL query string
     if (getOwnerId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sownerId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getOwnerId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sownerId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getOwnerId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `runner` to the URL query string
     if (getRunner() != null) {
-      joiner.add(String.format(Locale.ROOT, "%srunner%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRunner()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%srunner%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getRunner()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `runContext` to the URL query string
     if (getRunContext() != null) {
       for (String _key : getRunContext().keySet()) {
-        joiner.add(String.format(Locale.ROOT, "%srunContext%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
-            getRunContext().get(_key), ApiClient.urlEncode(ApiClient.valueToString(getRunContext().get(_key)))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%srunContext%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+              getRunContext().get(_key), URLEncoder.encode(String.valueOf(getRunContext().get(_key)), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 
     // add `notificationType` to the URL query string
     if (getNotificationType() != null) {
-      joiner.add(String.format(Locale.ROOT, "%snotificationType%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getNotificationType()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%snotificationType%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getNotificationType()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `singleton` to the URL query string
     if (getSingleton() != null) {
-      joiner.add(String.format(Locale.ROOT, "%ssingleton%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSingleton()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%ssingleton%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSingleton()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `system` to the URL query string
     if (getSystem() != null) {
-      joiner.add(String.format(Locale.ROOT, "%ssystem%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSystem()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%ssystem%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSystem()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `active` to the URL query string
     if (getActive() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sactive%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActive()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sactive%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getActive()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `incurred` to the URL query string
     if (getIncurred() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sincurred%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getIncurred()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sincurred%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getIncurred()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `executionInfo` to the URL query string
     if (getExecutionInfo() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sexecutionInfo%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getExecutionInfo()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sexecutionInfo%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getExecutionInfo()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 

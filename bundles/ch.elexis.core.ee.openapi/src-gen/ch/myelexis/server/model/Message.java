@@ -13,23 +13,16 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * Message
  */
@@ -37,7 +30,7 @@ import ch.myelexis.server.client.ApiClient;
   Message.JSON_PROPERTY_RECIPIENT_URI,
   Message.JSON_PROPERTY_MESSAGE
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class Message {
   public static final String JSON_PROPERTY_RECIPIENT_URI = "recipientUri";
   @jakarta.annotation.Nonnull
@@ -47,10 +40,11 @@ public class Message {
   @jakarta.annotation.Nonnull
   private String message;
 
-  public Message() { 
+  public Message() {
   }
 
   public Message recipientUri(@jakarta.annotation.Nonnull String recipientUri) {
+    
     this.recipientUri = recipientUri;
     return this;
   }
@@ -62,6 +56,7 @@ public class Message {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_RECIPIENT_URI, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getRecipientUri() {
     return recipientUri;
   }
@@ -73,8 +68,8 @@ public class Message {
     this.recipientUri = recipientUri;
   }
 
-
   public Message message(@jakarta.annotation.Nonnull String message) {
+    
     this.message = message;
     return this;
   }
@@ -86,6 +81,7 @@ public class Message {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getMessage() {
     return message;
   }
@@ -97,10 +93,6 @@ public class Message {
     this.message = message;
   }
 
-
-  /**
-   * Return true if this Message object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -174,15 +166,26 @@ public class Message {
 
     // add `recipientUri` to the URL query string
     if (getRecipientUri() != null) {
-      joiner.add(String.format(Locale.ROOT, "%srecipientUri%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRecipientUri()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%srecipientUri%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getRecipientUri()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `message` to the URL query string
     if (getMessage() != null) {
-      joiner.add(String.format(Locale.ROOT, "%smessage%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getMessage()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%smessage%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getMessage()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 

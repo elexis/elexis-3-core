@@ -13,25 +13,18 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * ElexisEvent
  */
@@ -39,7 +32,7 @@ import ch.myelexis.server.client.ApiClient;
   ElexisEvent.JSON_PROPERTY_TOPIC,
   ElexisEvent.JSON_PROPERTY_PROPERTIES
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class ElexisEvent {
   public static final String JSON_PROPERTY_TOPIC = "topic";
   @jakarta.annotation.Nullable
@@ -49,10 +42,11 @@ public class ElexisEvent {
   @jakarta.annotation.Nullable
   private Map<String, String> properties = new HashMap<>();
 
-  public ElexisEvent() { 
+  public ElexisEvent() {
   }
 
   public ElexisEvent topic(@jakarta.annotation.Nullable String topic) {
+    
     this.topic = topic;
     return this;
   }
@@ -64,6 +58,7 @@ public class ElexisEvent {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TOPIC, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getTopic() {
     return topic;
   }
@@ -75,8 +70,8 @@ public class ElexisEvent {
     this.topic = topic;
   }
 
-
   public ElexisEvent properties(@jakarta.annotation.Nullable Map<String, String> properties) {
+    
     this.properties = properties;
     return this;
   }
@@ -96,6 +91,7 @@ public class ElexisEvent {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_PROPERTIES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Map<String, String> getProperties() {
     return properties;
   }
@@ -107,10 +103,6 @@ public class ElexisEvent {
     this.properties = properties;
   }
 
-
-  /**
-   * Return true if this ElexisEvent object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -184,19 +176,30 @@ public class ElexisEvent {
 
     // add `topic` to the URL query string
     if (getTopic() != null) {
-      joiner.add(String.format(Locale.ROOT, "%stopic%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTopic()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%stopic%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getTopic()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `properties` to the URL query string
     if (getProperties() != null) {
       for (String _key : getProperties().keySet()) {
-        joiner.add(String.format(Locale.ROOT, "%sproperties%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
-            getProperties().get(_key), ApiClient.urlEncode(ApiClient.valueToString(getProperties().get(_key)))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%sproperties%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+              getProperties().get(_key), URLEncoder.encode(String.valueOf(getProperties().get(_key)), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 
     return joiner.toString();
   }
+
 }
 

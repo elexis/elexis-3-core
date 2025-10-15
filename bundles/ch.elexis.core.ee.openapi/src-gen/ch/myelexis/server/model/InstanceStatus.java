@@ -13,25 +13,17 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import java.time.OffsetDateTime;
 import java.util.Locale;
-import ch.myelexis.server.model.STATE;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * InstanceStatus
  */
@@ -46,7 +38,7 @@ import ch.myelexis.server.client.ApiClient;
   InstanceStatus.JSON_PROPERTY_LAST_UPDATE,
   InstanceStatus.JSON_PROPERTY_REMOTE_ADDRESS
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class InstanceStatus {
   public static final String JSON_PROPERTY_UUID = "uuid";
   @jakarta.annotation.Nullable
@@ -84,10 +76,11 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   private String remoteAddress;
 
-  public InstanceStatus() { 
+  public InstanceStatus() {
   }
 
   public InstanceStatus uuid(@jakarta.annotation.Nullable String uuid) {
+    
     this.uuid = uuid;
     return this;
   }
@@ -99,6 +92,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_UUID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getUuid() {
     return uuid;
   }
@@ -110,8 +104,8 @@ public class InstanceStatus {
     this.uuid = uuid;
   }
 
-
   public InstanceStatus activeUser(@jakarta.annotation.Nullable String activeUser) {
+    
     this.activeUser = activeUser;
     return this;
   }
@@ -123,6 +117,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ACTIVE_USER, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getActiveUser() {
     return activeUser;
   }
@@ -134,8 +129,8 @@ public class InstanceStatus {
     this.activeUser = activeUser;
   }
 
-
   public InstanceStatus identifier(@jakarta.annotation.Nullable String identifier) {
+    
     this.identifier = identifier;
     return this;
   }
@@ -147,6 +142,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_IDENTIFIER, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getIdentifier() {
     return identifier;
   }
@@ -158,8 +154,8 @@ public class InstanceStatus {
     this.identifier = identifier;
   }
 
-
   public InstanceStatus version(@jakarta.annotation.Nullable String version) {
+    
     this.version = version;
     return this;
   }
@@ -171,6 +167,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_VERSION, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getVersion() {
     return version;
   }
@@ -182,8 +179,8 @@ public class InstanceStatus {
     this.version = version;
   }
 
-
   public InstanceStatus state(@jakarta.annotation.Nullable STATE state) {
+    
     this.state = state;
     return this;
   }
@@ -195,6 +192,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public STATE getState() {
     return state;
   }
@@ -206,8 +204,8 @@ public class InstanceStatus {
     this.state = state;
   }
 
-
   public InstanceStatus operatingSystem(@jakarta.annotation.Nullable String operatingSystem) {
+    
     this.operatingSystem = operatingSystem;
     return this;
   }
@@ -219,6 +217,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_OPERATING_SYSTEM, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getOperatingSystem() {
     return operatingSystem;
   }
@@ -230,8 +229,8 @@ public class InstanceStatus {
     this.operatingSystem = operatingSystem;
   }
 
-
   public InstanceStatus firstSeen(@jakarta.annotation.Nullable OffsetDateTime firstSeen) {
+    
     this.firstSeen = firstSeen;
     return this;
   }
@@ -243,6 +242,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FIRST_SEEN, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public OffsetDateTime getFirstSeen() {
     return firstSeen;
   }
@@ -254,8 +254,8 @@ public class InstanceStatus {
     this.firstSeen = firstSeen;
   }
 
-
   public InstanceStatus lastUpdate(@jakarta.annotation.Nullable OffsetDateTime lastUpdate) {
+    
     this.lastUpdate = lastUpdate;
     return this;
   }
@@ -267,6 +267,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_LAST_UPDATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public OffsetDateTime getLastUpdate() {
     return lastUpdate;
   }
@@ -278,8 +279,8 @@ public class InstanceStatus {
     this.lastUpdate = lastUpdate;
   }
 
-
   public InstanceStatus remoteAddress(@jakarta.annotation.Nullable String remoteAddress) {
+    
     this.remoteAddress = remoteAddress;
     return this;
   }
@@ -291,6 +292,7 @@ public class InstanceStatus {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_REMOTE_ADDRESS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getRemoteAddress() {
     return remoteAddress;
   }
@@ -302,10 +304,6 @@ public class InstanceStatus {
     this.remoteAddress = remoteAddress;
   }
 
-
-  /**
-   * Return true if this InstanceStatus object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -393,50 +391,96 @@ public class InstanceStatus {
 
     // add `uuid` to the URL query string
     if (getUuid() != null) {
-      joiner.add(String.format(Locale.ROOT, "%suuid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getUuid()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%suuid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getUuid()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `activeUser` to the URL query string
     if (getActiveUser() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sactiveUser%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getActiveUser()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sactiveUser%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getActiveUser()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `identifier` to the URL query string
     if (getIdentifier() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sidentifier%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getIdentifier()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sidentifier%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getIdentifier()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `version` to the URL query string
     if (getVersion() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sversion%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getVersion()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sversion%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getVersion()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `state` to the URL query string
     if (getState() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sstate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getState()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sstate%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getState()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `operatingSystem` to the URL query string
     if (getOperatingSystem() != null) {
-      joiner.add(String.format(Locale.ROOT, "%soperatingSystem%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getOperatingSystem()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%soperatingSystem%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getOperatingSystem()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `firstSeen` to the URL query string
     if (getFirstSeen() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sfirstSeen%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFirstSeen()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sfirstSeen%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getFirstSeen()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `lastUpdate` to the URL query string
     if (getLastUpdate() != null) {
-      joiner.add(String.format(Locale.ROOT, "%slastUpdate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getLastUpdate()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%slastUpdate%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getLastUpdate()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `remoteAddress` to the URL query string
     if (getRemoteAddress() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sremoteAddress%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getRemoteAddress()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sremoteAddress%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getRemoteAddress()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 

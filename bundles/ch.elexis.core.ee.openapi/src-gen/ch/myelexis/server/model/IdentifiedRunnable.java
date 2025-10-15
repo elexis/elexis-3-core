@@ -13,25 +13,18 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * IdentifiedRunnable
  */
@@ -41,7 +34,7 @@ import ch.myelexis.server.client.ApiClient;
   IdentifiedRunnable.JSON_PROPERTY_DESCRIPTION,
   IdentifiedRunnable.JSON_PROPERTY_DEFAULT_RUN_CONTEXT
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class IdentifiedRunnable {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nullable
@@ -59,10 +52,11 @@ public class IdentifiedRunnable {
   @jakarta.annotation.Nullable
   private Map<String, String> defaultRunContext = new HashMap<>();
 
-  public IdentifiedRunnable() { 
+  public IdentifiedRunnable() {
   }
 
   public IdentifiedRunnable id(@jakarta.annotation.Nullable String id) {
+    
     this.id = id;
     return this;
   }
@@ -74,6 +68,7 @@ public class IdentifiedRunnable {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getId() {
     return id;
   }
@@ -85,8 +80,8 @@ public class IdentifiedRunnable {
     this.id = id;
   }
 
-
   public IdentifiedRunnable singleton(@jakarta.annotation.Nullable Boolean singleton) {
+    
     this.singleton = singleton;
     return this;
   }
@@ -98,6 +93,7 @@ public class IdentifiedRunnable {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SINGLETON, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getSingleton() {
     return singleton;
   }
@@ -109,8 +105,8 @@ public class IdentifiedRunnable {
     this.singleton = singleton;
   }
 
-
   public IdentifiedRunnable description(@jakarta.annotation.Nullable String description) {
+    
     this.description = description;
     return this;
   }
@@ -122,6 +118,7 @@ public class IdentifiedRunnable {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getDescription() {
     return description;
   }
@@ -133,8 +130,8 @@ public class IdentifiedRunnable {
     this.description = description;
   }
 
-
   public IdentifiedRunnable defaultRunContext(@jakarta.annotation.Nullable Map<String, String> defaultRunContext) {
+    
     this.defaultRunContext = defaultRunContext;
     return this;
   }
@@ -154,6 +151,7 @@ public class IdentifiedRunnable {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_DEFAULT_RUN_CONTEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Map<String, String> getDefaultRunContext() {
     return defaultRunContext;
   }
@@ -165,10 +163,6 @@ public class IdentifiedRunnable {
     this.defaultRunContext = defaultRunContext;
   }
 
-
-  /**
-   * Return true if this IdentifiedRunnable object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -246,29 +240,50 @@ public class IdentifiedRunnable {
 
     // add `id` to the URL query string
     if (getId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `singleton` to the URL query string
     if (getSingleton() != null) {
-      joiner.add(String.format(Locale.ROOT, "%ssingleton%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSingleton()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%ssingleton%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSingleton()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `description` to the URL query string
     if (getDescription() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sdescription%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getDescription()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sdescription%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getDescription()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `defaultRunContext` to the URL query string
     if (getDefaultRunContext() != null) {
       for (String _key : getDefaultRunContext().keySet()) {
-        joiner.add(String.format(Locale.ROOT, "%sdefaultRunContext%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
-            getDefaultRunContext().get(_key), ApiClient.urlEncode(ApiClient.valueToString(getDefaultRunContext().get(_key)))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%sdefaultRunContext%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+              getDefaultRunContext().get(_key), URLEncoder.encode(String.valueOf(getDefaultRunContext().get(_key)), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 
     return joiner.toString();
   }
+
 }
 

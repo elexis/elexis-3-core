@@ -13,14 +13,15 @@
 
 package ch.myelexis.server.client;
 
-import java.net.http.HttpHeaders;
+import java.util.List;
+import java.util.Map;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class ApiException extends Exception {
     private static final long serialVersionUID = 1L;
 
     private int code = 0;
-    private HttpHeaders responseHeaders = null;
+    private Map<String, List<String>> responseHeaders = null;
     private String responseBody = null;
 
     public ApiException() {}
@@ -33,23 +34,23 @@ public class ApiException extends Exception {
         super(message);
     }
 
-    public ApiException(String message, Throwable throwable, int code, HttpHeaders responseHeaders, String responseBody) {
+    public ApiException(String message, Throwable throwable, int code, Map<String, List<String>> responseHeaders, String responseBody) {
         super(message, throwable);
         this.code = code;
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
     }
 
-    public ApiException(String message, int code, HttpHeaders responseHeaders, String responseBody) {
+    public ApiException(String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
         this(message, (Throwable) null, code, responseHeaders, responseBody);
     }
 
-    public ApiException(String message, Throwable throwable, int code, HttpHeaders responseHeaders) {
+    public ApiException(String message, Throwable throwable, int code, Map<String, List<String>> responseHeaders) {
         this(message, throwable, code, responseHeaders, null);
     }
 
-    public ApiException(int code, HttpHeaders responseHeaders, String responseBody) {
-        this((String) null, (Throwable) null, code, responseHeaders, responseBody);
+    public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
+        this("Response Code: " + code + " Response Body: " + responseBody, (Throwable) null, code, responseHeaders, responseBody);
     }
 
     public ApiException(int code, String message) {
@@ -57,7 +58,7 @@ public class ApiException extends Exception {
         this.code = code;
     }
 
-    public ApiException(int code, String message, HttpHeaders responseHeaders, String responseBody) {
+    public ApiException(int code, String message, Map<String, List<String>> responseHeaders, String responseBody) {
         this(code, message);
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
@@ -75,9 +76,9 @@ public class ApiException extends Exception {
     /**
      * Get the HTTP response headers.
      *
-     * @return Headers as an HttpHeaders object
+     * @return A map of list of string
      */
-    public HttpHeaders getResponseHeaders() {
+    public Map<String, List<String>> getResponseHeaders() {
         return responseHeaders;
     }
 
@@ -88,5 +89,14 @@ public class ApiException extends Exception {
      */
     public String getResponseBody() {
         return responseBody;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiException{" +
+                "code=" + code +
+                ", responseHeaders=" + responseHeaders +
+                ", responseBody='" + responseBody + '\'' +
+                '}';
     }
 }

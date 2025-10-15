@@ -12,146 +12,33 @@
 
 package ch.myelexis.server.api;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ch.myelexis.server.client.ApiClient;
 import ch.myelexis.server.client.ApiException;
-import ch.myelexis.server.client.ApiResponse;
+import ch.myelexis.server.client.BaseApi;
 import ch.myelexis.server.client.Configuration;
 import ch.myelexis.server.client.Pair;
-
 import ch.myelexis.server.model.IdentifiedRunnable;
 import ch.myelexis.server.model.Task;
 import ch.myelexis.server.model.TaskResult;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Locale;
-import java.util.function.Consumer;
-
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class TaskServiceV1Api {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
-  private static class HttpRequestBuilderExtensions {
-    /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
-     *
-     * @param builder the HttpRequest.Builder to which headers will be added
-     * @param headers a map of header names and values to add; may be null
-     * @return the same HttpRequest.Builder instance with the additional headers set
-     */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder;
-    }
-  }
-  private final HttpClient memberVarHttpClient;
-  private final ObjectMapper memberVarObjectMapper;
-  private final String memberVarBaseUri;
-  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
-  private final Duration memberVarReadTimeout;
-  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+public class TaskServiceV1Api extends BaseApi {
 
   public TaskServiceV1Api() {
-    this(Configuration.getDefaultApiClient());
+    super(Configuration.getDefaultApiClient());
   }
 
   public TaskServiceV1Api(ApiClient apiClient) {
-    memberVarHttpClient = apiClient.getHttpClient();
-    memberVarObjectMapper = apiClient.getObjectMapper();
-    memberVarBaseUri = apiClient.getBaseUri();
-    memberVarInterceptor = apiClient.getRequestInterceptor();
-    memberVarReadTimeout = apiClient.getReadTimeout();
-    memberVarResponseInterceptor = apiClient.getResponseInterceptor();
-    memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
-  }
-
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
-    String body = response.body() == null ? null : new String(response.body().readAllBytes());
-    String message = formatExceptionMessage(operationId, response.statusCode(), body);
-    return new ApiException(response.statusCode(), message, response.headers(), body);
-  }
-
-  private String formatExceptionMessage(String operationId, int statusCode, String body) {
-    if (body == null || body.isEmpty()) {
-      body = "[no body]";
-    }
-    return operationId + " call failed with: " + statusCode + " - " + body;
-  }
-
-  /**
-   * Download file from the given response.
-   *
-   * @param response Response
-   * @return File
-   * @throws ApiException If fail to read file content from response and write to disk
-   */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response) throws ApiException {
-    try {
-      File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(response.body(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-      return file;
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-  }
-
-  /**
-   * <p>Prepare the file for download from the response.</p>
-   *
-   * @param response a {@link java.net.http.HttpResponse} object.
-   * @return a {@link java.io.File} object.
-   * @throws java.io.IOException if any.
-   */
-  private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
-    String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
-    if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
-      // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
-    }
-    File file = null;
-    if (filename != null) {
-      java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
-      java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
-      file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
-      file.deleteOnExit(); // best effort cleanup
-    } else {
-      file = java.nio.file.Files.createTempFile("download-", "").toFile();
-      file.deleteOnExit(); // best effort cleanup
-    }
-    return file;
+    super(apiClient);
   }
 
   /**
@@ -161,98 +48,69 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void activateTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    activateTask(id, null);
+    this.activateTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Activate and possibly incur task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void activateTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    activateTaskWithHttpInfo(id, headers);
-  }
-
-  /**
-   * Activate and possibly incur task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> activateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return activateTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Activate and possibly incur task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> activateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = activateTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("activateTask", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder activateTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public void activateTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling activateTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}/$activate"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -263,115 +121,70 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public Task createTask(@jakarta.annotation.Nonnull Task task) throws ApiException {
-    return createTask(task, null);
+    return this.createTask(task, Collections.emptyMap());
   }
+
 
   /**
    * Create a new task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param task  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Task
    * @throws ApiException if fails to make API call
    */
-  public Task createTask(@jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
-    ApiResponse<Task> localVarResponse = createTaskWithHttpInfo(task, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Create a new task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param task  (required)
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> createTaskWithHttpInfo(@jakarta.annotation.Nonnull Task task) throws ApiException {
-    return createTaskWithHttpInfo(task, null);
-  }
-
-  /**
-   * Create a new task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param task  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> createTaskWithHttpInfo(@jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = createTaskRequestBuilder(task, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("createTask", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Task>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Task responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Task>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Task>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder createTaskRequestBuilder(@jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
+  public Task createTask(@jakarta.annotation.Nonnull Task task, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = task;
+    
     // verify the required parameter 'task' is set
     if (task == null) {
       throw new ApiException(400, "Missing the required parameter 'task' when calling createTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/json");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(task);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Task> localVarReturnType = new TypeReference<Task>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -381,98 +194,69 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void deactivateTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    deactivateTask(id, null);
+    this.deactivateTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Deactivate task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void deactivateTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    deactivateTaskWithHttpInfo(id, headers);
-  }
-
-  /**
-   * Deactivate task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deactivateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return deactivateTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Deactivate task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deactivateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = deactivateTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("deactivateTask", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder deactivateTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public void deactivateTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling deactivateTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}/$deactivate"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -482,98 +266,69 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void deleteTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    deleteTask(id, null);
+    this.deleteTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Delete task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void deleteTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    deleteTaskWithHttpInfo(id, headers);
-  }
-
-  /**
-   * Delete task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return deleteTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Delete task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = deleteTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("deleteTask", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder deleteTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public void deleteTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling deleteTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -584,110 +339,71 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public List<TaskResult> findRunnableExecutions(@jakarta.annotation.Nonnull String runnableId) throws ApiException {
-    return findRunnableExecutions(runnableId, null);
+    return this.findRunnableExecutions(runnableId, Collections.emptyMap());
   }
+
 
   /**
    * Find all current and past executions of a runnable
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param runnableId  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;TaskResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<TaskResult> findRunnableExecutions(@jakarta.annotation.Nonnull String runnableId, Map<String, String> headers) throws ApiException {
-    ApiResponse<List<TaskResult>> localVarResponse = findRunnableExecutionsWithHttpInfo(runnableId, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Find all current and past executions of a runnable
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @return ApiResponse&lt;List&lt;TaskResult&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<TaskResult>> findRunnableExecutionsWithHttpInfo(@jakarta.annotation.Nonnull String runnableId) throws ApiException {
-    return findRunnableExecutionsWithHttpInfo(runnableId, null);
-  }
-
-  /**
-   * Find all current and past executions of a runnable
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;TaskResult&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<TaskResult>> findRunnableExecutionsWithHttpInfo(@jakarta.annotation.Nonnull String runnableId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = findRunnableExecutionsRequestBuilder(runnableId, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("findRunnableExecutions", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<TaskResult>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<TaskResult> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<TaskResult>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<TaskResult>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder findRunnableExecutionsRequestBuilder(@jakarta.annotation.Nonnull String runnableId, Map<String, String> headers) throws ApiException {
+  public List<TaskResult> findRunnableExecutions(@jakarta.annotation.Nonnull String runnableId, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'runnableId' is set
     if (runnableId == null) {
       throw new ApiException(400, "Missing the required parameter 'runnableId' when calling findRunnableExecutions");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/runnable/{runnableId}/executions"
-        .replace("{runnableId}", ApiClient.urlEncode(runnableId.toString()));
+      .replaceAll("\\{" + "runnableId" + "\\}", apiClient.escapeString(apiClient.parameterToString(runnableId)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<TaskResult>> localVarReturnType = new TypeReference<List<TaskResult>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -698,110 +414,71 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public Task findTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return findTask(id, null);
+    return this.findTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Get task and its state
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Task
    * @throws ApiException if fails to make API call
    */
-  public Task findTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    ApiResponse<Task> localVarResponse = findTaskWithHttpInfo(id, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get task and its state
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> findTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return findTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Get task and its state
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> findTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = findTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("findTask", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Task>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Task responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Task>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Task>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder findTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public Task findTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling findTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Task> localVarReturnType = new TypeReference<Task>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -812,110 +489,71 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public List<TaskResult> findTaskExecutions(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return findTaskExecutions(id, null);
+    return this.findTaskExecutions(id, Collections.emptyMap());
   }
+
 
   /**
    * Get all task executions ordered by create time descending (limit 25)
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;TaskResult&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<TaskResult> findTaskExecutions(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    ApiResponse<List<TaskResult>> localVarResponse = findTaskExecutionsWithHttpInfo(id, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get all task executions ordered by create time descending (limit 25)
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;List&lt;TaskResult&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<TaskResult>> findTaskExecutionsWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return findTaskExecutionsWithHttpInfo(id, null);
-  }
-
-  /**
-   * Get all task executions ordered by create time descending (limit 25)
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;TaskResult&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<TaskResult>> findTaskExecutionsWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = findTaskExecutionsRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("findTaskExecutions", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<TaskResult>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<TaskResult> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<TaskResult>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<TaskResult>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder findTaskExecutionsRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public List<TaskResult> findTaskExecutions(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling findTaskExecutions");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}/executions"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<TaskResult>> localVarReturnType = new TypeReference<List<TaskResult>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -926,120 +564,66 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public List<Task> findTasks(@jakarta.annotation.Nullable Boolean system) throws ApiException {
-    return findTasks(system, null);
+    return this.findTasks(system, Collections.emptyMap());
   }
+
 
   /**
    * List tasks
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param system  (optional, default to false)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;Task&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<Task> findTasks(@jakarta.annotation.Nullable Boolean system, Map<String, String> headers) throws ApiException {
-    ApiResponse<List<Task>> localVarResponse = findTasksWithHttpInfo(system, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * List tasks
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param system  (optional, default to false)
-   * @return ApiResponse&lt;List&lt;Task&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<Task>> findTasksWithHttpInfo(@jakarta.annotation.Nullable Boolean system) throws ApiException {
-    return findTasksWithHttpInfo(system, null);
-  }
-
-  /**
-   * List tasks
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param system  (optional, default to false)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;Task&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<Task>> findTasksWithHttpInfo(@jakarta.annotation.Nullable Boolean system, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = findTasksRequestBuilder(system, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("findTasks", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<Task>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<Task> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<Task>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<Task>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder findTasksRequestBuilder(@jakarta.annotation.Nullable Boolean system, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public List<Task> findTasks(@jakarta.annotation.Nullable Boolean system, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "system";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("system", system));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("system", system));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<Task>> localVarReturnType = new TypeReference<List<Task>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -1049,102 +633,64 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public List<IdentifiedRunnable> listRunnables() throws ApiException {
-    return listRunnables(null);
+    return this.listRunnables(Collections.emptyMap());
   }
+
 
   /**
    * List available runnables
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;IdentifiedRunnable&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<IdentifiedRunnable> listRunnables(Map<String, String> headers) throws ApiException {
-    ApiResponse<List<IdentifiedRunnable>> localVarResponse = listRunnablesWithHttpInfo(headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * List available runnables
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @return ApiResponse&lt;List&lt;IdentifiedRunnable&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<IdentifiedRunnable>> listRunnablesWithHttpInfo() throws ApiException {
-    return listRunnablesWithHttpInfo(null);
-  }
-
-  /**
-   * List available runnables
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;IdentifiedRunnable&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<IdentifiedRunnable>> listRunnablesWithHttpInfo(Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = listRunnablesRequestBuilder(headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("listRunnables", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<IdentifiedRunnable>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<IdentifiedRunnable> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<IdentifiedRunnable>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<IdentifiedRunnable>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder listRunnablesRequestBuilder(Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public List<IdentifiedRunnable> listRunnables(Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/runnable";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<IdentifiedRunnable>> localVarReturnType = new TypeReference<List<IdentifiedRunnable>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -1154,98 +700,69 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public void refreshTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    refreshTask(id, null);
+    this.refreshTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Refreshes the info on this task, and acts on it
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void refreshTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    refreshTaskWithHttpInfo(id, headers);
-  }
-
-  /**
-   * Refreshes the info on this task, and acts on it
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> refreshTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return refreshTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Refreshes the info on this task, and acts on it
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> refreshTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = refreshTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("refreshTask", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder refreshTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public void refreshTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling refreshTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}/$refresh"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -1257,123 +774,77 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public Task triggerRunnable(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    return triggerRunnable(runnableId, requestBody, null);
+    return this.triggerRunnable(runnableId, requestBody, Collections.emptyMap());
   }
+
 
   /**
    * Trigger asynchronous execution of a runnable
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param runnableId  (required)
    * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Task
    * @throws ApiException if fails to make API call
    */
-  public Task triggerRunnable(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    ApiResponse<Task> localVarResponse = triggerRunnableWithHttpInfo(runnableId, requestBody, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Trigger asynchronous execution of a runnable
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @param requestBody  (required)
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> triggerRunnableWithHttpInfo(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    return triggerRunnableWithHttpInfo(runnableId, requestBody, null);
-  }
-
-  /**
-   * Trigger asynchronous execution of a runnable
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> triggerRunnableWithHttpInfo(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = triggerRunnableRequestBuilder(runnableId, requestBody, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("triggerRunnable", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Task>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Task responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Task>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Task>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder triggerRunnableRequestBuilder(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
+  public Task triggerRunnable(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = requestBody;
+    
     // verify the required parameter 'runnableId' is set
     if (runnableId == null) {
       throw new ApiException(400, "Missing the required parameter 'runnableId' when calling triggerRunnable");
     }
+    
     // verify the required parameter 'requestBody' is set
     if (requestBody == null) {
       throw new ApiException(400, "Missing the required parameter 'requestBody' when calling triggerRunnable");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/runnable/{runnableId}/$trigger"
-        .replace("{runnableId}", ApiClient.urlEncode(runnableId.toString()));
+      .replaceAll("\\{" + "runnableId" + "\\}", apiClient.escapeString(apiClient.parameterToString(runnableId)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/json");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(requestBody);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Task> localVarReturnType = new TypeReference<Task>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -1385,123 +856,77 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public TaskResult triggerRunnableSync(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    return triggerRunnableSync(runnableId, requestBody, null);
+    return this.triggerRunnableSync(runnableId, requestBody, Collections.emptyMap());
   }
+
 
   /**
    * Trigger synchronous execution of a runnable by its id
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param runnableId  (required)
    * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return TaskResult
    * @throws ApiException if fails to make API call
    */
-  public TaskResult triggerRunnableSync(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    ApiResponse<TaskResult> localVarResponse = triggerRunnableSyncWithHttpInfo(runnableId, requestBody, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Trigger synchronous execution of a runnable by its id
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @param requestBody  (required)
-   * @return ApiResponse&lt;TaskResult&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<TaskResult> triggerRunnableSyncWithHttpInfo(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    return triggerRunnableSyncWithHttpInfo(runnableId, requestBody, null);
-  }
-
-  /**
-   * Trigger synchronous execution of a runnable by its id
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param runnableId  (required)
-   * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;TaskResult&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<TaskResult> triggerRunnableSyncWithHttpInfo(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = triggerRunnableSyncRequestBuilder(runnableId, requestBody, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("triggerRunnableSync", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<TaskResult>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        TaskResult responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<TaskResult>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<TaskResult>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder triggerRunnableSyncRequestBuilder(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
+  public TaskResult triggerRunnableSync(@jakarta.annotation.Nonnull String runnableId, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = requestBody;
+    
     // verify the required parameter 'runnableId' is set
     if (runnableId == null) {
       throw new ApiException(400, "Missing the required parameter 'runnableId' when calling triggerRunnableSync");
     }
+    
     // verify the required parameter 'requestBody' is set
     if (requestBody == null) {
       throw new ApiException(400, "Missing the required parameter 'requestBody' when calling triggerRunnableSync");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/runnable/{runnableId}/$trigger-sync"
-        .replace("{runnableId}", ApiClient.urlEncode(runnableId.toString()));
+      .replaceAll("\\{" + "runnableId" + "\\}", apiClient.escapeString(apiClient.parameterToString(runnableId)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/json");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(requestBody);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<TaskResult> localVarReturnType = new TypeReference<TaskResult>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -1512,110 +937,71 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public TaskResult triggerTask(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return triggerTask(id, null);
+    return this.triggerTask(id, Collections.emptyMap());
   }
+
 
   /**
    * Trigger task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return TaskResult
    * @throws ApiException if fails to make API call
    */
-  public TaskResult triggerTask(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    ApiResponse<TaskResult> localVarResponse = triggerTaskWithHttpInfo(id, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Trigger task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @return ApiResponse&lt;TaskResult&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<TaskResult> triggerTaskWithHttpInfo(@jakarta.annotation.Nonnull String id) throws ApiException {
-    return triggerTaskWithHttpInfo(id, null);
-  }
-
-  /**
-   * Trigger task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;TaskResult&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<TaskResult> triggerTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = triggerTaskRequestBuilder(id, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("triggerTask", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<TaskResult>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        TaskResult responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<TaskResult>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<TaskResult>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder triggerTaskRequestBuilder(@jakarta.annotation.Nonnull String id, Map<String, String> headers) throws ApiException {
+  public TaskResult triggerTask(@jakarta.annotation.Nonnull String id, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling triggerTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}/$trigger"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<TaskResult> localVarReturnType = new TypeReference<TaskResult>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -1627,123 +1013,117 @@ public class TaskServiceV1Api {
    * @throws ApiException if fails to make API call
    */
   public Task updateTask(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task) throws ApiException {
-    return updateTask(id, task, null);
+    return this.updateTask(id, task, Collections.emptyMap());
   }
+
 
   /**
    * Update task
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
    * @param id  (required)
    * @param task  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Task
    * @throws ApiException if fails to make API call
    */
-  public Task updateTask(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
-    ApiResponse<Task> localVarResponse = updateTaskWithHttpInfo(id, task, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Update task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param task  (required)
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> updateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task) throws ApiException {
-    return updateTaskWithHttpInfo(id, task, null);
-  }
-
-  /**
-   * Update task
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
-   * @param id  (required)
-   * @param task  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Task&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Task> updateTaskWithHttpInfo(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = updateTaskRequestBuilder(id, task, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("updateTask", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Task>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Task responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Task>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Task>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder updateTaskRequestBuilder(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task, Map<String, String> headers) throws ApiException {
+  public Task updateTask(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nonnull Task task, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = task;
+    
     // verify the required parameter 'id' is set
     if (id == null) {
       throw new ApiException(400, "Missing the required parameter 'id' when calling updateTask");
     }
+    
     // verify the required parameter 'task' is set
     if (task == null) {
       throw new ApiException(400, "Missing the required parameter 'task' when calling updateTask");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/services/task/{id}"
-        .replace("{id}", ApiClient.urlEncode(id.toString()));
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/json");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(task);
-      localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Task> localVarReturnType = new TypeReference<Task>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
+  @Override
+  public <T> T invokeAPI(String url, String method, Object request, TypeReference<T> returnType, Map<String, String> additionalHeaders) throws ApiException {
+    String localVarPath = url.replace(apiClient.getBaseURL(), "");
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    return apiClient.invokeAPI(
+      localVarPath,
+        method,
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        request,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        returnType
+    );
+  }
 }

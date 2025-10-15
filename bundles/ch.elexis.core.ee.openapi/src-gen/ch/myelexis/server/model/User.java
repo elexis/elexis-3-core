@@ -13,26 +13,19 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * User
  */
@@ -45,7 +38,7 @@ import ch.myelexis.server.client.ApiClient;
   User.JSON_PROPERTY_ROLES,
   User.JSON_PROPERTY_GROUPS
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class User {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nonnull
@@ -75,10 +68,11 @@ public class User {
   @jakarta.annotation.Nullable
   private Set<String> groups = new LinkedHashSet<>();
 
-  public User() { 
+  public User() {
   }
 
   public User id(@jakarta.annotation.Nonnull String id) {
+    
     this.id = id;
     return this;
   }
@@ -90,6 +84,7 @@ public class User {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_ID, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getId() {
     return id;
   }
@@ -101,8 +96,8 @@ public class User {
     this.id = id;
   }
 
-
   public User firstName(@jakarta.annotation.Nullable String firstName) {
+    
     this.firstName = firstName;
     return this;
   }
@@ -114,6 +109,7 @@ public class User {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FIRST_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getFirstName() {
     return firstName;
   }
@@ -125,8 +121,8 @@ public class User {
     this.firstName = firstName;
   }
 
-
   public User familyName(@jakarta.annotation.Nullable String familyName) {
+    
     this.familyName = familyName;
     return this;
   }
@@ -138,6 +134,7 @@ public class User {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FAMILY_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getFamilyName() {
     return familyName;
   }
@@ -149,8 +146,8 @@ public class User {
     this.familyName = familyName;
   }
 
-
   public User email(@jakarta.annotation.Nonnull String email) {
+    
     this.email = email;
     return this;
   }
@@ -162,6 +159,7 @@ public class User {
   @jakarta.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
   public String getEmail() {
     return email;
   }
@@ -173,8 +171,8 @@ public class User {
     this.email = email;
   }
 
-
   public User associatedContactId(@jakarta.annotation.Nullable String associatedContactId) {
+    
     this.associatedContactId = associatedContactId;
     return this;
   }
@@ -186,6 +184,7 @@ public class User {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ASSOCIATED_CONTACT_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getAssociatedContactId() {
     return associatedContactId;
   }
@@ -197,8 +196,8 @@ public class User {
     this.associatedContactId = associatedContactId;
   }
 
-
   public User roles(@jakarta.annotation.Nullable Set<String> roles) {
+    
     this.roles = roles;
     return this;
   }
@@ -218,6 +217,7 @@ public class User {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ROLES, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Set<String> getRoles() {
     return roles;
   }
@@ -230,8 +230,8 @@ public class User {
     this.roles = roles;
   }
 
-
   public User groups(@jakarta.annotation.Nullable Set<String> groups) {
+    
     this.groups = groups;
     return this;
   }
@@ -251,6 +251,7 @@ public class User {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_GROUPS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Set<String> getGroups() {
     return groups;
   }
@@ -263,10 +264,6 @@ public class User {
     this.groups = groups;
   }
 
-
-  /**
-   * Return true if this User object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -350,36 +347,66 @@ public class User {
 
     // add `id` to the URL query string
     if (getId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `firstName` to the URL query string
     if (getFirstName() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sfirstName%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFirstName()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sfirstName%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getFirstName()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `familyName` to the URL query string
     if (getFamilyName() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sfamilyName%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFamilyName()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sfamilyName%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getFamilyName()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `email` to the URL query string
     if (getEmail() != null) {
-      joiner.add(String.format(Locale.ROOT, "%semail%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getEmail()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%semail%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getEmail()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `associatedContactId` to the URL query string
     if (getAssociatedContactId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sassociatedContactId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getAssociatedContactId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sassociatedContactId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getAssociatedContactId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `roles` to the URL query string
     if (getRoles() != null) {
       int i = 0;
       for (String _item : getRoles()) {
-        joiner.add(String.format(Locale.ROOT, "%sroles%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
-            ApiClient.urlEncode(ApiClient.valueToString(_item))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%sroles%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+              URLEncoder.encode(String.valueOf(_item), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
       i++;
     }
@@ -388,14 +415,20 @@ public class User {
     if (getGroups() != null) {
       int i = 0;
       for (String _item : getGroups()) {
-        joiner.add(String.format(Locale.ROOT, "%sgroups%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
-            ApiClient.urlEncode(ApiClient.valueToString(_item))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%sgroups%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, i, containerSuffix),
+              URLEncoder.encode(String.valueOf(_item), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
       i++;
     }
 
     return joiner.toString();
   }
+
 }
 
