@@ -13,6 +13,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.ConfigServiceActivator;
 import ch.elexis.core.services.IConfigService;
@@ -160,12 +161,15 @@ public class ConfigService implements IConfigService {
 	public boolean set(String key, String value) {
 		try {
 			if (value == null) {
-				throw new UnsupportedOperationException();
+				userApi.deleteGlobalConfigurationValueByKey(key);
+				contextService.sendEvent(ElexisEventTopics.BASE_CONFIG + "delete", "global/" + key);
+			} else {
+				userApi.setGlobalConfigurationValueByKey(key, value);
+				contextService.sendEvent(ElexisEventTopics.BASE_CONFIG + "update", "global/" + key);
 			}
-			userApi.setGlobalConfigurationValueByKey(key, value);
 			return true;
 		} catch (ApiException e) {
-			logger.error("Could not set global key " + key, e);
+			logger.error("Could not set/delete global key " + key, e);
 		}
 		return false;
 	}
@@ -196,7 +200,12 @@ public class ConfigService implements IConfigService {
 		if (Objects.equals(contact.getId(), contextService.getActiveUserContact().map(IContact::getId).orElse(null))) {
 			return setActiveUserContact(key, value);
 		}
-		throw new UnsupportedOperationException();
+		if (value == null) {
+			// FIXME
+		} else {
+			// FIXME
+		}
+		throw new UnsupportedOperationException("May only set values for oneself");
 	}
 
 	@Override
@@ -214,7 +223,13 @@ public class ConfigService implements IConfigService {
 	@Override
 	public boolean setActiveUserContact(String key, String value) {
 		try {
-			userApi.setUserContactConfigurationValueByKey(key, value);
+			if (value == null) {
+				userApi.deleteUserContactConfigurationEntryByKey(key);
+				contextService.sendEvent(ElexisEventTopics.BASE_CONFIG + "delete", "user/" + key);
+			} else {
+				userApi.setUserContactConfigurationValueByKey(key, value);
+				contextService.sendEvent(ElexisEventTopics.BASE_CONFIG + "update", "user/" + key);
+			}
 		} catch (ApiException e) {
 			logger.error("Could not setActiveUserContact " + key, e);
 			return false;
@@ -224,12 +239,12 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean setActiveUserContact(String key, int value) {
-		return setActiveUserContact(key, value);
+		return setActiveUserContact(key, Integer.toString(value));
 	}
 
 	@Override
 	public boolean setActiveUserContact(String key, boolean value) {
-		return setActiveUserContact(key, value);
+		return setActiveUserContact(key, Boolean.toString(value));
 	}
 
 	@Override
@@ -239,14 +254,14 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public boolean setFromList(String key, List<String> values) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		String flattenedValue = values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
+		return set(key, flattenedValue);
 	}
 
 	@Override
 	public boolean setFromList(IContact contact, String key, List<String> values) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		String flattenedValue = values.stream().map(o -> o.toString()).reduce((u, t) -> u + LIST_SEPARATOR + t).get();
+		return set(contact, key, flattenedValue);
 	}
 
 	@Override

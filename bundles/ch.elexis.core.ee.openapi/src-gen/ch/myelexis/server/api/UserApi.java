@@ -12,145 +12,104 @@
 
 package ch.myelexis.server.api;
 
-import ch.myelexis.server.client.ApiClient;
-import ch.myelexis.server.client.ApiException;
-import ch.myelexis.server.client.ApiResponse;
-import ch.myelexis.server.client.Configuration;
-import ch.myelexis.server.client.Pair;
-
-import java.util.Set;
-import ch.myelexis.server.model.User;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
 import java.util.ArrayList;
-import java.util.StringJoiner;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Locale;
-import java.util.function.Consumer;
+import java.util.StringJoiner;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class UserApi {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
-  private static class HttpRequestBuilderExtensions {
-    /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
-     *
-     * @param builder the HttpRequest.Builder to which headers will be added
-     * @param headers a map of header names and values to add; may be null
-     * @return the same HttpRequest.Builder instance with the additional headers set
-     */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder;
-    }
-  }
-  private final HttpClient memberVarHttpClient;
-  private final ObjectMapper memberVarObjectMapper;
-  private final String memberVarBaseUri;
-  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
-  private final Duration memberVarReadTimeout;
-  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import ch.myelexis.server.client.ApiClient;
+import ch.myelexis.server.client.ApiException;
+import ch.myelexis.server.client.BaseApi;
+import ch.myelexis.server.client.Configuration;
+import ch.myelexis.server.client.Pair;
+import ch.myelexis.server.model.User;
+
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+public class UserApi extends BaseApi {
 
   public UserApi() {
-    this(Configuration.getDefaultApiClient());
+    super(Configuration.getDefaultApiClient());
   }
 
   public UserApi(ApiClient apiClient) {
-    memberVarHttpClient = apiClient.getHttpClient();
-    memberVarObjectMapper = apiClient.getObjectMapper();
-    memberVarBaseUri = apiClient.getBaseUri();
-    memberVarInterceptor = apiClient.getRequestInterceptor();
-    memberVarReadTimeout = apiClient.getReadTimeout();
-    memberVarResponseInterceptor = apiClient.getResponseInterceptor();
-    memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
-  }
-
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
-    String body = response.body() == null ? null : new String(response.body().readAllBytes());
-    String message = formatExceptionMessage(operationId, response.statusCode(), body);
-    return new ApiException(response.statusCode(), message, response.headers(), body);
-  }
-
-  private String formatExceptionMessage(String operationId, int statusCode, String body) {
-    if (body == null || body.isEmpty()) {
-      body = "[no body]";
-    }
-    return operationId + " call failed with: " + statusCode + " - " + body;
+    super(apiClient);
   }
 
   /**
-   * Download file from the given response.
-   *
-   * @param response Response
-   * @return File
-   * @throws ApiException If fail to read file content from response and write to disk
+   * Delete Global Configuration Value By Key
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
+   * @param key  (required)
+   * @throws ApiException if fails to make API call
    */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response) throws ApiException {
-    try {
-      File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(response.body(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-      return file;
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
+  public void deleteGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key) throws ApiException {
+    this.deleteGlobalConfigurationValueByKey(key, Collections.emptyMap());
   }
 
+
   /**
-   * <p>Prepare the file for download from the response.</p>
-   *
-   * @param response a {@link java.net.http.HttpResponse} object.
-   * @return a {@link java.io.File} object.
-   * @throws java.io.IOException if any.
+   * Delete Global Configuration Value By Key
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
+   * @param key  (required)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
    */
-  private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
-    String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
-    if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
-      // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
+  public void deleteGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // verify the required parameter 'key' is set
+    if (key == null) {
+      throw new ApiException(400, "Missing the required parameter 'key' when calling deleteGlobalConfigurationValueByKey");
     }
-    File file = null;
-    if (filename != null) {
-      java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
-      java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
-      file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
-      file.deleteOnExit(); // best effort cleanup
-    } else {
-      file = java.nio.file.Files.createTempFile("download-", "").toFile();
-      file.deleteOnExit(); // best effort cleanup
-    }
-    return file;
+    
+    // create path and map variables
+    String localVarPath = "/api/v1/user/config/global";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -160,112 +119,69 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public void deleteUserContactConfigurationEntryByKey(@jakarta.annotation.Nonnull String key) throws ApiException {
-    deleteUserContactConfigurationEntryByKey(key, null);
+    this.deleteUserContactConfigurationEntryByKey(key, Collections.emptyMap());
   }
+
 
   /**
    * Delete User Contact Configuration Entry By Key
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void deleteUserContactConfigurationEntryByKey(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    deleteUserContactConfigurationEntryByKeyWithHttpInfo(key, headers);
-  }
-
-  /**
-   * Delete User Contact Configuration Entry By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteUserContactConfigurationEntryByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key) throws ApiException {
-    return deleteUserContactConfigurationEntryByKeyWithHttpInfo(key, null);
-  }
-
-  /**
-   * Delete User Contact Configuration Entry By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> deleteUserContactConfigurationEntryByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = deleteUserContactConfigurationEntryByKeyRequestBuilder(key, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("deleteUserContactConfigurationEntryByKey", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder deleteUserContactConfigurationEntryByKeyRequestBuilder(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
+  public void deleteUserContactConfigurationEntryByKey(@jakarta.annotation.Nonnull String key, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling deleteUserContactConfigurationEntryByKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/contact";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -276,124 +192,71 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public List<String> findGlobalConfigurationDirectSubnodeKeysForGivenKey(@jakarta.annotation.Nonnull String key) throws ApiException {
-    return findGlobalConfigurationDirectSubnodeKeysForGivenKey(key, null);
+    return this.findGlobalConfigurationDirectSubnodeKeysForGivenKey(key, Collections.emptyMap());
   }
+
 
   /**
    * Find the direct subnode keys for a given entry branch. Programmatically limited to specific branches.
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return List&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public List<String> findGlobalConfigurationDirectSubnodeKeysForGivenKey(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    ApiResponse<List<String>> localVarResponse = findGlobalConfigurationDirectSubnodeKeysForGivenKeyWithHttpInfo(key, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Find the direct subnode keys for a given entry branch. Programmatically limited to specific branches.
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @return ApiResponse&lt;List&lt;String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<String>> findGlobalConfigurationDirectSubnodeKeysForGivenKeyWithHttpInfo(@jakarta.annotation.Nonnull String key) throws ApiException {
-    return findGlobalConfigurationDirectSubnodeKeysForGivenKeyWithHttpInfo(key, null);
-  }
-
-  /**
-   * Find the direct subnode keys for a given entry branch. Programmatically limited to specific branches.
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;List&lt;String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<List<String>> findGlobalConfigurationDirectSubnodeKeysForGivenKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = findGlobalConfigurationDirectSubnodeKeysForGivenKeyRequestBuilder(key, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("findGlobalConfigurationDirectSubnodeKeysForGivenKey", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<List<String>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        List<String> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<List<String>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<List<String>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder findGlobalConfigurationDirectSubnodeKeysForGivenKeyRequestBuilder(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
+  public List<String> findGlobalConfigurationDirectSubnodeKeysForGivenKey(@jakarta.annotation.Nonnull String key, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling findGlobalConfigurationDirectSubnodeKeysForGivenKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/global-subnodekeys";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<String>> localVarReturnType = new TypeReference<List<String>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -403,102 +266,64 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public Set<String> getExecutiveDoctorsWorkingFor() throws ApiException {
-    return getExecutiveDoctorsWorkingFor(null);
+    return this.getExecutiveDoctorsWorkingFor(Collections.emptyMap());
   }
+
 
   /**
    * Get executive doctors user is working for
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;Retrieves the contact ids of the executive doctors the current user is working for
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Set&lt;String&gt;
    * @throws ApiException if fails to make API call
    */
-  public Set<String> getExecutiveDoctorsWorkingFor(Map<String, String> headers) throws ApiException {
-    ApiResponse<Set<String>> localVarResponse = getExecutiveDoctorsWorkingForWithHttpInfo(headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get executive doctors user is working for
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;Retrieves the contact ids of the executive doctors the current user is working for
-   * @return ApiResponse&lt;Set&lt;String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Set<String>> getExecutiveDoctorsWorkingForWithHttpInfo() throws ApiException {
-    return getExecutiveDoctorsWorkingForWithHttpInfo(null);
-  }
-
-  /**
-   * Get executive doctors user is working for
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;Retrieves the contact ids of the executive doctors the current user is working for
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Set&lt;String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Set<String>> getExecutiveDoctorsWorkingForWithHttpInfo(Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getExecutiveDoctorsWorkingForRequestBuilder(headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getExecutiveDoctorsWorkingFor", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Set<String>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Set<String> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Set<String>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Set<String>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getExecutiveDoctorsWorkingForRequestBuilder(Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public Set<String> getExecutiveDoctorsWorkingFor(Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/executive-doctors-working-for";
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Set<String>> localVarReturnType = new TypeReference<Set<String>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -509,125 +334,71 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public String getGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key) throws ApiException {
-    return getGlobalConfigurationValueByKey(key, null);
+    return this.getGlobalConfigurationValueByKey(key, Collections.emptyMap());
   }
+
 
   /**
    * Get Global Configuration Value By Key
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return String
    * @throws ApiException if fails to make API call
    */
-  public String getGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    ApiResponse<String> localVarResponse = getGlobalConfigurationValueByKeyWithHttpInfo(key, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get Global Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> getGlobalConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key) throws ApiException {
-    return getGlobalConfigurationValueByKeyWithHttpInfo(key, null);
-  }
-
-  /**
-   * Get Global Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> getGlobalConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getGlobalConfigurationValueByKeyRequestBuilder(key, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getGlobalConfigurationValueByKey", localVarResponse);
-        }
-         // mde added see https://github.com/OpenAPITools/openapi-generator/issues/22055
-        if(204==localVarResponse.statusCode()) {
-        	return new ApiResponse<String>(
-                    localVarResponse.statusCode(),
-                    localVarResponse.headers().map(),
-                    null
-            );
-        }       
-        // for plain text response
-        if (localVarResponse.headers().map().containsKey("Content-Type") &&
-                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
-          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
-          String responseBodyText = s.hasNext() ? s.next() : "";
-          return new ApiResponse<String>(
-                  localVarResponse.statusCode(),
-                  localVarResponse.headers().map(),
-                  responseBodyText
-          );
-        } else {
-            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
-        }
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getGlobalConfigurationValueByKeyRequestBuilder(@jakarta.annotation.Nonnull String key, Map<String, String> headers) throws ApiException {
+  public String getGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling getGlobalConfigurationValueByKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/global";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "text/plain");
+    
+    
+    final String[] localVarAccepts = {
+      "text/plain"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<String> localVarReturnType = new TypeReference<String>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -639,130 +410,73 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public String getUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId) throws ApiException {
-    return getUserContactConfigurationValueByKey(key, contactId, null);
+    return this.getUserContactConfigurationValueByKey(key, contactId, Collections.emptyMap());
   }
+
 
   /**
    * Get User Contact Configuration Value By Key
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
    * @param contactId Target contact to fetch value for. Limited to self and contact user is aobo (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return String
    * @throws ApiException if fails to make API call
    */
-  public String getUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId, Map<String, String> headers) throws ApiException {
-    ApiResponse<String> localVarResponse = getUserContactConfigurationValueByKeyWithHttpInfo(key, contactId, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get User Contact Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param contactId Target contact to fetch value for. Limited to self and contact user is aobo (optional)
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> getUserContactConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId) throws ApiException {
-    return getUserContactConfigurationValueByKeyWithHttpInfo(key, contactId, null);
-  }
-
-  /**
-   * Get User Contact Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param contactId Target contact to fetch value for. Limited to self and contact user is aobo (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> getUserContactConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getUserContactConfigurationValueByKeyRequestBuilder(key, contactId, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getUserContactConfigurationValueByKey", localVarResponse);
-        }
-         // mde added see https://github.com/OpenAPITools/openapi-generator/issues/22055
-        if(204==localVarResponse.statusCode()) {
-        	return new ApiResponse<String>(
-                    localVarResponse.statusCode(),
-                    localVarResponse.headers().map(),
-                    null
-            );
-        }       
-        // for plain text response
-        if (localVarResponse.headers().map().containsKey("Content-Type") &&
-                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
-          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
-          String responseBodyText = s.hasNext() ? s.next() : "";
-          return new ApiResponse<String>(
-                  localVarResponse.statusCode(),
-                  localVarResponse.headers().map(),
-                  responseBodyText
-          );
-        } else {
-            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
-        }
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getUserContactConfigurationValueByKeyRequestBuilder(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId, Map<String, String> headers) throws ApiException {
+  public String getUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nullable String contactId, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling getUserContactConfigurationValueByKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/contact";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "contact-id";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("contact-id", contactId));
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("contact-id", contactId));
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "text/plain");
+    
+    
+    final String[] localVarAccepts = {
+      "text/plain"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<String> localVarReturnType = new TypeReference<String>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -773,120 +487,66 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak) throws ApiException {
-    return getUserInfo(resolveViaKeycloak, null);
+    return this.getUserInfo(resolveViaKeycloak, Collections.emptyMap());
   }
+
 
   /**
    * Get user information
    * User information as contained in the token
    * @param resolveViaKeycloak  (optional, default to false)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return User
    * @throws ApiException if fails to make API call
    */
-  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, Map<String, String> headers) throws ApiException {
-    ApiResponse<User> localVarResponse = getUserInfoWithHttpInfo(resolveViaKeycloak, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Get user information
-   * User information as contained in the token
-   * @param resolveViaKeycloak  (optional, default to false)
-   * @return ApiResponse&lt;User&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<User> getUserInfoWithHttpInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak) throws ApiException {
-    return getUserInfoWithHttpInfo(resolveViaKeycloak, null);
-  }
-
-  /**
-   * Get user information
-   * User information as contained in the token
-   * @param resolveViaKeycloak  (optional, default to false)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;User&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<User> getUserInfoWithHttpInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getUserInfoRequestBuilder(resolveViaKeycloak, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getUserInfo", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<User>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        User responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<User>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<User>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getUserInfoRequestBuilder(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, Map<String, String> headers) throws ApiException {
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/info";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "resolve-via-keycloak";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("resolve-via-keycloak", resolveViaKeycloak));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("resolve-via-keycloak", resolveViaKeycloak));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] {  };
+
+    TypeReference<User> localVarReturnType = new TypeReference<User>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -894,137 +554,78 @@ public class UserApi {
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
    * @param body  (required)
-   * @return String
    * @throws ApiException if fails to make API call
    */
-  public String setGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body) throws ApiException {
-    return setGlobalConfigurationValueByKey(key, body, null);
+  public void setGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body) throws ApiException {
+    this.setGlobalConfigurationValueByKey(key, body, Collections.emptyMap());
   }
+
 
   /**
    * Set Global Configuration Value By Key
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
    * @param body  (required)
-   * @param headers Optional headers to include in the request
-   * @return String
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public String setGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
-    ApiResponse<String> localVarResponse = setGlobalConfigurationValueByKeyWithHttpInfo(key, body, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Set Global Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param body  (required)
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> setGlobalConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body) throws ApiException {
-    return setGlobalConfigurationValueByKeyWithHttpInfo(key, body, null);
-  }
-
-  /**
-   * Set Global Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param body  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;String&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<String> setGlobalConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = setGlobalConfigurationValueByKeyRequestBuilder(key, body, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("setGlobalConfigurationValueByKey", localVarResponse);
-        }
-         // mde added see https://github.com/OpenAPITools/openapi-generator/issues/22055
-        if(204==localVarResponse.statusCode()) {
-        	return new ApiResponse<String>(
-                    localVarResponse.statusCode(),
-                    localVarResponse.headers().map(),
-                    null
-            );
-        }       
-        // for plain text response
-        if (localVarResponse.headers().map().containsKey("Content-Type") &&
-                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
-          java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
-          String responseBodyText = s.hasNext() ? s.next() : "";
-          return new ApiResponse<String>(
-                  localVarResponse.statusCode(),
-                  localVarResponse.headers().map(),
-                  responseBodyText
-          );
-        } else {
-            throw new RuntimeException("Error! The response Content-Type is supposed to be `text/plain` but it's not: " + localVarResponse);
-        }
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder setGlobalConfigurationValueByKeyRequestBuilder(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
+  public void setGlobalConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = body;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling setGlobalConfigurationValueByKey");
     }
+    
     // verify the required parameter 'body' is set
     if (body == null) {
       throw new ApiException(400, "Missing the required parameter 'body' when calling setGlobalConfigurationValueByKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/global";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Content-Type", "text/plain");
-    localVarRequestBuilder.header("Accept", "text/plain");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.ofString(body));
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      "text/plain"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -1035,120 +636,115 @@ public class UserApi {
    * @throws ApiException if fails to make API call
    */
   public void setUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body) throws ApiException {
-    setUserContactConfigurationValueByKey(key, body, null);
+    this.setUserContactConfigurationValueByKey(key, body, Collections.emptyMap());
   }
+
 
   /**
    * Set User Contact Configuration Value By Key
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
    * @param key  (required)
    * @param body  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void setUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
-    setUserContactConfigurationValueByKeyWithHttpInfo(key, body, headers);
-  }
-
-  /**
-   * Set User Contact Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param body  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setUserContactConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body) throws ApiException {
-    return setUserContactConfigurationValueByKeyWithHttpInfo(key, body, null);
-  }
-
-  /**
-   * Set User Contact Configuration Value By Key
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,user&lt;br&gt;
-   * @param key  (required)
-   * @param body  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setUserContactConfigurationValueByKeyWithHttpInfo(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = setUserContactConfigurationValueByKeyRequestBuilder(key, body, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("setUserContactConfigurationValueByKey", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder setUserContactConfigurationValueByKeyRequestBuilder(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> headers) throws ApiException {
+  public void setUserContactConfigurationValueByKey(@jakarta.annotation.Nonnull String key, @jakarta.annotation.Nonnull String body, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = body;
+    
     // verify the required parameter 'key' is set
     if (key == null) {
       throw new ApiException(400, "Missing the required parameter 'key' when calling setUserContactConfigurationValueByKey");
     }
+    
     // verify the required parameter 'body' is set
     if (body == null) {
       throw new ApiException(400, "Missing the required parameter 'body' when calling setUserContactConfigurationValueByKey");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/user/config/contact";
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Content-Type", "text/plain");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.ofString(body));
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      "text/plain"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
+  @Override
+  public <T> T invokeAPI(String url, String method, Object request, TypeReference<T> returnType, Map<String, String> additionalHeaders) throws ApiException {
+    String localVarPath = url.replace(apiClient.getBaseURL(), "");
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "text/plain"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    return apiClient.invokeAPI(
+      localVarPath,
+        method,
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        request,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        returnType
+    );
+  }
 }

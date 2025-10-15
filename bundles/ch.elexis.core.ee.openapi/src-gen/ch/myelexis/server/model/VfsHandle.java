@@ -13,23 +13,16 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * VfsHandle
  */
@@ -39,7 +32,7 @@ import ch.myelexis.server.client.ApiClient;
   VfsHandle.JSON_PROPERTY_NAME,
   VfsHandle.JSON_PROPERTY_FQNAME
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class VfsHandle {
   public static final String JSON_PROPERTY_TYPE = "type";
   @jakarta.annotation.Nullable
@@ -57,10 +50,11 @@ public class VfsHandle {
   @jakarta.annotation.Nullable
   private String fqname;
 
-  public VfsHandle() { 
+  public VfsHandle() {
   }
 
   public VfsHandle type(@jakarta.annotation.Nullable String type) {
+    
     this.type = type;
     return this;
   }
@@ -72,6 +66,7 @@ public class VfsHandle {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getType() {
     return type;
   }
@@ -83,8 +78,8 @@ public class VfsHandle {
     this.type = type;
   }
 
-
   public VfsHandle size(@jakarta.annotation.Nullable Long size) {
+    
     this.size = size;
     return this;
   }
@@ -96,6 +91,7 @@ public class VfsHandle {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SIZE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Long getSize() {
     return size;
   }
@@ -107,8 +103,8 @@ public class VfsHandle {
     this.size = size;
   }
 
-
   public VfsHandle name(@jakarta.annotation.Nullable String name) {
+    
     this.name = name;
     return this;
   }
@@ -120,6 +116,7 @@ public class VfsHandle {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getName() {
     return name;
   }
@@ -131,8 +128,8 @@ public class VfsHandle {
     this.name = name;
   }
 
-
   public VfsHandle fqname(@jakarta.annotation.Nullable String fqname) {
+    
     this.fqname = fqname;
     return this;
   }
@@ -144,6 +141,7 @@ public class VfsHandle {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FQNAME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getFqname() {
     return fqname;
   }
@@ -155,10 +153,6 @@ public class VfsHandle {
     this.fqname = fqname;
   }
 
-
-  /**
-   * Return true if this VfsHandle object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -236,25 +230,46 @@ public class VfsHandle {
 
     // add `type` to the URL query string
     if (getType() != null) {
-      joiner.add(String.format(Locale.ROOT, "%stype%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getType()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%stype%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getType()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `size` to the URL query string
     if (getSize() != null) {
-      joiner.add(String.format(Locale.ROOT, "%ssize%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getSize()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%ssize%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSize()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `name` to the URL query string
     if (getName() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sname%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getName()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sname%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getName()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `fqname` to the URL query string
     if (getFqname() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sfqname%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFqname()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sfqname%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getFqname()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 
