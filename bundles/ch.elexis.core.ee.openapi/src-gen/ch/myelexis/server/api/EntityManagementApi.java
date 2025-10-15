@@ -12,143 +12,30 @@
 
 package ch.myelexis.server.api;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ch.myelexis.server.client.ApiClient;
 import ch.myelexis.server.client.ApiException;
-import ch.myelexis.server.client.ApiResponse;
+import ch.myelexis.server.client.BaseApi;
 import ch.myelexis.server.client.Configuration;
 import ch.myelexis.server.client.Pair;
 
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.http.HttpRequest;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Locale;
-import java.util.function.Consumer;
-
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
-public class EntityManagementApi {
-  /**
-   * Utility class for extending HttpRequest.Builder functionality.
-   */
-  private static class HttpRequestBuilderExtensions {
-    /**
-     * Adds additional headers to the provided HttpRequest.Builder. Useful for adding method/endpoint specific headers.
-     *
-     * @param builder the HttpRequest.Builder to which headers will be added
-     * @param headers a map of header names and values to add; may be null
-     * @return the same HttpRequest.Builder instance with the additional headers set
-     */
-    static HttpRequest.Builder withAdditionalHeaders(HttpRequest.Builder builder, Map<String, String> headers) {
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                builder.header(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder;
-    }
-  }
-  private final HttpClient memberVarHttpClient;
-  private final ObjectMapper memberVarObjectMapper;
-  private final String memberVarBaseUri;
-  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
-  private final Duration memberVarReadTimeout;
-  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+public class EntityManagementApi extends BaseApi {
 
   public EntityManagementApi() {
-    this(Configuration.getDefaultApiClient());
+    super(Configuration.getDefaultApiClient());
   }
 
   public EntityManagementApi(ApiClient apiClient) {
-    memberVarHttpClient = apiClient.getHttpClient();
-    memberVarObjectMapper = apiClient.getObjectMapper();
-    memberVarBaseUri = apiClient.getBaseUri();
-    memberVarInterceptor = apiClient.getRequestInterceptor();
-    memberVarReadTimeout = apiClient.getReadTimeout();
-    memberVarResponseInterceptor = apiClient.getResponseInterceptor();
-    memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
-  }
-
-
-  protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
-    String body = response.body() == null ? null : new String(response.body().readAllBytes());
-    String message = formatExceptionMessage(operationId, response.statusCode(), body);
-    return new ApiException(response.statusCode(), message, response.headers(), body);
-  }
-
-  private String formatExceptionMessage(String operationId, int statusCode, String body) {
-    if (body == null || body.isEmpty()) {
-      body = "[no body]";
-    }
-    return operationId + " call failed with: " + statusCode + " - " + body;
-  }
-
-  /**
-   * Download file from the given response.
-   *
-   * @param response Response
-   * @return File
-   * @throws ApiException If fail to read file content from response and write to disk
-   */
-  public File downloadFileFromResponse(HttpResponse<InputStream> response) throws ApiException {
-    try {
-      File file = prepareDownloadFile(response);
-      java.nio.file.Files.copy(response.body(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-      return file;
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-  }
-
-  /**
-   * <p>Prepare the file for download from the response.</p>
-   *
-   * @param response a {@link java.net.http.HttpResponse} object.
-   * @return a {@link java.io.File} object.
-   * @throws java.io.IOException if any.
-   */
-  private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
-    String filename = null;
-    java.util.Optional<String> contentDisposition = response.headers().firstValue("Content-Disposition");
-    if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
-      // Get filename from the Content-Disposition header.
-      java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
-      if (matcher.find())
-        filename = matcher.group(1);
-    }
-    File file = null;
-    if (filename != null) {
-      java.nio.file.Path tempDir = java.nio.file.Files.createTempDirectory("swagger-gen-native");
-      java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
-      file = filePath.toFile();
-      tempDir.toFile().deleteOnExit();   // best effort cleanup
-      file.deleteOnExit(); // best effort cleanup
-    } else {
-      file = java.nio.file.Files.createTempFile("download-", "").toFile();
-      file.deleteOnExit(); // best effort cleanup
-    }
-    return file;
+    super(apiClient);
   }
 
   /**
@@ -160,118 +47,78 @@ public class EntityManagementApi {
    * @throws ApiException if fails to make API call
    */
   public Map<String, String> getEntityExtInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType) throws ApiException {
-    return getEntityExtInfo(entityId, entityType, null);
+    return this.getEntityExtInfo(entityId, entityType, Collections.emptyMap());
   }
+
 
   /**
    * Return the extinfo stored values of an entity
    * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
    * @param entityId  (required)
    * @param entityType  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @return Map&lt;String, String&gt;
    * @throws ApiException if fails to make API call
    */
-  public Map<String, String> getEntityExtInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, Map<String, String> headers) throws ApiException {
-    ApiResponse<Map<String, String>> localVarResponse = getEntityExtInfoWithHttpInfo(entityId, entityType, headers);
-    return localVarResponse.getData();
-  }
-
-  /**
-   * Return the extinfo stored values of an entity
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @return ApiResponse&lt;Map&lt;String, String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Map<String, String>> getEntityExtInfoWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType) throws ApiException {
-    return getEntityExtInfoWithHttpInfo(entityId, entityType, null);
-  }
-
-  /**
-   * Return the extinfo stored values of an entity
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Map&lt;String, String&gt;&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Map<String, String>> getEntityExtInfoWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = getEntityExtInfoRequestBuilder(entityId, entityType, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("getEntityExtInfo", localVarResponse);
-        }
-        if (localVarResponse.body() == null) {
-          return new ApiResponse<Map<String, String>>(
-              localVarResponse.statusCode(),
-              localVarResponse.headers().map(),
-              null
-          );
-        }
-
-        
-        
-        String responseBody = new String(localVarResponse.body().readAllBytes());
-        Map<String, String> responseValue = responseBody.isBlank()? null: memberVarObjectMapper.readValue(responseBody, new TypeReference<Map<String, String>>() {});
-        
-        localVarResponse.body().close();
-
-        return new ApiResponse<Map<String, String>>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            responseValue
-        );
-      } finally {
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder getEntityExtInfoRequestBuilder(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, Map<String, String> headers) throws ApiException {
+  public Map<String, String> getEntityExtInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'entityId' is set
     if (entityId == null) {
       throw new ApiException(400, "Missing the required parameter 'entityId' when calling getEntityExtInfo");
     }
+    
     // verify the required parameter 'entityType' is set
     if (entityType == null) {
       throw new ApiException(400, "Missing the required parameter 'entityType' when calling getEntityExtInfo");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/management/entity/{entityType}/{entityId}/extinfo"
-        .replace("{entityId}", ApiClient.urlEncode(entityId.toString()))
-        .replace("{entityType}", ApiClient.urlEncode(entityType.toString()));
+      .replaceAll("\\{" + "entityId" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityId)))
+      .replaceAll("\\{" + "entityType" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityType)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<Map<String, String>> localVarReturnType = new TypeReference<Map<String, String>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
+    );
   }
 
   /**
@@ -283,8 +130,9 @@ public class EntityManagementApi {
    * @throws ApiException if fails to make API call
    */
   public void removeEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key) throws ApiException {
-    removeEntityExtInfoKeyValue(entityId, entityType, key, null);
+    this.removeEntityExtInfoKeyValue(entityId, entityType, key, Collections.emptyMap());
   }
+
 
   /**
    * Remove a single key/value pair on an entities extinfo
@@ -292,115 +140,68 @@ public class EntityManagementApi {
    * @param entityId  (required)
    * @param entityType  (required)
    * @param key  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void removeEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, Map<String, String> headers) throws ApiException {
-    removeEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, key, headers);
-  }
-
-  /**
-   * Remove a single key/value pair on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param key  (optional)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> removeEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key) throws ApiException {
-    return removeEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, key, null);
-  }
-
-  /**
-   * Remove a single key/value pair on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param key  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> removeEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = removeEntityExtInfoKeyValueRequestBuilder(entityId, entityType, key, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("removeEntityExtInfoKeyValue", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder removeEntityExtInfoKeyValueRequestBuilder(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, Map<String, String> headers) throws ApiException {
+  public void removeEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'entityId' is set
     if (entityId == null) {
       throw new ApiException(400, "Missing the required parameter 'entityId' when calling removeEntityExtInfoKeyValue");
     }
+    
     // verify the required parameter 'entityType' is set
     if (entityType == null) {
       throw new ApiException(400, "Missing the required parameter 'entityType' when calling removeEntityExtInfoKeyValue");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/management/entity/{entityType}/{entityId}/extinfo"
-        .replace("{entityId}", ApiClient.urlEncode(entityId.toString()))
-        .replace("{entityType}", ApiClient.urlEncode(entityType.toString()));
+      .replaceAll("\\{" + "entityId" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityId)))
+      .replaceAll("\\{" + "entityType" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityType)));
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("DELETE", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -412,8 +213,9 @@ public class EntityManagementApi {
    * @throws ApiException if fails to make API call
    */
   public void setMultipleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    setMultipleEntityExtInfoKeyValue(entityId, entityType, requestBody, null);
+    this.setMultipleEntityExtInfoKeyValue(entityId, entityType, requestBody, Collections.emptyMap());
   }
+
 
   /**
    * Set multiple key/value pairs on an entities extinfo
@@ -421,110 +223,72 @@ public class EntityManagementApi {
    * @param entityId  (required)
    * @param entityType  (required)
    * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void setMultipleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    setMultipleEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, requestBody, headers);
-  }
-
-  /**
-   * Set multiple key/value pairs on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param requestBody  (required)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setMultipleEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody) throws ApiException {
-    return setMultipleEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, requestBody, null);
-  }
-
-  /**
-   * Set multiple key/value pairs on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param requestBody  (required)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setMultipleEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = setMultipleEntityExtInfoKeyValueRequestBuilder(entityId, entityType, requestBody, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("setMultipleEntityExtInfoKeyValue", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder setMultipleEntityExtInfoKeyValueRequestBuilder(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> headers) throws ApiException {
+  public void setMultipleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nonnull Map<String, String> requestBody, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = requestBody;
+    
     // verify the required parameter 'entityId' is set
     if (entityId == null) {
       throw new ApiException(400, "Missing the required parameter 'entityId' when calling setMultipleEntityExtInfoKeyValue");
     }
+    
     // verify the required parameter 'entityType' is set
     if (entityType == null) {
       throw new ApiException(400, "Missing the required parameter 'entityType' when calling setMultipleEntityExtInfoKeyValue");
     }
+    
     // verify the required parameter 'requestBody' is set
     if (requestBody == null) {
       throw new ApiException(400, "Missing the required parameter 'requestBody' when calling setMultipleEntityExtInfoKeyValue");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/management/entity/{entityType}/{entityId}/extinfo"
-        .replace("{entityId}", ApiClient.urlEncode(entityId.toString()))
-        .replace("{entityType}", ApiClient.urlEncode(entityType.toString()));
+      .replaceAll("\\{" + "entityId" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityId)))
+      .replaceAll("\\{" + "entityType" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityType)));
 
-    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    localVarRequestBuilder.header("Content-Type", "application/json");
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    try {
-      byte[] localVarPostBody = memberVarObjectMapper.writeValueAsBytes(requestBody);
-      localVarRequestBuilder.method("POST", HttpRequest.BodyPublishers.ofByteArray(localVarPostBody));
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      "application/json"
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "POST",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
   /**
@@ -537,8 +301,9 @@ public class EntityManagementApi {
    * @throws ApiException if fails to make API call
    */
   public void setSingleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value) throws ApiException {
-    setSingleEntityExtInfoKeyValue(entityId, entityType, key, value, null);
+    this.setSingleEntityExtInfoKeyValue(entityId, entityType, key, value, Collections.emptyMap());
   }
+
 
   /**
    * Set a single key/value pair on an entities extinfo
@@ -547,119 +312,109 @@ public class EntityManagementApi {
    * @param entityType  (required)
    * @param key  (optional)
    * @param value  (optional)
-   * @param headers Optional headers to include in the request
+   * @param additionalHeaders additionalHeaders for this call
    * @throws ApiException if fails to make API call
    */
-  public void setSingleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value, Map<String, String> headers) throws ApiException {
-    setSingleEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, key, value, headers);
-  }
-
-  /**
-   * Set a single key/value pair on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param key  (optional)
-   * @param value  (optional)
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setSingleEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value) throws ApiException {
-    return setSingleEntityExtInfoKeyValueWithHttpInfo(entityId, entityType, key, value, null);
-  }
-
-  /**
-   * Set a single key/value pair on an entities extinfo
-   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access,ict-administrator&lt;br&gt;
-   * @param entityId  (required)
-   * @param entityType  (required)
-   * @param key  (optional)
-   * @param value  (optional)
-   * @param headers Optional headers to include in the request
-   * @return ApiResponse&lt;Void&gt;
-   * @throws ApiException if fails to make API call
-   */
-  public ApiResponse<Void> setSingleEntityExtInfoKeyValueWithHttpInfo(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value, Map<String, String> headers) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = setSingleEntityExtInfoKeyValueRequestBuilder(entityId, entityType, key, value, headers);
-    try {
-      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofInputStream());
-      if (memberVarResponseInterceptor != null) {
-        memberVarResponseInterceptor.accept(localVarResponse);
-      }
-      try {
-        if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("setSingleEntityExtInfoKeyValue", localVarResponse);
-        }
-        return new ApiResponse<>(
-            localVarResponse.statusCode(),
-            localVarResponse.headers().map(),
-            null
-        );
-      } finally {
-        // Drain the InputStream
-        while (localVarResponse.body().read() != -1) {
-          // Ignore
-        }
-        localVarResponse.body().close();
-      }
-    } catch (IOException e) {
-      throw new ApiException(e);
-    }
-    catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new ApiException(e);
-    }
-  }
-
-  private HttpRequest.Builder setSingleEntityExtInfoKeyValueRequestBuilder(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value, Map<String, String> headers) throws ApiException {
+  public void setSingleEntityExtInfoKeyValue(@jakarta.annotation.Nonnull String entityId, @jakarta.annotation.Nonnull String entityType, @jakarta.annotation.Nullable String key, @jakarta.annotation.Nullable String value, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
     // verify the required parameter 'entityId' is set
     if (entityId == null) {
       throw new ApiException(400, "Missing the required parameter 'entityId' when calling setSingleEntityExtInfoKeyValue");
     }
+    
     // verify the required parameter 'entityType' is set
     if (entityType == null) {
       throw new ApiException(400, "Missing the required parameter 'entityType' when calling setSingleEntityExtInfoKeyValue");
     }
-
-    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
+    
+    // create path and map variables
     String localVarPath = "/api/v1/management/entity/{entityType}/{entityId}/extinfo"
-        .replace("{entityId}", ApiClient.urlEncode(entityId.toString()))
-        .replace("{entityType}", ApiClient.urlEncode(entityType.toString()));
+      .replaceAll("\\{" + "entityId" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityId)))
+      .replaceAll("\\{" + "entityType" + "\\}", apiClient.escapeString(apiClient.parameterToString(entityType)));
 
-    List<Pair> localVarQueryParams = new ArrayList<>();
     StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
-    localVarQueryParameterBaseName = "key";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("key", key));
-    localVarQueryParameterBaseName = "value";
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("value", value));
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-    if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      StringJoiner queryJoiner = new StringJoiner("&");
-      localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
-      if (localVarQueryStringJoiner.length() != 0) {
-        queryJoiner.add(localVarQueryStringJoiner.toString());
-      }
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath + '?' + queryJoiner.toString()));
-    } else {
-      localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
-    }
+    localVarQueryParams.addAll(apiClient.parameterToPair("key", key));
+    localVarQueryParams.addAll(apiClient.parameterToPair("value", value));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
 
-    localVarRequestBuilder.header("Accept", "application/json");
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-    localVarRequestBuilder.method("PUT", HttpRequest.BodyPublishers.noBody());
-    if (memberVarReadTimeout != null) {
-      localVarRequestBuilder.timeout(memberVarReadTimeout);
-    }
-    // Add custom headers if provided
-    localVarRequestBuilder = HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
-    if (memberVarInterceptor != null) {
-      memberVarInterceptor.accept(localVarRequestBuilder);
-    }
-    return localVarRequestBuilder;
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
   }
 
+  @Override
+  public <T> T invokeAPI(String url, String method, Object request, TypeReference<T> returnType, Map<String, String> additionalHeaders) throws ApiException {
+    String localVarPath = url.replace(apiClient.getBaseURL(), "");
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    return apiClient.invokeAPI(
+      localVarPath,
+        method,
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        request,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        returnType
+    );
+  }
 }

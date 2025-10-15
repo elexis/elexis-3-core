@@ -13,27 +13,19 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Locale;
-import ch.myelexis.server.model.TaskState;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * TaskResult
  */
@@ -47,7 +39,7 @@ import ch.myelexis.server.client.ApiClient;
   TaskResult.JSON_PROPERTY_RUN_CONTEXT,
   TaskResult.JSON_PROPERTY_RESULT
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class TaskResult {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nullable
@@ -81,10 +73,11 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   private String result;
 
-  public TaskResult() { 
+  public TaskResult() {
   }
 
   public TaskResult id(@jakarta.annotation.Nullable String id) {
+    
     this.id = id;
     return this;
   }
@@ -96,6 +89,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getId() {
     return id;
   }
@@ -107,8 +101,8 @@ public class TaskResult {
     this.id = id;
   }
 
-
   public TaskResult state(@jakarta.annotation.Nullable TaskState state) {
+    
     this.state = state;
     return this;
   }
@@ -120,6 +114,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STATE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public TaskState getState() {
     return state;
   }
@@ -131,8 +126,8 @@ public class TaskResult {
     this.state = state;
   }
 
-
   public TaskResult taskId(@jakarta.annotation.Nullable String taskId) {
+    
     this.taskId = taskId;
     return this;
   }
@@ -144,6 +139,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TASK_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getTaskId() {
     return taskId;
   }
@@ -155,8 +151,8 @@ public class TaskResult {
     this.taskId = taskId;
   }
 
-
   public TaskResult taskReferenceId(@jakarta.annotation.Nullable String taskReferenceId) {
+    
     this.taskReferenceId = taskReferenceId;
     return this;
   }
@@ -168,6 +164,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TASK_REFERENCE_ID, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getTaskReferenceId() {
     return taskReferenceId;
   }
@@ -179,8 +176,8 @@ public class TaskResult {
     this.taskReferenceId = taskReferenceId;
   }
 
-
   public TaskResult createTime(@jakarta.annotation.Nullable OffsetDateTime createTime) {
+    
     this.createTime = createTime;
     return this;
   }
@@ -192,6 +189,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_CREATE_TIME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public OffsetDateTime getCreateTime() {
     return createTime;
   }
@@ -203,8 +201,8 @@ public class TaskResult {
     this.createTime = createTime;
   }
 
-
   public TaskResult finishTime(@jakarta.annotation.Nullable OffsetDateTime finishTime) {
+    
     this.finishTime = finishTime;
     return this;
   }
@@ -216,6 +214,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_FINISH_TIME, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public OffsetDateTime getFinishTime() {
     return finishTime;
   }
@@ -227,8 +226,8 @@ public class TaskResult {
     this.finishTime = finishTime;
   }
 
-
   public TaskResult runContext(@jakarta.annotation.Nullable Map<String, String> runContext) {
+    
     this.runContext = runContext;
     return this;
   }
@@ -248,6 +247,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_RUN_CONTEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Map<String, String> getRunContext() {
     return runContext;
   }
@@ -259,8 +259,8 @@ public class TaskResult {
     this.runContext = runContext;
   }
 
-
   public TaskResult result(@jakarta.annotation.Nullable String result) {
+    
     this.result = result;
     return this;
   }
@@ -272,6 +272,7 @@ public class TaskResult {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_RESULT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getResult() {
     return result;
   }
@@ -283,10 +284,6 @@ public class TaskResult {
     this.result = result;
   }
 
-
-  /**
-   * Return true if this TaskResult object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -372,49 +369,90 @@ public class TaskResult {
 
     // add `id` to the URL query string
     if (getId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sid%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `state` to the URL query string
     if (getState() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sstate%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getState()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sstate%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getState()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `taskId` to the URL query string
     if (getTaskId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%staskId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTaskId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%staskId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getTaskId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `taskReferenceId` to the URL query string
     if (getTaskReferenceId() != null) {
-      joiner.add(String.format(Locale.ROOT, "%staskReferenceId%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getTaskReferenceId()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%staskReferenceId%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getTaskReferenceId()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `createTime` to the URL query string
     if (getCreateTime() != null) {
-      joiner.add(String.format(Locale.ROOT, "%screateTime%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getCreateTime()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%screateTime%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getCreateTime()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `finishTime` to the URL query string
     if (getFinishTime() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sfinishTime%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getFinishTime()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sfinishTime%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getFinishTime()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `runContext` to the URL query string
     if (getRunContext() != null) {
       for (String _key : getRunContext().keySet()) {
-        joiner.add(String.format(Locale.ROOT, "%srunContext%s%s=%s", prefix, suffix,
-            "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
-            getRunContext().get(_key), ApiClient.urlEncode(ApiClient.valueToString(getRunContext().get(_key)))));
+        try {
+          joiner.add(String.format(Locale.ROOT, "%srunContext%s%s=%s", prefix, suffix,
+              "".equals(suffix) ? "" : String.format(Locale.ROOT, "%s%d%s", containerPrefix, _key, containerSuffix),
+              getRunContext().get(_key), URLEncoder.encode(String.valueOf(getRunContext().get(_key)), "UTF-8").replaceAll("\\+", "%20")));
+        } catch (UnsupportedEncodingException e) {
+          // Should never happen, UTF-8 is always supported
+          throw new RuntimeException(e);
+        }
       }
     }
 
     // add `result` to the URL query string
     if (getResult() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sresult%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getResult()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sresult%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getResult()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 
