@@ -13,26 +13,16 @@
 
 package ch.myelexis.server.model;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Locale;
-import ch.myelexis.server.model.LockInfo;
-import ch.myelexis.server.model.Status;
-import ch.myelexis.server.model.Type;
+import java.util.Objects;
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
-import ch.myelexis.server.client.ApiClient;
 /**
  * LockResponse
  */
@@ -42,7 +32,7 @@ import ch.myelexis.server.client.ApiClient;
   LockResponse.JSON_PROPERTY_LOCK_REQUEST_TYPE,
   LockResponse.JSON_PROPERTY_OK
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-06T12:40:32.737785+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class LockResponse {
   public static final String JSON_PROPERTY_STATUS = "status";
   @jakarta.annotation.Nullable
@@ -60,10 +50,11 @@ public class LockResponse {
   @jakarta.annotation.Nullable
   private Boolean ok;
 
-  public LockResponse() { 
+  public LockResponse() {
   }
 
   public LockResponse status(@jakarta.annotation.Nullable Status status) {
+    
     this.status = status;
     return this;
   }
@@ -75,6 +66,7 @@ public class LockResponse {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Status getStatus() {
     return status;
   }
@@ -86,8 +78,8 @@ public class LockResponse {
     this.status = status;
   }
 
-
   public LockResponse lockInfo(@jakarta.annotation.Nullable LockInfo lockInfo) {
+    
     this.lockInfo = lockInfo;
     return this;
   }
@@ -99,6 +91,7 @@ public class LockResponse {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_LOCK_INFO, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public LockInfo getLockInfo() {
     return lockInfo;
   }
@@ -110,8 +103,8 @@ public class LockResponse {
     this.lockInfo = lockInfo;
   }
 
-
   public LockResponse lockRequestType(@jakarta.annotation.Nullable Type lockRequestType) {
+    
     this.lockRequestType = lockRequestType;
     return this;
   }
@@ -123,6 +116,7 @@ public class LockResponse {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_LOCK_REQUEST_TYPE, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Type getLockRequestType() {
     return lockRequestType;
   }
@@ -134,8 +128,8 @@ public class LockResponse {
     this.lockRequestType = lockRequestType;
   }
 
-
   public LockResponse ok(@jakarta.annotation.Nullable Boolean ok) {
+    
     this.ok = ok;
     return this;
   }
@@ -147,6 +141,7 @@ public class LockResponse {
   @jakarta.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_OK, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public Boolean getOk() {
     return ok;
   }
@@ -158,10 +153,6 @@ public class LockResponse {
     this.ok = ok;
   }
 
-
-  /**
-   * Return true if this LockResponse object is equal to o.
-   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -239,7 +230,12 @@ public class LockResponse {
 
     // add `status` to the URL query string
     if (getStatus() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sstatus%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getStatus()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sstatus%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getStatus()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `lockInfo` to the URL query string
@@ -249,15 +245,26 @@ public class LockResponse {
 
     // add `lockRequestType` to the URL query string
     if (getLockRequestType() != null) {
-      joiner.add(String.format(Locale.ROOT, "%slockRequestType%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getLockRequestType()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%slockRequestType%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getLockRequestType()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     // add `ok` to the URL query string
     if (getOk() != null) {
-      joiner.add(String.format(Locale.ROOT, "%sok%s=%s", prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getOk()))));
+      try {
+        joiner.add(String.format(Locale.ROOT, "%sok%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getOk()), "UTF-8").replaceAll("\\+", "%20")));
+      } catch (UnsupportedEncodingException e) {
+        // Should never happen, UTF-8 is always supported
+        throw new RuntimeException(e);
+      }
     }
 
     return joiner.toString();
   }
+
 }
 

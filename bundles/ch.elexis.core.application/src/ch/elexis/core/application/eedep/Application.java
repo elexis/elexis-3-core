@@ -85,10 +85,6 @@ public class Application implements IApplication {
 			// persistence layer
 			DBConnection dbConnection = loadDBConnectionSettings(accessToken);
 
-//		new Thread(() -> {
-
-			// we initialize the persistence layer while the ui alredy starts up
-
 			IStatus status = elexisDataSource.setDBConnection(dbConnection);
 			if (!status.isOK()) {
 				logger.error("Error connecting to database: " + status.getMessage());
@@ -96,18 +92,7 @@ public class Application implements IApplication {
 			}
 
 			// accessToken is required during activation of user
-
 			contextService.setActiveUser(user);
-
-//		}).start();
-//
-			// (2) Activate IElexisEnvironmentService ?
-
-			// (3) Set user and token in context
-
-			// Context should be active already
-
-			// (4) Load DB Connection settings
 
 			// FIXME Deactivate Logoff
 
