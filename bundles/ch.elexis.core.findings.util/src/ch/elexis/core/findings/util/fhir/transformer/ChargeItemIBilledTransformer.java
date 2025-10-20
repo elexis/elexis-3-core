@@ -35,7 +35,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
 
-@Component
+@Component(property = IFhirTransformer.TRANSFORMERID + "=ChargeItem.IBilled")
 public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem, IBilled> {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")

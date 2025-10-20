@@ -46,6 +46,7 @@ import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.rgw.tools.Money;
 import ch.rgw.tools.VersionedResource;
 
 public class TestDatabaseInitializer {
@@ -441,6 +442,8 @@ public class TestDatabaseInitializer {
 			article.setGtin("0000001111111");
 			article.setPackageSize(12);
 			article.setSellingSize(12);
+			article.setPurchasePrice(new Money(100));
+			article.setSellingPrice(new Money(150));
 			modelService.save(article);
 			isArticleInitialized = true;
 
