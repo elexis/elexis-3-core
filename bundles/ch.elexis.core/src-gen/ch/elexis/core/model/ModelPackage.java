@@ -7497,13 +7497,22 @@ public interface ModelPackage extends EPackage {
 	int IAPPOINTMENT__CREATED_BY = IPERIOD_FEATURE_COUNT + 16;
 
 	/**
+	 * The feature id for the '<em><b>Locked</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT__LOCKED = IPERIOD_FEATURE_COUNT + 17;
+
+	/**
 	 * The number of structural features of the '<em>IAppointment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 17;
+	int IAPPOINTMENT_FEATURE_COUNT = IPERIOD_FEATURE_COUNT + 18;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointmentSeries <em>IAppointment Series</em>}' class.
@@ -7703,6 +7712,15 @@ public interface ModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int IAPPOINTMENT_SERIES__CREATED_BY = IAPPOINTMENT__CREATED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Locked</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IAPPOINTMENT_SERIES__LOCKED = IAPPOINTMENT__LOCKED;
 
 	/**
 	 * The feature id for the '<em><b>Series Type</b></em>' attribute.
@@ -13355,6 +13373,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIAppointment_CreatedBy();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#isLocked <em>Locked</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Locked</em>'.
+	 * @see ch.elexis.core.model.IAppointment#isLocked()
+	 * @see #getIAppointment()
+	 * @generated
+	 */
+	EAttribute getIAppointment_Locked();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IAppointment#getSubjectOrPatient <em>Subject Or Patient</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17362,6 +17391,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IAPPOINTMENT__CREATED_BY = eINSTANCE.getIAppointment_CreatedBy();
+
+		/**
+		 * The meta object literal for the '<em><b>Locked</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IAPPOINTMENT__LOCKED = eINSTANCE.getIAppointment_Locked();
 
 		/**
 		 * The meta object literal for the '<em><b>Subject Or Patient</b></em>' attribute feature.

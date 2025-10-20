@@ -478,4 +478,14 @@ public class AppointmentSeries implements IAppointmentSeries {
 		query.and(ModelPackage.Literals.IAPPOINTMENT__LINKGROUP, COMPARATOR.EQUALS, getLinkgroup());
 		return query.execute();
 	}
+
+	@Override
+	public boolean isLocked() {
+		return rootAppointment.isLocked();
+	}
+
+	@Override
+	public void setLocked(boolean value) {
+		rootAppointment.setLocked(value);
+	}
 }

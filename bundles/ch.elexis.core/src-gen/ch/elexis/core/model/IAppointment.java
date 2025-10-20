@@ -36,6 +36,7 @@ package ch.elexis.core.model;
  *   <li>{@link ch.elexis.core.model.IAppointment#getStateHistory <em>State History</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#isRecurring <em>Recurring</em>}</li>
  *   <li>{@link ch.elexis.core.model.IAppointment#getCreatedBy <em>Created By</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IAppointment#isLocked <em>Locked</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIAppointment()
@@ -188,6 +189,28 @@ public interface IAppointment extends IPeriod {
 	 * @generated
 	 */
 	void setCreatedBy(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Locked</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Locked</em>' attribute.
+	 * @see #setLocked(boolean)
+	 * @see ch.elexis.core.model.ModelPackage#getIAppointment_Locked()
+	 * @model
+	 * @generated
+	 */
+	boolean isLocked();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IAppointment#isLocked <em>Locked</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Locked</em>' attribute.
+	 * @see #isLocked()
+	 * @generated
+	 */
+	void setLocked(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Subject Or Patient</b></em>' attribute.
