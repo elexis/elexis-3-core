@@ -501,21 +501,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;
-			String desc1 = m1.getDescription1();
-			String desc2 = m2.getDescription1();
-			
-			// Handle null values - treat them as empty strings for comparison
-			if (desc1 == null && desc2 == null) {
-				return 0;
-			}
-			if (desc1 == null) {
-				return 1; // null values go to the end
-			}
-			if (desc2 == null) {
-				return -1; // null values go to the end
-			}
-			
-			return desc1.compareToIgnoreCase(desc2);
+			return StringUtils.compareIgnoreCase(m1.getDescription1(), m2.getDescription1());
 		}
 	}
 
@@ -525,21 +511,7 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IUser u1 = (IUser) o1;
 			IUser u2 = (IUser) o2;
-			String id1 = u1.getId();
-			String id2 = u2.getId();
-			
-			// Handle null values - treat them as empty strings for comparison
-			if (id1 == null && id2 == null) {
-				return 0;
-			}
-			if (id1 == null) {
-				return 1; // null values go to the end
-			}
-			if (id2 == null) {
-				return -1; // null values go to the end
-			}
-			
-			return id1.compareToIgnoreCase(id2);
+			return StringUtils.compareIgnoreCase(u1.getId(), u2.getId());
 		}
 	}
 }
