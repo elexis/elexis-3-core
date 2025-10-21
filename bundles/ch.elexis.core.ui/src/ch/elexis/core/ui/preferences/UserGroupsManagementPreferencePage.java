@@ -501,6 +501,15 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;
+			if (m1 == null && m2 == null) {
+				return 0;
+			}
+			if (m1 == null) {
+				return -1;
+			}
+			if (m2 == null) {
+				return 1;
+			}
 			return StringUtils.compareIgnoreCase(m1.getDescription1(), m2.getDescription1());
 		}
 	}
@@ -511,6 +520,15 @@ public class UserGroupsManagementPreferencePage extends PreferencePage implement
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IUser u1 = (IUser) o1;
 			IUser u2 = (IUser) o2;
+			if (u1 == null && u2 == null) {
+				return 0;
+			}
+			if (u1 == null) {
+				return -1;
+			}
+			if (u2 == null) {
+				return 1;
+			}
 			return StringUtils.compareIgnoreCase(u1.getId(), u2.getId());
 		}
 	}
