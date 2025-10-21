@@ -50,6 +50,7 @@ import ch.elexis.hl7.util.HL7Helper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
+import ch.elexis.hl7.v2x.kikons.HL7ImporterKIKonsReader;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
 
@@ -88,17 +89,23 @@ public class HL7ReaderV251 extends HL7Reader {
 
 		try {
 			this.patientResolver = patientResolver;
+			if (message.toString().contains("11488-4")) {
+				logger.info("Detected AI Consultation (LOINC 11488-4) – using HL7ImporterKIKonsReader");
+				return new HL7ImporterKIKonsReader(message).readObservation(patientResolver,
+						createIfNotFound);
+			}
 			if (message.getName().contains("OUL_R22")) {
 				readObservationOulR22(createIfNotFound);
 			} else {
 				readObservationOruR01(createIfNotFound);
 			}
-		} catch (HL7Exception | ParseException e) {
+
+		} catch (Exception e) {
 			throw new ElexisException(e.getMessage(), e);
 		}
-
 		return observation;
 	}
+
 
 	private void readObservationOruR01(boolean createIfNotFound) throws ParseException, HL7Exception {
 		ORU_R01 oru = (ORU_R01) message;

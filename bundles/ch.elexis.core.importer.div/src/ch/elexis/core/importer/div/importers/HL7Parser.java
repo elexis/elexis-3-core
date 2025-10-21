@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.importer.div.importers.internal.HL7KiKonsImportHandler;
 import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabResult;
@@ -48,8 +49,8 @@ import ch.rgw.tools.TimeTool;
 
 public class HL7Parser {
 	private static final Logger logger = LoggerFactory.getLogger(HL7Parser.class);
-	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata";
-	public static final String CFG_IMPORT_ENCDATA_CATEGORY = "hl7Parser/importencdataCategory";
+	public static final String CFG_IMPORT_ENCDATA = "hl7Parser/importencdata"; //$NON-NLS-1$
+	public static final String CFG_IMPORT_ENCDATA_CATEGORY = "hl7Parser/importencdataCategory"; //$NON-NLS-1$
 
 	private HL7PatientResolver patientResolver;
 
@@ -108,21 +109,42 @@ public class HL7Parser {
 
 		// assure resolvers are initialized
 		if (labResolver == null) {
-			throw new IllegalArgumentException("labContactResolver must not be null");
+			throw new IllegalArgumentException("labContactResolver must not be null"); //$NON-NLS-1$
 		}
 		if (labItemResolver == null) {
 			labItemResolver = new DefaultLabItemResolver();
 		}
 
 		try {
-			ILaboratory labor = labResolver.getLabContact(myLab, hl7Reader.getSender());
-			// stop here if lab does not exist
-			if (labor == null) {
-				logger.warn("Exiting parsing process as labor is null");
-				return new Result<>(SEVERITY.ERROR, 2, "Labor contact is null", StringUtils.EMPTY, true);
+
+			if (hl7Reader == null) {
+				logger.warn("HL7Parser: hl7Reader is null – aborting import"); //$NON-NLS-1$
+				return new Result<>(SEVERITY.ERROR, 2, "HL7Reader is null", "n/a", true); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
+			String rawMessage = null;
+			try {
+				rawMessage = hl7Reader.getMessage().encode();
+			} catch (Exception e) {
+				logger.warn("Could not encode HL7 message: {}", e.getMessage()); //$NON-NLS-1$
+			}
+			if (rawMessage != null && StringUtils.containsIgnoreCase(rawMessage, "11488-4")) { //$NON-NLS-1$
+				logger.info("HL7Parser: KI-Report erkannt – Kennzeichne für späteren Import"); //$NON-NLS-1$
+				Result<Object> result = new Result<>();
+				result.add(Result.SEVERITY.OK, 0, "KI HL7 erkannt", //$NON-NLS-1$
+						"Handled via Kons-ID", false); //$NON-NLS-1$
+				return result;
+			}
+
+			ILaboratory labor = labResolver.getLabContact(myLab, hl7Reader.getSender());
+
+			logger.info("HL7Parser: Reader class is {}", hl7Reader.getClass().getName()); //$NON-NLS-1$
+
 			ObservationMessage obsMessage = hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
+			if (obsMessage == null) {
+				logger.warn("HL7Parser: ObservationMessage is null – aborting parsing safely"); //$NON-NLS-1$
+				return new Result<>(SEVERITY.ERROR, 2, "ObservationMessage is null", StringUtils.EMPTY, true); //$NON-NLS-1$
+			}
 
 			IPatient patient = hl7Reader.getPatient();
 			if (patient == null) {
@@ -139,7 +161,7 @@ public class HL7Parser {
 			OrcMessage orcMessage = hl7Reader.getOrcMessage();
 			if (orcMessage != null) {
 				if (orcMessage.getNames().isEmpty()) {
-					logger.info("Cannot parse mandant name for ORC message");
+					logger.info("Cannot parse mandant name for ORC message"); //$NON-NLS-1$
 				}
 			}
 
@@ -186,7 +208,7 @@ public class HL7Parser {
 								refMale, refFemale, hl7LabResult.getUnit(), typ,
 								labItemResolver.getTestGroupName(hl7LabResult),
 								labItemResolver.getNextTestGroupSequence(hl7LabResult));
-						logger.debug("LabItem created [{}]", labItem);
+						logger.debug("LabItem created [{}]", labItem); //$NON-NLS-1$
 					}
 
 					boolean importAsLongText = (hl7LabResult.isFormatedText() || hl7LabResult.isPlainText());
@@ -211,7 +233,7 @@ public class HL7Parser {
 						if (hl7LabResult.getFlag() != null) {
 							flag = (hl7LabResult.getFlag().booleanValue()) ? LabResultConstants.PATHOLOGIC : 0;
 						}
-						TransientLabResult importedResult = new TransientLabResult.Builder(pat, labor, labItem, "text")
+						TransientLabResult importedResult = new TransientLabResult.Builder(pat, labor, labItem, "text") //$NON-NLS-1$
 								.date(obrDateTime)
 								.comment(StringTool.unNull(hl7LabResult.getValue()) + StringUtils.LF
 										+ StringTool.unNull(hl7LabResult.getComment()))
@@ -248,22 +270,22 @@ public class HL7Parser {
 							}
 						}
 						date = new TimeTool(hl7EncData.getDate());
-						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", StringUtils.EMPTY);
-						dateString = dateString.replace("-", StringUtils.EMPTY);
-						String title = "Lab-" + dateString + "-" + hl7EncData.getSequence();
+						String dateString = date.toString(TimeTool.DATETIME_XML).replace(":", StringUtils.EMPTY); //$NON-NLS-1$
+						dateString = dateString.replace("-", StringUtils.EMPTY); //$NON-NLS-1$
+						String title = "Lab-" + dateString + "-" + hl7EncData.getSequence(); //$NON-NLS-1$ //$NON-NLS-2$
 
 						String fileType = StringUtils.EMPTY;
-						if (hl7EncData.getName().contains("/")) {
-							String[] split = hl7EncData.getName().split("/");
+						if (hl7EncData.getName().contains("/")) { //$NON-NLS-1$
+							String[] split = hl7EncData.getName().split("/"); //$NON-NLS-1$
 							if (split.length == 2) {
 								fileType = split[1];
-								title = title + "." + fileType;
+								title = title + "." + fileType; //$NON-NLS-1$
 							}
 						}
 
 						// get or create LabItem and create labresult
-						String liShort = "doc";
-						String liName = "Dokument";
+						String liShort = "doc"; //$NON-NLS-1$
+						String liName = "Dokument"; //$NON-NLS-1$
 
 						ILabItem labItem = labImportUtil.getDocumentLabItem(liShort, liName, labor).orElse(null);
 						if (labItem == null) {
@@ -313,7 +335,7 @@ public class HL7Parser {
 								comment.append(hl7TextData.getComment());
 							}
 							TransientLabResult commentsResult = new TransientLabResult.Builder(pat, labor, labItem,
-									"text").date(commentsDate).comment(comment.toString()).build(labImportUtil);
+									"text").date(commentsDate).comment(comment.toString()).build(labImportUtil); //$NON-NLS-1$
 							results.add(commentsResult);
 						}
 						number++;
@@ -322,14 +344,14 @@ public class HL7Parser {
 			}
 
 			if (StringUtils.isNotBlank(obsMessage.getPatientNotesAndComments())) {
-				ILabItem labItem = labImportUtil.getLabItem("NOTE", labor);
+				ILabItem labItem = labImportUtil.getLabItem("NOTE", labor); //$NON-NLS-1$
 				if (labItem == null) {
-					labItem = labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name, labor,
-							StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LabItemTyp.TEXT, "AA", "1");
-					logger.debug("LabItem created [{}]", labItem);
+					labItem = labImportUtil.createLabItem("NOTE", Messages.HL7Parser_LabItem_Note_Name, labor, //$NON-NLS-1$
+							StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LabItemTyp.TEXT, "AA", "1"); //$NON-NLS-1$ //$NON-NLS-2$
+					logger.debug("LabItem created [{}]", labItem); //$NON-NLS-1$
 				}
 
-				TransientLabResult patientNoteAndComment = new TransientLabResult.Builder(pat, labor, labItem, "text")
+				TransientLabResult patientNoteAndComment = new TransientLabResult.Builder(pat, labor, labItem, "text") //$NON-NLS-1$
 						.comment(obsMessage.getPatientNotesAndComments()).date(obrDateTime).flags(0)
 						.observationTime(obrDateTime).analyseTime(obxDateTime).orcMessage(orcMessage)
 						.build(labImportUtil);
@@ -343,7 +365,7 @@ public class HL7Parser {
 			orderId = labImportUtil.importLabResults(results, importHandler);
 
 		} catch (Exception e) {
-			logger.error("Parsing HL7 failed", e);
+			logger.error("Parsing HL7 failed", e); //$NON-NLS-1$
 			return new Result<>(SEVERITY.ERROR, 2, Messages.Core_Error_while_importing_HL7, e.getMessage(),
 					true);
 		}
@@ -420,8 +442,18 @@ public class HL7Parser {
 		for (HL7Reader hl7Reader : hl7Readers) {
 			this.hl7Reader = hl7Reader;
 			Result<?> ret = parse(hl7Reader, labItemResolver, labContactResolver, bCreatePatientIfNotExists);
+
+			boolean isKiReport = "Handled via Kons-ID".equals(ret.get()); //$NON-NLS-1$
+
 			// move result to archive
 			if (ret.isOK()) {
+				if (isKiReport) {
+					String nativePath = file.getAbsolutePath();
+					if (nativePath.startsWith("file:/")) { //$NON-NLS-1$
+						nativePath = nativePath.replaceFirst("^file:/+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					HL7KiKonsImportHandler.handleKiKonsImport(nativePath);
+				}
 				if (archiveDir != null) {
 					if (archiveDir.exists() && archiveDir.isDirectory()) {
 						if (file.exists() && !file.isDirectory() && file.canRead()) {
@@ -431,7 +463,7 @@ public class HL7Parser {
 								// on multiple move to archive dir:
 								// first time use own filename
 								// n+ times use filename_timestamp
-								String fnwts = file.getName() + "_" + new TimeTool().toString(TimeTool.TIMESTAMP);
+								String fnwts = file.getName() + "_" + new TimeTool().toString(TimeTool.TIMESTAMP); //$NON-NLS-1$
 								newFile = archiveDir.subFile(fnwts);
 							}
 
@@ -454,7 +486,7 @@ public class HL7Parser {
 			try {
 				isDirectory = handle.isDirectory();
 			} catch (IOException e) {
-				logger.warn("Error checking [" + handle + "], treating as file", e);
+				logger.warn("Error checking [" + handle + "], treating as file", e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			if (isDirectory) {
@@ -500,7 +532,7 @@ public class HL7Parser {
 		this.hl7Reader = hl7Reader;
 		Result<?> ret = parse(hl7Reader, bCreatePatientIfNotExists);
 		if (ret.isOK()) {
-			return new Result<Object>("OK");
+			return new Result<Object>("OK"); //$NON-NLS-1$
 		}
 		return ret;
 		// ResultAdapter.displayResult(ret,

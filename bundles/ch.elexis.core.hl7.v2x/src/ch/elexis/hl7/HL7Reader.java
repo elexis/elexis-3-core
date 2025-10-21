@@ -114,6 +114,10 @@ public abstract class HL7Reader {
 		return message.getVersion();
 	}
 
+	public Message getMessage() {
+		return message.getMessage();
+	}
+
 	public String parseTextValue(String value) {
 		String text = value;
 		text = text.replaceAll("\\\\.br\\\\", StringUtils.LF);
