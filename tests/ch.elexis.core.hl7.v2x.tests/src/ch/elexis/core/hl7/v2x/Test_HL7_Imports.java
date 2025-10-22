@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -57,18 +56,12 @@ public class Test_HL7_Imports {
 	private void testGetObservationsOneHL7file(File f) throws ElexisException, IOException {
 		String name = f.getAbsolutePath();
 		if (f.canRead() && (name.toLowerCase().endsWith(".hl7"))) {
-			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
-			String raw = null;
-			try {
-				raw = Files.readString(f.toPath(), java.nio.charset.StandardCharsets.UTF_8);
-			} catch (java.nio.charset.MalformedInputException e) {
-				raw = Files.readString(f.toPath(), java.nio.charset.StandardCharsets.ISO_8859_1);
-				System.out.println("Fallback auf ISO-8859-1 für Datei: " + f.getName());
-			}
-			if (raw.contains("11488-4") || raw.toLowerCase().contains("consult note")) {
-				System.out.println("Skipping KI report file: " + f.getName());
+			// Skip KI report files
+			// These are AI-generated consultation reports, not real HL7 lab results.
+			if (name.toLowerCase().contains("ki_report")) {
 				return;
 			}
+			List<HL7Reader> hl7Readers = HL7ReaderFactory.INSTANCE.getReader(f);
 			ObservationMessage obs = hl7Readers.get(0).readObservation(resolver, false);
 			assertNotNull(hl7Readers.get(0).getSender());
 			assertNotNull(obs);
