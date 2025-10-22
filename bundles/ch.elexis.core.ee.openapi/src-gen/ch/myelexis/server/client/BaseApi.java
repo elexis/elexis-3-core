@@ -12,12 +12,12 @@
 
 package ch.myelexis.server.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.util.Collections;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public abstract class BaseApi {
 
   protected ApiClient apiClient;

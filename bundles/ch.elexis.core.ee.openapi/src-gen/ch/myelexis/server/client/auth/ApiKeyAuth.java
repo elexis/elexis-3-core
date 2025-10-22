@@ -13,12 +13,12 @@
 
 package ch.myelexis.server.client.auth;
 
-import java.util.List;
-import java.util.Map;
-
 import ch.myelexis.server.client.Pair;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+import java.util.Map;
+import java.util.List;
+
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class ApiKeyAuth implements Authentication {
   private final String location;
   private final String paramName;

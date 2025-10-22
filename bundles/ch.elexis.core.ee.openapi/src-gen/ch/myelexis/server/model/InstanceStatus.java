@@ -13,16 +13,21 @@
 
 package ch.myelexis.server.model;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.time.OffsetDateTime;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.StringJoiner;
-
+import java.util.Arrays;
+import java.util.Locale;
+import ch.myelexis.server.model.STATE;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.StringJoiner;
 
 /**
  * InstanceStatus
@@ -38,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   InstanceStatus.JSON_PROPERTY_LAST_UPDATE,
   InstanceStatus.JSON_PROPERTY_REMOTE_ADDRESS
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class InstanceStatus {
   public static final String JSON_PROPERTY_UUID = "uuid";
   @jakarta.annotation.Nullable
