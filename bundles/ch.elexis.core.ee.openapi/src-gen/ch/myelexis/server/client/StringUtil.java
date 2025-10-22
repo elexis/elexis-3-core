@@ -16,7 +16,7 @@ package ch.myelexis.server.client;
 import java.util.Collection;
 import java.util.Iterator;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-14T13:28:11.344655+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
 public class StringUtil {
   /**
    * Check if the given array contains the given value (with case-insensitive comparison).
