@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,7 +38,9 @@ import ca.uhn.hl7v2.model.v251.segment.ORC;
 import ca.uhn.hl7v2.model.v251.segment.PID;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.hl7.HL7PatientResolver;
@@ -47,6 +51,7 @@ import ch.elexis.hl7.model.ObservationMessage;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.elexis.hl7.model.TextData;
 import ch.elexis.hl7.util.HL7Helper;
+import ch.elexis.hl7.util.KiConsultationHelper;
 import ch.elexis.hl7.v26.HL7Constants;
 import ch.elexis.hl7.v26.HL7_ORU_R01;
 import ch.elexis.hl7.v26.Messages;
@@ -103,6 +108,60 @@ public class HL7ReaderV251 extends HL7Reader {
 	private void readObservationOruR01(boolean createIfNotFound) throws ParseException, HL7Exception {
 		ORU_R01 oru = (ORU_R01) message;
 		msh = oru.getMSH();
+		OBR firstObr = oru.getPATIENT_RESULT().getORDER_OBSERVATION().getOBR();
+		String obrCode = firstObr.getObr4_UniversalServiceIdentifier().getCe1_Identifier().getValue();
+
+		if ("11488-4".equals(obrCode)) {
+			logger.info("Detected KI Consultation (OBR 11488-4)");
+
+			String konsId = null;
+			try {
+				konsId = oru.getPATIENT_RESULT().getPATIENT().getVISIT().getPV1().getPv119_VisitNumber()
+						.getCx1_IDNumber().getValue();
+			} catch (Exception e) {
+				logger.warn("No PV1-19 VisitNumber (Kons-ID) found in KI Consultation", e);
+			}
+			if (StringUtils.isBlank(konsId)) {
+				konsId = firstObr.getObr2_PlacerOrderNumber().getEi1_EntityIdentifier().getValue();
+			}
+			Optional<IPatient> encPatient = tryResolvePatientViaEncounter(konsId);
+			String sendingApplication = msh.getMsh3_SendingApplication().getHd1_NamespaceID().getValue();
+			String sendingFacility = msh.getMsh4_SendingFacility().getHd1_NamespaceID().getValue();
+			String dateTimeOfMessage = msh.getMsh7_DateTimeOfMessage().getTs1_Time().getValue();
+
+			String patientId = encPatient.map(IPatient::getId).orElse(StringUtils.EMPTY);
+			String patientName = encPatient.map(IPatient::getLabel).orElse(StringUtils.EMPTY);
+
+			observation = new ObservationMessage(sendingApplication, sendingFacility, dateTimeOfMessage, patientId,
+					patientName, /* patientNotes */ StringUtils.EMPTY, /* altId */ StringUtils.EMPTY,
+					/* order */ konsId);
+
+			this.pat = encPatient.orElse(null);
+
+			String obrObservationDateTime = firstObr.getObr7_ObservationDateTime().getTs1_Time().getValue();
+
+			for (int i = 0; i < oru.getPATIENT_RESULT().getORDER_OBSERVATION().getOBSERVATIONReps(); i++) {
+				ORU_R01_ORDER_OBSERVATION obs = oru.getPATIENT_RESULT().getORDER_OBSERVATION();
+				String commentNTE = getComments(obs, i);
+				readOBXResults(obs.getOBSERVATION(i).getOBX(), commentNTE, StringUtils.EMPTY, StringUtils.EMPTY,
+						obrObservationDateTime);
+			}
+
+			StringBuilder sb = new StringBuilder();
+			observation.getObservations().stream().filter(ch.elexis.hl7.model.TextData.class::isInstance)
+					.map(v -> ((ch.elexis.hl7.model.TextData) v).getText()).filter(StringUtils::isNotBlank)
+					.forEach(t -> sb.append(t).append("\n"));
+
+			if (sb.length() > 0) {
+				logger.info("Detected KI Consultation with {} characters of text", sb.length());
+				KiConsultationHelper.attachToEncounter(konsId, sb.toString());
+			} else {
+				logger.warn("KI Consultation without text content (Kons-ID={})", konsId);
+			}
+
+			return;
+		}
+
 
 		PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 		// place order number
@@ -368,6 +427,30 @@ public class HL7ReaderV251 extends HL7Reader {
 		Boolean flag;
 		String rawAbnormalFlags;
 
+		itemCode = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
+
+		if ("11488-4".equals(itemCode)) {
+			logger.info("Detected AI Consultation (LOINC 11488-4) inside OBX – extracting text directly");
+			String rawText = StringUtils.EMPTY;
+			try {
+				Object tmp = obx.getObx5_ObservationValue(0).getData();
+				if (tmp instanceof TX tx) {
+					rawText = tx.getValue();
+				} else if (tmp != null) {
+					rawText = tmp.toString();
+				}
+			} catch (Exception e) {
+				logger.warn("Cannot read OBX-5 text for KI consultation", e);
+			}
+			if (StringUtils.isNotBlank(rawText)) {
+				String cleanText = rawText.replace("\\X0A\\", "\n").replace("\\X0D\\", "\r").replace("\\F\\", "|")
+						.replace("\\S\\", "^").replace("\\T\\", "&").replace("\\.br\\", "\n");
+				observation.add(
+						new ch.elexis.hl7.model.TextData("Consult Note", cleanText, null, "AI Consultation", null));
+			}
+			return;
+		}
+
 		if (valueType.equals(HL7Constants.OBX_VALUE_TYPE_ED)) {
 			String observationId = obx.getObx3_ObservationIdentifier().getCe1_Identifier().getValue();
 
@@ -499,5 +582,17 @@ public class HL7ReaderV251 extends HL7Reader {
 			return orcMessage;
 		}
 		return null;
+	}
+
+	private Optional<IPatient> tryResolvePatientViaEncounter(String konsId) {
+		if (StringUtils.isBlank(konsId))
+			return Optional.empty();
+		try {
+			Optional<IEncounter> enc = CoreModelServiceHolder.get().load(konsId, IEncounter.class);
+			return enc.map(IEncounter::getPatient).filter(Objects::nonNull);
+		} catch (Exception e) {
+			logger.warn("Encounter lookup by Kons-ID failed ({}).", konsId, e);
+			return Optional.empty();
+		}
 	}
 }
