@@ -1169,7 +1169,7 @@ public class UserManagementPreferencePage extends PreferencePage implements IWor
 		public int compare(Viewer viewer, Object o1, Object o2) {
 			IMandator m1 = (IMandator) o1;
 			IMandator m2 = (IMandator) o2;
-			return m1.getDescription1().compareToIgnoreCase(m2.getDescription1());
+			return StringUtils.compareIgnoreCase(m1.getDescription1(), m2.getDescription1());
 		}
 	}
 
