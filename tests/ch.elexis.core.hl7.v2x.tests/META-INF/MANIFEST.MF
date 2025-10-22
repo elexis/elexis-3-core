@@ -10,5 +10,4 @@ Require-Bundle: ch.elexis.core.services;bundle-version="3.9.0",
  ch.elexis.core.model;bundle-version="3.9.0",
  ch.elexis.core.test.context;bundle-version="3.13.0",
  org.junit
-Import-Package: ch.elexis.core.importer.div.importers,
- org.apache.commons.io;version="2.5.0"
+Import-Package: org.apache.commons.io;version="2.5.0"
