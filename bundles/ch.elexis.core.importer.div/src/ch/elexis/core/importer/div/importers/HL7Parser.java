@@ -122,15 +122,20 @@ public class HL7Parser {
 				return new Result<>(SEVERITY.ERROR, 2, "Labor contact is null", StringUtils.EMPTY, true);
 			}
 
-			ObservationMessage obsKIMessage = hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
-			if (obsKIMessage != null && obsKIMessage.getObservations().stream()
+			ObservationMessage obsMessage = hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
+
+			if (obsMessage == null) {
+				return new Result<>(SEVERITY.ERROR, 2, "No observation message", null, true);
+			}
+
+			boolean isKIConsultation = obsMessage.getObservations().stream()
 					.anyMatch(o -> o instanceof ch.elexis.hl7.model.TextData td
-							&& "AI Consultation".equalsIgnoreCase(td.getGroup()))) {
+							&& "AI Consultation".equalsIgnoreCase(td.getGroup()));
+
+			if (isKIConsultation) {
 				logger.info("Detected KI Consultation – skipping lab import (no LabResultData will be created).");
 				return new Result<>(SEVERITY.OK, 0, "KI consultation imported into encounter only", null, false);
 			}
-
-			ObservationMessage obsMessage = hl7Reader.readObservation(patientResolver, createPatientIfNotFound);
 			IPatient patient = hl7Reader.getPatient();
 			if (patient == null) {
 				return new Result<>(SEVERITY.ERROR, 2, Messages.HL7_PatientNotInDatabase, obsMessage.getPatientId(),
