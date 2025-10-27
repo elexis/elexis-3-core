@@ -30,7 +30,8 @@ public class PreferencesUtil {
 		if (StringUtils.isBlank(value)) {
 			LoggerFactory.getLogger(PreferencesUtil.class)
 					.warn("No OS specific path set, reverting to generic setting");
-			value = configService.get(defaultPreference, null);
+			// never return null
+			value = configService.get(defaultPreference, StringUtils.EMPTY);
 		}
 		return value;
 	}
