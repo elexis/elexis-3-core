@@ -15,14 +15,11 @@ import ch.elexis.core.ui.views.OrderManagementView;
 
 public class EntryTableLabelProvider extends ColumnLabelProvider {
 
-	private final boolean showDeliveredColumn;
 	private final int columnIndex;
-	private OrderManagementView orderManagementView;
+	private final OrderManagementView orderManagementView;
 
-	public EntryTableLabelProvider(int columnIndex, boolean showDeliveredColumn,
-			OrderManagementView orderManagementView) {
+	public EntryTableLabelProvider(int columnIndex, boolean ignored, OrderManagementView orderManagementView) {
 		this.columnIndex = columnIndex;
-		this.showDeliveredColumn = showDeliveredColumn;
 		this.orderManagementView = orderManagementView;
 	}
 
@@ -30,10 +27,6 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 	public String getText(Object element) {
 		if (element instanceof IOrderEntry entry) {
 			int ordered = entry.getAmount();
-			int delivered = entry.getDelivered();
-			int missing = Math.max(0, ordered - delivered);
-			String deliveredText = showDeliveredColumn ? String.valueOf(delivered) : StringUtils.EMPTY;
-			String missingText = showDeliveredColumn ? String.valueOf(missing) : StringUtils.EMPTY;
 
 			String articleName = (entry.getArticle() != null) ? entry.getArticle().getName() : StringUtils.EMPTY;
 			String providerLabel = (entry.getProvider() != null) ? entry.getProvider().getLabel() : "Unknown";
@@ -41,11 +34,15 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 
 			switch (columnIndex) {
 			case OrderConstants.OrderTable.STATUS:
-				return String.format("%12s", missingText);
+				return StringUtils.SPACE;
 			case OrderConstants.OrderTable.ORDERED:
 				return String.valueOf(ordered);
-			case OrderConstants.OrderTable.DELIVERED:
-				return deliveredText;
+			case OrderConstants.OrderTable.DELIVERED: {
+				int base = entry.getDelivered();
+				int delta = orderManagementView.getPendingDeliveredValues().getOrDefault(entry, 0);
+				return (delta > 0) ? base + " (+" + delta + ")" : String.valueOf(base);
+			}
+
 			case OrderConstants.OrderTable.ADD:
 				if (orderManagementView != null) {
 					Integer pendingValue = orderManagementView.getPendingDeliveredValues().get(entry);
