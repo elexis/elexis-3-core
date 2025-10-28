@@ -62,7 +62,7 @@ public class Reminder extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.en
 
 	@Override
 	public IContact getContact() {
-		return ModelUtil.getAdapter(getEntity().getKontakt(), IContact.class);
+		return ModelUtil.getAdapter(getEntity().getKontakt(), IContact.class, true);
 	}
 
 	@SuppressWarnings("unchecked")
