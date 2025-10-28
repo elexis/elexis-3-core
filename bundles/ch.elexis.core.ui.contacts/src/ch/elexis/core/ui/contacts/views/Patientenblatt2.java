@@ -21,6 +21,7 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -86,6 +88,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
@@ -102,6 +105,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.MaritalStatus;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
@@ -222,9 +226,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(
-			Arrays.asList(Patient.FLD_DIAGNOSES, Patient.FLD_PERS_ANAMNESE, Patient.FLD_FAM_ANAMNESE, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					Patient.FLD_ALLERGIES, Patient.FLD_RISKS, Kontakt.FLD_REMARK //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-	));
+			Arrays.asList(ModelPackage.Literals.IPATIENT__DIAGNOSEN.getName(),
+					ModelPackage.Literals.IPATIENT__PERSONAL_ANAMNESE.getName(),
+					ModelPackage.Literals.IPATIENT__FAMILY_ANAMNESE.getName(),
+					ModelPackage.Literals.IPATIENT__ALLERGIES.getName(), ModelPackage.Literals.IPATIENT__RISK.getName(),
+					ModelPackage.Literals.ICONTACT__COMMENT.getName()));
 	private final List<ExpandableComposite> ec = new ArrayList<>();
 	private final static String FIXMEDIKATION = Messages.Core_Fixed_medication; // $NON-NLS-1$
 	private static final int COLUMNCOUNT = 3;
@@ -626,23 +632,23 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					// remove unstructured diagnosis ui
 					if (ivc.getClass().getSimpleName().equals("DiagnoseViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Core_Diagnosis);
-						dfExpandable.remove(Patient.FLD_DIAGNOSES); //$NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__DIAGNOSEN.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
-						dfExpandable.remove(Patient.FLD_PERS_ANAMNESE); //$NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__PERSONAL_ANAMNESE.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("FamilyAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_famAnamnesisLbl);
-						dfExpandable.remove(Patient.FLD_FAM_ANAMNESE); //$NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__FAMILY_ANAMNESE.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("RiskViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_risksLbl);
-						dfExpandable.remove(Patient.FLD_RISKS); //$NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__RISK.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("AllergyIntoleranceViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Allergies);
-						dfExpandable.remove(Patient.FLD_ALLERGIES); //$NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__ALLERGIES.getName()); // $NON-NLS-1$
 					}
 				}
 			}
@@ -812,7 +818,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					if (e.getState() == true) {
 						Text tx = (Text) src.getClient();
 						if (actPatient != null) {
-							tx.setText(StringTool.unNull(actPatient.get((String) src.getData(KEY_DBFIELD))));
+							tx.setText(getPatientValue((String) src.getData(KEY_DBFIELD)));
 						} else {
 							tx.setText(StringUtils.EMPTY);
 						}
@@ -820,13 +826,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						if (actPatient != null) {
 							Text tx = (Text) src.getClient();
 							if (tx.getText() != null) {
-								actPatient.set((String) src.getData(KEY_DBFIELD), tx.getText());
+								setPatientValue((String) src.getData(KEY_DBFIELD), tx.getText());
 							}
 						}
 					}
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
 				}
-
 			});
 			txExpandable.get(i).addKeyListener(new KeyListener() {
 
@@ -887,12 +892,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	protected void saveExpandable(Integer i) {
 		if (i != null) {
 			String field = dfExpandable.get(i);
-			String oldvalue = StringTool.unNull(actPatient.get(field));
+			String oldvalue = getPatientValue(field);
 			String newvalue = txExpandable.get(i).getText();
 			if (bLocked) {
 				txExpandable.get(i).setText(oldvalue);
 			} else {
-				actPatient.set(field, newvalue);
+				setPatientValue(field, newvalue);
 			}
 		}
 	}
@@ -1020,7 +1025,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < dfExpandable.size(); i++) {
 			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + ec.get(i).getText());
-			txExpandable.get(i).setText(StringTool.unNull(actPatient.get(dfExpandable.get(i))));
+			txExpandable.get(i).setText(getPatientValue(dfExpandable.get(i)));
 		}
 		dmd.reload();
 
@@ -1704,5 +1709,35 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 
 		}
+	}
+
+	private void setPatientValue(String field, String value) {
+		if (actPatient != null) {
+			java.util.Optional<IPatient> patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class);
+			if (patient.isPresent()) {
+				try {
+					BeanUtils.setProperty(patient.get(), field, value);
+					CoreModelServiceHolder.get().save(patient.get());
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					LoggerFactory.getLogger(getClass())
+							.error("Error setting property [" + field + "] of [" + patient.get() + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+		}
+	}
+
+	private String getPatientValue(String field) {
+		if (actPatient != null) {
+			java.util.Optional<IPatient> patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class);
+			if (patient.isPresent()) {
+				try {
+					return StringUtils.defaultString(BeanUtils.getProperty(patient.get(), field));
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					LoggerFactory.getLogger(getClass())
+							.error("Error getting property [" + field + "] of [" + patient.get() + "]", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+		}
+		return StringUtils.EMPTY;
 	}
 }
