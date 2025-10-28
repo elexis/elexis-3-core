@@ -341,4 +341,21 @@ public class Appointment extends AbstractIdDeleteModelAdapter<Termin> implements
 
 		return sb.toString();
 	}
+
+	@Override
+	public boolean isLocked() {
+		Integer flags = getEntity().getFlags();
+		return flags != null && (flags & 0x10) != 0;
+	}
+
+	@Override
+	public void setLocked(boolean locked) {
+		int flags = getEntity().getFlags();
+		if (locked)
+			flags |= 0x10;
+		else
+			flags &= ~0x10;
+		getEntity().setFlags(flags);
+	}
+
 }

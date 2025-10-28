@@ -135,4 +135,34 @@ public class AppointmentTest extends AbstractTest {
 
 		coreModelService.remove(appointment);
 	}
+
+	@Test
+	public void lockUnlockAppointment() {
+		LocalDateTime begin = LocalDateTime.of(2025, 10, 7, 10, 0);
+		LocalDateTime end = begin.plus(Duration.ofMinutes(30));
+
+		IAppointment appointment = coreModelService.create(IAppointment.class);
+		appointment.setReason("lockTest");
+		appointment.setStartTime(begin);
+		appointment.setEndTime(end);
+		appointment.setState("geplant");
+		coreModelService.save(appointment);
+
+		assertFalse(appointment.isLocked());
+
+		appointment.setLocked(true);
+		coreModelService.save(appointment);
+
+		IAppointment reloaded = coreModelService.load(appointment.getId(), IAppointment.class).get();
+		assertTrue("Appointment sollte gesperrt sein", reloaded.isLocked());
+
+		reloaded.setLocked(false);
+		coreModelService.save(reloaded);
+
+		IAppointment unlocked = coreModelService.load(appointment.getId(), IAppointment.class).get();
+		assertFalse("Appointment sollte nicht mehr gesperrt sein", unlocked.isLocked());
+
+		coreModelService.remove(appointment);
+	}
+
 }

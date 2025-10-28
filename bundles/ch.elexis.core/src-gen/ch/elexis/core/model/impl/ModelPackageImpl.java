@@ -4094,6 +4094,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIAppointment_Locked() {
+		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(17);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getIAppointment_SubjectOrPatient() {
 		return (EAttribute)iAppointmentEClass.getEStructuralFeatures().get(5);
 	}
@@ -5947,6 +5957,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__STATE_HISTORY);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__RECURRING);
 		createEAttribute(iAppointmentEClass, IAPPOINTMENT__CREATED_BY);
+		createEAttribute(iAppointmentEClass, IAPPOINTMENT__LOCKED);
 
 		iAppointmentSeriesEClass = createEClass(IAPPOINTMENT_SERIES);
 		createEAttribute(iAppointmentSeriesEClass, IAPPOINTMENT_SERIES__SERIES_TYPE);
@@ -7036,6 +7047,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIAppointment_StateHistory(), ecorePackage.getEString(), "stateHistory", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_Recurring(), ecorePackage.getEBoolean(), "recurring", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIAppointment_CreatedBy(), ecorePackage.getEString(), "createdBy", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIAppointment_Locked(), ecorePackage.getEBoolean(), "locked", null, 0, 1, IAppointment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(iAppointmentEClass, this.getIContact(), "getContact", 0, 1, IS_UNIQUE, IS_ORDERED);
 

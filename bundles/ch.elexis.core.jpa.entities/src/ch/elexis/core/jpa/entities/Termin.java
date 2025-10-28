@@ -74,8 +74,10 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 	@Column
 	private int palmId;
 
+
 	@Column(length = 10)
-	private String flags;
+	@Convert(converter = IntegerStringConverter.class)
+	private int flags;
 
 	@Lob()
 	private String extension;
@@ -194,11 +196,11 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 		this.palmId = palmId;
 	}
 
-	public String getFlags() {
+	public int getFlags() {
 		return flags;
 	}
 
-	public void setFlags(String flags) {
+	public void setFlags(int flags) {
 		this.flags = flags;
 	}
 

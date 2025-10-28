@@ -1208,6 +1208,7 @@
         <details key="attributeName" value="erstelltvon"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="locked" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IAppointmentSeries" abstract="true"
       interface="true" eSuperTypes="#//IAppointment">
