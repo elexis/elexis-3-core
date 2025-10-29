@@ -25,7 +25,7 @@ public class OrderManagementHelper {
 	/**
 	 * Checks which column is editable (ORDERED or DELIVERED).
 	 */
-	public static int determineEditableColumn(IOrderEntry entry) {
+	public static int isEditable(IOrderEntry entry) {
 		if (entry == null) {
 			return -1;
 		}
@@ -41,7 +41,7 @@ public class OrderManagementHelper {
 	/**
 	 * Updates an order entry (e.g., new quantity or delivery).
 	 */
-	public static void updateOrderEntry(OrderManagementView view, IOrderEntry entry, int newValue) {
+	public static void updateAmount(OrderManagementView view, IOrderEntry entry, int newValue) {
 		if (entry == null) {
 			return;
 		}
