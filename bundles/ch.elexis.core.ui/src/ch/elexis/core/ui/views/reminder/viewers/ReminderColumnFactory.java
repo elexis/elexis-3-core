@@ -32,14 +32,63 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType.ReminderColorType;
 
+/**
+ * Factory class responsible for creating and configuring columns in the
+ * {@link TableViewer} of the Reminder View.
+ * <p>
+ * Each column represents a specific aspect of a reminder (type, date,
+ * responsible user, status, patient, description, etc.) and provides custom
+ * rendering (labels, icons, colors, and fonts) via individual
+ * {@link ColumnLabelProvider} implementations.
+ * </p>
+ *
+ * <p>
+ * The factory also supports:
+ * <ul>
+ * <li>Dynamic hiding of columns based on user preferences</li>
+ * <li>Automatic resizing of the last column to fit available space</li>
+ * <li>Sorting of table data via {@link ReminderComparator}</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Colors and icons are used to visually highlight the status of each reminder,
+ * such as overdue, in progress, due today, or closed.
+ * </p>
+ *
+ * <p>
+ * This class is typically used by {@code ReminderView} during initialization to
+ * build and configure the reminder table.
+ * </p>
+ *
+ * @author Dalibor Aksic
+ * @since 2025
+ */
 public class ReminderColumnFactory {
 
 	private final Font boldFont;
 
+	/**
+	 * Constructs a new {@code ReminderColumnFactory}.
+	 *
+	 * @param boldFont the font to be used for high-priority reminder rows
+	 */
 	public ReminderColumnFactory(Font boldFont) {
 		this.boldFont = boldFont;
 	}
 
+	/**
+	 * Creates and adds the specified columns to the provided {@link TableViewer}.
+	 * <p>
+	 * Columns that are marked as hidden in user preferences will be skipped. After
+	 * creation, the last visible column automatically expands to fill remaining
+	 * horizontal space.
+	 * </p>
+	 *
+	 * @param viewer the table viewer to which the columns are added
+	 * @param types  the column types to create, defined in
+	 *               {@link ReminderColumnType}
+	 */
 	public void createColumns(TableViewer viewer, ReminderColumnType... types) {
 	    String hiddenPref = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, "");
 	    Set<String> hiddenCols = Arrays.stream(hiddenPref.split(","))
@@ -87,6 +136,10 @@ public class ReminderColumnFactory {
 
 	// ====================== COLUMNS ======================
 
+	/**
+	 * Creates the "Type" column which displays an icon representing the reminder
+	 * type.
+	 */
 	private TableViewerColumn createTypeColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setWidth(ReminderColumnType.TYPE.getDefaultWidth());
@@ -124,6 +177,10 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Creates the "Date" column which shows the due date of the reminder and colors
+	 * rows based on the due state (overdue, due, or open).
+	 */
 	private TableViewerColumn createDateColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.DATE.getTitle());
@@ -160,6 +217,10 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Creates the "Status" column which displays the localized process status text
+	 * and applies color highlighting depending on reminder state.
+	 */
 	private TableViewerColumn createStatusColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.STATUS.getTitle());
@@ -220,6 +281,9 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Creates the "Patient" column which shows the linked patient's full name.
+	 */
 	private TableViewerColumn createPatientColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.PATIENT.getTitle());
@@ -246,6 +310,10 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Creates the "Description" column which displays the subject or message text.
+	 * High-priority reminders are shown in bold.
+	 */
 	private TableViewerColumn createDescriptionColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.DESCRIPTION.getTitle());
@@ -277,6 +345,10 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Creates the "Responsible" column which lists all responsible users or
+	 * mandators.
+	 */
 	private TableViewerColumn createResponsibleColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.RESPONSIBLE.getTitle());
@@ -308,12 +380,29 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
+	/**
+	 * Checks whether the given reminder is in {@link ProcessStatus#CLOSED}.
+	 *
+	 * @param r reminder instance
+	 * @return {@code true} if the reminder is closed, {@code false} otherwise
+	 */
 	private boolean isClosed(IReminder r) {
 		return r.getStatus() == ProcessStatus.CLOSED;
 	}
 
-	// ====================== SORT SUPPORT ======================
+	// =====================================================================
+	// Sorting support
+	// =====================================================================
 
+	/**
+	 * Creates a {@link SelectionAdapter} that updates the current sorting column
+	 * and direction whenever a table column header is clicked.
+	 *
+	 * @param viewer the table viewer being sorted
+	 * @param column the clicked column
+	 * @param index  the column index
+	 * @return the configured selection adapter
+	 */
 	private SelectionAdapter createSortSelectionAdapter(final TableViewer viewer, final TableColumn column, final int index) {
 	    return new SelectionAdapter() {
 	        @Override
@@ -330,8 +419,39 @@ public class ReminderColumnFactory {
 	    };
 	}
 
-	// ====================== COMPARATOR ======================
-
+	/**
+	 * Comparator used for sorting {@link IReminder} entries in the reminder table.
+	 * <p>
+	 * This comparator defines the sorting logic for all reminder table columns,
+	 * such as type, date, responsible user, status, patient, and description.
+	 * </p>
+	 *
+	 * <p>
+	 * The {@code column} field determines which column is currently sorted, while
+	 * the {@code direction} field controls the sort order (ascending or
+	 * descending).
+	 * </p>
+	 *
+	 * <p>
+	 * Sorting is performed in a null-safe way and never throws an exception. If an
+	 * unexpected error occurs, the comparator returns equality (0) to prevent UI
+	 * crashes.
+	 * </p>
+	 *
+	 * <h3>Supported columns:</h3>
+	 * <ul>
+	 * <li><b>0:</b> Type</li>
+	 * <li><b>1:</b> Date</li>
+	 * <li><b>2:</b> Responsible</li>
+	 * <li><b>3:</b> Status</li>
+	 * <li><b>4:</b> Patient</li>
+	 * <li><b>5:</b> Description</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * The default sort direction is {@link SWT#DOWN}.
+	 * </p>
+	 */
 	public static class ReminderComparator extends ViewerComparator implements Comparator<IReminder> {
 		private int column = -1;
 		private int direction = SWT.DOWN;
