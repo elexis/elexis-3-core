@@ -417,6 +417,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					plcp.syncRefresh();
 					TableViewer tv = (TableViewer) cv.getViewerWidget();
 					tv.setSelection(new StructuredSelection(pat), true);
+					ContextServiceHolder.get().setActivePatient(pat);
 				}
 			}
 		};
