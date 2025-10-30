@@ -260,7 +260,6 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
 				patient.addXid(DOMAIN_AHV, formattedAHV, true);
 			}
-
 			super.okPressed();
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);
