@@ -5303,6 +5303,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_CannotOpenPhone;
 	public static String Omnivore_demo_outsource_disabled;
 	public static String Texterstellung_demo_browse_disabled;
+	public static String AgendaUI_DayOverView_collisions;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
