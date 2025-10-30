@@ -38,6 +38,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
@@ -260,7 +261,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 				formattedAHV = FormatValidator.getFormattedAHVNum(formattedAHV);
 				patient.addXid(DOMAIN_AHV, formattedAHV, true);
 			}
-
+			ContextServiceHolder.get().setActivePatient(patient);
 			super.okPressed();
 		} catch (TimeFormatException e) {
 			ExHandler.handle(e);
