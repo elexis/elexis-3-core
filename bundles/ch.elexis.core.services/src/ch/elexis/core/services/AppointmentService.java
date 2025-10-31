@@ -46,6 +46,7 @@ import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.handler.AppointmentExtensionHandler;
 import ch.elexis.core.services.holder.AppointmentServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -65,6 +66,7 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_BEREICH_PREFIX = "agenda/bereich/"; //$NON-NLS-1$
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
 	public static final String AG_TIMEPREFERENCES = "agenda/zeitvorgaben"; //$NON-NLS-1$
+	public static final String AG_KOMBITERMINE = "agenda/kombitermine/"; // $NON-NLS-1$
 
 	private static final int TYPE_FREE = 0; // frei
 	private static final int TYPE_RESERVED = 1; // reserviert
@@ -284,7 +286,7 @@ public class AppointmentService implements IAppointmentService {
 				iAppointment.setType(typReserved);
 				iAppointment.setState(stateEmpty);
 				iAppointment.setEndTime(endTime);
-				String ts = Integer.toString(TimeTool.getTimeInSeconds() / 60);
+				String ts = createTimeStamp();
 				iAppointment.setCreated(ts);
 				iAppointment.setLastEdit(ts);
 				iAppointment.setStateHistory(stateDefault);
@@ -875,5 +877,107 @@ public class AppointmentService implements IAppointmentService {
 			return start1.isBefore(end2) && start2.isBefore(end1);
 		}
 		return false;
+	}
+
+	@Override
+	public List<IAppointment> createKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
+			String type, String patientName) {
+		List<IAppointment> kombiAppointments = new ArrayList<>();
+		List<String> kombiTermineList = ConfigServiceHolder.get().getAsList(AG_KOMBITERMINE + type);
+		if (kombiTermineList.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		if (!AppointmentExtensionHandler.getLinkedAppointments(mainAppointment).isEmpty()) {
+			return Collections.emptyList();
+		}
+		AppointmentExtensionHandler.setMainAppointmentId(mainAppointment, mainAppointment.getId());
+		List<String> linkedIds = new ArrayList<>();
+
+		for (String kombiTermin : kombiTermineList) {
+			kombiTermin = kombiTermin.replaceAll("[{}]", "");
+			String[] elements = kombiTermin.split(";");
+			if (elements.length < 6)
+				continue;
+
+			IAppointment newAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
+			newAppointment.setState(mainAppointment.getState());
+			newAppointment.setType(elements[2]);
+			newAppointment.setSchedule(elements[1]);
+			newAppointment.setCreatedBy(mainAppointment.getCreatedBy());
+			newAppointment.setCreated(createTimeStamp());
+			newAppointment.setLastEdit(createTimeStamp());
+			newAppointment.setReason(elements[0]);
+
+			if (patient != null) {
+				newAppointment.setSubjectOrPatient(patient.getId());
+			} else if (StringUtils.isNotBlank(patientName)) {
+				newAppointment.setSubjectOrPatient(patientName);
+			}
+
+			LocalDateTime startTime = mainAppointment.getStartTime();
+			int offset = Integer.parseInt(elements[4]);
+			if (Messages.AddCombiTerminDialogBefore.equalsIgnoreCase(elements[3])) {
+				startTime = startTime.minusMinutes(offset);
+			} else {
+				startTime = startTime.plusMinutes(offset);
+			}
+			newAppointment.setStartTime(startTime);
+			newAppointment.setEndTime(startTime.plusMinutes(Integer.parseInt(elements[5])));
+			AppointmentExtensionHandler.setMainAppointmentId(newAppointment, mainAppointment.getId());
+			AppointmentExtensionHandler.addLinkedAppointmentId(newAppointment, newAppointment.getId());
+			linkedIds.add(newAppointment.getId());
+
+			kombiAppointments.add(newAppointment);
+		}
+		AppointmentExtensionHandler.addMultipleLinkedAppointments(mainAppointment, linkedIds);
+		return kombiAppointments;
+	}
+
+	@Override
+	public List<IAppointment> findCollisionsForKombiAppointment(IAppointment newAppointment, String appointmentType) {
+		List<String> allKombiTermine = ConfigServiceHolder.get()
+				.getAsList(AG_KOMBITERMINE + appointmentType);
+
+		if (allKombiTermine.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		List<IAppointment> collisions = new ArrayList<>();
+
+		for (String kombi : allKombiTermine) {
+			kombi = kombi.replaceAll("[{}]", "");
+			String[] e = kombi.split(";");
+			if (e.length < 6)
+				continue;
+
+			String area = e[1].trim();
+			String direction = e[3].trim();
+			int offset = Integer.parseInt(e[4].trim());
+			int duration = Integer.parseInt(e[5].trim());
+
+			LocalDateTime start = newAppointment.getStartTime();
+			if (Messages.AddCombiTerminDialogBefore.equalsIgnoreCase(direction)) {
+				start = start.minusMinutes(offset);
+			} else {
+				start = start.plusMinutes(offset);
+			}
+
+			IAppointment virtual = CoreModelServiceHolder.get().create(IAppointment.class);
+			virtual.setSchedule(area);
+			virtual.setReason(StringUtils.EMPTY);
+			virtual.setStartTime(start);
+			virtual.setEndTime(start.plusMinutes(duration));
+
+			if (isColliding(virtual)) {
+				collisions.add(virtual);
+			}
+		}
+
+		return collisions;
+	}
+
+	public static String createTimeStamp() {
+		return Integer.toString(TimeTool.getTimeInSeconds() / 60);
 	}
 }

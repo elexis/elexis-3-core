@@ -54,6 +54,7 @@ Import-Package: bsh,
  org.osgi.service.component;version="1.4.0",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Export-Package: ch.elexis.core.services.holder,
+Export-Package: ch.elexis.core.services.handler,
+ ch.elexis.core.services.holder,
  ch.elexis.core.services.oauth2
 Bundle-RequiredExecutionEnvironment: JavaSE-21
