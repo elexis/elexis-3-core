@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.preferences;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -28,12 +29,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.DecoratedStringChooser;
 import ch.elexis.core.ui.util.DecoratedString;
+import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType;
 import ch.elexis.data.Reminder;
 
 public class ReminderPrefences extends PreferencePage implements IWorkbenchPreferencePage {
@@ -43,18 +49,19 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private String[] choosenFields;
 	private String[] availableFields;
 	private Label lblInfo;
-	private String prefixPrevLabel = "Label Vorschau";
+	private String prefixPrevLabel = "Label Vorschau"; //$NON-NLS-1$
 	private Button defaultPatientRelated;
 	private Button defaultResponsibleSelf;
+	private ListViewer lViewerVisible, lViewerHidden;
 
 	public ReminderPrefences() {
 		super(Messages.ReminderPrefences_Reminders);
-		strings = new DecoratedString[4];
+		strings = new DecoratedString[5];
 		strings[0] = new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name());
 		strings[1] = new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText(), ProcessStatus.IN_PROGRESS.name());
 		strings[2] = new DecoratedString(ProcessStatus.DUE.getLocaleText(), ProcessStatus.DUE.name());
 		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText(), ProcessStatus.OVERDUE.name());
-
+		strings[4] = new DecoratedString(ProcessStatus.CLOSED.getLocaleText(), ProcessStatus.CLOSED.name());
 		choosenFields = ConfigServiceHolder
 				.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, Reminder.LabelFields.LASTNAME.toString())
 				.split(","); //$NON-NLS-1$
@@ -119,13 +126,13 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		Label lblLabelConfig = new Label(ret, SWT.NONE);
 		lblLabelConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		lblLabelConfig.setText("Pendenzen (mit Patienten-Bezug) Label Optionen");
+		lblLabelConfig.setText("Pendenzen (mit Patienten-Bezug) Label Optionen"); //$NON-NLS-1$
 
 		Label lblChoosen = new Label(ret, SWT.NONE);
-		lblChoosen.setText("Gewählt");
+		lblChoosen.setText("Gewählt"); //$NON-NLS-1$
 		new Label(ret, SWT.NONE);
 		Label lblAvailable = new Label(ret, SWT.NONE);
-		lblAvailable.setText("Noch verfügbar");
+		lblAvailable.setText("Noch verfügbar"); //$NON-NLS-1$
 
 		GridData gdListViewer = new GridData();
 		gdListViewer.horizontalAlignment = SWT.FILL;
@@ -180,6 +187,91 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		lblInfo = new Label(ret, SWT.NONE);
 		lblInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		lblInfo.setText(getPreviewLabel());
+
+		Label lblSeparator2 = new Label(ret, SWT.HORIZONTAL | SWT.SEPARATOR);
+		lblSeparator2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+
+		Label lblColumnConfig = new Label(ret, SWT.NONE);
+		lblColumnConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		lblColumnConfig.setText("Pendenzen Spaltenanzeige (sichtbare Spalten)"); //$NON-NLS-1$
+
+		Label lblVisible = new Label(ret, SWT.NONE);
+		lblVisible.setText("Anzeigen"); //$NON-NLS-1$
+		new Label(ret, SWT.NONE);
+		Label lblHidden = new Label(ret, SWT.NONE);
+		lblHidden.setText("Nicht anzeigen"); //$NON-NLS-1$
+
+		GridData gdListViewerColumns = new GridData();
+		gdListViewerColumns.horizontalAlignment = SWT.FILL;
+		gdListViewerColumns.verticalAlignment = SWT.CENTER;
+		gdListViewerColumns.minimumHeight = 100;
+		gdListViewerColumns.heightHint = 100;
+
+		lViewerVisible = new ListViewer(ret, SWT.BORDER | SWT.V_SCROLL);
+		lViewerVisible.getList().setLayoutData(gdListViewerColumns);
+		lViewerVisible.setContentProvider(new ArrayContentProvider());
+
+		String defaultColumns = String.join(",", ReminderColumnType.getAllTitles()); //$NON-NLS-1$
+		String[] visibleColumns = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_VISIBLE, defaultColumns)
+				.split(","); //$NON-NLS-1$
+
+		String hiddenValue = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, StringUtils.EMPTY);
+		String[] hiddenColumns = hiddenValue.split(","); //$NON-NLS-1$
+
+		java.util.List<String> cleanedHidden = new java.util.ArrayList<>();
+		for (String s : hiddenColumns) {
+			if (s != null && !s.trim().isEmpty()) {
+				cleanedHidden.add(s.trim());
+			}
+		}
+		hiddenColumns = cleanedHidden.toArray(new String[0]);
+
+		lViewerVisible.setInput(visibleColumns);
+
+		Composite btnCompositeCols = new Composite(ret, SWT.NONE);
+		btnCompositeCols.setLayout(new GridLayout());
+		btnCompositeCols.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+
+		Button btnAddCol = new Button(btnCompositeCols, SWT.PUSH);
+		btnAddCol.setImage(Images.IMG_PREVIOUS.getImage());
+		btnAddCol.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = (IStructuredSelection) lViewerHidden.getSelection();
+				String item = (String) sel.getFirstElement();
+				if (item != null) {
+					lViewerHidden.remove(item);
+					lViewerVisible.add(item);
+				}
+			}
+		});
+
+		Button btnRemoveCol = new Button(btnCompositeCols, SWT.PUSH);
+		btnRemoveCol.setImage(Images.IMG_NEXT.getImage());
+		btnRemoveCol.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = (IStructuredSelection) lViewerVisible.getSelection();
+				String item = (String) sel.getFirstElement();
+				if (item != null) {
+					lViewerVisible.remove(item);
+					lViewerHidden.add(item);
+				}
+			}
+		});
+		lViewerHidden = new ListViewer(ret, SWT.BORDER | SWT.V_SCROLL);
+		lViewerHidden.getList().setLayoutData(gdListViewerColumns);
+		lViewerHidden.setContentProvider(new ArrayContentProvider());
+		lViewerHidden.setInput(hiddenColumns);
+
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+		new Label(ret, SWT.NONE);
+
+		Label lblColInfo = new Label(ret, SWT.NONE);
+		lblColInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		lblColInfo.setText("Sichtbare Spalten: " + String.join(", ", visibleColumns)); //$NON-NLS-1$ //$NON-NLS-2$
+
 		return ret;
 	}
 
@@ -215,7 +307,11 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 				getListAsString(lViewerChoosen.getList().getItems()));
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,
 				getListAsString(lViewerAvailable.getList().getItems()));
-
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_COLUMNS_VISIBLE,
+				getListAsString(lViewerVisible.getList().getItems()));
+		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN,
+				getListAsString(lViewerHidden.getList().getItems()));
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IReminder.class);
 		return super.performOk();
 	}
 
