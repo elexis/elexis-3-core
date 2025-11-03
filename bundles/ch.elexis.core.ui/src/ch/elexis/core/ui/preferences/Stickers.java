@@ -12,14 +12,19 @@
 
 package ch.elexis.core.ui.preferences;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,7 +41,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.ColorDialog;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -45,28 +49,32 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IDocumentLetter;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IImage;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.ISticker;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
-import ch.elexis.core.ui.data.UiSticker;
+import ch.elexis.core.ui.data.UiDBImage;
 import ch.elexis.core.ui.dialogs.ImageChooser;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.data.Brief;
-import ch.elexis.data.Fall;
-import ch.elexis.data.Konsultation;
-import ch.elexis.data.Patient;
-import ch.elexis.data.Query;
-import ch.elexis.data.Sticker;
 
 public class Stickers extends PreferencePage implements IWorkbenchPreferencePage {
 
-	Combo combo;
+	ComboViewer comboViewer;
 	Canvas cImage, cFore, cBack;
-	Sticker act;
-	List<Sticker> lEtiketten;
+	ISticker act;
+	List<ISticker> lEtiketten;
 	Button bNew, bRemove;
 	Spinner spWert;
 	HashMap<String, Button> classesCheck = new HashMap<>();
 
-	void setSticker(Sticker et) {
+	void setSticker(ISticker et) {
 		act = et;
 		if (et == null) {
 			cImage.setBackground(UiDesk.getColor(UiDesk.COL_WHITE));
@@ -74,11 +82,10 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 			cBack.setBackground(UiDesk.getColor(UiDesk.COL_LIGHTGREY));
 			spWert.setSelection(0);
 		} else {
-			UiSticker uist = new UiSticker(et);
-			cFore.setBackground(uist.getForeground());
-			cBack.setBackground(uist.getBackground());
-			spWert.setSelection(act.getWert());
-			List<String> classes = et.getClassesForSticker();
+			cFore.setBackground(CoreUiUtil.getColorForString(act.getForeground()));
+			cBack.setBackground(CoreUiUtil.getColorForString(act.getBackground()));
+			spWert.setSelection(act.getImportance());
+			List<String> classes = StickerServiceHolder.get().getStickerClassLinksForSticker(act);
 			for (Entry<String, Button> e : classesCheck.entrySet()) {
 				e.getValue().setSelection(false);
 			}
@@ -100,24 +107,29 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		Composite ret = new Composite(parent, SWT.NONE);
 		ret.setLayout(new GridLayout());
 		ret.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		combo = new Combo(ret, SWT.SIMPLE);
-		combo.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		combo.addSelectionListener(new SelectionAdapter() {
-
+		comboViewer = new ComboViewer(ret, SWT.SIMPLE);
+		comboViewer.setContentProvider(ArrayContentProvider.getInstance());
+		comboViewer.setLabelProvider(new LabelProvider() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int i = combo.getSelectionIndex();
-				if (i > -1) {
-					setSticker(lEtiketten.get(i));
-					bRemove.setEnabled(true);
+			public String getText(Object element) {
+				if (element instanceof ISticker) {
+					return ((ISticker) element).getName();
 				}
+				return super.getText(element);
 			}
-
 		});
-		combo.addModifyListener(new ModifyListener() {
+		comboViewer.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		comboViewer.addSelectionChangedListener(e -> {
+			if (!e.getStructuredSelection().isEmpty()) {
+				setSticker((ISticker) e.getStructuredSelection().getFirstElement());
+				bRemove.setEnabled(true);
+			}
+		});
 
+		comboViewer.getCombo().addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
-				if (combo.getText().length() == 0) {
+				if (comboViewer.getCombo().getText().length() == 0) {
 					bNew.setEnabled(false);
 				} else {
 					bNew.setEnabled(true);
@@ -125,10 +137,7 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 
 			}
 		});
-		for (Sticker et : lEtiketten) {
-			if (et.isVisible() && et.getWert() < 1000)
-				combo.add(et.getLabel());
-		}
+		comboViewer.setInput(lEtiketten);
 		// new Label(ret,SWT.NONE).setText("Anzeige");
 		Composite bottom = new Composite(ret, SWT.NONE);
 		bottom.setLayout(new GridLayout(3, false));
@@ -138,25 +147,30 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = combo.getText();
-				Sticker n = new Sticker(name, null, null);
-				lEtiketten.add(n);
-				combo.add(n.getLabel());
+				String name = comboViewer.getCombo().getText();
+				ISticker sticker = CoreModelServiceHolder.get().create(ISticker.class);
+				sticker.setName(name);
+				sticker.setForeground("000000");
+				sticker.setBackground("ffffff");
+				CoreModelServiceHolder.get().save(sticker);
+				lEtiketten.add(sticker);
+				comboViewer.setInput(lEtiketten);
+				comboViewer.setSelection(new StructuredSelection(sticker));
+				setSticker(sticker);
 			}
-
 		});
 		bRemove = new Button(bottom, SWT.PUSH);
 		bRemove.setText(Messages.Stickers_DeleteSticker);
 		bRemove.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int idx = combo.getSelectionIndex();
-				if (idx > -1) {
-					// String n=combo.getItem(idx);
-					combo.remove(idx);
-					Sticker eti = lEtiketten.get(idx);
-					lEtiketten.remove(idx);
-					eti.delete();
+				IStructuredSelection selection = comboViewer.getStructuredSelection();
+				if (selection != null && !selection.isEmpty()) {
+					ISticker eti = (ISticker) selection.getFirstElement();
+					lEtiketten.remove(eti);
+					comboViewer.setInput(lEtiketten);
+					CoreModelServiceHolder.get().delete(eti);
+					setSticker(null);
 				}
 			}
 		});
@@ -164,10 +178,10 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		bottomRight.setLayoutData(SWTHelper.getFillGridData(1, true, 5, true));
 		bottomRight.setLayout(new RowLayout(SWT.VERTICAL));
 		bottomRight.setText(Messages.Stickers_useFor);
-		addAssociateButton(Messages.Core_Patient, Patient.class, bottomRight);
-		addAssociateButton(Messages.Core_Consultation, Konsultation.class, bottomRight);
-		addAssociateButton(Messages.Core_Case, Fall.class, bottomRight);
-		addAssociateButton(Messages.Core_Document, Brief.class, bottomRight);
+		addAssociateButton(Messages.Core_Patient, IPatient.class, bottomRight);
+		addAssociateButton(Messages.Core_Consultation, IEncounter.class, bottomRight);
+		addAssociateButton(Messages.Core_Case, ICoverage.class, bottomRight);
+		addAssociateButton(Messages.Core_Document, IDocumentLetter.class, bottomRight);
 		/*
 		 * new Label(ret, SWT.SEPARATOR |
 		 * SWT.HORIZONTAL).setLayoutData(SWTHelper.getFillGridData(2, false, 1, false));
@@ -176,10 +190,11 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		cImage = new Canvas(bottom, SWT.BORDER);
 		cImage.addPaintListener(new PaintListener() {
 
+			@Override
 			public void paintControl(PaintEvent e) {
 				GC gc = e.gc;
 				if (act != null) {
-					Image img = new UiSticker(act).getImage();
+					Image img = act.getImage() != null ? CoreUiUtil.getImageAsIcon(act.getImage()) : null;
 					if (img != null) {
 						gc.drawImage(img, 0, 0);
 						return;
@@ -199,7 +214,13 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 				if (act != null) {
 					ImageChooser imc = new ImageChooser(getShell());
 					if (imc.open() == Dialog.OK) {
-						new UiSticker(act).setImage(imc.getSelection());
+						UiDBImage dbImage = imc.getSelection();
+						if (dbImage != null) {
+							act.setImage(CoreModelServiceHolder.get().load(dbImage.getId(), IImage.class).get());
+						} else {
+							act.setImage(null);
+						}
+						CoreModelServiceHolder.get().save(act);
 						setSticker(act);
 					}
 				}
@@ -219,11 +240,11 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 					RGB rgb = cd.open();
 					if (rgb != null) {
 						act.setForeground(UiDesk.createColor(rgb));
+						CoreModelServiceHolder.get().save(act);
 					}
 					setSticker(act);
 				}
 			}
-
 		});
 		cBack = new Canvas(bottom, SWT.BORDER);
 		GridData gdBack = GridDataFactory.copyData(gdFore);
@@ -239,22 +260,23 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 					RGB rgb = cd.open();
 					if (rgb != null) {
 						act.setBackground(UiDesk.createColor(rgb));
+						CoreModelServiceHolder.get().save(act);
 					}
 					setSticker(act);
 				}
 			}
-
 		});
 		spWert = new Spinner(bottom, SWT.NONE);
 		spWert.setMaximum(999);
 		spWert.setMinimum(0);
 		spWert.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (act != null) {
-					act.setWert(spWert.getSelection());
+					act.setImportance(spWert.getSelection());
+					CoreModelServiceHolder.get().save(act);
 				}
-
 			}
 		});
 		new Label(bottom, SWT.NONE).setText(Messages.Stickers_ValueOfSticker);
@@ -263,15 +285,11 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		return ret;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
-		Query<Sticker> qbe = new Query<>(Sticker.class);
-		lEtiketten = qbe.execute();
-		if (lEtiketten != null) {
-
-		} else {
-			lEtiketten = new LinkedList<>();
-		}
-
+		lEtiketten = CoreModelServiceHolder.get().getQuery(ISticker.class).execute();
+		lEtiketten = new ArrayList<>(
+				lEtiketten.stream().filter(et -> et.isVisible() && et.getImportance() < 1000).toList());
 	}
 
 	private void addAssociateButton(final String label, final Class<?> clazz, final Composite parent) {
@@ -280,18 +298,17 @@ public class Stickers extends PreferencePage implements IWorkbenchPreferencePage
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int i = combo.getSelectionIndex();
-				if (i > -1) {
-					Sticker sticker = lEtiketten.get(i);
-
+				IStructuredSelection selection = comboViewer.getStructuredSelection();
+				if (selection != null && !selection.isEmpty()) {
+					ISticker sticker = (ISticker) selection.getFirstElement();
 					if (button.getSelection()) {
-						sticker.setClassForSticker(clazz);
+						StickerServiceHolder.get().setStickerAddableToClass(clazz, sticker);
 					} else {
-						sticker.removeClassForSticker(clazz);
+						StickerServiceHolder.get().removeStickerAddableToClass(clazz, sticker);
 					}
 				}
 			}
 		});
-		classesCheck.put(clazz.getName(), button);
+		classesCheck.put(StoreToStringServiceHolder.get().getTypeForModel(clazz), button);
 	}
 }

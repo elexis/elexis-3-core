@@ -80,7 +80,23 @@ public interface IStickerService {
 	 */
 	public boolean isStickerAddableToClass(Class<?> clazz, ISticker sticker);
 
+	/**
+	 * Add the class to the list of {@link ISticker}s addable to instances of that
+	 * class.
+	 * 
+	 * @param clazz
+	 * @param sticker
+	 */
 	public void setStickerAddableToClass(Class<?> clazz, ISticker sticker);
+
+	/**
+	 * Remove the class from the list of {@link ISticker}s addable to instances of
+	 * that class.
+	 * 
+	 * @param clazz
+	 * @param sticker
+	 */
+	public void removeStickerAddableToClass(Class<?> clazz, ISticker sticker);
 
 	/**
 	 * Find all Stickers applicable for a given class
@@ -99,5 +115,13 @@ public interface IStickerService {
 	 * @return
 	 */
 	public <T> List<T> getObjectsWithSticker(ISticker sticker, Class<T> type);
+
+	/**
+	 * Get a list of class names the provided {@link ISticker} is marked as addable.
+	 * 
+	 * @param sticker
+	 * @return
+	 */
+	public List<String> getStickerClassLinksForSticker(ISticker sticker);
 
 }

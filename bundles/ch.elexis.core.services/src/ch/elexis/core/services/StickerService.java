@@ -201,6 +201,12 @@ public class StickerService implements IStickerService {
 		handleUpdate(identifiable);
 	}
 
+	@Override
+	public List<String> getStickerClassLinksForSticker(ISticker sticker) {
+		List<StickerClassLink> links = getStickerClassLinksForSticker(sticker.getId());
+		return links.stream().map(cl -> cl.getObjclass()).toList();
+	}
+
 	private List<StickerClassLink> getStickerClassLinksForSticker(String id) {
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 		TypedQuery<StickerClassLink> query = em.createNamedQuery("StickerClassLink.sticker", StickerClassLink.class);
@@ -239,6 +245,32 @@ public class StickerService implements IStickerService {
 				em.getTransaction().commit();
 			} finally {
 				entityManager.closeEntityManager(em);
+			}
+		} else {
+			throw new IllegalStateException("Could not get type for [" + clazz + "]");
+		}
+	}
+
+	@Override
+	public void removeStickerAddableToClass(Class<?> clazz, ISticker sticker) {
+		String type = getTypeForClass(clazz);
+		if (type != null) {
+			List<StickerClassLink> allLinks = getStickerClassLinksForSticker(sticker.getId());
+
+			List<StickerClassLink> matchingLinks = allLinks.stream().filter(cl -> type.equals(cl.getObjclass()))
+					.toList();
+			if (!matchingLinks.isEmpty()) {
+				EntityManager em = (EntityManager) entityManager.getEntityManager(false);
+				try {
+					em.getTransaction().begin();
+					for (StickerClassLink stickerClassLink : matchingLinks) {
+						EntityWithId object = em.merge(stickerClassLink);
+						em.remove(object);
+					}
+					em.getTransaction().commit();
+				} finally {
+					entityManager.closeEntityManager(em);
+				}
 			}
 		} else {
 			throw new IllegalStateException("Could not get type for [" + clazz + "]");
