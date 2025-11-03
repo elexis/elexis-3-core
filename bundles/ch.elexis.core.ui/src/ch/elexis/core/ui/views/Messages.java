@@ -650,4 +650,6 @@ public class Messages {
 	public static String OrderManagement_StockOrder_DefaultName = ch.elexis.core.l10n.Messages.OrderManagement_StockOrder_DefaultName;
 	public static String Patientenblatt2_PhotoOpen_GenericError_Title = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError_Title;
 	public static String Patientenblatt2_PhotoOpen_GenericError = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError;
+	public static String OmnivoreView_editActionCaption = ch.elexis.core.l10n.Messages.OmnivoreView_editActionCaption;
+	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
 }

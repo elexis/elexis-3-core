@@ -69,13 +69,11 @@ public class OrderManagementActionFactory {
 	private static final Logger logger = LoggerFactory.getLogger(OrderManagementActionFactory.class);
 	private final OrderManagementView view;
 
-	// Action-Felder:
 	private Action dailyWizardAction;
 	private Action wizardAction;
 	private Action newAction;
 	private Action printAction;
 	private Action exportClipboardAction;
-
 
 	private IOrderService orderService;
 
@@ -183,7 +181,6 @@ public class OrderManagementActionFactory {
 		}
 	}
 
-
 	private void handleAutomaticOrder() {
 		if (actOrder == null) {
 			actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName, orderService);
@@ -234,6 +231,7 @@ public class OrderManagementActionFactory {
 				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 		if (nbDlg.open() == Dialog.OK) {
 			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle(), orderService);
+			view.setActOrder(actOrder);
 			view.reload();
 		}
 	}
@@ -265,7 +263,6 @@ public class OrderManagementActionFactory {
 						logger.error("Error printing order", e); //$NON-NLS-1$
 						MessageDialog.openError(view.getViewSite().getShell(), Messages.Core_Error,
 								MessageFormat.format(Messages.OrderManagement_PrintError, receiver.getLabel()));
-
 					}
 				}
 			}
@@ -432,6 +429,7 @@ public class OrderManagementActionFactory {
 			if (order.getEntries().isEmpty()) {
 				CoreModelServiceHolder.get().delete(order);
 				actOrder = null;
+				view.reload();
 			}
 
 			Display.getDefault().asyncExec(() -> {

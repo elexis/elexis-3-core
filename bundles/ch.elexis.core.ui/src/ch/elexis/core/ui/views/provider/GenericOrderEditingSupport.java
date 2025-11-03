@@ -102,7 +102,6 @@ public class GenericOrderEditingSupport extends EditingSupport {
 		}
 	}
 
-
 	@Override
 	protected boolean canEdit(Object element) {
 		if (!(element instanceof IOrderEntry entry)) {
@@ -110,27 +109,29 @@ public class GenericOrderEditingSupport extends EditingSupport {
 		}
 		return switch (columnType) {
 		case ORDERED -> entry.getState() == OrderEntryState.OPEN;
-		case DELIVERED -> orderManagementView.isDeliveryEditMode()
-				&& (entry.getState() == OrderEntryState.ORDERED || entry.getState() == OrderEntryState.PARTIAL_DELIVER);
-		case SUPPLIER -> true;
+		case DELIVERED -> orderManagementView.isDeliveryEditMode();
+		case SUPPLIER -> entry.getState() == OrderEntryState.OPEN;
 		};
 	}
 
+	@Override
+	protected Object getValue(Object element) {
+		if (!(element instanceof IOrderEntry entry)) {
+			return null;
+		}
 
-    @Override
-    protected Object getValue(Object element) {
-        if (!(element instanceof IOrderEntry entry)) {
-            return null;
-        }
 		return switch (columnType) {
 		case ORDERED -> {
-                int amount = entry.getAmount();
+			int amount = entry.getAmount();
 			yield amount > 0 ? String.valueOf(amount) : StringUtils.EMPTY;
 		}
-		case DELIVERED -> String.valueOf(StringUtils.EMPTY);
+		case DELIVERED -> {
+			Integer pending = orderManagementView.getPendingDeliveredValues().get(entry);
+			yield (pending != null && pending != 0) ? String.valueOf(pending) : StringUtils.EMPTY;
+		}
 		case SUPPLIER -> entry.getProvider();
 		};
-    }
+	}
 
     @Override
     protected void setValue(Object element, Object value) {
@@ -152,9 +153,21 @@ public class GenericOrderEditingSupport extends EditingSupport {
 				}
 			}
 			case DELIVERED -> {
-				int part = Integer.parseInt(value.toString().trim());
-				orderManagementView.getPendingDeliveredValues().put(entry, part);
-				viewer.update(entry, null);
+				String input = value.toString().trim();
+
+				if (input.isEmpty()) {
+					orderManagementView.getPendingDeliveredValues().remove(entry);
+					viewer.update(entry, null);
+					return;
+				}
+
+				try {
+					int part = Integer.parseInt(input);
+					orderManagementView.getPendingDeliveredValues().put(entry, part);
+					viewer.update(entry, null);
+				} catch (NumberFormatException e) {
+					// ungültige Eingabe → ignorieren, aber alten Wert nicht überschreiben
+				}
 			}
 				case SUPPLIER -> {
                     if (value instanceof IContact contact) {
