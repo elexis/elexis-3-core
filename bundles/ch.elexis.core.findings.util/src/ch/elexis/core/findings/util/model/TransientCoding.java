@@ -1,6 +1,9 @@
 package ch.elexis.core.findings.util.model;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IObservation.ObservationCode;
 
@@ -37,4 +40,20 @@ public class TransientCoding implements ICoding {
 		return display;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(code, system);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransientCoding other = (TransientCoding) obj;
+		return Objects.equals(code, other.code) && Objects.equals(system, other.system);
+	}
 }

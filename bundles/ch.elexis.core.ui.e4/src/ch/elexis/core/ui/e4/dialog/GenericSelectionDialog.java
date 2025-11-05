@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -36,6 +37,8 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 	private String title;
 	private String message;
 
+	private LabelProvider labelProvider;
+
 	public GenericSelectionDialog(Shell parentShell, List<?> input, String title, String message) {
 		super(parentShell);
 		this.title = title;
@@ -54,6 +57,10 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 
 	public IStructuredSelection getSelection() {
 		return new StructuredSelection(selection);
+	}
+
+	public void setLabelProvider(LabelProvider labelProvider) {
+		this.labelProvider = labelProvider;
 	}
 
 	@Override
@@ -106,7 +113,10 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 		}
 	}
 
-	public static String getLabel(Object object) {
+	private String getLabel(Object object) {
+		if (labelProvider != null) {
+			return labelProvider.getText(object);
+		}
 		if (object instanceof Identifiable) {
 			return ((Identifiable) object).getLabel();
 		} else if (object != null) {
@@ -120,5 +130,4 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 	protected boolean isResizable() {
 		return true;
 	}
-
 }
