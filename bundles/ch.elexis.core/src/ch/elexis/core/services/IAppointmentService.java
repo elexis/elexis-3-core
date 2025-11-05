@@ -250,35 +250,44 @@ public interface IAppointmentService {
 
 	/**
 	 * Creates linked (combination) appointments for a given main appointment, if
-	 * applicable. The created appointments are **not persistent**, meaning they
-	 * must be saved manually.
+	 * applicable, based on the configured Kombitermine definitions.
+	 * <p>
+	 * The created appointments are <b>not persisted</b>; they must be saved
+	 * manually by the caller. If the main appointment already has linked
+	 * appointments, this method returns an empty list.
+	 * </p>
 	 *
-	 * @param mainAppointment The main appointment.
-	 * @param patient         Optional patient (if available).
-	 * @param type            The selected appointment type.
-	 * @param schedule        The current schedule or area.
-	 * @param patientName     Free-text name if no patient is assigned.
-	 * @return A list of newly created (unsaved) linked appointments.
+	 * @param mainAppointment The main (root) appointment.
+	 * @param patient         Optional patient (if available). Used to assign
+	 *                        patient information to generated Kombi appointments.
+	 * @param type            The selected appointment type used to look up Kombi
+	 *                        definitions.
+	 * @param patientName     Free-text name used when no {@link IContact} (patient)
+	 *                        is assigned.
+	 * @return A list of newly created, <b>unsaved</b> linked Kombi appointments.
+	 *         Returns an empty list if no definitions exist or if the appointment
+	 *         is already linked.
 	 */
-	public List<IAppointment> createKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
+	public List<IAppointment> getKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
 			String type, String patientName);
 
 	/**
-	 * Checks for potential collisions of a given appointment with existing
-	 * appointments based on the configured combination (Kombi) appointment
-	 * definitions.
-	 * 
-	 * This method creates temporary virtual appointments using the Kombi
-	 * definitions and verifies whether any of them would overlap with existing
-	 * booked appointments.
+	 * Checks whether the given appointment would collide with existing appointments
+	 * when its configured Kombitermine definitions are applied.
+	 * <p>
+	 * This method creates temporary in-memory (non-persistent) Kombi appointments
+	 * for the given {@code appointmentType} and checks for overlaps with already
+	 * booked appointments in the agenda. Only the Kombi appointments that would
+	 * cause a collision are returned.
+	 * </p>
 	 *
-	 * @param newAppointment  The appointment for which collisions should be
-	 *                        checked.
-	 * @param appointmentType The appointment type used to look up Kombi
-	 *                        configurations.
-	 * @return A list of virtual {@link IAppointment} objects that would collide
+	 * @param newAppointment  The appointment to be tested.
+	 * @param appointmentType The type used to retrieve Kombi definitions from the
+	 *                        configuration.
+	 * @return A list of virtual {@link IAppointment} objects that would overlap
 	 *         with existing appointments. Returns an empty list if no collisions
 	 *         are found or no Kombi definitions exist.
 	 */
-	public List<IAppointment> findCollisionsForKombiAppointment(IAppointment newAppointment, String appointmentType);
+	public List<IAppointment> isColliding(IAppointment newAppointment, String appointmentType);
+
 }

@@ -879,35 +879,89 @@ public class AppointmentService implements IAppointmentService {
 		return false;
 	}
 
-	@Override
-	public List<IAppointment> createKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
-			String type, String patientName) {
-		List<IAppointment> kombiAppointments = new ArrayList<>();
-		List<String> kombiTermineList = ConfigServiceHolder.get().getAsList(AG_KOMBITERMINE + type);
-		if (kombiTermineList.isEmpty()) {
+	/**
+	 * Builds combination (Kombi) appointments for the given base appointment using
+	 * the configured Kombitermine definitions.
+	 *
+	 * @param baseAppointment    The base appointment to derive Kombis from.
+	 * @param patient            Optional patient (if available).
+	 * @param patientName        Fallback name if no patient is assigned.
+	 * @param appointmentType    The appointment type used to look up Kombi
+	 *                           definitions.
+	 * @param checkCollisionOnly If true, no appointments are linked or persisted —
+	 *                           only collisions are checked.
+	 * @return A list of generated {@link IAppointment} objects (transient).
+	 */
+	private List<IAppointment> buildKombiAppointments(IAppointment baseAppointment, IContact patient,
+			String patientName, String appointmentType, boolean checkCollisionOnly) {
+		List<String> kombiList = ConfigServiceHolder.get().getAsList(AG_KOMBITERMINE + appointmentType);
+		if (kombiList.isEmpty()) {
 			return Collections.emptyList();
 		}
-
-		if (!AppointmentExtensionHandler.getLinkedAppointments(mainAppointment).isEmpty()) {
-			return Collections.emptyList();
-		}
-		AppointmentExtensionHandler.setMainAppointmentId(mainAppointment, mainAppointment.getId());
+		List<IAppointment> result = new ArrayList<>();
 		List<String> linkedIds = new ArrayList<>();
-
-		for (String kombiTermin : kombiTermineList) {
-			kombiTermin = kombiTermin.replaceAll("[{}]", "");
-			String[] elements = kombiTermin.split(";");
-			if (elements.length < 6)
+		for (String kombiEntry : kombiList) {
+			IAppointment kombiAppointment = parseAndBuildKombiAppointment(baseAppointment, patient, patientName,
+					kombiEntry);
+			if (kombiAppointment == null) {
 				continue;
+			}
+			if (checkCollisionOnly) {
+				if (isColliding(kombiAppointment)) {
+					result.add(kombiAppointment);
+				}
+			} else {
+				linkedIds.add(kombiAppointment.getId());
+				result.add(kombiAppointment);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Parses a Kombitermin definition line and creates an in-memory appointment.
+	 *
+	 * @param baseAppointment The base appointment.
+	 * @param patient         Optional patient.
+	 * @param patientName     Optional free-text name.
+	 * @param kombiDefinition The raw Kombitermin definition string.
+	 * @return A newly created {@link IAppointment}, or null if the definition is
+	 *         invalid.
+	 */
+	private IAppointment parseAndBuildKombiAppointment(IAppointment baseAppointment, IContact patient,
+			String patientName, String kombiDefinition) {
+		if (StringUtils.isBlank(kombiDefinition)) {
+			return null;
+		}
+
+		String[] parts = kombiDefinition.replaceAll("[{}]", "").split(";");
+		if (parts.length < 6) {
+			LoggerFactory.getLogger(getClass()).warn("Invalid Kombitermin entry: " + kombiDefinition);
+			return null;
+		}
+
+		try {
+			String reason = parts[0].trim();
+			String area = parts[1].trim();
+			String type = parts[2].trim();
+			String direction = parts[3].trim();
+			int offset = Integer.parseInt(parts[4].trim());
+			int duration = Integer.parseInt(parts[5].trim());
+
+			LocalDateTime start = Messages.AddCombiTerminDialogBefore.equalsIgnoreCase(direction)
+					? baseAppointment.getStartTime().minusMinutes(offset)
+					: baseAppointment.getStartTime().plusMinutes(offset);
 
 			IAppointment newAppointment = CoreModelServiceHolder.get().create(IAppointment.class);
-			newAppointment.setState(mainAppointment.getState());
-			newAppointment.setType(elements[2]);
-			newAppointment.setSchedule(elements[1]);
-			newAppointment.setCreatedBy(mainAppointment.getCreatedBy());
+			newAppointment.setSchedule(area);
+			newAppointment.setType(type);
+			newAppointment.setState(baseAppointment.getState());
+			newAppointment.setCreatedBy(baseAppointment.getCreatedBy());
 			newAppointment.setCreated(createTimeStamp());
 			newAppointment.setLastEdit(createTimeStamp());
-			newAppointment.setReason(elements[0]);
+			newAppointment.setReason(reason);
+			newAppointment.setStartTime(start);
+			newAppointment.setEndTime(start.plusMinutes(duration));
 
 			if (patient != null) {
 				newAppointment.setSubjectOrPatient(patient.getId());
@@ -915,66 +969,43 @@ public class AppointmentService implements IAppointmentService {
 				newAppointment.setSubjectOrPatient(patientName);
 			}
 
-			LocalDateTime startTime = mainAppointment.getStartTime();
-			int offset = Integer.parseInt(elements[4]);
-			if (Messages.AddCombiTerminDialogBefore.equalsIgnoreCase(elements[3])) {
-				startTime = startTime.minusMinutes(offset);
-			} else {
-				startTime = startTime.plusMinutes(offset);
-			}
-			newAppointment.setStartTime(startTime);
-			newAppointment.setEndTime(startTime.plusMinutes(Integer.parseInt(elements[5])));
-			AppointmentExtensionHandler.setMainAppointmentId(newAppointment, mainAppointment.getId());
-			AppointmentExtensionHandler.addLinkedAppointmentId(newAppointment, newAppointment.getId());
-			linkedIds.add(newAppointment.getId());
+			return newAppointment;
 
-			kombiAppointments.add(newAppointment);
+		} catch (NumberFormatException e) {
+			LoggerFactory.getLogger(getClass()).warn("Invalid numeric value in Kombitermin entry: " + kombiDefinition,
+					e);
+			return null;
 		}
-		AppointmentExtensionHandler.addMultipleLinkedAppointments(mainAppointment, linkedIds);
-		return kombiAppointments;
 	}
 
 	@Override
-	public List<IAppointment> findCollisionsForKombiAppointment(IAppointment newAppointment, String appointmentType) {
-		List<String> allKombiTermine = ConfigServiceHolder.get()
-				.getAsList(AG_KOMBITERMINE + appointmentType);
-
-		if (allKombiTermine.isEmpty()) {
+	public List<IAppointment> getKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
+			String type, String patientName) {
+		if (!AppointmentExtensionHandler.getLinkedAppointments(mainAppointment).isEmpty()) {
 			return Collections.emptyList();
 		}
+		AppointmentExtensionHandler.setMainAppointmentId(mainAppointment, mainAppointment.getId());
+		return buildKombiAppointments(mainAppointment, patient, patientName, type, false);
+	}
 
-		List<IAppointment> collisions = new ArrayList<>();
+	@Override
+	public List<IAppointment> isColliding(IAppointment newAppointment, String appointmentType) {
+		List<IAppointment> virtualAppointments = buildKombiAppointments(newAppointment, null, null, appointmentType,
+				false);
+		return getCollidingAppointments(virtualAppointments);
+	}
 
-		for (String kombi : allKombiTermine) {
-			kombi = kombi.replaceAll("[{}]", "");
-			String[] e = kombi.split(";");
-			if (e.length < 6)
-				continue;
-
-			String area = e[1].trim();
-			String direction = e[3].trim();
-			int offset = Integer.parseInt(e[4].trim());
-			int duration = Integer.parseInt(e[5].trim());
-
-			LocalDateTime start = newAppointment.getStartTime();
-			if (Messages.AddCombiTerminDialogBefore.equalsIgnoreCase(direction)) {
-				start = start.minusMinutes(offset);
-			} else {
-				start = start.plusMinutes(offset);
-			}
-
-			IAppointment virtual = CoreModelServiceHolder.get().create(IAppointment.class);
-			virtual.setSchedule(area);
-			virtual.setReason(StringUtils.EMPTY);
-			virtual.setStartTime(start);
-			virtual.setEndTime(start.plusMinutes(duration));
-
-			if (isColliding(virtual)) {
-				collisions.add(virtual);
+	public List<IAppointment> getCollidingAppointments(List<IAppointment> appointments) {
+		if (appointments == null || appointments.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<IAppointment> colliding = new ArrayList<>();
+		for (IAppointment appointment : appointments) {
+			if (isColliding(appointment)) {
+				colliding.add(appointment);
 			}
 		}
-
-		return collisions;
+		return colliding;
 	}
 
 	public static String createTimeStamp() {
