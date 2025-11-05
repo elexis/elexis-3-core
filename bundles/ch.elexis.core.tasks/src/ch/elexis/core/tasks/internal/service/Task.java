@@ -132,7 +132,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		} else {
 			logger.debug("state = {}", getState());
 		}
-		CoreModelServiceHolder.get().save(this);
+		AccessControlServiceHolder.get().doPrivileged(() -> CoreModelServiceHolder.get().save(this));
 		TaskServiceImpl ts = (TaskServiceImpl) TaskServiceHolder.get();
 		ts.notify(this);
 	}
