@@ -98,7 +98,6 @@ public class ReminderColumnFactory {
 			String header = type.getTitle();
 
 			if (hiddenCols.contains(header)) {
-				System.out.println("➡️  Skipping hidden column: " + header);
 				continue;
 			}
 

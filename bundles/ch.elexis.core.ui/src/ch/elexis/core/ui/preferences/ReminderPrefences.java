@@ -209,7 +209,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		lViewerVisible = new ListViewer(ret, SWT.BORDER | SWT.V_SCROLL);
 		lViewerVisible.getList().setLayoutData(gdListViewerColumns);
-		lViewerVisible.setContentProvider(new ArrayContentProvider());
+		lViewerVisible.setContentProvider(ArrayContentProvider.getInstance());
 
 		String defaultColumns = String.join(",", ReminderColumnType.getAllTitles()); //$NON-NLS-1$
 		String[] visibleColumns = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_VISIBLE, defaultColumns)
@@ -261,7 +261,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		});
 		lViewerHidden = new ListViewer(ret, SWT.BORDER | SWT.V_SCROLL);
 		lViewerHidden.getList().setLayoutData(gdListViewerColumns);
-		lViewerHidden.setContentProvider(new ArrayContentProvider());
+		lViewerHidden.setContentProvider(ArrayContentProvider.getInstance());
 		lViewerHidden.setInput(hiddenColumns);
 
 		new Label(ret, SWT.NONE);
