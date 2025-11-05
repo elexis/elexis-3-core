@@ -140,7 +140,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	private void setResult(Map<String, Serializable> result) {
 		String json = GSON.toJson(result);
 		getEntity().setResult(json);
-		CoreModelServiceHolder.get().save(this);
+		AccessControlServiceHolder.get().doPrivileged(() -> CoreModelServiceHolder.get().save(this));
 	}
 
 	@Override
