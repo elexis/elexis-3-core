@@ -5315,6 +5315,14 @@ public class Messages extends NLS {
 	public static String ReminderView_customTimeAction;
 	public static String ReminderView_nextDays;
 	public static String ReminderView_statusMenu;
+	public static String ReminderPrefences_PrefixPrevLabel;
+	public static String ReminderPrefences_LabelConfig;
+	public static String ReminderPrefences_Choosen;
+	public static String ReminderPrefences_Available;
+	public static String ReminderPrefences_ColumnConfig;
+	public static String ReminderPrefences_Visible;
+	public static String ReminderPrefences_Hidden;
+	public static String ReminderPrefences_ColInfo;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

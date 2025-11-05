@@ -49,7 +49,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private String[] choosenFields;
 	private String[] availableFields;
 	private Label lblInfo;
-	private String prefixPrevLabel = "Label Vorschau"; //$NON-NLS-1$
+	private String prefixPrevLabel = Messages.ReminderPrefences_PrefixPrevLabel;
 	private Button defaultPatientRelated;
 	private Button defaultResponsibleSelf;
 	private ListViewer lViewerVisible, lViewerHidden;
@@ -126,13 +126,13 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		Label lblLabelConfig = new Label(ret, SWT.NONE);
 		lblLabelConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		lblLabelConfig.setText("Pendenzen (mit Patienten-Bezug) Label Optionen"); //$NON-NLS-1$
+		lblLabelConfig.setText(Messages.ReminderPrefences_LabelConfig);
 
 		Label lblChoosen = new Label(ret, SWT.NONE);
-		lblChoosen.setText("Gewählt"); //$NON-NLS-1$
+		lblChoosen.setText(Messages.ReminderPrefences_Choosen);
 		new Label(ret, SWT.NONE);
 		Label lblAvailable = new Label(ret, SWT.NONE);
-		lblAvailable.setText("Noch verfügbar"); //$NON-NLS-1$
+		lblAvailable.setText(Messages.ReminderPrefences_Available);
 
 		GridData gdListViewer = new GridData();
 		gdListViewer.horizontalAlignment = SWT.FILL;
@@ -193,13 +193,13 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		Label lblColumnConfig = new Label(ret, SWT.NONE);
 		lblColumnConfig.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		lblColumnConfig.setText("Pendenzen Spaltenanzeige (sichtbare Spalten)"); //$NON-NLS-1$
+		lblColumnConfig.setText(Messages.ReminderPrefences_ColumnConfig);
 
 		Label lblVisible = new Label(ret, SWT.NONE);
-		lblVisible.setText("Anzeigen"); //$NON-NLS-1$
+		lblVisible.setText(Messages.ReminderPrefences_Visible);
 		new Label(ret, SWT.NONE);
 		Label lblHidden = new Label(ret, SWT.NONE);
-		lblHidden.setText("Nicht anzeigen"); //$NON-NLS-1$
+		lblHidden.setText(Messages.ReminderPrefences_Hidden);
 
 		GridData gdListViewerColumns = new GridData();
 		gdListViewerColumns.horizontalAlignment = SWT.FILL;
@@ -270,7 +270,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 		Label lblColInfo = new Label(ret, SWT.NONE);
 		lblColInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		lblColInfo.setText("Sichtbare Spalten: " + String.join(", ", visibleColumns)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblColInfo.setText(Messages.ReminderPrefences_ColInfo + String.join(", ", visibleColumns)); //$NON-NLS-1$
 
 		return ret;
 	}
