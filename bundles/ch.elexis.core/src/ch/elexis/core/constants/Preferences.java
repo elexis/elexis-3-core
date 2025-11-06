@@ -169,6 +169,8 @@ public class Preferences {
 	public static final String USR_SERVICES_DIAGNOSES_DIAGNOSE = "servicediagnose/diagnose";
 	public static final String USR_SERVICES_DIAGNOSES_CODES = "servicediagnose/codes";
 	public static final String USR_AGENDAFONT = "anwender/agendafont"; //$NON-NLS-1$
+	public static final String USR_REMINDER_COLUMNS_VISIBLE = "usr/reminder/columns/visible";
+	public static final String USR_REMINDER_COLUMNS_HIDDEN = "usr/reminder/columns/hidden";
 
 	// Menu item "lock perspectives" (GlobalActions.fixLayoutAction)
 	public static final String USR_FIX_LAYOUT = "perspectives/fix_layout"; //$NON-NLS-1$

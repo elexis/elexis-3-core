@@ -5303,6 +5303,26 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_CannotOpenPhone;
 	public static String Omnivore_demo_outsource_disabled;
 	public static String Texterstellung_demo_browse_disabled;
+	public static String ReminderView_currentPatient;
+	public static String ReminderView_allPatients;
+	public static String ReminderView_generalReminders;
+	public static String ReminderView_myReminders;
+	public static String ReminderView_resetColumnOrder;
+	public static String ReminderView_resetColumnOrderTooltip;
+	public static String ReminderView_resetColumnOrderDoneTitle;
+	public static String ReminderView_resetColumnOrderDoneMessage;
+	public static String ReminderView_timeFilterMenu;
+	public static String ReminderView_customTimeAction;
+	public static String ReminderView_nextDays;
+	public static String ReminderView_statusMenu;
+	public static String ReminderPrefences_PrefixPrevLabel;
+	public static String ReminderPrefences_LabelConfig;
+	public static String ReminderPrefences_Choosen;
+	public static String ReminderPrefences_Available;
+	public static String ReminderPrefences_ColumnConfig;
+	public static String ReminderPrefences_Visible;
+	public static String ReminderPrefences_Hidden;
+	public static String ReminderPrefences_ColInfo;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

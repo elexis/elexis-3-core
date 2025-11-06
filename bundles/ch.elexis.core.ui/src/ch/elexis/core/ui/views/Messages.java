@@ -650,6 +650,23 @@ public class Messages {
 	public static String OrderManagement_StockOrder_DefaultName = ch.elexis.core.l10n.Messages.OrderManagement_StockOrder_DefaultName;
 	public static String Patientenblatt2_PhotoOpen_GenericError_Title = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError_Title;
 	public static String Patientenblatt2_PhotoOpen_GenericError = ch.elexis.core.l10n.Messages.Patientenblatt2_PhotoOpen_GenericError;
+	public static String Core_Status = ch.elexis.core.l10n.Messages.Core_Status;
+	public static String EditReminderDialog_assigTo = ch.elexis.core.l10n.Messages.EditReminderDialog_assigTo;
+	public static String ProcessStatus_OVERDUE = ch.elexis.core.l10n.Messages.ProcessStatus_OVERDUE;
+	public static String ProcessStatus_DUE = ch.elexis.core.l10n.Messages.ProcessStatus_DUE;
+	public static String Core_today = ch.elexis.core.l10n.Messages.Core_today;
+	public static String ReminderView_currentPatient = ch.elexis.core.l10n.Messages.ReminderView_currentPatient;
+	public static String ReminderView_allPatients = ch.elexis.core.l10n.Messages.ReminderView_allPatients;
+	public static String ReminderView_generalReminders = ch.elexis.core.l10n.Messages.ReminderView_generalReminders;
+	public static String ReminderView_myReminders = ch.elexis.core.l10n.Messages.ReminderView_myReminders;
+	public static String ReminderView_resetColumnOrder = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrder;
+	public static String ReminderView_resetColumnOrderTooltip = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderTooltip;
+	public static String ReminderView_resetColumnOrderDoneTitle = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderDoneTitle;
+	public static String ReminderView_resetColumnOrderDoneMessage = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderDoneMessage;
+	public static String ReminderView_timeFilterMenu = ch.elexis.core.l10n.Messages.ReminderView_timeFilterMenu;
+	public static String ReminderView_customTimeAction = ch.elexis.core.l10n.Messages.ReminderView_customTimeAction;
+	public static String ReminderView_nextDays = ch.elexis.core.l10n.Messages.ReminderView_nextDays;
+	public static String ReminderView_statusMenu = ch.elexis.core.l10n.Messages.ReminderView_statusMenu;
 	public static String OmnivoreView_editActionCaption = ch.elexis.core.l10n.Messages.OmnivoreView_editActionCaption;
 	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
 }
