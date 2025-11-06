@@ -608,5 +608,20 @@ public class Messages {
 	public static String Web_Button_Reload = ch.elexis.core.l10n.Messages.LaborViewPart_actionReload;
 	public static String Web_Button_Favoriten = ch.elexis.core.l10n.Messages.Web_Button_Favoriten;
 	public static String Web_Button_Forward = ch.elexis.core.l10n.Messages.Web_Button_Forward;
-
+	public static String ReminderView_currentPatient = ch.elexis.core.l10n.Messages.ReminderView_currentPatient;
+	public static String ReminderView_allPatients = ch.elexis.core.l10n.Messages.ReminderView_allPatients;
+	public static String ReminderView_generalReminders = ch.elexis.core.l10n.Messages.ReminderView_generalReminders;
+	public static String ReminderView_myReminders = ch.elexis.core.l10n.Messages.ReminderView_myReminders;
+	public static String ReminderView_resetColumnOrder = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrder;
+	public static String ReminderView_resetColumnOrderTooltip = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderTooltip;
+	public static String ReminderView_resetColumnOrderDoneTitle = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderDoneTitle;
+	public static String ReminderView_resetColumnOrderDoneMessage = ch.elexis.core.l10n.Messages.ReminderView_resetColumnOrderDoneMessage;
+	public static String ReminderView_timeFilterMenu = ch.elexis.core.l10n.Messages.ReminderView_timeFilterMenu;
+	public static String ReminderView_customTimeAction = ch.elexis.core.l10n.Messages.ReminderView_customTimeAction;
+	public static String ReminderView_nextDays = ch.elexis.core.l10n.Messages.ReminderView_nextDays;
+	public static String ReminderView_statusMenu = ch.elexis.core.l10n.Messages.ReminderView_statusMenu;
+	public static String EditReminderDialog_assigTo = ch.elexis.core.l10n.Messages.EditReminderDialog_assigTo;
+	public static String ProcessStatus_OVERDUE = ch.elexis.core.l10n.Messages.ProcessStatus_OVERDUE;
+	public static String ProcessStatus_DUE = ch.elexis.core.l10n.Messages.ProcessStatus_DUE;
+	public static String Core_today = ch.elexis.core.l10n.Messages.Core_today;	
 }

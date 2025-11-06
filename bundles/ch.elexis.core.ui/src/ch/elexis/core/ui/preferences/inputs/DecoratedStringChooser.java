@@ -23,7 +23,10 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.util.DecoratedString;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -43,8 +46,8 @@ public class DecoratedStringChooser extends Composite {
 		int num = strings.length;
 		int typRows = ((int) Math.sqrt(num));
 		int typCols = typRows + (num - (typRows * typRows));
-		if (typCols < 4) {
-			typCols = 4;
+		if (typCols < 5) {
+			typCols = 5;
 		}
 		setLayout(new GridLayout(typCols, true));
 		Label expl = new Label(this, SWT.WRAP);
@@ -81,7 +84,9 @@ public class DecoratedStringChooser extends Composite {
 						} else {
 							ConfigServiceHolder.setUser(prefix + "/" + l.getText(), symbolic); //$NON-NLS-1$
 						}
+
 					}
+					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IReminder.class);
 				}
 
 			});
