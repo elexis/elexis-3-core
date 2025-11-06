@@ -8,19 +8,20 @@ import ch.elexis.core.ui.icons.Images;
 public class OrderConstants {
 
 	public static class OrderTable {
-		public static final int STATUS = 0;
-		public static final int ORDERED = 1;
-		public static final int DELIVERED = 2;
-		public static final int ADD = 3;
-		public static final int ARTICLE = 4;
-		public static final int SUPPLIER = 5;
-		public static final int STOCK = 6;
-
+		public static final int CHECKBOX = 0;
+		public static final int STATUS = 1;
+		public static final int ORDERED = 2;
+		public static final int DELIVERED = 3;
+		public static final int ADD = 4;
+		public static final int ARTICLE = 5;
+		public static final int SUPPLIER = 6;
+		public static final int STOCK = 7;
 	}
 
 	public static class OrderImages {
 		public static final Image CLEAR = Images.IMG_CLEAR.getImage();
 		public static final Image TICK = Images.IMG_TICK.getImage();
+		public static final Image EDIT = Images.IMG_EDIT.getImage();
 		public static final Image DELIVERY_TRUCK_64x64 = Images.IMG_DELIVERY_TRUCK
 				.getImage(ImageSize._75x66_TitleDialogIconSize);
 		public static final Image SHOPPING_CART_64x64 = Images.IMG_SHOPPING_CART

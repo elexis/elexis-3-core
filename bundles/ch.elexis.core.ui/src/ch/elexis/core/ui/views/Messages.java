@@ -667,5 +667,6 @@ public class Messages {
 	public static String ReminderView_customTimeAction = ch.elexis.core.l10n.Messages.ReminderView_customTimeAction;
 	public static String ReminderView_nextDays = ch.elexis.core.l10n.Messages.ReminderView_nextDays;
 	public static String ReminderView_statusMenu = ch.elexis.core.l10n.Messages.ReminderView_statusMenu;
-
+	public static String OmnivoreView_editActionCaption = ch.elexis.core.l10n.Messages.OmnivoreView_editActionCaption;
+	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
 }
