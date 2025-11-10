@@ -8,21 +8,29 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
+import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.data.PersistentObject;
@@ -79,6 +87,20 @@ public class LockStatusDialog extends TitleAreaDialog {
 		Label lblSystemUuid = new Label(container, SWT.NONE);
 		lblSystemUuid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblSystemUuid.setText("System UUID: " + LocalLockServiceHolder.get().getSystemUuid()); //$NON-NLS-1$
+
+		Link accessTokenLink = new Link(container, SWT.NONE);
+		accessTokenLink.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		accessTokenLink.setText("<a>Copy Access Token to Clipboard</a>"); //$NON-NLS-1$
+		accessTokenLink.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String token = ContextServiceHolder.get().getTyped(AccessToken.class).get().getToken();
+				Clipboard clipboard = new Clipboard(parent.getDisplay());
+				clipboard.setContents(new Object[] { token }, new Transfer[] { TextTransfer.getInstance() });
+				setMessage("Access Token copied to Clipboard!");
+			}
+		});
+		accessTokenLink.setEnabled(ContextServiceHolder.get().getTyped(AccessToken.class).isPresent());
 
 		Label lblLockStatus = new Label(container, SWT.NONE);
 		ConnectionStatus connectionStatus = ElexisServerServiceHolder.get().getConnectionStatus();
