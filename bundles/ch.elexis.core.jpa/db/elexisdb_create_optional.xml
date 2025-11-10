@@ -648,18 +648,6 @@
             <column name="PHAR"/>
         </createIndex>
     </changeSet>	
-	
-	<changeSet author="thomas" id="manual_idx_IDXATCCODE">
-		<preConditions onFail="MARK_RAN">
-			<not>
-				<indexExists indexName="IDXATCCODE" />
-			</not>
-		</preConditions>
-		<createIndex indexName="IDXATCCODE"
-			tableName="DEFAULT_SIGNATURES">
-			<column name="ATCCODE" />
-		</createIndex>
-	</changeSet>
 
 	<changeSet author="marco" id="manual_table_TASKDESCRIPTOR">
 		<preConditions onFail="MARK_RAN">
