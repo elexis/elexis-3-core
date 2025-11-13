@@ -14,6 +14,7 @@
     <elements xsi:type="commands:Command" xmi:id="_DkO0MD1mEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.command.jfr.recorder.activate" commandName="%jfr.recorder.activate">
       <parameters xmi:id="_LVQggD1mEe2hc6qLS9N21g" elementId="booleanActivationValue" name="the boolean activation state"/>
     </elements>
+    <elements xsi:type="commands:Command" xmi:id="_OYwh0KmdEfCd7ImrcFevjA" elementId="ch.elexis.core.ui.e4.command.clearhttpcache" commandName="HTTP Cache leeren"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OS5oUI6XEeq69IgL7XvkGA" featurename="categories" parentElementId="xpath:/">
     <elements xsi:type="commands:Category" xmi:id="_Pj4vEI6XEeq69IgL7XvkGA" elementId="ch.elexis.core.ui.category.treatment.administration" name="%category.treatment.administration" description="%category.treatment.administration.description"/>
@@ -23,6 +24,7 @@
     <elements xsi:type="commands:Handler" xmi:id="_Wrv_wIGhEeuh_oRSm2ExFw" elementId="ch.elexis.core.ui.handler.part.refresh" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.RefreshPartHandler" command="_uu0MoIGgEeuh_oRSm2ExFw"/>
     <elements xsi:type="commands:Handler" xmi:id="_M-kykIcBEeutVMzWpU7zdQ" elementId="ch.elexis.core.ui.e4.handler.part.show.invoicelist" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.ShowInvoiceListHandler" command="_vKmzgIcAEeutVMzWpU7zdQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_d3hh0D1mEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.handler.jfr.recorder.activate" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.JavaFlightRecorderActivateHandler" command="_DkO0MD1mEe2hc6qLS9N21g"/>
+    <elements xsi:type="commands:Handler" xmi:id="_TYLCIKmdEfCd7ImrcFevjA" elementId="ch.elexis.core.ui.e4.handler.clearhttpcache" contributionURI="bundleclass://ch.elexis.core.ui.e4/ch.elexis.core.ui.e4.handlers.ClearHttpCacheHandler" command="_OYwh0KmdEfCd7ImrcFevjA"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_yTI8UD1kEe2hc6qLS9N21g" featurename="menuContributions" parentElementId="xpath:/">
     <elements xsi:type="menu:MenuContribution" xmi:id="_NPmiwD1lEe2hc6qLS9N21g" elementId="ch.elexis.core.ui.e4.menucontribution.0" positionInParent="after=additions" parentId="help">
@@ -35,6 +37,7 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_J7gksFNyEe2saMDnqjswGg" featurename="bindingTables" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:BindingTable" xmi:id="_YCzPgFNyEe2saMDnqjswGg" elementId="ch.elexis.core.ui.e4.bindingtable" bindingContext="_NvJzkIcEEeutVMzWpU7zdQ">
       <bindings xmi:id="_d3fyAFNyEe2saMDnqjswGg" elementId="ch.elexis.core.ui.e4.keybinding.ToggleCurrentKonsultationLockCommand" keySequence="M1+K" command="_yhHE4FNzEe2saMDnqjswGg"/>
+      <bindings xmi:id="_JwGUoKmdEfCd7ImrcFevjA" elementId="ch.elexis.core.ui.e4.keybinding.clearhttpcache" keySequence="M1+U" command="_OYwh0KmdEfCd7ImrcFevjA"/>
     </elements>
   </fragments>
 </fragment:ModelFragments>

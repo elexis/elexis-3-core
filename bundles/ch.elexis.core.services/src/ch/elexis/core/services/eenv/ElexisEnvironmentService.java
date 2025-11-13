@@ -16,7 +16,6 @@ import com.google.gson.JsonParser;
 
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
-import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
@@ -30,15 +29,12 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	private String elexisEnvironmentHost;
 	private IContextService contextService;
-	private IConfigService configService;
 
 	private Timer refreshAccessTokenTimer;
 
-	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
-			IConfigService configService) {
+	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService) {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
 		this.contextService = contextService;
-		this.configService = configService;
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 
@@ -59,9 +55,17 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return value;
 		}
 
+		value = System.getProperty(key);
+		if (StringUtils.isNotEmpty(value)) {
+			return value;
+		}
+
+		System.out.println("trying to fetch key " + key);
+
+		throw new UnsupportedOperationException();
 		// TODO first try via LocalProperties?
 		// THEN Config DB Table ?
-		return configService.get(key, null);
+//		return configService.get(key, null);
 	}
 
 	@Override
