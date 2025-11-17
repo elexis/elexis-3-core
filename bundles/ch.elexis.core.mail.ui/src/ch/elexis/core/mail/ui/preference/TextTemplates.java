@@ -54,6 +54,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.ac.Right;
 import ch.elexis.core.mail.MailConstants;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
@@ -63,6 +65,7 @@ import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ITextTemplate;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
@@ -348,6 +351,12 @@ public class TextTemplates extends PreferencePage implements IWorkbenchPreferenc
 	}
 
 	private class RemoveTextTemplateAction extends Action {
+
+		@Override
+		public boolean isEnabled() {
+			return AccessControlServiceHolder.get().evaluate(EvACE.of(ITextTemplate.class, Right.REMOVE));
+		}
+
 		@Override
 		public ImageDescriptor getImageDescriptor() {
 			return Images.IMG_DELETE.getImageDescriptor();
