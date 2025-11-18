@@ -87,6 +87,8 @@ public interface IIdentifiedRunnable {
 		 * watcher that found nothing). When setting this to the run context, every
 		 * successful execution of the task will NOT be logged. A single task may still
 		 * use this as return value.
+		 * 
+		 * @since 3.13 keeps a single latest entry with id = taskDescriptorId
 		 */
 		public static final String MARKER_DO_NOT_PERSIST = "markerDoNotPersist";
 

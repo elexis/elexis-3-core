@@ -31,6 +31,7 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.ContextServiceHolder;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
@@ -226,8 +227,15 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 				|| TaskState.FAILED == getState() || TaskState.CANCELLED == getState());
 	}
 
-	private void removeTaskRecord() {
-		AccessControlServiceHolder.get().doPrivileged(() -> CoreModelServiceHolder.get().remove(this));
+	/**
+	 * @since 3.13
+	 */
+	private void overwriteSingledLatestTaskRecordEntry() {
+		String taskDescriptorId = getTaskDescriptor().getId();
+		IModelService coreModelService = CoreModelServiceHolder.get();
+		coreModelService.executeNativeUpdate("DELETE FROM TASK WHERE ID ='" + taskDescriptorId + "'");
+		coreModelService
+				.executeNativeUpdate("UPDATE TASK SET ID = '" + taskDescriptorId + "' WHERE ID = '" + getId() + "'");
 	}
 
 	@Override
@@ -311,7 +319,7 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 			if (effectiveRunContext.containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)
 					|| getResult().containsKey(ReturnParameter.MARKER_DO_NOT_PERSIST)) {
 				// only if completion was successful
-				removeTaskRecord();
+				overwriteSingledLatestTaskRecordEntry();
 			}
 		} catch (OperationCanceledException oce) {
 			setState(TaskState.CANCELLED);
