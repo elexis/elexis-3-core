@@ -78,9 +78,10 @@ public class XidElement extends XChangeElement {
 		} else {
 			domainRoot.append(lab.get(Kontakt.FLD_NAME1));
 		}
-		String domain = domainRoot.toString();
-		Xid.localRegisterXIDDomainIfNotExists(domain, li.getLabel(), Xid.ASSIGNMENT_LOCAL);
-		addIdentities((LabItem) li, domain, li.getName(), Xid.ASSIGNMENT_LOCAL, true);
+		String domain = domainRoot.toString().replace(";", "");
+		String domainId = (li.getKuerzel() + "|" + li.getName()).replace(";", "");
+		Xid.localRegisterXIDDomainIfNotExists(domain, domainId, Xid.ASSIGNMENT_LOCAL);
+		addIdentities((LabItem) li, domain, domainId, Xid.ASSIGNMENT_LOCAL, true);
 		return this;
 	}
 
@@ -298,6 +299,7 @@ public class XidElement extends XChangeElement {
 
 		}
 
+		@Override
 		public String getXMLName() {
 			return ELEMENT_IDENTITY;
 		}
