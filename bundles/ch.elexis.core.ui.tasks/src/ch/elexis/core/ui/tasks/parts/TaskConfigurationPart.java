@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -71,7 +72,8 @@ public class TaskConfigurationPart implements IRefreshablePart {
 
 	private TableViewer tvTaskDescriptors;
 	private TaskLogComparator comparator;
-
+	private Composite actionContainer;
+	private ScrolledComposite actionScroller;
 	// TODO only Admin should see all, else only current user
 
 	@PostConstruct
@@ -203,24 +205,41 @@ public class TaskConfigurationPart implements IRefreshablePart {
 		tttcp = new TaskTriggerTypeConfigurationComposite(tabFolder, SWT.None);
 		tbtmTrigger.setControl(tttcp);
 
-		// ACTION (Runnable and RunContext)
+		// ACTION
 		TabItem tbtmAction = new TabItem(tabFolder, SWT.NONE);
 		tbtmAction.setText("action");
-		raccp = new RunnableAndContextConfigurationComposite(tabFolder, SWT.NONE, taskService);
-		tbtmAction.setControl(raccp);
+		actionScroller = new ScrolledComposite(tabFolder, SWT.V_SCROLL /* | SWT.H_SCROLL */);
+		actionScroller.setExpandHorizontal(true);
+		actionScroller.setExpandVertical(true);
+		actionContainer = new Composite(actionScroller, SWT.NONE);
+		actionContainer.setLayout(new GridLayout(1, false));
+		actionContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		raccp = new RunnableAndContextConfigurationComposite(actionContainer, SWT.NONE, taskService);
+		raccp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		actionScroller.setContent(actionContainer);
+		actionScroller.setMinSize(actionContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		tbtmAction.setControl(actionScroller);
 
 		menuService.registerContextMenu(tableDescriptors, "ch.elexis.core.ui.tasks.popupmenu.tabledescriptors"); //$NON-NLS-1$
 
 		refresh();
 	}
 
-	private void selectionChanged(ITaskDescriptor taskDescriptor) {
-		selectionService.setSelection(taskDescriptor);
-		gcp.setSelection(taskDescriptor);
-		tttcp.setSelection(taskDescriptor);
-		raccp.setSelection(taskDescriptor);
+	private void selectionChanged(ITaskDescriptor td) {
+		selectionService.setSelection(td);
+		gcp.setSelection(td);
+		tttcp.setSelection(td);
+		raccp.setSelection(td);
+		updateActionMinSize();
 	}
 
+	private void updateActionMinSize() {
+		if (actionScroller != null && actionContainer != null && !actionScroller.isDisposed()) {
+			actionContainer.layout(true, true);
+			actionScroller.setMinSize(actionContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		}
+	}
 	@Focus
 	public boolean setFocus() {
 		return tableDescriptors.setFocus();
