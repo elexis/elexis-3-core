@@ -89,8 +89,7 @@ public class ReminderQueryService {
 		}
 
 		// --- Creator and responsible user filters ---
-		ContextServiceHolder.get().getActiveMandator().ifPresent(m -> {
-
+		ContextServiceHolder.get().getActiveUserContact().ifPresent(m -> {
 			if (cfg.showSelfCreated) {
 				query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
 			}
