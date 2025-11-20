@@ -23,10 +23,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -82,10 +79,6 @@ public class BillingProposalView extends ViewPart {
 	private UISynchronize uiSync;
 	@Inject
 	private EPartService partService;
-	@Inject
-	private EModelService modelService;
-	@Inject
-	private MApplication application;
 
 	private TableViewer viewer;
 	private BillingProposalViewerComparator comparator;
@@ -267,14 +260,10 @@ public class BillingProposalView extends ViewPart {
 			}
 				uiSync.asyncExec(() -> {
 					MPart konsPart = partService.createPart("ch.elexis.Konsdetail");
-					MPartStack detailStack = (MPartStack) modelService.find("ch.elexis.core.ui.partstack.details",
-							application);
-
-					if (detailStack != null) {
-						detailStack.getChildren().add(konsPart);
-						partService.activate(konsPart);
+				if (konsPart != null) {
+					partService.showPart(konsPart, EPartService.PartState.ACTIVATE);
 					} else {
-						partService.showPart(konsPart, EPartService.PartState.ACTIVATE);
+
 					}
 				});
 		});
