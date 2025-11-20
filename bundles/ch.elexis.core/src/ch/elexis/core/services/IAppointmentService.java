@@ -262,32 +262,21 @@ public interface IAppointmentService {
 	 *                        patient information to generated Kombi appointments.
 	 * @param type            The selected appointment type used to look up Kombi
 	 *                        definitions.
-	 * @param patientName     Free-text name used when no {@link IContact} (patient)
+	 * @param freetext        Free-text name used when no {@link IContact} (patient)
 	 *                        is assigned.
 	 * @return A list of newly created, <b>unsaved</b> linked Kombi appointments.
 	 *         Returns an empty list if no definitions exist or if the appointment
 	 *         is already linked.
 	 */
 	public List<IAppointment> getKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
-			String type, String patientName);
+			String type, String freetext);
 
 	/**
-	 * Checks whether the given appointment would collide with existing appointments
-	 * when its configured Kombitermine definitions are applied.
-	 * <p>
-	 * This method creates temporary in-memory (non-persistent) Kombi appointments
-	 * for the given {@code appointmentType} and checks for overlaps with already
-	 * booked appointments in the agenda. Only the Kombi appointments that would
-	 * cause a collision are returned.
-	 * </p>
+	 * Returns only those appointments from the given list that overlap with
+	 * existing appointments in the agenda.
 	 *
-	 * @param newAppointment  The appointment to be tested.
-	 * @param appointmentType The type used to retrieve Kombi definitions from the
-	 *                        configuration.
-	 * @return A list of virtual {@link IAppointment} objects that would overlap
-	 *         with existing appointments. Returns an empty list if no collisions
-	 *         are found or no Kombi definitions exist.
+	 * @param appointments the (virtual) appointments to check
+	 * @return all appointments that would collide; never {@code null}
 	 */
-	public List<IAppointment> isColliding(IAppointment newAppointment, String appointmentType);
-
+	public List<IAppointment> getCollidingAppointments(List<IAppointment> appointments);
 }

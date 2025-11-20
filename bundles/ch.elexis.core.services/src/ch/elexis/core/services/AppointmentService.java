@@ -893,7 +893,7 @@ public class AppointmentService implements IAppointmentService {
 	 * @return A list of generated {@link IAppointment} objects (transient).
 	 */
 	private List<IAppointment> buildKombiAppointments(IAppointment baseAppointment, IContact patient,
-			String patientName, String appointmentType, boolean checkCollisionOnly) {
+			String freetext, String appointmentType, boolean checkCollisionOnly) {
 		List<String> kombiList = ConfigServiceHolder.get().getAsList(AG_KOMBITERMINE + appointmentType);
 		if (kombiList.isEmpty()) {
 			return Collections.emptyList();
@@ -901,7 +901,7 @@ public class AppointmentService implements IAppointmentService {
 		List<IAppointment> result = new ArrayList<>();
 		List<String> linkedIds = new ArrayList<>();
 		for (String kombiEntry : kombiList) {
-			IAppointment kombiAppointment = parseAndBuildKombiAppointment(baseAppointment, patient, patientName,
+			IAppointment kombiAppointment = parseAndBuildKombiAppointment(baseAppointment, patient, freetext,
 					kombiEntry);
 			if (kombiAppointment == null) {
 				continue;
@@ -929,7 +929,7 @@ public class AppointmentService implements IAppointmentService {
 	 *         invalid.
 	 */
 	private IAppointment parseAndBuildKombiAppointment(IAppointment baseAppointment, IContact patient,
-			String patientName, String kombiDefinition) {
+			String freetext, String kombiDefinition) {
 		if (StringUtils.isBlank(kombiDefinition)) {
 			return null;
 		}
@@ -965,8 +965,8 @@ public class AppointmentService implements IAppointmentService {
 
 			if (patient != null) {
 				newAppointment.setSubjectOrPatient(patient.getId());
-			} else if (StringUtils.isNotBlank(patientName)) {
-				newAppointment.setSubjectOrPatient(patientName);
+			} else if (StringUtils.isNotBlank(freetext)) {
+				newAppointment.setSubjectOrPatient(freetext);
 			}
 
 			return newAppointment;
@@ -980,21 +980,15 @@ public class AppointmentService implements IAppointmentService {
 
 	@Override
 	public List<IAppointment> getKombiTermineIfApplicable(IAppointment mainAppointment, IContact patient,
-			String type, String patientName) {
+			String type, String freetext) {
 		if (!AppointmentExtensionHandler.getLinkedAppointments(mainAppointment).isEmpty()) {
 			return Collections.emptyList();
 		}
 		AppointmentExtensionHandler.setMainAppointmentId(mainAppointment, mainAppointment.getId());
-		return buildKombiAppointments(mainAppointment, patient, patientName, type, false);
+		return buildKombiAppointments(mainAppointment, patient, freetext, type, false);
 	}
 
 	@Override
-	public List<IAppointment> isColliding(IAppointment newAppointment, String appointmentType) {
-		List<IAppointment> virtualAppointments = buildKombiAppointments(newAppointment, null, null, appointmentType,
-				false);
-		return getCollidingAppointments(virtualAppointments);
-	}
-
 	public List<IAppointment> getCollidingAppointments(List<IAppointment> appointments) {
 		if (appointments == null || appointments.isEmpty()) {
 			return Collections.emptyList();
