@@ -123,6 +123,7 @@ public class SpotlightUiUtil {
 			if (contact != null) {
 				IPatient patient = CoreModelServiceHolder.get().load(contact.getId(), IPatient.class).orElse(null);
 				contextService.getRootContext().setTyped(patient);
+				partService.showPart("ch.elexis.agenda.largeview", PartState.ACTIVATE);
 				return true;
 			}
 		}
@@ -138,6 +139,7 @@ public class SpotlightUiUtil {
 			}
 			contextService.getRootContext().setTyped(patient);
 			return patient != null;
+
 		} else if (string.startsWith(ACTION_SHOW_BALANCE)) {
 			return performActionShowBalance(string.substring(ACTION_SHOW_BALANCE.length()));
 
@@ -146,6 +148,29 @@ public class SpotlightUiUtil {
 
 		} else if (string.startsWith(ACTION_SHOW_LATEST_ENCOUNTER)) {
 			return performActionShowLatestEncounter(string.substring(ACTION_SHOW_LATEST_ENCOUNTER.length()));
+
+		} else if (string.startsWith(ACTION_SHOW_APPOINTMENT)) {
+			String appointmentId = string.substring(ACTION_SHOW_APPOINTMENT.length());
+			IAppointment appointment = CoreModelServiceHolder.get().load(appointmentId, IAppointment.class)
+					.orElse(null);
+			return handleEnter(appointment);
+		} else if (string.startsWith(ACTION_SHOW_FIXED_MEDICATION)) {
+			System.out.println("test 67 ");
+			String patientId = string.substring(ACTION_SHOW_FIXED_MEDICATION.length());
+			return performActionShowFixedMedication(patientId);
+		}
+
+		return false;
+	}
+
+	private boolean performActionShowFixedMedication(String patientId) {
+		// zuerst Patient in den Kontext setzen
+		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
+		System.out.println("test 66 " + ok);
+		if (ok) {
+			System.out.println("test");
+			partService.showPart("ch.elexis.core.ui.medication.views.MedicationView", PartState.ACTIVATE);
+			return true;
 		}
 		return false;
 	}

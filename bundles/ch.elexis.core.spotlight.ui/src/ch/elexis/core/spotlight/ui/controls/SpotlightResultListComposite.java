@@ -79,6 +79,19 @@ public class SpotlightResultListComposite extends Composite {
 		tvSpotlightResults.setLabelProvider(srllp);
 
 		tableSpotlightResults.addListener(SWT.KeyDown, event -> {
+		    if ((event.stateMask & SWT.ALT) != 0) {
+		        event.doit = false;
+
+		        boolean success = false;
+		        if (resultDetailComposite != null) {
+		            success = resultDetailComposite.handleAltKeyPressed(event.keyCode);
+		        }
+
+		        if (success && !_spotlightShell.isDisposed()) {
+		            _spotlightShell.close();
+		        }
+		        return;
+		    }
 			// TODO prevent selection of Category objects
 			int keyCode = event.keyCode;
 			switch (keyCode) {
@@ -100,7 +113,10 @@ public class SpotlightResultListComposite extends Composite {
 			}
 
 			// user wants to modify the filter
-			_spotlightShell.setFocusAppendChar(event.character);
+			if (event.character != 0) {
+				_spotlightShell.setFocusAppendChar(event.character);
+				event.doit = false;
+			}
 		});
 
 		tableSpotlightResults.addMouseListener(new MouseAdapter() {
