@@ -30,9 +30,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -130,19 +134,12 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private Composite tableArea;
 	private StackLayout tableStack;
 
+	private Composite mainComposite;
+	private Composite headerBar;
+
 	private TableSortController plainSorter;
 	private TableSortController checkboxSorter;
-
-	@Inject
-	private IOrderService orderService;
-
-	public Composite getCompletedContainer() {
-		return completedContainer;
-	}
-
-	public void setCompletedContainer(Composite completedContainer) {
-		this.completedContainer = completedContainer;
-	}
+	private Label addArticleLabel;
 
 	private Composite rightListComposite;
 	private ScrolledComposite scrolledComposite;
@@ -163,6 +160,20 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private static boolean barcodeScannerActivated = false;
 	private boolean isDeliveryEditMode = false;
 	private Image orderButtonCustomImage;
+	private GenericObjectDropTarget plainDropTarget;
+	private GenericObjectDropTarget checkboxDropTarget;
+	public GenericObjectDropTarget dropTarget;
+
+	@Inject
+	private IOrderService orderService;
+
+	public Composite getCompletedContainer() {
+		return completedContainer;
+	}
+
+	public void setCompletedContainer(Composite completedContainer) {
+		this.completedContainer = completedContainer;
+	}
 
 	public boolean isDeliveryEditMode() {
 		return isDeliveryEditMode;
@@ -176,12 +187,10 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		barcodeScannerActivated = enabled;
 	}
 
-	public GenericObjectDropTarget dropTarget;
-
 	@org.eclipse.e4.core.di.annotations.Optional
 	@Inject
 	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
-		if (IStock.class.equals(clazz)) {
+		if (IStock.class.equals(clazz) || IOrder.class.equals(clazz) || IArticle.class.equals(clazz)) {
 			if (actOrder != null) {
 				refresh();
 				loadOpenOrders();
@@ -199,8 +208,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (isMatchingPart(partRef)) {
 				hasFocus = true;
 				String valueToSet = OrderManagementView.class.getName();
-				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, valueToSet); // $NON-NLS-1$
-
+				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, valueToSet);
+				CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 			}
 		}
 
@@ -209,6 +218,26 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (isMatchingPart(partRef)) {
 				hasFocus = false;
 				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, null);
+			}
+		}
+
+		@Override
+		public void partHidden(IWorkbenchPartReference partRef) {
+			if (isMatchingPart(partRef)) {
+				CodeSelectorHandler handler = CodeSelectorHandler.getInstance();
+				if (handler.getCodeSelectorTarget() == dropTarget) {
+					handler.removeCodeSelectorTarget();
+				}
+			}
+		}
+
+		@Override
+		public void partClosed(IWorkbenchPartReference partRef) {
+			if (isMatchingPart(partRef)) {
+				CodeSelectorHandler handler = CodeSelectorHandler.getInstance();
+				if (handler.getCodeSelectorTarget() == dropTarget) {
+					handler.removeCodeSelectorTarget();
+				}
 			}
 		}
 	};
@@ -355,9 +384,6 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tableViewer.refresh(entry);
 	}
 
-	/**
-	 * Erstellt die Kopfzeile der UI
-	 */
 	private void createHeaderUI(Composite parent) {
 		topComposite = new Composite(parent, SWT.BORDER);
 		topComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
@@ -483,22 +509,54 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private void createTableUI(Composite parent) {
-		Composite mainComposite = new Composite(parent, SWT.BORDER);
+		mainComposite = new Composite(parent, SWT.BORDER);
 		mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		mainComposite.setLayout(new GridLayout(1, false));
 
-		Composite headerBar = new Composite(mainComposite, SWT.NONE);
-		headerBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		headerBar.setLayout(new GridLayout(2, false));
+		headerBar = new Composite(mainComposite, SWT.NONE);
+		GridData headerGD = new GridData(SWT.FILL, SWT.TOP, true, false);
+		headerGD.heightHint = 30;
+		headerGD.verticalIndent = 2;
+		headerBar.setLayoutData(headerGD);
+		headerBar.setLayout(new org.eclipse.swt.layout.FormLayout());
 
 		selectAllChk = new Button(headerBar, SWT.CHECK);
 		selectAllChk.setText(Messages.OrderManagement_FullyDelivered);
 		selectAllChk.addListener(SWT.Selection,
 				e -> OrderManagementHelper.applySelectAll(this, selectAllChk.getSelection(), pendingDeliveredValues));
 
+		FormData fdChk = new FormData();
+		fdChk.left = new FormAttachment(0, 5);
+
+		int chkHeight = selectAllChk.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+		fdChk.top = new FormAttachment(50, -chkHeight / 2);
+
+		selectAllChk.setLayoutData(fdChk);
+
+		addArticleLabel = new Label(headerBar, SWT.NONE);
+		Image plusImg = Images.IMG_NEW.getImage();
+		addArticleLabel.setImage(plusImg);
+		addArticleLabel.setToolTipText(Messages.OrderManagement_AddItem);
+
+		FormData fdPlus = new FormData();
+		fdPlus.right = new FormAttachment(100, -5);
+		fdPlus.top = new FormAttachment(50, -plusImg.getBounds().height / 2);
+		addArticleLabel.setLayoutData(fdPlus);
+
+		addArticleLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				if (e.button == 1 && actionFactory != null && actOrder != null) {
+					actionFactory.handleAddItem();
+				}
+			}
+		});
+
+		addArticleLabel.setVisible(false);
+
 		tableArea = new Composite(mainComposite, SWT.NONE);
 		tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		tableStack = new org.eclipse.swt.custom.StackLayout();
+		tableStack = new StackLayout();
 		tableArea.setLayout(tableStack);
 
 		createPlainTable();
@@ -510,7 +568,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private void createPlainTable() {
-		int style = SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+		int style = SWT.MULTI | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 		plainViewer = new TableViewer(tableArea, style);
 		plainViewer.setUseHashlookup(true);
 
@@ -519,7 +577,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tableControl.setHeaderVisible(true);
 		tableControl.setLinesVisible(true);
 
-		String[] columnHeaders = { "", Messages.OrderManagement_Column_Status, Messages.OrderManagement_Column_Ordered,
+		String[] columnHeaders = { StringUtils.EMPTY, Messages.OrderManagement_Column_Status,
+				Messages.OrderManagement_Column_Ordered,
 				Messages.OrderManagement_Column_Delivered, Messages.Core_Add, Messages.OrderManagement_Column_Article,
 				Messages.OrderManagement_Column_Supplier, Messages.OrderManagement_Column_Stock };
 		int[] columnWidths = { 0, 0, 50, 60, 0, 190, 160, 50 };
@@ -537,14 +596,15 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		addEditingSupportForDeliveredColumn(plainViewer);
 		addEditingSupportForOrderColumn(plainViewer);
 
-		dropTarget = new GenericObjectDropTarget("ArtikelDropTarget", plainViewer.getControl(),
-				new OrderDropReceiver(this, orderService));
+		plainDropTarget = new GenericObjectDropTarget("ArtikelDropTarget", plainViewer.getControl(),
+				new OrderDropReceiver(this, orderService), false);
+		plainDropTarget.registered(false);
+		dropTarget = plainDropTarget;
 		CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
-		dropTarget.registered(false);
 	}
 
 	private void createCheckboxTable() {
-		int style = SWT.CHECK | SWT.FULL_SELECTION;
+		int style = SWT.MULTI | SWT.CHECK | SWT.FULL_SELECTION;
 		checkboxViewer = CheckboxTableViewer.newCheckList(tableArea, style);
 		checkboxViewer.setUseHashlookup(true);
 
@@ -573,19 +633,27 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		addEditingSupportForDeliveredColumn(checkboxViewer);
 		addEditingSupportForOrderColumn(checkboxViewer);
 
-		new GenericObjectDropTarget("ArtikelDropTarget", checkboxViewer.getControl(),
-				new OrderDropReceiver(this, orderService));
-
+		checkboxDropTarget = new GenericObjectDropTarget("ArtikelDropTarget", checkboxViewer.getControl(),
+				new OrderDropReceiver(this, orderService), false);
+		checkboxDropTarget.registered(false);
 		checkboxViewer.addCheckStateListener(e -> {
 			IOrderEntry entry = (IOrderEntry) e.getElement();
+			if (!isDeliveryEditMode) {
+				boolean shouldBeChecked = pendingDeliveredValues.getOrDefault(entry, 0) > 0;
+				if (checkboxViewer.getChecked(entry) != shouldBeChecked) {
+					checkboxViewer.setChecked(entry, shouldBeChecked);
+				}
+				return;
+			}
 			if (!isEligibleForBooking(entry)) {
 				checkboxViewer.setChecked(entry, false);
 				return;
 			}
 			if (e.getChecked()) {
 				int rest = Math.max(0, entry.getAmount() - entry.getDelivered());
-				if (rest > 0)
+				if (rest > 0) {
 					pendingDeliveredValues.put(entry, rest);
+				}
 			} else {
 				pendingDeliveredValues.remove(entry);
 			}
@@ -719,17 +787,81 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			updateOrderDetails(actOrder);
 		}
 		updateTableBackground(actOrder);
+		updateCheckIn();
 		updateUI();
 	}
 
 	public void reload() {
+		loadOpenOrders();
 		if (actOrder != null) {
-			loadOpenOrders();
+			refresh();
 		}
 		if (completedContainer != null) {
 			loadCompletedOrders();
+			refresh();
+		}
+	}
+
+	public void clearOrderDetailsView() {
+		if (tableViewer != null && tableViewer.getContentProvider() != null && tableViewer.getControl() != null
+				&& !tableViewer.getControl().isDisposed()) {
+			tableViewer.setInput(java.util.Collections.emptyList());
+			tableViewer.refresh();
 		}
 
+		titleLabel.setText(StringUtils.EMPTY);
+		createdLabelState.setText(StringUtils.EMPTY);
+		statusValue.setText(StringUtils.EMPTY);
+
+		cartIcon.setImage(null);
+		dispatchedLabelIcon.setImage(null);
+		dispatchedLabelState.setText(StringUtils.EMPTY);
+		bookedLabelIcon.setImage(null);
+		bookedLabelState.setText(StringUtils.EMPTY);
+
+		orderButton.setImage(null);
+		orderButton.setText(StringUtils.EMPTY);
+		orderButton.setEnabled(false);
+
+	}
+
+	public void selectOrderInHistory(IOrder order) {
+		if (order == null) {
+			return;
+		}
+		String id = order.getId();
+		if (orderTable != null && !orderTable.getTable().isDisposed()) {
+			@SuppressWarnings("unchecked")
+			List<IOrder> openOrders = (List<IOrder>) orderTable.getInput();
+			if (openOrders != null) {
+				for (IOrder o : openOrders) {
+					if (id.equals(o.getId())) {
+						orderTable.setSelection(new StructuredSelection(o), true);
+						orderTable.reveal(o);
+						clearOtherSelections(orderTable);
+						return;
+					}
+				}
+			}
+		}
+		for (TableViewer tv : completedYearViewers) {
+			if (tv == null || tv.getTable().isDisposed()) {
+				continue;
+			}
+			@SuppressWarnings("unchecked")
+			List<IOrder> yearOrders = (List<IOrder>) tv.getInput();
+			if (yearOrders == null) {
+				continue;
+			}
+			for (IOrder o : yearOrders) {
+				if (id.equals(o.getId())) {
+					tv.setSelection(new StructuredSelection(o), true);
+					tv.reveal(o);
+					clearOtherSelections(tv);
+					return;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -746,12 +878,15 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		}
 		if (actOrder == null) {
 			checkInAction.setEnabled(false);
+			selectAllChk.setVisible(false);
 			checkInAction.setToolTipText(Messages.OrderManagement_CheckIn_NoOrder);
 		} else if (actOrder.isDone()) {
 			checkInAction.setEnabled(false);
+			selectAllChk.setVisible(false);
 			checkInAction.setToolTipText(Messages.OrderManagement_CheckIn_Done);
 		} else {
 			checkInAction.setEnabled(true);
+			selectAllChk.setVisible(true);
 			checkInAction.setToolTipText(Messages.OrderManagement_CheckIn_Confirm);
 		}
 	}
@@ -943,6 +1078,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		showDeliveredColumn = !allOpen;
 		actOrder = order;
 		switchViewerFor(order);
+		boolean hasEntries = !order.getEntries().isEmpty();
+		boolean anyOrdered = order.getEntries().stream().anyMatch(e -> e.getState() != OrderEntryState.OPEN);
+		updateAddArticleButtonVisibility(hasEntries, anyOrdered);
 		List<IOrderEntry> alleEintraege = order.getEntries();
 		int sortColumn = OrderConstants.OrderTable.ARTICLE;
 		int sortDirection = SWT.UP;
@@ -1041,14 +1179,25 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		if (anyOrdered) {
 			tableViewer = checkboxViewer;
 			tableStack.topControl = checkboxViewer.getControl();
+			if (checkboxDropTarget != null) {
+				dropTarget = checkboxDropTarget;
+				CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
+			}
 		} else {
 			tableViewer = plainViewer;
 			tableStack.topControl = plainViewer.getControl();
+			if (plainDropTarget != null) {
+				dropTarget = plainDropTarget;
+				CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
+			}
 		}
 		tableArea.layout(true, true);
-
-		((GridData) selectAllChk.getLayoutData()).exclude = !anyOrdered;
-		selectAllChk.getParent().layout(true, true);
+		if (headerBar != null && !headerBar.isDisposed()) {
+			headerBar.layout(true, true);
+		}
+		if (mainComposite != null && !mainComposite.isDisposed()) {
+			mainComposite.layout(true, true);
+		}
 	}
 
 	public void updateOrderDetails(IOrder order) {
@@ -1170,6 +1319,17 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	private String defaultString(String str) {
 		return StringUtils.isNotBlank(str) ? str : Messages.UNKNOWN;
+	}
+
+	private void updateAddArticleButtonVisibility(boolean hasEntries, boolean anyOrdered) {
+		if (addArticleLabel == null || addArticleLabel.isDisposed()) {
+			return;
+		}
+		boolean show = hasEntries && !anyOrdered;
+		addArticleLabel.setVisible(show);
+		if (headerBar != null && !headerBar.isDisposed()) {
+			headerBar.layout();
+		}
 	}
 
 	public void updateUI() {

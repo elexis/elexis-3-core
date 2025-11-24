@@ -3,17 +3,20 @@ package ch.elexis.core.ui.util;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -26,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
@@ -326,18 +330,24 @@ public class OrderManagementUtil {
 		}
 
 		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_MissingSupplier)) {
-			IContact selectedProvider = ContactSelectionDialog.showInSync(IContact.class,
+			List<IContact> allowedSuppliers = loadConfiguredSuppliers();
+			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-			if (selectedProvider != null && actOrder != null) {
-				for (IOrderEntry entry : actOrder.getEntries()) {
-					if (entry.getProvider() == null) {
-						entry.setProvider(selectedProvider);
-						orderService.getHistoryService().logSupplierAdded(actOrder, entry, selectedProvider.getLabel());
-						CoreModelServiceHolder.get().save(entry);
+			dialog.setAllowedContacts(allowedSuppliers);
+			if (dialog.open() == Dialog.OK) {
+				IContact selectedProvider = (IContact) dialog.getSelection();
+				if (selectedProvider != null && actOrder != null) {
+					for (IOrderEntry entry : actOrder.getEntries()) {
+						if (entry.getProvider() == null) {
+							entry.setProvider(selectedProvider);
+							orderService.getHistoryService().logSupplierAdded(actOrder, entry,
+									selectedProvider.getLabel());
+							CoreModelServiceHolder.get().save(entry);
+						}
 					}
+					view.refreshTables();
 				}
-				view.refreshTables();
 			}
 			return;
 		}
@@ -373,23 +383,18 @@ public class OrderManagementUtil {
 					String articleName = orderEntry.getArticle() != null ? orderEntry.getArticle().getLabel()
 							: "Unbekannter Artikel";
 		            boolean confirm = MessageDialog.openQuestion(
-		                view.getSite().getShell(),
-		                ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
-		                MessageFormat.format(
-		                    ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
-									currentDelivered, part, newTotal, ordered, articleName
-		                )
-		            );
+							view.getSite().getShell(),
+							ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
+							MessageFormat.format(ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
+									currentDelivered, part, newTotal, ordered, articleName));
 		            if (!confirm) {
 		                continue;
 		            }
 		        }
 		        if (newTotal < 0) {
 		            MessageDialog.openError(
-		                view.getSite().getShell(),
-		                ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
-		                ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount
-		            );
+							view.getSite().getShell(), ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
+							ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount);
 		            continue;
 		        }
 
@@ -407,26 +412,42 @@ public class OrderManagementUtil {
 		    setCheckboxColumnVisible(view, false);
 
 		    view.selectAllChk.setVisible(false);
-		    ((GridData) view.selectAllChk.getLayoutData()).exclude = true;
 		    view.selectAllChk.getParent().layout(true, true);
 
 		    view.tableViewer.refresh();
-
+			final boolean isCompletelyDelivered = isOrderCompletelyDelivered(actOrder);
+			final String finishedOrderId = (actOrder != null) ? actOrder.getId() : null;
 		    Display.getDefault().asyncExec(() -> {
 		        view.loadOpenOrders();
 		        view.loadCompletedOrders(view.getCompletedContainer());
-
-		        if (isOrderCompletelyDelivered(actOrder)) {
-		            view.setActOrder(null);
-		            view.getTableViewer().setInput(java.util.Collections.emptyList());
-		            view.getTableViewer().refresh();
-		        }
-
-		        view.updateUI();
+				if (finishedOrderId != null) {
+					IOrder reloaded = getSelectedOrder(finishedOrderId, isCompletelyDelivered);
+					if (reloaded != null) {
+						view.setActOrder(reloaded);
+						view.selectOrderInHistory(reloaded);
+						view.refresh();
+					}
+				}
+				view.updateUI();
 		    });
 
 		    return;
 		}
+	}
+
+	public static List<IContact> loadConfiguredSuppliers() {
+		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class);
+		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.LIKE, "%/supplier%");
+		List<IConfig> configs = query.execute();
+		Set<IContact> result = new LinkedHashSet<>();
+		for (IConfig cfg : configs) {
+			String contactId = cfg.getValue();
+			if (StringUtils.isBlank(contactId)) {
+				continue;
+			}
+			CoreModelServiceHolder.get().load(contactId, IContact.class).ifPresent(result::add);
+		}
+		return new ArrayList<>(result);
 	}
 
 	public static void setCheckboxColumnVisible(OrderManagementView view, boolean visible) {

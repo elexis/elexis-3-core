@@ -89,6 +89,7 @@ import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.dialogs.OrderImportDialog;
 import ch.elexis.core.ui.dialogs.StockSelectorDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -368,6 +369,22 @@ public class StockView extends ViewPart implements IRefreshable {
 
 		Menu menu = contextMenu.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
+		viewer.addDoubleClickListener(event -> {
+			IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+			Object element = sel.getFirstElement();
+			if (!(element instanceof IStockEntry stockEntry)) {
+				return;
+			}
+			IArticle article = stockEntry.getArticle();
+			if (article == null) {
+				return;
+			}
+			var handler = CodeSelectorHandler.getInstance();
+			var target = handler.getCodeSelectorTarget();
+			if (target != null) {
+				target.codeSelected(article);
+			}
+		});
 
 		comparator = new StockViewComparator();
 		viewer.setComparator(comparator);
