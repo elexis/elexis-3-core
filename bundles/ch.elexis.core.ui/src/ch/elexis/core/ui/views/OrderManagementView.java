@@ -584,7 +584,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		int[] columnWidths = { 0, 0, 50, 60, 0, 190, 160, 50 };
 
 		createTableColumns(plainViewer, columnHeaders, columnWidths, showDeliveredColumn);
-
+		OrderManagementUtil.enableLastColumnFill(tableControl);
 		plainSorter = new TableSortController(plainViewer);
 		plainSorter.setDefaultSort(OrderConstants.OrderTable.ARTICLE, SWT.UP);
 		TableColumn addCol = plainViewer.getTable().getColumn(OrderConstants.OrderTable.ADD);
@@ -621,7 +621,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		int[] columnWidths = { 30, 50, 50, 60, 0, 190, 160, 50 };
 
 		createTableColumns(checkboxViewer, columnHeaders, columnWidths, showDeliveredColumn);
-
+		OrderManagementUtil.enableLastColumnFill(tableControl);
 		checkboxSorter = new TableSortController(checkboxViewer);
 		checkboxSorter.setDefaultSort(OrderConstants.OrderTable.ARTICLE, SWT.UP);
 		TableColumn addCol = checkboxViewer.getTable().getColumn(OrderConstants.OrderTable.ADD);
@@ -1221,7 +1221,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	public void updateOrderStatus(IOrder order) {
 		if (order == null)
 			return;
-
+		Table table = tableViewer.getTable();
 		IOutputLog logEntry = OrderManagementUtil.getOrderLogEntry(order);
 		String jsonLog = (logEntry != null) ? logEntry.getOutputterStatus() : "[]"; //$NON-NLS-1$
 
@@ -1283,6 +1283,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (!hasOpenEntries && anyOrdered) {
 				orderButton.setText(Messages.OrderManagement_Button_Book);
 				orderButton.setImage(OrderConstants.OrderImages.IMPORT);
+				OrderManagementUtil.adjustLastColumnWidth(table);
 			} else if (allDone) {
 				orderButton.setText(Messages.OmnivoreView_editActionCaption);
 				orderButton.setImage(OrderConstants.OrderImages.EDIT);

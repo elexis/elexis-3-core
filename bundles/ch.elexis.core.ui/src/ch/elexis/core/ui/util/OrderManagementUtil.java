@@ -16,6 +16,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
@@ -369,6 +370,7 @@ public class OrderManagementUtil {
 				orderButton.setText(ch.elexis.core.ui.views.Messages.MedicationComposite_btnConfirm);
 				orderButton.setImage(Images.IMG_TICK.getImage());
 			}
+			enableLastColumnFill(view.tableViewer.getTable());
 			return;
 		}
 
@@ -468,4 +470,30 @@ public class OrderManagementUtil {
 		return order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 	}
 
+	public static void enableLastColumnFill(Table table) {
+		table.addListener(SWT.Resize, e -> {
+			Table t = (Table) e.widget;
+			adjustLastColumnWidth(t);
+		});
+	}
+
+	public static void adjustLastColumnWidth(Table table) {
+		if (table == null || table.isDisposed() || table.getColumnCount() == 0) {
+			return;
+		}
+		int clientWidth = table.getClientArea().width;
+		if (clientWidth <= 0) {
+			return;
+		}
+		int totalFixedWidth = 0;
+		for (int i = 0; i < table.getColumnCount() - 1; i++) {
+			totalFixedWidth += table.getColumn(i).getWidth();
+		}
+		int minLastWidth = 50;
+		int newLastWidth = clientWidth - totalFixedWidth;
+		if (newLastWidth < minLastWidth) {
+			newLastWidth = minLastWidth;
+		}
+		table.getColumn(table.getColumnCount() - 1).setWidth(newLastWidth);
+	}
 }
