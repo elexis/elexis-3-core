@@ -58,7 +58,7 @@ public class TardocLeistung extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 5)
 	private String digniQuanti;
 
-	@Column(length = 4)
+	@Column(length = 255)
 	private String digniQuali;
 
 	@Column(length = 4)
