@@ -5323,6 +5323,7 @@ public class Messages extends NLS {
 	public static String ReminderPrefences_Visible;
 	public static String ReminderPrefences_Hidden;
 	public static String ReminderPrefences_ColInfo;
+	public static String MandatorFilter_lockedMandatorTooltip;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

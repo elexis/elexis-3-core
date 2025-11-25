@@ -67,4 +67,5 @@ public class Messages {
 	public static String OrderManagement_NotOrdered = ch.elexis.core.l10n.Messages.OrderManagement_NotOrdered;
 	public static String BestellView_OrderIsClosed = ch.elexis.core.l10n.Messages.BestellView_OrderIsClosed;
 	public static String Outputter_Sent = ch.elexis.core.l10n.Messages.Outputter_Sent;
+	public static String MandatorFilter_lockedMandatorTooltip = ch.elexis.core.l10n.Messages.MandatorFilter_lockedMandatorTooltip;
 }
