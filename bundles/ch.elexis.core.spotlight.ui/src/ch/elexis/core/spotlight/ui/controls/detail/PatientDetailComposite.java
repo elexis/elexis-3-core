@@ -184,7 +184,7 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			+ "<ll>Letztes Labor</l>\t{5}\t<m0>ALT+L</m>\r\n\r\n"
 			+ "<lk>Letzte Kons</l>\t{6}\t<m0>ALT+K</m>\r\n"
 			+ "{7}\r\n\r\n"
-			+ "<lf>Fixmedikation</l>\t\t<m0>ALT+F</m>\r\n"
+			+ "<lm>Fixmedikation</l>\t\t<m0>ALT+M</m>\r\n"
 			+ "{8}";
 	//@formatter:on
 
@@ -322,8 +322,8 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			case 'L':
 				selectedElement = SpotlightUiUtil.ACTION_SHOW_LATEST_LABORATORY + selectedPatient.getId();
 				break;
-			case 'f':
-			case 'F':
+			case 'm':
+			case 'M':
 				selectedElement = SpotlightUiUtil.ACTION_SHOW_FIXED_MEDICATION + selectedPatient.getId();
 				break;
 			default:
