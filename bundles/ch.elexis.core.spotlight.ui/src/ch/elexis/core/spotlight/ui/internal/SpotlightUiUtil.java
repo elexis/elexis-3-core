@@ -15,6 +15,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.swt.program.Program;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.documents.DocumentStore;
@@ -35,7 +36,7 @@ import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")
 public class SpotlightUiUtil {
-
+	private static Logger logger = LoggerFactory.getLogger(SpotlightUiUtil.class);
 	public static final String ACTION_SHOW_LATEST_LABORATORY = "sll::";
 	public static final String ACTION_SHOW_LATEST_ENCOUNTER = "sle::";
 	public static final String ACTION_SHOW_FIXED_MEDICATION = "sfm::";
@@ -102,7 +103,6 @@ public class SpotlightUiUtil {
 			IEncounter encounter = CoreModelServiceHolder.get().load(objectId, IEncounter.class).orElse(null);
 			return handleEnter(encounter);
 		default:
-			System.out.println("No default enter action");
 			return false;
 		}
 	}
@@ -135,7 +135,7 @@ public class SpotlightUiUtil {
 			String patientId = string.substring(Category.PATIENT.name().length() + 2);
 			IPatient patient = CoreModelServiceHolder.get().load(patientId, IPatient.class).orElse(null);
 			if (patient == null) {
-				System.out.println("Could not load patient " + patientId);
+				logger.info("Could not load patient " + patientId);
 			}
 			contextService.getRootContext().setTyped(patient);
 			return patient != null;
@@ -155,7 +155,6 @@ public class SpotlightUiUtil {
 					.orElse(null);
 			return handleEnter(appointment);
 		} else if (string.startsWith(ACTION_SHOW_FIXED_MEDICATION)) {
-			System.out.println("test 67 ");
 			String patientId = string.substring(ACTION_SHOW_FIXED_MEDICATION.length());
 			return performActionShowFixedMedication(patientId);
 		}
@@ -164,11 +163,8 @@ public class SpotlightUiUtil {
 	}
 
 	private boolean performActionShowFixedMedication(String patientId) {
-		// zuerst Patient in den Kontext setzen
 		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
-		System.out.println("test 66 " + ok);
 		if (ok) {
-			System.out.println("test");
 			partService.showPart("ch.elexis.core.ui.medication.views.MedicationView", PartState.ACTIVATE);
 			return true;
 		}

@@ -310,7 +310,6 @@ public class PatientDetailComposite extends AbstractSpotlightResultEntryDetailCo
 			case 't':
 			case 'T':
 				String id = (selectedNextAppointment != null) ? selectedNextAppointment.getId() : null;
-				System.out.println("test 33" + id);
 				if (id != null) {
 					selectedElement = SpotlightUiUtil.ACTION_SHOW_APPOINTMENT + id;
 				}
