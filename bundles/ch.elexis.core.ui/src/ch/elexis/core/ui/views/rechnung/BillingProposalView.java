@@ -259,12 +259,7 @@ public class BillingProposalView extends ViewPart {
 				return;
 			}
 				uiSync.asyncExec(() -> {
-					MPart konsPart = partService.createPart("ch.elexis.Konsdetail");
-				if (konsPart != null) {
-					partService.showPart(konsPart, EPartService.PartState.ACTIVATE);
-					} else {
-
-					}
+				partService.showPart("ch.elexis.Konsdetail", EPartService.PartState.ACTIVATE);
 				});
 		});
 
