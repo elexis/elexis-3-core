@@ -6,14 +6,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -32,7 +38,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPage;
@@ -385,17 +390,15 @@ public class OrderManagementActionFactory {
 							}
 
 							StringBuilder contactsBuilder = new StringBuilder();
-							List<String> added = new ArrayList<>();
+							Set<String> added = new HashSet<>();
+							StringJoiner contactsJoiner = new StringJoiner(", ");
+
 							for (IOrderEntry oe : orderableItems) {
 								IContact provider = oe.getProvider();
 								if (provider != null) {
 									String label = provider.getLabel();
-									if (!added.contains(label)) {
-										if (contactsBuilder.length() > 0) {
-											contactsBuilder.append(", ");
-										}
-										contactsBuilder.append(label);
-										added.add(label);
+									if (added.add(label)) {
+										contactsJoiner.add(label);
 									}
 								}
 							}
@@ -446,34 +449,49 @@ public class OrderManagementActionFactory {
 		if (table.getTable().getMenu() != null && !table.getTable().getMenu().isDisposed()) {
 			table.getTable().getMenu().dispose();
 		}
-		Menu menu = new Menu(table.getTable());
-
-		MenuItem removeItem = new MenuItem(menu, SWT.NONE);
-		removeItem.setImage(Images.IMG_CLEAR.getImage());
-		removeItem.setText(Messages.BestellView_RemoveArticle);
-		removeItem.addListener(SWT.Selection, event -> handleRemoveItem());
-
-		MenuItem editItem = new MenuItem(menu, SWT.NONE);
-		editItem.setImage(Images.IMG_EDIT.getImage());
-		editItem.setText(Messages.OrderManagement_EditItem);
-		editItem.addListener(SWT.Selection, event -> handleEditItem());
-
-		MenuItem addItem = new MenuItem(menu, SWT.NONE);
-		addItem.setImage(Images.IMG_ADDITEM.getImage());
-		addItem.setText(Messages.OrderManagement_AddItem);
-		addItem.addListener(SWT.Selection, event -> handleAddItem());
-		menu.addListener(SWT.Show, e -> {
-			boolean hasOrder = actOrder != null;
-			boolean hasEntries = hasOrder && !actOrder.getEntries().isEmpty();
-			IOrderEntry selectedEntry = null;
-			IStructuredSelection sel = (IStructuredSelection) table.getSelection();
-			if (sel != null && !sel.isEmpty() && sel.getFirstElement() instanceof IOrderEntry) {
-				selectedEntry = (IOrderEntry) sel.getFirstElement();
+		Action removeAction = new Action(Messages.BestellView_RemoveArticle) {
+			@Override
+			public void run() {
+				handleRemoveItem();
 			}
-			boolean enableEditRemove = hasEntries && selectedEntry != null;
-			removeItem.setEnabled(enableEditRemove);
-			editItem.setEnabled(enableEditRemove);
+		};
+		removeAction.setImageDescriptor(Images.IMG_CLEAR.getImageDescriptor());
+		Action editAction = new Action(Messages.OrderManagement_EditItem) {
+			@Override
+			public void run() {
+				handleEditItem();
+			}
+		};
+		editAction.setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+		Action addAction = new Action(Messages.OrderManagement_AddItem) {
+			@Override
+			public void run() {
+				handleAddItem();
+			}
+		};
+		addAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+		MenuManager menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				boolean hasOrder = actOrder != null;
+				boolean hasEntries = hasOrder && !actOrder.getEntries().isEmpty();
+				IOrderEntry selectedEntry = null;
+				IStructuredSelection sel = (IStructuredSelection) table.getSelection();
+				if (sel != null && !sel.isEmpty() && sel.getFirstElement() instanceof IOrderEntry) {
+					selectedEntry = (IOrderEntry) sel.getFirstElement();
+				}
+				boolean enableEditRemove = hasEntries && selectedEntry != null;
+				removeAction.setEnabled(enableEditRemove);
+				editAction.setEnabled(enableEditRemove);
+				manager.add(removeAction);
+				manager.add(editAction);
+				manager.add(addAction);
+			}
 		});
+		Menu menu = menuManager.createContextMenu(table.getTable());
+		table.getTable().setMenu(menu);
 		Table swtTable = table.getTable();
 		swtTable.addListener(SWT.MenuDetect, ev -> {
 			Point p = swtTable.toControl(ev.x, ev.y);
@@ -491,34 +509,43 @@ public class OrderManagementActionFactory {
 				}
 			}
 		});
-
-		table.getTable().setMenu(menu);
 		createOrderHistoryMenu(orderTable);
 	}
 
 	public void createOrderHistoryMenu(TableViewer orderTableViewer) {
-		Menu menu = new Menu(orderTableViewer.getTable());
-		MenuItem historyItem = new MenuItem(menu, SWT.NONE);
-		historyItem.setImage(Images.IMG_INFO.getImage());
-		historyItem.setText(Messages.OrderManagement_ShowOrderHistory);
-		historyItem.addListener(SWT.Selection, event -> handleShowOrderHistory(orderTableViewer));
-		MenuItem deleteItem = new MenuItem(menu, SWT.NONE);
-		deleteItem.setImage(Images.IMG_CLEAR.getImage());
-		deleteItem.setText(Messages.OrderManagement_DeleteOrder);
-		deleteItem.addListener(SWT.Selection, event -> handleDeleteOrder(orderTableViewer));
+		Action historyAction = new Action(Messages.OrderManagement_ShowOrderHistory) {
+			@Override
+			public void run() {
+				handleShowOrderHistory(orderTableViewer);
+			}
+		};
+		historyAction.setImageDescriptor(Images.IMG_INFO.getImageDescriptor());
+		Action deleteAction = new Action(Messages.OrderManagement_DeleteOrder) {
+			@Override
+			public void run() {
+				handleDeleteOrder(orderTableViewer);
+			}
+		};
+		deleteAction.setImageDescriptor(Images.IMG_CLEAR.getImageDescriptor());
+		MenuManager menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				deleteAction.setEnabled(false);
 
-		menu.addListener(SWT.Show, e -> {
-			deleteItem.setEnabled(false);
-
-			IStructuredSelection selection = (IStructuredSelection) orderTableViewer.getSelection();
-			Object first = selection.getFirstElement();
-			if (first instanceof IOrder selectedOrder) {
-				boolean allOpen = selectedOrder.getEntries().stream()
-						.allMatch(entry -> entry.getState() == OrderEntryState.OPEN);
-				deleteItem.setEnabled(allOpen);
+				IStructuredSelection selection = (IStructuredSelection) orderTableViewer.getSelection();
+				Object first = selection.getFirstElement();
+				if (first instanceof IOrder selectedOrder) {
+					boolean allOpen = selectedOrder.getEntries().stream()
+							.allMatch(entry -> entry.getState() == OrderEntryState.OPEN);
+					deleteAction.setEnabled(allOpen);
+				}
+				manager.add(historyAction);
+				manager.add(deleteAction);
 			}
 		});
-
+		Menu menu = menuManager.createContextMenu(orderTableViewer.getTable());
 		orderTableViewer.getTable().setMenu(menu);
 	}
 
