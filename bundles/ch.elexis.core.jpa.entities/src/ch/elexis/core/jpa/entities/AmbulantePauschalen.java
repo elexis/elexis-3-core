@@ -17,6 +17,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 @Entity
 @Table(name = "CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN")
 @EntityListeners(EntityWithIdListener.class)
+@NamedQuery(name = "AmbulantePauschalen.code", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.code = :code")
 @NamedQuery(name = "AmbulantePauschalen.typ.code", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.typ = :typ AND tp.code = :code")
 @NamedQuery(name = "AmbulantePauschalen.typ.code.validFrom", query = "SELECT tp FROM AmbulantePauschalen tp WHERE tp.deleted = false AND tp.typ = :typ AND tp.code = :code AND tp.validFrom = :validFrom")
 public class AmbulantePauschalen extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
