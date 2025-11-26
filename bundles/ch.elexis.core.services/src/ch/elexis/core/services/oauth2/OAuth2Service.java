@@ -26,18 +26,17 @@ public class OAuth2Service {
 	private Gson gson = new GsonBuilder().create();
 
 	/**
-	 * @param keycloakRealmEndpoint e.g.
-	 *                              "https://keycloak.medelexis.ch/realms/Medelexis"
+	 * @param tokenEndpoint e.g.
+	 *                      "https://keycloak.medelexis.ch/realms/Medelexis/protocol/openid-connect/token"
 	 * @param clientId
 	 * @param clientSecret
 	 * @param username
 	 * @param password
 	 * @return
 	 */
-	public ObjectStatus<AccessToken> performDirectAccessGrantFlow(URI keycloakRealmEndpoint, String clientId,
+	public ObjectStatus<AccessToken> performDirectAccessGrantFlow(URI tokenEndpoint, String clientId,
 			String clientSecret, String username, char[] password) {
 
-		URI tokenEndpoint = keycloakRealmEndpoint.resolve("protocol/openid-connect/token");
 		final HttpPost httpPost = new HttpPost(tokenEndpoint);
 		final List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("grant_type", "password"));

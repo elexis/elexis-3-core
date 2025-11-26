@@ -1,6 +1,6 @@
 package ch.elexis.core.tasks.internal.service.vfs;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,12 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.RunContextParameter;
 import ch.elexis.core.model.tasks.TaskException;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.tasks.internal.service.TaskServiceImpl;
 import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 
 public class FilesystemChangeWatcherTimerTask extends TimerTask {
@@ -80,14 +83,17 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 					listHandles = of.listHandles();
 				}
 
-			} catch (IOException e) {
+				for (IVirtualFilesystemHandle fileHandle : listHandles) {
+					runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
+				}
+
+			} catch (Exception e) {
 				logger.warn("[{}] Error on listHandle", taskDescriptorId, e);
+				Map<String, Serializable> result = Collections.singletonMap(
+						IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage());
+				((TaskServiceImpl) taskService).updateCreateSingleLatestTaskResult(taskDescriptorId, TaskState.FAILED,
+						TaskTriggerType.CRON, result);
 			}
-
-			for (IVirtualFilesystemHandle fileHandle : listHandles) {
-				runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
-			}
-
 		}
 
 	}

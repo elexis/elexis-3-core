@@ -22,14 +22,13 @@ public class Context implements IContext {
 
 	private TypedModifier typedModifier;
 
-	public Context(IContextService service) {
-		this(null, "root", service); //$NON-NLS-1$
+	public Context() {
+		this(null, "root"); //$NON-NLS-1$
 	}
 
-	public Context(Context parent, String name, IContextService service) {
+	public Context(Context parent, String name) {
 		context = new ConcurrentHashMap<>();
 		this.parent = parent;
-		this.service = service;
 		this.typedModifier = new TypedModifier(this);
 	}
 

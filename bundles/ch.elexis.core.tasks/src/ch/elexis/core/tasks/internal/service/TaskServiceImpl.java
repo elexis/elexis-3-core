@@ -381,6 +381,31 @@ public class TaskServiceImpl implements ITaskService {
 		return taskDescriptor;
 	}
 
+	/**
+	 * Not meant for general usage thus not part of ITaskService. This helps us to
+	 * track errors in a task in a way thats visible to the user.
+	 * 
+	 * @since 3.13
+	 */
+	public void updateCreateSingleLatestTaskResult(String taskDescriptorId, TaskState taskState,
+			TaskTriggerType triggerType, Map<String, Serializable> result) {
+		accessControl.doPrivileged(() -> {
+
+			ITaskDescriptor taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorId).orElse(null);
+			if (taskDescriptor == null) {
+				logger.warn("Invalid taskDescriptorId " + taskDescriptorId
+						+ " passed to updateCreateSingleLatestTaskResult()");
+				return;
+			}
+
+			ITask existingLatest = taskModelService.load(taskDescriptorId, ITask.class).orElse(null);
+			if (existingLatest == null && taskDescriptor != null) {
+				existingLatest = new Task(taskDescriptor, taskState, triggerType, result);
+			}
+			taskModelService.save(existingLatest);
+		});
+	}
+
 	@Override
 	public boolean removeTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
 

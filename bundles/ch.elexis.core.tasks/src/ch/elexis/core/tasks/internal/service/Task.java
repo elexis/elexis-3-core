@@ -56,6 +56,21 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		super(entity);
 	}
 
+	@SuppressWarnings("unchecked")
+	protected Task(ITaskDescriptor taskDescriptor, TaskState taskState, TaskTriggerType triggerType,
+			Map<String, Serializable> result) {
+		this(new ch.elexis.core.jpa.entities.Task());
+		getEntity().setId(taskDescriptor.getId());
+		getEntity().setTriggerEvent(triggerType.getValue());
+		getEntity()
+				.setTaskDescriptor(((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.TaskDescriptor>) taskDescriptor)
+						.getEntityMarkDirty());
+		getEntity().setState(taskState.getValue());
+		String json = GSON.toJson(result);
+		getEntity().setResult(json);
+		getEntity().setCreatedAt(System.currentTimeMillis());
+	}
+
 	/**
 	 *
 	 * @param taskDescriptor
