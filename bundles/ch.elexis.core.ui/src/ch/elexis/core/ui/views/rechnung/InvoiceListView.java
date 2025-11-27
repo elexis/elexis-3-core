@@ -17,6 +17,7 @@ import static ch.elexis.core.ui.views.rechnung.invoice.InvoiceListSqlQuery.VIEW_
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
@@ -62,18 +63,15 @@ import org.eclipse.ui.part.ViewPart;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IMandator;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.InvoiceState;
-import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IQuery;
-import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.MandatorUIUtil;
 import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceActions;
 import ch.elexis.core.ui.views.rechnung.invoice.InvoiceListBottomComposite;
@@ -144,38 +142,39 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart, IDoub
 
 		@Override
 		public void run() {
-			IQuery<IUser> query = coreModelService.getQuery(IUser.class);
-			query.and(ModelPackage.Literals.IMANDATOR__ACTIVE, COMPARATOR.EQUALS, true);
-			query.and(ModelPackage.Literals.IUSER__ASSIGNED_CONTACT, COMPARATOR.NOT_EQUALS, null);
-
-			GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(getSite().getShell(),
-					query.execute(), Messages.Core_Select_Mandator, Messages.Core_Select_Mandator,
-					Messages.Core_Select_Mandator_Tooltip, null, SWT.CHECK);
+			MandatorUIUtil.MandatorSelectionData data = MandatorUIUtil.loadMandatorsAndLockedIds(coreModelService);
+			List<IMandator> mandators = data.getMandators();
+			Set<String> lockedMandatorIds = data.getLockedMandatorIds();
+			GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(getSite().getShell(), mandators,
+					Messages.Core_Select_Mandator, Messages.Core_Select_Mandator, Messages.Core_Select_Mandator_Tooltip,
+					null, SWT.CHECK);
+			dialog.setCustomComparator(MandatorUIUtil.createMandatorComparator(lockedMandatorIds));
+			dialog.setCustomLabelProvider(MandatorUIUtil.createMandatorLabelProvider(lockedMandatorIds));
 
 			dialog.open();
 			applyMandatorsFilter(dialog);
 			refresh();
 		}
+	};
 
-		private void applyMandatorsFilter(GenericSearchSelectionDialog dialog) {
-			Object selection = dialog.getSelection();
+	private void applyMandatorsFilter(GenericSearchSelectionDialog dialog) {
+		Object selection = dialog.getSelection();
 
-			if (selection instanceof IStructuredSelection structuredSelection) {
-				List<String> idList = new ArrayList<>();
-				for (Object obj : structuredSelection.toList()) {
-					if (obj instanceof IUser user) {
-						idList.add(user.getAssignedContact().getId());
-					}
-				}
-
-				if (!idList.isEmpty()) {
-					String joinedIds = String.join(",", idList); //$NON-NLS-1$
-					ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
-							CFG_MANDATORFILTER, joinedIds);
+		if (selection instanceof IStructuredSelection structuredSelection) {
+			List<String> idList = new ArrayList<>();
+			for (Object obj : structuredSelection.toList()) {
+				if (obj instanceof IMandator mandator) {
+					idList.add(mandator.getId());
 				}
 			}
+
+			if (!idList.isEmpty()) {
+				String joinedIds = String.join(",", idList); //$NON-NLS-1$
+				ConfigServiceHolder.get().set(ContextServiceHolder.get().getActiveUserContact().get(),
+						CFG_MANDATORFILTER, joinedIds);
+			}
 		}
-	};
+	}
 
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
@@ -597,5 +596,4 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart, IDoub
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
-
 }
