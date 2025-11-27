@@ -1002,7 +1002,7 @@ public class AppointmentService implements IAppointmentService {
 		return colliding;
 	}
 
-	public static String createTimeStamp() {
+	private static String createTimeStamp() {
 		return Integer.toString(TimeTool.getTimeInSeconds() / 60);
 	}
 }
