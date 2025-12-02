@@ -11,9 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ch.elexis.core.ee.json.WellKnownRcp;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IConfigService;
@@ -22,6 +24,7 @@ import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 // Activated via ElexisEnvironmentServiceActivator
 public class ElexisEnvironmentService implements IElexisEnvironmentService {
@@ -60,13 +63,30 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		}
 
 		// TODO first try via LocalProperties?
-		// THEN Config DB Table ?
-		return configService.get(key, null);
+				// THEN Config DB Table ?
+				return configService.get(key, null);
+	}
+
+	@Override
+	public WellKnownRcp getWellKnownRcp() {
+		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.well-known/elexis-rcp"))
+				.build();
+		try {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return new Gson().fromJson(response.body(), WellKnownRcp.class);
+		} catch (IOException | InterruptedException e) {
+			logger.warn("Error obtaining /.well-known/elexis-rcp returning defaults", e);
+		} finally {
+			OsgiServiceUtil.ungetService(client);
+		}
+
+		return new WellKnownRcp();
 	}
 
 	@Override
 	public JsonObject getStatus() {
-		HttpClient client = HttpClient.newHttpClient();
+		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.status.json")).build();
 
 		HttpResponse<String> response;
@@ -75,6 +95,8 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return JsonParser.parseString(response.body()).getAsJsonObject();
 		} catch (IOException | InterruptedException e) {
 			logger.warn("Error obtaining status", e);
+		} finally {
+			OsgiServiceUtil.ungetService(client);
 		}
 
 		return null;
