@@ -1,6 +1,7 @@
 package ch.elexis.core.ui.views;
 
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -323,6 +324,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.ReminderView_foreignTooltip);
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(
@@ -360,6 +362,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.ReminderView_myRemindersToolTip); // $NON-NLS-1$
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(
@@ -369,6 +372,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -398,6 +402,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.ReminderView_onlyDueToolTip); // $NON-NLS-1$
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(
@@ -407,6 +412,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -435,6 +441,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.ShowNotYetDueReminders_Tooltip); // $NON-NLS-1$
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(ConfigServiceHolder
@@ -445,6 +452,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -474,6 +482,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.Reminders_PopupOnLogin_ToolTip); // $NON-NLS-1$
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(
@@ -483,6 +492,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -512,6 +522,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.Reminders_PopupOnPatientSelection_ToolTip); // $NON-NLS-1$
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(ConfigServiceHolder
@@ -522,6 +533,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -551,6 +563,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				setToolTipText(Messages.Reminders_AssignedToMe_ToolTip);
 			}
 
+			@SuppressWarnings("unused")
 			public void reload() {
 				if (useGlobalFilters) {
 					this.setChecked(ConfigServiceHolder
@@ -561,6 +574,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				}
 			}
 
+			@SuppressWarnings("unused")
 			public void reset() {
 				if (useGlobalFilters) {
 					this.setChecked(false);
@@ -906,8 +920,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					ConfigServiceHolder.setUser("reminder.column.order." + cfg, null);
 					int[] defaultOrder = IntStream.range(0, table.getColumnCount()).toArray();
 					table.setColumnOrder(defaultOrder);
+					String label = getColumnGroupLabel(cfg);
 					SWTHelper.showInfo(Messages.ReminderView_resetColumnOrderDoneTitle,
-							Messages.ReminderView_resetColumnOrderDoneMessage + cfg);
+							MessageFormat.format(Messages.ReminderView_resetColumnOrderDoneMessage, label));
 				}
 			});
 
@@ -986,12 +1001,22 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		tableViewer.addDoubleClickListener(getDoubleClickListener());
 		columnFactory = new ReminderColumnFactory(boldFont);
 		if (tableViewer == myViewer) {
-			columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
-					ReminderColumnType.STATUS, ReminderColumnType.PATIENT, ReminderColumnType.DESCRIPTION);
+			if (withPatientColumn) {
+				columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
+						ReminderColumnType.STATUS, ReminderColumnType.PATIENT, ReminderColumnType.DESCRIPTION);
+			} else {
+				columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
+						ReminderColumnType.STATUS, ReminderColumnType.DESCRIPTION);
+			}
 		} else {
-			columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
-					ReminderColumnType.RESPONSIBLE, ReminderColumnType.STATUS, ReminderColumnType.PATIENT,
-					ReminderColumnType.DESCRIPTION);
+			if (withPatientColumn) {
+				columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
+						ReminderColumnType.RESPONSIBLE, ReminderColumnType.STATUS, ReminderColumnType.PATIENT,
+						ReminderColumnType.DESCRIPTION);
+			} else {
+				columnFactory.createColumns(tableViewer, ReminderColumnType.TYPE, ReminderColumnType.DATE,
+						ReminderColumnType.RESPONSIBLE, ReminderColumnType.STATUS, ReminderColumnType.DESCRIPTION);
+			}
 		}
 		TableViewerResizer.enableResizing(tableViewer, viewersScrolledComposite);
 		addModifiedScrollListener(tableViewer.getTable());
@@ -1298,33 +1323,34 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		}
 	}
 
-	private void refreshMyRemindersInput(String config) {
-		refreshViewerInput(config, myViewer, SELECTIONCOMP_MYREMINDERS_ID, null, null, false);
+	private void refreshCurrentPatientInput(String config) {
+		refreshViewerInput(config, currentPatientViewer, SELECTIONCOMP_CURRENTPATIENT_ID, actPatient, null, false);
+	}
+
+	private void refreshGeneralPatientInput(String config) {
+		refreshViewerInput(config, generalPatientViewer, SELECTIONCOMP_GENERALPATIENT_ID, null, null, false);
 	}
 
 	private void refreshGeneralInput(String config) {
 		refreshViewerInput(config, generalRemindersViewer, SELECTIONCOMP_GENERALREMINDERS_ID, null, null, false);
 	}
 
-	private void refreshGeneralPatientInput(String config) {
-		refreshViewerInput(config, generalPatientViewer, SELECTIONCOMP_GENERALPATIENT_ID, actPatient, null, false);
+	private void refreshMyRemindersInput(String config) {
+		refreshViewerInput(config, myViewer, SELECTIONCOMP_MYREMINDERS_ID, null, null, false);
 	}
 
-	private void refreshCurrentPatientInput(String config) {
-		refreshViewerInput(config, currentPatientViewer, SELECTIONCOMP_CURRENTPATIENT_ID, actPatient, null, false);
-	}
-
-	private void refreshGroupRemindersInput(GroupComponent group) {
-		refreshViewerInput(group.id(), group.viewer(), SELECTIONCOMP_GROUPREMINDERS_PREFIX + group.id(), null,
-				group.id(), true);
+	private void refreshGroupRemindersInput(GroupComponent groupComponent) {
+		IUserGroup group = getUserGroupById(groupComponent.id());
+		refreshViewerInput(groupComponent.id(), groupComponent.viewer(),
+				SELECTIONCOMP_GROUPREMINDERS_PREFIX + groupComponent.id(), null, group, false);
 	}
 
 	/**
 	 * Führt eine Reminder-Abfrage asynchron aus und aktualisiert den angegebenen
 	 * Viewer.
 	 */
-	private void refreshViewerInput(String configKey, TableViewer viewer, String counterId, Object patient,
-			Object group, boolean visibleOnly) {
+	private void refreshViewerInput(String configKey, TableViewer viewer, String counterId, IPatient patient,
+			IUserGroup group, boolean visibleOnly) {
 		if (filtersMap == null || filtersMap.isEmpty()) {
 			return;
 		}
@@ -1336,9 +1362,10 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		var filter = filtersMap.get(configKey);
 
 
-	    ReminderQueryService.Config cfg = new ReminderQueryService.Config()
-				.showAll(false).filterDue(filterDueDateDays != -1).showOnlyDue(false).showNotYetDueReminders(false)
-				.showSelfCreated(false).assignedToMe(false).popupOnLogin(false).popupOnPatientSelection(false);
+		ReminderQueryService.Config cfg = new ReminderQueryService.Config().showAll(false)
+				.filterDue(filterDueDateDays > 0).dueInDays(filterDueDateDays).showOnlyDue(false)
+				.showNotYetDueReminders(false).showSelfCreated(false).assignedToMe(false).popupOnLogin(false)
+				.popupOnPatientSelection(false);
 
 
 		if (filter.showOnlyOwnDueReminderToggleAction.isChecked()) {
@@ -1359,28 +1386,32 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		if (filter.popupOnPatientSelectionReminderToggleAction.isChecked()) {
 			cfg.popupOnPatientSelection(true);
 		}
+		if (filter.showOthersRemindersAction().isChecked()) {
+			cfg.showAll(true);
+			cfg.showSelfCreated(false);
+			cfg.assignedToMe(false);
+		} else {
+			cfg.showAll(false);
+		}
 
 		switch (configKey) {
-		case "currentpatient":
-			cfg.patient(actPatient);
+		case CURRENTPATIENT:
+			cfg.patient(patient);
 			break;
 
-		case "allpatients":
+		case ALLPATIENTS:
 			cfg.patient(null);
-			cfg.showAll(true);
 			break;
 
-		case "generalreminders":
+		case GENERALREMINDERS:
 			cfg.patient(null);
 			cfg.group(null);
-			cfg.showAll(true);
 			cfg.noPatient(true);
 			break;
 
-		case "myreminders":
+		case MYREMINDERS:
 			cfg.patient(null);
 			cfg.group(null);
-			cfg.showAll(true);
 			cfg.assignedToMe(true);
 			cfg.showSelfCreated(false);
 			break;
@@ -1400,7 +1431,6 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 					}
 				}));
 	}
-
 	
 	private void refreshUserConfiguration() {
 		// reload all filters
@@ -1655,7 +1685,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		private int days;
 
 		public FilterTimeAction(int days) {
-			super(String.format(Messages.ReminderView_nextDays, days), Action.AS_CHECK_BOX);
+			super(MessageFormat.format(Messages.ReminderView_nextDays, days), Action.AS_CHECK_BOX);
 			this.days = days;
 			if (filterDueDateDays == days) {
 				setChecked(true);
@@ -1669,12 +1699,12 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 		@Override
 		public void run() {
 			if (isChecked()) {
-				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, days);
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, days);
 				filterDueDateDays = days;
 				clearSelection();
 				refresh();
 			} else {
-				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, -1);
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, -1);
 				filterDueDateDays = -1;
 				clearSelection();
 				refresh();
@@ -2063,5 +2093,15 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				v.refresh();
 			}
 		});
+	}
+
+	private String getColumnGroupLabel(String cfg) {
+		return switch (cfg) {
+		case CURRENTPATIENT -> Messages.ReminderView_currentPatient;
+		case ALLPATIENTS -> Messages.ReminderView_allPatients;
+		case GENERALREMINDERS -> Messages.ReminderView_generalReminders;
+		case MYREMINDERS -> Messages.ReminderView_myReminders;
+		default -> cfg;
+		};
 	}
 }
