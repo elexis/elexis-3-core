@@ -36,10 +36,6 @@ import jakarta.inject.Named;
 public class CreatePatientOrderHandler {
 
 	@Inject
-	@Service(filterExpression = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	IModelService coreModelService;
-
-	@Inject
 	EPartService partService;
 
 	@Inject
@@ -50,7 +46,8 @@ public class CreatePatientOrderHandler {
 
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, IConfigService configService,
-			IOrderService orderService, IStockService stockService) {
+			IOrderService orderService, IStockService stockService, @Service(filterExpression = "("
+					+ IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)") IModelService coreModelService) {
 
 		boolean excludeAlreadyOrderedItems = configService.get(
 				Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
@@ -87,7 +84,7 @@ public class CreatePatientOrderHandler {
 		for (IStockEntry stockEntry : stockEntries) {
 			if (stockEntry.getArticle() != null) {
 				if (stockEntry.getMaximumStock() != 0) {
-				orderService.addRefillForStockEntryToOrder(stockEntry, order);
+					orderService.addRefillForStockEntryToOrder(stockEntry, order);
 				}
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Could not resolve article [{}] of stock entry [{}]", //$NON-NLS-1$
