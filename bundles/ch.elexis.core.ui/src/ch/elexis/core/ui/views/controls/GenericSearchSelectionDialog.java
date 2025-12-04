@@ -11,6 +11,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.AbstractTableViewer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -51,6 +53,8 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 	private SearchDataDialog filter;
 
 	private UpdateFilterRunnable currentFilterRunnable;
+	private IBaseLabelProvider customLabelProvider;
+	private Comparator<Object> customComparator;
 
 	public GenericSearchSelectionDialog(Shell parentShell, List<?> input, String shellTitle, String title,
 			String message, Image image, int style) {
@@ -83,6 +87,15 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		return new StructuredSelection(selection);
 	}
 
+	public void setCustomLabelProvider(IBaseLabelProvider labelProvider) {
+		this.customLabelProvider = labelProvider;
+	}
+
+	public void setCustomComparator(Comparator<Object> comparator) {
+		this.customComparator = comparator;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setTitle(title);
@@ -100,23 +113,27 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 		text.setLayoutData(textGridData);
 
 		if (input != null && input.size() < 1000) {
-			Collections.sort(input, new Comparator<Object>() {
-				@Override
-				public int compare(Object o1, Object o2) {
-					if (o1 instanceof Brief) {
-						return ((PersistentObject) o1).getLabel().substring(11)
-								.compareToIgnoreCase(((PersistentObject) o2).getLabel().substring(11));
+			if (customComparator != null) {
+				Collections.sort((List<Object>) input, customComparator);
+			} else {
+				Collections.sort(input, new Comparator<Object>() {
+					@Override
+					public int compare(Object o1, Object o2) {
+						if (o1 instanceof Brief) {
+							return ((PersistentObject) o1).getLabel().substring(11)
+									.compareToIgnoreCase(((PersistentObject) o2).getLabel().substring(11));
+						}
+						if (o1 instanceof PersistentObject) {
+							return ((PersistentObject) o1).getLabel()
+									.compareToIgnoreCase(((PersistentObject) o2).getLabel());
+						}
+						if (o1 instanceof Identifiable) {
+							return ((Identifiable) o1).getLabel().compareToIgnoreCase(((Identifiable) o2).getLabel());
+						}
+						return 0;
 					}
-					if (o1 instanceof PersistentObject) {
-						return ((PersistentObject) o1).getLabel()
-								.compareToIgnoreCase(((PersistentObject) o2).getLabel());
-					}
-					if (o1 instanceof Identifiable) {
-						return ((Identifiable) o1).getLabel().compareToIgnoreCase(((Identifiable) o2).getLabel());
-					}
-					return 0;
-				}
-			});
+				});
+			}
 		}
 
 		if (style == SWT.SINGLE) {
@@ -130,25 +147,30 @@ public class GenericSearchSelectionDialog extends TitleAreaDialog {
 			createButton(btnComposite, Messages.Core_Select_all, true);
 			createButton(btnComposite, Messages.Core_Deselct_all, false);
 		}
-
+		ColumnViewerToolTipSupport.enableFor(structuredViewer);
 		GridData viewerGridData = new GridData(GridData.FILL_BOTH);
 		viewerGridData.heightHint = 250;
 		viewerGridData.widthHint = 300;
 		((TableViewer) structuredViewer).getTable().setLayoutData(viewerGridData);
 		structuredViewer.setContentProvider(ArrayContentProvider.getInstance());
 
-		structuredViewer.setLabelProvider(new LabelProvider() {
-			public String getText(Object elements) {
-				if (elements instanceof PersistentObject) {
-					return ((PersistentObject) elements).getLabel();
-				} else if (elements instanceof Identifiable) {
-					return ((Identifiable) elements).getLabel();
-				} else if (elements != null) {
-					return elements.toString();
+		if (customLabelProvider != null) {
+			structuredViewer.setLabelProvider(customLabelProvider);
+		} else {
+			structuredViewer.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object elements) {
+					if (elements instanceof PersistentObject) {
+						return ((PersistentObject) elements).getLabel();
+					} else if (elements instanceof Identifiable) {
+						return ((Identifiable) elements).getLabel();
+					} else if (elements != null) {
+						return elements.toString();
+					}
+					return null;
 				}
-				return null;
-			}
-		});
+			});
+		}
 		if (input != null) {
 			structuredViewer.setInput(input.toArray());
 		} else if (inputFunction != null) {
