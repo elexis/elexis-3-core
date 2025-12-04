@@ -5215,6 +5215,20 @@ public class Messages extends NLS {
 	public static String Texterstellung_demo_browse_disabled;
 	public static String AgendaUI_DayOverView_collisions;
 	public static String LaborOrdersComposite_columnObservationTime;	
+	public static String TardocSpecialistComposite_selectDignitiesTitle;
+	public static String RechnungsPrefs_TardocSpecialistLink;
+	public static String RechnungsPrefs_BillsElectronically;
+	public static String RechnungsPrefs_AddChildren;
+	public static String RechnungsPrefs_FixProviderGroupTitle;
+	public static String RechnungsPrefs_FixProviderLink;
+	public static String RechnungsPrefs_SelectContactTitle;
+	public static String RechnungsPrefs_SelectFixProviderMessage;
+	public static String RechnungsPrefs_AccountOwner;
+	public static String RechnungsPrefs_SelectAccountOwnerMessage;
+	public static String RechnungsPrefs_InvoiceInfoLabel;
+	public static String RechnungsPrefs_InvoiceInfoTooltip;
+	public static String RechnungsPrefs_NoFinanceInstituteSelected;
+
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
