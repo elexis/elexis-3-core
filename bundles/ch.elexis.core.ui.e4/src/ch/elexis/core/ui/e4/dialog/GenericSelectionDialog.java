@@ -40,7 +40,7 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 
 	private String title;
 	private String message;
-
+	private Text txtSearch;
 	private LabelProvider labelProvider;
 
 	public GenericSelectionDialog(Shell parentShell, List<?> input, String title, String message) {
@@ -74,10 +74,15 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 
 		Composite ret = (Composite) super.createDialogArea(parent);
 		ret.setLayout(new GridLayout(1, false));
+		final boolean showSearch = input != null && input.size() > 10;
 
-		Text txtSearch = new Text(ret, SWT.SEARCH | SWT.CANCEL | SWT.ICON_SEARCH | SWT.BORDER);
-		txtSearch.setMessage(Messages.AddLinkDialog_searchCaption);
-		txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		if (showSearch) {
+			txtSearch = new Text(ret, SWT.SEARCH | SWT.CANCEL | SWT.ICON_SEARCH | SWT.BORDER);
+			txtSearch.setMessage(Messages.AddLinkDialog_searchCaption);
+			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		} else {
+			txtSearch = null;
+		}
 
 		ScrolledComposite sc = new ScrolledComposite(ret, SWT.H_SCROLL | SWT.V_SCROLL);
 
@@ -113,16 +118,23 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 
 		updateSelectionUi();
 
+		if (txtSearch != null) {
 		txtSearch.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				String pattern = txtSearch.getText().trim().toLowerCase();
 
+				boolean doFilter = pattern.length() >= 2;
+
 				for (Map.Entry<Object, Button> entry : buttonMap.entrySet()) {
 					Button b = entry.getValue();
 					String text = b.getText().toLowerCase();
-					boolean visible = pattern.isEmpty() || text.contains(pattern);
-
+					boolean visible;
+					if (!doFilter) {
+						visible = true;
+					} else {
+						visible = text.contains(pattern);
+					}
 					GridData gd = (GridData) b.getLayoutData();
 					if (gd == null) {
 						gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
@@ -135,7 +147,7 @@ public class GenericSelectionDialog extends TitleAreaDialog {
 				sc.setMinSize(child.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			}
 		});
-
+		}
 		return ret;
 	}
 
