@@ -51,6 +51,7 @@ public class ElexisServerService implements IElexisServerService {
 	private Logger log = LoggerFactory.getLogger(getClass());
 	private static final UUID systemUuid = UUID.randomUUID();
 	private static boolean standalone = false;
+	private static boolean lockServiceAdministrativelyDisabled = false;
 
 	private String restUrl;
 	private Timer timer;
@@ -143,7 +144,9 @@ public class ElexisServerService implements IElexisServerService {
 			if (eeService.isPresent()) {
 				connectionStatus = ConnectionStatus.LOCAL;
 				restUrl = eeService.get().getBaseUrl() + "/services";
+				lockServiceAdministrativelyDisabled = !eeService.get().getWellKnownRcp().config.enableLockService;
 				log.info("Bound to ES via EE " + restUrl);
+				OsgiServiceUtil.ungetService(eeService.get());
 				return;
 			}
 		}
@@ -151,6 +154,11 @@ public class ElexisServerService implements IElexisServerService {
 		standalone = true;
 		connectionStatus = ConnectionStatus.STANDALONE;
 		log.debug("No elexis-server url provided, operating in stand-alone mode.");
+	}
+
+	@Override
+	public boolean isLockAdministrativelyDisabled() {
+		return lockServiceAdministrativelyDisabled;
 	}
 
 	@Override
@@ -238,38 +246,43 @@ public class ElexisServerService implements IElexisServerService {
 
 			connectionOk = (urlConn.getResponseCode() >= 200 && urlConn.getResponseCode() < 300);
 		} catch (IOException e) {
-//			log.warn("Error connecting to [{}]: {}", restUrl, e.getMessage());
+			log.info("Error connecting to [{}]: {}", restUrl, e.getMessage());
 		}
 
 		if (connectionOk && connectionStatus != ConnectionStatus.REMOTE) {
+			// connected to elexis-server, connection is up
+			connectionStatus = ConnectionStatus.REMOTE;
 
 			Client client = ClientBuilder.newClient();
 			WebTarget target = client.target(restUrl);
-
 			eventService = WebResourceFactory.newResource(IEventService.class, target);
-
-			// connected to elexis-server, connection is up
-			connectionStatus = ConnectionStatus.REMOTE;
-//			eventService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), IEventService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
 			instanceService = WebResourceFactory.newResource(IInstanceService.class, target);
-//			instanceService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(),
-//					IInstanceService.class);
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
-//			lockService = ConsumerFactory.createConsumer(restUrl, new ElexisServerClientConfig(), ILockService.class);
-			lockService = WebResourceFactory.newResource(ILockService.class, target);
+			if (lockServiceAdministrativelyDisabled) {
+				lockService = new AcceptAllLockService();
+			} else {
+				lockService = WebResourceFactory.newResource(ILockService.class, target);
+			}
+
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
 		}
 
 		if (!connectionOk && connectionStatus != ConnectionStatus.LOCAL) {
 			// connected to elexis-server, connection is down
 			connectionStatus = ConnectionStatus.LOCAL;
+
 			eventService = new NoRemoteEventService();
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IEventService.class);
 			// TODO should we react otherwise here?
 			instanceService = new NoRemoteInstanceService();
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, IInstanceService.class);
-			lockService = new DenyAllLockService();
+			if (lockServiceAdministrativelyDisabled) {
+				lockService = new AcceptAllLockService();
+			} else {
+				lockService = new DenyAllLockService();
+			}
+
 			contextService.postEvent(ElexisEventTopics.EVENT_RELOAD, ILockService.class);
 		}
 

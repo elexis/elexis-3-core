@@ -1,17 +1,24 @@
 package ch.elexis.core.ui.util;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -19,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -34,6 +42,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.constants.OrderConstants;
+import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.OrderManagementView;
@@ -105,10 +114,12 @@ public class OrderManagementUtil {
 		boolean allOrdered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.ORDERED);
 		boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 		boolean anyDelivered = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.DONE);
-
+		boolean isPartial = order.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.PARTIAL_DELIVER);
 		if (allDelivered)
 			return Messages.OrderManagement_FullyDelivered;
 		if (anyDelivered)
+			return Messages.OrderManagement_PartiallyDelivered;
+		if (isPartial)
 			return Messages.OrderManagement_PartiallyDelivered;
 		if (allOrdered)
 			return Messages.OrderManagement_Ordered;
@@ -150,7 +161,7 @@ public class OrderManagementUtil {
 			}
 
 		} catch (NumberFormatException e) {
-			logger.error("Error: Invalid partialDelivery value: " + partialDelivery, e);
+			logger.error("Error: Invalid partialDelivery value: " + partialDelivery, e); //$NON-NLS-1$
 		}
 	}
 
@@ -270,7 +281,7 @@ public class OrderManagementUtil {
 	}
 
 	public static void activateBarcodeScannerAndFocus() {
-		String COMMAND_ID = "ch.elexis.base.barcode.scanner.ListenerProcess";
+		String COMMAND_ID = "ch.elexis.base.barcode.scanner.ListenerProcess"; //$NON-NLS-1$
 		try {
 			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
 					.getService(IHandlerService.class);
@@ -279,8 +290,8 @@ public class OrderManagementUtil {
 
 			Command scannerCommand = commandService.getCommand(COMMAND_ID);
 			Boolean isActive = false;
-			if (scannerCommand.getState("org.eclipse.jface.commands.ToggleState") != null) {
-				isActive = (Boolean) scannerCommand.getState("org.eclipse.jface.commands.ToggleState").getValue();
+			if (scannerCommand.getState("org.eclipse.jface.commands.ToggleState") != null) { //$NON-NLS-1$
+				isActive = (Boolean) scannerCommand.getState("org.eclipse.jface.commands.ToggleState").getValue(); //$NON-NLS-1$
 			}
 
 			if (!isActive) {
@@ -291,8 +302,149 @@ public class OrderManagementUtil {
 				OrderManagementView.setBarcodeScannerActivated(true);
 			}
 		} catch (Exception e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Barcode-Scanner Fehler",
-					"Barcode-Scanner konnte nicht aktiviert werden:\n" + e.getMessage());
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Barcode-Scanner Fehler", //$NON-NLS-1$
+					"Barcode-Scanner konnte nicht aktiviert werden:\n" + e.getMessage()); //$NON-NLS-1$
 		}
 	}
+
+	public static void handleOrderButtonClick(OrderManagementView view, IOrderService orderService,
+			Map<IOrderEntry, Integer> pendingDeliveredValues, IOrder actOrder) {
+
+		Button orderButton = view.orderButton;
+		String buttonText = orderButton.getText();
+
+		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_Order)) {
+			boolean confirm = MessageDialog.openQuestion(view.getSite().getShell(),
+					ch.elexis.core.ui.dialogs.Messages.OrderMethodDialog_Title,
+					ch.elexis.core.ui.dialogs.Messages.OrderMethodDialog_Message);
+			if (confirm) {
+				view.getActionFactory().sendOrder();
+				view.loadOpenOrders();
+			}
+			view.refresh();
+			return;
+		}
+
+		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_MissingSupplier)) {
+			IContact selectedProvider = ContactSelectionDialog.showInSync(IContact.class,
+					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
+					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
+			if (selectedProvider != null && actOrder != null) {
+				for (IOrderEntry entry : actOrder.getEntries()) {
+					if (entry.getProvider() == null) {
+						entry.setProvider(selectedProvider);
+						orderService.getHistoryService().logSupplierAdded(actOrder, entry, selectedProvider.getLabel());
+						CoreModelServiceHolder.get().save(entry);
+					}
+				}
+				view.refreshTables();
+			}
+			return;
+		}
+
+		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_Book)
+				|| buttonText.equals(ch.elexis.core.ui.views.Messages.OmnivoreView_editActionCaption)) {
+			if (view.isBarcodePortAvailable()) {
+				activateBarcodeScannerAndFocus();
+			}
+			view.setDeliveryEditMode(true);
+			setCheckboxColumnVisible(view, true);
+
+			view.tableViewer.refresh();
+			IOrderEntry first = view.findFirstEditableInViewerOrder();
+			if (first != null) {
+				view.tableViewer.setSelection(new StructuredSelection(first), true);
+				view.tableViewer.reveal(first);
+				view.tableViewer.editElement(first, OrderConstants.OrderTable.DELIVERED);
+				orderButton.setText(ch.elexis.core.ui.views.Messages.MedicationComposite_btnConfirm);
+				orderButton.setImage(Images.IMG_TICK.getImage());
+			}
+			return;
+		}
+
+		if (buttonText.equals(ch.elexis.core.ui.views.Messages.MedicationComposite_btnConfirm)) {
+		    for (Map.Entry<IOrderEntry, Integer> entry : pendingDeliveredValues.entrySet()) {
+		        IOrderEntry orderEntry = entry.getKey();
+		        int currentDelivered = orderEntry.getDelivered();
+		        int ordered = orderEntry.getAmount();
+		        int part = entry.getValue();
+		        int newTotal = currentDelivered + part;
+		        if (newTotal > ordered) {
+					String articleName = orderEntry.getArticle() != null ? orderEntry.getArticle().getLabel()
+							: "Unbekannter Artikel";
+		            boolean confirm = MessageDialog.openQuestion(
+		                view.getSite().getShell(),
+		                ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
+		                MessageFormat.format(
+		                    ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
+									currentDelivered, part, newTotal, ordered, articleName
+		                )
+		            );
+		            if (!confirm) {
+		                continue;
+		            }
+		        }
+		        if (newTotal < 0) {
+		            MessageDialog.openError(
+		                view.getSite().getShell(),
+		                ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
+		                ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount
+		            );
+		            continue;
+		        }
+
+		        orderService.getHistoryService().logDelivery(orderEntry.getOrder(), orderEntry, part, ordered);
+		        saveSingleDelivery(orderEntry, part, orderService);
+		    }
+
+		    if (view.isBarcodePortAvailable()) {
+		        activateBarcodeScannerAndFocus();
+		        OrderManagementView.setBarcodeScannerActivated(false);
+		    }
+
+		    pendingDeliveredValues.clear();
+		    view.setDeliveryEditMode(false);
+		    setCheckboxColumnVisible(view, false);
+
+		    view.selectAllChk.setVisible(false);
+		    ((GridData) view.selectAllChk.getLayoutData()).exclude = true;
+		    view.selectAllChk.getParent().layout(true, true);
+
+		    view.tableViewer.refresh();
+
+		    Display.getDefault().asyncExec(() -> {
+		        view.loadOpenOrders();
+		        view.loadCompletedOrders(view.getCompletedContainer());
+
+		        if (isOrderCompletelyDelivered(actOrder)) {
+		            view.setActOrder(null);
+		            view.getTableViewer().setInput(java.util.Collections.emptyList());
+		            view.getTableViewer().refresh();
+		        }
+
+		        view.updateUI();
+		    });
+
+		    return;
+		}
+	}
+
+	public static void setCheckboxColumnVisible(OrderManagementView view, boolean visible) {
+		Table table = view.checkboxViewer.getTable();
+		if (table.isDisposed() || table.getColumnCount() == 0)
+			return;
+		view.selectAllChk.setVisible(visible);
+		TableColumn checkboxCol = table.getColumn(OrderConstants.OrderTable.CHECKBOX);
+		checkboxCol.setResizable(visible);
+		checkboxCol.setMoveable(visible);
+		checkboxCol.setWidth(visible ? 30 : 0);
+	}
+
+	public static boolean isOrderCompletelyDelivered(IOrder order) {
+		if (order == null || order.getEntries().isEmpty()) {
+			return false;
+		}
+		return order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+	}
+
 }

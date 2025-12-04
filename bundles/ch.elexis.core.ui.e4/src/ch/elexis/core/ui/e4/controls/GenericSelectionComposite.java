@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.e4.dialog.GenericSelectionDialog;
 
 /**
@@ -49,6 +51,12 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 
 	private Label selectLabel;
 	private Button selectButton;
+
+	private LabelProvider labelProvider;
+
+	public void setLabelProvider(LabelProvider labelProvider) {
+		this.labelProvider = labelProvider;
+	}
 
 	public GenericSelectionComposite(Composite parent, int style) {
 		super(parent, style);
@@ -88,7 +96,7 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 		StringBuilder sb = new StringBuilder();
 		if (selection != null && !selection.isEmpty()) {
 			for (Object object : selection.toList()) {
-				String label = GenericSelectionDialog.getLabel(object);
+				String label = getLabel(object);
 				if (label != null && !label.isEmpty()) {
 					if (sb.length() > 0) {
 						sb.append(", ").append(label); //$NON-NLS-1$
@@ -102,6 +110,19 @@ public class GenericSelectionComposite extends Composite implements ISelectionPr
 			selectLabel.setText(StringUtils.EMPTY);
 		}
 		getParent().layout();
+	}
+
+	private String getLabel(Object object) {
+		if (labelProvider != null) {
+			return labelProvider.getText(object);
+		}
+		if (object instanceof Identifiable) {
+			return ((Identifiable) object).getLabel();
+		} else if (object != null) {
+			return object.toString();
+		} else {
+			return StringUtils.EMPTY;
+		}
 	}
 
 	public void setInput(List<?> input) {

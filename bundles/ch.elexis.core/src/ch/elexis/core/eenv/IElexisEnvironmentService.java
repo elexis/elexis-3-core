@@ -2,6 +2,8 @@ package ch.elexis.core.eenv;
 
 import com.google.gson.JsonObject;
 
+import ch.elexis.core.ee.json.WellKnownRcp;
+
 public interface IElexisEnvironmentService {
 
 	/**
@@ -33,6 +35,11 @@ public interface IElexisEnvironmentService {
 	 * @since EER3
 	 */
 	JsonObject getStatus();
+
+	/**
+	 * @since EER3
+	 */
+	WellKnownRcp getWellKnownRcp();
 
 	/**
 	 * @return the entry hostname of the elexis-environment

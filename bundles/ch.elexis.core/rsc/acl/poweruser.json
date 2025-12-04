@@ -21,6 +21,7 @@
 		"at.medevit.elexis.inbox.model.IInboxElement":"cruvdx",
 		"ch.berchtold.emanuel.privatrechnung.model.IPrivatLeistung":"cruvdx",
 		"ch.elexis.core.model.IConfig":"cruvxz",
-		"ch.elexis.core.model.ICategory": "cruvdx"		
+		"ch.elexis.core.model.ICategory": "cruvdx",
+		"ch.elexis.core.model.ITextTemplate": "cruvdxz"	
 	}
 }

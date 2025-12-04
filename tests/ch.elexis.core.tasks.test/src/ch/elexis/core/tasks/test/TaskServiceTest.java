@@ -30,6 +30,8 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable.ReturnParameter;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
@@ -37,6 +39,7 @@ import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
+import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
@@ -201,6 +204,42 @@ public class TaskServiceTest {
 
 		assertEquals(true, taskService.findLatestExecution(taskDescriptor).isPresent());
 
+	}
+
+	@Test
+	public void logOnlyLatestExecution() throws TaskException {
+		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
+		taskDescriptor.setSingleton(true);
+		taskDescriptor.setOwner(owner);
+		taskDescriptor.setRunContext(
+				Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.MARKER_DO_NOT_PERSIST, Boolean.TRUE));
+		taskService.setActive(taskDescriptor, true);
+		taskService.saveTaskDescriptor(taskDescriptor);
+
+		assertTrue(taskService.findLatestExecution(taskDescriptor).isEmpty());
+
+		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
+		System.out.println(task.getResult());
+		assertEquals(TaskState.COMPLETED, task.getState());
+
+		ITask iTask = taskService.findLatestExecution(taskDescriptor).get();
+		assertEquals(taskDescriptor.getId(), iTask.getId());
+
+		IQuery<ITask> query = AllTests.getTaskModelService().getQuery(ITask.class);
+		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
+		int size = query.execute().size();
+		assertEquals(1, size);
+
+		task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+		Awaitility.await().atMost(2, TimeUnit.SECONDS).until(taskDone(task));
+		System.out.println(task.getResult());
+		assertEquals(TaskState.COMPLETED, task.getState());
+
+		query = AllTests.getTaskModelService().getQuery(ITask.class);
+		query.and(ModelPackage.Literals.ITASK__TASK_DESCRIPTOR, COMPARATOR.EQUALS, taskDescriptor);
+		size = query.execute().size();
+		assertEquals(1, size);
 	}
 
 }
