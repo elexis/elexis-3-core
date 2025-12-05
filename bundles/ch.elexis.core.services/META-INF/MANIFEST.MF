@@ -51,5 +51,6 @@ Import-Package: bsh,
  org.osgi.service.useradmin;version="1.1.0",
  org.slf4j
 Service-Component: OSGI-INF/*.xml
-Export-Package: ch.elexis.core.services.holder
+Export-Package: ch.elexis.core.services.handler,
+ ch.elexis.core.services.holder
 Bundle-RequiredExecutionEnvironment: JavaSE-17
