@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.hl7.fhir.r4.model.ChargeItem;
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Invoice;
 import org.hl7.fhir.r4.model.Invoice.InvoiceLineItemComponent;
 import org.hl7.fhir.r4.model.Invoice.InvoiceLineItemPriceComponentComponent;
@@ -44,13 +43,6 @@ public class IInvoiceInvoiceAttributeMapper implements IdentifiableDomainResourc
 	public void elexisToFhir(IInvoice source, Invoice target, SummaryEnum summaryEnum, Set<Include> includes) {
 		target.setId(new IdDt(Invoice.class.getSimpleName(), source.getId()));
 		mapMetaData(source, target);
-
-		Identifier invoiceNumber = new Identifier();
-		invoiceNumber.setSystem("invoice-number");
-		invoiceNumber.setValue(source.getNumber());
-		target.addIdentifier(invoiceNumber);
-
-		// TODO RechnungsNummer
 
 		target.setStatus(toInvoiceStatus(source.getState()));
 		// cancelledReason ?
