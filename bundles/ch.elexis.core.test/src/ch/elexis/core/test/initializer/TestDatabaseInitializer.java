@@ -47,6 +47,7 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.VersionedResource;
 
 public class TestDatabaseInitializer {
@@ -626,6 +627,29 @@ public class TestDatabaseInitializer {
 
 			isILabResultInitialized = true;
 		}
+	}
+
+	/**
+	 * @return array with {@link IMandator}, {@link IPatient}, {@link ICoverage},
+	 *         {@link IEncounter}, Coverage is KVG
+	 */
+	public Object[] createTestMandantPatientFallBehandlung() {
+		TimeTool timeTool = new TimeTool();
+		IPerson _mandator = new IContactBuilder.PersonBuilder(modelService, "mandator1 " + timeTool.toString(),
+				"Anton" + timeTool.toString(), timeTool.toLocalDate(), Gender.MALE).mandator().buildAndSave();
+		IMandator mandator = modelService.load(_mandator.getId(), IMandator.class).get();
+
+		IPatient patient = new IContactBuilder.PatientBuilder(modelService, "Armer", "Anton" + timeTool.toString(),
+				timeTool.toLocalDate(), Gender.MALE).buildAndSave();
+
+		ICoverage coverage = new ICoverageBuilder(modelService, patient, "Fallbezeichnung", "Fallgrund", "KVG")
+				.buildAndSave();
+		coverage.setExtInfo("Versicherungsnummer", "12340815"); // KVG requirement for billing
+		modelService.save(coverage);
+
+		IEncounter behandlung = new IEncounterBuilder(modelService, coverage, mandator).buildAndSave();
+
+		return new Object[] { mandator, patient, coverage, behandlung };
 	}
 
 	public static IXidService getXidService() {
