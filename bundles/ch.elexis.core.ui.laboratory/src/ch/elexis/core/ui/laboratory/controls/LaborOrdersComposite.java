@@ -4,28 +4,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -47,8 +55,8 @@ import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultOrderDeleteAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.data.LabOrder;
-import ch.elexis.data.LabOrder.State;
 import ch.elexis.data.Patient;
+import ch.elexis.data.LabOrder.State;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
@@ -69,12 +77,70 @@ public class LaborOrdersComposite extends Composite {
 	private Composite toolComposite;
 	private ToolBarManager toolbar;
 	public static final String OUTPUTLOG_EXTERNES_LABOR = "Externes Labor"; //$NON-NLS-1$
+	private boolean isGroupHighlightingEnabled = false;
+
+	private static final String CFG_HIGHLIGHT_ENABLED = "labor/orders/highlight/enabled"; //$NON-NLS-1$
+	private static final String CFG_HIGHLIGHT_COLOR = "labor/orders/highlight/color"; //$NON-NLS-1$
+	private static final String DEFAULT_COLOR_HEX = "FDF9D9"; //$NON-NLS-1$
+	private Color highlightColor;
 
 	public LaborOrdersComposite(Composite parent, int style) {
 		super(parent, style);
-
+		loadConfiguration();
 		createContent();
 		selectPatient(ElexisEventDispatcher.getSelectedPatient());
+	}
+
+	public boolean isGroupHighlightingEnabled() {
+		return isGroupHighlightingEnabled;
+	}
+
+	public void setGroupHighlightingEnabled(boolean value) {
+		if (value != isGroupHighlightingEnabled) {
+			isGroupHighlightingEnabled = value;
+			ConfigServiceHolder.setUser(CFG_HIGHLIGHT_ENABLED, value);
+			viewer.refresh();
+		}
+	}
+
+	private void loadConfiguration() {
+		isGroupHighlightingEnabled = ConfigServiceHolder.getUser(CFG_HIGHLIGHT_ENABLED, false);
+		String hexColor = ConfigServiceHolder.getUser(CFG_HIGHLIGHT_COLOR, DEFAULT_COLOR_HEX);
+		RGB rgb = hexToRgb(hexColor);
+		if (rgb == null) {
+			rgb = hexToRgb(DEFAULT_COLOR_HEX);
+		}
+
+		if (highlightColor != null && !highlightColor.isDisposed()) {
+			highlightColor.dispose();
+		}
+		highlightColor = new Color(getDisplay(), rgb);
+	}
+
+	private RGB hexToRgb(String hex) {
+		try {
+			if (hex.length() == 6) {
+				int r = Integer.valueOf(hex.substring(0, 2), 16);
+				int g = Integer.valueOf(hex.substring(2, 4), 16);
+				int b = Integer.valueOf(hex.substring(4, 6), 16);
+				return new RGB(r, g, b);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
+	private String rgbToHex(RGB rgb) {
+		return String.format("%02X%02X%02X", rgb.red, rgb.green, rgb.blue); //$NON-NLS-1$
+	}
+
+	private RGB convertToPastel(RGB original) {
+		double whiteFactor = 0.85;
+		int r = (int) ((original.red * (1 - whiteFactor)) + (255 * whiteFactor));
+		int g = (int) ((original.green * (1 - whiteFactor)) + (255 * whiteFactor));
+		int b = (int) ((original.blue * (1 - whiteFactor)) + (255 * whiteFactor));
+		return new RGB(r, g, b);
 	}
 
 	private void createContent() {
@@ -85,30 +151,53 @@ public class LaborOrdersComposite extends Composite {
 		body.setLayout(new GridLayout());
 
 		toolComposite = new Composite(body, SWT.NONE);
-		toolComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		toolComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
-		toolbar = new ToolBarManager();
-		toolbar.add(new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
+		GridLayout toolLayout = new GridLayout(3, false);
+		toolLayout.marginWidth = 0;
+		toolLayout.marginHeight = 0;
+		toolLayout.horizontalSpacing = 15;
+		toolComposite.setLayout(toolLayout);
 
-			@Override
-			public String getText() {
-				return Messages.LaborOrdersComposite_actionTooltipShowHistory;
-			}
+		toolComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 
-			@Override
-			public String getToolTipText() {
-				return Messages.LaborOrdersComposite_actionTooltipShowHistory;
-			}
-
-			@Override
-			public void run() {
-				setIncludeDone(!includeDone);
-			}
-		});
-		tk.adapt(toolbar.createControl(toolComposite));
 		tk.adapt(toolComposite);
 
+		Button btnHighlight = tk.createButton(toolComposite, Messages.LaborOrdersComposite_btnGroupHighlighting,
+				SWT.CHECK);
+		btnHighlight.setSelection(isGroupHighlightingEnabled);
+		btnHighlight.setToolTipText(Messages.LaborOrdersComposite_btnGroupHighlightingTooltip);
+		btnHighlight.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		if (highlightColor != null && !highlightColor.isDisposed()) {
+			btnHighlight.setBackground(highlightColor);
+		}
+		btnHighlight.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setGroupHighlightingEnabled(btnHighlight.getSelection());
+			}
+		});
+
+		Button btnHistory = tk.createButton(toolComposite, Messages.LaborOrdersComposite_actionTooltipShowHistory,
+				SWT.CHECK);
+		btnHistory.setSelection(includeDone);
+		btnHistory.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+		btnHistory.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setIncludeDone(btnHistory.getSelection());
+			}
+		});
+		Composite iconComposite = new Composite(toolComposite, SWT.NONE);
+		iconComposite.setLayout(new FillLayout());
+
+		GridData gd = new GridData(SWT.RIGHT, SWT.CENTER, true, false);
+		gd.horizontalIndent = 10;
+		iconComposite.setLayoutData(gd);
+		tk.adapt(iconComposite);
+
+		toolbar = new ToolBarManager();
+		tk.adapt(toolbar.createControl(iconComposite));
 		viewer = new TableViewer(body, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		viewer.getTable().setHeaderVisible(true);
@@ -134,6 +223,35 @@ public class LaborOrdersComposite extends Composite {
 			}
 		});
 		viewer.getControl().setMenu(mgr.createContextMenu(viewer.getControl()));
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				viewer.refresh(true);
+			}
+		});
+
+		btnHighlight.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				ColorDialog dlg = new ColorDialog(getShell());
+				dlg.setText(Messages.AgendaFarben_Titel);
+				if (highlightColor != null && !highlightColor.isDisposed()) {
+					dlg.setRGB(highlightColor.getRGB());
+				}
+				RGB selectedRGB = dlg.open();
+				if (selectedRGB != null) {
+					RGB pastelRGB = convertToPastel(selectedRGB);
+					if (highlightColor != null && !highlightColor.isDisposed()) {
+						highlightColor.dispose();
+					}
+					highlightColor = new Color(getDisplay(), pastelRGB);
+					btnHighlight.setBackground(highlightColor);
+					String hex = rgbToHex(pastelRGB);
+					ConfigServiceHolder.setUser(CFG_HIGHLIGHT_COLOR, hex);
+					viewer.refresh();
+				}
+			}
+		});
 
 		TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(28);
@@ -159,6 +277,11 @@ public class LaborOrdersComposite extends Composite {
 			public String getText(Object element) {
 				return StringUtils.EMPTY;
 			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
+			}
 		});
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
@@ -173,6 +296,11 @@ public class LaborOrdersComposite extends Composite {
 					return LabOrder.getStateLabel(((LaborOrderViewerItem) element).getState());
 				}
 				return StringUtils.EMPTY;
+			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
 			}
 		});
 
@@ -193,6 +321,11 @@ public class LaborOrdersComposite extends Composite {
 					}
 				}
 				return StringUtils.EMPTY;
+			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
 			}
 		});
 
@@ -215,6 +348,11 @@ public class LaborOrdersComposite extends Composite {
 				}
 				return StringUtils.EMPTY;
 			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
+			}
 		});
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
@@ -229,6 +367,11 @@ public class LaborOrdersComposite extends Composite {
 					return ((LaborOrderViewerItem) element).getOrderId().orElse(StringUtils.EMPTY);
 				}
 				return StringUtils.EMPTY;
+			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
 			}
 		});
 
@@ -245,6 +388,11 @@ public class LaborOrdersComposite extends Composite {
 				}
 				return StringUtils.EMPTY;
 			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
+			}
 		});
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
@@ -260,6 +408,11 @@ public class LaborOrdersComposite extends Composite {
 				}
 				return StringUtils.EMPTY;
 			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
+			}
 		});
 
 		column = new TableViewerColumn(viewer, SWT.NONE);
@@ -273,11 +426,48 @@ public class LaborOrdersComposite extends Composite {
 				}
 				return StringUtils.EMPTY;
 			}
+
+			@Override
+			public Color getBackground(Object element) {
+				return getRowColor(element, LaborOrdersComposite.this);
+			}
 		});
 
 		column.setEditingSupport(new LabOrderEditingSupport(viewer));
 
 		form.setText(Messages.Core_No_patient_selected);
+		addDisposeListener(e -> {
+            if (highlightColor != null) {
+                highlightColor.dispose();
+            }
+        });
+    }
+
+	private boolean isGroupSelected(Object element) {
+		if (viewer.getSelection() instanceof IStructuredSelection selection) {
+			if (selection.isEmpty()) {
+				return false;
+			}
+			Optional<String> selectedGroup = selection.stream().filter(item -> item instanceof LaborOrderViewerItem)
+					.map(item -> ((LaborOrderViewerItem) item).getOrderGroupName()).findFirst()
+					.orElse(Optional.empty());
+			if (selectedGroup.isEmpty()) {
+				return false;
+			}
+			if (element instanceof LaborOrderViewerItem item) {
+				return selectedGroup.get().equals(item.getOrderGroupName().orElse(null));
+			}
+		}
+		return false;
+	}
+
+	private Color getRowColor(Object element, LaborOrdersComposite composite) {
+		if (composite.isGroupHighlightingEnabled()) {
+			if (composite.isGroupSelected(element)) {
+					return composite.highlightColor;
+			}
+		}
+		return null;
 	}
 
 	public void selectPatient(Patient patient) {
