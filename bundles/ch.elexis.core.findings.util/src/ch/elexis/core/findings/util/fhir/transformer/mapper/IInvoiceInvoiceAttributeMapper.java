@@ -50,8 +50,6 @@ public class IInvoiceInvoiceAttributeMapper implements IdentifiableDomainResourc
 		invoiceNumber.setValue(source.getNumber());
 		target.addIdentifier(invoiceNumber);
 
-		// TODO RechnungsNummer
-
 		target.setStatus(toInvoiceStatus(source.getState()));
 		// cancelledReason ?
 		// type ?
