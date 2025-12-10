@@ -8,6 +8,7 @@
     "ch.elexis.core.model.IArticle" : "crudv",
     "ch.elexis.core.model.IInvoice" : "crdv:aobo",
 	"ch.elexis.core.model.ISticker": "cruvd",
+	"ch.elexis.core.model.ICategory": "cruvdx",
 	"ch.elexis.core.model.ITextTemplate": "cruvdxz"
   }
 }
