@@ -15,14 +15,14 @@ Containing the core files of the Elexis Application.
 The binaries of our latest stable version (3.12) you will find under
 
 - [Windows](http://download.elexis.info/elexis/3.12/products/Elexis3-win32.win32.x86_64.zip)
-- [Apple OS X](http://download.elexis.info/elexis/3.12/products/Elexis3-macosx.cocoa.x86_64.zip)
-- [Linux](http://download.elexis.info/elexis/3.12/products/Elexis3-linux.gtk.x86_64.zip)
+- [Apple OS X](http://download.elexis.info/elexis/3.12/products/Elexis3-macosx.cocoa.x86_64.tar.gz)
+- [Linux](http://download.elexis.info/elexis/3.12/products/Elexis3-linux.gtk.x86_64.tar.gz)
 
 The binaries of our main development branch  (master) you will find under
 
 - [Windows](http://download.elexis.info/elexis/master/products/Elexis3-win32.win32.x86_64.zip)
-- [Apple OS X](http://download.elexis.info/elexis/master/products/Elexis3-macosx.cocoa.x86_64.zip)
-- [Linux](http://download.elexis.info/elexis/master/products/Elexis3-linux.gtk.x86_64.zip)
+- [Apple OS X](http://download.elexis.info/elexis/master/products/Elexis3-macosx.cocoa.x86_64.tar.gz)
+- [Linux](http://download.elexis.info/elexis/master/products/Elexis3-linux.gtk.x86_64.tar.gz)
 
 ### From source
 
