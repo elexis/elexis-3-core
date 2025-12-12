@@ -49,6 +49,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.laboratory.actions.LabOrderSetObservationDateAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
@@ -106,29 +107,7 @@ public class LaborOrdersComposite extends Composite {
 	private void loadConfiguration() {
 		isGroupHighlightingEnabled = ConfigServiceHolder.getUser(CFG_HIGHLIGHT_ENABLED, false);
 		String hexColor = ConfigServiceHolder.getUser(CFG_HIGHLIGHT_COLOR, DEFAULT_COLOR_HEX);
-		RGB rgb = hexToRgb(hexColor);
-		if (rgb == null) {
-			rgb = hexToRgb(DEFAULT_COLOR_HEX);
-		}
-
-		if (highlightColor != null && !highlightColor.isDisposed()) {
-			highlightColor.dispose();
-		}
-		highlightColor = new Color(getDisplay(), rgb);
-	}
-
-	private RGB hexToRgb(String hex) {
-		try {
-			if (hex.length() == 6) {
-				int r = Integer.valueOf(hex.substring(0, 2), 16);
-				int g = Integer.valueOf(hex.substring(2, 4), 16);
-				int b = Integer.valueOf(hex.substring(4, 6), 16);
-				return new RGB(r, g, b);
-			}
-		} catch (Exception e) {
-			// ignore
-		}
-		return null;
+		highlightColor = CoreUiUtil.getColorForString(hexColor);
 	}
 
 	private String rgbToHex(RGB rgb) {
@@ -241,13 +220,10 @@ public class LaborOrdersComposite extends Composite {
 				RGB selectedRGB = dlg.open();
 				if (selectedRGB != null) {
 					RGB pastelRGB = convertToPastel(selectedRGB);
-					if (highlightColor != null && !highlightColor.isDisposed()) {
-						highlightColor.dispose();
-					}
-					highlightColor = new Color(getDisplay(), pastelRGB);
-					btnHighlight.setBackground(highlightColor);
 					String hex = rgbToHex(pastelRGB);
 					ConfigServiceHolder.setUser(CFG_HIGHLIGHT_COLOR, hex);
+					highlightColor = CoreUiUtil.getColorForString(hex);
+					btnHighlight.setBackground(highlightColor);
 					viewer.refresh();
 				}
 			}
@@ -436,11 +412,6 @@ public class LaborOrdersComposite extends Composite {
 		column.setEditingSupport(new LabOrderEditingSupport(viewer));
 
 		form.setText(Messages.Core_No_patient_selected);
-		addDisposeListener(e -> {
-            if (highlightColor != null) {
-                highlightColor.dispose();
-            }
-        });
     }
 
 	private boolean isGroupSelected(Object element) {
