@@ -32,4 +32,7 @@ public class Messages {
 	public static String LaborResultsComposite_selectionLimitErrorMessage = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorMessage;
 	public static String LaborResultsComposite_selectionLimitErrorTitle = ch.elexis.core.l10n.Messages.LaborResultsComposite_selectionLimitErrorTitle;
 	public static String LaborOrdersComposite_columnObservationTime = ch.elexis.core.l10n.Messages.LaborOrdersComposite_columnObservationTime;
+	public static String LaborOrdersComposite_btnGroupHighlighting = ch.elexis.core.l10n.Messages.LaborOrdersComposite_btnGroupHighlighting;
+	public static String LaborOrdersComposite_btnGroupHighlightingTooltip = ch.elexis.core.l10n.Messages.LaborOrdersComposite_btnGroupHighlightingTooltip;
+	public static String AgendaFarben_Titel = ch.elexis.core.l10n.Messages.AgendaFarben_Titel;
 }

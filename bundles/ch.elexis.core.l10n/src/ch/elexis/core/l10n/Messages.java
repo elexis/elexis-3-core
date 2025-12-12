@@ -5337,6 +5337,8 @@ public class Messages extends NLS {
 	public static String RechnungsPrefs_InvoiceInfoLabel;
 	public static String RechnungsPrefs_InvoiceInfoTooltip;
 	public static String RechnungsPrefs_NoFinanceInstituteSelected;
+	public static String LaborOrdersComposite_btnGroupHighlighting;
+	public static String LaborOrdersComposite_btnGroupHighlightingTooltip;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
