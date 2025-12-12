@@ -85,8 +85,13 @@ public class LiquibaseDBUpdater {
 								@Override
 								public void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog,
 										Database database, RunStatus runStatus) {
-									updateProgress.setMessage(
-											Messages.LiquibaseDBUpdater_Update_execute + changeSet.getDescription());
+									if (updateProgress != null) {
+										updateProgress.setMessage(Messages.LiquibaseDBUpdater_Update_execute
+												+ changeSet.getDescription());
+									} else {
+										logger.info(Messages.LiquibaseDBUpdater_Update_execute
+												+ changeSet.getDescription());
+									}
 								}
 							})
 					.execute());
@@ -117,8 +122,13 @@ public class LiquibaseDBUpdater {
 										@Override
 										public void willRun(ChangeSet changeSet, DatabaseChangeLog databaseChangeLog,
 												Database database, RunStatus runStatus) {
-											updateProgress.setMessage(Messages.LiquibaseDBUpdater_Update_execute
-													+ changeSet.getDescription());
+											if (updateProgress != null) {
+												updateProgress.setMessage(Messages.LiquibaseDBUpdater_Update_execute
+														+ changeSet.getDescription());
+											} else {
+												logger.info(Messages.LiquibaseDBUpdater_Update_execute
+														+ changeSet.getDescription());
+											}
 										}
 									})
 							.execute());
