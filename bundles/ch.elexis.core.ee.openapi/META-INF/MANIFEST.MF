@@ -14,7 +14,8 @@ Service-Component: OSGI-INF/ch.elexis.core.ee.openapi.OpenApiClientProvider.xml
 Bundle-Vendor: ch.elexis
 Automatic-Module-Name: ch.elexis.core.ee.openapi
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/jackson-core-2.20.0.jar,
+Bundle-ClassPath: lib/org.eclipse.jdt.annotation-2.4.100.jar,
+ lib/jackson-core-2.20.0.jar,
  lib/jackson-annotations-2.20.jar,
  lib/jackson-databind-2.20.0.jar,
  lib/jackson-datatype-jsr310-2.20.0.jar,

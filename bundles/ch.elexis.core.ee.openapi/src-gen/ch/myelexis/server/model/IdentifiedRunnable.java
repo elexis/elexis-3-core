@@ -38,7 +38,7 @@ import java.util.StringJoiner;
   IdentifiedRunnable.JSON_PROPERTY_DESCRIPTION,
   IdentifiedRunnable.JSON_PROPERTY_DEFAULT_RUN_CONTEXT
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-12-15T07:54:11.603392+01:00[Europe/Vienna]", comments = "Generator version: 7.17.0")
 public class IdentifiedRunnable {
   public static final String JSON_PROPERTY_ID = "id";
   @jakarta.annotation.Nullable

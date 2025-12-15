@@ -125,6 +125,62 @@ components:
       - DENIED_PERMANENT
       - ERROR
       - NOINFO
+    Stock:
+      type: object
+      required:
+      - id
+      - code
+      - commissioningSystem
+      properties:
+        id:
+          type: string
+          minLength: 5
+          maxLength: 25
+          pattern: "^[a-zA-Z0-9-]+$"
+          description: System ID
+        code:
+          type: string
+          minLength: 1
+          maxLength: 7
+          pattern: "^[a-zA-Z0-9-]+$"
+          description: Stock Code
+        description:
+          type: string
+        driverConfig:
+          type: string
+        driverUuid:
+          type: string
+        location:
+          type: string
+        owner:
+          type: string
+        priority:
+          type: integer
+          format: int32
+        responsibleContactId:
+          type: string
+        commissioningSystem:
+          type: boolean
+        status:
+          type: string
+    StockEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        gtin:
+          type: string
+        label:
+          type: string
+        current:
+          type: integer
+          format: int32
+        min:
+          type: integer
+          format: int32
+        max:
+          type: integer
+          format: int32
     Task:
       type: object
       required:
@@ -297,7 +353,7 @@ components:
     SecurityScheme:
       type: openIdConnect
       description: Authentication
-      openIdConnectUrl: http://localhost:50363/realms/ElexisEnvironment/.well-known/openid-configuration
+      openIdConnectUrl: https://ee-master.myelexis.ch/keycloak/auth/realms/ElexisEnvironment/.well-known/openid-configuration
 info:
   license:
     name: Eclipse Public License - v 2.0
@@ -322,6 +378,7 @@ tags:
     - Data primary store is Elexis database.
 - name: instance service v1
 - name: message service v1
+- name: stock service v1
 - name: task service v1
   description: Service to handle Task execution
 - name: virtual filesystem service v1
@@ -348,8 +405,8 @@ paths:
                 type: string
         required: true
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
         "401":
           description: Not Authorized
         "403":
@@ -875,6 +932,24 @@ paths:
         - api-access
         - ict-administrator
       description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/instance/$clear:
+    put:
+      operationId: clearInstanceStatus
+      tags:
+      - instance service v1
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Clear Instance Status
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
   /api/v1/services/message:
     post:
       summary: Send a message using an available transporter scheme
@@ -1043,6 +1118,188 @@ paths:
       - ElexisEnvironment:
         - api-access
       description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/stock:
+    get:
+      summary: List the defined stocks (excluding patient-stocks)
+      operationId: listStocks
+      tags:
+      - stock service v1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Stock"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+    post:
+      summary: Create a Stock
+      operationId: createStock
+      tags:
+      - stock service v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Stock"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stock"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+        "400":
+          description: Bad Request
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/stock/{stockId}:
+    get:
+      summary: List all stock entries for the given stock
+      operationId: listStockEntries
+      tags:
+      - stock service v1
+      parameters:
+      - name: stockId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockEntry"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/stock/{stockId}/$scs-outlay:
+    put:
+      summary: Outlay a single element of a given stockEntryId (if stockId is a scs)
+      operationId: outlayArticleOnStockCommissioningSystem
+      tags:
+      - stock service v1
+      parameters:
+      - name: stockId
+        in: path
+        required: true
+        schema:
+          type: string
+      - required: true
+        name: stockEntryId
+        in: query
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/stock/{stockId}/$scs-start:
+    put:
+      summary: Start stock commissioning system (if stockId is a scs)
+      operationId: startStockCommissioningSystem
+      tags:
+      - stock service v1
+      parameters:
+      - name: stockId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/stock/{stockId}/$scs-stop:
+    put:
+      summary: Stop stock commissioning system (if stockId is a scs)
+      operationId: stopStockCommissioningSystem
+      tags:
+      - stock service v1
+      parameters:
+      - name: stockId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+        - ict-administrator
+      description: "<b>Roles Required:</b> api-access,ict-administrator<br>"
+  /api/v1/services/stock/{stockId}/$scs-sync:
+    put:
+      summary: Synchronize the stock state of the commissioning system with Elexis
+        (if stockId is a scs)
+      operationId: synchronizeStockFromStockCommissioningSystem
+      tags:
+      - stock service v1
+      parameters:
+      - name: stockId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
   /api/v1/services/task:
     get:
       summary: List tasks
@@ -1096,6 +1353,29 @@ paths:
           description: Not Allowed
         "400":
           description: Bad Request
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+  /api/v1/services/task/$executions:
+    get:
+      summary: Show the latest execution of each task
+      operationId: findLatestTaskExecutions
+      tags:
+      - task service v1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskResult"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
       security:
       - ElexisEnvironment:
         - api-access
@@ -1300,6 +1580,34 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/TaskResult"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
+      description: <b>Roles Required:</b> api-access<br>
+    delete:
+      summary: Remove task executions
+      operationId: removeTaskExecutions
+      tags:
+      - task service v1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: TaskState of entries to remove
+        name: taskState
+        in: query
+        schema:
+          type: string
+          default: FAILED
+      responses:
+        "204":
+          description: No Content
         "401":
           description: Not Authorized
         "403":
@@ -1675,16 +1983,24 @@ paths:
   /api/v1/user/info:
     get:
       summary: Get user information
-      description: User information as contained in the token
+      description: <b>Roles Required:</b> api-access<br>Get User information
       operationId: getUserInfo
       tags:
       - user
       parameters:
-      - name: resolve-via-keycloak
+      - description: "If true resolve info via keycloak, by default resolves via token"
+        required: false
+        name: resolve-via-keycloak
         in: query
         schema:
           type: boolean
           default: "false"
+      - description: Target user (only ict-administrator) (implies resolveViaKeycloak)
+        required: false
+        name: targetUserId
+        in: query
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -1692,6 +2008,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - ElexisEnvironment:
+        - api-access
   /services/elexis/eventservice/postEvent:
     post:
       operationId: postEvent

@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-12-15T07:54:11.603392+01:00[Europe/Vienna]", comments = "Generator version: 7.17.0")
 public class UserApi extends BaseApi {
 
   public UserApi() {
@@ -484,25 +484,27 @@ public class UserApi extends BaseApi {
 
   /**
    * Get user information
-   * User information as contained in the token
-   * @param resolveViaKeycloak  (optional, default to false)
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;Get User information
+   * @param resolveViaKeycloak If true resolve info via keycloak, by default resolves via token (optional, default to false)
+   * @param targetUserId Target user (only ict-administrator) (implies resolveViaKeycloak) (optional)
    * @return User
    * @throws ApiException if fails to make API call
    */
-  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak) throws ApiException {
-    return this.getUserInfo(resolveViaKeycloak, Collections.emptyMap());
+  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, @jakarta.annotation.Nullable String targetUserId) throws ApiException {
+    return this.getUserInfo(resolveViaKeycloak, targetUserId, Collections.emptyMap());
   }
 
 
   /**
    * Get user information
-   * User information as contained in the token
-   * @param resolveViaKeycloak  (optional, default to false)
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;Get User information
+   * @param resolveViaKeycloak If true resolve info via keycloak, by default resolves via token (optional, default to false)
+   * @param targetUserId Target user (only ict-administrator) (implies resolveViaKeycloak) (optional)
    * @param additionalHeaders additionalHeaders for this call
    * @return User
    * @throws ApiException if fails to make API call
    */
-  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, Map<String, String> additionalHeaders) throws ApiException {
+  public User getUserInfo(@jakarta.annotation.Nullable Boolean resolveViaKeycloak, @jakarta.annotation.Nullable String targetUserId, Map<String, String> additionalHeaders) throws ApiException {
     Object localVarPostBody = null;
     
     // create path and map variables
@@ -517,6 +519,7 @@ public class UserApi extends BaseApi {
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
     localVarQueryParams.addAll(apiClient.parameterToPair("resolve-via-keycloak", resolveViaKeycloak));
+    localVarQueryParams.addAll(apiClient.parameterToPair("targetUserId", targetUserId));
     
     localVarHeaderParams.putAll(additionalHeaders);
 
@@ -532,7 +535,7 @@ public class UserApi extends BaseApi {
     };
     final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-    String[] localVarAuthNames = new String[] {  };
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
 
     TypeReference<User> localVarReturnType = new TypeReference<User>() {};
     return apiClient.invokeAPI(

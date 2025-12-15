@@ -39,7 +39,7 @@ import java.util.StringJoiner;
   LockResponse.JSON_PROPERTY_LOCK_REQUEST_TYPE,
   LockResponse.JSON_PROPERTY_OK
 })
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-12-15T07:54:11.603392+01:00[Europe/Vienna]", comments = "Generator version: 7.17.0")
 public class LockResponse {
   public static final String JSON_PROPERTY_STATUS = "status";
   @jakarta.annotation.Nullable

@@ -33,7 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
 
-@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-10-22T15:12:38.209802+02:00[Europe/Vienna]", comments = "Generator version: 7.16.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2025-12-15T07:54:11.603392+01:00[Europe/Vienna]", comments = "Generator version: 7.17.0")
 public class TaskServiceV1Api extends BaseApi {
 
   public TaskServiceV1Api() {
@@ -331,6 +331,73 @@ public class TaskServiceV1Api extends BaseApi {
         localVarContentType,
         localVarAuthNames,
         null
+    );
+  }
+
+  /**
+   * Show the latest execution of each task
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * @return List&lt;TaskResult&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public List<TaskResult> findLatestTaskExecutions() throws ApiException {
+    return this.findLatestTaskExecutions(Collections.emptyMap());
+  }
+
+
+  /**
+   * Show the latest execution of each task
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * @param additionalHeaders additionalHeaders for this call
+   * @return List&lt;TaskResult&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public List<TaskResult> findLatestTaskExecutions(Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // create path and map variables
+    String localVarPath = "/api/v1/services/task/$executions";
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    
+    
+    final String[] localVarAccepts = {
+      "application/json"
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    TypeReference<List<TaskResult>> localVarReturnType = new TypeReference<List<TaskResult>>() {};
+    return apiClient.invokeAPI(
+        localVarPath,
+        "GET",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        localVarReturnType
     );
   }
 
@@ -754,6 +821,81 @@ public class TaskServiceV1Api extends BaseApi {
     apiClient.invokeAPI(
         localVarPath,
         "PUT",
+        localVarQueryParams,
+        localVarCollectionQueryParams,
+        localVarQueryStringJoiner.toString(),
+        localVarPostBody,
+        localVarHeaderParams,
+        localVarCookieParams,
+        localVarFormParams,
+        localVarAccept,
+        localVarContentType,
+        localVarAuthNames,
+        null
+    );
+  }
+
+  /**
+   * Remove task executions
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * @param id  (required)
+   * @param taskState TaskState of entries to remove (optional, default to FAILED)
+   * @throws ApiException if fails to make API call
+   */
+  public void removeTaskExecutions(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nullable String taskState) throws ApiException {
+    this.removeTaskExecutions(id, taskState, Collections.emptyMap());
+  }
+
+
+  /**
+   * Remove task executions
+   * &lt;b&gt;Roles Required:&lt;/b&gt; api-access&lt;br&gt;
+   * @param id  (required)
+   * @param taskState TaskState of entries to remove (optional, default to FAILED)
+   * @param additionalHeaders additionalHeaders for this call
+   * @throws ApiException if fails to make API call
+   */
+  public void removeTaskExecutions(@jakarta.annotation.Nonnull String id, @jakarta.annotation.Nullable String taskState, Map<String, String> additionalHeaders) throws ApiException {
+    Object localVarPostBody = null;
+    
+    // verify the required parameter 'id' is set
+    if (id == null) {
+      throw new ApiException(400, "Missing the required parameter 'id' when calling removeTaskExecutions");
+    }
+    
+    // create path and map variables
+    String localVarPath = "/api/v1/services/task/{id}/executions"
+      .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(apiClient.parameterToString(id)));
+
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+    String localVarQueryParameterBaseName;
+    List<Pair> localVarQueryParams = new ArrayList<Pair>();
+    List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+    Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+    Map<String, String> localVarCookieParams = new HashMap<String, String>();
+    Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+    localVarQueryParams.addAll(apiClient.parameterToPair("taskState", taskState));
+    
+    localVarHeaderParams.putAll(additionalHeaders);
+
+    
+    
+    final String[] localVarAccepts = {
+      
+    };
+    final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+    final String[] localVarContentTypes = {
+      
+    };
+    final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+    String[] localVarAuthNames = new String[] { "ElexisEnvironment" };
+
+    apiClient.invokeAPI(
+        localVarPath,
+        "DELETE",
         localVarQueryParams,
         localVarCollectionQueryParams,
         localVarQueryStringJoiner.toString(),
