@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -29,6 +31,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
@@ -46,6 +49,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
@@ -335,7 +339,9 @@ public class OrderManagementUtil {
 			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-			dialog.setAllowedContacts(allowedSuppliers);
+			if (!allowedSuppliers.isEmpty()) {
+				dialog.setAllowedContacts(allowedSuppliers);
+			}
 			if (dialog.open() == Dialog.OK) {
 				IContact selectedProvider = (IContact) dialog.getSelection();
 				if (selectedProvider != null && actOrder != null) {
@@ -438,16 +444,58 @@ public class OrderManagementUtil {
 	}
 
 	public static List<IContact> loadConfiguredSuppliers() {
+		Set<String> validPluginNamespaces = new HashSet<>();
+		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
+		for (IConfigurationElement ic : list) {
+			String handler = ic.getAttribute("type");
+			if (handler != null && handler.contains(ch.elexis.data.Bestellung.class.getName())) {
+				String contributorName = ic.getContributor().getName();
+				validPluginNamespaces.add(contributorName);
+			}
+		}
+
+		Set<IContact> result = new LinkedHashSet<>();
 		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class);
 		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.LIKE, "%/supplier%");
 		List<IConfig> configs = query.execute();
-		Set<IContact> result = new LinkedHashSet<>();
+
 		for (IConfig cfg : configs) {
-			String contactId = cfg.getValue();
-			if (StringUtils.isBlank(contactId)) {
+			String key = cfg.getKey();
+			String configPrefix = key;
+			int slashIndex = key.indexOf('/');
+			if (slashIndex > 0) {
+				configPrefix = key.substring(0, slashIndex);
+			}
+			final String searchPrefix = configPrefix;
+			boolean isValidOwner = validPluginNamespaces.stream().anyMatch(pluginID -> {
+				if (pluginID == null || searchPrefix == null)
+					return false;
+				if (key.startsWith(pluginID))
+					return true;
+				if (pluginID.contains(searchPrefix))
+					return true;
+				return false;
+			});
+
+			if (!isValidOwner) {
 				continue;
 			}
-			CoreModelServiceHolder.get().load(contactId, IContact.class).ifPresent(result::add);
+			String contactId = cfg.getValue();
+			if (StringUtils.isNotBlank(contactId)) {
+				String[] ids = contactId.split(",");
+				for (String id : ids) {
+					CoreModelServiceHolder.get().load(id.trim(), IContact.class).ifPresent(result::add);
+				}
+			}
+		}
+		IQuery<IConfig> inventoryQuery = CoreModelServiceHolder.get().getQuery(IConfig.class);
+		inventoryQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "inventory/defaultArticleProvider");
+		List<IConfig> inventoryConfigs = inventoryQuery.execute();
+		if (!inventoryConfigs.isEmpty()) {
+			String inventoryValue = inventoryConfigs.get(0).getValue();
+			if (StringUtils.isNotBlank(inventoryValue)) {
+				CoreModelServiceHolder.get().load(inventoryValue.trim(), IContact.class).ifPresent(result::add);
+			}
 		}
 		return new ArrayList<>(result);
 	}

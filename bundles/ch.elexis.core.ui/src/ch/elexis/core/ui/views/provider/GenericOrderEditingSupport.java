@@ -58,7 +58,9 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					ContactSelectionDialog dialog = new ContactSelectionDialog(cellEditorWindow.getShell(),
 							IContact.class, ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 							ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-					dialog.setAllowedContacts(allowedSuppliers);
+					if (!allowedSuppliers.isEmpty()) {
+						dialog.setAllowedContacts(allowedSuppliers);
+					}
 					if (dialog.open() == Window.OK) {
 						return dialog.getSelection();
 					}

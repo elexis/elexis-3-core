@@ -378,6 +378,9 @@ public class OrderManagementActionFactory {
 								sender.store(actOrder);
 								sender.finalizeExport();
 							} catch (XChangeException xe) {
+								if ("ABORT_BY_USER".equals(xe.getMessage())) {
+									continue;
+								}
 								logger.error("Error saving or exporting the order: ", xe);
 								SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
 										Messages.OrderManagement_ExportError_Message);
@@ -497,8 +500,7 @@ public class OrderManagementActionFactory {
 			Point p = swtTable.toControl(ev.x, ev.y);
 			TableItem item = swtTable.getItem(p);
 			if (item == null) {
-				swtTable.deselectAll();
-				table.setSelection(StructuredSelection.EMPTY);
+				table.setSelection(StructuredSelection.EMPTY, true); // true = reveal (optional)
 			}
 		});
 		swtTable.addKeyListener(new KeyAdapter() {

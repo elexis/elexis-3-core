@@ -139,7 +139,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	private TableSortController plainSorter;
 	private TableSortController checkboxSorter;
-	private Label addArticleLabel;
+	private Button addArticleButton;
 
 	private Composite rightListComposite;
 	private ScrolledComposite scrolledComposite;
@@ -537,17 +537,17 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 		selectAllChk.setLayoutData(fdChk);
 
-		addArticleLabel = new Label(headerBar, SWT.NONE);
+		addArticleButton = new Button(headerBar, SWT.NONE);
 		Image plusImg = Images.IMG_NEW.getImage();
-		addArticleLabel.setImage(plusImg);
-		addArticleLabel.setToolTipText(Messages.OrderManagement_AddItem);
+		addArticleButton.setImage(plusImg);
+		addArticleButton.setToolTipText(Messages.OrderManagement_AddItem);
 
 		FormData fdPlus = new FormData();
 		fdPlus.right = new FormAttachment(100, -5);
-		fdPlus.top = new FormAttachment(50, -plusImg.getBounds().height / 2);
-		addArticleLabel.setLayoutData(fdPlus);
+		fdPlus.top = new FormAttachment(30, -plusImg.getBounds().height / 2);
+		addArticleButton.setLayoutData(fdPlus);
 
-		addArticleLabel.addMouseListener(new MouseAdapter() {
+		addArticleButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if (e.button == 1 && actionFactory != null && actOrder != null) {
@@ -556,7 +556,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			}
 		});
 
-		addArticleLabel.setVisible(false);
+		addArticleButton.setVisible(false);
 
 		tableArea = new Composite(mainComposite, SWT.NONE);
 		tableArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -1345,11 +1345,11 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	private void updateAddArticleButtonVisibility(boolean hasEntries, boolean anyOrdered) {
-		if (addArticleLabel == null || addArticleLabel.isDisposed()) {
+		if (addArticleButton == null || addArticleButton.isDisposed()) {
 			return;
 		}
 		boolean show = hasEntries && !anyOrdered;
-		addArticleLabel.setVisible(show);
+		addArticleButton.setVisible(show);
 		if (headerBar != null && !headerBar.isDisposed()) {
 			headerBar.layout();
 		}
