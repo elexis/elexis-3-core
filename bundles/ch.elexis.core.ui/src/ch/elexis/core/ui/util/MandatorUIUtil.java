@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -47,9 +46,6 @@ public final class MandatorUIUtil {
 				sb.append(StringUtils.SPACE);
 			}
 			sb.append('(').append(kuerzel).append(')');
-		}
-		if (sb.length() == 0 && mandator instanceof Identifiable) {
-			return ((Identifiable) mandator).getLabel();
 		}
 		return sb.toString();
 	}
