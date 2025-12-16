@@ -25,4 +25,8 @@
          id="ch.elexis.core.ee.openapi"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.httpclient"
+         version="0.0.0"/>
+
 </feature>

@@ -44,6 +44,7 @@
     <module>ch.elexis.core.findings.util</module>
     <module>ch.elexis.core.findings</module>
     <module>ch.elexis.core.hl7.v2x</module>
+    <module>ch.elexis.core.httpclient</module>
     <module>ch.elexis.core.importer.div</module>
     <module>ch.elexis.core.jcifs</module>
     <module>ch.elexis.core.webdav</module>
