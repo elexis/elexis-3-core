@@ -18,7 +18,6 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.data.PersistentObject;
 
 public final class MandatorUIUtil {
 
@@ -55,15 +54,9 @@ public final class MandatorUIUtil {
 		return sb.toString();
 	}
 
-	public static String getGenericLabel(Object element) {
+	public static String getMandatorLabel(Object element) {
 		if (element instanceof IMandator mandator) {
 			return buildMandatorLabel(mandator);
-		}
-		if (element instanceof PersistentObject po) {
-			return po.getLabel();
-		}
-		if (element instanceof Identifiable identifiable) {
-			return identifiable.getLabel();
 		}
 		return element != null ? element.toString() : StringUtils.EMPTY;
 	}
@@ -75,8 +68,8 @@ public final class MandatorUIUtil {
 			if (locked1 != locked2) {
 				return locked1 ? 1 : -1;
 			}
-			String l1 = getGenericLabel(o1);
-			String l2 = getGenericLabel(o2);
+			String l1 = getMandatorLabel(o1);
+			String l2 = getMandatorLabel(o2);
 			return StringUtils.compareIgnoreCase(l1, l2);
 		};
 	}
@@ -94,7 +87,7 @@ public final class MandatorUIUtil {
 
 			@Override
 			public String getText(Object element) {
-				return MandatorUIUtil.getGenericLabel(element);
+				return MandatorUIUtil.getMandatorLabel(element);
 			}
 
 			@Override
