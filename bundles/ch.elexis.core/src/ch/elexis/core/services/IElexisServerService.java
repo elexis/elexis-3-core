@@ -120,4 +120,6 @@ public interface IElexisServerService {
 	 *         else <code>null</code>)
 	 */
 	public String getConnectionUrl();
+
+	public boolean isLockAdministrativelyDisabled();
 }

@@ -2,17 +2,19 @@ package ch.elexis.core.ui.views.reminder.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
+import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.ISubQuery;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
@@ -29,7 +31,7 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
  * <pre>{@code
  * ReminderQueryService service = new ReminderQueryService();
  * ReminderQueryService.Config cfg = new ReminderQueryService.Config().showAll(false).showSelfCreated(false)
- * 		.assignedToMe(true).showOnlyDue(true).filterDue(true);
+ * 		.assignedToMe(true).showOnlyDue(true).filterDue(true).group(groupIdOrGroupObject);
  *
  * List<IReminder> reminders = service.load(cfg);
  * }</pre>
@@ -37,10 +39,6 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
  * @author Dalibor Aksic
  */
 public class ReminderQueryService {
-
-	private static final String GLOBALFILTERS = "global"; //$NON-NLS-1$
-	private static int filterDueDateDays = ConfigServiceHolder
-			.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS + "/" + GLOBALFILTERS, -1);
 
 	/**
 	 * Executes a reminder query based on the provided {@link Config}.
@@ -62,20 +60,6 @@ public class ReminderQueryService {
 	public List<IReminder> load(Config cfg) {
 		IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
 
-		// --- Due date filters ---
-		if (cfg.showOnlyDue) {
-			query.startGroup();
-			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, LocalDate.now());
-			query.or(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.EQUALS, null);
-			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-			query.andJoinGroups();
-		}
-
-		if (cfg.showNotYetDueReminders) {
-			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, LocalDate.now());
-		}
-
-		// --- Popup visibility filters ---
 		if (cfg.popupOnLogin || cfg.popupOnPatientSelection) {
 			query.startGroup();
 			if (cfg.popupOnLogin) {
@@ -88,53 +72,79 @@ public class ReminderQueryService {
 			query.andJoinGroups();
 		}
 
-		// --- Creator and responsible user filters ---
-		ContextServiceHolder.get().getActiveUserContact().ifPresent(m -> {
-			if (cfg.showSelfCreated) {
-				query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, m);
-			}
+		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeContact -> {
+			if (!cfg.showAll) {
 
-			if (cfg.assignedToMe) {
-				ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
-						CoreModelServiceHolder.get());
-				subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid");
-				subQuery.and("responsible", COMPARATOR.EQUALS, m);
-				query.exists(subQuery);
-			}
+				if (cfg.showSelfCreated) {
+					query.and(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS, activeContact);
+				}
 
+				if (cfg.assignedToMe) {
+					ISubQuery<IReminderResponsibleLink> subQuery = query.createSubQuery(IReminderResponsibleLink.class,
+							CoreModelServiceHolder.get());
+					subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid"); //$NON-NLS-1$ //$NON-NLS-2$
+					subQuery.and("responsible", COMPARATOR.EQUALS, activeContact); //$NON-NLS-1$
+					query.exists(subQuery);
+				}
+			}
 		});
 
-		// --- Due date range (based on preferences) ---
-		if (cfg.filterDue) {
-			LocalDate now = LocalDate.now();
-			int days = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_FILTER_DUE_DAYS, 30);
-			LocalDate limit = now.plusDays(days);
-
-			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
-			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, limit);
-		}
-
-		// --- Patient filter ---
 		if (cfg.patient != null) {
 			query.and(ModelPackage.Literals.IREMINDER__CONTACT, COMPARATOR.EQUALS, cfg.patient);
 			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 		}
 
-		// --- Group filter ---
-		if (cfg.group != null) {
-			query.and(ModelPackage.Literals.IREMINDER__GROUP, COMPARATOR.EQUALS, cfg.group);
-		}
-
-		// --- Reminders without a patient ---
 		if (cfg.noPatient) {
 			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 			query.andFeatureCompare(ModelPackage.Literals.IREMINDER__CREATOR, COMPARATOR.EQUALS,
 					ModelPackage.Literals.IREMINDER__CONTACT);
 		}
 
-		// --- Include reminders with no due date if no due filter is active ---
-		if (!cfg.showOnlyDue && !cfg.showNotYetDueReminders) {
+		if (cfg.group != null) {
+			IUserGroup group = cfg.group;
+			if (group != null) {
+
+				List<IContact> contactList = group.getUsers().stream().map(u -> u.getAssignedContact())
+						.filter(c -> c != null).collect(Collectors.toList());
+
+				if (!contactList.isEmpty()) {
+
+					for (IContact c : contactList) {
+						ISubQuery<IReminderResponsibleLink> subQuery = query
+								.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
+						subQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid"); //$NON-NLS-1$ //$NON-NLS-2$
+						subQuery.and("responsible", COMPARATOR.EQUALS, c); //$NON-NLS-1$
+						query.exists(subQuery);
+					}
+
+					ISubQuery<IReminderResponsibleLink> excludeQuery = query
+							.createSubQuery(IReminderResponsibleLink.class, CoreModelServiceHolder.get());
+					excludeQuery.andParentCompare("id", COMPARATOR.EQUALS, "reminderid"); //$NON-NLS-1$ //$NON-NLS-2$
+					for (IContact c : contactList) {
+						excludeQuery.and("responsible", COMPARATOR.NOT_EQUALS, c); //$NON-NLS-1$
+					}
+					query.notExists(excludeQuery);
+				}
+			}
+		}
+
+		LocalDate today = LocalDate.now();
+
+		if (cfg.showOnlyDue) {
+
+			query.startGroup();
+			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS_OR_EQUAL, today);
 			query.or(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.EQUALS, null);
+			query.andJoinGroups();
+
+		} else if (cfg.showNotYetDueReminders) {
+
+			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, today);
+
+		} else if (cfg.filterDue && cfg.dueInDays > 0) {
+			applyDueDateFilter(query, true, cfg.dueInDays);
 		}
 
 		return query.execute();
@@ -148,9 +158,12 @@ public class ReminderQueryService {
 	 * @param includeNoDue if {@code true}, reminders without a due date are also
 	 *                     included
 	 */
-	public static void applyDueDateFilter(IQuery<IReminder> query, boolean includeNoDue) {
+	public static void applyDueDateFilter(IQuery<IReminder> query, boolean includeNoDue, int days) {
+		if (days <= 0) {
+			return;
+		}
 		LocalDate now = LocalDate.now();
-		LocalDate dueDateDays = now.plusDays(filterDueDateDays);
+		LocalDate dueDateDays = now.plusDays(days);
 		query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 
 		if (!includeNoDue) {
@@ -185,9 +198,10 @@ public class ReminderQueryService {
 		public boolean popupOnLogin;
 		public boolean popupOnPatientSelection;
 		public boolean filterDue;
-		public Object group;
-		public Object patient;
+		public IUserGroup group;
+		public IPatient patient;
 		public boolean noPatient;
+		public int dueInDays = -1;
 
 		/** Show all reminders (ignoring ownership or responsibility). */
 		public Config showAll(boolean v) {
@@ -238,13 +252,13 @@ public class ReminderQueryService {
 		}
 
 		/** Restrict the query to reminders of a specific group. */
-		public Config group(Object g) {
+		public Config group(IUserGroup g) {
 			this.group = g;
 			return this;
 		}
 
 		/** Restrict the query to reminders for a specific patient. */
-		public Config patient(Object p) {
+		public Config patient(IPatient p) {
 			this.patient = p;
 			return this;
 		}
@@ -252,6 +266,11 @@ public class ReminderQueryService {
 		/** Show reminders that are not linked to any patient. */
 		public Config noPatient(boolean v) {
 			this.noPatient = v;
+			return this;
+		}
+
+		public Config dueInDays(int days) {
+			this.dueInDays = days;
 			return this;
 		}
 	}
