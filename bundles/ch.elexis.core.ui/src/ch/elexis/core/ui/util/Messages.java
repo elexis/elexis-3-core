@@ -60,4 +60,5 @@ public class Messages {
 	public static String CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_ErrorDispensationArtikelstammUpate;
 	public static String CreatePrescriptionHelper_WarninigNoConsTitle = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_WarninigNoConsTitle;
 	public static String CreatePrescriptionHelper_WarninigNoConsText = ch.elexis.core.l10n.Messages.CreatePrescriptionHelper_WarninigNoConsText;
+	public static String MandatorFilter_lockedMandatorTooltip = ch.elexis.core.l10n.Messages.MandatorFilter_lockedMandatorTooltip;
 }

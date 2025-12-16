@@ -5215,6 +5215,7 @@ public class Messages extends NLS {
 	public static String Texterstellung_demo_browse_disabled;
 	public static String AgendaUI_DayOverView_collisions;
 	public static String LaborOrdersComposite_columnObservationTime;	
+	public static String MandatorFilter_lockedMandatorTooltip;
 	public static String TardocSpecialistComposite_selectDignitiesTitle;
 	public static String RechnungsPrefs_TardocSpecialistLink;
 	public static String RechnungsPrefs_BillsElectronically;
