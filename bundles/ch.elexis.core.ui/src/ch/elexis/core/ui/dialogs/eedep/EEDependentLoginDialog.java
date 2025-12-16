@@ -1,11 +1,9 @@
 package ch.elexis.core.ui.dialogs.eedep;
 
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -25,10 +23,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.ee.json.OpenIdConfiguration;
 import ch.elexis.core.ee.json.WellKnownEE;
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.httpclient.HttpClientUtil;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
@@ -38,13 +36,14 @@ import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
+import ch.elexis.core.utils.Extensions;
 import ch.rgw.tools.ExHandler;
 import jakarta.inject.Inject;
 
 public class EEDependentLoginDialog extends TitleAreaDialog {
 
 	@Inject
-	private HttpClient httpClient;
+	private CloseableHttpClient httpClient;
 
 	@Inject
 	private Gson gson;
@@ -143,19 +142,13 @@ public class EEDependentLoginDialog extends TitleAreaDialog {
 
 	private void loadWellKnownEEInfo() {
 		new Thread(() -> {
-			var request = HttpRequest
-					.newBuilder(URI.create("https://" + eeHostname + "/.well-known/elexis-environment"))
-					.header("accept", "application/json").build();
-
 			try {
-				String body = httpClient.send(request, BodyHandlers.ofString()).body();
+				String body = HttpClientUtil.getOrThrowAcceptJson(httpClient,
+						"https://" + eeHostname + "/.well-known/elexis-environment");
 				wellKnownEE = gson.fromJson(body, WellKnownEE.class);
-
 				String organisationName = wellKnownEE.ee.config.organisationName.replaceAll("__", " ");
 
-				request = HttpRequest.newBuilder(URI.create(wellKnownEE.openidConfiguration))
-						.header("accept", "application/json").build();
-				body = httpClient.send(request, BodyHandlers.ofString()).body();
+				body = HttpClientUtil.getOrThrowAcceptJson(httpClient, wellKnownEE.openidConfiguration);
 				openidConfiguration = gson.fromJson(body, OpenIdConfiguration.class);
 
 				getShell().getDisplay().syncExec(() -> {

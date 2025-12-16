@@ -1,4 +1,4 @@
-package ch.elexis.core.ee.openapi;
+package ch.elexis.core.httpclient.internal;
 
 import java.util.Collection;
 import java.util.HashMap;

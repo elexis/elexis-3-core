@@ -4,11 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -34,7 +32,6 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandEvaluatableACE;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
-import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IRole;
@@ -59,7 +56,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	Gson gson;
 
 	@Reference
-	HttpClient httpClient;
+	CloseableHttpClient httpClient;
 
 	@Reference
 	IContextService contextService;
@@ -193,19 +190,24 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	}
 
 	private void loadRoleAccessControlListDependent(String roleId) {
-		String accessToken = contextService.getTyped(AccessToken.class).get().getToken();
-		var request = HttpRequest
-				.newBuilder(URI.create("https://" + ElexisSystemPropertyConstants.GET_EE_HOSTNAME
-						+ "/api/v1/ops/elexis-rcp/acl/" + roleId))
-				.header("Authorization", "Bearer " + accessToken).header("accept", "application/json").build();
 		try {
-			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
-			if (204 == response.statusCode()) {
-				logger.info("No acl file for role [{}]", roleId);
-				return;
+			HttpGet request = new HttpGet("https://" + ElexisSystemPropertyConstants.GET_EE_HOSTNAME
+					+ "/api/v1/ops/elexis-rcp/acl/" + roleId);
+			request.addHeader("accept", "application/json");
+			String aclJsonResponse = httpClient.execute(request, response -> {
+				if (204 == response.getCode()) {
+					logger.info("No acl file for role [{}]", roleId);
+					EntityUtils.consume(response.getEntity());
+					return null;
+				}
+				return EntityUtils.toString(response.getEntity());
+			});
+			
+			if (aclJsonResponse != null) {
+				AccessControlList acl = gson.fromJson(aclJsonResponse, AccessControlList.class);
+				roleAclMap.put(roleId, acl);
 			}
-			AccessControlList acl = gson.fromJson(response.body(), AccessControlList.class);
-			roleAclMap.put(roleId, acl);
+
 		} catch (Exception e) {
 			logger.error("Error loading role acl [{}]", roleId, e);
 		}

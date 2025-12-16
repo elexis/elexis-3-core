@@ -1,11 +1,9 @@
 package ch.elexis.core.application.eedep;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -21,11 +19,15 @@ import ch.elexis.core.application.advisors.ApplicationWorkbenchAdvisor;
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.ee.OpenIdUser;
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.httpclient.HttpClientUtil;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisDataSource;
 import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.oauth2.AccessTokenUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.eedep.EEDependentLoginDialog;
@@ -44,7 +46,7 @@ public class Application implements IApplication {
 	IContextService contextService;
 
 	@Inject
-	HttpClient httpClient;
+	CloseableHttpClient httpClient;
 
 	public Object start(IApplicationContext context) {
 
@@ -77,7 +79,7 @@ public class Application implements IApplication {
 			// for other web related activities
 			// set user to context only after model service is ready!
 			contextService.setTyped(accessToken);
-			
+
 			// requires clientSecret for elexis-rcp-openid via license or manual add
 			// eleixs-rcp-openid should not work from outside too
 
@@ -88,11 +90,24 @@ public class Application implements IApplication {
 			IStatus status = elexisDataSource.setDBConnection(dbConnection);
 			if (!status.isOK()) {
 				logger.error("Error connecting to database: " + status.getMessage());
+				MessageDialog.openError(UiDesk.getTopShell(), "Database connection error", status.getMessage());
 				System.exit(-1);
 			}
 
 			// accessToken is required during activation of user
 			contextService.setActiveUser(user);
+
+			// validate associated contact
+			// TODO move to fhir
+			Optional<IContact> associatedContact = CoreModelServiceHolder.get().load(user.getAssociatedContactId(),
+					IContact.class);
+			if (!associatedContact.isPresent()) {
+				logger.info("Invalid associated contact for user");
+				MessageDialog.openError(UiDesk.getTopShell(), "Invalid associated contact",
+						"The associated contact [" + user.getAssociatedContactId() + "] can not be loaded. Exiting.");
+				System.exit(-1);
+			}
+			((OpenIdUser) user).setAssignedContact(associatedContact.get());
 
 			// FIXME Deactivate Logoff
 
@@ -122,12 +137,9 @@ public class Application implements IApplication {
 	}
 
 	private DBConnection loadDBConnectionSettings(AccessToken accessToken) {
-		var request = HttpRequest
-				.newBuilder(URI.create("https://" + eeHostname + "/api/v1/ops/elexis-rcp/dbconnection.json"))
-				.header("accept", "application/json").header("Authorization", "Bearer " + accessToken.getToken())
-				.build();
 		try {
-			String body = httpClient.send(request, BodyHandlers.ofString()).body();
+			String body = HttpClientUtil.getOrThrowAcceptJson(httpClient,
+					"https://" + eeHostname + "/api/v1/ops/elexis-rcp/dbconnection.json");
 			return new Gson().fromJson(body, DBConnection.class);
 		} catch (Exception e) {
 			// TODO show error dialog

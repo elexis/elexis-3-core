@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.Timer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import com.google.gson.JsonParser;
 import ch.elexis.core.ee.json.WellKnownRcp;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.httpclient.HttpClientUtil;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
@@ -73,16 +75,15 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	@Override
 	public WellKnownRcp getWellKnownRcp() {
-		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.well-known/elexis-rcp"))
-				.build();
+		CloseableHttpClient closeableHttpClient = OsgiServiceUtil.getService(CloseableHttpClient.class).get();
 		try {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			return new Gson().fromJson(response.body(), WellKnownRcp.class);
-		} catch (IOException | InterruptedException e) {
+			String body = HttpClientUtil.getOrThrowAcceptJson(closeableHttpClient,
+					getBaseUrl() + "/.well-known/elexis-rcp");
+			return new Gson().fromJson(body, WellKnownRcp.class);
+		} catch (IOException e) {
 			logger.warn("Error obtaining /.well-known/elexis-rcp returning defaults", e);
 		} finally {
-			OsgiServiceUtil.ungetService(client);
+			OsgiServiceUtil.ungetService(closeableHttpClient);
 		}
 
 		return new WellKnownRcp();

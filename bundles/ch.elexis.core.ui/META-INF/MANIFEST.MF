@@ -28,7 +28,8 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexpor
  com.google.gson,
  org.eclipse.jface,
  ch.elexis.core,
- ch.elexis.core.serial;bundle-version="3.13.0"
+ ch.elexis.core.serial;bundle-version="3.13.0",
+ ch.elexis.core.httpclient;bundle-version="3.13.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui,
@@ -86,6 +87,8 @@ Import-Package: com.equo.chromium.swt,
  org.apache.commons.io;version="2.6.0",
  org.apache.commons.lang3;version="3.12.0",
  org.apache.commons.lang3.math;version="3.12.0",
+ org.apache.hc.client5.http.classic.methods;version="[5.4.0,6.0.0)",
+ org.apache.hc.client5.http.impl.classic;version="[5.4.0,6.0.0)",
  org.eclipse.core.expressions,
  org.eclipse.e4.core.di.annotations;version="1.6.0",
  org.eclipse.e4.ui.model.application.ui.basic,

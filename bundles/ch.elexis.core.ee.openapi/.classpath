@@ -11,7 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.20.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-datatype-jsr310-2.20.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-nullable-0.2.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/httpclient5-cache-5.4.1.jar" sourcepath="lib-src/httpclient5-cache-5.4.1-sources.jar"/>
 	<classpathentry kind="src" output="bin" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>

@@ -5,6 +5,6 @@
    </service>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <reference cardinality="1..1" field="gson" interface="com.google.gson.Gson" name="gson"/>
-   <reference cardinality="1..1" field="httpClient" interface="java.net.http.HttpClient" name="httpClient"/>
+   <reference cardinality="1..1" field="httpClient" interface="org.apache.hc.client5.http.impl.classic.CloseableHttpClient" name="httpClient"/>
    <implementation class="ch.elexis.core.services.internal.RoleBasedAccessControlService"/>
 </scr:component>

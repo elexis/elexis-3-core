@@ -21,6 +21,8 @@ public class OpenIdUser implements IUser {
 	private final long expirationTime;
 	private final Set<String> roles;
 
+	private IContact associatedContact;
+
 	/**
 	 * This users data is populated via incoming Json Web Token.
 	 *
@@ -117,12 +119,14 @@ public class OpenIdUser implements IUser {
 
 	@Override
 	public IContact getAssignedContact() {
-		throw new UnsupportedOperationException();
+		return associatedContact;
 	}
 
 	@Override
 	public void setAssignedContact(IContact value) {
-		throw new UnsupportedOperationException();
+		if (getAssociatedContactId().equals(value.getId())) {
+			associatedContact = value;
+		}
 	}
 
 	@Override
