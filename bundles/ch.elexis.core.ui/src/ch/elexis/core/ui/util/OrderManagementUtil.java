@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
-import ch.elexis.core.model.IConfig;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
@@ -53,6 +51,7 @@ import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
+import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.OrderManagementView;
 
@@ -444,57 +443,24 @@ public class OrderManagementUtil {
 	}
 
 	public static List<IContact> loadConfiguredSuppliers() {
-		Set<String> validPluginNamespaces = new HashSet<>();
+		Set<IContact> result = new LinkedHashSet<>();
 		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
 		for (IConfigurationElement ic : list) {
-			String handler = ic.getAttribute("type");
-			if (handler != null && handler.contains(ch.elexis.data.Bestellung.class.getName())) {
-				String contributorName = ic.getContributor().getName();
-				validPluginNamespaces.add(contributorName);
-			}
-		}
-
-		Set<IContact> result = new LinkedHashSet<>();
-		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class);
-		query.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.LIKE, "%/supplier%");
-		List<IConfig> configs = query.execute();
-
-		for (IConfig cfg : configs) {
-			String key = cfg.getKey();
-			String configPrefix = key;
-			int slashIndex = key.indexOf('/');
-			if (slashIndex > 0) {
-				configPrefix = key.substring(0, slashIndex);
-			}
-			final String searchPrefix = configPrefix;
-			boolean isValidOwner = validPluginNamespaces.stream().anyMatch(pluginID -> {
-				if (pluginID == null || searchPrefix == null)
-					return false;
-				if (key.startsWith(pluginID))
-					return true;
-				if (pluginID.contains(searchPrefix))
-					return true;
-				return false;
-			});
-
-			if (!isValidOwner) {
-				continue;
-			}
-			String contactId = cfg.getValue();
-			if (StringUtils.isNotBlank(contactId)) {
-				String[] ids = contactId.split(",");
-				for (String id : ids) {
-					CoreModelServiceHolder.get().load(id.trim(), IContact.class).ifPresent(result::add);
+			String handlerType = ic.getAttribute("type");
+			if (handlerType != null && handlerType.contains(ch.elexis.data.Bestellung.class.getName())) {
+				try {
+					Object executable = ic.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
+					if (executable instanceof IDataSender) {
+						IDataSender sender = (IDataSender) executable;
+						List<IContact> suppliers = sender.getSupplier();
+						if (suppliers != null) {
+							result.addAll(suppliers);
+						}
+					}
+				} catch (CoreException e) {
+					LoggerFactory.getLogger(OrderManagementUtil.class)
+							.error("Fehler beim Laden des Lieferanten aus Plugin: " + ic.getContributor().getName(), e);
 				}
-			}
-		}
-		IQuery<IConfig> inventoryQuery = CoreModelServiceHolder.get().getQuery(IConfig.class);
-		inventoryQuery.and(ModelPackage.Literals.ICONFIG__KEY, COMPARATOR.EQUALS, "inventory/defaultArticleProvider");
-		List<IConfig> inventoryConfigs = inventoryQuery.execute();
-		if (!inventoryConfigs.isEmpty()) {
-			String inventoryValue = inventoryConfigs.get(0).getValue();
-			if (StringUtils.isNotBlank(inventoryValue)) {
-				CoreModelServiceHolder.get().load(inventoryValue.trim(), IContact.class).ifPresent(result::add);
 			}
 		}
 		return new ArrayList<>(result);

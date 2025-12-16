@@ -392,7 +392,6 @@ public class OrderManagementActionFactory {
 								pluginName = sender.getClass().getSimpleName();
 							}
 
-							StringBuilder contactsBuilder = new StringBuilder();
 							Set<String> added = new HashSet<>();
 							StringJoiner contactsJoiner = new StringJoiner(", ");
 
@@ -405,7 +404,8 @@ public class OrderManagementActionFactory {
 									}
 								}
 							}
-							String contactNames = contactsBuilder.length() > 0 ? contactsBuilder.toString()
+							String joinedNames = contactsJoiner.toString();
+							String contactNames = !joinedNames.isEmpty() ? joinedNames
 									: Messages.OrderManagement_NoSupplierRecipient;
 							String title = MessageFormat.format(Messages.BestellView_OrderSentWithPluginTitle,
 									pluginName);
@@ -704,5 +704,4 @@ public class OrderManagementActionFactory {
 
 		scrollComposite.setOrigin(scrollComposite.getOrigin().x, Math.max(0, Math.min(newY, maxY)));
 	}
-
 }
