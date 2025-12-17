@@ -39,6 +39,18 @@ public class HttpClientProvider implements EventHandler {
 	@Activate
 	public void activate() {
 
+		// Performance Ideas
+		// no additional gson
+		// http2.0 <-> myelexis-server
+		// conditional operations
+		// grpc instead of json?
+		// add "cache-control" header to search result
+		// search -> only communicate references + labels -> then perform parallel
+		// direct async loads
+		// Subscription?
+		// e.g. Pendenzen -> Nur PatientenTask nach User Event, andere bei click reload,
+		// oder alle 15 sekunden im hintergrund
+
 		CachingHttpClientBuilder cachingHttpClientBuilder = CachingHttpClientBuilder.create();
 		CacheConfig cacheConfig = CacheConfig.custom().setSharedCache(false).build();
 		httpCacheStorage = new ExtendedBasicHttpCacheStorage(cacheConfig);
