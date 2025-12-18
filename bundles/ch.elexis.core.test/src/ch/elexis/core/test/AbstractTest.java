@@ -153,10 +153,8 @@ public abstract class AbstractTest {
 
 	public void createCoverage() {
 		IBillingSystemService billingSystemService = OsgiServiceUtil.getService(IBillingSystemService.class).get();
-		billingSystemService.addOrModifyBillingSystem(KVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER,
-				KVG_REQUIREMENTS, BillingLaw.KVG);
-		billingSystemService.addOrModifyBillingSystem(UVG_NAME, CONST_TARMED_LEISTUNG, CONST_TARMED_DRUCKER,
-				UVG_REQUIREMENTS, BillingLaw.UVG);
+		billingSystemService.addOrModifyBillingSystem(KVG_NAME, CONST_TARMED_DRUCKER, KVG_REQUIREMENTS, BillingLaw.KVG);
+		billingSystemService.addOrModifyBillingSystem(UVG_NAME, CONST_TARMED_DRUCKER, UVG_REQUIREMENTS, BillingLaw.UVG);
 
 		if (patient == null) {
 			createPatient();
