@@ -106,8 +106,8 @@ public class BillingSystemService implements IBillingSystemService {
 		if (billingSystem.isPresent()) {
 			return billingSystem.get();
 		}
-		return addOrModifyBillingSystem(Messages.Case_KVG_Short, Messages.Fall_TarmedLeistung,
-				Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
+		return addOrModifyBillingSystem(Messages.Case_KVG_Short, Messages.Fall_TarmedPrinter,
+				Messages.Fall_KVGRequirements, BillingLaw.KVG);
 	}
 
 	@Override
@@ -179,12 +179,12 @@ public class BillingSystemService implements IBillingSystemService {
 	}
 
 	@Override
-	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode, String defaultPrinter,
-			String requirements, BillingLaw law) {
-
+	public IBillingSystem addOrModifyBillingSystem(String name, String defaultPrinter, String requirements,
+			BillingLaw law) {
 		setConfigurationValue(name, "name", name);
-		setConfigurationValue(name, "leistungscodes", serviceCode);
-		setConfigurationValue(name, "standardausgabe", defaultPrinter);
+		if (defaultPrinter != null) {
+			setConfigurationValue(name, "standardausgabe", defaultPrinter);
+		}
 		setConfigurationValue(name, "bedingungen", requirements);
 		setConfigurationValue(name, Preferences.LEISTUNGSCODES_BILLINGLAW, law.name());
 

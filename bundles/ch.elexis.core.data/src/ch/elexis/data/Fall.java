@@ -499,10 +499,6 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 		return ret;
 	}
 
-	public String getCodeSystemName() {
-		return BillingSystem.getCodeSystem(getAbrechnungsSystem());
-	}
-
 	/**
 	 * Retrieve requirements of this Cases billing system
 	 *
