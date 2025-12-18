@@ -39,10 +39,10 @@ public class CoverageICoverageTransformerTest {
 
 		IBillingSystemService billingSystemService = OsgiServiceUtil.getServiceWait(IBillingSystemService.class, 2000)
 				.orElseThrow();
-		billingSystemService.addOrModifyBillingSystem(Messages.Case_UVG_Short, Messages.Fall_TarmedLeistung,
-				Messages.Fall_TarmedPrinter, Messages.Fall_UVGRequirements, BillingLaw.UVG);
-		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name, Messages.Fall_TarmedLeistung,
-				Messages.Fall_TarmedPrinter, null, BillingLaw.IV);
+		billingSystemService.addOrModifyBillingSystem(Messages.Case_UVG_Short, Messages.Fall_TarmedPrinter,
+				Messages.Fall_UVGRequirements, BillingLaw.UVG);
+		billingSystemService.addOrModifyBillingSystem(Messages.Fall_IV_Name, Messages.Fall_TarmedPrinter, null,
+				BillingLaw.IV);
 
 		transformer = AllTransformerTests.getTransformerRegistry()
 				.getTransformerFor(Coverage.class, ICoverage.class);
