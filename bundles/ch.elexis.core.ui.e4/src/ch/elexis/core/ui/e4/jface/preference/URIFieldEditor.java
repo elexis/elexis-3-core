@@ -1,17 +1,17 @@
 package ch.elexis.core.ui.e4.jface.preference;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 
@@ -23,6 +23,8 @@ import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 public class URIFieldEditor extends StringButtonFieldEditor {
 
 	private String scheme;
+	private boolean migrateLegacyPaths = false;
+	private boolean useFileMode = false;
 
 	/**
 	 *
@@ -49,11 +51,37 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 
 	@Override
 	protected void doLoad() {
-		String value = getPreferenceStore().getString(getPreferenceName());
-		if (getTextControl() != null) {
-			getTextControl().setText(value);
-			oldValue = value;
+		IPreferenceStore store = getPreferenceStore();
+		if (store == null)
+			return;
+
+		String value = store.getString(getPreferenceName());
+
+		if (StringUtils.isNotBlank(value) && migrateLegacyPaths) {
+			boolean isAlreadyUri = value.matches("^[a-zA-Z][a-zA-Z0-9+.-]*:/.*");
+
+			if (isAlreadyUri) {
+				boolean isWindowsPath = value.contains("\\") || (value.length() > 2 && value.charAt(1) == ':');
+				boolean isLinuxPath = value.startsWith("/");
+
+				if (isWindowsPath || isLinuxPath) {
+					try {
+						File file = new File(value);
+						value = file.toURI().toString();
+
+						store.setValue(getPreferenceName(), value);
+						System.out.println("Erfolgreich migriert zu URI: " + value);
+					} catch (Exception e) {
+						System.err.println("Fehler bei Migration von: " + value + " -> " + e.getMessage());
+					}
+				}
+			}
 		}
+
+		if (getTextControl() != null) {
+			getTextControl().setText(value != null ? value : "");
+		}
+		this.oldValue = value;
 	}
 
 	@Override
@@ -69,14 +97,18 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		try {
 			String stringValue = getStringValue();
 			if (StringUtils.isNotBlank(stringValue)) {
-				IVirtualFilesystemHandle fileHandle = virtualFilesystemService.of(getStringValue(), false);
-				inputUri = fileHandle.toURL().toURI();
+				if (!stringValue.startsWith("file:") && !stringValue.contains(":/")) {
+					inputUri = new File(stringValue).toURI();
+				} else {
+					inputUri = new URI(stringValue);
+				}
 			}
-		} catch (URISyntaxException | IOException e) {
+		} catch (URISyntaxException e) {
 		}
 		VirtualFilesystemUriEditorDialog dialog = new VirtualFilesystemUriEditorDialog(getShell(),
 				virtualFilesystemService, inputUri);
 		dialog.setFixedScheme(scheme);
+		dialog.setFileMode(useFileMode);
 		if (IDialogConstants.OK_ID == dialog.open()) {
 			return dialog.getValue().toString();
 		}
@@ -90,5 +122,13 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	 */
 	public void setFixedScheme(String scheme) {
 		this.scheme = scheme;
+	}
+
+	public void setMigrateLegacyPaths(boolean migrate) {
+		this.migrateLegacyPaths = migrate;
+	}
+
+	public void setUseFileMode(boolean useFileMode) {
+		this.useFileMode = useFileMode;
 	}
 }
