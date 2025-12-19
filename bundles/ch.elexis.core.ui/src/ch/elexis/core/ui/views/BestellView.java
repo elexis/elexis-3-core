@@ -605,7 +605,7 @@ public class BestellView extends ViewPart {
 							} catch (CoreException ex) {
 								ExHandler.handle(ex);
 							} catch (XChangeException xx) {
-								if ("ABORT_BY_USER".equals(xx.getMessage())) {
+								if (ExtensionPointConstantsUi.ABORT_BY_USER.equals(xx.getMessage())) {
 									continue;
 								}
 								SWTHelper.showError(Messages.BestellView_OrderNotPossible,
