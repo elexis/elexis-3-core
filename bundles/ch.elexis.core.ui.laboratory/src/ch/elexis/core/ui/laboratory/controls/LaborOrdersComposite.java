@@ -56,8 +56,8 @@ import ch.elexis.core.ui.laboratory.actions.LaborResultEditDetailAction;
 import ch.elexis.core.ui.laboratory.actions.LaborResultOrderDeleteAction;
 import ch.elexis.core.ui.laboratory.controls.util.LabOrderEditingSupport;
 import ch.elexis.data.LabOrder;
-import ch.elexis.data.Patient;
 import ch.elexis.data.LabOrder.State;
+import ch.elexis.data.Patient;
 import ch.rgw.tools.TimeTool;
 
 public class LaborOrdersComposite extends Composite {
@@ -419,9 +419,15 @@ public class LaborOrdersComposite extends Composite {
 			if (selection.isEmpty()) {
 				return false;
 			}
-			Optional<String> selectedGroup = selection.stream().filter(item -> item instanceof LaborOrderViewerItem)
-					.map(item -> ((LaborOrderViewerItem) item).getOrderGroupName()).findFirst()
-					.orElse(Optional.empty());
+			Optional<String> selectedGroup = Optional.empty();
+			for (Object item : selection.toList()) {
+				if (item instanceof LaborOrderViewerItem) {
+					if (((LaborOrderViewerItem) item).getOrderGroupName().isPresent()) {
+						selectedGroup = ((LaborOrderViewerItem) item).getOrderGroupName();
+						break;
+					}
+				}
+			}
 			if (selectedGroup.isEmpty()) {
 				return false;
 			}
