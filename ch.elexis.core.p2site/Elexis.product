@@ -57,6 +57,7 @@
       <feature id="ch.elexis.core.persistence.feature" installMode="root"/>
       <feature id="ch.elexis.core.tasks.feature" installMode="root"/>
       <feature id="at.medevit.elexis.text.docx.feature" installMode="root"/>
+      <feature id="ch.elexis.core.ui.eenv.feature" installMode="root"/>
    </features>
 
    <configurations>
@@ -70,8 +71,8 @@
    </configurations>
 
    <repositories>
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-base" name="" enabled="true" />
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-core" name="" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/f27297/p2/elexis-3-base" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/f27297/p2/elexis-3-core" enabled="true" />
    </repositories>
 
    <preferencesInfo>

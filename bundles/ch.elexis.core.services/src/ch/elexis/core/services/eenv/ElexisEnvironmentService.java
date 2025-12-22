@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.Timer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ import com.google.gson.JsonParser;
 import ch.elexis.core.ee.json.WellKnownRcp;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
-import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.httpclient.HttpClientUtil;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
@@ -33,15 +34,12 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	private String elexisEnvironmentHost;
 	private IContextService contextService;
-	private IConfigService configService;
 
 	private Timer refreshAccessTokenTimer;
 
-	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService,
-			IConfigService configService) {
+	public ElexisEnvironmentService(String elexisEnvironmentHost, IContextService contextService) {
 		this.elexisEnvironmentHost = elexisEnvironmentHost;
 		this.contextService = contextService;
-		this.configService = configService;
 
 		LoggerFactory.getLogger(getClass()).info("Binding to EE {}", getHostname());
 
@@ -62,23 +60,30 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return value;
 		}
 
+		value = System.getProperty(key);
+		if (StringUtils.isNotEmpty(value)) {
+			return value;
+		}
+
+		System.out.println("trying to fetch key " + key);
+
+		throw new UnsupportedOperationException();
 		// TODO first try via LocalProperties?
-				// THEN Config DB Table ?
-				return configService.get(key, null);
+		// THEN Config DB Table ?
+//		return configService.get(key, null);
 	}
 
 	@Override
 	public WellKnownRcp getWellKnownRcp() {
-		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.well-known/elexis-rcp"))
-				.build();
+		CloseableHttpClient closeableHttpClient = OsgiServiceUtil.getService(CloseableHttpClient.class).get();
 		try {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			return new Gson().fromJson(response.body(), WellKnownRcp.class);
-		} catch (IOException | InterruptedException e) {
+			String body = HttpClientUtil.getOrThrowAcceptJson(closeableHttpClient,
+					getBaseUrl() + "/.well-known/elexis-rcp");
+			return new Gson().fromJson(body, WellKnownRcp.class);
+		} catch (IOException e) {
 			logger.warn("Error obtaining /.well-known/elexis-rcp returning defaults", e);
 		} finally {
-			OsgiServiceUtil.ungetService(client);
+			OsgiServiceUtil.ungetService(closeableHttpClient);
 		}
 
 		return new WellKnownRcp();
@@ -86,7 +91,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	@Override
 	public JsonObject getStatus() {
-		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
+		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.status.json")).build();
 
 		HttpResponse<String> response;
@@ -95,8 +100,6 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return JsonParser.parseString(response.body()).getAsJsonObject();
 		} catch (IOException | InterruptedException e) {
 			logger.warn("Error obtaining status", e);
-		} finally {
-			OsgiServiceUtil.ungetService(client);
 		}
 
 		return null;

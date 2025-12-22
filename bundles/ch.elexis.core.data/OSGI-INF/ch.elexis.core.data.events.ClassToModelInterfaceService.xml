@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.data.events.ClassToModelInterfaceService"/>
    </service>
-   <reference cardinality="0..n" field="contributions" interface="ch.elexis.core.data.events.ElexisClassToModelInterfaceContribution" name="contributions"/>
+   <reference cardinality="0..n" field="contributions" field-collection-type="service" interface="ch.elexis.core.data.events.ElexisClassToModelInterfaceContribution" name="contributions"/>
    <implementation class="ch.elexis.core.data.events.ClassToModelInterfaceService"/>
 </scr:component>
