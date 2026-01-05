@@ -124,6 +124,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixInvoiceRoundedAmount">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeTardocOpenCons">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
