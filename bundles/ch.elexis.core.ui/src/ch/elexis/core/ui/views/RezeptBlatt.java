@@ -214,9 +214,9 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 
 		fields[0] = new String[4];
 		fields[0][0] = StringUtils.EMPTY;
-		fields[0][1] = "Medikament";
-		fields[0][2] = "Einnahme";
-		fields[0][3] = "Bemerkung";
+		fields[0][1] = "";
+		fields[0][2] = "";
+		fields[0][3] = "";
 
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
