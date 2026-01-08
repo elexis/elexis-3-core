@@ -277,7 +277,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		} else if (1025 == buttonId) {
 			String selected = null;
 			if (fileMode) {
-				org.eclipse.swt.widgets.FileDialog fd = new FileDialog(getShell());
+				FileDialog fd = new FileDialog(getShell());
 				fd.setFilterExtensions(new String[] { "*.*" });
 				selected = fd.open();
 			} else {
