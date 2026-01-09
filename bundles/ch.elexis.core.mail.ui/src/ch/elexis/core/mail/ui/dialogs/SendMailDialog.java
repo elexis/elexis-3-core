@@ -323,9 +323,12 @@ public class SendMailDialog extends TitleAreaDialog {
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
-						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
-							subjectText.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT)
-									+ StringUtils.SPACE + subjectString);
+						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl) {
+							String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+									subjTpl);
+							subjectText.setText(ctx);
+						} else {
+							subjectText.setText(StringUtils.EMPTY);
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
@@ -580,18 +583,15 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 
 	private String getValidation() {
-		boolean isConfidential = Boolean.TRUE
-				.equals(selectedTemplate != null ? selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) : null);
 		boolean isCheckboxSelected = getConfidentialCheckbox().getSelection();
-
-		if (isConfidential && isCheckboxSelected) {
-			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
-		} else if (isCheckboxSelected && !isConfidential) {
-			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
-		} else {
-			subjectString = subjectText.getText();
+		String rawSubject = StringUtils.defaultString(subjectText.getText());
+		String replacedSubject = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+				rawSubject);
+		if (isCheckboxSelected) {
+			replacedSubject = replacedSubject + MailConstants.CONFIDENTIAL_STRING;
 		}
 
+		subjectString = replacedSubject;
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
 			return "Kein Konto ausgewählt.";
