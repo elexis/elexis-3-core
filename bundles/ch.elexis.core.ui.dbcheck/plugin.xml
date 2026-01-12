@@ -133,6 +133,9 @@
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeTardocOpenCons">
             </ExternalMaintenance>
+            <ExternalMaintenance
+                  MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.SetAmbulatoryFactorOpenCons">
+            </ExternalMaintenance>
    </extension>
 
 </plugin>
