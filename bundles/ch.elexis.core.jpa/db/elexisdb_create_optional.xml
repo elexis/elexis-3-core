@@ -3106,6 +3106,16 @@ WHERE kontakt.id IN (
             <column name="CODE"/>
         </createIndex>
     </changeSet>
+	<changeSet author="thomas" id="manual_table_TARDOC_DIGNIQUALI">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="TARDOC" />
+				<columnExists tableName="TARDOC"
+					columnName="DIGNIQUALI" />
+			</and>
+		</preConditions>
+		<modifyDataType tableName="TARDOC" columnName="DIGNIQUALI" newDataType="VARCHAR(255)"/>
+	</changeSet>
     
     <changeSet author="thomas" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_AMBULANTEPAUSCHALEN">
 		<preConditions onFail="MARK_RAN">

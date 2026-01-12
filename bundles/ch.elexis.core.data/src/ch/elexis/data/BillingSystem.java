@@ -132,6 +132,7 @@ public class BillingSystem {
 	 * @deprecated use
 	 *             ch.elexis.core.services.BillingSystemService#getRequirements(ch.elexis.core.model.IBillingSystem)
 	 */
+	@Deprecated
 	public static String getRequirements(final String billingSystem) {
 		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/bedingungen", null); //$NON-NLS-1$
@@ -238,8 +239,6 @@ public class BillingSystem {
 				if (ic.getAttribute("name").startsWith("Tarmed")) { //$NON-NLS-1$ //$NON-NLS-2$
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/name", //$NON-NLS-1$
 							KVG_NAME);
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/KVG/bedingungen", //$NON-NLS-1$
@@ -248,8 +247,6 @@ public class BillingSystem {
 
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/name", //$NON-NLS-1$
 							UVG_NAME);
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/UVG/bedingungen", //$NON-NLS-1$
@@ -257,8 +254,6 @@ public class BillingSystem {
 					BillingSystem.setConfigurationValue("UVG", BillingSystem.CFG_BILLINGLAW, BillingLaw.UVG.name());
 
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/name", IV_NAME); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/IV/bedingungen", //$NON-NLS-1$
@@ -266,16 +261,12 @@ public class BillingSystem {
 					BillingSystem.setConfigurationValue("IV", BillingSystem.CFG_BILLINGLAW, BillingLaw.IV.name());
 
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/name", MV_NAME); //$NON-NLS-1$
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/MV/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					BillingSystem.setConfigurationValue("MV", BillingSystem.CFG_BILLINGLAW, BillingLaw.MV.name());
 
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/name", //$NON-NLS-1$
 							PRIVATE_NAME);
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/privat/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					BillingSystem.setConfigurationValue("privat", BillingSystem.CFG_BILLINGLAW, BillingLaw.VVG.name());
@@ -283,8 +274,6 @@ public class BillingSystem {
 
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/name", //$NON-NLS-1$
 							VVG_NAME);
-					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/leistungscodes", //$NON-NLS-1$
-							CONST_TARMED_LEISTUNG);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/standardausgabe", //$NON-NLS-1$
 							CONST_TARMED_DRUCKER);
 					ConfigServiceHolder.setGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/VVG/bedingungen", //$NON-NLS-1$
@@ -354,11 +343,11 @@ public class BillingSystem {
 	 * @deprecated use
 	 *             ch.elexis.core.services.BillingSystemService#addOrModifyBillingSystem
 	 */
+	@Deprecated
 	public static void createAbrechnungssystem(final String systemname, final String codesystem, final String ausgabe,
 			final String... requirements) {
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + systemname; //$NON-NLS-1$
 		ConfigServiceHolder.setGlobal(key + "/name", systemname); //$NON-NLS-1$
-		ConfigServiceHolder.setGlobal(key + "/leistungscodes", codesystem); //$NON-NLS-1$
 		ConfigServiceHolder.setGlobal(key + "/standardausgabe", ausgabe); //$NON-NLS-1$
 		ConfigServiceHolder.setGlobal(key + "/bedingungen", StringTool.join(requirements, //$NON-NLS-1$
 				";")); //$NON-NLS-1$
@@ -379,27 +368,11 @@ public class BillingSystem {
 	 * @param billingSystem
 	 * @return
 	 * @since 3.6 moved from {@link Fall}
-	 */
-	public static String getCodeSystem(final String billingSystem) {
-		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-				+ billingSystem + "/leistungscodes", null); //$NON-NLS-1$
-		if (ret == null) { // compatibility
-			BillingSystem.getAbrechnungsSysteme();
-			ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-					+ billingSystem + "/leistungscodes", "?"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return ret;
-	}
-
-	/**
-	 *
-	 * @param billingSystem
-	 * @return
-	 * @since 3.6 moved from {@link Fall}
 	 * @since 3.8 @deprecated
 	 * @deprecated use
 	 *             {@link ch.elexis.core.services.BillingSystemService#getDefaultPrintSystem)}
 	 */
+	@Deprecated
 	public static String getDefaultPrintSystem(final String billingSystem) {
 		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
 				+ billingSystem + "/standardausgabe", null); //$NON-NLS-1$

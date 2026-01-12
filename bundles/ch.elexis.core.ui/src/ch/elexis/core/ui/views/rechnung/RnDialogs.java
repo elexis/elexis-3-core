@@ -570,7 +570,7 @@ public class RnDialogs {
 		private boolean hasTrace(String msg) {
 			List<String> msgs = rn.getTrace(Rechnung.OUTPUT);
 			for (String m : msgs) {
-				if (m.indexOf(msg) > -1) {
+				if (m != null && msg != null && m.toLowerCase().indexOf(msg.toLowerCase()) > -1) {
 					return true;
 				}
 			}

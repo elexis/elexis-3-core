@@ -318,7 +318,9 @@ public abstract class CodeSelectorFactory implements IExecutableExtension {
 			if (cv != null && cv.getViewerWidget() != null && (!cv.getViewerWidget().getControl().isDisposed())) {
 				cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
 			}
-			userStatistics.setContact(user.getAssignedContact());
+			if (user != null) {
+				userStatistics.setContact(user.getAssignedContact());
+			}
 		}
 
 		cPage(final CTabItem ctab, final CodeSystemDescription description) {

@@ -108,8 +108,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			.getExtensions(ExtensionPointConstantsData.RECHNUNGS_MANAGER); // $NON-NLS-1$
 	List<IConfigurationElement> liste_CS_codes = Extensions.getExtensions(ExtensionPointConstantsUi.VERRECHNUNGSCODE); // $NON-NLS-1$
 	Table table;
-	String[] tableCols = { Messages.Core_Name, Messages.Core_Services_Code_System,
-			Messages.Leistungscodes_defaultOutput, Messages.Core_Multiplicator };
+	String[] tableCols = { Messages.Core_Name, Messages.Leistungscodes_defaultOutput, Messages.Core_Multiplicator };
 	int[] tableWidths = { 60, 120, 120, 70 };
 	Button bCheckZero;
 	Button bStrictCheck;
@@ -139,23 +138,21 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				if (at.open() == Dialog.OK) {
 					String[] result = at.getResult();
 					String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
-					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], result[1], //$NON-NLS-1$
-							result[2]);
-					String leistungscode = getDbLeistungscodeName(result[1]);
-					String rnOutputter = getDbAusgabeName(result[2]);
-					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], leistungscode, //$NON-NLS-1$
+					log.info("Dialog.OK localized values: name {} leistung {} ausgabe {}", result[0], StringUtils.EMPTY, //$NON-NLS-1$
+							result[1]);
+					String rnOutputter = getDbAusgabeName(result[1]);
+					log.info("Dialog.OK dbNames values: name {} leistung {} ausgabe {}", result[0], StringUtils.EMPTY, //$NON-NLS-1$
 							rnOutputter);
 
 					configService.set(key + "/name", result[0]); //$NON-NLS-1$
-					configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
 					configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-					configService.set(key + "/standardgrund", result[9]); //$NON-NLS-1$
-					configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
-					configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
-					configService.set(key + "/unused", result[5]); //$NON-NLS-1$
-					configService.set(key + "/disabled", result[6]); //$NON-NLS-1$
-					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW, result[7]);
-					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER, result[8]);
+					configService.set(key + "/standardgrund", result[8]); //$NON-NLS-1$
+					configService.set(key + "/bedingungen", result[2]); //$NON-NLS-1$
+					configService.set(key + "/fakultativ", result[3]); //$NON-NLS-1$
+					configService.set(key + "/unused", result[4]); //$NON-NLS-1$
+					configService.set(key + "/disabled", result[5]); //$NON-NLS-1$
+					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW, result[6]);
+					BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER, result[7]);
 					reload();
 				}
 			}
@@ -192,43 +189,41 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					for (String s1 : configService.getSubNodes(Preferences.LEISTUNGSCODES_CFG_KEY, true)) {
 						if (s1.equals(ssel)) {
 							String[] pre = new String[10];
-							log.info("ssel {} cs {} rn {}", ssel, BillingSystem.getCodeSystem(s1), //$NON-NLS-1$
+							log.info("ssel {} cs {} rn {}", ssel, StringUtils.EMPTY, //$NON-NLS-1$
 									BillingSystem.getDefaultPrintSystem(s1));
 							pre[0] = s1;
-							pre[1] = BillingSystem.getCodeSystem(s1);
-							pre[2] = BillingSystem.getDefaultPrintSystem(s1);
-							pre[3] = BillingSystem.getRequirements(s1);
-							pre[4] = BillingSystem.getOptionals(s1);
-							pre[5] = BillingSystem.getUnused(s1);
-							pre[6] = Boolean.toString(BillingSystem.isDisabled(s1));
-							pre[7] = BillingSystem.getConfigurationValue(s1, BillingSystem.CFG_BILLINGLAW,
+							pre[1] = BillingSystem.getDefaultPrintSystem(s1);
+							pre[2] = BillingSystem.getRequirements(s1);
+							pre[3] = BillingSystem.getOptionals(s1);
+							pre[4] = BillingSystem.getUnused(s1);
+							pre[5] = Boolean.toString(BillingSystem.isDisabled(s1));
+							pre[6] = BillingSystem.getConfigurationValue(s1, BillingSystem.CFG_BILLINGLAW,
 									BillingLaw.KVG.name());
-							pre[8] = BillingSystem.getConfigurationValue(s1, BillingSystem.CFG_NOCOSTBEARER,
+							pre[7] = BillingSystem.getConfigurationValue(s1, BillingSystem.CFG_NOCOSTBEARER,
 									Boolean.FALSE.toString());
-							pre[9] = BillingSystemServiceHolder.get().getDefaultInsuranceReason(
+							pre[8] = BillingSystemServiceHolder.get().getDefaultInsuranceReason(
 									BillingSystemServiceHolder.get().getBillingSystem(s1).get());
 
 							AbrechnungsTypDialog at = new AbrechnungsTypDialog(getShell(), pre);
 							if (at.open() == Dialog.OK) {
 								String[] result = at.getResult();
 								log.info("DoubleClick Okay: name '{}'  localized leistung: '{}' ausgabe: '{}'", //$NON-NLS-1$
-										result[0], result[1], result[2]);
-								String leistungscode = getDbLeistungscodeName(result[1]);
-								String rnOutputter = getDbAusgabeName(result[2]);
+										result[0], StringUtils.EMPTY, result[1]);
+
+								String rnOutputter = getDbAusgabeName(result[1]);
 								String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + result[0]; //$NON-NLS-1$
 								log.info("Dialog.OK db values: name '{}' leistung '{}' ausgabe '{}' key '{}'", //$NON-NLS-1$
-										result[0], leistungscode, rnOutputter, key);
+										result[0], StringUtils.EMPTY, rnOutputter, key);
 								configService.set(key + "/name", result[0]); //$NON-NLS-1$
-								configService.set(key + "/leistungscodes", leistungscode); //$NON-NLS-1$
 								configService.set(key + "/standardausgabe", rnOutputter); //$NON-NLS-1$
-								configService.set(key + "/standardgrund", result[9]); //$NON-NLS-1$
-								configService.set(key + "/bedingungen", result[3]); //$NON-NLS-1$
-								configService.set(key + "/fakultativ", result[4]); //$NON-NLS-1$
-								configService.set(key + "/unused", result[5]); //$NON-NLS-1$
-								configService.set(key + "/disabled", result[6]); //$NON-NLS-1$
-								BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW, result[7]);
+								configService.set(key + "/standardgrund", result[8]); //$NON-NLS-1$
+								configService.set(key + "/bedingungen", result[2]); //$NON-NLS-1$
+								configService.set(key + "/fakultativ", result[3]); //$NON-NLS-1$
+								configService.set(key + "/unused", result[4]); //$NON-NLS-1$
+								configService.set(key + "/disabled", result[5]); //$NON-NLS-1$
+								BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_BILLINGLAW, result[6]);
 								BillingSystem.setConfigurationValue(result[0], BillingSystem.CFG_NOCOSTBEARER,
-										result[8]);
+										result[7]);
 								reload();
 							}
 						}
@@ -361,10 +356,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				TableItem it = new TableItem(table, SWT.NONE);
 				String name = configService.get(cfgkey + "name", "default"); //$NON-NLS-1$ //$NON-NLS-2$
 				it.setText(0, name);
-				String code = configService.get(cfgkey + "leistungscodes", "?");//$NON-NLS-1$ //$NON-NLS-2$
 				String ausgabe = configService.get(cfgkey + "standardausgabe", "?");//$NON-NLS-1$ //$NON-NLS-2$
-				it.setText(1, getLocalizedLeistungscode(code)); // $NON-NLS-1$ //$NON-NLS-2$
-				it.setText(2, getLocalizedAusgabe(ausgabe));
+				it.setText(1, getLocalizedAusgabe(ausgabe));
 				StringBuilder sql = new StringBuilder();
 				TimeTool actdat = new TimeTool();
 				MultiplikatorList multis = new MultiplikatorList("VK_PREISE", name); //$NON-NLS-1$
@@ -376,7 +369,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					}
 					tp = "1.0"; //$NON-NLS-1$
 				}
-				it.setText(3, tp);
+				it.setText(2, tp);
 			}
 		}
 	}
@@ -407,20 +400,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		return dbName;
 	}
 
-	private String getDbLeistungscodeName(String Leistungscode) {
-		String dbName = "unknown: " + Leistungscode; //$NON-NLS-1$
-		for (IConfigurationElement ic : liste_CS_codes) {
-			String name = ic.getAttribute("name"); //$NON-NLS-1$
-			String localizedName = ic.getAttribute("localizedName"); //$NON-NLS-1$
-			if (!(name.contentEquals(Leistungscode)
-					|| (localizedName != null && localizedName.contentEquals(Leistungscode)))) {
-				continue;
-			}
-			return name;
-		}
-		return dbName;
-	}
-
 	private String getLocalizedLeistungscode(String code) {
 		String localizedName = "unknown: " + code; //$NON-NLS-1$
 		for (IConfigurationElement ic : liste_CS_codes) {
@@ -434,6 +413,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		return localizedName;
 	}
 
+	@Override
 	public void init(final IWorkbench workbench) {
 		// *** at the moment do just nothing
 	}
@@ -566,6 +546,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		 * @initialValue the initial input value, or null if none (equivalent to the
 		 *               empty string)
 		 */
+		@Override
 		protected Control createDialogArea(final Composite parent) {
 			// *** remove any existing controls - used if refreshing for
 			// changing field type
@@ -774,7 +755,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 	 */
 	class AbrechnungsTypDialog extends TitleAreaDialog {
 		Text tName;
-		Combo cbLstg;
 		ComboViewer cbReason;
 		Combo cbRechn;
 		ComboViewer cbLaw;
@@ -827,16 +807,6 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 				}
 			});
 
-			// *** label/combo for billingcode system
-			new Label(upperPartComp, SWT.NONE).setText(Messages.Core_Services_Code_System);
-			cbLstg = new Combo(upperPartComp, SWT.READ_ONLY);
-			cbLstg.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-			for (IConfigurationElement ic : liste_CS_codes) {
-				String name = ic.getAttribute("name"); //$NON-NLS-1$
-				log.trace("cbLstg name {} -> {}", name, getLocalizedLeistungscode(name)); //$NON-NLS-1$
-				cbLstg.add(getLocalizedLeistungscode(name));
-			}
-
 			// *** label/combo for default reason
 			new Label(upperPartComp, SWT.NONE).setText(Messages.Leistungscodes_defaultReasonLabel);
 			cbReason = new ComboViewer(upperPartComp, SWT.READ_ONLY);
@@ -886,18 +856,17 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** setting the values
 			String name = "default"; //$NON-NLS-1$
 			if (result != null) {
-				log.info("set values: name {} leistung {} ausgabe {}", result[0], result[1], result[2]); //$NON-NLS-1$
+				log.info("set values: name {} leistung {} ausgabe {}", result[0], StringUtils.EMPTY, result[1]); //$NON-NLS-1$
 				tName.setText(result[0]);
-				cbLstg.setText(getLocalizedLeistungscode(result[1]));
-				cbRechn.setText(getLocalizedAusgabe(result[2]));
+				cbRechn.setText(getLocalizedAusgabe(result[1]));
 				boolean checked = true;
-				if ((result[6] == null) || (result[6].isEmpty()) || (result[6].equalsIgnoreCase("0")) //$NON-NLS-1$
-						|| (result[6].equalsIgnoreCase("false"))) //$NON-NLS-1$
+				if ((result[5] == null) || (result[5].isEmpty()) || (result[5].equalsIgnoreCase("0")) //$NON-NLS-1$
+						|| (result[5].equalsIgnoreCase("false"))) //$NON-NLS-1$
 					checked = false;
 				cbDisabled.setSelection(checked);
-				cbLaw.setSelection(new StructuredSelection(BillingSystemServiceHolder.get().getBillingLaw(result[7])));
-				bNoCostBearer.setSelection(Boolean.valueOf(result[8]));
-				cbReason.setSelection(new StructuredSelection(result[9]));
+				cbLaw.setSelection(new StructuredSelection(BillingSystemServiceHolder.get().getBillingLaw(result[6])));
+				bNoCostBearer.setSelection(Boolean.valueOf(result[7]));
+				cbReason.setSelection(new StructuredSelection(result[8]));
 				name = result[0];
 			}
 
@@ -933,10 +902,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** label/editor for case constants
 			new Label(rightMiddlePart, SWT.NONE).setText(Messages.Leistungscodes_caseConstants);
 			ldConstants = new ListDisplay<>(rightMiddlePart, SWT.NONE, new ListDisplay.LDListener() {
+				@Override
 				public String getLabel(Object o) {
 					return (String) o;
 				}
 
+				@Override
 				public void hyperlinkActivated(String l) {
 					String msg = Messages.Leistungscodes_pleaseEnterNameAndValue;
 					InputDialog inp = new InputDialog(getShell(), l + Messages.Leistungscodes_add, msg, StringTool.leer,
@@ -1008,8 +979,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 			// *** label/editor field for required fields
 			String[] data = null;
-			if ((result != null) && (result.length > 3) && (result[3] != null))
-				data = result[3].split(DEFINITIONSDELIMITER);
+			if ((result != null) && (result.length > 3) && (result[2] != null))
+				data = result[2].split(DEFINITIONSDELIMITER);
 			FieldDefsDisplay fdReq = new FieldDefsDisplay(lowerPartComp, SWT.BORDER, data);
 			fdReq.setLabel(Messages.Leistungscodes_necessaryData);
 			fdReq.setData(tName.getText());
@@ -1018,8 +989,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 			// *** label/editor field for optional fields
 			data = null;
-			if ((result != null) && (result.length > 4) && (result[4] != null))
-				data = result[4].split(DEFINITIONSDELIMITER);
+			if ((result != null) && (result.length > 4) && (result[3] != null))
+				data = result[3].split(DEFINITIONSDELIMITER);
 			FieldDefsDisplay fdOpt = new FieldDefsDisplay(lowerPartComp, SWT.BORDER, data);
 			fdOpt.setLabel(Messages.Core_optional_data);
 			ldOptional = fdOpt.getListDisplay();
@@ -1028,8 +999,8 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 			// *** label/editor field for unused fields
 			if (AccessControlServiceHolder.get().evaluate(EvACEs.CASE_DEFINE_SPECIALS)) {
 				data = null;
-				if ((result != null) && (result.length > 5) && (result[5] != null))
-					data = result[5].split(DEFINITIONSDELIMITER);
+				if ((result != null) && (result.length > 5) && (result[4] != null))
+					data = result[4].split(DEFINITIONSDELIMITER);
 				FieldDefsDisplay fdUnused = new FieldDefsDisplay(lowerPartComp, SWT.BORDER, data);
 				fdUnused.setLabel(Messages.Leistungscodes_unusedData);
 				ldUnused = fdUnused.getListDisplay();
@@ -1111,16 +1082,15 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		protected void okPressed() {
 			result = new String[10];
 			result[0] = tName.getText();
-			result[1] = cbLstg.getText();
-			result[2] = cbRechn.getText();
-			log.info("localized values: name {} leistung {} ausgabe {}", tName.getText(), cbLstg.getText(), //$NON-NLS-1$
+			result[1] = cbRechn.getText();
+			log.info("localized values: name {} leistung {} ausgabe {}", tName.getText(), StringUtils.EMPTY, //$NON-NLS-1$
 					cbRechn.getText());
-			result[3] = StringTool.join(ldRequirements.getAll(), DEFINITIONSDELIMITER);
-			result[4] = StringTool.join(ldOptional.getAll(), DEFINITIONSDELIMITER);
+			result[2] = StringTool.join(ldRequirements.getAll(), DEFINITIONSDELIMITER);
+			result[3] = StringTool.join(ldOptional.getAll(), DEFINITIONSDELIMITER);
 			if (ldUnused != null) {
-				result[5] = StringTool.join(ldUnused.getAll(), DEFINITIONSDELIMITER);
+				result[4] = StringTool.join(ldUnused.getAll(), DEFINITIONSDELIMITER);
 			}
-			result[6] = (cbDisabled.getSelection() == true) ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			result[5] = (cbDisabled.getSelection() == true) ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 			if (bUseMultiForEigenleistung.getSelection()) {
 				if (!MultiplikatorList.isEigenleistungUseMulti(tName.getText())) {
 					MultiplikatorList.setEigenleistungUseMulti(tName.getText());
@@ -1130,9 +1100,9 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 					MultiplikatorList.removeEigenleistungUseMulti(tName.getText());
 				}
 			}
-			result[7] = ((BillingLaw) cbLaw.getStructuredSelection().getFirstElement()).name();
-			result[8] = Boolean.toString(bNoCostBearer.getSelection());
-			result[9] = (String) cbReason.getStructuredSelection().getFirstElement();
+			result[6] = ((BillingLaw) cbLaw.getStructuredSelection().getFirstElement()).name();
+			result[7] = Boolean.toString(bNoCostBearer.getSelection());
+			result[8] = (String) cbReason.getStructuredSelection().getFirstElement();
 			super.okPressed();
 		}
 
@@ -1320,10 +1290,12 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 
 			// ****** create the ListDisplay
 			listDisplay = new ListDisplay<>(this, SWT.NONE, new ListDisplay.LDListener() {
+				@Override
 				public void hyperlinkActivated(final String l) {
 					_FieldsHyperlinkActivated(l, StringTool.leer);
 				}
 
+				@Override
 				public String getLabel(final Object o) {
 					return _FieldsGetLabel(o);
 				}
@@ -1449,7 +1421,7 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 							if ("K".equals(fieldType.substring(0, 1)) && fieldName != null && getData() != null) { //$NON-NLS-1$
 								String message = MessageFormat.format(
 										"Move the selected field [{0}] to cost bearer table for billing systems [{1}]?",
-										fieldName, (String) getData());
+										fieldName, getData());
 								boolean performMove = MessageDialog.openQuestion(UiDesk.getTopShell(),
 										"Move to cost bearer table", message);
 								if (performMove) {

@@ -1,20 +1,16 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import org.apache.commons.lang3.StringUtils;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.ChargeItem;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Invoice;
-import org.hl7.fhir.r4.model.Invoice.InvoiceLineItemComponent;
-import org.hl7.fhir.r4.model.Invoice.InvoiceLineItemPriceComponentComponent;
-import org.hl7.fhir.r4.model.Invoice.InvoicePriceComponentType;
 import org.hl7.fhir.r4.model.Invoice.InvoiceStatus;
-import org.hl7.fhir.r4.model.Reference;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
@@ -22,6 +18,7 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
@@ -43,6 +40,16 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 			+ "=ChargeItem.IBilled)")
 	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
 
+	private IInvoiceInvoiceAttributeMapper attributeMapper;
+
+	public InvoiceIEncounterTransformer() {
+	}
+
+	@Activate
+	public void activate() {
+		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
+	}
+
 	private final CodeableConcept TYPE_VIRTUAL = new CodeableConcept(
 			new Coding(StringUtils.EMPTY, "encounter-only", StringUtils.EMPTY));
 
@@ -60,36 +67,12 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 
 		List<IBilled> billed = localObject.getBilled();
 		for (IBilled iBilled : billed) {
-			invoice.addLineItem(toInvoiceLineItemComponent(iBilled, includes, sumTotal));
+			invoice.addLineItem(attributeMapper.toInvoiceLineItemComponent(iBilled, includes, sumTotal));
 		}
 
 		invoice.setTotalGross(FhirUtil.toFhir(sumTotal));
 
 		return Optional.of(invoice);
-	}
-
-	private InvoiceLineItemComponent toInvoiceLineItemComponent(IBilled iBilled, Set<Include> includes,
-			ch.rgw.tools.Money sum) {
-
-		InvoiceLineItemComponent ilic = new InvoiceLineItemComponent(FhirUtil.getReference(iBilled));
-
-		if (includes.contains(new Include("Invoice.lineItem.chargeItem"))) {
-			ChargeItem chargeItem = chargeItemTransformer.getFhirObject(iBilled).get();
-			((Reference) ilic.getChargeItem()).setResource(chargeItem);
-		}
-
-		InvoiceLineItemPriceComponentComponent ilipcc = new InvoiceLineItemPriceComponentComponent();
-		ilipcc.setType(InvoicePriceComponentType.BASE);
-
-		// VerrechnungsDisplay#updateBilledLabel
-		ch.rgw.tools.Money total = iBilled.getTotal();
-		sum.addMoney(total);
-		ilipcc.setAmount(FhirUtil.toFhir(total));
-		ilipcc.setFactor(iBilled.getFactor());
-
-		ilic.setPriceComponent(Collections.singletonList(ilipcc));
-
-		return ilic;
 	}
 
 	@Override

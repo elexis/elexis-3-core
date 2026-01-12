@@ -503,13 +503,15 @@ public class LaborChartPopupManager {
 	public boolean dispose() {
 		if (chartPopup != null && !chartPopup.isDisposed()) {
 			chartPopup.dispose();
-			legendFont.dispose();
 			chartPopup = null;
 		}
 		if (chart != null && !chart.isDisposed()) {
 			chart.dispose();
-			legendFont.dispose();
 			chart = null;
+		}
+		if (legendFont != null && !legendFont.isDisposed()) {
+			legendFont.dispose();
+			legendFont = null;
 		}
 		return false;
 	}

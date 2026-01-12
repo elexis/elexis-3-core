@@ -81,7 +81,7 @@ public class OsgiServiceUtil {
 		if (reference != null) {
 			Bundle bundle = FrameworkUtil.getBundle(service.getClass());
 			// fallback to our context ...
-			if (bundle.getBundleContext() == null) {
+			if (bundle == null || bundle.getBundleContext() == null) {
 				bundle = FrameworkUtil.getBundle(OsgiServiceUtil.class);
 			}
 			if (bundle.getBundleContext().ungetService(reference)) {

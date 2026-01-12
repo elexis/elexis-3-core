@@ -15,6 +15,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.swt.program.Program;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.documents.DocumentStore;
@@ -35,7 +36,7 @@ import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")
 public class SpotlightUiUtil {
-
+	private static Logger logger = LoggerFactory.getLogger(SpotlightUiUtil.class);
 	public static final String ACTION_SHOW_LATEST_LABORATORY = "sll::";
 	public static final String ACTION_SHOW_LATEST_ENCOUNTER = "sle::";
 	public static final String ACTION_SHOW_FIXED_MEDICATION = "sfm::";
@@ -102,7 +103,6 @@ public class SpotlightUiUtil {
 			IEncounter encounter = CoreModelServiceHolder.get().load(objectId, IEncounter.class).orElse(null);
 			return handleEnter(encounter);
 		default:
-			System.out.println("No default enter action");
 			return false;
 		}
 	}
@@ -123,6 +123,7 @@ public class SpotlightUiUtil {
 			if (contact != null) {
 				IPatient patient = CoreModelServiceHolder.get().load(contact.getId(), IPatient.class).orElse(null);
 				contextService.getRootContext().setTyped(patient);
+				partService.showPart("ch.elexis.agenda.largeview", PartState.ACTIVATE);
 				return true;
 			}
 		}
@@ -134,10 +135,11 @@ public class SpotlightUiUtil {
 			String patientId = string.substring(Category.PATIENT.name().length() + 2);
 			IPatient patient = CoreModelServiceHolder.get().load(patientId, IPatient.class).orElse(null);
 			if (patient == null) {
-				System.out.println("Could not load patient " + patientId);
+				logger.info("Could not load patient " + patientId);
 			}
 			contextService.getRootContext().setTyped(patient);
 			return patient != null;
+
 		} else if (string.startsWith(ACTION_SHOW_BALANCE)) {
 			return performActionShowBalance(string.substring(ACTION_SHOW_BALANCE.length()));
 
@@ -146,6 +148,25 @@ public class SpotlightUiUtil {
 
 		} else if (string.startsWith(ACTION_SHOW_LATEST_ENCOUNTER)) {
 			return performActionShowLatestEncounter(string.substring(ACTION_SHOW_LATEST_ENCOUNTER.length()));
+
+		} else if (string.startsWith(ACTION_SHOW_APPOINTMENT)) {
+			String appointmentId = string.substring(ACTION_SHOW_APPOINTMENT.length());
+			IAppointment appointment = CoreModelServiceHolder.get().load(appointmentId, IAppointment.class)
+					.orElse(null);
+			return handleEnter(appointment);
+		} else if (string.startsWith(ACTION_SHOW_FIXED_MEDICATION)) {
+			String patientId = string.substring(ACTION_SHOW_FIXED_MEDICATION.length());
+			return performActionShowFixedMedication(patientId);
+		}
+
+		return false;
+	}
+
+	private boolean performActionShowFixedMedication(String patientId) {
+		boolean ok = handleEnter(Category.PATIENT.name() + "::" + patientId);
+		if (ok) {
+			partService.showPart("ch.elexis.core.ui.medication.views.MedicationView", PartState.ACTIVATE);
+			return true;
 		}
 		return false;
 	}
