@@ -5324,6 +5324,11 @@ public class Messages extends NLS {
 	public static String ReminderPrefences_Visible;
 	public static String ReminderPrefences_Hidden;
 	public static String ReminderPrefences_ColInfo;
+	public static String BestellView_OrderSentWithPluginTitle;
+	public static String BestellView_OrderSentWithPluginBody;
+	public static String OrderManagement_DeleteOrder;
+	public static String OrderManagement_DeleteOrder_Title;
+	public static String OrderManagement_DeleteOrder_Message;
 	public static String MandatorFilter_lockedMandatorTooltip;
 	public static String TardocSpecialistComposite_selectDignitiesTitle;
 	public static String RechnungsPrefs_TardocSpecialistLink;

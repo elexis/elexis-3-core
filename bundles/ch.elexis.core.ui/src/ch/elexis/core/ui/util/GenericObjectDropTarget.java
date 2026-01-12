@@ -97,10 +97,7 @@ public class GenericObjectDropTarget implements DropTargetListener, ICodeSelecto
 			String droppedString = (String) event.data;
 			String[] parts = droppedString.split(","); //$NON-NLS-1$
 			for (String part : parts) {
-				Object loaded = StoreToStringServiceHolder.getLoadFromString(part);
-				if (loaded != null) {
-					ret.add(loaded);
-				}
+				StoreToStringServiceHolder.get().loadFromString(part.trim()).ifPresent(ret::add);
 			}
 			return ret;
 		}
