@@ -583,15 +583,16 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 
 	private String getValidation() {
-		boolean isCheckboxSelected = getConfidentialCheckbox().getSelection();
+
+		boolean templateConfidential = Boolean.TRUE
+				.equals(selectedTemplate != null ? selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) : null);
+		boolean checkboxConfidential = getConfidentialCheckbox().getSelection();
 		String rawSubject = StringUtils.defaultString(subjectText.getText());
 		String replacedSubject = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 				rawSubject);
-		if (isCheckboxSelected) {
-			replacedSubject = replacedSubject + MailConstants.CONFIDENTIAL_STRING;
-		}
+		boolean finalConfidential = templateConfidential || checkboxConfidential;
+		subjectString = finalConfidential ? replacedSubject + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
 
-		subjectString = replacedSubject;
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
 			return "Kein Konto ausgewählt.";
