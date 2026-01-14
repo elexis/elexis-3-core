@@ -6,16 +6,19 @@ import java.util.Map;
 
 import org.hl7.fhir.r4.model.BaseResource;
 import org.hl7.fhir.r4.model.CareTeam;
+import org.hl7.fhir.r4.model.Coverage;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.Task;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.fhir.model.impl.FhirCoverage;
 import ch.elexis.core.fhir.model.impl.FhirPatient;
 import ch.elexis.core.fhir.model.impl.FhirPractitionerContact;
 import ch.elexis.core.fhir.model.impl.FhirReminder;
 import ch.elexis.core.fhir.model.impl.FhirUserGroup;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
@@ -29,9 +32,10 @@ public class ModelAdapterFactory {
 
 	public ModelAdapterFactory() {
 		fhirAdapterClassMap = Map.of(Task.class, FhirReminder.class, Patient.class, FhirPatient.class,
-				Practitioner.class, FhirPractitionerContact.class, CareTeam.class, FhirUserGroup.class);
+				Practitioner.class, FhirPractitionerContact.class, CareTeam.class, FhirUserGroup.class, Coverage.class,
+				FhirCoverage.class);
 		modelFhirClassMap = Map.of(IReminder.class, Task.class, IPatient.class, Patient.class, IMandator.class,
-				Practitioner.class, IUserGroup.class, CareTeam.class);
+				Practitioner.class, IUserGroup.class, CareTeam.class, ICoverage.class, Coverage.class);
 	}
 
 	public Identifiable createAdapter(BaseResource resource) {

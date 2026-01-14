@@ -24,7 +24,8 @@ import org.hl7.fhir.r4.model.Task.TaskPriority;
 import org.hl7.fhir.r4.model.Task.TaskStatus;
 
 import ca.uhn.fhir.model.primitive.IdDt;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
+import ch.elexis.core.fhir.model.FhirModelServiceHolder;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
@@ -34,7 +35,7 @@ import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
 
-public class FhirReminder extends AbstractFhirModelAdapter<Task> implements IReminder {
+public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> implements IReminder {
 
 	private IContact creator;
 

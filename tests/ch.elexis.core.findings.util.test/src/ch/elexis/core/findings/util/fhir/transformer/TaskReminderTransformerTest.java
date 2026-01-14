@@ -13,9 +13,9 @@ import org.hl7.fhir.r4.model.Task.TaskStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;

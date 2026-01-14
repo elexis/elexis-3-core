@@ -131,6 +131,7 @@ public interface IFhirModelService {
 	 * Get a HAPI FHIR {@link IQuery} from the FHIR client of this
 	 * {@link IFhirModelService} for search by the provided url.
 	 * 
+	 * 
 	 * @param byUrl
 	 * @return
 	 */

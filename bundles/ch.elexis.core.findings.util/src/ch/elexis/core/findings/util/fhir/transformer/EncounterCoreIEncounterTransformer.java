@@ -11,16 +11,17 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IEncounterEncounterAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.helper.IEncounterHelper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IEncounterEncounterAttributeMapper;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 
 @Component
@@ -29,19 +30,22 @@ public class EncounterCoreIEncounterTransformer implements IFhirTransformer<Enco
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
+	@Reference
+	private IEncounterService encounterService;
+
 	private IEncounterEncounterAttributeMapper attributeMapper;
 	private IEncounterHelper encounterHelper;
 
 	@Activate
 	public void activate() {
-		attributeMapper = new IEncounterEncounterAttributeMapper();
+		attributeMapper = new IEncounterEncounterAttributeMapper(encounterService);
 		encounterHelper = new IEncounterHelper(coreModelService, null);
 	}
 
 	@Override
 	public Optional<Encounter> getFhirObject(IEncounter localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Encounter encounter = new Encounter();
-		attributeMapper.elexisToFhir(localObject, encounter, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, encounter, summaryEnum);
 		return Optional.of(encounter);
 
 	}
@@ -59,9 +63,9 @@ public class EncounterCoreIEncounterTransformer implements IFhirTransformer<Enco
 
 	@Override
 	public Optional<IEncounter> updateLocalObject(Encounter fhirObject, IEncounter localObject) {
-			attributeMapper.fhirToElexis(fhirObject, localObject);
-			coreModelService.save(localObject);
-			return Optional.of(localObject);
+		attributeMapper.fhirToElexis(fhirObject, localObject);
+		coreModelService.save(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override

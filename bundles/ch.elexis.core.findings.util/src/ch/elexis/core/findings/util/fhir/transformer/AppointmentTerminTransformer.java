@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,8 +11,8 @@ import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IAppointmentAppointmentAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IAppointmentAppointmentAttributeMapper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
@@ -66,7 +65,7 @@ public class AppointmentTerminTransformer implements IFhirTransformer<Appointmen
 			Set<Include> includes) {
 
 		Appointment appointment = new Appointment();
-		attributeMapper.elexisToFhir(localObject, appointment, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, appointment, summaryEnum);
 		return Optional.of(appointment);
 	}
 

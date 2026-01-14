@@ -10,9 +10,9 @@ import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IInvoiceInvoiceAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.IModelService;
@@ -32,13 +32,13 @@ public class InvoiceIInvoiceTransformer implements IFhirTransformer<Invoice, IIn
 
 	@Activate
 	private void activate() {
-		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
+		attributeMapper = new IInvoiceInvoiceAttributeMapper();
 	}
 
 	@Override
 	public Optional<Invoice> getFhirObject(IInvoice localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Invoice invoice = new Invoice();
-		attributeMapper.elexisToFhir(localObject, invoice, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, invoice, summaryEnum);
 		return Optional.of(invoice);
 	}
 

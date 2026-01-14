@@ -16,6 +16,7 @@ import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.fhir.mapper.r4.findings.ObservationAccessor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IObservation;
@@ -26,7 +27,6 @@ import ch.elexis.core.findings.fhir.model.service.FindingsModelService;
 import ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder;
 import ch.elexis.core.findings.scripting.FindingsScriptingUtil;
 import ch.elexis.core.findings.util.ModelUtil;
-import ch.elexis.core.findings.util.fhir.accessor.ObservationAccessor;
 import ch.elexis.core.jpa.entities.ObservationLink;
 import ch.elexis.core.model.IXid;
 

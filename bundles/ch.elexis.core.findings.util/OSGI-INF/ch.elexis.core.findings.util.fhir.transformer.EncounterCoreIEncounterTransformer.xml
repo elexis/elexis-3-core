@@ -4,5 +4,6 @@
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
    </service>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="encounterService" interface="ch.elexis.core.services.IEncounterService" name="encounterService"/>
    <implementation class="ch.elexis.core.findings.util.fhir.transformer.EncounterCoreIEncounterTransformer"/>
 </scr:component>

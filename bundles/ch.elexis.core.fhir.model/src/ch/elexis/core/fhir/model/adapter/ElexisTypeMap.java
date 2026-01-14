@@ -100,7 +100,7 @@ public class ElexisTypeMap {
 	 * @param obj
 	 * @return <code>null</code> if not resolvable, else the resp. Entity Type
 	 */
-	public static String getKeyForObject(AbstractFhirModelAdapter<?> obj) {
+	public static String getKeyForObject(AbstractFhirModelAdapter<?, ?> obj) {
 		if (obj != null) {
 			return classToStsMap.get(obj.getModelType());
 		}
