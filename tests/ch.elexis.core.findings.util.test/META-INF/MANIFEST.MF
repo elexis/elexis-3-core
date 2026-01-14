@@ -6,7 +6,8 @@ Bundle-SymbolicName: ch.elexis.core.findings.util.test
 Bundle-Version: 3.13.0.qualifier
 Fragment-Host: ch.elexis.core.findings.util;bundle-version="3.13.0"
 iBundle-RequiredExecutionEnvironment: JavaSE-21
-Import-Package: ch.elexis.core.jpa.entities,
+Import-Package: ch.elexis.core.fhir.mapper.r4.util,
+ ch.elexis.core.jpa.entities,
  ch.elexis.core.jpa.model.adapter,
  ch.elexis.core.l10n,
  org.apache.commons.io

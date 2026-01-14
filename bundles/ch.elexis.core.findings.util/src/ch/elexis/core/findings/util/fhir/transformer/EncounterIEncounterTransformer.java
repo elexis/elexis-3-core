@@ -12,17 +12,18 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IEncounterEncounterAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.helper.FindingsContentHelper;
+import ch.elexis.core.fhir.mapper.r4.helper.IEncounterHelper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
-import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IEncounterEncounterAttributeMapper;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
 
 @Component
@@ -40,6 +41,9 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 	@Reference
 	private IMigratorService migratorService;
 
+	@Reference
+	private IEncounterService encounterService;
+
 	private FindingsContentHelper contentHelper;
 	private IEncounterHelper encounterHelper;
 	private IEncounterEncounterAttributeMapper attributeMapper;
@@ -48,7 +52,7 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 	public void activate() {
 		contentHelper = new FindingsContentHelper();
 		encounterHelper = new IEncounterHelper(coreModelService, findingsModelService);
-		attributeMapper = new IEncounterEncounterAttributeMapper();
+		attributeMapper = new IEncounterEncounterAttributeMapper(encounterService);
 	}
 
 	@Override

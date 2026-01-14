@@ -13,10 +13,10 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.helper.CodeSystemUtil;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemUtil;
 
 @Component
 public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem, String> {

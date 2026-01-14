@@ -12,8 +12,8 @@ import org.osgi.service.component.annotations.Component;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.helper.MandantHelper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.MandantHelper;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 

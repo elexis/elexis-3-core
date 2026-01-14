@@ -15,6 +15,7 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.fhir.model.interfaces.IFhirCoverage;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -266,6 +267,9 @@ public class CoverageService implements ICoverageService {
 
 	@Override
 	public Optional<IEncounter> getLatestEncounter(ICoverage coverage) {
+		if (coverage instanceof IFhirCoverage _coverage) {
+			return _coverage.getLatestEncounter();
+		}
 		List<IEncounter> encounters = new ArrayList<>(
 				coverage.getEncounters().stream().filter(e -> hasReadRight(IEncounter.class, e)).toList());
 		if (encounters != null && !encounters.isEmpty()) {
@@ -329,8 +333,8 @@ public class CoverageService implements ICoverageService {
 		if (element != null) {
 			IQuery<ISickCertificate> sickCertQuery = CoreModelServiceHolder.get().getQuery(ISickCertificate.class)
 					.and("fall", COMPARATOR.EQUALS, element);
-			IQuery<IInvoice> invoiceQuery = CoreModelServiceHolder.get().getQuery(IInvoice.class)
-					.and("fall", COMPARATOR.EQUALS, element);
+			IQuery<IInvoice> invoiceQuery = CoreModelServiceHolder.get().getQuery(IInvoice.class).and("fall",
+					COMPARATOR.EQUALS, element);
 			return element.getEncounters().isEmpty() && sickCertQuery.execute().isEmpty()
 					&& invoiceQuery.execute().isEmpty();
 		}

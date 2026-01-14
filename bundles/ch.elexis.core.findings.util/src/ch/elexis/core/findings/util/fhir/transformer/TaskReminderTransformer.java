@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -12,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IReminderTaskAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IReminderTaskAttributeMapper;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.IModelService;
 
@@ -67,7 +66,7 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 			@Override
 			public Task call() throws Exception {
 				Task ret = new Task();
-				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
+				attributeMapper.elexisToFhir(localObject, ret, summaryEnum);
 				return ret;
 			}
 		});

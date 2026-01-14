@@ -1,10 +1,10 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ServiceRequest;
 import org.osgi.service.component.annotations.Component;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.helper.FindingsContentHelper;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -25,7 +26,6 @@ import ch.elexis.core.findings.IProcedureRequest;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;

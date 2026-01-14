@@ -9,7 +9,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 
-public class FhirUserGroup extends AbstractFhirModelAdapter<CareTeam> implements IUserGroup {
+public class FhirUserGroup extends AbstractFhirModelAdapter<IUserGroup, CareTeam> implements IUserGroup {
 
 	public FhirUserGroup(CareTeam fhirResource) {
 		super(fhirResource);

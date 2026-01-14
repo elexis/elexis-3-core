@@ -175,4 +175,8 @@
          arch="aarch64"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.ui.e4.fhir"
+         version="0.0.0"/>
+
 </feature>

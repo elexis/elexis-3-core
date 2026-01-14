@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IVaccinationImmunizationAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.MedicamentCoding;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IVaccinationImmunizationAttributeMapper;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IVaccination;
@@ -54,7 +54,7 @@ public class ImmunizationVaccinationTransformer implements IFhirTransformer<Immu
 	public Optional<Immunization> getFhirObject(IVaccination localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		Immunization fhirObject = new Immunization();
-		attributeMapper.elexisToFhir(localObject, fhirObject, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, fhirObject, summaryEnum);
 		return Optional.of(fhirObject);
 	}
 

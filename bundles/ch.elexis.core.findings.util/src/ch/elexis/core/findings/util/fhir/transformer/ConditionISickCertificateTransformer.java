@@ -9,9 +9,9 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.ISickCertificateConditionAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.ISickCertificateConditionAttributeMapper;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.IModelService;
 
@@ -24,14 +24,14 @@ public class ConditionISickCertificateTransformer implements IFhirTransformer<Co
 	private ISickCertificateConditionAttributeMapper attributeMapper;
 
 	public ConditionISickCertificateTransformer() {
-		attributeMapper = new ISickCertificateConditionAttributeMapper();
+		attributeMapper = new ISickCertificateConditionAttributeMapper(coreModelService);
 	}
 
 	@Override
 	public Optional<Condition> getFhirObject(ISickCertificate localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		Condition condition = new Condition();
-		attributeMapper.elexisToFhir(localObject, condition, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, condition, summaryEnum);
 		FhirUtil.setVersionedIdPartLastUpdatedMeta(Condition.class, condition, localObject);
 		return Optional.of(condition);
 	}

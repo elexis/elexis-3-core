@@ -15,10 +15,21 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.types.Country;
 
-public class FhirPractitionerContact extends AbstractFhirModelAdapter<Practitioner> implements IContact, IMandator {
+public class FhirPractitionerContact extends AbstractFhirModelAdapter<IMandator, Practitioner>
+		implements IContact, IMandator {
 
 	public FhirPractitionerContact(Practitioner fhirResource) {
 		super(fhirResource);
+	}
+
+	@Override
+	public Class<Practitioner> getFhirType() {
+		return Practitioner.class;
+	}
+
+	@Override
+	public Class<?> getModelType() {
+		return IContact.class;
 	}
 
 	@Override
@@ -393,16 +404,6 @@ public class FhirPractitionerContact extends AbstractFhirModelAdapter<Practition
 	public Map<Object, Object> getMap() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Class<Practitioner> getFhirType() {
-		return Practitioner.class;
-	}
-
-	@Override
-	public Class<?> getModelType() {
-		return IContact.class;
 	}
 
 	@Override

@@ -7,10 +7,10 @@ import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.fhir.mapper.r4.findings.DocumentReferenceAccessor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IDocumentReference;
 import ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder;
-import ch.elexis.core.findings.util.fhir.accessor.DocumentReferenceAccessor;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IXid;
 

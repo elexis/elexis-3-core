@@ -10,8 +10,8 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IPersonRelatedPersonAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonRelatedPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.services.IModelService;
 
