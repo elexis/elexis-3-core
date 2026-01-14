@@ -69,6 +69,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
@@ -180,7 +181,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
-							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
+							MessageEvent.fireInformation(Messages.ReminderView_importantRemindersCaption, sb.toString(),
+									false);
 						}
 					}
 				});
