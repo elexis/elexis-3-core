@@ -1,4 +1,4 @@
-package ch.elexis.core.ui.util;
+package ch.elexis.core.model.format;
 
 import java.util.regex.Pattern;
 
