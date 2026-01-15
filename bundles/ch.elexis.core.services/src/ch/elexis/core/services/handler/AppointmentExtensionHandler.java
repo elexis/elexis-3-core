@@ -50,14 +50,14 @@ public class AppointmentExtensionHandler {
 		List<IAppointment> linkedAppointments = new ArrayList<>();
 		String extension = mainAppointment.getExtension();
 
-		if (extension != null && !extension.isEmpty()) {
-			String[] parts = extension.split(",");
+		String linkPart = getLinkPart(extension);
+		if (!linkPart.isBlank()) {
+			String[] parts = linkPart.split(",");
 			for (String part : parts) {
+				part = part.trim();
 				if (part.startsWith(KOMBI_PREFIX)) {
-					String id = part.replace(KOMBI_PREFIX, "").trim();
-					Optional<IAppointment> linkedAppointment = CoreModelServiceHolder.get().load(id,
-							IAppointment.class);
-					linkedAppointment.ifPresent(linkedAppointments::add);
+					String id = part.substring(KOMBI_PREFIX.length()).trim();
+					CoreModelServiceHolder.get().load(id, IAppointment.class).ifPresent(linkedAppointments::add);
 				}
 			}
 		}
@@ -128,10 +128,12 @@ public class AppointmentExtensionHandler {
 	}
 
 	private static String extractIdByPrefix(String extension, String prefix) {
-		String[] parts = extension.split(",");
+		String linkPart = getLinkPart(extension);
+		String[] parts = linkPart.split(",");
 		for (String part : parts) {
+			part = part.trim();
 			if (part.startsWith(prefix)) {
-				return part.replace(prefix, "").trim();
+				return part.substring(prefix.length()).trim();
 			}
 		}
 		return null;
@@ -173,4 +175,10 @@ public class AppointmentExtensionHandler {
 		return mainAppointment.getExtension();
 	}
 
+	private static String getLinkPart(String extension) {
+		if (extension == null || extension.isBlank()) {
+			return "";
+		}
+		return extension.split("\\|\\|", 2)[0];
+	}
 }
