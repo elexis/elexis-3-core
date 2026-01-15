@@ -5395,6 +5395,10 @@ public class Messages extends NLS {
 	public static String RegiomedCheckTemplate_BtnDelete;
 	public static String LaborOrdersComposite_btnGroupHighlighting;
 	public static String LaborOrdersComposite_btnGroupHighlightingTooltip;
+	public static String AgendaFarben_Terminliste;
+	public static String AgendaFarben_PastAppointments;
+	public static String AgendaFarben_FutureAppointments;
+	public static String AgendaFarben_DoubleClickToChange;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
