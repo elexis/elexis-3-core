@@ -84,6 +84,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	private static Object addTarifLock = new Object();
 	private static Logger logger;
 
+	private static List<String> tardocConsCodes = List.of("AA.00.0010", "CA.00.0010");
+
 	private final IModelService coreModelService;
 	private final EncounterSelector encounterSelector;
 
@@ -293,7 +295,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 						break;
 					}
 					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("TARDOC")
-							&& verrechenbar.getCode().equals(tardocConsCode)) {
+							&& tardocConsCodes.contains(verrechenbar.getCode())) {
 						addCons = false;
 						break;
 					}
