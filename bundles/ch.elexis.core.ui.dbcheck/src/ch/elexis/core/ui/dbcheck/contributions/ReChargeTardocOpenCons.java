@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
@@ -69,24 +72,11 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 					return getProblemsString();
 				}
 				List<IBilled> tardocVerrechnet = getTardocOnly(encounter.getBilled());
-				for (IBilled tardocVerr : tardocVerrechnet) {
-					IBillable verrechenbar = tardocVerr.getBillable();
-					if (verrechenbar != null) {
-						// make sure we verrechenbar is matching for the kons
-						Optional<ICodeElement> matchingVerrechenbar = codeElementService.loadFromString(
-								verrechenbar.getCodeSystemName(), verrechenbar.getCode(), getContext(encounter));
-						if (matchingVerrechenbar.isPresent()) {
-							double amount = tardocVerr.getAmount();
-							removeVerrechnet(encounter, tardocVerr);
-							addVerrechnet(encounter, matchingVerrechenbar, amount);
-						} else {
-							addProblem("Could not find matching Verrechenbar for [" + verrechenbar.getCodeSystemName()
-									+ "->" + verrechenbar.getCode() + "]", encounter);
-						}
-					} else {
-						addProblem("Could not find Verrechenbar for [" + tardocVerr.getLabel() + "]", encounter);
-					}
-				}
+				// make sure Referenzleistung is re charged after Hauptleistung
+				List<IBilled> tardocReferenzVerrechnet = tardocVerrechnet.stream().filter(v -> isReferenz(v)).toList();
+				tardocVerrechnet.removeAll(tardocReferenzVerrechnet);
+				reCharge(tardocVerrechnet, encounter);
+				reCharge(tardocReferenzVerrechnet, encounter);
 				count++;
 				pm.worked(1);
 			}
@@ -99,6 +89,47 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 
 		return "TARDOC Leistungen von [" + count + "] Konsultationen des Jahres [" + getBeginOfYear().get(TimeTool.YEAR)
 				+ "] neu verrechnet" + getProblemsString();
+	}
+
+	private void reCharge(List<IBilled> tardocVerrechnet, IEncounter encounter) {
+		for (IBilled tardocVerr : tardocVerrechnet) {
+			IBillable verrechenbar = tardocVerr.getBillable();
+			if (verrechenbar != null) {
+				// make sure we verrechenbar is matching for the kons
+				Optional<ICodeElement> matchingVerrechenbar = codeElementService.loadFromString(
+						verrechenbar.getCodeSystemName(), verrechenbar.getCode(), getContext(encounter));
+				if (matchingVerrechenbar.isPresent()) {
+					double amount = tardocVerr.getAmount();
+					removeVerrechnet(encounter, tardocVerr);
+					addVerrechnet(encounter, matchingVerrechenbar, amount);
+				} else {
+					addProblem("Could not find matching Verrechenbar for [" + verrechenbar.getCodeSystemName() + "->"
+							+ verrechenbar.getCode() + "]", encounter);
+				}
+			} else {
+				addProblem("Could not find Verrechenbar for [" + tardocVerr.getLabel() + "]", encounter);
+			}
+		}
+	}
+
+	private boolean isReferenz(IBilled tardocVerr) {
+		IBillable verrechenbar = tardocVerr.getBillable();
+		String serviceTyp = getServiceTypReflective(verrechenbar);
+		return serviceTyp != null && serviceTyp.equals("R");
+	}
+
+	private String getServiceTypReflective(IBillable billable) {
+		try {
+			Method getterMethod = billable.getClass().getMethod("getServiceTyp", (Class[]) null);
+			Object typ = getterMethod.invoke(billable, (Object[]) null);
+			if (typ instanceof String) {
+				return (String) typ;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LoggerFactory.getLogger(getClass()).warn("Could not get service typ of [" + billable + "]", e.getMessage());
+		}
+		return null;
 	}
 
 	private void getCurrentMandantOnly() {
