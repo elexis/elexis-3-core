@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -92,25 +93,35 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 				+ "] neu verrechnet" + getProblemsString();
 	}
 
-	private void reCharge(List<IBilled> tardocVerrechnet, IEncounter encounter) {
-		for (IBilled tardocVerr : tardocVerrechnet) {
-			IBillable verrechenbar = tardocVerr.getBillable();
-			if (verrechenbar != null) {
-				// make sure we verrechenbar is matching for the kons
-				Optional<ICodeElement> matchingVerrechenbar = codeElementService.loadFromString(
-						verrechenbar.getCodeSystemName(), verrechenbar.getCode(), getContext(encounter));
-				if (matchingVerrechenbar.isPresent()) {
-					double amount = tardocVerr.getAmount();
-					removeVerrechnet(encounter, tardocVerr);
-					addVerrechnet(encounter, matchingVerrechenbar, amount);
-				} else {
-					addProblem("Could not find matching Verrechenbar for [" + verrechenbar.getCodeSystemName() + "->"
-							+ verrechenbar.getCode() + "]", encounter);
-				}
+	private Optional<ICodeElement> getMatchingVerrechenbar(IBilled tardocVerr, IEncounter encounter) {
+		IBillable verrechenbar = tardocVerr.getBillable();
+		if (verrechenbar != null) {
+			// make sure we verrechenbar is matching for the kons
+			Optional<ICodeElement> matchingVerrechenbar = codeElementService
+					.loadFromString(verrechenbar.getCodeSystemName(), verrechenbar.getCode(), getContext(encounter));
+			if (matchingVerrechenbar.isEmpty()) {
+				addProblem("Could not find matching Verrechenbar for [" + verrechenbar.getCodeSystemName() + "->"
+						+ verrechenbar.getCode() + "]", encounter);
 			} else {
-				addProblem("Could not find Verrechenbar for [" + tardocVerr.getLabel() + "]", encounter);
+				return matchingVerrechenbar;
 			}
+		} else {
+			addProblem("Could not find Verrechenbar for [" + tardocVerr.getLabel() + "]", encounter);
 		}
+		return Optional.empty();
+	}
+
+	private void reCharge(List<IBilled> tardocVerrechnet, IEncounter encounter) {
+		Map<IBilled, Double> amountMap = new HashMap<>();
+		Map<IBilled, ICodeElement> verrechenbarMap = new HashMap<>();
+		tardocVerrechnet.forEach(v -> amountMap.put(v, v.getAmount()));
+		tardocVerrechnet.forEach(v -> getMatchingVerrechenbar(v, encounter).ifPresent(c -> verrechenbarMap.put(v, c)));
+		// do not remove or add if there is no ICodeElement match found
+		tardocVerrechnet = tardocVerrechnet.stream().filter(v -> verrechenbarMap.containsKey(v)).toList();
+		// remove all
+		tardocVerrechnet.forEach(v -> removeVerrechnet(encounter, v));
+		// add all 
+		tardocVerrechnet.forEach(v -> addVerrechnet(encounter, verrechenbarMap.get(v), amountMap.get(v)));
 	}
 
 	private boolean isReferenz(IBilled tardocVerr) {
@@ -159,13 +170,13 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 		return new TimeTool(LocalDate.now().minusDays(1));
 	}
 
-	private void addVerrechnet(IEncounter encounter, Optional<ICodeElement> matchingVerrechenbar, double amount) {
+	private void addVerrechnet(IEncounter encounter, ICodeElement matchingVerrechenbar, double amount) {
 		// no locking required, PersistentObject create events are passed to server (RH)
 		for (int i = 0; i < amount; i++) {
-			Result<IBilled> addRes = BillingServiceHolder.get().bill((IBillable) matchingVerrechenbar.get(), encounter,
+			Result<IBilled> addRes = BillingServiceHolder.get().bill((IBillable) matchingVerrechenbar, encounter,
 					1);
 			if (!addRes.isOK()) {
-				addProblem("Could not add Verrechenbar [" + matchingVerrechenbar.get().getCode() + "]" + "["
+				addProblem("Could not add Verrechenbar [" + matchingVerrechenbar.getCode() + "]" + "["
 						+ addRes.toString() + "]", encounter);
 			}
 		}
