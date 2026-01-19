@@ -2,6 +2,7 @@ package ch.elexis.core.ui.dbcheck.contributions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 			boolean presetBillingStrict = ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 			ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 
-			List<Konsultation> consultations = getKonsultation(getBeginOfYear(), getEndOfYear());
+			List<Konsultation> consultations = getKonsultation(getBeginOfYear(), getYesterday());
 			pm.beginTask("Bitte warten, TARDOC Leistungen werden neu verrechnet", consultations.size());
 			for (Konsultation konsultation : consultations) {
 				// only still open Konsultation
@@ -152,6 +153,10 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 		endOfYear.set(TimeTool.MONTH, 11);
 		endOfYear.set(TimeTool.DAY_OF_MONTH, 31);
 		return endOfYear;
+	}
+
+	private TimeTool getYesterday() {
+		return new TimeTool(LocalDate.now().minusDays(1));
 	}
 
 	private void addVerrechnet(IEncounter encounter, Optional<ICodeElement> matchingVerrechenbar, double amount) {
