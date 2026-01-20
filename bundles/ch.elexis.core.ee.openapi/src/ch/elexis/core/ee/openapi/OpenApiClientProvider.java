@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IContextService;
+import ch.myelexis.server.api.EntityManagementApi;
 import ch.myelexis.server.api.UserApi;
 import ch.myelexis.server.client.ApiClient;
 import ch.myelexis.server.client.Configuration;
@@ -49,6 +50,10 @@ public class OpenApiClientProvider {
 		UserApi userApi = new UserApi(defaultApiClient);
 		FrameworkUtil.getBundle(OpenApiClientProvider.class).getBundleContext().registerService(UserApi.class, userApi,
 				null);
+
+		EntityManagementApi entityManagementApi = new EntityManagementApi(defaultApiClient);
+		FrameworkUtil.getBundle(OpenApiClientProvider.class).getBundleContext()
+				.registerService(EntityManagementApi.class, entityManagementApi, null);
 	}
 
 }

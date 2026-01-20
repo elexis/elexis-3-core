@@ -2,12 +2,15 @@
 package ch.elexis.core.ui.views;
 
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.ui.e4.SWTHelper;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -21,32 +24,51 @@ import jakarta.inject.Named;
  */
 public class CoverageDetailPart {
 
-	private CoverageDetailComposite fdb;
+	private CoverageDetailComposite coverageDetailComposite;
 
 	@Inject
 	public void activeCoverage(@Optional ICoverage coverage) {
 		CoreUiUtil.runAsyncIfActive(() -> {
 //			ICoverage deselectedCoverage = fdb.getFall();
 			if (coverage != null) {
-				fdb.setFall(coverage);
+				coverageDetailComposite.setFall(coverage);
 //				if (deselectedCoverage != null) {
 //					releaseAndRefreshLock(deselectedCoverage, ToggleCurrentCaseLockHandler.COMMAND_ID);
 //				}
 			} else {
-				fdb.setFall(null);
+				coverageDetailComposite.setFall(null);
 //				if (deselectedCoverage != null) {
 //					releaseAndRefreshLock(deselectedCoverage, ToggleCurrentCaseLockHandler.COMMAND_ID);
 //				}
 			}
-		}, fdb);
+		}, coverageDetailComposite);
+	}
+
+	@Inject
+	void activeUser(@Optional IUser user) {
+		Display.getDefault().asyncExec(() -> {
+			if (coverageDetailComposite != null && !coverageDetailComposite.isDisposed()) {
+				adaptForUser(user);
+			}
+		});
+	}
+
+	private void adaptForUser(IUser user) {
+		coverageDetailComposite.setUser(user);
+		coverageDetailComposite.reloadBillingSystemsMenu();
 	}
 
 	@PostConstruct
 	public void postConstruct(Composite parent) {
 		parent.setLayout(new GridLayout());
-		fdb = new CoverageDetailComposite(parent);
-		fdb.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
-		fdb.setUnlocked(false);
+		coverageDetailComposite = new CoverageDetailComposite(parent);
+		coverageDetailComposite.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
+		coverageDetailComposite.setUnlocked(false);
+	}
+
+	@Focus
+	public void setFocus() {
+		coverageDetailComposite.setFocus();
 	}
 
 	private void releaseAndRefreshLock(ICoverage object, String commandId) {

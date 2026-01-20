@@ -17,12 +17,14 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.fhir.model.FhirModelServiceHolder;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.interfaces.IFhirBased;
+import ch.elexis.core.fhir.model.internal.ManagementApiHolder;
 import ch.elexis.core.fhir.model.service.FhirAttributeMapperProvider;
 import ch.elexis.core.fhir.model.service.FhirDtoProvider;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.myelexis.server.client.ApiException;
 
 // TODO add WithExtInfo -> via internal service
 public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends DomainResource>
@@ -115,19 +117,16 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 
 	@Override
 	public Object getExtInfo(Object key) {
-		// TODO direct access?
 		return extInfo.get(key);
 	}
 
 	@Override
 	public void setExtInfo(Object key, Object value) {
-		// TODO direct access?
 		extInfo.put(key, value);
 	}
 
 	@Override
 	public Map<Object, Object> getMap() {
-		// TODO direct access?
 		return extInfo;
 	}
 
@@ -141,10 +140,21 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 		if (isSubsetted()) {
 			Optional<U> loaded = FhirModelServiceHolder.get().loadFhir(getId(), getFhirType());
 			if (loaded.isPresent()) {
+
 				fhirResource = loaded.get();
 				localObject = FhirDtoProvider.createDto(getModelType());
 				FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).fhirToElexis(fhirResource,
 						localObject);
+
+				try {
+					// TODO If-Not-Modified support on server side
+					Map<String, String> entityExtInfo = ManagementApiHolder.get().getEntityExtInfo(getId(),
+							getModelType().getName());
+					extInfo.putAll(entityExtInfo);
+				} catch (ApiException e) {
+					LoggerFactory.getLogger(getClass()).warn("Error loading extInfo for type {} with id {}",
+							getModelType(), getId());
+				}
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Error loading type {} with id {}", getFhirType(), getId());
 				// FIXME what to do??
@@ -159,12 +169,6 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 			// use attributeMapper to populate local object
 			// use localObject to delegate requests
 		}
-		// get AttributeMapper use it to populate
-//		localObject = FhirDtoProvider.createDto(getModelType());
-//		if (getModelType().equals(ICoverage.class) || getFhirType().equals(Coverage.class)) {
-//			new ICoverageCoverageAttributeMapper(null, null).fhirToElexis((Coverage) fhirResource, (ICoverage) localObject);
-//		}
-
 	}
 
 	public abstract Class<U> getFhirType();

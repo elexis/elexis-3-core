@@ -1,5 +1,6 @@
 package ch.elexis.core.fhir.model.dto;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import ch.elexis.core.model.Deleteable;
@@ -22,7 +23,7 @@ public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithE
 
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
-	private Map<Object, Object> extInfo;
+	private Map<Object, Object> extInfo = new HashMap<Object, Object>();
 
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists) {
@@ -36,19 +37,16 @@ public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithE
 
 	@Override
 	public Object getExtInfo(Object key) {
-		// TODO direct access?
 		return extInfo.get(key);
 	}
 
 	@Override
 	public void setExtInfo(Object key, Object value) {
-		// TODO direct access?
 		extInfo.put(key, value);
 	}
 
 	@Override
 	public Map<Object, Object> getMap() {
-		// TODO direct access?
 		return extInfo;
 	}
 }

@@ -87,7 +87,7 @@ public class FhirCoverage extends AbstractFhirModelAdapter<ICoverage, Coverage> 
 
 	@Override
 	public String getDescription() {
-		return getLoaded().getDescription();
+		return getNarrativeLabel();
 	}
 
 	@Override
