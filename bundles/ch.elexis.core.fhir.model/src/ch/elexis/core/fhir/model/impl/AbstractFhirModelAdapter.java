@@ -139,11 +139,14 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 		}
 
 		if (isSubsetted()) {
-			Optional<U> loaded = FhirModelServiceHolder.get().load(getId(), getFhirType());
+			Optional<U> loaded = FhirModelServiceHolder.get().loadFhir(getId(), getFhirType());
 			if (loaded.isPresent()) {
 				fhirResource = loaded.get();
+				localObject = FhirDtoProvider.createDto(getModelType());
+				FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).fhirToElexis(fhirResource,
+						localObject);
 			} else {
-				LoggerFactory.getLogger(getClass()).warn("Error loading type %s with id %s", getFhirType(), getId());
+				LoggerFactory.getLogger(getClass()).warn("Error loading type {} with id {}", getFhirType(), getId());
 				// FIXME what to do??
 			}
 
@@ -157,8 +160,11 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 			// use localObject to delegate requests
 		}
 		// get AttributeMapper use it to populate
-		localObject = FhirDtoProvider.createDto(getModelType());
-		FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).fhirToElexis(fhirResource, localObject);
+//		localObject = FhirDtoProvider.createDto(getModelType());
+//		if (getModelType().equals(ICoverage.class) || getFhirType().equals(Coverage.class)) {
+//			new ICoverageCoverageAttributeMapper(null, null).fhirToElexis((Coverage) fhirResource, (ICoverage) localObject);
+//		}
+
 	}
 
 	public abstract Class<U> getFhirType();

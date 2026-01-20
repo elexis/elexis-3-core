@@ -43,6 +43,16 @@ public interface IFhirModelService {
 	}
 
 	/**
+	 * Directly load the fhir resource
+	 * 
+	 * @param <U>
+	 * @param id
+	 * @param fhirClazz
+	 * @return
+	 */
+	public <U> Optional<U> loadFhir(String id, Class<U> fhirClazz);
+
+	/**
 	 * Adapt a loaded FHIR object to clazz. This can be used to "convert" already
 	 * loaded FHIR objects to the model. <br />
 	 * <br />

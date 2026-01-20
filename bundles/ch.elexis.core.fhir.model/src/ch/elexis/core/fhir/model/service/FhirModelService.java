@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.BaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.osgi.service.component.annotations.Activate;
@@ -111,6 +112,21 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 				if (fhirObject != null) {
 					return adapt(fhirObject, clazz);
 				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).warn(e.getMessage());
+			}
+		}
+		return Optional.empty();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <U> Optional<U> loadFhir(String id, Class<U> fhirClazz) {
+		if (StringUtils.isNotBlank(id)) {
+			try {
+				IBaseResource fhirObject = getGenericClient().read().resource(fhirClazz.getSimpleName()).withId(id)
+						.execute();
+				return Optional.of((U) fhirObject);
 			} catch (Exception e) {
 				LoggerFactory.getLogger(getClass()).warn(e.getMessage());
 			}

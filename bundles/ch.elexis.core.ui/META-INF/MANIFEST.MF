@@ -69,8 +69,7 @@ Export-Package: ch.elexis.core.ui,
  ch.elexis.core.ui.views.rechnung,
  ch.elexis.core.ui.views.textsystem,
  ch.elexis.core.ui.wizards,
- ch.elexis.scripting,
- com.tiff.common.ui.datepicker;uses:="org.eclipse.swt.events,org.eclipse.swt.graphics,org.eclipse.swt.widgets"
+ ch.elexis.scripting
 Import-Package: com.equo.chromium.swt,
  com.google.common.collect;version="21.0.0",
  com.google.gson;version="[2.11.0,3.0.0)",

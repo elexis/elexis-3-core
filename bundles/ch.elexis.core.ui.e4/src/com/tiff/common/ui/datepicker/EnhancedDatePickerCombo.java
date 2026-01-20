@@ -16,7 +16,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.UiDesk;
 import ch.rgw.tools.TimeTool;
 
 public class EnhancedDatePickerCombo extends DatePickerCombo {

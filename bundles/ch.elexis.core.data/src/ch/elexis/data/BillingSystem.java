@@ -70,6 +70,7 @@ public class BillingSystem {
 	 * returns false
 	 *
 	 * @param billingSystem String, the name of the billing system to be tested
+	 * @deprecated moved to BillingSystemService
 	 */
 	public static boolean isDisabled(final String billingSystemName) {
 		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
@@ -90,6 +91,7 @@ public class BillingSystem {
 	 *         numeric RS Radios, saved as string RN Radios, saved as numeric,
 	 *         selected index
 	 * @since 3.6 moved from {@link Fall}
+	 * @deprecated moved to IBillingSystemService
 	 */
 	public static String getUnused(final String billingSystem) {
 		String ret = ConfigServiceHolder.getGlobal(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$

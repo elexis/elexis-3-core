@@ -101,4 +101,38 @@ public interface IBillingSystemService {
 	 * @return
 	 */
 	public BillingLaw getBillingLaw(String law);
+
+	/**
+	 * returns true if the billing system specified by the param is DISabled else
+	 * returns false
+	 *
+	 * @param billingSystem String, the name of the billing system to be tested
+	 * @since 3.13 moved from ch.elexis.data.BillingSystem
+	 */
+	public boolean isDisabled(IBillingSystem billingSystem);
+
+	/**
+	 * 
+	 * @param billingSystem
+	 * @return
+	 * @since 3.13 moved from ch.elexis.data.BillingSystem
+	 */
+	public boolean isCostBearerDisabled(IBillingSystem billingSystem);
+
+	/**
+	 * Retrieve unused/saved definitions of previously used required and optional
+	 * field for a given billingSystem
+	 *
+	 * @param billingSystem
+	 * @return a ; separated String of fields name:type where type is one of K,T,D
+	 *         for Kontakt, Text, Date TM Text Multiline TS Text Styled CS Combo
+	 *         saved as string CN Combo saved as numeric (selected index) LS List
+	 *         items, saved as strings, tab-delimited LN List items, saved as
+	 *         numerics, tab-delimited (selected indexes) X CheckBox always saved as
+	 *         numeric RS Radios, saved as string RN Radios, saved as numeric,
+	 *         selected index
+	 * @since 3.6 moved from ch.elexis.data.Fall
+	 * @since 3.13 moved from ch.elexis.data.BillingSystem
+	 */
+	public String getUnused(IBillingSystem billingSystem);
 }

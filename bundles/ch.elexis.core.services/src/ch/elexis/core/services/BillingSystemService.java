@@ -33,6 +33,7 @@ public class BillingSystemService implements IBillingSystemService {
 	private LoadingCache<String, BillingSystem> cache;
 
 	private static final String CFG_KEY_BILLINGLAW = "defaultBillingLaw";
+	private static final String CFG_NOCOSTBEARER = "noCostBearer";
 
 	public BillingSystemService() {
 		cache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(new BillingSystemLoader());
@@ -198,6 +199,25 @@ public class BillingSystemService implements IBillingSystemService {
 	private void setConfigurationValue(String billingSystemName, String attributeName, String attributeValue) {
 		String key = Preferences.LEISTUNGSCODES_CFG_KEY + "/" + billingSystemName; //$NON-NLS-1$
 		configService.set(key + "/" + attributeName, attributeValue);
+	}
+
+	@Override
+	public boolean isDisabled(IBillingSystem billingSystem) {
+		String ret = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+				+ billingSystem.getName() + "/disabled", "0"); //$NON-NLS-1$ //$NON-NLS-2$
+		return !ret.equalsIgnoreCase("0");
+	}
+
+	@Override
+	public boolean isCostBearerDisabled(IBillingSystem billingSystem) {
+		return Boolean
+				.valueOf(getConfigurationValue(billingSystem.getName(), CFG_NOCOSTBEARER, Boolean.FALSE.toString()));
+	}
+
+	@Override
+	public String getUnused(IBillingSystem billingSystem) {
+		return configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
+				+ billingSystem.getName() + "/unused", null); //$NON-NLS-1$
 	}
 
 }

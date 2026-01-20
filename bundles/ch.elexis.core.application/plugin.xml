@@ -434,6 +434,13 @@
             inject="true"
             name="%elexis.orderManagementView">
       </view>
+      <e4view
+            class="ch.elexis.core.ui.views.CoverageDetailPart"
+            icon="icon://IMG_FHIR"
+            id="ch.elexis.core.application.e4view1"
+            name="Fall Detail NEU"
+            restorable="true">
+      </e4view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
