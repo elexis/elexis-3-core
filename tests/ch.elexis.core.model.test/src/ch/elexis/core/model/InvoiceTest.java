@@ -17,6 +17,8 @@ import org.junit.Test;
 import ch.elexis.core.model.builder.IAccountTransactionBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IPaymentBuilder;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.test.AbstractTest;
 import ch.rgw.tools.Money;
 
@@ -57,6 +59,25 @@ public class InvoiceTest extends AbstractTest {
 		assertEquals(0, invoice.getAttachments().size());
 
 		coreModelService.remove(document);
+		coreModelService.remove(invoice);
+	}
+
+	@Test
+	public void queryByCoverage() {
+
+		IInvoice invoice = coreModelService.create(IInvoice.class);
+		invoice.setCoverage(coverage);
+		invoice.setDate(LocalDate.now());
+		invoice.setDateFrom(LocalDate.now());
+		invoice.setRemark("remark");
+		coreModelService.save(invoice);
+
+		IQuery<IInvoice> query = coreModelService.getQuery(IInvoice.class);
+		query.and(ModelPackage.Literals.IINVOICE__COVERAGE, COMPARATOR.EQUALS, coverage);
+		List<IInvoice> result = query.execute();
+
+		assertTrue(result.contains(invoice));
+
 		coreModelService.remove(invoice);
 	}
 

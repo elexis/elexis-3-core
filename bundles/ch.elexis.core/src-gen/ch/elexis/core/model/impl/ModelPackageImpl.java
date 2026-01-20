@@ -7326,6 +7326,12 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 			   "attributeName", "eintrag"
 		   });
 		addAnnotation
+		  (getIInvoice_Coverage(),
+		   source,
+		   new String[] {
+			   "attributeName", "fall"
+		   });
+		addAnnotation
 		  (getIPrescription_DateTo(),
 		   source,
 		   new String[] {

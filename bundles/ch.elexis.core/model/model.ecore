@@ -863,7 +863,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         changeable="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mandator" eType="#//IMandator"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//ICoverage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//ICoverage">
+      <eAnnotations source="http://elexis.info/jpa/entity/attribute/mapping">
+        <details key="attributeName" value="fall"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="encounters" upperBound="-1"
         eType="#//IEncounter"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billed" upperBound="-1"
