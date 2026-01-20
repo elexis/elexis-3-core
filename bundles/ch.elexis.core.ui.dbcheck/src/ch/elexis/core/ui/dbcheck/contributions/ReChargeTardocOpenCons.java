@@ -74,10 +74,15 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 					return getProblemsString();
 				}
 				List<IBilled> tardocVerrechnet = getTardocOnly(encounter.getBilled());
+				// make sure Zuschlagleistung is re charged after Hauptleistung
+				List<IBilled> tardocZuschlagVerrechnet = tardocVerrechnet.stream().filter(v -> isZuschlag(v)).toList();
+				tardocVerrechnet.removeAll(tardocZuschlagVerrechnet);
 				// make sure Referenzleistung is re charged after Hauptleistung
 				List<IBilled> tardocReferenzVerrechnet = tardocVerrechnet.stream().filter(v -> isReferenz(v)).toList();
 				tardocVerrechnet.removeAll(tardocReferenzVerrechnet);
+
 				reCharge(tardocVerrechnet, encounter);
+				reCharge(tardocZuschlagVerrechnet, encounter);
 				reCharge(tardocReferenzVerrechnet, encounter);
 				count++;
 				pm.worked(1);
@@ -130,12 +135,32 @@ public class ReChargeTardocOpenCons extends ExternalMaintenance {
 		return serviceTyp != null && serviceTyp.equals("R");
 	}
 
+	private boolean isZuschlag(IBilled tardocVerr) {
+		IBillable verrechenbar = tardocVerr.getBillable();
+		Boolean serviceTyp = getIsZuschlagsleistungReflective(verrechenbar);
+		return serviceTyp != null && serviceTyp;
+	}
+
 	private String getServiceTypReflective(IBillable billable) {
 		try {
 			Method getterMethod = billable.getClass().getMethod("getServiceTyp", (Class[]) null);
 			Object typ = getterMethod.invoke(billable, (Object[]) null);
 			if (typ instanceof String) {
 				return (String) typ;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LoggerFactory.getLogger(getClass()).warn("Could not get service typ of [" + billable + "]", e.getMessage());
+		}
+		return null;
+	}
+
+	private Boolean getIsZuschlagsleistungReflective(IBillable billable) {
+		try {
+			Method getterMethod = billable.getClass().getMethod("isZuschlagsleistung", (Class[]) null);
+			Object typ = getterMethod.invoke(billable, (Object[]) null);
+			if (typ instanceof Boolean) {
+				return (Boolean) typ;
 			}
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
