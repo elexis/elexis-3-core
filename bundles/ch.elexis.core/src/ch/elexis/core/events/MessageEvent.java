@@ -43,8 +43,16 @@ public class MessageEvent {
 		fire(LEVEL.INFO, title, message, null, true);
 	}
 
+	public static void fireInformation(String title, String message, boolean log) {
+		fire(LEVEL.INFO, title, message, null, log);
+	}
+
 	public static void fireWarninig(String title, String message) {
 		fire(LEVEL.WARNING, title, message, null, true);
+	}
+
+	public static void fireWarninig(String title, String message, boolean log) {
+		fire(LEVEL.WARNING, title, message, null, log);
 	}
 
 	private static void fire(LEVEL level, String title, String message, Exception ex, boolean log) {

@@ -272,4 +272,11 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 			<column name="LAW" type="VARCHAR(3)" defaultValue=""/>
 		</addColumn>
 	</changeSet>
+	
+	<changeSet author="thomas" id="tardoc_tarmed_gueltigbis">
+	    <update tableName="TARMED">
+	        <column name="GUELTIGBIS" value="20251231" />
+	        <where>GUELTIGBIS='21991231'</where>
+	    </update>
+	</changeSet>	
 </databaseChangeLog>

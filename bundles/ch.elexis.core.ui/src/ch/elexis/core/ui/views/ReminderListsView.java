@@ -86,6 +86,7 @@ import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
@@ -647,6 +648,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			setToolTipText(Messages.ReminderView_activatePatientTooltip);
 		}
 
+		@Override
 		public void doRun() {
 			StructuredSelection sel = (StructuredSelection) getSelection();
 			if (sel != null && sel.size() != 1) {
@@ -695,6 +697,7 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 			if (!ConfigServiceHolder.getUser(Preferences.USR_SHOWPATCHGREMINDER, true)) {
 				UiDesk.asyncExec(new Runnable() {
 
+					@Override
 					public void run() {
 						// base reminders for active patient query execution
 						IQuery<IReminder> query = CoreModelServiceHolder.get().getQuery(IReminder.class);
@@ -724,7 +727,8 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
-							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
+							MessageEvent.fireInformation(Messages.ReminderView_importantRemindersCaption, sb.toString(),
+									false);
 						}
 					}
 				});

@@ -40,7 +40,12 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 			case OrderConstants.OrderTable.DELIVERED: {
 				int base = entry.getDelivered();
 				int delta = orderManagementView.getPendingDeliveredValues().getOrDefault(entry, 0);
-				return (delta > 0) ? base + " (+" + delta + ")" : String.valueOf(base);
+				if (delta != 0) {
+					String sign = (delta > 0) ? "+" : "";
+					return base + " (" + sign + delta + ")";
+				} else {
+					return String.valueOf(base);
+				}
 			}
 
 			case OrderConstants.OrderTable.ADD:

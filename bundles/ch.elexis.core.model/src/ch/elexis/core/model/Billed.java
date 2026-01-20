@@ -228,9 +228,58 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		// get sales for the verrechnet including all scales and quantity
 		// replaced with toIntExact and round: new DecimalFormat("#").parse(new
 		// DecimalFormat("#").format(value)).doubleValue()
-		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
-				* getSecondaryScaleFactor() * getEntity().getZahl()));
+		// special handling for swiss specific AL TL based billed
+		int cents = 0;
+		if (isALTL()) {
+			long roundedAmount = Math.round(getAL() * getFactor() * getEntity().getZahl())
+					+ Math.round(getTL() * getFactor() * getEntity().getZahl());
+			cents = Math
+					.toIntExact(Math.round(roundedAmount * getPrimaryScaleFactor() * getSecondaryScaleFactor()));
+		} else {
+			cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
+					* getSecondaryScaleFactor() * getEntity().getZahl()));
+		}
 		return new Money(cents);
+	}
+
+	private boolean isALTL() {
+		String className = getEntity().getKlasse();
+		return className != null && !className.isEmpty()
+				&& (className.endsWith("TarmedLeistung") || className.endsWith("TardocLeistung"));
+	}
+
+	private double getAL() {
+		// if price was changed, use TP as AL
+		boolean changedPrice = isChangedPrice();
+		if (changedPrice) {
+			return getPoints();
+		}
+		String alString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL);
+		if (alString != null) {
+			try {
+				return (int) Double.parseDouble(alString);
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 0;
+	}
+
+	public double getTL() {
+		// if price was changed to 0, use TP as TL
+		boolean changedPrice = isChangedPrice();
+		if (changedPrice && getPoints() == 0) {
+			return getPoints();
+		}
+		String tlString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL);
+		if (tlString != null) {
+			try {
+				return (int) Double.parseDouble(tlString);
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -258,7 +307,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		if (getPrimaryScale() == 0) {
 			return 1.0;
 		}
-		return ((double) getPrimaryScale()) / 100.0;
+		return (getPrimaryScale()) / 100.0;
 	}
 
 	@Override
@@ -266,7 +315,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		if (getSecondaryScale() == 0) {
 			return 1.0;
 		}
-		return ((double) getSecondaryScale()) / 100.0;
+		return (getSecondaryScale()) / 100.0;
 	}
 
 	@Override

@@ -3,17 +3,22 @@ package ch.elexis.core.ui.util;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -25,6 +30,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -41,9 +47,11 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
+import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.OrderManagementView;
 
@@ -326,18 +334,26 @@ public class OrderManagementUtil {
 		}
 
 		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_MissingSupplier)) {
-			IContact selectedProvider = ContactSelectionDialog.showInSync(IContact.class,
+			List<IContact> allowedSuppliers = loadConfiguredSuppliers();
+			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-			if (selectedProvider != null && actOrder != null) {
-				for (IOrderEntry entry : actOrder.getEntries()) {
-					if (entry.getProvider() == null) {
-						entry.setProvider(selectedProvider);
-						orderService.getHistoryService().logSupplierAdded(actOrder, entry, selectedProvider.getLabel());
-						CoreModelServiceHolder.get().save(entry);
+			if (!allowedSuppliers.isEmpty()) {
+				dialog.setAllowedContacts(allowedSuppliers);
+			}
+			if (dialog.open() == Dialog.OK) {
+				IContact selectedProvider = (IContact) dialog.getSelection();
+				if (selectedProvider != null && actOrder != null) {
+					for (IOrderEntry entry : actOrder.getEntries()) {
+						if (entry.getProvider() == null) {
+							entry.setProvider(selectedProvider);
+							orderService.getHistoryService().logSupplierAdded(actOrder, entry,
+									selectedProvider.getLabel());
+							CoreModelServiceHolder.get().save(entry);
+						}
 					}
+					view.refreshTables();
 				}
-				view.refreshTables();
 			}
 			return;
 		}
@@ -359,6 +375,7 @@ public class OrderManagementUtil {
 				orderButton.setText(ch.elexis.core.ui.views.Messages.MedicationComposite_btnConfirm);
 				orderButton.setImage(Images.IMG_TICK.getImage());
 			}
+			enableLastColumnFill(view.tableViewer.getTable());
 			return;
 		}
 
@@ -373,23 +390,18 @@ public class OrderManagementUtil {
 					String articleName = orderEntry.getArticle() != null ? orderEntry.getArticle().getLabel()
 							: "Unbekannter Artikel";
 		            boolean confirm = MessageDialog.openQuestion(
-		                view.getSite().getShell(),
-		                ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
-		                MessageFormat.format(
-		                    ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
-									currentDelivered, part, newTotal, ordered, articleName
-		                )
-		            );
+							view.getSite().getShell(),
+							ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
+							MessageFormat.format(ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
+									currentDelivered, part, newTotal, ordered, articleName));
 		            if (!confirm) {
 		                continue;
 		            }
 		        }
 		        if (newTotal < 0) {
 		            MessageDialog.openError(
-		                view.getSite().getShell(),
-		                ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
-		                ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount
-		            );
+							view.getSite().getShell(), ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
+							ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount);
 		            continue;
 		        }
 
@@ -407,26 +419,51 @@ public class OrderManagementUtil {
 		    setCheckboxColumnVisible(view, false);
 
 		    view.selectAllChk.setVisible(false);
-		    ((GridData) view.selectAllChk.getLayoutData()).exclude = true;
 		    view.selectAllChk.getParent().layout(true, true);
 
 		    view.tableViewer.refresh();
-
+			final boolean isCompletelyDelivered = isOrderCompletelyDelivered(actOrder);
+			final String finishedOrderId = (actOrder != null) ? actOrder.getId() : null;
 		    Display.getDefault().asyncExec(() -> {
 		        view.loadOpenOrders();
 		        view.loadCompletedOrders(view.getCompletedContainer());
-
-		        if (isOrderCompletelyDelivered(actOrder)) {
-		            view.setActOrder(null);
-		            view.getTableViewer().setInput(java.util.Collections.emptyList());
-		            view.getTableViewer().refresh();
-		        }
-
-		        view.updateUI();
+				if (finishedOrderId != null) {
+					IOrder reloaded = getSelectedOrder(finishedOrderId, isCompletelyDelivered);
+					if (reloaded != null) {
+						view.setActOrder(reloaded);
+						view.selectOrderInHistory(reloaded);
+						view.refresh();
+					}
+				}
+				view.updateUI();
 		    });
 
 		    return;
 		}
+	}
+
+	public static List<IContact> loadConfiguredSuppliers() {
+		Set<IContact> result = new LinkedHashSet<>();
+		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
+		for (IConfigurationElement ic : list) {
+			String handlerType = ic.getAttribute("type");
+			if (handlerType != null && handlerType.contains(ch.elexis.data.Bestellung.class.getName())) {
+				try {
+					Object executable = ic.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
+					if (executable instanceof IDataSender) {
+						IDataSender sender = (IDataSender) executable;
+						List<IContact> suppliers = sender.getSupplier();
+						if (suppliers != null) {
+							result.addAll(suppliers);
+						}
+					}
+				} catch (CoreException e) {
+					LoggerFactory.getLogger(OrderManagementUtil.class)
+							.error("Fehler beim Laden des Lieferanten aus Plugin: " + ic.getContributor().getName(), e);
+				}
+			}
+		}
+		return new ArrayList<>(result);
 	}
 
 	public static void setCheckboxColumnVisible(OrderManagementView view, boolean visible) {
@@ -447,4 +484,30 @@ public class OrderManagementUtil {
 		return order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 	}
 
+	public static void enableLastColumnFill(Table table) {
+		table.addListener(SWT.Resize, e -> {
+			Table t = (Table) e.widget;
+			adjustLastColumnWidth(t);
+		});
+	}
+
+	public static void adjustLastColumnWidth(Table table) {
+		if (table == null || table.isDisposed() || table.getColumnCount() == 0) {
+			return;
+		}
+		int clientWidth = table.getClientArea().width;
+		if (clientWidth <= 0) {
+			return;
+		}
+		int totalFixedWidth = 0;
+		for (int i = 0; i < table.getColumnCount() - 1; i++) {
+			totalFixedWidth += table.getColumn(i).getWidth();
+		}
+		int minLastWidth = 50;
+		int newLastWidth = clientWidth - totalFixedWidth;
+		if (newLastWidth < minLastWidth) {
+			newLastWidth = minLastWidth;
+		}
+		table.getColumn(table.getColumnCount() - 1).setWidth(newLastWidth);
+	}
 }
