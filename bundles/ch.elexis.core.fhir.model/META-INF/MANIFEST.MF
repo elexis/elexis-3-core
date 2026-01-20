@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: FHIR core model
 Bundle-SymbolicName: ch.elexis.core.fhir.model
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Export-Package: ch.elexis.core.fhir.model
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.fhir.model
