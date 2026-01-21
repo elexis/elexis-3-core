@@ -68,6 +68,7 @@
     <module>ch.elexis.core.ui.eigendiagnosen</module>
     <module>ch.elexis.core.ui.eenv</module>
     <module>ch.elexis.core.ui.e4</module>
+    <module>ch.elexis.core.ui.e4.fhir</module>
     <module>ch.elexis.core.ui.icons</module>
     <module>ch.elexis.core.ui.importer.div.native64</module>
     <module>ch.elexis.core.ui.importer.div</module>

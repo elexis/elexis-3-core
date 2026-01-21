@@ -126,17 +126,17 @@ public class ICoverageCoverageAttributeMapper extends IdentifiableDomainResource
 			coverageHelper.setDependent(target, source.getDependent());
 		}
 
-		// Bezeichnung
-//		String divAsString = source.getText().getDivAsString();
-//		if (divAsString != null && !coverageHelper.getFallText(target).equalsIgnoreCase(divAsString)) {
-//			target.setDescription(divAsString);
-//		}
-
 		// Abrechnungsmethode
 		Optional<String> type = coverageHelper.getType(source);
 		if (type.isPresent()) {
 			target.setBillingSystem(new BillingSystem(type.get(), null));
 		}
+
+//		// Bezeichnung
+//		String divAsString = source.getText().getDivAsString();
+//		if (divAsString != null && !coverageHelper.getFallText(target).equalsIgnoreCase(divAsString)) {
+//			target.setDescription(divAsString);
+//		}
 
 		// Versicherungsgrund
 		FhirUtil.getCodeFromCodingList(CodingSystem.ELEXIS_COVERAGE_REASON.getSystem(), source.getType().getCoding())
