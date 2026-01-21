@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -61,6 +62,7 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	private Text txtUri;
 	private Combo comboScheme;
 	private boolean passwortPhase = false;
+	private boolean fileMode = false;
 
 	private String fixedScheme;
 
@@ -273,10 +275,18 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 				setErrorMessage(e.getLocalizedMessage());
 			}
 		} else if (1025 == buttonId) {
-			DirectoryDialog dirDialog = new DirectoryDialog(getShell());
-			String selectedDir = dirDialog.open();
-			if (StringUtils.isNotBlank(selectedDir)) {
-				uri.setUri(new File(selectedDir).toURI());
+			String selected = null;
+			if (fileMode) {
+				FileDialog fd = new FileDialog(getShell());
+				fd.setFilterExtensions(new String[] { "*.*" });
+				selected = fd.open();
+			} else {
+				DirectoryDialog dirDialog = new DirectoryDialog(getShell());
+				selected = dirDialog.open();
+			}
+
+			if (StringUtils.isNotBlank(selected)) {
+				uri.setUri(new File(selected).toURI());
 				uri.setPort(null);
 			}
 		} else {
@@ -509,5 +519,9 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 	 */
 	public void setFixedScheme(String scheme) {
 		this.fixedScheme = scheme;
+	}
+
+	public void setFileMode(boolean fileMode) {
+		this.fileMode = fileMode;
 	}
 }

@@ -13,6 +13,7 @@ import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemServiceTest {
@@ -22,25 +23,42 @@ public class VirtualFilesystemServiceTest {
 	@Test
 	public void of_unixoid() throws IOException {
 		File file = new File("/tmp/test.txt");
-		assertEquals(file, service.of("/tmp/test.txt").toFile().get());
-		assertEquals(file, service.of("//tmp/test.txt").toFile().get());
-		assertEquals(file, service.of("file:///tmp/test.txt").toFile().get());
+
+		if (!CoreUtil.isWindows()) {
+			assertEquals(file, service.of("/tmp/test.txt").toFile().get());
+			assertEquals(file, service.of("//tmp/test.txt").toFile().get());
+			assertEquals(file, service.of("file:///tmp/test.txt").toFile().get());
+
+		}
 	}
 
 	@Test
 	public void of_windows_share_UNC_Notation() throws IOException {
 		IVirtualFilesystemHandle unc_handle = service.of("\\\\medeserv\\elexisdata\\folder_name");
-		assertEquals(new URL("smb://medeserv/elexisdata/folder_name"), unc_handle.toURL());
+		if (CoreUtil.isWindows()) {
+			// https://wiki.eclipse.org/Eclipse/UNC_Paths
+			assertEquals(new URL("file://////medeserv/elexisdata/folder_name"), unc_handle.toURL());
+
+		} else {
+			assertEquals(new URL("smb://medeserv/elexisdata/folder_name"), unc_handle.toURL());
+		}
+
 		IVirtualFilesystemHandle subDir = unc_handle.subDir("subdir");
-		assertEquals("smb://medeserv/elexisdata/folder_name/subdir/", subDir.toURL().toString());
+		if (CoreUtil.isWindows()) {
+			// https://wiki.eclipse.org/Eclipse/UNC_Paths
+			assertEquals("file:////medeserv/elexisdata/folder_name/subdir/", subDir.toURL().toString());
+		} else {
+			assertEquals("smb://medeserv/elexisdata/folder_name/subdir/", subDir.toURL().toString());
+		}
+
 	}
 
 	@Test
 	public void of_windows_C_Notation() throws IOException {
 		IVirtualFilesystemHandle handle = service.of("C:/Windows/Test/");
-		assertEquals("file://C:/Windows/Test/", handle.toURL().toString());
+		assertEquals("file:/C:/Windows/Test/", handle.toURL().toString());
 		IVirtualFilesystemHandle subDir = handle.subDir("subdir");
-		assertEquals("file://C:/Windows/Test/subdir/", subDir.toURL().toString());
+		assertEquals("file:/C:/Windows/Test/subdir/", subDir.toURL().toString());
 	}
 
 	@Test
@@ -82,18 +100,18 @@ public class VirtualFilesystemServiceTest {
 		IVirtualFilesystemHandle dirWithSpace = service
 				.of("C:\\Users\\mad\\Documents\\Arbeit\\Testing\\Omnivore\\Abstand mit\\");
 		URL url = dirWithSpace.toURL();
-		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/"), url);
+		assertEquals(new URL("file:/C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/"), url);
 		IVirtualFilesystemHandle dirWithSpaceSubdir = dirWithSpace.subDir("1");
 		url = dirWithSpaceSubdir.toURL();
-		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/1/"), url);
+		assertEquals(new URL("file:/C:/Users/mad/Documents/Arbeit/Testing/Omnivore/Abstand%20mit/1/"), url);
 
 		// multiple spaces
 		dirWithSpace = service.of("C:\\Users\\mad\\Documents\\Arbeit\\Testing\\Omni  vore\\Abstand mit\\");
 		url = dirWithSpace.toURL();
-		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/"), url);
+		assertEquals(new URL("file:/C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/"), url);
 		dirWithSpaceSubdir = dirWithSpace.subDir("1");
 		url = dirWithSpaceSubdir.toURL();
-		assertEquals(new URL("file://C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/1/"), url);
+		assertEquals(new URL("file:/C:/Users/mad/Documents/Arbeit/Testing/Omni%20%20vore/Abstand%20mit/1/"), url);
 	}
 
 }
