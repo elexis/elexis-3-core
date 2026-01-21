@@ -32,6 +32,7 @@ Import-Package: ca.uhn.fhir.model.api,
  org.hl7.fhir.r4.model;version="6.1.2",
  org.hl7.fhir.r4.model.codesystems;version="[6.1.0,7.0.0)",
  org.slf4j;version="[1.7.0,2.0.0)"
+Require-Bundle: info.elexis.target.hapi.fhir;bundle-version="7.2.3"
 Bundle-Vendor: elexis.ch
 Automatic-Module-Name: ch.elexis.core.fhir.mapper.r4
 Bundle-RequiredExecutionEnvironment: JavaSE-21
