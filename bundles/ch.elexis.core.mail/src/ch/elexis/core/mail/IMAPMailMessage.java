@@ -50,9 +50,9 @@ public class IMAPMailMessage {
 		sentDate = message.getSentDate();
 		subject = message.getSubject();
 
-		String contentType = message.getContentType();
-
 		try {
+			String contentType = message.getContentType();
+
 			Object content = message.getContent();
 			if (content instanceof Multipart) {
 				extractMultipartContent((Multipart) content);
@@ -62,7 +62,8 @@ public class IMAPMailMessage {
 				extractOtherContent(contentType, content);
 			}
 
-		} catch (IOException e) {
+		} catch (MessagingException | IOException e) {
+			LoggerFactory.getLogger(getClass()).warn("Error reading attachments on mail {}: {}", sender, subject);
 			throw new MessagingException("Error reading attachments", e);
 		}
 	}
