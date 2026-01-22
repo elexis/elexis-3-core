@@ -57,6 +57,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.BillingUtil.IBillableCheck;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IContextService;
@@ -86,6 +87,7 @@ public class BillingProposalView extends ViewPart {
 
 	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d"); //$NON-NLS-1$
 	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa"); //$NON-NLS-1$
+	private Color lightOrange = UiDesk.getColorFromRGB("ffb266"); //$NON-NLS-1$
 
 	private TableViewerColumn seriesColumn;
 
@@ -218,7 +220,13 @@ public class BillingProposalView extends ViewPart {
 			@Override
 			public Color getBackground(Object element) {
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).isOk() ? lightGreen : lightRed;
+					if (((BillingInformation) element).isWarning()) {
+						return lightOrange;
+					}
+					if (((BillingInformation) element).isOk()) {
+						return lightGreen;
+					}
+					return lightRed;
 				} else {
 					return super.getForeground(element);
 				}
@@ -413,6 +421,8 @@ public class BillingProposalView extends ViewPart {
 		private String series;
 		@XmlElement
 		private boolean checkResult;
+		@XmlElement
+		private boolean checkWarning;
 		@XmlTransient
 		private boolean showSeries;
 
@@ -495,6 +505,14 @@ public class BillingProposalView extends ViewPart {
 			}
 		}
 
+		public Boolean isWarning() {
+			if (!isResolved()) {
+				return false;
+			} else {
+				return checkWarning;
+			}
+		}
+
 		public String getTotal() {
 			if (!isResolved()) {
 				return "..."; //$NON-NLS-1$
@@ -564,6 +582,19 @@ public class BillingProposalView extends ViewPart {
 				if (result.isOK()) {
 					item.checkResultMessage = "Ok";
 					item.checkResult = true;
+					List<Result<Konsultation>.msg> warningMgs = result.getMessages().stream()
+							.filter(m -> m.getCode() == IBillableCheck.CODE_WARNING).toList();
+					if (!warningMgs.isEmpty()) {
+						item.checkWarning = true;
+						StringBuilder sb = new StringBuilder();
+						for (Result<Konsultation>.msg message : warningMgs) {
+								if (sb.length() > 0) {
+									sb.append(" / "); //$NON-NLS-1$
+								}
+								sb.append(message.getText());
+						}
+						item.checkResultMessage = item.checkResultMessage + ", " + sb.toString();
+					}
 				} else {
 					StringBuilder sb = new StringBuilder();
 					for (@SuppressWarnings("rawtypes")
