@@ -5399,6 +5399,10 @@ public class Messages extends NLS {
 	public static String AgendaFarben_PastAppointments;
 	public static String AgendaFarben_FutureAppointments;
 	public static String AgendaFarben_DoubleClickToChange;
+	public static String TerminListeView_PrintSelected;
+	public static String TerminListeView_PrintSelectedTooltip;
+	public static String TerminListeView_PrintSeries;
+	public static String TerminListeView_PrintSeriesTooltip;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
