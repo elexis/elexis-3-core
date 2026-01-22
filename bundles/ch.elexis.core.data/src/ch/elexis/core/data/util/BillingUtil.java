@@ -499,7 +499,8 @@ public class BillingUtil {
 					List<IBilled> ret = new ArrayList<>();
 					for (IBilled verrechnet : list) {
 						IBillable billable = verrechnet.getBillable();
-						if (billable.getCodeSystemName().contains("TARDOC")) {
+						if (billable != null && billable.getCodeSystemName() != null
+								&& billable.getCodeSystemName().contains("TARDOC")) {
 							ret.add(verrechnet);
 						}
 					}
