@@ -5441,6 +5441,7 @@ public class Messages extends NLS {
 	public static String RegiomedCheckTemplate_InvalidQtyAlert;
 	public static String RegiomedCheckTemplate_SuccessAppliedPrefix;
 	public static String RegiomedCheckTemplate_QtyExceedsStock;
+	public static String RegiomedCheckTemplate_CorrectedItems;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
