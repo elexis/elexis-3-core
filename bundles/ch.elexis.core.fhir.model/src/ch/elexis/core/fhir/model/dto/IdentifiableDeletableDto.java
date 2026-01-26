@@ -7,22 +7,14 @@ import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Data
 public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithExtInfo {
 
-	@Setter(AccessLevel.NONE)
 	String id;
 	String label;
 	Long lastupdate;
 	boolean deleted;
 
-	@Getter(AccessLevel.NONE)
-	@Setter(AccessLevel.NONE)
 	private Map<Object, Object> extInfo = new HashMap<Object, Object>();
 
 	@Override
@@ -49,4 +41,45 @@ public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithE
 	public Map<Object, Object> getMap() {
 		return extInfo;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public Long getLastupdate() {
+		return lastupdate;
+	}
+
+	public void setLastupdate(Long lastupdate) {
+		this.lastupdate = lastupdate;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Map<Object, Object> getExtInfo() {
+		return extInfo;
+	}
+
+	public void setExtInfo(Map<Object, Object> extInfo) {
+		this.extInfo = extInfo;
+	}
+
 }
