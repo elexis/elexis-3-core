@@ -59,7 +59,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
 							IContact.class, ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 							ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
 					if (!allowedSuppliers.isEmpty()) {
-						dialog.setAllowedContacts(allowedSuppliers);
+//						dialog.setAllowedContacts(allowedSuppliers);
 					}
 					if (dialog.open() == Window.OK) {
 						return dialog.getSelection();
