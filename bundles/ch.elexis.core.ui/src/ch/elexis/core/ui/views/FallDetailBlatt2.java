@@ -280,32 +280,37 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 					if (fall != null) {
 						if (fall.getBehandlungen(false).length > 0) {
 							if (AccessControlServiceHolder.get().evaluate(EvACE.of(ICoverage.class, Right.UPDATE))) {
-								if (SWTHelper.askYesNo(Messages.Invoice_System, // $NON-NLS-1$
-										MessageFormat.format(Messages.FallDetailBlatt2_Change_Invoice_System,
-												new Object[] { fall.getAbrechnungsSystem(),
-														cAbrechnung.getItem(i) }))) { // $NON-NLS-1$
+								if (invoiceCorrection) {
 									fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
-									for (Konsultation behandlung : fall.getBehandlungen(false)) {
-										IEncounter encounter = NoPoUtil.loadAsIdentifiable(behandlung, IEncounter.class)
-												.get();
-										// make sure to work with updated data
-										CoreModelServiceHolder.get().refresh(encounter.getCoverage(), true);
-										Result<IEncounter> result = EncounterServiceHolder.get().reBillEncounter(
-												NoPoUtil.loadAsIdentifiable(behandlung, IEncounter.class).get());
-										if (!result.isOK()) {
-											SWTHelper.alert(behandlung.getLabel(), result.toString());
-										}
-										contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
-									}
 									setFall(fall);
 									return;
+								} else {
+									if (SWTHelper.askYesNo(Messages.Invoice_System, // $NON-NLS-1$
+											MessageFormat.format(Messages.FallDetailBlatt2_Change_Invoice_System,
+													new Object[] { fall.getAbrechnungsSystem(),
+															cAbrechnung.getItem(i) }))) { // $NON-NLS-1$
+										fall.setAbrechnungsSystem(cAbrechnung.getItem(i));
+										for (Konsultation behandlung : fall.getBehandlungen(false)) {
+											IEncounter encounter = NoPoUtil
+													.loadAsIdentifiable(behandlung, IEncounter.class).get();
+											// make sure to work with updated data
+											CoreModelServiceHolder.get().refresh(encounter.getCoverage(), true);
+											Result<IEncounter> result = EncounterServiceHolder.get().reBillEncounter(
+													NoPoUtil.loadAsIdentifiable(behandlung, IEncounter.class).get());
+											if (!result.isOK()) {
+												SWTHelper.alert(behandlung.getLabel(), result.toString());
+											}
+											contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+										}
+										setFall(fall);
+										return;
+									}
 								}
 							} else {
 								SWTHelper.alert(Messages.Invoice_System_cannot_be_changed, // $NON-NLS-1$
 										Messages.FallDetailBlatt2_CantChangeBillingSystemBody); // $NON-NLS-1$
 							}
 							cAbrechnung.select(cAbrechnung.indexOf(gesetz));
-
 						} else {
 							fall.setAbrechnungsSystem(Abrechnungstypen[i]);
 							setFall(fall);
@@ -314,7 +319,6 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 							// selben Gesetz nehmen
 						}
 					}
-
 				}
 
 				// auto select default insurance reason for billing system

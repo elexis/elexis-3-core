@@ -12,6 +12,8 @@ package ch.elexis.core.data.util;
 
 import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,24 +29,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.model.format.FormatValidator;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.CoverageServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
+import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
@@ -83,6 +89,9 @@ public class BillingUtil {
 	 *
 	 */
 	public static interface IBillableCheck {
+		int CODE_WARNING = 2;
+		int CODE_ERROR = 2;
+
 		/**
 		 * Get a unique id of the check.
 		 *
@@ -121,7 +130,7 @@ public class BillingUtil {
 				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
 					boolean fail = konsultation.getRechnung() != null && !Rechnung.isStorno(konsultation.getRechnung());
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -142,7 +151,7 @@ public class BillingUtil {
 				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
 					boolean fail = getTotal(konsultation).isZero();
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -164,7 +173,7 @@ public class BillingUtil {
 					Mandant mandant = konsultation.getMandant();
 					boolean fail = (mandant == null || !mandant.isValid());
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -186,7 +195,7 @@ public class BillingUtil {
 					Fall fall = konsultation.getFall();
 					boolean fail = (fall == null);
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -210,7 +219,7 @@ public class BillingUtil {
 							&& ConfigServiceHolder.getUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, true)
 							&& !fall.isValid());
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -232,7 +241,7 @@ public class BillingUtil {
 					ArrayList<IDiagnose> diagnosen = konsultation.getDiagnosen();
 					boolean fail = (diagnosen == null || diagnosen.isEmpty());
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -255,7 +264,7 @@ public class BillingUtil {
 				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
 					boolean fail = (checkTool.set(konsultation.getDatum()) == false);
 					if (fail) {
-						result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+						result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 					}
 					return !fail;
 				}
@@ -291,7 +300,7 @@ public class BillingUtil {
 							}
 						}
 						if (fail) {
-							result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+							result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 						}
 					}
 					return !fail;
@@ -314,8 +323,8 @@ public class BillingUtil {
 						ICoverage coverage = CoreModelServiceHolder.get()
 								.load(konsultation.getFall().getId(), ICoverage.class).get();
 						if (coverage.getPatient() != null) {
-							if (StringUtils.isBlank(getSSN(coverage))) {
-								result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+							if (StringUtils.isBlank(getSSN(coverage.getPatient()))) {
+								result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 								return false;
 							}
 						}
@@ -339,10 +348,10 @@ public class BillingUtil {
 						ICoverage coverage = CoreModelServiceHolder.get()
 								.load(konsultation.getFall().getId(), ICoverage.class).get();
 						if (coverage.getPatient() != null) {
-							String ssn = getSSN(coverage);
+							String ssn = getSSN(coverage.getPatient());
 							if (StringUtils.isNotBlank(ssn)) {
-								if (!ssn.matches("[0-9]{4,10}|[1-9][0-9]{10}|756[0-9]{10}|438[0-9]{10}")) {
-									result.add(SEVERITY.ERROR, 1, getDescription(), konsultation, false);
+								if (!FormatValidator.isValidAHVNum(ssn)) {
+									result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
 									return false;
 								}
 							}
@@ -360,20 +369,175 @@ public class BillingUtil {
 				public String getDescription() {
 					return "Fehlerhafte AHV Nummer";
 				}
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					if (konsultation.getFall() != null) {
+						ICoverage coverage = CoreModelServiceHolder.get()
+								.load(konsultation.getFall().getId(), ICoverage.class).get();
+						IContact guarantor = coverage.getGuarantor();
+						if (guarantor == null || (!guarantor.isPerson() && !guarantor.isOrganization())) {
+							result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
+							return false;
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidGuarantor";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Rechnungsempfänger nicht Person oder Organisation";
+				}
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					if (konsultation.getFall() != null) {
+						ICoverage coverage = CoreModelServiceHolder.get()
+								.load(konsultation.getFall().getId(), ICoverage.class).get();
+						IContact costBearer = coverage.getCostBearer();
+						if (costBearer == null || (!costBearer.isPerson() && !costBearer.isOrganization())) {
+							result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
+							return false;
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public String getId() {
+					return "invalidCostBearer";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Kostenträger nicht Person oder Organisation";
+				}
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					if (konsultation.getFall() != null) {
+						ICoverage coverage = CoreModelServiceHolder.get()
+								.load(konsultation.getFall().getId(), ICoverage.class).get();
+						IContact patient = coverage.getPatient();
+						if (patient != null) {
+							if (StringUtils.isBlank(patient.getEmail())) {
+								result.add(SEVERITY.OK, CODE_WARNING, "Patient hat keine Email Adresse", konsultation,
+										false);
+							}
+							if (StringUtils.isBlank(patient.getMobile())) {
+								result.add(SEVERITY.OK, CODE_WARNING, "Patient hat keine Mobil Nummer", konsultation,
+										false);
+							}
+							if (StringUtils.isBlank(patient.getStreet())) {
+								result.add(SEVERITY.OK, CODE_WARNING, "Patient Adresse hat keine Strasse", konsultation,
+										false);
+							}
+							if (StringUtils.isBlank(patient.getZip())) {
+								result.add(SEVERITY.OK, CODE_WARNING, "Patient Adresse hat keine PLZ", konsultation,
+										false);
+							}
+							if (StringUtils.isBlank(patient.getCity())) {
+								result.add(SEVERITY.OK, CODE_WARNING, "Patient Adresse hat keinen Ort", konsultation,
+										false);
+							}
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public String getId() {
+					return "missingPatientData";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Patientendaten fehlen";
+				}
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).orElse(null);
+					if (encounter != null) {
+						List<IBilled> tardocBilled = getTardocOnly(encounter.getBilled());
+						List<IBilled> tardocReferenzBilled = tardocBilled.stream().filter(v -> isReferenz(v)).toList();
+						if (!tardocReferenzBilled.isEmpty()) {
+							List<IBilled> noBezug = tardocReferenzBilled.stream().filter(b -> hasNoBezug(b)).toList();
+							if (!noBezug.isEmpty()) {
+								String noBezugString = noBezug.stream().map(b -> b.getCode())
+										.collect(Collectors.joining(", "));
+								result.add(SEVERITY.ERROR, CODE_ERROR,
+										"TARDOC Referenzleistung(en) " + noBezugString + " ohne Bezug", konsultation,
+										false);
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+
+				private boolean hasNoBezug(IBilled billed) {
+					return StringUtils.isBlank((String) billed.getExtInfo("Bezug"));
+				}
+
+				@Override
+				public String getId() {
+					return "tardocRefNoBezug";
+				}
+
+				@Override
+				public String getDescription() {
+					return "TARDOC Referenzleistung(en) ohne Bezug";
+				}
+
+				private List<IBilled> getTardocOnly(List<IBilled> list) {
+					List<IBilled> ret = new ArrayList<>();
+					for (IBilled verrechnet : list) {
+						IBillable billable = verrechnet.getBillable();
+						if (billable != null && billable.getCodeSystemName() != null
+								&& billable.getCodeSystemName().contains("TARDOC")) {
+							ret.add(verrechnet);
+						}
+					}
+					return ret;
+				}
+
+				private boolean isReferenz(IBilled tardocVerr) {
+					IBillable verrechenbar = tardocVerr.getBillable();
+					String serviceTyp = getServiceTypReflective(verrechenbar);
+					return serviceTyp != null && serviceTyp.equals("R");
+				}
+
+				private String getServiceTypReflective(IBillable billable) {
+					try {
+						Method getterMethod = billable.getClass().getMethod("getServiceTyp", (Class[]) null);
+						Object typ = getterMethod.invoke(billable, (Object[]) null);
+						if (typ instanceof String) {
+							return (String) typ;
+						}
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						LoggerFactory.getLogger(getClass()).warn("Could not get service typ of [" + billable + "]",
+								e.getMessage());
+					}
+					return null;
+				}
+
 			} };
 
-	private static String getSSN(ICoverage coverage) {
-		IXid ahvXid = coverage.getPatient().getXid(DOMAIN_AHV);
-		String ahv = ahvXid != null ? ahvXid.getDomainId() : StringUtils.EMPTY;
-		if (StringUtils.isBlank(ahv)) {
-			ahv = StringUtils.defaultString((String) coverage.getPatient().getExtInfo("AHV-Nummer")); //$NON-NLS-1$
+	private static String getSSN(IPerson p) {
+		IXid ahv = p.getXid(DOMAIN_AHV);
+		String ret = ahv != null ? ahv.getDomainId() : StringUtils.EMPTY;
+		if (StringUtils.isBlank(ret)) {
+			ret = StringUtils
+					.defaultString((String) p.getExtInfo(XidServiceHolder.get().getDomain(DOMAIN_AHV).getSimpleName()));
 		}
-		ahv = ahv.replaceAll("[^0-9]", StringConstants.EMPTY);// $NON-NLS-1$
-		if (StringUtils.isBlank(ahv)) {
-			ahv = CoverageServiceHolder.get().getRequiredString(coverage, "AHV-Nummer").replaceAll("[^0-9]", //$NON-NLS-2$
-					StringConstants.EMPTY);
-		}
-		return StringUtils.isNotBlank(ahv) ? ahv : null;
+		return ret.trim();
 	}
 
 	public static boolean isCheckEnabled(IBillableCheck check) {
