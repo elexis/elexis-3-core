@@ -1,0 +1,51 @@
+<project
+	xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'
+	xmlns='http://maven.apache.org/POM/4.0.0'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>ch.elexis.core</groupId>
+		<artifactId>ch.elexis.core.bundles</artifactId>
+		<version>3.13.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ch.rgw.utility</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>[bundle] ch.rgw.utility</name>
+
+	<organization>
+		<name>G. Weirich</name>
+	</organization>
+	
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.12.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.13.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.19.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.17</version>
+		</dependency>
+	</dependencies>
+
+</project>
