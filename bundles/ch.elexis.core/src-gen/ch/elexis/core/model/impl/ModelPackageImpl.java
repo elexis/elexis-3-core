@@ -1394,6 +1394,26 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIUser_AssociatedContactId() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIUser_RoleIds() {
+		return (EAttribute)iUserEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIUserGroup() {
 		return iUserGroupEClass;
 	}
@@ -5557,6 +5577,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iUserEClass, IUSER__ACTIVE);
 		createEAttribute(iUserEClass, IUSER__ALLOW_EXTERNAL);
 		createEAttribute(iUserEClass, IUSER__ADMINISTRATOR);
+		createEAttribute(iUserEClass, IUSER__ASSOCIATED_CONTACT_ID);
+		createEAttribute(iUserEClass, IUSER__ROLE_IDS);
 
 		iUserGroupEClass = createEClass(IUSER_GROUP);
 		createEReference(iUserGroupEClass, IUSER_GROUP__USERS);
@@ -6360,6 +6382,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIUser_Active(), ecorePackage.getEBoolean(), "active", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_AllowExternal(), ecorePackage.getEBoolean(), "allowExternal", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIUser_Administrator(), ecorePackage.getEBoolean(), "administrator", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_AssociatedContactId(), ecorePackage.getEString(), "associatedContactId", null, 1, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIUser_RoleIds(), ecorePackage.getEString(), "roleIds", null, 0, -1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iUserEClass, this.getIRole(), "addRole", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIRole(), "role", 1, 1, IS_UNIQUE, IS_ORDERED);

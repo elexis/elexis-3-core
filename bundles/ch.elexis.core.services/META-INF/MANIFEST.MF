@@ -9,7 +9,9 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.13.0",
  ch.rgw.utility;bundle-version="3.13.0",
- ch.elexis.core.jpa.entities;bundle-version="3.13.0"
+ ch.elexis.core.httpclient;bundle-version="3.13.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.13.0",
+ ch.elexis.core.ee.openapi;bundle-version="3.13.0"
 Import-Package: bsh,
  ch.elexis.core.webdav,
  com.google.common.cache;version="15.0.0",
@@ -38,6 +40,7 @@ Import-Package: bsh,
  org.apache.hc.core5.http.io.entity;version="[5.3.0,6.0.0)",
  org.apache.hc.core5.http.message;version="[5.3.0,6.0.0)",
  org.apache.hc.core5.io;version="[5.3.0,6.0.0)",
+ org.apache.hc.core5.net;version="[5.3.0,6.0.0)",
  org.eclipse.core.runtime;version="3.7.0",
  org.eclipse.emf.ecore,
  org.eclipse.equinox.console.completion.common,

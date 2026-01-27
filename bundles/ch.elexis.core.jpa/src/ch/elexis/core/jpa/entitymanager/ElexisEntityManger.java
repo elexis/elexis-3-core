@@ -57,9 +57,6 @@ public class ElexisEntityManger implements IElexisEntityManager {
 
 	private IDatabaseUpdateUi updateProgress;
 
-	private final boolean SKIP_LIQUIBASE = Boolean
-			.valueOf(System.getProperty(ElexisSystemPropertyConstants.CONN_SKIP_LIQUIBASE));
-
 	@Activate
 	public void activate() {
 		updateSuccess = false;
@@ -93,7 +90,9 @@ public class ElexisEntityManger implements IElexisEntityManager {
 		if (factory == null) {
 			// try to initialize
 
-			if (!SKIP_LIQUIBASE) {
+			boolean skipLiquibase = Boolean
+					.valueOf(System.getProperty(ElexisSystemPropertyConstants.CONN_SKIP_LIQUIBASE));
+			if (!skipLiquibase) {
 				updateProgress = OsgiServiceUtil.getServiceWait(IDatabaseUpdateUi.class, 100).orElse(null);
 				if (updateProgress != null) {
 					try {

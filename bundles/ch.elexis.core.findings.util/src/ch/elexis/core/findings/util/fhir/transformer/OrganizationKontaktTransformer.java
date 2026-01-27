@@ -10,9 +10,9 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IOrganizationOrganizationAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IOrganizationOrganizationAttributeMapper;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
@@ -34,14 +34,14 @@ public class OrganizationKontaktTransformer implements IFhirTransformer<Organiza
 
 	@Activate
 	public void activate() {
-		attributeMapper = new IOrganizationOrganizationAttributeMapper(xidService);
+		attributeMapper = new IOrganizationOrganizationAttributeMapper(modelService, xidService);
 	}
 
 	@Override
 	public Optional<Organization> getFhirObject(IOrganization localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		Organization organization = new Organization();
-		attributeMapper.elexisToFhir(localObject, organization, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, organization, summaryEnum);
 		return Optional.of(organization);
 	}
 

@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -36,38 +39,42 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.IUserService;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component
 public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private Logger logger;
 
-	@Reference
-	private IContextService contextService;
+	private final boolean logDenials;
 
 	@Reference
-	private IUserService userService;
+	Gson gson;
 
 	@Reference
-	private IStoreToStringService storeToStringService;
+	CloseableHttpClient httpClient;
 
 	@Reference
-	private Gson gson;
-
-	private Map<String, AccessControlList> roleAclMap;
-	private Map<IUser, AccessControlList> userAclMap;
+	IContextService contextService;
 
 	private ThreadLocal<Boolean> privileged;
 
-	private String[] aoboObjects = { "IEncounter", "IInvoice" };
+	private Map<Integer, AccessControlList> combinedRolesAclMap;
+	private Map<String, AccessControlList> roleAclMap;
+
+	private IUserService userService;
+
+	private final String[] aoboObjects = { "IEncounter", "IInvoice" };
 
 	public RoleBasedAccessControlService() {
 		logger = LoggerFactory.getLogger(getClass());
+		logDenials = ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION;
+		combinedRolesAclMap = Collections.synchronizedMap(new HashMap<>());
 		roleAclMap = Collections.synchronizedMap(new HashMap<>());
-		userAclMap = Collections.synchronizedMap(new HashMap<>());
 
 		privileged = ThreadLocal.withInitial(() -> Boolean.FALSE);
 	}
@@ -77,17 +84,21 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (isPrivileged()) {
 			return true;
 		}
-		Optional<IUser> user = contextService.getActiveUser();
-		if (user.isPresent()) {
-			if (!userAclMap.containsKey(user.get())) {
-				refresh(user.get());
+
+		String activeUserId = contextService.getActiveUser().map(IUser::getId).orElse(null);
+		if (activeUserId != null) {
+			int combinedRolesHashCode = contextService.getActiveUser().map(IUser::getRoleIds).get().hashCode();
+			if (!combinedRolesAclMap.containsKey(combinedRolesHashCode)) {
+				refresh(activeUserId, contextService.getActiveUser().map(IUser::getRoleIds).get());
 			}
-			boolean result = evaluateACE(user.get(), userAclMap.get(user.get()), evaluatableAce);
-			if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION && !result) {
-				String message = "(ACL " + System.currentTimeMillis() + ") User [" + user.get().getId()
-						+ "]  has no right [" + evaluatableAce.toString() + "]";
-				logger.info("", new Throwable(message));
+
+			boolean result = evaluateACE(combinedRolesAclMap.get(combinedRolesHashCode),
+					evaluatableAce);
+			if (logDenials && !result) {
+				logger.info("User %s denied %s ", activeUserId, evaluatableAce.toString());
+				logger.info("Combined Roles: %s", gson.toJson(combinedRolesAclMap.get(combinedRolesHashCode)));
 			}
+
 			return result;
 		} else {
 			logger.warn("No active user to evalute");
@@ -97,13 +108,24 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public void refresh(IUser user) {
+		refresh(user.getId(), user.getRoleIds());
+	}
+
+	/**
+	 * 
+	 * @param userId
+	 * @param roles  ALL roles to be applied to user, we do not care about
+	 *               usergroups - this set is imperative
+	 */
+	public void refresh(String userId, List<String> roles) {
 		// calculate user ACL by combining the users roles
-		AccessControlList userAccessControlList = determineUserAccessControlList(userService.getUserRoles(user));
-		userAclMap.put(user, userAccessControlList);
+
+		AccessControlList userAccessControlList = determineUserAccessControlList(roles);
+		combinedRolesAclMap.put(roles.hashCode(), userAccessControlList);
 		if (userAccessControlList.getRolesRepresented().isEmpty()) {
-			logger.warn("ACE User=[{}] Empty Role Set", user.getId());
+			logger.warn("ACE User=[{}] Empty Role Set", userId);
 		} else {
-			logger.info("ACE User=[{}] Roles=[{}]", user.getId(), userAccessControlList.getRolesRepresented());
+			logger.info("Refresh ACE User=[{}] Roles={}", userId, userAccessControlList.getRolesRepresented());
 		}
 	}
 
@@ -113,31 +135,86 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return privileged.get() || (CoreUtil.isTestMode() && contextService.getNamed("testAccessControl").isEmpty());
 	}
 
-	private AccessControlList determineUserAccessControlList(List<IRole> roles) {
+	private AccessControlList determineUserAccessControlList(List<String> roles) {
 		if (roles.isEmpty()) {
 			return new AccessControlList();
 		}
 
 		AccessControlList accessControlList = null;
-		for (IRole role : roles) {
+		for (String roleId : roles) {
 			if (accessControlList == null) {
-				accessControlList = getOrLoadRoleAccessControlList(role);
+				accessControlList = getOrLoadRoleAccessControlList(roleId);
 			} else {
-				AccessControlList _accessControlList = roleAclMap.get(role.getId().toLowerCase());
+				AccessControlList _accessControlList = roleAclMap.get(roleId.toLowerCase());
 				if (_accessControlList == null) {
-					_accessControlList = getOrLoadRoleAccessControlList(role);
+					_accessControlList = getOrLoadRoleAccessControlList(roleId);
 				}
 				if (_accessControlList != null) {
 					accessControlList = AccessControlListUtil.merge(accessControlList, _accessControlList);
 				} else {
-					logger.warn("Unknown role [" + role.getId() + "]");
+					logger.warn("Unknown role [" + roleId + "]");
 				}
 			}
 		}
+
+		if (accessControlList == null) {
+			// we might have only roles that are not represented in Elexis
+			// e.g. only fhir-r4-access
+			accessControlList = new AccessControlList();
+		}
+
 		return accessControlList;
 	}
 
-	private AccessControlList getOrLoadRoleAccessControlList(IRole iRole) {
+	/**
+	 * We use another approach than Elexis: We assume that no roles are required in
+	 * the Elexis database. If however a role entry for the id exists AND it is not
+	 * a system role, we only check for the acl override.
+	 * 
+	 * @param roleId
+	 * @return
+	 */
+	public AccessControlList getOrLoadRoleAccessControlList(String roleId) {
+		if (!roleAclMap.containsKey(roleId)) {
+
+			if (ElexisSystemPropertyConstants.IS_EE_DEPENDENT_OPERATION_MODE) {
+				loadRoleAccessControlListDependent(roleId);
+			} else {
+				doPrivileged(() -> {
+					IRole role = CoreModelServiceHolder.get().load(roleId, IRole.class).orElseThrow();
+					loadRoleAccessControlListLegacy(role);
+				});
+			}
+		}
+		return roleAclMap.get(roleId);
+	}
+
+	private void loadRoleAccessControlListDependent(String roleId) {
+		try {
+			HttpGet request = new HttpGet("https://" + ElexisSystemPropertyConstants.GET_EE_HOSTNAME
+					+ "/api/v1/ops/elexis-rcp/acl/" + roleId);
+			request.addHeader("accept", "application/json");
+			String aclJsonResponse = httpClient.execute(request, response -> {
+				if (204 == response.getCode()) {
+					logger.info("No acl file for role [{}]", roleId);
+					EntityUtils.consume(response.getEntity());
+					return null;
+				}
+				return EntityUtils.toString(response.getEntity());
+			});
+			
+			if (aclJsonResponse != null) {
+				AccessControlList acl = gson.fromJson(aclJsonResponse, AccessControlList.class);
+				roleAclMap.put(roleId, acl);
+			}
+
+		} catch (Exception e) {
+			logger.error("Error loading role acl [{}]", roleId, e);
+		}
+
+	}
+
+	private void loadRoleAccessControlListLegacy(IRole iRole) {
 		String _role = iRole.getId().toLowerCase();
 		if (!roleAclMap.containsKey(_role)) {
 			InputStream jsonStream = null;
@@ -165,7 +242,6 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 				logger.warn("No role acl [{}] file", _role);
 			}
 		}
-		return roleAclMap.get(_role);
 	}
 
 	@Override
@@ -179,7 +255,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return Optional.empty();
 	}
 
-	private boolean evaluateACE(IUser user, AccessControlList acl, EvaluatableACE ace) {
+	private boolean evaluateACE(AccessControlList acl, EvaluatableACE ace) {
 		if (ace instanceof ObjectEvaluatableACE) {
 			ObjectEvaluatableACE _ace = (ObjectEvaluatableACE) ace;
 			ACEAccessBitMap useracebm = acl.getObject().get(_ace.getObject());
@@ -199,7 +275,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 						flattenedbitmap |= 1 << i;
 					} else if (aceBitMap[i] == (byte) 2 || aceBitMap[i] == (byte) 1) {
 						if (StringUtils.isNotEmpty(_ace.getStoreToString()) && isAoboObject(_ace.getObject())) {
-							if (evaluateAobo(user, _ace)) {
+							List<String> aoboMandatorIds = getAoboMandatorIds();
+							if (evaluateAobo(aoboMandatorIds, _ace)) {
 								aceBitMap[i] = (byte) 1;
 								flattenedbitmap |= 1 << i;
 							} else {
@@ -224,9 +301,8 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		return false;
 	}
 
-	private boolean evaluateAobo(IUser user, ObjectEvaluatableACE _ace) {
-		List<String> aoboIds = getAoboMandatorIds(user);
-		Optional<Identifiable> object = storeToStringService.loadFromString(_ace.getStoreToString());
+	private boolean evaluateAobo(List<String> aoboMandatorIds, ObjectEvaluatableACE _ace) {
+		Optional<Identifiable> object = StoreToStringServiceHolder.get().loadFromString(_ace.getStoreToString());
 		if (object.isPresent()) {
 			String id = null;
 			if (object.get() instanceof IEncounter) {
@@ -240,7 +316,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 			} else {
 				logger.warn("Unknown aobo object [{}]", _ace.getStoreToString());
 			}
-			return id != null ? aoboIds.contains(id) : true;
+			return id != null ? aoboMandatorIds.contains(id) : true;
 		} else {
 			logger.warn("Could not load aobo object [{}]", _ace.getStoreToString());
 		}
@@ -249,31 +325,19 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 
 	@Override
 	public String getSelfMandatorId() {
-		Optional<IUser> user = contextService.getActiveUser();
-		if (user.isPresent()) {
-			if (user.get().getAssignedContact() != null) {
-				return user.get().getAssignedContact().getId();
-			}
-		}
-		return "-1";
+		return contextService.getActiveUser().map(IUser::getAssociatedContactId).orElse("-1");
 	}
 
-	private List<String> getAoboMandatorIds(IUser user) {
-		List<String> ret = new ArrayList<>();
-		if (user.getAssignedContact() != null) {
-			ret.add(user.getAssignedContact().getId());
-			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
-		}
-		return ret;
-	}
-
-	@Override
 	public List<String> getAoboMandatorIds() {
-		Optional<IUser> user = contextService.getActiveUser();
-		if (user.isPresent()) {
-			return getAoboMandatorIds(user.get());
+		if (userService == null) {
+			userService = OsgiServiceUtil.getService(IUserService.class).get();
 		}
-		return Collections.emptyList();
+		List<String> ret = new ArrayList<>();
+		contextService.getActiveUser().ifPresent(user -> {
+			ret.add(user.getAssociatedContactId());
+			userService.getExecutiveDoctorsWorkingFor(user, true).stream().forEach(m -> ret.add(m.getId()));
+		});
+		return ret;
 	}
 
 	@Override
@@ -315,26 +379,25 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		if (!isAoboObject(evaluatableAce.getObject())) {
 			return Optional.empty();
 		}
-		Optional<IUser> user = contextService.getActiveUser();
-		if (user.isPresent()) {
-			if (!userAclMap.containsKey(user.get())) {
-				refresh(user.get());
-			}
-			AccessControlList acl = userAclMap.get(user.get());
-			ACEAccessBitMap useracebm = acl.getObject().get(evaluatableAce.getObject());
-			if (useracebm != null) {
-				byte[] aceBitMap = useracebm.getAccessRightMap();
-				byte[] requested = evaluatableAce.getRequestedRightMap();
-				for (int i = 0; i < requested.length; i++) {
-					if (requested[i] == 1 && (aceBitMap[i] == 1)) {
-						return Optional.of(ACEAccessBitMapConstraint.SELF);
-					} else if (requested[i] == 1 && (aceBitMap[i] == 2)) {
-						return Optional.of(ACEAccessBitMapConstraint.AOBO);
-					}
+
+		int combinedRolesHashCode = contextService.getActiveUser().map(IUser::getRoleIds).get().hashCode();
+		if (!combinedRolesAclMap.containsKey(combinedRolesHashCode)) {
+			refresh(contextService.getActiveUser().map(IUser::getId).get(),
+					contextService.getActiveUser().map(IUser::getRoleIds).get());
+		}
+		AccessControlList acl = combinedRolesAclMap.get(combinedRolesHashCode);
+
+		ACEAccessBitMap useracebm = acl.getObject().get(evaluatableAce.getObject());
+		if (useracebm != null) {
+			byte[] aceBitMap = useracebm.getAccessRightMap();
+			byte[] requested = evaluatableAce.getRequestedRightMap();
+			for (int i = 0; i < requested.length; i++) {
+				if (requested[i] == 1 && (aceBitMap[i] == 1)) {
+					return Optional.of(ACEAccessBitMapConstraint.SELF);
+				} else if (requested[i] == 1 && (aceBitMap[i] == 2)) {
+					return Optional.of(ACEAccessBitMapConstraint.AOBO);
 				}
 			}
-		} else {
-			logger.warn("No active user to test aobo");
 		}
 		return Optional.empty();
 	}

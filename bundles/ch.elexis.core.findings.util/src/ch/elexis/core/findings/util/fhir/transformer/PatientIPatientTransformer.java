@@ -11,9 +11,9 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IPatientPatientAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IPatientPatientAttributeMapper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -45,7 +45,7 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 			@Override
 			public Patient call() throws Exception {
 				Patient ret = new Patient();
-				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
+				attributeMapper.elexisToFhir(localObject, ret, summaryEnum);
 				return ret;
 			}
 		});

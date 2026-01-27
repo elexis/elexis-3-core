@@ -96,8 +96,19 @@ public interface IUserService {
 	 *
 	 * @param user contact as retrieved by {@link IUser#getAssignedContact()}
 	 * @return
+	 * @Deprecated replace with
+	 *             {@link #getDefaultExecutiveDoctorWorkingFor(IContact)}
 	 */
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user);
+
+	/**
+	 * Retrieve the default executive doctors this contact is working for.
+	 * 
+	 * @param user
+	 * @return
+	 * @since 3.13
+	 */
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact);
 
 	/**
 	 * Set the default executive doctor this user is working for.

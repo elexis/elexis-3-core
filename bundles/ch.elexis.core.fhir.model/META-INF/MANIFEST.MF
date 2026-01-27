@@ -2,16 +2,21 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: FHIR core model
 Bundle-SymbolicName: ch.elexis.core.fhir.model
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 3.13.0.qualifier
 Export-Package: ch.elexis.core.fhir.model
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.fhir.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: info.elexis.target.hapi.fhir;visibility:=reexport,
- ch.elexis.core
+ ch.elexis.core.l10n;bundle-version="3.13.0",
+ ch.elexis.core;bundle-version="[3.13.0,4.0.0)",
+ ch.elexis.core.httpclient;bundle-version="3.13.0",
+ ch.elexis.core.fhir.mapper.r4;bundle-version="3.13.0"
 Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.util.fhir.transformer.helper,
  ch.elexis.core.services.holder,
+ ch.myelexis.server.api,
+ ch.myelexis.server.client,
  org.apache.commons.lang3;version="[3.17.0,4.0.0)",
  org.apache.http;version="[4.4.0,5.0.0)",
  org.apache.http.auth;version="[4.5.0,5.0.0)",
@@ -19,12 +24,13 @@ Import-Package: ch.elexis.core.findings,
  org.apache.http.client.config;version="[4.5.0,5.0.0)",
  org.apache.http.conn;version="[4.5.0,5.0.0)",
  org.apache.http.impl.client;version="[4.5.0,5.0.0)"
-Service-Component: OSGI-INF/ch.elexis.core.fhir.model.service.FhirModelService.xml
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/hapi-fhir-client-okhttp-8.2.0.jar,
+ lib/hapi-fhir-client-apache-http5-8.6.0.jar,
  lib/kotlin-stdlib-2.1.21.jar,
  lib/kotlin-stdlib-jdk8-1.8.21.jar,
  lib/okhttp-4.12.0.jar,
  lib/okio-3.6.0.jar,
  lib/okio-jvm-3.12.0.jar,
  .
+Service-Component: OSGI-INF/ch.elexis.core.fhir.model.service.FhirModelService.xml

@@ -4,7 +4,6 @@
       <provide interface="ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator"/>
    </service>
    <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
-   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
    <implementation class="ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator"/>
 </scr:component>

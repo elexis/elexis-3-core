@@ -4,6 +4,6 @@
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
    </service>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
-   <reference cardinality="0..n" field="documentStores" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
+   <reference cardinality="0..n" field="documentStores" field-collection-type="service" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
    <implementation class="ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer"/>
 </scr:component>

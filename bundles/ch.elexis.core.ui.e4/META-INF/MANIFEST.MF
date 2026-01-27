@@ -4,7 +4,8 @@ Bundle-Name: Core UI for e4
 Bundle-SymbolicName: ch.elexis.core.ui.e4;singleton:=true
 Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
-Export-Package: ch.elexis.core.ui.e4.controls,
+Export-Package: ch.elexis.core.ui.e4,
+ ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.dialog,
  ch.elexis.core.ui.e4.dnd,
  ch.elexis.core.ui.e4.events,
@@ -13,7 +14,9 @@ Export-Package: ch.elexis.core.ui.e4.controls,
  ch.elexis.core.ui.e4.locks,
  ch.elexis.core.ui.e4.parts,
  ch.elexis.core.ui.e4.providers,
- ch.elexis.core.ui.e4.util
+ ch.elexis.core.ui.e4.user,
+ ch.elexis.core.ui.e4.util,
+ com.tiff.common.ui.datepicker
 Require-Bundle: ch.elexis.core;bundle-version="3.12.0";visibility:=reexport,
  ch.rgw.utility;bundle-version="3.12.0";visibility:=reexport,
  ch.elexis.core.l10n;bundle-version="3.12.0";visibility:=reexport,
@@ -46,6 +49,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.data.util,
  ch.elexis.core.lock.types,
  ch.elexis.data,
+ com.google.gson;version="[2.11.0,3.0.0)",
  org.apache.commons.lang3;version="3.12.0",
  org.eclipse.swt,
  org.eclipse.swt.custom,

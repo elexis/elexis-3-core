@@ -14,7 +14,6 @@ import ch.elexis.core.constants.ElexisEnvironmentPropertyConstants;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.services.IAccessControlService;
-import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 
 /**
@@ -30,9 +29,6 @@ public class ElexisEnvironmentServiceActivator {
 	private IAccessControlService accessControlService;
 
 	@Reference
-	private IConfigService configService;
-
-	@Reference
 	private IContextService contextService;
 
 	@Activate
@@ -44,10 +40,10 @@ public class ElexisEnvironmentServiceActivator {
 			if (StringUtils.isBlank(elexisEnvironmentHost)) {
 				elexisEnvironmentHost = System.getenv(ElexisEnvironmentPropertyConstants.EE_HOSTNAME);
 			}
-			// 3. if empty fetch via config service
-			if (StringUtils.isBlank(elexisEnvironmentHost)) {
-				elexisEnvironmentHost = configService.get(IElexisEnvironmentService.CFG_EE_HOSTNAME, null);
-			}
+//			// 3. if empty fetch via config service
+//			if (StringUtils.isBlank(elexisEnvironmentHost)) {
+//				elexisEnvironmentHost = configService.get(IElexisEnvironmentService.CFG_EE_HOSTNAME, null);
+//			}
 
 			Logger log = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +51,7 @@ public class ElexisEnvironmentServiceActivator {
 				try {
 					// activate the service
 					ElexisEnvironmentService elexisEnvironmentService = new ElexisEnvironmentService(
-							elexisEnvironmentHost, contextService, configService);
+							elexisEnvironmentHost, contextService);
 					serviceRegistration = FrameworkUtil.getBundle(ElexisEnvironmentServiceActivator.class)
 							.getBundleContext()
 							.registerService(IElexisEnvironmentService.class, elexisEnvironmentService, null);

@@ -2,8 +2,6 @@ package ch.elexis.core.model;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +44,11 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 
 	@Override
+	public String getAssociatedContactId() {
+		return getAssignedContact().getId();
+	}
+
+	@Override
 	public IContact getAssignedContact() {
 		return ModelUtil.getAdapter(getEntity().getKontakt(), IContact.class, true);
 	}
@@ -63,6 +66,11 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public List<IRole> getRoles() {
 		return getEntity().getRoles().parallelStream().map(r -> ModelUtil.getAdapter(r, IRole.class))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getRoleIds() {
+		return getRoles().stream().map(IRole::getId).toList();
 	}
 
 	@Override
@@ -156,14 +164,6 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	@Override
 	public boolean isInternal() {
 		return true;
-	}
-
-	public Set<String> getContactIdsOfExecutiveDoctorsWorkingFor() {
-		String mandators = (String) getAssignedContact().getExtInfo("Mandant");
-		if (mandators == null) {
-			return Collections.emptySet();
-		}
-		return new HashSet<>(Arrays.asList(mandators.split(",")));
 	}
 
 }

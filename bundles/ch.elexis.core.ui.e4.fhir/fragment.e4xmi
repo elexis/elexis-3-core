@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_xnDUgOooEfCh-KyzPAEAMg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_0SVPAOooEfCh-KyzPAEAMg" featurename="descriptors" parentElementId="xpath:/">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_2RPywOooEfCh-KyzPAEAMg" elementId="ch.elexis.core.ui.e4.fhir.partdescriptor.coveragelistpart" label="F&#xe4;lle NEU" category="Konsultation" closeable="true" contributionURI="bundleclass://ch.elexis.core.ui.e4.fhir/ch.elexis.core.ui.e4.fhir.parts.CoverageListPart">
+      <tags>View</tags>
+      <menus xsi:type="menu:PopupMenu" xmi:id="_x4no0OosEfCh-KyzPAEAMg" elementId="ch.elexis.core.ui.e4.fhir.parts.coveragelist.popupmenu.tableresults"/>
+      <toolbar xmi:id="_446_oOooEfCh-KyzPAEAMg" elementId="ch.elexis.core.ui.e4.fhir.toolbar.0"/>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>

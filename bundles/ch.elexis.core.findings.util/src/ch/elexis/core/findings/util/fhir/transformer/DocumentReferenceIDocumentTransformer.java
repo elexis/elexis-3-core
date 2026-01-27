@@ -23,11 +23,11 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.fhir.mapper.r4.IDocumentAttributeMapper;
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IDocumentAttributeMapper;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
@@ -53,7 +53,7 @@ public class DocumentReferenceIDocumentTransformer implements IFhirTransformer<D
 	public Optional<DocumentReference> getFhirObject(IDocument localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		DocumentReference ret = new DocumentReference();
-		attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, ret, summaryEnum);
 
 		if (localObject.getPatient() != null) {
 			ret.setSubject(new org.hl7.fhir.r4.model.Reference(new IdDt("Patient", localObject.getPatient().getId())));

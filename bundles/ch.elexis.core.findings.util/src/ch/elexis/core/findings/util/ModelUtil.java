@@ -20,8 +20,6 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -45,40 +43,31 @@ import ch.elexis.core.findings.util.model.CodingWrapper;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 
-@Component
 public class ModelUtil {
-
-	private static IModelService findingsModelService;
-
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	public void setFindingsModelService(IModelService modelService) {
-		ModelUtil.findingsModelService = modelService;
-	}
 
 	public static <T> Optional<T> loadFinding(String id, Class<T> clazz) {
 		if (id != null) {
-			return findingsModelService.load(id, clazz);
+			return FindingsModelServiceHolder.get().load(id, clazz);
 		}
 		return Optional.empty();
 	}
 
 	public static <T> INamedQuery<T> getFindingsNamedQuery(Class<T> clazz, String... properties) {
-		return findingsModelService.getNamedQuery(clazz, properties);
+		return FindingsModelServiceHolder.get().getNamedQuery(clazz, properties);
 	}
 
 	public static <T> T createFinding(Class<T> clazz) {
-		return findingsModelService.create(clazz);
+		return FindingsModelServiceHolder.get().create(clazz);
 	}
 
 	public static void saveFinding(Identifiable identifiable) {
-		findingsModelService.save(identifiable);
+		FindingsModelServiceHolder.get().save(identifiable);
 	}
 
 	public static void deleteFinding(Deleteable deleteable) {
-		findingsModelService.delete(deleteable);
+		FindingsModelServiceHolder.get().delete(deleteable);
 	}
 
 	private static FhirContext context;
@@ -112,7 +101,7 @@ public class ModelUtil {
 				rawContent = StringEscapeUtils.unescapeHtml4(rawContent);
 				resource = getAsResource(rawContent);
 				finding.setRawContent(rawContent);
-				findingsModelService.save(finding);
+				FindingsModelServiceHolder.get().save(finding);
 			}
 		}
 		return Optional.ofNullable(resource);

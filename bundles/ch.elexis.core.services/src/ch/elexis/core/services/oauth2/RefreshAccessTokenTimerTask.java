@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.eenv.AccessToken;
-import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.eenv.ElexisEnvironmentService;
@@ -61,7 +61,7 @@ public class RefreshAccessTokenTimerTask extends TimerTask {
 			// we need to refresh the access-token
 			// 1) try via refreshToken
 			// FIXME does not work correctly
-			String rcpClientSecret = eeService.getProperty(IElexisEnvironmentService.EE_RCP_OPENID_SECRET);
+			String rcpClientSecret = eeService.getProperty(ElexisSystemPropertyConstants.EE_CLIENTSECRET);
 			ObjectStatus<AccessToken> _accessToken = AccessTokenUtil.invokeRefresh(accessToken, rcpClientSecret);
 			if (_accessToken.isOK()) {
 				contextService.setTyped(_accessToken.getObject());

@@ -15,6 +15,7 @@
   </parent>
 
   <modules>
+	<module>ch.elexis.core.ee.openapi</module>
     <module>ch.elexis.core.test</module>
     <module>ch.elexis.core.test.context</module>
     <module>ch.elexis.core.test.logging</module>
@@ -33,6 +34,7 @@
     <module>ch.elexis.core.eigenartikel</module>
     <module>ch.elexis.core.eigendiagnosen</module>
     <module>ch.elexis.core.fhir.model</module>
+    <module>ch.elexis.core.fhir.mapper.r4</module>
     <module>ch.elexis.core.findings.fhir.model</module>
     <module>ch.elexis.core.findings.fhir.po</module>
     <module>ch.elexis.core.findings.templates.edit</module>
@@ -43,6 +45,7 @@
     <module>ch.elexis.core.findings.util</module>
     <module>ch.elexis.core.findings</module>
     <module>ch.elexis.core.hl7.v2x</module>
+    <module>ch.elexis.core.httpclient</module>
     <module>ch.elexis.core.importer.div</module>
     <module>ch.elexis.core.jcifs</module>
     <module>ch.elexis.core.webdav</module>
@@ -65,6 +68,7 @@
     <module>ch.elexis.core.ui.eigendiagnosen</module>
     <module>ch.elexis.core.ui.eenv</module>
     <module>ch.elexis.core.ui.e4</module>
+    <module>ch.elexis.core.ui.e4.fhir</module>
     <module>ch.elexis.core.ui.icons</module>
     <module>ch.elexis.core.ui.importer.div.native64</module>
     <module>ch.elexis.core.ui.importer.div</module>
