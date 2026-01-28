@@ -9,8 +9,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
-Export-Package: ch.elexis.core.common,
- ch.elexis.core.console,
+Export-Package: ch.elexis.core.console,
  ch.elexis.core.constants,
  ch.elexis.core.events,
  ch.elexis.core.jaxrs.filter,
