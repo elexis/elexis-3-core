@@ -42,8 +42,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.IOUtils;
+import org.h2.util.IOUtils;
 
+import ch.elexis.core.l10n.Messages;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.Log;
 import ch.rgw.tools.StringTool;

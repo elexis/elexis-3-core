@@ -69,6 +69,10 @@ public class JdbcLink {
 	// connection open
 	private Connection preparedStatementConnection;
 
+	public static final String DBFLAVOR_MYSQL = "mysql";
+	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
+	public static final String DBFLAVOR_H2 = "h2";
+
 	private int keepAliveCount;
 	private Timer keepAliveTimer = new Timer();
 
@@ -99,6 +103,7 @@ public class JdbcLink {
 
 	private static Log log;
 
+
 	public static final int CONNECT_SUCCESS = 0;
 	public static final int CONNECT_CLASSNOTFOUND = 1;
 	public static final int CONNECT_FAILED = 2;
@@ -109,10 +114,6 @@ public class JdbcLink {
 	public static final int CONNECTION_CANT_CREATE_STATEMENT = 30;
 	public static final int CONNECTION_CANT_PREPARE_STAMENT = 31;
 	public static final int CONNECTION_SQL_ERROR = 40;
-
-	public static final String DBFLAVOR_MYSQL = "mysql";
-	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
-	public static final String DBFLAVOR_H2 = "h2";
 
 	public static final String VALIDATION_QUERY = "SELECT 1;";
 
@@ -354,84 +355,6 @@ public class JdbcLink {
 			lastErrorCode = CONNECT_UNKNOWN_ERROR;
 			lastErrorString = "Illegal state exception: " + e.getMessage();
 			throw JdbcLinkExceptionTranslation.translateException("Connect failed: " + lastErrorString, e);
-		}
-	}
-
-	/**
-	 * Utility-Funktion zum Einpacken von Strings in Hochkommata und escapen
-	 * illegaler Zeichen
-	 *
-	 * @param s der String
-	 * @return Datenbankkonform eingepackte String
-	 *
-	 * @deprecated only escapes for DBFLAVOR_MYSQL, use
-	 *             {@link JdbcLink#wrapFlavored(String)} for correct wrapping
-	 */
-	public static String wrap(String s) {
-		if (StringTool.isNothing(s)) {
-			return "''";
-		}
-		try {
-			return wrap(s.getBytes("UTF-8"), DBFLAVOR_MYSQL);
-		} catch (UnsupportedEncodingException e) {
-			ExHandler.handle(e);
-			return wrap(s.getBytes(), DBFLAVOR_MYSQL);
-		}
-	}
-
-	public String wrapFlavored(String s) {
-		if (StringTool.isNothing(s)) {
-			return "''";
-		}
-		try {
-			return wrap(s.getBytes("UTF-8"), DBFlavor);
-		} catch (UnsupportedEncodingException e) {
-			ExHandler.handle(e);
-			return wrap(s.getBytes(), DBFlavor);
-		}
-	}
-
-	/**
-	 * Utility-Funktion zum Datenbankkonformen Verpacken von byte arrays zwecks
-	 * Einfügen in BLOB-Felder.
-	 *
-	 * @param flavor TODO
-	 * @param b      das rohe byte array
-	 * @return das verpackte array in Form eines String
-	 */
-	public static String wrap(byte[] in, String flavor) {
-
-		byte[] out = new byte[2 * in.length + 2];
-		int j = 0;
-		out[j++] = '\'';
-		for (int i = 0; i < in.length; i++) {
-			switch (in[i]) {
-			case 0:
-			case 34:
-
-			case '\'':
-				if (flavor.startsWith(DBFLAVOR_POSTGRESQL) || flavor.startsWith("hsql")) {
-					out[j++] = '\'';
-					break;
-				} else if (flavor.startsWith(DBFLAVOR_H2)) {
-					out[j++] = 39;
-					break;
-				}
-			case 92:
-				boolean before = (i > 1 && in[i - 1] == 92);
-				boolean after = (i < in.length - 1 && in[i + 1] == 92);
-				if (!before && !after) {
-					out[j++] = '\\';
-				}
-			}
-			out[j++] = in[i];
-		}
-		out[j++] = '\'';
-		try {
-			return new String(out, 0, j, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			ExHandler.handle(e);
-			return null;
 		}
 	}
 
@@ -980,6 +903,18 @@ public class JdbcLink {
 
 	}
 
+	public String wrapFlavored(String s) {
+		if (StringTool.isNothing(s)) {
+			return "''";
+		}
+		try {
+			return JdbcLinkUtil.wrap(s.getBytes("UTF-8"), DBFlavor);
+		} catch (UnsupportedEncodingException e) {
+			ExHandler.handle(e);
+			return JdbcLinkUtil.wrap(s.getBytes(), DBFlavor);
+		}
+	}
+
 	public static String readStatement(InputStream is) {
 		StringBuffer inp = new StringBuffer(1000);
 		String sql = "<none>";
@@ -1051,9 +986,9 @@ public class JdbcLink {
 					break;
 				case JdbcLink.TEXT:
 					if (o == null) {
-						w.write(JdbcLink.wrap("null"));
+						w.write(JdbcLinkUtil.wrap("null"));
 					} else {
-						w.write(JdbcLink.wrap((String) o));
+						w.write(JdbcLinkUtil.wrap((String) o));
 					}
 					break;
 
@@ -1110,5 +1045,9 @@ public class JdbcLink {
 	@Override
 	public String toString() {
 		return DBFlavor + " " + verMajor + "." + verMinor;
+	}
+
+	public static String wrap(String sql) {
+		return JdbcLinkUtil.wrap(sql);
 	}
 }

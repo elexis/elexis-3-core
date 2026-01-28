@@ -20,6 +20,9 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
+import ch.rgw.tools.JdbcLink;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -31,10 +34,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-
-import org.apache.commons.lang3.StringUtils;
-
-import ch.rgw.tools.JdbcLink;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

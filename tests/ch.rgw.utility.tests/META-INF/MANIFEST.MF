@@ -4,6 +4,6 @@ Bundle-Name: ch.rgw.utility test fragment
 Bundle-SymbolicName: ch.rgw.utility.tests
 Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.ch
-Fragment-Host: ch.rgw.utility;bundle-version="3.10.0"
+Fragment-Host: ch.rgw.utility.legacy;bundle-version="3.13.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.junit

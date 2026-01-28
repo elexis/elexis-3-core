@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IStatus;
 
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.message.TransientMessage;
+import ch.elexis.core.status.ObjectStatus;
 
 public interface IMessageTransporter {
 

@@ -1,8 +1,8 @@
 package ch.rgw.tools;
 
-import static ch.rgw.tools.JdbcLink.DBFLAVOR_H2;
-import static ch.rgw.tools.JdbcLink.DBFLAVOR_MYSQL;
-import static ch.rgw.tools.JdbcLink.DBFLAVOR_POSTGRESQL;
+import static ch.rgw.tools.JdbcLinkUtil.DBFLAVOR_H2;
+import static ch.rgw.tools.JdbcLinkUtil.DBFLAVOR_MYSQL;
+import static ch.rgw.tools.JdbcLinkUtil.DBFLAVOR_POSTGRESQL;
 
 import java.sql.SQLException;
 

@@ -1,7 +1,8 @@
 package ch.elexis.core.model.prescription;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.services.IMedicationService;
 
