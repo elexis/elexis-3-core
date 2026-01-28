@@ -1,26 +1,31 @@
 package ch.elexis.core.services;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableVerifier;
 import ch.elexis.core.model.IBilled;
-import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -35,11 +40,12 @@ import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.holder.CodeElementServiceHolder;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.CoverageServiceHolder;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
@@ -143,8 +149,6 @@ public class EncounterService implements IEncounterService {
 	public Result<IEncounter> reBillEncounter(IEncounter encounter) {
 		Result<IEncounter> result = new Result<>(encounter);
 
-		ch.elexis.core.services.ICodeElementService codeElementService = CodeElementServiceHolder.get();
-		HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
 		List<IBilled> encounterBilled = encounter.getBilled();
 
 		// test if all required IBillable types are resolvable
@@ -156,40 +160,168 @@ public class EncounterService implements IEncounterService {
 			}
 		}
 
-		for (IBilled billed : encounterBilled) {
-			IBillable billable = billed.getBillable();
+		List<IBilled> tardocVerrechnet = getTardocOnly(encounter.getBilled());
+		// make sure Zuschlagleistung is re charged after Hauptleistung
+		List<IBilled> tardocZuschlagVerrechnet = tardocVerrechnet.stream().filter(v -> isZuschlag(v)).toList();
+		tardocVerrechnet.removeAll(tardocZuschlagVerrechnet);
+		// make sure Referenzleistung is re charged after Hauptleistung
+		List<IBilled> tardocReferenzVerrechnet = tardocVerrechnet.stream().filter(v -> isReferenz(v)).toList();
+		tardocVerrechnet.removeAll(tardocReferenzVerrechnet);
 
-			// TODO there should be a central codeSystemName registry
-			if ("Tarmed".equals(billable.getCodeSystemName())) {
-				Optional<ICodeElement> matchingIBillable = codeElementService
-						.loadFromString(billable.getCodeSystemName(), billable.getCode(), context);
-				if (matchingIBillable.isPresent()) {
-					double amount = billed.getAmount();
-					// do not use billing service / optifier to remove the billed, as that could
-					// also modify other billed (tarmed bezug)
-					encounter.removeBilled(billed);
-					for (int i = 0; i < amount; i++) {
-						billingService.bill((IBillable) matchingIBillable.get(), encounter, 1);
-					}
-				} else {
-					encounter.removeBilled(billed);
-					String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
-							+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.";
-					result.addMessage(SEVERITY.WARNING, message, encounter);
-				}
+		List<IBilled> tarmedVerrechnet = getTarmedOnly(encounter.getBilled());
+		// make sure Zuschlagleistung is re charged after Hauptleistung
+		List<IBilled> tarmedZuschlagVerrechnet = tardocVerrechnet.stream().filter(v -> isZuschlag(v)).toList();
+		tardocVerrechnet.removeAll(tardocZuschlagVerrechnet);
+		// make sure Referenzleistung is re charged after Hauptleistung
+		List<IBilled> tarmedReferenzVerrechnet = tardocVerrechnet.stream().filter(v -> isReferenz(v)).toList();
+		tardocVerrechnet.removeAll(tardocReferenzVerrechnet);
 
-			} else {
-				@SuppressWarnings("unchecked")
-				Optional<IBillingSystemFactor> billableFactor = billable.getOptifier().getFactor(encounter);
-				if (billableFactor.isPresent()) {
-					billed.setFactor(billableFactor.get().getFactor());
-				} else {
-					billed.setFactor(1.0);
-				}
-				coreModelService.save(billed);
+		List<IBilled> othersVerrechnet = getOthersOnly(encounter.getBilled());
+
+		reCharge(tardocVerrechnet, encounter, result);
+		reCharge(tardocZuschlagVerrechnet, encounter, result);
+		reCharge(tardocReferenzVerrechnet, encounter, result);
+
+		reCharge(tarmedVerrechnet, encounter, result);
+		reCharge(tarmedZuschlagVerrechnet, encounter, result);
+		reCharge(tarmedReferenzVerrechnet, encounter, result);
+
+		reCharge(othersVerrechnet, encounter, result);
+		return result;
+	}
+
+	private void reCharge(List<IBilled> billed, IEncounter encounter, Result<IEncounter> result) {
+		Map<IBilled, Double> amountMap = new HashMap<>();
+		Map<IBilled, ICodeElement> verrechenbarMap = new HashMap<>();
+		billed.forEach(v -> amountMap.put(v, v.getAmount()));
+		billed.forEach(v -> getMatchingVerrechenbar(v, encounter, result).ifPresent(c -> verrechenbarMap.put(v, c)));
+		// do not remove or add if there is no ICodeElement match found
+		billed = billed.stream().filter(v -> verrechenbarMap.containsKey(v)).toList();
+		// remove all
+		billed.forEach(v -> removeVerrechnet(encounter, v, result));
+		// add all
+		billed.forEach(v -> addVerrechnet(encounter, verrechenbarMap.get(v), amountMap.get(v), result));
+	}
+
+	private void addVerrechnet(IEncounter encounter, ICodeElement billable, double amount, Result<IEncounter> result) {
+		// no locking required, PersistentObject create events are passed to server (RH)
+		for (int i = 0; i < amount; i++) {
+			Result<IBilled> addRes = BillingServiceHolder.get().bill((IBillable) billable, encounter, 1);
+			if (!addRes.isOK()) {
+				String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
+						+ " automatisch entfernt.\n" + addRes.toString();
+				result.addMessage(SEVERITY.WARNING, message, encounter);
 			}
 		}
-		return result;
+	}
+
+	private void removeVerrechnet(IEncounter encounter, IBilled billed, Result<IEncounter> result) {
+		// acquire lock before removing
+		LockResponse lockResult = LocalLockServiceHolder.get().acquireLockBlocking(billed, 10,
+				new NullProgressMonitor());
+		if (lockResult.isOk()) {
+			Result<?> removeRes = BillingServiceHolder.get().removeBilled(billed, encounter);
+			if (!removeRes.isOK()) {
+				String message = "Achtung: Position " + billed.getCode() + " konnte nicht entfernt werden.";
+				result.addMessage(SEVERITY.WARNING, message, encounter);
+			}
+			LocalLockServiceHolder.get().releaseLock(lockResult.getLockInfo());
+		} else {
+			String message = "Achtung: Locking von Position " + billed.getCode() + " fehlgeschlagen.";
+			result.addMessage(SEVERITY.WARNING, message, encounter);
+		}
+	}
+
+	private Optional<ICodeElement> getMatchingVerrechenbar(IBilled billed, IEncounter encounter,
+			Result<IEncounter> result) {
+		IBillable billable = billed.getBillable();
+		if (billable != null) {
+			HashMap<Object, Object> context = getCodeElementServiceContext(encounter);
+			// make sure we verrechenbar is matching for the kons
+			Optional<ICodeElement> matchingVerrechenbar = codeElementService
+					.loadFromString(billable.getCodeSystemName(), billable.getCode(), context);
+			if (matchingVerrechenbar.isEmpty()) {
+				String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
+						+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.";
+				result.addMessage(SEVERITY.WARNING, message, encounter);
+			} else {
+				return matchingVerrechenbar;
+			}
+		}
+		return Optional.empty();
+	}
+
+	private List<IBilled> getTardocOnly(List<IBilled> list) {
+		List<IBilled> ret = new ArrayList<>();
+		for (IBilled verrechnet : list) {
+			IBillable billable = verrechnet.getBillable();
+			if (billable.getCodeSystemName().contains("TARDOC")) {
+				ret.add(verrechnet);
+			}
+		}
+		return ret;
+	}
+
+	private List<IBilled> getTarmedOnly(List<IBilled> list) {
+		List<IBilled> ret = new ArrayList<>();
+		for (IBilled verrechnet : list) {
+			IBillable billable = verrechnet.getBillable();
+			if (billable.getCodeSystemName().contains("Tarmed")) {
+				ret.add(verrechnet);
+			}
+		}
+		return ret;
+	}
+
+	private List<IBilled> getOthersOnly(List<IBilled> list) {
+		List<IBilled> ret = new ArrayList<>();
+		for (IBilled verrechnet : list) {
+			IBillable billable = verrechnet.getBillable();
+			if (!billable.getCodeSystemName().contains("Tarmed") && !billable.getCodeSystemName().contains("TARDOC")) {
+				ret.add(verrechnet);
+			}
+		}
+		return ret;
+	}
+
+	private boolean isReferenz(IBilled tardocVerr) {
+		IBillable verrechenbar = tardocVerr.getBillable();
+		String serviceTyp = getServiceTypReflective(verrechenbar);
+		return serviceTyp != null && serviceTyp.equals("R");
+	}
+
+	private boolean isZuschlag(IBilled tardocVerr) {
+		IBillable verrechenbar = tardocVerr.getBillable();
+		Boolean serviceTyp = getIsZuschlagsleistungReflective(verrechenbar);
+		return serviceTyp != null && serviceTyp;
+	}
+
+	private String getServiceTypReflective(IBillable billable) {
+		try {
+			Method getterMethod = billable.getClass().getMethod("getServiceTyp", (Class[]) null);
+			Object typ = getterMethod.invoke(billable, (Object[]) null);
+			if (typ instanceof String) {
+				return (String) typ;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LoggerFactory.getLogger(getClass()).warn("Could not get service typ of [" + billable + "]", e.getMessage());
+		}
+		return null;
+	}
+
+	private Boolean getIsZuschlagsleistungReflective(IBillable billable) {
+		try {
+			Method getterMethod = billable.getClass().getMethod("isZuschlagsleistung", (Class[]) null);
+			Object typ = getterMethod.invoke(billable, (Object[]) null);
+			if (typ instanceof Boolean) {
+				return (Boolean) typ;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LoggerFactory.getLogger(getClass()).warn("Could not get service typ of [" + billable + "]", e.getMessage());
+		}
+		return null;
 	}
 
 	private HashMap<Object, Object> getCodeElementServiceContext(IEncounter encounter) {

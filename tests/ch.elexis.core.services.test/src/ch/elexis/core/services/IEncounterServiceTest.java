@@ -21,6 +21,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
+import ch.rgw.tools.Result;
 
 public class IEncounterServiceTest extends AbstractServiceTest {
 
@@ -105,4 +106,27 @@ public class IEncounterServiceTest extends AbstractServiceTest {
 		coreModelService.remove(encounter.get());
 	}
 
+	@Test
+	public void reBillEncounter() {
+		ContextServiceHolder.get().setActiveUser(AllServiceTests.getUser());
+		ContextServiceHolder.get().setActiveMandator(testMandators.get(0));
+
+		for (int number = 1; number < 10; number++) {
+			ICustomService service = coreModelService.create(ICustomService.class);
+			service.setCode("code" + number);
+			service.setNetPrice(new Money(number));
+			service.setPrice(new Money(number));
+			service.setText("test" + number);
+			coreModelService.save(service);
+
+			billingService.bill(service, encounter, 1.0);
+		}
+
+		int billedSize = encounter.getBilled().size();
+
+		Result<IEncounter> result = encounterService.reBillEncounter(encounter);
+
+		assertTrue(result.isOK());
+		assertEquals(billedSize, encounter.getBilled().size());
+	}
 }
