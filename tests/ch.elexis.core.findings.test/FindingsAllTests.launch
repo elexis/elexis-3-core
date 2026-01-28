@@ -53,7 +53,9 @@
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
+        <setEntry value="com.opencsv@default:default"/>
         <setEntry value="info.elexis.target.hapi.fhir@default:default"/>
+        <setEntry value="io.curity.oauth-filter@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
         <setEntry value="jakarta.el-api@default:default"/>
@@ -83,6 +85,9 @@
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
+        <setEntry value="org.apache.httpcomponents.client5.httpclient5@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5-h2@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -144,6 +149,7 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.coding@default:default"/>
+        <setEntry value="ch.elexis.core.data.tests@default:default"/>
         <setEntry value="ch.elexis.core.data@default:default"/>
         <setEntry value="ch.elexis.core.findings.fhir.model@default:default"/>
         <setEntry value="ch.elexis.core.findings.fhir.po@default:default"/>
@@ -151,20 +157,29 @@
         <setEntry value="ch.elexis.core.findings.test@default:default"/>
         <setEntry value="ch.elexis.core.findings.util@default:default"/>
         <setEntry value="ch.elexis.core.findings@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
+        <setEntry value="ch.elexis.core.jpa.entities.test@default:default"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:default"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
+        <setEntry value="ch.elexis.core.logging.default_configuration@default:default"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
+        <setEntry value="es.gogo.shell@default:default"/>
         <setEntry value="info.elexis.jaxrs.service@default:default"/>
+        <setEntry value="info.elexis.server.core.logging@default:default"/>
+        <setEntry value="org.apache.felix.gogo.shell.contribution@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
