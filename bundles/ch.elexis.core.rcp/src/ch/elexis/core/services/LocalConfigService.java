@@ -28,8 +28,16 @@ public class LocalConfigService {
 
 	}
 
-	public static void set(String rnnDefaultexportmode, int idx) {
-		// TODO Auto-generated method stub
+	public static void set(String string, boolean idx) {
+		ILocalConfigService iLocalConfigService = OsgiServiceUtil.getService(ILocalConfigService.class).get();
+		iLocalConfigService.set(string, idx);
+		OsgiServiceUtil.ungetService(iLocalConfigService);
+	}
+
+	public static void set(String string, int idx) {
+		ILocalConfigService iLocalConfigService = OsgiServiceUtil.getService(ILocalConfigService.class).get();
+		iLocalConfigService.set(string, idx);
+		OsgiServiceUtil.ungetService(iLocalConfigService);
 
 	}
 
