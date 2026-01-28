@@ -8,7 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: elexis.info
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100",
- ch.rgw.utility.legacy;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.rcp;bundle-version="3.13.0",
  ch.elexis.core.services;bundle-version="3.10.0",
@@ -31,5 +30,6 @@ Import-Package: ch.elexis.core.tasks.model,
  jakarta.annotation;version="[2.1.0,3.0.0)",
  jakarta.enterprise.context;version="[4.0.0,5.0.0)",
  jakarta.inject;version="[2.0.0,3.0.0)",
+ org.apache.commons.io;version="[2.16.0,3.0.0)",
  org.apache.commons.lang3;version="3.12.0"
 Service-Component: OSGI-INF/*

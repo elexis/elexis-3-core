@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.rgw.io.FileTool;
 
 public abstract class BasicFileImportStrategyFactory implements IFileImportStrategyFactory {
 
@@ -32,7 +32,7 @@ public abstract class BasicFileImportStrategyFactory implements IFileImportStrat
 		List<IVirtualFilesystemHandle> matchingFiles = new ArrayList<>();
 
 		String origin = hl7File.getName();
-		String seekName = FileTool.getNakedFilename(origin);
+		String seekName = FilenameUtils.getBaseName(origin);
 
 		IVirtualFilesystemHandle directory = hl7File.getParent();
 		for (IVirtualFilesystemHandle f : directory.listHandles()) {
