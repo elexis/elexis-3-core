@@ -5,6 +5,7 @@
    </service>
    <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="1..1" field="localConfigService" interface="ch.elexis.core.services.ILocalConfigService" name="localConfigService"/>
    <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
    <implementation class="ch.elexis.core.services.ConfigService"/>
 </scr:component>

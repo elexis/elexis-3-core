@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
+import ch.elexis.core.utils.DBConnectionUtil;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -27,12 +28,12 @@ public class JAXBTest {
 		dbc.rdbmsType = DBType.H2;
 		dbc.username = "testUsername";
 
-		String marshallIntoString = dbc.marshallIntoString();
+		String marshallIntoString = DBConnectionUtil.marshallIntoString(dbc);
 		assertNotNull(marshallIntoString);
 		assertNotEquals(StringUtils.EMPTY, marshallIntoString);
 		System.out.println("DBConnection: [" + marshallIntoString + "]");
 
-		DBConnection _dbc = DBConnection.unmarshall(marshallIntoString);
+		DBConnection _dbc = DBConnectionUtil.unmarshall(marshallIntoString);
 		assertEquals(dbc.databaseName, _dbc.databaseName);
 		assertEquals(dbc.hostName, _dbc.hostName);
 		assertEquals(dbc.password, _dbc.password);

@@ -236,12 +236,12 @@ public class DBConnectionUtil {
 		return (DBConnection) o;
 	}
 
-	public String marshallIntoString() {
+	public static String marshallIntoString(DBConnection dbc) {
 		try (StringWriter sw = new StringWriter()) {
 			JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
 			Marshaller m = jaxbContext.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m.marshal(this, sw);
+			m.marshal(dbc, sw);
 			return sw.toString();
 		} catch (JAXBException | IOException e) {
 			e.printStackTrace();

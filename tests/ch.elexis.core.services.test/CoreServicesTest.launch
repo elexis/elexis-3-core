@@ -164,6 +164,7 @@
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services.test.ws-bind@default:false"/>
         <setEntry value="ch.elexis.core.services.test.ws@default:default"/>
         <setEntry value="ch.elexis.core.services.test@default:false"/>
@@ -174,6 +175,7 @@
         <setEntry value="ch.elexis.core.text.docx@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
