@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,6 +74,12 @@ public abstract class AbstractModelService implements IModelService {
 	private List<String> blockEventTopics;
 
 	private EntityWithId entity;
+
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache,
+			Set<String> eagerFetchAttributes) {
+		// Only implemented in Quarkus Hibernation
+		return load(id, clazz, includeDeleted);
+	}
 
 	/**
 	 * Get the core model service to perform delete of XID. Can return null if model
