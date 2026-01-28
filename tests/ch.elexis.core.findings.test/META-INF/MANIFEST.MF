@@ -13,13 +13,12 @@ Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
  ch.elexis.core.test.context;bundle-version="3.12.0",
  ch.elexis.core.findings.fhir.po;bundle-version="3.12.0",
  ch.rgw.utility;bundle-version="3.13.0",
- ch.rgw.utility.legacy;bundle-version="3.13.0"
+ ch.rgw.utility.legacy;bundle-version="3.13.0",
+ ch.elexis.core.rcp;bundle-version="[3.13.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.exceptions,
  ch.elexis.core.findings.util.model,
- ch.elexis.core.model,
  ch.elexis.core.services,
- ch.elexis.core.utils,
  ch.elexis.data,
  org.apache.commons.io;version="2.4.0",
  org.junit;version="[4.12.0,5.0.0)",
