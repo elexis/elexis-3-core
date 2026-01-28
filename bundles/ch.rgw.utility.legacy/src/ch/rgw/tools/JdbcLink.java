@@ -46,7 +46,7 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * Datenbank
  */
 
-public class JdbcLink {
+public class JdbcLink implements IJdbcLink {
 	public static final String getVersion() {
 		return "3.2.1";
 	}

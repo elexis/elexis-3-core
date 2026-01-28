@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
-import ch.rgw.io.FileTool;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.TimeTool;
@@ -208,7 +208,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 	private String generatePDFTitle(String filename, TimeTool dateTime) {
 		SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 		String title = "Laborbefund" + sdfTitle.format(dateTime.getTime()) + "." //$NON-NLS-2$
-				+ FileTool.getExtension(filename);
+				+ FilenameUtils.getExtension(filename);
 		log.debug("generated labresult pdf title '" + title + StringUtils.EMPTY);
 		return title;
 	}
@@ -224,7 +224,7 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 		if (existing.isEmpty()) {
 			IDocument document = OmnivoreDocumentStoreServiceHolder.get().createDocument(patient.getId(), title,
 					iCategory.getName());
-			String extension = FileTool.getExtension(fileHandle.getName());
+			String extension = FilenameUtils.getExtension(fileHandle.getName());
 			document.setCreated(dateTime.getTime());
 			document.setExtension(extension);
 			document.setMimeType(extension.toLowerCase());
