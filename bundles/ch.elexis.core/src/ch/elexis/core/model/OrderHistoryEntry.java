@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import ch.elexis.core.model.OrderHistoryAction;
-
 public class OrderHistoryEntry {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"); //$NON-NLS-1$
 

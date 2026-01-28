@@ -39,6 +39,7 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  ch.elexis.core;bundle-version="3.10.0";visibility:=reexport,
+ ch.elexis.core.rcp;bundle-version="3.13.0",
  ch.elexis.core.jpa;bundle-version="3.10.0",
  ch.elexis.core.jpa.entities;bundle-version="3.10.0",
  ch.elexis.core.jcifs

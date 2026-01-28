@@ -6,9 +6,10 @@ Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.jpa
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: ch.elexis.core.jpa.entities;bundle-version="3.13.0",
- ch.rgw.utility;bundle-version="3.13.0",
+Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core.rcp;bundle-version="3.13.0",
  ch.elexis.core.l10n;bundle-version="3.13.0"
 Import-Package: com.opencsv.exceptions;version="[5.9.0,6.0.0)",
  jakarta.activation;version="1.2.2",

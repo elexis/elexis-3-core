@@ -1,15 +1,14 @@
 package ch.elexis.core.server;
 
+import ch.elexis.core.lock.types.LockInfo;
+import ch.elexis.core.lock.types.LockRequest;
+import ch.elexis.core.lock.types.LockResponse;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
-
-import ch.elexis.core.lock.types.LockInfo;
-import ch.elexis.core.lock.types.LockRequest;
-import ch.elexis.core.lock.types.LockResponse;
 
 @Path("/elexis/lockservice")
 public interface ILockService {
