@@ -1,8 +1,12 @@
 package ch.elexis.core.findings.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -22,6 +26,8 @@ import ch.elexis.core.findings.MigratorServiceTest;
 import ch.elexis.core.findings.ObservationTest;
 import ch.elexis.core.findings.ProcedureRequestTest;
 import ch.elexis.core.findings.codings.CodingServiceTest;
+import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.data.PersistentObject;
 
 @RunWith(Suite.class)
 @SuiteClasses({ FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
@@ -52,5 +58,8 @@ public class AllTests {
 				initializer.initalize();
 			}
 		}
+
+		DataSource dataSource = OsgiServiceUtil.getService(DataSource.class, "(id=default)").get();
+		assertTrue(PersistentObject.connect(dataSource));
 	}
 }
