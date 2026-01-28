@@ -8,7 +8,9 @@ Automatic-Module-Name: ch.elexis.core.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.13.0",
  ch.rgw.utility;bundle-version="3.9.100",
+ ch.rgw.utility.legacy;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core.rcp;bundle-version="3.13.0",
  ch.elexis.core.jpa.entities;bundle-version="3.13.0",
  ch.elexis.core.jpa.datasource;bundle-version="3.13.0",
  ch.elexis.core.jpa;bundle-version="3.13.0",

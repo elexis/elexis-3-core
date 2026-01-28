@@ -24,7 +24,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.ICategory;
@@ -347,8 +346,9 @@ public class DocumentStore {
 			return iDocumentStore;
 		}
 
-		MessageEvent.fireError(Messages.DocumentStore_storeError,
-				Messages.DocumentStore_storeErrorText + " [" + storeId + "]");
+		LoggerFactory.getLogger(getClass()).error(Messages.DocumentStore_storeErrorText + " [" + storeId + "]",
+				new Throwable());
+		System.out.println(Messages.DocumentStore_storeErrorText + " [" + storeId + "]");
 		return new EmptyDocumentStore();
 	}
 

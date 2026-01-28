@@ -6,7 +6,9 @@ Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: elexis.info
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.9.100";visibility:=reexport,
+ ch.rgw.utility.legacy;bundle-version="3.13.0";visibility:=reexport,
  ch.elexis.core;bundle-version="3.13.0";visibility:=reexport,
+ ch.elexis.core.rcp;bundle-version="3.13.0";visibility:=reexport,
  ch.elexis.core.services;bundle-version="3.10.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Service-Component: OSGI-INF/*.xml

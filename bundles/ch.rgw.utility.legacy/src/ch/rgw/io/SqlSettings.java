@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.JdbcLink.Stm;
 import ch.rgw.tools.JdbcLinkExceptionTranslation;
+import ch.rgw.tools.JdbcLinkUtil;
 
 /**
  * settings-IMplementation, die eine SQL-Datenbank zur Speicherung verwendet. In
@@ -75,7 +76,7 @@ public class SqlSettings extends Settings {
 		if (constraint != null) {
 			sql.append(constraint).append(" AND ");
 		}
-		sql.append(paramColumn).append(" LIKE ").append(JdbcLink.wrap(key + "%"));
+		sql.append(paramColumn).append(" LIKE ").append(JdbcLinkUtil.wrap(key + "%"));
 		stm.exec(sql.toString());
 		j.releaseStatement(stm);
 	}

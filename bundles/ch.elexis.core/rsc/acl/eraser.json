@@ -1,0 +1,12 @@
+{
+    "roles-represented": [
+        "eraser"
+    ],
+    "object": {
+        "ch.elexis.core.model.IPatient": "z",
+        "ch.elexis.core.model.IPerson": "z",
+        "ch.elexis.core.model.IReminder": "z",
+        "ch.elexis.core.model.IUserGroup": "z",
+        "ch.elexis.core.model.IOrganization": "z"
+    }
+}

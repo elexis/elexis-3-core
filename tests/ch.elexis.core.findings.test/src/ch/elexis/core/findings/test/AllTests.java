@@ -46,9 +46,9 @@ public class AllTests {
 	}
 
 	@BeforeClass
-	public static void beforeClass() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-			NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException,
-			SQLException {
+	public static void beforeClass()
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException,
+			SecurityException, IllegalArgumentException, InvocationTargetException, SQLException {
 
 		// check if for server test mode and init db if so
 		String testMode = System.getProperty("es.test");

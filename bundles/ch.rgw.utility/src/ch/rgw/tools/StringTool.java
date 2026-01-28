@@ -40,6 +40,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.compress.bzip2.CBZip2InputStream;
 import org.apache.commons.compress.bzip2.CBZip2OutputStream;
+import org.slf4j.Logger;
 
 import ch.rgw.compress.CompEx;
 import ch.rgw.compress.GLZInputStream;
@@ -1051,13 +1052,13 @@ public class StringTool {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void dumpHashtable(final Log log, final Hashtable table) {
+	public static void dumpHashtable(final Logger log, final Hashtable table) {
 		Set<String> keys = table.keySet();
-		log.log("Dump Hashtable\n", Log.INFOS);
+		log.info("Dump Hashtable\n");
 		for (String key : keys) {
-			log.log(key + ": " + table.get(key).toString(), Log.INFOS);
+			log.info(key + ": " + table.get(key).toString());
 		}
-		log.log("End dump\n", Log.INFOS);
+		log.info("End dump\n");
 	}
 
 	/**
