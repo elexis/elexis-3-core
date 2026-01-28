@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.DBConnectionUtil;
 
 public class CoreUtilTest {
 
 	@Test
 	public void testGetDatabaseType() {
-		String databaseType = CoreUtil.getDatabaseProductName();
+		String databaseType = DBConnectionUtil.getDatabaseProductName();
 		assertEquals("H2", databaseType);
 	}
 
