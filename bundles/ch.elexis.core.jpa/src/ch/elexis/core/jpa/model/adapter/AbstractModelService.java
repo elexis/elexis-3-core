@@ -753,6 +753,22 @@ public abstract class AbstractModelService implements IModelService {
 		return 0;
 	}
 
+	@Override
+	public <T extends Identifiable> long getLastUpdate(Class<T> clazz, String id) {
+		Table t = getEntityClass(clazz).getAnnotation(Table.class);
+		StringBuilder sb = new StringBuilder("SELECT LASTUPDATE FROM ");
+		sb.append(t.name());
+		sb.append(" WHERE ID=");
+		sb.append(StringUtils.wrap(id, "'"));
+		INativeQuery nativeQuery = getNativeQuery(sb.toString());
+		Optional<?> result = nativeQuery.executeWithParameters(Collections.emptyMap()).findFirst();
+		if (result.isPresent()) {
+			// Native queries can return different objects based on the database driver
+			return ((Number) result.get()).longValue();
+		}
+		return -1;
+	}
+
 	private <T> String getTableName(EntityManager em, Class<T> entityClass) {
 		/*
 		 * Check if the specified class is present in the metamodel. Throws
