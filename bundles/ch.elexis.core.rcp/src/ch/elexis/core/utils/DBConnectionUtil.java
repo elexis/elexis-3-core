@@ -2,8 +2,12 @@ package ch.elexis.core.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -23,6 +27,10 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jdt.NonNull;
 import ch.rgw.io.Settings;
 import ch.rgw.tools.StringTool;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 public class DBConnectionUtil {
 
@@ -198,6 +206,62 @@ public class DBConnectionUtil {
 			OsgiServiceUtil.ungetService(DataSource.class);
 		}
 		return "unknown"; //$NON-NLS-1$
+	}
+
+	/**
+	 * Marshall this object into a storable xml
+	 *
+	 * @param os
+	 * @param dbc
+	 * @throws JAXBException
+	 */
+	public static void marshall(OutputStream os, DBConnection dbc) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+		Marshaller m = jaxbContext.createMarshaller();
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.marshal(dbc, os);
+	}
+
+	/**
+	 * Unmarshall a DBConnection object created by {@link #marshall()}
+	 *
+	 * @param is
+	 * @return
+	 * @throws JAXBException
+	 */
+	public static DBConnection unmarshall(InputStream is) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+		Unmarshaller um = jaxbContext.createUnmarshaller();
+		Object o = um.unmarshal(is);
+		return (DBConnection) o;
+	}
+
+	public String marshallIntoString() {
+		try (StringWriter sw = new StringWriter()) {
+			JAXBContext jaxbContext = JAXBContext.newInstance(DBConnection.class);
+			Marshaller m = jaxbContext.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m.marshal(this, sw);
+			return sw.toString();
+		} catch (JAXBException | IOException e) {
+			e.printStackTrace();
+			return StringUtils.EMPTY;
+		}
+	}
+
+	public static DBConnection unmarshall(String value) {
+		if (value == null) {
+			return null;
+		}
+		try {
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+					value.getBytes(StandardCharsets.UTF_8));
+			return unmarshall(byteArrayInputStream);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new DBConnection();
 	}
 
 }
