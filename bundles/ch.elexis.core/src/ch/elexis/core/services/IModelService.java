@@ -431,6 +431,14 @@ public interface IModelService {
 	public <T> long getHighestLastUpdate(Class<T> clazz);
 
 	/**
+	 * Returns the lastUpdate for a specific entity. Ignores deleted value.
+	 * 
+	 * @return the lastUpdate value for the given entity, or -1 if not loadable.
+	 * @since 3.13
+	 */
+	public <T extends Identifiable> long getLastUpdate(Class<T> clazz, String id);
+
+	/**
 	 * Set a list of {@link ElexisEventTopics} to be blocked. These events will not
 	 * be posted or sent, until method is called with null as block event topics.
 	 * This can be used for importers where events lead to unwanted side effects.

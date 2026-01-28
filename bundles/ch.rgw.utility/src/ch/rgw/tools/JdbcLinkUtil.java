@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException;
 
 public class JdbcLinkUtil {
 
+	public final static String MYSQL_DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
+	public final static String POSTGRESQL_DRIVER_CLASS_NAME = "org.postgresql.Driver";
+	public final static String H2_DRIVER_CLASS_NAME = "org.h2.Driver";
+
 	public static final String DBFLAVOR_MYSQL = "mysql";
 	public static final String DBFLAVOR_POSTGRESQL = "postgresql";
 	public static final String DBFLAVOR_H2 = "h2";
