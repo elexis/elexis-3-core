@@ -240,6 +240,8 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS = "billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_ALLOWOVERRIDE_STRICT = "billing/allowoverride/strict"; //$NON-NLS-1$
+	public static final String LEISTUNGSCODES_BILLINGLAW = "defaultBillingLaw"; //$NON-NLS-1$
+	public static final String LEISTUNGSCODES_NOCOSTBEARER = "noCostBearer"; //$NON-NLS-1$
 
 	// Fall
 	public static final String COVERAGE_COPY_TO_PATIENT = "coverage/copytopatient";
