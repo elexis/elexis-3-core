@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.interfaces.IFall;
@@ -36,6 +37,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
@@ -45,6 +47,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.format.FormatValidator;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.CoverageServiceHolder;
@@ -399,10 +402,16 @@ public class BillingUtil {
 					if (konsultation.getFall() != null) {
 						ICoverage coverage = CoreModelServiceHolder.get()
 								.load(konsultation.getFall().getId(), ICoverage.class).get();
-						IContact costBearer = coverage.getCostBearer();
-						if (costBearer == null || (!costBearer.isPerson() && !costBearer.isOrganization())) {
-							result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
-							return false;
+						IBillingSystem billingSystem = coverage.getBillingSystem();
+						String noCostBearerValue = BillingSystemServiceHolder.get().getConfigurationValue(billingSystem,
+								Preferences.LEISTUNGSCODES_NOCOSTBEARER, Boolean.FALSE.toString());
+						if (noCostBearerValue == null || Boolean.FALSE.toString().equals(noCostBearerValue)
+								|| StringConstants.ZERO.equals(noCostBearerValue)) {
+							IContact costBearer = coverage.getCostBearer();
+							if (costBearer == null || (!costBearer.isPerson() && !costBearer.isOrganization())) {
+								result.add(SEVERITY.ERROR, CODE_ERROR, getDescription(), konsultation, false);
+								return false;
+							}
 						}
 					}
 					return true;
