@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement
+@XmlRootElement(namespace = "http://elexis.ch/core/lock")
 public class LockInfo {
 
 	@XmlTransient
