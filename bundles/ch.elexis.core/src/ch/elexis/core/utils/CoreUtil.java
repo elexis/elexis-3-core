@@ -28,7 +28,6 @@ public class CoreUtil {
 	private static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 
 	private static final OS osType;
-	private static final boolean testMode;
 
 	static {
 		String osName = System.getProperty("os.name"); //$NON-NLS-1$
@@ -41,12 +40,10 @@ public class CoreUtil {
 		} else {
 			osType = OS.UNSPECIFIED;
 		}
-
-		testMode = Boolean.valueOf(System.getProperty(TEST_MODE));
 	}
 
 	public static boolean isTestMode() {
-		return testMode;
+		return Boolean.valueOf(System.getProperty(TEST_MODE));
 	}
 
 	public static Path getElexisServerHomeDirectory() {
