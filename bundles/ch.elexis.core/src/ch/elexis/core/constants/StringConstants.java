@@ -14,6 +14,8 @@ package ch.elexis.core.constants;
 
 import org.apache.commons.lang3.StringUtils;
 
+import ch.elexis.core.l10n.Messages;
+
 /**
  * Utility Class for different constants. To ensure that same things are named
  * identically in different program parts

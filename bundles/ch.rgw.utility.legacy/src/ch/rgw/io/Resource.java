@@ -17,7 +17,6 @@ import java.awt.Toolkit;
 import java.io.InputStream;
 
 import ch.rgw.tools.ExHandler;
-import ch.rgw.tools.Log;
 
 /**
  * �berschrift: Toolbox Beschreibung: Copyright: Copyright (c) 2002
@@ -31,7 +30,6 @@ public class Resource {
 
 	Class clazz;
 	String resbase;
-	static Log log;
 
 	// String basedir;
 

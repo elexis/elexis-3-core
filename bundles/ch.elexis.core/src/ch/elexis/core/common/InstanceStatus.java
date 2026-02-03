@@ -1,7 +1,8 @@
 package ch.elexis.core.common;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 

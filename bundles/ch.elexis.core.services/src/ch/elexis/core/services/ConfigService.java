@@ -50,6 +50,9 @@ public class ConfigService implements IConfigService {
 	@Reference
 	private IAccessControlService accessControlService;
 
+	@Reference
+	private ILocalConfigService localConfigService;
+
 	public static final String LIST_SEPARATOR = ",";
 
 	private Map<Object, LocalLock> managedLocks;
@@ -73,6 +76,11 @@ public class ConfigService implements IConfigService {
 		if (traceService != null) {
 			OsgiServiceUtil.ungetService(traceService);
 		}
+	}
+
+	@Override
+	public ILocalConfigService getLocalConfigService() {
+		return localConfigService;
 	}
 
 	/**

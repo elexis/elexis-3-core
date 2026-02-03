@@ -1,10 +1,12 @@
 package ch.elexis.core.lock.types;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlRootElement(namespace = "http://elexis.ch/core/lock")
 public class LockRequest {
 
+	@XmlType(name = "LockRequestType", namespace = "http://elexis.ch/core/lock")
 	public enum Type {
 		ACQUIRE, RELEASE, INFO
 	};

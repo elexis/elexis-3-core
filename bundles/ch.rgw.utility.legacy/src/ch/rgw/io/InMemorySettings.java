@@ -14,6 +14,7 @@ package ch.rgw.io;
 
 import java.util.Hashtable;
 
+import ch.elexis.core.l10n.Messages;
 import ch.rgw.tools.StringTool;
 
 /**

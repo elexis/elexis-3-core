@@ -66,6 +66,7 @@
         <setEntry value="jakarta.inject.jakarta.inject-api@default:default"/>
         <setEntry value="jakarta.interceptor-api@default:default"/>
         <setEntry value="jakarta.persistence-api@default:default"/>
+        <setEntry value="jakarta.servlet-api*6.1.0@default:default"/>
         <setEntry value="jakarta.transaction-api@default:default"/>
         <setEntry value="jakarta.ws.rs-api*3.1.99@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
@@ -85,6 +86,9 @@
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
+        <setEntry value="org.apache.httpcomponents.client5.httpclient5@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5-h2@default:default"/>
+        <setEntry value="org.apache.httpcomponents.core5.httpcore5@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpclient@default:default"/>
         <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
@@ -106,6 +110,7 @@
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
         <setEntry value="org.eclipse.jdt.junit.runtime@default:default"/>
         <setEntry value="org.eclipse.jdt.junit4.runtime@default:default"/>
+        <setEntry value="org.eclipse.jetty.ee10.osgi.alpn.fragment@default:false"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
         <setEntry value="org.eclipse.osgi@1:true"/>
         <setEntry value="org.eclipse.pde.junit.runtime@default:default"/>
@@ -142,22 +147,27 @@
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.data.tests@default:false"/>
         <setEntry value="ch.elexis.core.data@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
         <setEntry value="ch.elexis.core.jpa.entities@default:false"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
+        <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.model@default:false"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>

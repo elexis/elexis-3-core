@@ -15,6 +15,8 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.Desk;
@@ -32,14 +34,24 @@ import ch.rgw.io.SysSettings;
  * 
  * @since 3.12
  */
-public class LocalConfigService {
+@Component
+public class LocalConfigServiceImpl implements ILocalConfigService {
 
-	private static Settings localConfig;
+	static Settings localConfig;
 
 	static {
 		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(CoreUtil.getWritableUserDir() + File.separator + getLocalConfigFileName());
 		localConfig = cfg;
+
+	}
+
+	static Settings getLocalConfig() {
+		return localConfig;
+	}
+
+	@Activate
+	public void activate() {
 		initializeDefaultPreferences();
 	}
 
@@ -67,19 +79,19 @@ public class LocalConfigService {
 		localConfig.flush();
 	}
 
-	public static String get(String key, String defaultValue) {
+	public String get(String key, String defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
-	public static boolean get(String key, boolean defaultValue) {
+	public boolean get(String key, boolean defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
-	public static int get(String key, int defaultValue) {
+	public int get(String key, int defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
-	public static boolean set(String key, String value) {
+	public boolean set(String key, String value) {
 		boolean result;
 		if (value == null) {
 			localConfig.remove(key);
@@ -92,14 +104,14 @@ public class LocalConfigService {
 		return result;
 	}
 
-	public static boolean set(String key, boolean value) {
+	public boolean set(String key, boolean value) {
 		boolean result = localConfig.set(key, value);
 		localConfig.flush();
 		persist();
 		return result;
 	}
 
-	public static boolean set(String key, int value) {
+	public boolean set(String key, int value) {
 		localConfig.set(key, value);
 		localConfig.flush();
 		persist();
@@ -113,7 +125,7 @@ public class LocalConfigService {
 		LoggerFactory.getLogger(LocalConfigService.class).info("LocalConfig persisted to [{}]", xmlFileName);
 	}
 
-	private static void initializeDefaultPreferences() {
+	private void initializeDefaultPreferences() {
 
 		// default database
 		localConfig.set(Preferences.DB_NAME + SETTINGS_PREFERENCE_STORE_DEFAULT, "h2");

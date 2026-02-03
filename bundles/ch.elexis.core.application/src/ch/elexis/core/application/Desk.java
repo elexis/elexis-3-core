@@ -43,6 +43,7 @@ import ch.elexis.core.status.StatusUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.utils.CoreUtil;
+import ch.elexis.core.utils.DBConnectionUtil;
 import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectDataSourceActivator;
@@ -83,7 +84,7 @@ public class Desk implements IApplication {
 		if (connectionStatus == null) {
 			// no connection provided by DataSource - use the connection
 			// configure in CoreHub.localCfg
-			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
+			Optional<DBConnection> connection = DBConnectionUtil.getDBConnection(CoreHub.localCfg);
 			if (!connection.isPresent()) {
 				// none found in CoreHub.localCfg - need to configure
 				CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();
