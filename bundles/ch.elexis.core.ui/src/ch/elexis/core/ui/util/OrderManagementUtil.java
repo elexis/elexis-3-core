@@ -312,7 +312,7 @@ public class OrderManagementUtil {
 								+ e.getMessage());
 					}
 				} else {
-					logger.debug("Scanner Command ist disabled (busy). Überspringe Aktivierung."); //$NON-NLS-1$
+					logger.debug("Scanner Command ist disabled (busy). Skip activation."); //$NON-NLS-1$
 				}
 			}
 			OrderManagementView.setBarcodeScannerActivated(true);
@@ -377,9 +377,6 @@ public class OrderManagementUtil {
 			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-			if (!allowedSuppliers.isEmpty()) {
-				// dialog.setAllowedContacts(allowedSuppliers);
-			}
 			if (dialog.open() == Dialog.OK) {
 				IContact selectedProvider = (IContact) dialog.getSelection();
 				if (selectedProvider != null && actOrder != null) {

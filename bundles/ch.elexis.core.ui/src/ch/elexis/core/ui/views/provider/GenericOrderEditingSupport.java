@@ -58,9 +58,6 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					ContactSelectionDialog dialog = new ContactSelectionDialog(cellEditorWindow.getShell(),
 							IContact.class, ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 							ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-					if (!allowedSuppliers.isEmpty()) {
-//						dialog.setAllowedContacts(allowedSuppliers);
-					}
 					if (dialog.open() == Window.OK) {
 						return dialog.getSelection();
 					}
@@ -186,7 +183,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					orderManagementView.getPendingDeliveredValues().put(entry, part);
 					viewer.update(entry, null);
 				} catch (NumberFormatException e) {
-					// ungültige Eingabe → ignorieren, aber alten Wert nicht überschreiben
+					// Invalid input ignore, but do not overwrite old value
 				}
 			}
 				case SUPPLIER -> {
