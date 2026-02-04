@@ -3785,6 +3785,24 @@ public class Messages extends NLS {
 	public static String PriaidSetter_To;
 	public static String PriaidSetter_UpdateTerminDialog;
 	public static String PriaidSetter_Yes;
+	public static String PriceHistory_Error_LoadFailed;
+	public static String PriceHistory_Title;
+	public static String PriceHistory_Subtitle;
+	public static String PriceHistory_NoData_Title;
+	public static String PriceHistory_NoData_Desc;
+	public static String PriceHistory_Stat_TotalChanges;
+	public static String PriceHistory_Stat_AffectedArticles;
+	public static String PriceHistory_Stat_Period;
+	public static String PriceHistory_ChangesSuffix;
+	public static String PriceHistory_AutoAdjustOff_Badge;
+	public static String PriceHistory_AutoAdjustOff_Tooltip;
+	public static String PriceHistory_Encounters_Title;
+	public static String PriceHistory_Encounter_MandatorLabel;
+	public static String PriceHistory_NoEncounters;
+	public static String PriceHistory_LastUpdated;
+	public static String PriceHistory_UnknownArticle;
+	public static String PriceHistory_Error_LoadingTitle;
+	public static String PriceHistoryTemplate_24;
 	public static String PrintChartAction_Alterskorrektur;
 	public static String PrintChartAction_author;
 	public static String PrintChartAction_printTitle;
@@ -5462,6 +5480,7 @@ public class Messages extends NLS {
 	public static String RegiomedCheckTemplate_SuccessAppliedPrefix;
 	public static String RegiomedCheckTemplate_QtyExceedsStock;
 	public static String RegiomedCheckTemplate_CorrectedItems;
+
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
