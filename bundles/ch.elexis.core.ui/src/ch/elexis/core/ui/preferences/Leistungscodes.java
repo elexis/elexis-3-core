@@ -324,18 +324,32 @@ public class Leistungscodes extends PreferencePage implements IWorkbenchPreferen
 		bRemoveOpenReminders.setSelection(configService.get(Preferences.RNN_REMOVE_OPEN_REMINDER, false));
 		bRemoveOpenReminders.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 
-		// *** checkbox for automatic setting CopyForPatient on TP coverage extinfo
+		// checkbox for automatic setting CopyForPatient on TP / KVG coverage extinfo
 		final Button bCoverageCopyForPatient = new Button(ret, SWT.CHECK);
 		bCoverageCopyForPatient.setText(Messages.Leistungscodes_setCopyForPatient);
 		bCoverageCopyForPatient.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				configService.set(Preferences.COVERAGE_COPY_TO_PATIENT, bCoverageCopyForPatient.getSelection());
+				configService.set(Preferences.COVERAGE_COPY_TO_PATIENT_KVG, bCoverageCopyForPatient.getSelection());
 			}
-
 		});
-		bCoverageCopyForPatient.setSelection(configService.get(Preferences.COVERAGE_COPY_TO_PATIENT, false));
+		bCoverageCopyForPatient.setSelection(configService.get(Preferences.COVERAGE_COPY_TO_PATIENT_KVG, false));
 		bCoverageCopyForPatient.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
+
+		// checkbox for automatic setting CopyForPatient on TP / other laws coverage
+		// extinfo
+		final Button bCoverageCopyForPatientOthers = new Button(ret, SWT.CHECK);
+		bCoverageCopyForPatientOthers.setText(Messages.Leistungscodes_setCopyForPatientOthers);
+		bCoverageCopyForPatientOthers.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				configService.set(Preferences.COVERAGE_COPY_TO_PATIENT_OTHERS,
+						bCoverageCopyForPatientOthers.getSelection());
+			}
+		});
+		bCoverageCopyForPatientOthers
+				.setSelection(configService.get(Preferences.COVERAGE_COPY_TO_PATIENT_OTHERS, false));
+		bCoverageCopyForPatientOthers.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 
 		// *** populate the table with items
 		reload();

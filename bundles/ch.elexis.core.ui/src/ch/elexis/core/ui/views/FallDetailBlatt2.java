@@ -556,8 +556,15 @@ public class FallDetailBlatt2 extends Composite implements IUnlockable {
 	}
 
 	private void updateCopyForPatient(Fall fall) {
-		if (fall != null && ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT, false)
-				&& ((Fall) fall).getTiersType() == Tiers.PAYANT) {
+		if (fall != null && ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT_KVG, false)
+				&& fall.getTiersType() == Tiers.PAYANT
+				&& BillingLaw.KVG.equals(fall.getConfiguredBillingSystemLaw())) {
+			getFall().setCopyForPatient(true);
+			fireSelectedFallUpdateEvent();
+			btnCopyForPatient.setSelection(true);
+		} else if (fall != null && ConfigServiceHolder.get().get(Preferences.COVERAGE_COPY_TO_PATIENT_OTHERS, false)
+				&& fall.getTiersType() == Tiers.PAYANT
+				&& !BillingLaw.KVG.equals(fall.getConfiguredBillingSystemLaw())) {
 			getFall().setCopyForPatient(true);
 			fireSelectedFallUpdateEvent();
 			btnCopyForPatient.setSelection(true);
