@@ -12,10 +12,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.menus.IMenuStateIds;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -173,7 +175,6 @@ public class OrderManagementUtil {
 		}
 	}
 
-
 	public static void saveAllDeliveries(List<IOrderEntry> entries, IOrderService orderService) {
 		for (IOrderEntry entry : entries) {
 
@@ -303,15 +304,53 @@ public class OrderManagementUtil {
 			}
 
 			if (!isActive) {
-				handlerService.executeCommand(COMMAND_ID, null);
-				OrderManagementView.setBarcodeScannerActivated(true);
-
-			} else {
-				OrderManagementView.setBarcodeScannerActivated(true);
+				if (scannerCommand.isEnabled()) {
+					try {
+						handlerService.executeCommand(COMMAND_ID, null);
+					} catch (Exception e) {
+						logger.warn("Scanner could not be activated (possibly changed too quickly): " //$NON-NLS-1$
+								+ e.getMessage());
+					}
+				} else {
+					logger.debug("Scanner Command ist disabled (busy). Skip activation."); //$NON-NLS-1$
+				}
 			}
+			OrderManagementView.setBarcodeScannerActivated(true);
+			ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", //$NON-NLS-1$
+					OrderManagementView.class.getName());
+
 		} catch (Exception e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Barcode-Scanner Fehler", //$NON-NLS-1$
-					"Barcode-Scanner konnte nicht aktiviert werden:\n" + e.getMessage()); //$NON-NLS-1$
+			logger.error("General error in barcode setup", e); //$NON-NLS-1$
+		}
+	}
+
+	public static void deactivateBarcodeScanner() {
+		String COMMAND_ID = "ch.elexis.base.barcode.scanner.ListenerProcess"; //$NON-NLS-1$
+		try {
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					.getService(IHandlerService.class);
+			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+					.getService(ICommandService.class);
+			Command scannerCommand = commandService.getCommand(COMMAND_ID);
+			if (scannerCommand == null) {
+				return;
+			}
+			State state = scannerCommand.getState("org.eclipse.jface.commands.ToggleState"); //$NON-NLS-1$
+			if (state == null) {
+				state = scannerCommand.getState(IMenuStateIds.STYLE);
+			}
+			Boolean isActive = false;
+			if (state != null) {
+				isActive = (Boolean) state.getValue();
+			}
+			if (Boolean.TRUE.equals(isActive)) {
+				handlerService.executeCommand(COMMAND_ID, null);
+			}
+			OrderManagementView.setBarcodeScannerActivated(false);
+			ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", null); //$NON-NLS-1$
+
+		} catch (Exception e) {
+			logger.error("Error when deactivating the barcode scanner", e); //$NON-NLS-1$
 		}
 	}
 
@@ -338,9 +377,6 @@ public class OrderManagementUtil {
 			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
 					ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
-			if (!allowedSuppliers.isEmpty()) {
-				dialog.setAllowedContacts(allowedSuppliers);
-			}
 			if (dialog.open() == Dialog.OK) {
 				IContact selectedProvider = (IContact) dialog.getSelection();
 				if (selectedProvider != null && actOrder != null) {
@@ -360,9 +396,6 @@ public class OrderManagementUtil {
 
 		if (buttonText.equals(ch.elexis.core.ui.views.Messages.OrderManagement_Button_Book)
 				|| buttonText.equals(ch.elexis.core.ui.views.Messages.OmnivoreView_editActionCaption)) {
-			if (view.isBarcodePortAvailable()) {
-				activateBarcodeScannerAndFocus();
-			}
 			view.setDeliveryEditMode(true);
 			setCheckboxColumnVisible(view, true);
 
@@ -388,31 +421,25 @@ public class OrderManagementUtil {
 		        int newTotal = currentDelivered + part;
 		        if (newTotal > ordered) {
 					String articleName = orderEntry.getArticle() != null ? orderEntry.getArticle().getLabel()
-							: "Unbekannter Artikel";
-		            boolean confirm = MessageDialog.openQuestion(
-							view.getSite().getShell(),
+							: "Unbekannter Artikel"; //$NON-NLS-1$
+					boolean confirm = MessageDialog.openQuestion(view.getSite().getShell(),
 							ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Title,
 							MessageFormat.format(ch.elexis.core.ui.views.Messages.OrderManagement_Overdelivery_Message,
 									currentDelivered, part, newTotal, ordered, articleName));
-		            if (!confirm) {
-		                continue;
-		            }
-		        }
-		        if (newTotal < 0) {
-		            MessageDialog.openError(
-							view.getSite().getShell(), ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
+					if (!confirm) {
+						continue;
+					}
+				}
+				if (newTotal < 0) {
+					MessageDialog.openError(view.getSite().getShell(),
+							ch.elexis.core.ui.views.Messages.Cst_Text_ungueltiger_Wert,
 							ch.elexis.core.ui.views.Messages.OrderManagement_Error_NegativeDeliveredAmount);
-		            continue;
-		        }
+					continue;
+				}
 
-		        orderService.getHistoryService().logDelivery(orderEntry.getOrder(), orderEntry, part, ordered);
-		        saveSingleDelivery(orderEntry, part, orderService);
-		    }
-
-		    if (view.isBarcodePortAvailable()) {
-		        activateBarcodeScannerAndFocus();
-		        OrderManagementView.setBarcodeScannerActivated(false);
-		    }
+				orderService.getHistoryService().logDelivery(orderEntry.getOrder(), orderEntry, part, ordered);
+				saveSingleDelivery(orderEntry, part, orderService);
+			}
 
 		    pendingDeliveredValues.clear();
 		    view.setDeliveryEditMode(false);
@@ -446,7 +473,7 @@ public class OrderManagementUtil {
 		Set<IContact> result = new LinkedHashSet<>();
 		List<IConfigurationElement> list = Extensions.getExtensions(ExtensionPointConstantsUi.TRANSPORTER);
 		for (IConfigurationElement ic : list) {
-			String handlerType = ic.getAttribute("type");
+			String handlerType = ic.getAttribute("type"); //$NON-NLS-1$
 			if (handlerType != null && handlerType.contains(ch.elexis.data.Bestellung.class.getName())) {
 				try {
 					Object executable = ic.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
@@ -459,7 +486,7 @@ public class OrderManagementUtil {
 					}
 				} catch (CoreException e) {
 					LoggerFactory.getLogger(OrderManagementUtil.class)
-							.error("Fehler beim Laden des Lieferanten aus Plugin: " + ic.getContributor().getName(), e);
+							.error("Error loading supplier from plugin: " + ic.getContributor().getName(), e); //$NON-NLS-1$
 				}
 			}
 		}

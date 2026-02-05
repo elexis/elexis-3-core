@@ -267,6 +267,7 @@ public class OrderManagementActionFactory {
 		if (nbDlg.open() == Dialog.OK) {
 			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle(), orderService);
 			view.setActOrder(actOrder);
+			OrderManagementView.setBarcodeScannerActivated(true);
 			view.reload();
 		}
 	}
@@ -378,22 +379,22 @@ public class OrderManagementActionFactory {
 								sender.store(actOrder);
 								sender.finalizeExport();
 							} catch (XChangeException xe) {
-								if ("ABORT_BY_USER".equals(xe.getMessage())) {
+								if ("ABORT_BY_USER".equals(xe.getMessage())) { //$NON-NLS-1$
 									continue;
 								}
-								logger.error("Error saving or exporting the order: ", xe);
+								logger.error("Error saving or exporting the order: ", xe); //$NON-NLS-1$
 								SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
 										Messages.OrderManagement_ExportError_Message);
 								continue;
 							}
 
-							String pluginName = ic.getAttribute("name");
+							String pluginName = ic.getAttribute("name"); //$NON-NLS-1$
 							if (pluginName == null || pluginName.isEmpty()) {
 								pluginName = sender.getClass().getSimpleName();
 							}
 
 							Set<String> added = new HashSet<>();
-							StringJoiner contactsJoiner = new StringJoiner(", ");
+							StringJoiner contactsJoiner = new StringJoiner(", "); //$NON-NLS-1$
 
 							for (IOrderEntry oe : orderableItems) {
 								IContact provider = oe.getProvider();
@@ -628,11 +629,13 @@ public class OrderManagementActionFactory {
 		}
 
 		Display.getDefault().asyncExec(() -> {
-			view.getTableViewer().refresh();
 			if (actOrder != null) {
+				view.getTableViewer().refresh();
 				view.updateOrderDetails(actOrder);
 			} else {
-				setOrder(null);
+				view.clearOrderDetailsView();
+				view.getTableViewer().setInput(Collections.emptyList());
+				view.getTableViewer().refresh();
 			}
 		});
 		view.reload();
