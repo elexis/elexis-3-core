@@ -244,7 +244,8 @@ public class Preferences {
 	public static final String LEISTUNGSCODES_NOCOSTBEARER = "noCostBearer"; //$NON-NLS-1$
 
 	// Fall
-	public static final String COVERAGE_COPY_TO_PATIENT = "coverage/copytopatient";
+	public static final String COVERAGE_COPY_TO_PATIENT_KVG = "coverage/copytopatient";
+	public static final String COVERAGE_COPY_TO_PATIENT_OTHERS = "coverage/copytopatientothers";
 
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT = "medication/settings/emediplanHeaderComment";
