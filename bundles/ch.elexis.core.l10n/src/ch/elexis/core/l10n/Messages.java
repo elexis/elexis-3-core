@@ -343,6 +343,8 @@ public class Messages extends NLS {
 	public static String AnalyzingBills;
 	public static String AngefangeneArbeiten_Description;
 	public static String AngefangeneArbeiten_Name;
+	public static String AngefangeneArbeitenDetails_Description;
+	public static String AngefangeneArbeitenDetails_Name;
 	public static String AnschriftEingabeDialog_enterAddress;
 	public static String AnschriftEingabeDialog_enterData;
 	public static String AnschriftEingabeDialog_postalAddressInfo;
