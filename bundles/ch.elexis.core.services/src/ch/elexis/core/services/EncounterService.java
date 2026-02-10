@@ -23,6 +23,7 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.lock.types.LockResponse;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBillableVerifier;
 import ch.elexis.core.model.IBilled;
@@ -277,7 +278,8 @@ public class EncounterService implements IEncounterService {
 		List<IBilled> ret = new ArrayList<>();
 		for (IBilled verrechnet : list) {
 			IBillable billable = verrechnet.getBillable();
-			if (!billable.getCodeSystemName().contains("Tarmed") && !billable.getCodeSystemName().contains("TARDOC")) {
+			if (!billable.getCodeSystemName().contains("Tarmed") && !billable.getCodeSystemName().contains("TARDOC")
+					&& !(billable instanceof IArticle)) {
 				ret.add(verrechnet);
 			}
 		}
