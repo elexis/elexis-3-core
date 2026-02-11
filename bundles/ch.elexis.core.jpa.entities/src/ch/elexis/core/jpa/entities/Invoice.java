@@ -33,6 +33,7 @@ import jakarta.persistence.Table;
 @EntityListeners({ InvoiceEntityListener.class, EntityWithIdListener.class })
 @Cache(expiry = 15000)
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
+@NamedQuery(name = "Invoice.number.aobo", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number AND (i.mandator.id IN :aoboids OR i.mandator is null)")
 @NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
 		+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 @NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "

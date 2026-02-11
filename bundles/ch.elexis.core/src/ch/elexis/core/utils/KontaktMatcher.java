@@ -13,6 +13,7 @@
 package ch.elexis.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;

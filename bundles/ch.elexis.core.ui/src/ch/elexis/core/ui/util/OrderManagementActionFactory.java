@@ -4,19 +4,27 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -24,10 +32,14 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
@@ -142,22 +154,10 @@ public class OrderManagementActionFactory {
 	}
 
 	private void handleDailyOrder() {
-		boolean hasOrderedEntries = actOrder != null
-				&& actOrder.getEntries().stream().anyMatch(e -> e.getState() == OrderEntryState.ORDERED);
+		boolean reuseExistingOrder = isDailyOrder(actOrder) && isUnsent(actOrder)
+				&& actOrder.getTimestamp().toLocalDate().equals(LocalDate.now());
 
-		boolean orderIsTrulyDone = actOrder != null && !actOrder.getEntries().isEmpty()
-				&& actOrder.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
-
-		boolean reuseExistingOrder = actOrder != null && !orderIsTrulyDone
-				&& actOrder.getTimestamp().toLocalDate().equals(LocalDate.now()) && !hasOrderedEntries;
-
-		IOrder orderToUse = actOrder != null ? actOrder : CoreModelServiceHolder.get().create(IOrder.class);
-
-		if (actOrder == null) {
-			orderToUse.setTimestamp(LocalDateTime.now());
-			orderToUse.setName(Messages.BestellView_AutomaticDaily);
-		}
-
+		IOrder orderToUse;
 		if (reuseExistingOrder) {
 			orderToUse = actOrder;
 		} else {
@@ -170,34 +170,65 @@ public class OrderManagementActionFactory {
 		int result = doDlg.open();
 
 		if (result == Window.OK) {
-			if (!reuseExistingOrder) {
-				actOrder = orderToUse;
-			}
-		}
-
-		if (actOrder != null) {
+			actOrder = orderToUse;
+			view.setActOrder(actOrder);
 			view.reload();
 			view.updateCheckIn();
 		}
 	}
 
-	private void handleAutomaticOrder() {
-		if (actOrder == null) {
-			actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName, orderService);
-		} else {
-			if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
-				if (MessageDialog.openQuestion(view.getSite().getShell(), Messages.Core_Areas,
-						Messages.BestellView_WizardAskNewOrder)) {
-					actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName,
-							orderService);
-				}
+	private boolean isDailyOrder(IOrder order) {
+		return order != null && Messages.BestellView_AutomaticDaily.equals(order.getName());
+	}
+
+	private boolean isUnsent(IOrder order) {
+		if (order == null) {
+			return false;
+		}
+		return order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.OPEN);
+	}
+
+	private boolean isStockOrder(IOrder order) {
+		return order != null && Messages.OrderManagement_StockOrder_DefaultName.equals(order.getName());
+	}
+
+	private IOrder findReusableStockOrder() {
+		for (IOrder o : OrderManagementUtil.getOpenOrders()) {
+			if (isStockOrder(o) && isUnsent(o)) {
+				return o;
 			}
 		}
+		return null;
+	}
 
-		int trigger = ConfigServiceHolder.get().get(
-				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER,
-				ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
-		boolean isInventoryBelow = trigger == ch.elexis.core.constants.Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
+
+	private void clearOpenEntries(IOrder order) {
+		if (order == null) {
+			return;
+		}
+		List<IOrderEntry> toRemove = new ArrayList<>();
+		for (IOrderEntry entry : new ArrayList<>(order.getEntries())) {
+			if (entry.getState() == OrderEntryState.OPEN) {
+				toRemove.add(entry);
+			}
+		}
+		for (IOrderEntry entry : toRemove) {
+			order.getEntries().remove(entry);
+			CoreModelServiceHolder.get().delete(entry);
+		}
+	}
+
+	private void handleAutomaticOrder() {
+		IOrder reusableStockOrder = findReusableStockOrder();
+		if (reusableStockOrder != null) {
+			actOrder = reusableStockOrder;
+			clearOpenEntries(actOrder);
+		} else {
+			actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName, orderService);
+		}
+		int trigger = ConfigServiceHolder.get().get(Preferences.INVENTORY_ORDER_TRIGGER,
+				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
+		boolean isInventoryBelow = trigger == Preferences.INVENTORY_ORDER_TRIGGER_BELOW;
 
 		boolean excludeAlreadyOrderedItems = ConfigServiceHolder.get().get(
 				Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
@@ -222,7 +253,11 @@ public class OrderManagementActionFactory {
 						+ " of stock entry " + stockEntry.getId()); //$NON-NLS-1$
 			}
 		}
-		view.reload();
+
+		if (actOrder != null) {
+			view.setActOrder(actOrder);
+			view.reload();
+		}
 		view.updateCheckIn();
 	}
 
@@ -232,6 +267,7 @@ public class OrderManagementActionFactory {
 		if (nbDlg.open() == Dialog.OK) {
 			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle(), orderService);
 			view.setActOrder(actOrder);
+			OrderManagementView.setBarcodeScannerActivated(true);
 			view.reload();
 		}
 	}
@@ -322,8 +358,8 @@ public class OrderManagementActionFactory {
 				sb.append(noSupItem.getArticle().getLabel()).append("\n"); //$NON-NLS-1$
 			}
 
-			runOrder = SWTHelper.askYesNo(ch.elexis.core.ui.views.Messages.BestellView_NoSupplierArticle, MessageFormat
-					.format(ch.elexis.core.ui.views.Messages.BestellView_NoSupplierArticleMsg, sb.toString()));
+			runOrder = SWTHelper.askYesNo(Messages.BestellView_NoSupplierArticle,
+					MessageFormat.format(Messages.BestellView_NoSupplierArticleMsg, sb.toString()));
 		}
 
 		if (runOrder) {
@@ -343,13 +379,40 @@ public class OrderManagementActionFactory {
 								sender.store(actOrder);
 								sender.finalizeExport();
 							} catch (XChangeException xe) {
-								logger.error("Error saving or exporting the order: ", xe);
+								if ("ABORT_BY_USER".equals(xe.getMessage())) { //$NON-NLS-1$
+									continue;
+								}
+								logger.error("Error saving or exporting the order: ", xe); //$NON-NLS-1$
 								SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
 										Messages.OrderManagement_ExportError_Message);
 								continue;
 							}
-							SWTHelper.showInfo(Messages.BestellView_OrderSentCaption,
-									Messages.BestellView_OrderSentBody);
+
+							String pluginName = ic.getAttribute("name"); //$NON-NLS-1$
+							if (pluginName == null || pluginName.isEmpty()) {
+								pluginName = sender.getClass().getSimpleName();
+							}
+
+							Set<String> added = new HashSet<>();
+							StringJoiner contactsJoiner = new StringJoiner(", "); //$NON-NLS-1$
+
+							for (IOrderEntry oe : orderableItems) {
+								IContact provider = oe.getProvider();
+								if (provider != null) {
+									String label = provider.getLabel();
+									if (added.add(label)) {
+										contactsJoiner.add(label);
+									}
+								}
+							}
+							String joinedNames = contactsJoiner.toString();
+							String contactNames = !joinedNames.isEmpty() ? joinedNames
+									: Messages.OrderManagement_NoSupplierRecipient;
+							String title = MessageFormat.format(Messages.BestellView_OrderSentWithPluginTitle,
+									pluginName);
+							String body = MessageFormat.format(
+									Messages.BestellView_OrderSentWithPluginBody, actOrder.getName(), contactNames);
+							SWTHelper.showInfo(title, body);
 							view.refresh();
 							orderService.getHistoryService().logOrderSent(actOrder, true);
 							view.reload();
@@ -387,61 +450,195 @@ public class OrderManagementActionFactory {
 	}
 
 	public void createContextMenu(TableViewer table, TableViewer orderTable) {
-		Menu menu = new Menu(table.getTable());
-
-		MenuItem removeItem = new MenuItem(menu, SWT.NONE);
-		removeItem.setImage(Images.IMG_CLEAR.getImage());
-		removeItem.setText(Messages.BestellView_RemoveArticle);
-		removeItem.addListener(SWT.Selection, event -> handleRemoveItem());
-
-		MenuItem editItem = new MenuItem(menu, SWT.NONE);
-		editItem.setImage(Images.IMG_EDIT.getImage());
-		editItem.setText(Messages.OrderManagement_EditItem);
-		editItem.addListener(SWT.Selection, event -> handleEditItem());
-
-		MenuItem addItem = new MenuItem(menu, SWT.NONE);
-		addItem.setImage(Images.IMG_ADDITEM.getImage());
-		addItem.setText(Messages.OrderManagement_AddItem);
-		addItem.addListener(SWT.Selection, event -> handleAddItem());
-
+		if (table.getTable().getMenu() != null && !table.getTable().getMenu().isDisposed()) {
+			table.getTable().getMenu().dispose();
+		}
+		Action removeAction = new Action(Messages.BestellView_RemoveArticle) {
+			@Override
+			public void run() {
+				handleRemoveItem();
+			}
+		};
+		removeAction.setImageDescriptor(Images.IMG_CLEAR.getImageDescriptor());
+		Action editAction = new Action(Messages.OrderManagement_EditItem) {
+			@Override
+			public void run() {
+				handleEditItem();
+			}
+		};
+		editAction.setImageDescriptor(Images.IMG_EDIT.getImageDescriptor());
+		Action addAction = new Action(Messages.OrderManagement_AddItem) {
+			@Override
+			public void run() {
+				handleAddItem();
+			}
+		};
+		addAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+		MenuManager menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				boolean hasOrder = actOrder != null;
+				boolean hasEntries = hasOrder && !actOrder.getEntries().isEmpty();
+				IOrderEntry selectedEntry = null;
+				IStructuredSelection sel = (IStructuredSelection) table.getSelection();
+				if (sel != null && !sel.isEmpty() && sel.getFirstElement() instanceof IOrderEntry) {
+					selectedEntry = (IOrderEntry) sel.getFirstElement();
+				}
+				boolean enableEditRemove = hasEntries && selectedEntry != null;
+				removeAction.setEnabled(enableEditRemove);
+				editAction.setEnabled(enableEditRemove);
+				manager.add(removeAction);
+				manager.add(editAction);
+				manager.add(addAction);
+			}
+		});
+		Menu menu = menuManager.createContextMenu(table.getTable());
 		table.getTable().setMenu(menu);
+		Table swtTable = table.getTable();
+		swtTable.addListener(SWT.MenuDetect, ev -> {
+			Point p = swtTable.toControl(ev.x, ev.y);
+			TableItem item = swtTable.getItem(p);
+			if (item == null) {
+				table.setSelection(StructuredSelection.EMPTY, true); // true = reveal (optional)
+			}
+		});
+		swtTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.DEL) {
+					handleRemoveItem();
+				}
+			}
+		});
 		createOrderHistoryMenu(orderTable);
 	}
 
 	public void createOrderHistoryMenu(TableViewer orderTableViewer) {
-		Menu menu = new Menu(orderTableViewer.getTable());
-		MenuItem historyItem = new MenuItem(menu, SWT.NONE);
-		historyItem.setImage(Images.IMG_INFO.getImage());
-		historyItem.setText(Messages.OrderManagement_ShowOrderHistory);
-		historyItem.addListener(SWT.Selection, event -> handleShowOrderHistory(orderTableViewer));
+		Action historyAction = new Action(Messages.OrderManagement_ShowOrderHistory) {
+			@Override
+			public void run() {
+				handleShowOrderHistory(orderTableViewer);
+			}
+		};
+		historyAction.setImageDescriptor(Images.IMG_INFO.getImageDescriptor());
+		Action deleteAction = new Action(Messages.OrderManagement_DeleteOrder) {
+			@Override
+			public void run() {
+				handleDeleteOrder(orderTableViewer);
+			}
+		};
+		deleteAction.setImageDescriptor(Images.IMG_CLEAR.getImageDescriptor());
+		MenuManager menuManager = new MenuManager();
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				deleteAction.setEnabled(false);
+
+				IStructuredSelection selection = (IStructuredSelection) orderTableViewer.getSelection();
+				Object first = selection.getFirstElement();
+				if (first instanceof IOrder selectedOrder) {
+					boolean allOpen = selectedOrder.getEntries().stream()
+							.allMatch(entry -> entry.getState() == OrderEntryState.OPEN);
+					deleteAction.setEnabled(allOpen);
+				}
+				manager.add(historyAction);
+				manager.add(deleteAction);
+			}
+		});
+		Menu menu = menuManager.createContextMenu(orderTableViewer.getTable());
 		orderTableViewer.getTable().setMenu(menu);
+	}
+
+	private void handleDeleteOrder(TableViewer orderTableViewer) {
+		IStructuredSelection selection = (IStructuredSelection) orderTableViewer.getSelection();
+		IOrder selectedOrder = (IOrder) selection.getFirstElement();
+		if (selectedOrder == null) {
+			return;
+		}
+
+		String orderName = selectedOrder.getName() != null ? selectedOrder.getName() : Messages.UNKNOWN;
+		String orderDate = OrderManagementUtil.formatDate(selectedOrder.getTimestamp());
+
+		String title = Messages.OrderManagement_DeleteOrder_Title;
+		String message = MessageFormat.format(Messages.OrderManagement_DeleteOrder_Message, orderName, orderDate);
+
+		boolean confirm = MessageDialog.openQuestion(view.getSite().getShell(), title, message);
+
+		if (!confirm) {
+			return;
+		}
+
+		List<IOrderEntry> entriesToDelete = new ArrayList<>(selectedOrder.getEntries());
+		for (IOrderEntry entry : entriesToDelete) {
+			CoreModelServiceHolder.get().delete(entry);
+		}
+		selectedOrder.getEntries().clear();
+
+		CoreModelServiceHolder.get().delete(selectedOrder);
+
+		if (actOrder != null && actOrder.getId().equals(selectedOrder.getId())) {
+			actOrder = null;
+			view.setActOrder(null);
+		}
+		Display.getDefault().asyncExec(() -> {
+			view.getTableViewer().setInput(Collections.emptyList());
+			view.getTableViewer().refresh();
+			view.reload();
+			view.clearOrderDetailsView();
+		});
 	}
 
 	private void handleRemoveItem() {
 		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
-		IOrderEntry entry = (IOrderEntry) selection.getFirstElement();
-		if (entry != null && entry.getState() == OrderEntryState.OPEN) {
+		if (selection == null || selection.isEmpty()) {
+			return;
+		}
+
+		List<IOrderEntry> selectedEntries = new ArrayList<>();
+		for (Object o : selection.toArray()) {
+			if (o instanceof IOrderEntry) {
+				selectedEntries.add((IOrderEntry) o);
+			}
+		}
+		if (selectedEntries.isEmpty()) {
+			return;
+		}
+
+		for (IOrderEntry entry : selectedEntries) {
+			if (entry.getState() != OrderEntryState.OPEN) {
+				continue; 
+			}
+
 			IOrder order = entry.getOrder();
+			if (order == null) {
+				continue;
+			}
+
 			orderService.getHistoryService().logRemove(order, entry);
 			CoreModelServiceHolder.get().delete(entry);
 			order.getEntries().remove(entry);
-
-			if (order.getEntries().isEmpty()) {
-				CoreModelServiceHolder.get().delete(order);
-				actOrder = null;
-				view.reload();
-			}
-
-			Display.getDefault().asyncExec(() -> {
-				view.tableViewer.refresh();
-				if (actOrder != null) {
-					view.updateOrderDetails(actOrder);
-				} else {
-					setOrder(null);
-				}
-			});
-			view.reload();
 		}
+
+		if (actOrder != null && actOrder.getEntries().isEmpty()) {
+			CoreModelServiceHolder.get().delete(actOrder);
+			actOrder = null;
+			view.setActOrder(null);
+		}
+
+		Display.getDefault().asyncExec(() -> {
+			if (actOrder != null) {
+				view.getTableViewer().refresh();
+				view.updateOrderDetails(actOrder);
+			} else {
+				view.clearOrderDetailsView();
+				view.getTableViewer().setInput(Collections.emptyList());
+				view.getTableViewer().refresh();
+			}
+		});
+		view.reload();
 	}
 
 	private void handleShowOrderHistory(TableViewer viewer) {
@@ -510,5 +707,4 @@ public class OrderManagementActionFactory {
 
 		scrollComposite.setOrigin(scrollComposite.getOrigin().x, Math.max(0, Math.min(newY, maxY)));
 	}
-
 }

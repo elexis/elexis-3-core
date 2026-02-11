@@ -170,7 +170,7 @@ public class InvoiceService implements IInvoiceService {
 		// perform some checks
 		if (coverage == null) {
 			result = result.add(Result.SEVERITY.ERROR, 8,
-					"Die Rechnung hat keinen gültigen Fall (" + getInvoiceDesc(ret) + ")", ret, true);
+					"Die Rechnung ist keinem Fall zugeordnet (" + getInvoiceDesc(ret) + ")", ret, true);
 		} else {
 			if (isBillingStrict() && !CoverageServiceHolder.get().isValid(coverage)) {
 				result = result.add(Result.SEVERITY.ERROR, 8,

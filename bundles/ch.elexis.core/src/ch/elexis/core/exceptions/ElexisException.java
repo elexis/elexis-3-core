@@ -11,8 +11,9 @@
  *******************************************************************************/
 package ch.elexis.core.exceptions;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class ElexisException extends Exception {
 	private static final long serialVersionUID = -4535064606049686854L;

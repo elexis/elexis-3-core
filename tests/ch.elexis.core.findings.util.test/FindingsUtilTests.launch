@@ -166,21 +166,24 @@
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:default"/>
         <setEntry value="ch.elexis.core.jpa@3:true"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
+        <setEntry value="ch.elexis.core.services.test.ws-bind@default:default"/>
+        <setEntry value="ch.elexis.core.services.test.ws@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:false"/>
+        <setEntry value="ch.elexis.core.test.logging@default:default"/>
         <setEntry value="ch.elexis.core.test@default:default"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
-        <setEntry value="ch.rgw.utility.tests@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="es.gogo.shell@default:default"/>
-        <setEntry value="info.elexis.server.core.logging@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfig" value="true"/>

@@ -103,6 +103,7 @@ public class OrderManagementHelper {
 		} else {
 			view.orderButton.setText(Messages.MedicationComposite_btnConfirm);
 			view.orderButton.setImage(Images.IMG_TICK.getImage());
+			OrderManagementUtil.enableLastColumnFill(view.tableViewer.getTable());
 		}
 
 	}

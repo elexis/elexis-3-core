@@ -6,7 +6,8 @@ Bundle-Version: 3.13.0.qualifier
 Bundle-Vendor: ch.elexis
 Fragment-Host: ch.elexis.core.hl7.v2x;bundle-version="3.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: ch.elexis.core.services;bundle-version="3.9.0",
+Require-Bundle: ch.elexis.core.rcp;bundle-version="3.13.0",
+ ch.elexis.core.services;bundle-version="3.9.0",
  ch.elexis.core.model;bundle-version="3.9.0",
  ch.elexis.core.test.context;bundle-version="3.13.0",
  org.junit

@@ -138,7 +138,7 @@ public class Hub extends AbstractUIPlugin {
 							sb.append(r.getSubject() + StringUtils.LF);
 							sb.append(r.getMessage() + "\n\n");
 						}
-						MessageEvent.fireInformation(Messages.PatientEventListener_0, sb.toString());
+						MessageEvent.fireInformation(Messages.PatientEventListener_0, sb.toString(), false);
 					}
 				});
 			}

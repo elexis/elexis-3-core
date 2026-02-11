@@ -669,4 +669,9 @@ public class Messages {
 	public static String ReminderView_statusMenu = ch.elexis.core.l10n.Messages.ReminderView_statusMenu;
 	public static String OmnivoreView_editActionCaption = ch.elexis.core.l10n.Messages.OmnivoreView_editActionCaption;
 	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
+	public static String BestellView_OrderSentWithPluginTitle = ch.elexis.core.l10n.Messages.BestellView_OrderSentWithPluginTitle;
+	public static String BestellView_OrderSentWithPluginBody = ch.elexis.core.l10n.Messages.BestellView_OrderSentWithPluginBody;
+	public static String OrderManagement_DeleteOrder = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder;
+	public static String OrderManagement_DeleteOrder_Title = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Title;
+	public static String OrderManagement_DeleteOrder_Message = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Message;
 }

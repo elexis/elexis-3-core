@@ -22,7 +22,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -46,15 +48,16 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.BillingUtil;
+import ch.elexis.core.data.util.BillingUtil.IBillableCheck;
+import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Patient;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -71,11 +74,19 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class BillingProposalView extends ViewPart {
 	public static final String ID = "ch.elexis.core.ui.views.rechnung.BillingProposalView"; //$NON-NLS-1$
 
+	@Inject
+	private IContextService contextService;
+	@Inject
+	private UISynchronize uiSync;
+	@Inject
+	private EPartService partService;
+
 	private TableViewer viewer;
 	private BillingProposalViewerComparator comparator;
 
 	private Color lightRed = UiDesk.getColorFromRGB("ff8d8d"); //$NON-NLS-1$
 	private Color lightGreen = UiDesk.getColorFromRGB("a6ffaa"); //$NON-NLS-1$
+	private Color lightOrange = UiDesk.getColorFromRGB("ffb266"); //$NON-NLS-1$
 
 	private TableViewerColumn seriesColumn;
 
@@ -208,7 +219,13 @@ public class BillingProposalView extends ViewPart {
 			@Override
 			public Color getBackground(Object element) {
 				if (element instanceof BillingInformation) {
-					return ((BillingInformation) element).isOk() ? lightGreen : lightRed;
+					if (((BillingInformation) element).isWarning()) {
+						return lightOrange;
+					}
+					if (((BillingInformation) element).isOk()) {
+						return lightGreen;
+					}
+					return lightRed;
 				} else {
 					return super.getForeground(element);
 				}
@@ -224,11 +241,12 @@ public class BillingProposalView extends ViewPart {
 					if (selection.getFirstElement() instanceof BillingInformation) {
 						Konsultation kons = ((BillingInformation) selection.getFirstElement()).getKonsultation();
 						// patient change has to be done before changing kons
-						Patient pat = kons.getFall().getPatient();
-						ElexisEventDispatcher.getInstance().fire(new ElexisEvent(pat, pat.getClass(),
-								ElexisEvent.EVENT_SELECTED, ElexisEvent.PRIORITY_SYNC));
-
-						ElexisEventDispatcher.fireSelectionEvent(kons);
+						IEncounter encounter = NoPoUtil.loadAsIdentifiable(kons, IEncounter.class).orElse(null);
+						if (encounter != null) {
+							contextService.setActivePatient(encounter.getCoverage().getPatient());
+							contextService.setActiveCoverage(encounter.getCoverage());
+							contextService.setTyped(encounter);
+						}
 					}
 				}
 			}
@@ -241,6 +259,16 @@ public class BillingProposalView extends ViewPart {
 					refresh();
 				}
 			}
+		});
+
+		viewer.addDoubleClickListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			if (selection == null || selection.isEmpty()) {
+				return;
+			}
+				uiSync.asyncExec(() -> {
+				partService.showPart("ch.elexis.Konsdetail", EPartService.PartState.ACTIVATE);
+				});
 		});
 
 		MenuManager menuManager = new MenuManager();
@@ -392,6 +420,8 @@ public class BillingProposalView extends ViewPart {
 		private String series;
 		@XmlElement
 		private boolean checkResult;
+		@XmlElement
+		private boolean checkWarning;
 		@XmlTransient
 		private boolean showSeries;
 
@@ -474,6 +504,14 @@ public class BillingProposalView extends ViewPart {
 			}
 		}
 
+		public Boolean isWarning() {
+			if (!isResolved()) {
+				return false;
+			} else {
+				return checkWarning;
+			}
+		}
+
 		public String getTotal() {
 			if (!isResolved()) {
 				return "..."; //$NON-NLS-1$
@@ -543,6 +581,19 @@ public class BillingProposalView extends ViewPart {
 				if (result.isOK()) {
 					item.checkResultMessage = "Ok";
 					item.checkResult = true;
+					List<Result<Konsultation>.msg> warningMgs = result.getMessages().stream()
+							.filter(m -> m.getCode() == IBillableCheck.CODE_WARNING).toList();
+					if (!warningMgs.isEmpty()) {
+						item.checkWarning = true;
+						StringBuilder sb = new StringBuilder();
+						for (Result<Konsultation>.msg message : warningMgs) {
+								if (sb.length() > 0) {
+									sb.append(" / "); //$NON-NLS-1$
+								}
+								sb.append(message.getText());
+						}
+						item.checkResultMessage = item.checkResultMessage + ", " + sb.toString();
+					}
 				} else {
 					StringBuilder sb = new StringBuilder();
 					for (@SuppressWarnings("rawtypes")

@@ -32,8 +32,6 @@ public class BillingSystemService implements IBillingSystemService {
 
 	private LoadingCache<String, BillingSystem> cache;
 
-	private static final String CFG_KEY_BILLINGLAW = "defaultBillingLaw";
-
 	public BillingSystemService() {
 		cache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(new BillingSystemLoader());
 	}
@@ -76,7 +74,7 @@ public class BillingSystemService implements IBillingSystemService {
 	@Override
 	public List<String> getBillingSystemConstants(IBillingSystem billingSystem) {
 		String bc = configService.get(Preferences.LEISTUNGSCODES_CFG_KEY + "/" //$NON-NLS-1$
-				+ billingSystem + "/constants", null); //$NON-NLS-1$
+				+ billingSystem.getName() + "/constants", null); //$NON-NLS-1$
 		if (bc == null) {
 			return Collections.emptyList();
 		} else {
@@ -97,13 +95,19 @@ public class BillingSystemService implements IBillingSystemService {
 	}
 
 	@Override
+	public String getConfigurationValue(IBillingSystem billingSystem, String attributeName,
+			String defaultIfNotDefined) {
+		return getConfigurationValue(billingSystem.getName(), attributeName, defaultIfNotDefined);
+	}
+
+	@Override
 	public IBillingSystem getDefaultBillingSystem() {
 		Optional<IBillingSystem> billingSystem = getBillingSystem("KVG");
 		if (billingSystem.isPresent()) {
 			return billingSystem.get();
 		}
-		return addOrModifyBillingSystem(Messages.Case_KVG_Short, Messages.Fall_TarmedLeistung,
-				Messages.Fall_TarmedPrinter, Messages.Fall_KVGRequirements, BillingLaw.KVG);
+		return addOrModifyBillingSystem(Messages.Case_KVG_Short, Messages.Fall_TarmedPrinter,
+				Messages.Fall_KVGRequirements, BillingLaw.KVG);
 	}
 
 	@Override
@@ -145,7 +149,7 @@ public class BillingSystemService implements IBillingSystemService {
 		public BillingSystem load(String key) throws Exception {
 			String billingSystemName = getConfigurationValue(key, "name", null);
 			if (billingSystemName != null) {
-				String configuredLaw = getConfigurationValue(key, CFG_KEY_BILLINGLAW, null);
+				String configuredLaw = getConfigurationValue(key, Preferences.LEISTUNGSCODES_BILLINGLAW, null);
 
 				if (configuredLaw != null) {
 					BillingLaw law = getBillingLaw(configuredLaw);
@@ -175,14 +179,14 @@ public class BillingSystemService implements IBillingSystemService {
 	}
 
 	@Override
-	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode, String defaultPrinter,
-			String requirements, BillingLaw law) {
-
+	public IBillingSystem addOrModifyBillingSystem(String name, String defaultPrinter, String requirements,
+			BillingLaw law) {
 		setConfigurationValue(name, "name", name);
-		setConfigurationValue(name, "leistungscodes", serviceCode);
-		setConfigurationValue(name, "standardausgabe", defaultPrinter);
+		if (defaultPrinter != null) {
+			setConfigurationValue(name, "standardausgabe", defaultPrinter);
+		}
 		setConfigurationValue(name, "bedingungen", requirements);
-		setConfigurationValue(name, CFG_KEY_BILLINGLAW, law.name());
+		setConfigurationValue(name, Preferences.LEISTUNGSCODES_BILLINGLAW, law.name());
 
 		cache.invalidateAll();
 

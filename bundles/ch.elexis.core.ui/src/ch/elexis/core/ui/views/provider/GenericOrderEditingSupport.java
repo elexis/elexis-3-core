@@ -1,11 +1,15 @@
 package ch.elexis.core.ui.views.provider;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
@@ -16,7 +20,9 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
+import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.views.OrderManagementView;
 
 public class GenericOrderEditingSupport extends EditingSupport {
@@ -45,8 +51,19 @@ public class GenericOrderEditingSupport extends EditingSupport {
 		switch (columnType) {
 		case SUPPLIER:
 			return new ContactSelectionDialogCellEditor(viewer.getTable(),
-					Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message);
-
+					Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message) {
+				@Override
+				protected Object openDialogBox(Control cellEditorWindow) {
+					List<IContact> allowedSuppliers = OrderManagementUtil.loadConfiguredSuppliers();
+					ContactSelectionDialog dialog = new ContactSelectionDialog(cellEditorWindow.getShell(),
+							IContact.class, ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Title,
+							ch.elexis.core.ui.views.Messages.OrderManagement_SelectSupplier_Message);
+					if (dialog.open() == Window.OK) {
+						return dialog.getSelection();
+					}
+					return null;
+				}
+			};
 		case DELIVERED:
 		case ORDERED:
 		default:
@@ -166,7 +183,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					orderManagementView.getPendingDeliveredValues().put(entry, part);
 					viewer.update(entry, null);
 				} catch (NumberFormatException e) {
-					// ungültige Eingabe → ignorieren, aber alten Wert nicht überschreiben
+					// Invalid input ignore, but do not overwrite old value
 				}
 			}
 				case SUPPLIER -> {

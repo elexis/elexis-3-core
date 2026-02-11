@@ -102,6 +102,7 @@
         <setEntry value="org.apache.httpcomponents.httpcore@default:default"/>
         <setEntry value="org.apache.logging.log4j.api@default:default"/>
         <setEntry value="org.apache.logging.log4j.core@default:default"/>
+        <setEntry value="org.apache.poi.ooxml-lite@default:default"/>
         <setEntry value="org.apache.poi.ooxml@default:default"/>
         <setEntry value="org.apache.poi@default:default"/>
         <setEntry value="org.apache.xmlbeans@default:default"/>
@@ -162,36 +163,31 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.documents@default:default"/>
-        <setEntry value="ch.elexis.core.hl7.v2x.tests@default:default"/>
         <setEntry value="ch.elexis.core.hl7.v2x@default:default"/>
         <setEntry value="ch.elexis.core.importer.div@default:default"/>
-        <setEntry value="ch.elexis.core.jcifs.test@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities.test@default:default"/>
         <setEntry value="ch.elexis.core.jpa.entities@default:default"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
-        <setEntry value="ch.elexis.core.jpa.test@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
-        <setEntry value="ch.elexis.core.logging.default_configuration@default:default"/>
+        <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.mail.test@default:false"/>
         <setEntry value="ch.elexis.core.mail@default:default"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
-        <setEntry value="ch.elexis.core.tasks.test@default:default"/>
+        <setEntry value="ch.elexis.core.tasks.test@default:false"/>
         <setEntry value="ch.elexis.core.tasks@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
-        <setEntry value="ch.rgw.utility.tests@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
-        <setEntry value="es.gogo.shell@default:default"/>
-        <setEntry value="info.elexis.jaxrs.service@default:default"/>
-        <setEntry value="info.elexis.server.core.logging@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="false"/>
+    <booleanAttribute key="show_selected_only" value="true"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfig" value="true"/>

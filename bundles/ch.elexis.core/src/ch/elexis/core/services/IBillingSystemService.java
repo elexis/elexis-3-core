@@ -60,6 +60,18 @@ public interface IBillingSystemService {
 	public String getBillingSystemConstant(IBillingSystem billingSystem, String name);
 
 	/**
+	 * Get the value of the configuration of the provided {@link IBillingSystem}
+	 * matching the attributeName. Return defaultIfNotDefined if no such
+	 * configuration is present.
+	 * 
+	 * @param billingSystem
+	 * @param attributeName
+	 * @param defaultIfNotDefined
+	 * @return
+	 */
+	public String getConfigurationValue(IBillingSystem billingSystem, String attributeName, String defaultIfNotDefined);
+
+	/**
 	 * Returns the default billing system, which is always asserted to be available
 	 *
 	 * @return
@@ -86,14 +98,13 @@ public interface IBillingSystemService {
 	 * existing
 	 *
 	 * @param name           to identify the billing system
-	 * @param serviceCode
 	 * @param defaultPrinter
 	 * @param requirements
 	 * @param law
 	 * @return the {@link IBillingSystem} just added or modified
 	 */
-	public IBillingSystem addOrModifyBillingSystem(String name, String serviceCode, String defaultPrinter,
-			String requirements, BillingLaw law);
+	public IBillingSystem addOrModifyBillingSystem(String name, String defaultPrinter, String requirements,
+			BillingLaw law);
 
 	/**
 	 * Get a matching {@link BillingLaw} instance for the provided law short name.

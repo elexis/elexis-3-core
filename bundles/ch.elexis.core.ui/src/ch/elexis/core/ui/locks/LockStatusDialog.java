@@ -107,7 +107,12 @@ public class LockStatusDialog extends TitleAreaDialog {
 		StringBuilder statusString = new StringBuilder();
 		statusString.append("Lock-Service: " + connectionStatus.name()); //$NON-NLS-1$
 		if (connectionStatus != ConnectionStatus.STANDALONE) {
-			statusString.append(" @ " + ElexisServerServiceHolder.get().getConnectionUrl()); //$NON-NLS-1$
+			if (ElexisServerServiceHolder.get().isLockAdministrativelyDisabled()) {
+				statusString.append(" deaktiviert"); //$NON-NLS-1$
+			} else {
+				statusString.append(" @ " + ElexisServerServiceHolder.get().getConnectionUrl()); //$NON-NLS-1$
+			}
+
 		}
 		lblLockStatus.setText(statusString.toString());
 

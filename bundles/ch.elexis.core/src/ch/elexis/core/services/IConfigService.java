@@ -41,7 +41,7 @@ public interface IConfigService {
 	 * @param value to set, <code>null</code> to delete the entry
 	 */
 	default void setLocal(String key, String value) {
-		LocalConfigService.set(key, value);
+		getLocalConfigService().set(key, value);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public interface IConfigService {
 	 * @param value to set
 	 */
 	default void setLocal(String key, boolean value) {
-		LocalConfigService.set(key, value);
+		getLocalConfigService().set(key, value);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public interface IConfigService {
 	 * @param value to set
 	 */
 	default void setLocal(String name, int value) {
-		LocalConfigService.set(name, value);
+		getLocalConfigService().set(name, value);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	default String getLocal(String key, String defaultValue) {
-		return LocalConfigService.get(key, defaultValue);
+		return getLocalConfigService().get(key, defaultValue);
 	}
 
 	/**
@@ -261,6 +261,8 @@ public interface IConfigService {
 	 */
 	public boolean get(String key, boolean defaultValue);
 
+	public ILocalConfigService getLocalConfigService();
+
 	/**
 	 * Convenience method wrapping {@link #getLocal(String, String)}
 	 *
@@ -269,7 +271,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	default boolean getLocal(String key, boolean defaultValue) {
-		return LocalConfigService.get(key, defaultValue);
+		return getLocalConfigService().get(key, defaultValue);
 	}
 
 	/**
@@ -280,7 +282,7 @@ public interface IConfigService {
 	 * @return
 	 */
 	default int getLocal(String key, int defaultValue) {
-		return LocalConfigService.get(key, defaultValue);
+		return getLocalConfigService().get(key, defaultValue);
 	}
 
 	/**

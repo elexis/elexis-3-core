@@ -219,12 +219,13 @@ public class InvoiceActions {
 			@Override
 			public void doRun(PersistentObject po) {
 				Rechnung actRn = (Rechnung) po;
-				List<Konsultation> actRnEncounters = invoiceEncounterMap.get(actRn);
+				IInvoice actInvoice = NoPoUtil.loadAsIdentifiable(actRn, IInvoice.class).get();
+				List<IEncounter> actRnEncounters = NoPoUtil.loadAsIdentifiable(invoiceEncounterMap.get(actRn),
+						IEncounter.class);
 				// test if cancelled and encounters open for new invoice
-				if (actRn.getInvoiceState() == InvoiceState.CANCELLED) {
-					if (actRnEncounters.stream().allMatch(e -> e.getRechnung() == null)) {
-						InvoiceServiceHolder.get()
-								.invoice(NoPoUtil.loadAsIdentifiable(actRnEncounters, IEncounter.class));
+				if (actInvoice.getState() == InvoiceState.CANCELLED) {
+					if (actRnEncounters.stream().allMatch(e -> e.getInvoice() == null)) {
+						InvoiceServiceHolder.get().invoice(actRnEncounters);
 					}
 				}
 			}

@@ -84,6 +84,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	private static Object addTarifLock = new Object();
 	private static Logger logger;
 
+	private static List<String> tardocConsCodes = List.of("AA.00.0010", "CA.00.0010");
+
 	private final IModelService coreModelService;
 	private final EncounterSelector encounterSelector;
 
@@ -102,9 +104,18 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	private IBillable getKonsVerrechenbar(IEncounter kons) {
 		if (kons.getCoverage() != null) {
 			Map<Object, Object> context = CodeElementServiceHolder.createContext(kons);
-			Optional<ICodeElement> tarmed = CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010", context);
-			if (tarmed.isPresent()) {
-				return (IBillable) tarmed.get();
+			if (kons.getDate().isAfter(LocalDate.of(2025, 12, 31))) {
+				Optional<ICodeElement> tardoc = CodeElementServiceHolder.get().loadFromString("TARDOC",
+						getTardocConsCode(kons.getMandator()), context);
+				if (tardoc.isPresent()) {
+					return (IBillable) tardoc.get();
+				}
+			} else {
+				Optional<ICodeElement> tarmed = CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010",
+						context);
+				if (tarmed.isPresent()) {
+					return (IBillable) tarmed.get();
+				}
 			}
 		}
 		return null;
@@ -273,12 +284,18 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
 		if (autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) {
 			synchronized (kons) {
+				String tardocConsCode = getTardocConsCode(kons.getMandator());
 				List<IBilled> leistungen = kons.getBilled();
 				boolean addCons = true;
 				for (IBilled verrechnet : leistungen) {
 					IBillable verrechenbar = verrechnet.getBillable();
 					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("Tarmed")
 							&& verrechenbar.getCode().equals("00.0010")) {
+						addCons = false;
+						break;
+					}
+					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("TARDOC")
+							&& tardocConsCodes.contains(verrechenbar.getCode())) {
 						addCons = false;
 						break;
 					}
@@ -302,6 +319,22 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 			throw new TaskException(TaskException.EXECUTION_ERROR, result);
 		}
 		return result;
+	}
+
+	private String getTardocConsCode(IMandator mandator) {
+		Object typeObj = mandator.getExtInfo("ch.elexis.data.tardoc.mandant.dignitaet");
+		if (typeObj instanceof String) {
+			String[] codesString = ((String) typeObj).split("::");
+			for (String codeString : codesString) {
+				String[] codeParts = codeString.split("\\|");
+				if (codeParts.length == 2) {
+					if ("1100".equals(codeParts[0]) || "3010".equals(codeParts[0])) {
+						return "CA.00.0010";
+					}
+				}
+			}
+		}
+		return "AA.00.0010";
 	}
 
 	private IBillable getLabor2009TarifByCode(String ealCode) {
