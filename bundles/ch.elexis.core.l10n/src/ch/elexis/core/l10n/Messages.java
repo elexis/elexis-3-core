@@ -5327,6 +5327,11 @@ public class Messages extends NLS {
 	public static String ReminderPrefences_Visible;
 	public static String ReminderPrefences_Hidden;
 	public static String ReminderPrefences_ColInfo;
+	public static String PreferencesServer_patientSourceLabel;
+	public static String PreferencesServer_patientSource_filePrefix;
+	public static String PreferencesServer_patientSource_folder;
+	public static String PreferencesServer_patientSource_hierarchy;
+	public static String PreferencesServer_patientSource_hybrid;
 	public static String BestellView_OrderSentWithPluginTitle;
 	public static String BestellView_OrderSentWithPluginBody;
 	public static String OrderManagement_DeleteOrder;
