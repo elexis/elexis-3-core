@@ -165,6 +165,7 @@ location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	org.jfree.chart-swt
 	org.jfree.swtgraphics2d
 	xerces.Impl
+	org.freemarker.freemarker
 	
 	// solr
 	org.apache.solr.solrj
