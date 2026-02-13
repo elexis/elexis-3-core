@@ -1157,6 +1157,18 @@ public class Messages extends NLS {
 	public static String Core_undefined;
 	public static String Core_loading;
 	public static String Corr_No;
+	public static String CovercardImporter_EnterNumberLabel;
+	public static String CovercardImporter_InvalidCodeTitle;
+	public static String CovercardImporter_InvalidCodeMessage;
+	public static String CovercardImporter_Description;
+	public static String CovercardImporter_ErrorTitle;
+	public static String CovercardImporter_ErrorMessage;
+	public static String CovercardImporter_ExclusionTitle;
+	public static String CovercardImporter_ExclusionCaseCreated;
+	public static String CovercardImporter_InfoTitle;
+	public static String CovercardImporter_CardExistsMessage;
+	public static String CovercardImporter_NewCardTitle;
+	public static String CovercardImporter_NewCardQuestion;
 	public static String CreateChart;
 	public static String Create_Lab_attachment;
 	public static String CreateLicenseJob_Creating;

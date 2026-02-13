@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.model.IArticle;
@@ -154,7 +155,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	private boolean hasFocus = false;
 	private boolean showAllYears = false;
 	private static final Logger logger = LoggerFactory.getLogger(OrderManagementView.class);
-	private static final String BARCODE_CONSUMER_KEY = "barcodeInputConsumer"; //$NON-NLS-1$
+
 
 	public static final String BarcodeScanner_COMPORT = "barcode/Symbol/port"; //$NON-NLS-1$
 	private static final GridData FILL_HORIZONTAL = new GridData(SWT.FILL, SWT.CENTER, true, false);
@@ -216,7 +217,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (isMatchingPart(partRef)) {
 				hasFocus = true;
 				String valueToSet = OrderManagementView.class.getName();
-				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, valueToSet);
+				ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, valueToSet);
 				CodeSelectorHandler.getInstance().setCodeSelectorTarget(dropTarget);
 			}
 		}
@@ -225,7 +226,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			if (isMatchingPart(partRef)) {
 				hasFocus = false;
-				ContextServiceHolder.get().getRootContext().setNamed(BARCODE_CONSUMER_KEY, null);
+				ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, null);
 				OrderManagementUtil.deactivateBarcodeScanner();
 			}
 		}
@@ -259,7 +260,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			return;
 		}
 		if (event instanceof IArticle scannedArticle && OrderManagementView.class.getName()
-				.equals(contextService.getNamed(BARCODE_CONSUMER_KEY).orElse(null))) {
+				.equals(contextService.getNamed(Barcode.BARCODE_CONSUMER_KEY).orElse(null))) {
 			if (actOrder == null) {
 
 				return;

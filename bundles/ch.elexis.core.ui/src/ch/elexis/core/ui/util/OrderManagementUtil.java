@@ -32,6 +32,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
@@ -316,7 +317,7 @@ public class OrderManagementUtil {
 				}
 			}
 			OrderManagementView.setBarcodeScannerActivated(true);
-			ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", //$NON-NLS-1$
+			ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY,
 					OrderManagementView.class.getName());
 
 		} catch (Exception e) {
@@ -347,7 +348,7 @@ public class OrderManagementUtil {
 				handlerService.executeCommand(COMMAND_ID, null);
 			}
 			OrderManagementView.setBarcodeScannerActivated(false);
-			ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", null); //$NON-NLS-1$
+			ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, null);
 
 		} catch (Exception e) {
 			logger.error("Error when deactivating the barcode scanner", e); //$NON-NLS-1$
