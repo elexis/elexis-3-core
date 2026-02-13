@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.service.ContextServiceHolder;
@@ -138,8 +139,8 @@ public class OrderImportDialog extends TitleAreaDialog {
 		setShellStyle(getShellStyle() | SWT.SHELL_TRIM);
 
 		CoreUiUtil.injectServices(this);
-		previousBarcodeInputConsumer = (String) contextService.getNamed("barcodeInputConsumer").orElse(null);
-		contextService.getRootContext().setNamed("barcodeInputConsumer", OrderImportDialog.class.getName());
+		previousBarcodeInputConsumer = (String) contextService.getNamed(Barcode.BARCODE_CONSUMER_KEY).orElse(null);
+		contextService.getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, OrderImportDialog.class.getName());
 
 		orderElements = new ArrayList<>();
 		List<IOrderEntry> items = order != null ? order.getEntries() : Collections.emptyList();
@@ -486,7 +487,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 
 	@Override
 	public boolean close() {
-		contextService.getRootContext().setNamed("barcodeInputConsumer", previousBarcodeInputConsumer);
+		contextService.getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, previousBarcodeInputConsumer);
 		CoreUiUtil.uninjectServices(this);
 		return super.close();
 	}
@@ -531,7 +532,7 @@ public class OrderImportDialog extends TitleAreaDialog {
 	public void barcodeEvent(@org.eclipse.e4.core.di.annotations.Optional @UIEventTopic(ElexisEventTopics.BASE_EVENT
 			+ "barcodeinput") Object object, IContextService contextService) {
 		if (object instanceof IArticle && StringUtils.equals(OrderImportDialog.class.getName(),
-				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
+				(String) contextService.getNamed(Barcode.BARCODE_CONSUMER_KEY).orElse(null))) {
 			IArticle article = ((IArticle) object);
 			applyScanner(article.getGtin(), 1, article);
 		}

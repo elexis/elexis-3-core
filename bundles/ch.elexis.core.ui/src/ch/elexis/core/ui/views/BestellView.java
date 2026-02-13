@@ -63,6 +63,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
@@ -405,7 +406,7 @@ public class BestellView extends ViewPart {
 			@Override
 			public void run() {
 				String valueToSet = listenToBarcodeInputAction.isChecked() ? BestellView.class.getName() : null;
-				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet);
+				ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, valueToSet);
 			}
 		};
 		removeAction = new Action(Messages.BestellView_RemoveArticle) {
@@ -701,7 +702,7 @@ public class BestellView extends ViewPart {
 	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event,
 			IContextService contextService) {
 		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
-				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
+				(String) contextService.getNamed(Barcode.BARCODE_CONSUMER_KEY).orElse(null))) {
 			addItemsToOrder(Collections.singletonList((IArticle) event));
 		}
 	}
