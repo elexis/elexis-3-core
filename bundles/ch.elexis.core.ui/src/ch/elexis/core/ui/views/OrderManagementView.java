@@ -1405,7 +1405,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 			if (isOpenOrder) {
 				this.setFocus();
-				if (!barcodeScannerActivated) {
+				if (!barcodeScannerActivated && isBarcodePortAvailable()) {
 					OrderManagementUtil.activateBarcodeScannerAndFocus();
 				}
 			} else {
