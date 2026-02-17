@@ -49,8 +49,8 @@ public abstract class AbstractOptifier<T extends IBillable> implements IBillable
 		if (!added) {
 			IContact activeUserContact = contextService.getActiveUserContact().get();
 			billed = new IBilledBuilder(coreModelService, billable, encounter, activeUserContact).build();
-			setPrice(billable, billed);
 			setAmount(billed, amount);
+			setPrice(billable, billed);
 			if (save) {
 				coreModelService.save(billed);
 			}
