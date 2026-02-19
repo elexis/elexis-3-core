@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.medication.IMedicationInteractionUi;
+import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MedicationTableComposite extends Composite {
 
@@ -38,6 +40,8 @@ public class MedicationTableComposite extends Composite {
 	private MedicationComposite medicationComposite;
 	private List<IPrescription> pendingInput;
 
+	private IMedicationInteractionUi interactionUi;
+	
 	public MedicationTableComposite(Composite parent, int style) {
 		super(parent, style);
 
@@ -87,6 +91,12 @@ public class MedicationTableComposite extends Composite {
 
 		});
 
+		MedicationTableViewerContentProvider contentProvider = new MedicationTableViewerContentProvider(viewer);
+		interactionUi = OsgiServiceUtil.getService(IMedicationInteractionUi.class).orElse(null);
+		if (interactionUi != null) {
+			MedicationViewerHelper.createInteractionColumn(viewer, layout, 10);
+			contentProvider.setInteractionUi(interactionUi);
+		}
 		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
 		MedicationViewerHelper.createArticleColumn(viewer, layout, 1);
 		MedicationViewerHelper.createDosageColumn(viewer, layout, 2);
@@ -95,7 +105,7 @@ public class MedicationTableComposite extends Composite {
 		MedicationViewerHelper.createDisposalCommentColumn(viewer, layout, 8);
 		MedicationViewerHelper.createMandantColumn(viewer, layout, 7);
 
-		viewer.setContentProvider(new MedicationTableViewerContentProvider(viewer));
+		viewer.setContentProvider(contentProvider);
 	}
 
 	public void setMedicationComposite(MedicationComposite medicationComposite) {

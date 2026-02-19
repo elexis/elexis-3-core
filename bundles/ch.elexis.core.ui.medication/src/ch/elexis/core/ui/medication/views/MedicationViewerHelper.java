@@ -27,6 +27,31 @@ import ch.elexis.core.ui.icons.Images;
 
 public class MedicationViewerHelper {
 
+	public static TableViewerColumn createInteractionColumn(TableViewer viewer, TableColumnLayout layout,
+			int columnIndex) {
+		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
+		TableColumn tblclmnStateDisposition = ret.getColumn();
+		tblclmnStateDisposition.setToolTipText("Interaktion");
+		layout.setColumnData(tblclmnStateDisposition, new ColumnPixelData(20, false, false));
+		ret.setLabelProvider(new MedicationCellLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return StringUtils.EMPTY;
+			}
+
+			@Override
+			public String getToolTipText(Object element) {
+				return ((MedicationTableViewerItem) element).getInteractionText();
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				return ((MedicationTableViewerItem) element).getInteractionImage();
+			}
+		});
+		return ret;
+	}
+
 	public static TableViewerColumn createTypeColumn(TableViewer viewer, TableColumnLayout layout, int columnIndex) {
 		TableViewerColumn ret = new TableViewerColumn(viewer, SWT.NONE);
 		TableColumn tblclmnStateDisposition = ret.getColumn();

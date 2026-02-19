@@ -23,6 +23,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.medication.IMedicationInteractionUi;
 
 /**
  * Maps an element of type {@link IPrescription} for presentation within the
@@ -54,10 +55,15 @@ public class MedicationTableViewerItem {
 	private String stopReason;
 	private Image image;
 
+	private Image interactionImage;
+	private String interactionText;
+
 	private Date endTime;
 
 	private boolean resolved = false;
 	private boolean resolving = false;
+
+	private IMedicationInteractionUi interactionUi;
 
 	private MedicationTableViewerItem(IPrescription prescription, StructuredViewer viewer) {
 		this.viewer = viewer;
@@ -218,6 +224,27 @@ public class MedicationTableViewerItem {
 		return image != null ? image : Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
 
+	public Image getInteractionImage() {
+		if (interactionImage == null) {
+			if (!resolved && !resolving) {
+				resolving = true;
+				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
+			}
+		}
+		return interactionImage != null ? interactionImage : Images.IMG_EMPTY_TRANSPARENT.getImage();
+	}
+
+	public String getInteractionText() {
+		if (interactionText == null) {
+			if (!resolved && !resolving) {
+				resolving = true;
+				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
+			}
+
+		}
+		return interactionText;
+	}
+
 	/**
 	 * Resolve the properties, blocks until resolved.
 	 */
@@ -238,6 +265,7 @@ public class MedicationTableViewerItem {
 
 		@Override
 		public void run() {
+			resolveInteractionImage();
 			resolveImage();
 			resolveArticleLabel();
 			resolveLastDisposed();
@@ -301,6 +329,13 @@ public class MedicationTableViewerItem {
 			}
 		}
 
+		private void resolveInteractionImage() {
+			if (item.interactionUi != null) {
+				item.interactionImage = item.interactionUi.getImage(item.getPrescription());
+				item.interactionText = item.interactionUi.getText(item.getPrescription());
+			}
+		}
+
 		private void resolveLastDisposed() {
 			IRecipe recipe = item.prescription.getRecipe();
 			IBilled billed = item.prescription.getBilled();
@@ -343,5 +378,9 @@ public class MedicationTableViewerItem {
 
 	public IBilled getBilled() {
 		return prescription.getBilled();
+	}
+
+	public void setInteractionUi(IMedicationInteractionUi interactionUi) {
+		this.interactionUi = interactionUi;
 	}
 }
