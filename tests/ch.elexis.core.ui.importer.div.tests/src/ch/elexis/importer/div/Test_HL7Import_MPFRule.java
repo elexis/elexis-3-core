@@ -148,6 +148,45 @@ public class Test_HL7Import_MPFRule {
 	}
 
 	@Test
+	public void test_ImportOnExistingLabItemRefValue() throws IOException {
+		removeAllPatientsAndDependants();
+		removeAllLaboWerte();
+
+		// set the use local config to false
+		ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, true);
+
+		LabItem liTsh = new LabItem("TSH", "TSH basal", AllTests.testLab, "0.50 - 4.70", "0.50 - 4.70", "mU/l",
+				LabItemTyp.NUMERIC, "Urin", "42");
+
+		parseOneHL7file(hlp, new File(workDir.toString(), "Analytica/Albumin.hl7"), false, true);
+
+		Query<LabResult> qr = new Query<LabResult>(LabResult.class);
+		List<LabResult> qrr = qr.execute();
+		assertEquals(4, qrr.size());
+		for (LabResult labResult : qrr) {
+
+			assertEquals(LabItemTyp.NUMERIC, labResult.getItem().getTyp());
+			assertEquals(labResult.getOrigin().getLabel(), AllTests.testLab.getId(), labResult.getOrigin().getId());
+
+			String itemCode = labResult.getItem().getKuerzel();
+			switch (itemCode) {
+			case "TSH":
+				assertEquals(liTsh.getId(), labResult.getItem().getId());
+				assertEquals("2.07", labResult.getResult());
+				assertEquals("mU/l", labResult.getUnit());
+				assertEquals("0.50 - 4.70", labResult.getRefFemale());
+
+				ConfigServiceHolder.setUser(Preferences.LABSETTINGS_CFG_LOCAL_REFVALUES, false);
+				assertEquals("0.55 - 4.78", labResult.getRefFemale());
+				assertEquals(0, labResult.getFlags());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	@Test
 	public void test_ImportConsiderCorrectNPathologicFlag_11231() throws IOException {
 
 		removeAllPatientsAndDependants();
