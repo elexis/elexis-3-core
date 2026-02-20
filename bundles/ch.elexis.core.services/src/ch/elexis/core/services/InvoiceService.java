@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IAccountTransaction;
+import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -83,7 +84,7 @@ public class InvoiceService implements IInvoiceService {
 			} else {
 				List<IBilled> encounterBilled = encounter.getBilled();
 				for (IBilled billed : encounterBilled) {
-					if (billed.getPrice().isZero() && isBillingCheckZero()) {
+					if (billed.getPrice().isZero() && isBillingCheckZero() && isBillingCheckZero(billed)) {
 						IPatient pat = encounter.getCoverage().getPatient();
 						String msg = "Die Konsultation vom "
 								+ encounter.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
@@ -219,6 +220,15 @@ public class InvoiceService implements IInvoiceService {
 			}
 		}
 		return result.add(SEVERITY.OK, 0, "Ok", ret, false);
+	}
+
+	private boolean isBillingCheckZero(IBilled billed) {
+		IBillable billable = billed.getBillable();
+		// skip code system allowance trigger position
+		if (billable != null && "TMA".equals(billable.getCodeSystemCode())) {
+			return false;
+		}
+		return true;
 	}
 
 	private boolean isBillingCheckZero() {
