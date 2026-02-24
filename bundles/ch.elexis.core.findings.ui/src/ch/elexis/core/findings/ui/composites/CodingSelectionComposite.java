@@ -31,9 +31,9 @@ import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
+import ch.elexis.core.findings.codes.TransientCoding;
 import ch.elexis.core.findings.ui.dialogs.CodingEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
-import ch.elexis.core.findings.util.model.TransientCoding;
 
 public class CodingSelectionComposite extends Composite implements ISelectionProvider {
 

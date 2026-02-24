@@ -11,7 +11,7 @@ import org.hl7.fhir.r4.model.Coding;
 
 import ch.elexis.core.fhir.CodeSystem;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+import ch.elexis.core.findings.codes.MedicamentCoding;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementServiceContribution;

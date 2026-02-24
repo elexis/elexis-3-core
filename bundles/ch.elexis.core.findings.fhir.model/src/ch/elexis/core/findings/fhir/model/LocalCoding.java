@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ILocalCoding;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.util.model.TransientCoding;
+import ch.elexis.core.findings.codes.TransientCoding;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.IXid;
 
