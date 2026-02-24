@@ -1,12 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
-import com.google.gson.annotations.JsonAdapter;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.gson.AbstractEntityWithIdJsonAdapter;
-import ch.elexis.core.jpa.entities.gson.RawJsonMapStringAdapter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.Column;
@@ -21,7 +15,6 @@ import jakarta.persistence.Table;
 @Entity
 @EntityListeners(EntityWithIdListener.class)
 @Table(name = "TASKDESCRIPTOR")
-@Cache(expiry = 15000)
 public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
@@ -42,7 +35,6 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 64)
 	protected String referenceId;
 
-	@JsonAdapter(AbstractEntityWithIdJsonAdapter.class)
 	@JoinColumn
 	protected User owner;
 
@@ -52,7 +44,6 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 64)
 	protected String runnableId;
 
-	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String runContext;
@@ -60,7 +51,6 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column
 	protected int triggerType = 0;
 
-	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String triggerParameters;

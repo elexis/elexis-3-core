@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -22,7 +20,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CH_ELEXIS_OMNIVORE_DATA")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "DocHandle.select.category.names", query = "SELECT DISTINCT dh.title FROM DocHandle dh WHERE dh.deleted = false AND dh.mimetype='text/category' ORDER BY dh.title")
 @NamedQuery(name = "DocHandle.select.categories", query = "SELECT dh FROM DocHandle dh WHERE dh.deleted = false AND dh.mimetype='text/category' ORDER BY dh.title")

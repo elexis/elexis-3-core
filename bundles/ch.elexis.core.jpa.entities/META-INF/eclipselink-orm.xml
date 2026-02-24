@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.4"
+	xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eclipse.org/eclipselink/xsds/persistence/orm http://www.eclipse.org/eclipselink/xsds/eclipselink_orm_2_4.xsd">
+
+	<entity class="ch.elexis.core.jpa.entities.AllergyIntolerance">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.AUF">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Behandlung">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Bestellung">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.BestellungEntry">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Brief">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.BriefVorlage">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.ClinicalImpression">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Condition">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Config">
+		<optimistic-locking type="SELECTED_COLUMNS">
+			<selected-column name="LASTUPDATE" />
+		</optimistic-locking>
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.DocHandle">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.DocumentReference">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Eigenleistung">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Encounter">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.EsrRecord">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Fall">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.FamilyMemberHistory">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.FreeTextDiagnosis">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Heap">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Heap2">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.InboxElement">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Invoice">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Kontakt">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.LabItem">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.LabMapping">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.LabOrder">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.LabResult">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.LocalCoding">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Observation">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.ObservationLink">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.OutboxElement">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.OutputLogEntity">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileChecklistData">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileChecklistForm">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileChecklistQuestion">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileChecklistTitle">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.PercentileData">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.PercentilePatient">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Prescription">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.ProcedureRequest">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Reminder">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.ReminderResponsibleLink">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Sticker">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.StickerClassLink">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.StickerObjectLink">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Stock">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.StockEntry">
+		<!-- FIXME override named-queries -->
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.TagesNachricht">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Task">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.TaskDescriptor">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Termin">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.TextTemplate">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.User">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Userconfig">
+		<optimistic-locking type="SELECTED_COLUMNS">
+			<selected-column name="LASTUPDATE" />
+		</optimistic-locking>
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.UserGroup">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Vaccination">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Verrechnet">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity class="ch.elexis.core.jpa.entities.Xid">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+</entity-mappings>

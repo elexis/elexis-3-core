@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +13,6 @@ import jakarta.persistence.Table;
 @Table(name = "ETIKETTEN_OBJECT_LINK")
 @EntityListeners(EntityWithIdListener.class)
 @IdClass(StickerObjectLinkId.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "StickerObjectLink.obj", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj")
 @NamedQuery(name = "StickerObjectLink.etikette", query = "SELECT st FROM StickerObjectLink st WHERE st.etikette = :etikette")
 @NamedQuery(name = "StickerObjectLink.obj.etikette", query = "SELECT st FROM StickerObjectLink st WHERE st.obj = :obj AND st.etikette = :etikette")

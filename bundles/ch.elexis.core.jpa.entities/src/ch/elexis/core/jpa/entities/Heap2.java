@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -17,7 +15,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "HEAP2")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class Heap2 extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 

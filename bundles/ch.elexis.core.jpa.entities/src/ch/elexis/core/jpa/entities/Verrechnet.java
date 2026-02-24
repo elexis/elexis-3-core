@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.beans.Transient;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -21,7 +19,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "LEISTUNGEN")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Verrechnet.behandlung.leistungenCode", query = "SELECT v FROM Verrechnet v WHERE v.deleted = false AND v.behandlung = :behandlung AND v.leistungenCode = :leistungenCode")
 public class Verrechnet extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {

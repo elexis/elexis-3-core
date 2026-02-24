@@ -2,12 +2,9 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDateTime;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.LabOrderStateConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
-import ch.elexis.core.jpa.entities.listener.LabOrderEntityListener;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.Column;
@@ -22,8 +19,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "laborder")
-@EntityListeners({ LabOrderEntityListener.class, EntityWithIdListener.class })
-@Cache(expiry = 15000)
+@EntityListeners({ EntityWithIdListener.class })
 @NamedQuery(name = "LabOrder.orderid", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.orderid = :orderid")
 @NamedQuery(name = "LabOrder.item.patient.state", query = "SELECT lo FROM LabOrder lo WHERE  lo.deleted = false AND lo.item = :item AND lo.patient = :patient AND lo.state = :state")
 public class LabOrder extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {

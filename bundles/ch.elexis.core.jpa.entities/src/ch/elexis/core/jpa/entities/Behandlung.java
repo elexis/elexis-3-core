@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.Mutable;
-
 import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -34,7 +31,6 @@ import jakarta.persistence.Table;
 @AoboEntity
 @Table(name = "behandlungen")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "Behandlung.fall", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall")
 @NamedQuery(name = "Behandlung.fall.aobo", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall = :fall AND (b.mandant.id IN :aoboids OR b.mandant is null)")
 @NamedQuery(name = "Behandlung.patient", query = "SELECT b FROM Behandlung b WHERE b.deleted = false AND b.fall.patientKontakt = :patient ORDER BY b.datum desc")
@@ -78,14 +74,13 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	private String time;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID"))
+	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID", referencedColumnName = "id"))
 	private List<Diagnosis> diagnoses;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "behandlung", cascade = CascadeType.REFRESH)
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 
-	@Mutable
 	@Convert(converter = VersionedResourceConverter.class)
 	private VersionedResource eintrag;
 

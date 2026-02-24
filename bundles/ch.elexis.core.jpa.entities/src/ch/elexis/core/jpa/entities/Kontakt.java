@@ -14,14 +14,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ElexisDBCompressedStringConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyCountryToEnumConverter;
 import ch.elexis.core.jpa.entities.converter.FuzzyGenderToEnumConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
-import ch.elexis.core.jpa.entities.listener.KontaktEntityListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
@@ -36,7 +33,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * The persistent class for the Elexis KONTAKT database table. Valid from DB
@@ -46,9 +42,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "KONTAKT")
-@Cache(expiry = 15000)
-@XmlRootElement(name = "contact")
-@EntityListeners({ KontaktEntityListener.class, EntityWithIdListener.class })
+@EntityListeners({ EntityWithIdListener.class })
 @NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.code = :code")
 @NamedQuery(name = "Kontakt.patient", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.patient = :patient")
 @NamedQuery(name = "Kontakt.person", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.person = :person")
