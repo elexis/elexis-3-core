@@ -1,7 +1,6 @@
-package ch.elexis.core.findings.util.fhir;
+package ch.elexis.core.findings.codes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.r4.model.Coding;
 
 public enum MedicamentCoding {
 	NAME("http://www.elexis.info/medication/name", StringUtils.EMPTY),
@@ -25,10 +24,9 @@ public enum MedicamentCoding {
 		return "urn:oid:" + oid;
 	}
 
-	public boolean isCodeSystemOf(Coding coding) {
-		if (coding != null && StringUtils.isNotBlank(coding.getSystem())) {
-			return coding.getSystem().equals(oid) || coding.getSystem().equals(url)
-					|| coding.getSystem().equals(getOid());
+	public boolean isCodeSystemOf(String system) {
+		if (system != null && StringUtils.isNotBlank(system)) {
+			return system.equals(oid) || system.equals(url) || system.equals(getOid());
 		}
 		return false;
 	}

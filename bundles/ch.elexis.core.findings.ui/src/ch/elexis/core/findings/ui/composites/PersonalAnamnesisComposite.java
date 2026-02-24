@@ -17,10 +17,10 @@ import org.eclipse.swt.widgets.Composite;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationCode;
+import ch.elexis.core.findings.codes.TransientCoding;
 import ch.elexis.core.findings.ui.model.AbstractBeanAdapter;
 import ch.elexis.core.findings.ui.model.ObservationBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.core.findings.util.model.TransientCoding;
 
 public class PersonalAnamnesisComposite extends Composite {
 

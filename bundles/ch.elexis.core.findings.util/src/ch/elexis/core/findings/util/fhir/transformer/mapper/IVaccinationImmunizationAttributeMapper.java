@@ -18,7 +18,7 @@ import org.hl7.fhir.r4.model.Immunization.ImmunizationStatus;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+import ch.elexis.core.findings.codes.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IVaccination;
