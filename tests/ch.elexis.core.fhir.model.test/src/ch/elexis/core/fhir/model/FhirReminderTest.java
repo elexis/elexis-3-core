@@ -25,10 +25,10 @@ import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.builder.IUserGroupBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class FhirReminderTest {
 
