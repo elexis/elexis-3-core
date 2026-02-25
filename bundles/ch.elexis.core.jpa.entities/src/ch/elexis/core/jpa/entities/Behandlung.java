@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.persistence.annotations.Mutable;
+
 import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
@@ -81,6 +83,7 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 
+	@Mutable
 	@Convert(converter = VersionedResourceConverter.class)
 	private VersionedResource eintrag;
 
