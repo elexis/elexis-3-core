@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2026 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ import jakarta.persistence.Table;
  * Version 3.1.0
  *
  * @author M. Descher, MEDEVIT, Austria
+ * @since 3.13 removed KontaktEntityListener
  */
 @Entity
 @Table(name = "KONTAKT")

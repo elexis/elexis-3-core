@@ -59,6 +59,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.EntityType;
@@ -660,7 +661,9 @@ public abstract class AbstractModelService implements IModelService {
 			if (byId == null) {
 				byId = new Config();
 				byId.setId(id);
-				byId.setWert(Long.toString(initialValue - 1));
+				byId.setWert(Long.toString(initialValue));
+			} else {
+				entityManager.lock(byId, LockModeType.PESSIMISTIC_WRITE);
 			}
 			Long valueOf = Long.valueOf(byId.getWert());
 			long sum = Long.sum(valueOf, 1l);

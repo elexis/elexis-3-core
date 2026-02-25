@@ -17,6 +17,9 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * @since 3.13 removed LabOrderEntityListener
+ */
 @Entity
 @Table(name = "laborder")
 @EntityListeners({ EntityWithIdListener.class })

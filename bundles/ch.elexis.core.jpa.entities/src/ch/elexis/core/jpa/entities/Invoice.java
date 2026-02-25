@@ -24,6 +24,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * @since 3.13 removed InvoiceEntityListener
+ */
 @Entity
 @AoboEntity
 @Table(name = "RECHNUNGEN")
