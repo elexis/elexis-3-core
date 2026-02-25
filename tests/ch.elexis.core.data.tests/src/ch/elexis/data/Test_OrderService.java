@@ -11,11 +11,11 @@ import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class Test_OrderService extends AbstractPersistentObjectTest {
 

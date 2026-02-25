@@ -18,8 +18,8 @@ import org.junit.Test;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 

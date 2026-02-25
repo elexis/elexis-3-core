@@ -15,11 +15,11 @@ import org.junit.Test;
 
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ITextTemplate;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MailTextTemplateTest {
 

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.Test;
 
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class IContextServiceTest extends AbstractServiceTest {
 

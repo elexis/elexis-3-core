@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({ Test_DBInitialState.class, Test_PersistentObject.class, Test_Prescription.class, Test_Patient.class,

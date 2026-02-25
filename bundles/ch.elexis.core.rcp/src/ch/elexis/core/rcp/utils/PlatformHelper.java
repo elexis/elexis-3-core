@@ -10,7 +10,7 @@
  *
  *******************************************************************************/
 
-package ch.elexis.core.utils;
+package ch.elexis.core.rcp.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import java.io.File;

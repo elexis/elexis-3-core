@@ -2,8 +2,8 @@ package ch.elexis.data;
 
 import org.junit.Ignore;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IStockService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Ignore
 public class Test_StockService extends AbstractPersistentObjectTest {

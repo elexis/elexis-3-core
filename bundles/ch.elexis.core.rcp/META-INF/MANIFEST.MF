@@ -16,9 +16,9 @@ Export-Package: ch.elexis.core.console,
  ch.elexis.core.jfr,
  ch.elexis.core.mediorder,
  ch.elexis.core.osgi,
+ ch.elexis.core.rcp.utils,
  ch.elexis.core.services,
- ch.elexis.core.status,
- ch.elexis.core.utils
+ ch.elexis.core.status
 Import-Package: com.google.gson;version="2.10.1",
  com.google.gson.annotations;version="[2.11.0,3.0.0)",
  io.curity.oauth;version="[5.0.0,6.0.0)";resolution:=optional,

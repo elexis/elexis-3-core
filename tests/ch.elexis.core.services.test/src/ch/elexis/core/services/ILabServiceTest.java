@@ -22,10 +22,10 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.ILabItemBuilder;
 import ch.elexis.core.model.builder.ILabResultBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Result;
 
 public class ILabServiceTest extends AbstractServiceTest {

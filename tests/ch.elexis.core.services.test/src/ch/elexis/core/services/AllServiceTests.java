@@ -14,10 +14,10 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.internal.RoleBasedAccessControlServiceTest;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 @RunWith(Suite.class)
 @SuiteClasses({ RoleBasedAccessControlServiceTest.class, IContextServiceTest.class, IAppointmentServiceTest.class,

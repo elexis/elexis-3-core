@@ -21,10 +21,10 @@ import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class AttachmentsUtil {
 

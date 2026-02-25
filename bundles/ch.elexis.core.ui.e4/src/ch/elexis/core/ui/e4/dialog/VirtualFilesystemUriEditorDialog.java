@@ -35,9 +35,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 

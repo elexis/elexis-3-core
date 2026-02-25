@@ -9,8 +9,8 @@ import org.osgi.service.component.annotations.Component;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.ILoginContributor;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 @Component(property = "id=login.dialog")
 public class LoginDialogLoginContributor implements ILoginContributor {

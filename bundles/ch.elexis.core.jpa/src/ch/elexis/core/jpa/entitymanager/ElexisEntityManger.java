@@ -26,9 +26,9 @@ import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 

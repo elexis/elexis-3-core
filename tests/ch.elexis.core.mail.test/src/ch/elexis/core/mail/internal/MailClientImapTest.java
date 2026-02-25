@@ -26,7 +26,7 @@ import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import jakarta.mail.BodyPart;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;

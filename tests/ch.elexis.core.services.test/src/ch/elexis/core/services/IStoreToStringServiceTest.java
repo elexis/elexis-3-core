@@ -10,7 +10,7 @@ import org.junit.Test;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class IStoreToStringServiceTest extends AbstractServiceTest {
 

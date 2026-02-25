@@ -1,7 +1,7 @@
 package ch.elexis.core.model.service.holder;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ContextServiceHolder {
 

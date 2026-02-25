@@ -22,9 +22,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFileHandle_FileFile_Test extends AbstractVirtualFileHandleTest {
 

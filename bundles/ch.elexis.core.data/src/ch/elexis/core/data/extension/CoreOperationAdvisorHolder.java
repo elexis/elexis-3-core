@@ -1,6 +1,6 @@
 package ch.elexis.core.data.extension;
 
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 /**
  * @since 3.8 replaced extension point based solution

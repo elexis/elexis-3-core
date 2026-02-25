@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.medication.IMedicationInteractionUi;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MedicationTableComposite extends Composite {
 

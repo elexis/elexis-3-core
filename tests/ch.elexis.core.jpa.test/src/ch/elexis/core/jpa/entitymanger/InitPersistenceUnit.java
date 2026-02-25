@@ -10,8 +10,8 @@ import java.util.Optional;
 import org.junit.Test;
 
 import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisEntityManager;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.persistence.EntityManager;
 
 public class InitPersistenceUnit {

@@ -33,9 +33,9 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.PasswordEncryptionService;
 
 @Component

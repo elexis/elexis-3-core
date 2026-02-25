@@ -9,11 +9,11 @@ import ch.elexis.core.fhir.rdus.IResourceSynchronizer;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.builder.IUserBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.ITraceService;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.status.StatusUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ContextSettingFilterUtil {
 

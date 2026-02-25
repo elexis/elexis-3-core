@@ -30,10 +30,10 @@ import ch.elexis.core.model.agenda.AreaType;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentServiceTest extends AbstractServiceTest {
 

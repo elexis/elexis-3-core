@@ -8,11 +8,11 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStickerService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class MediorderUtil {
 

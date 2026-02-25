@@ -18,13 +18,13 @@ import com.google.gson.JsonParser;
 import ch.elexis.core.ee.json.WellKnownRcp;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.oauth2.OAuth2Service;
 import ch.elexis.core.services.oauth2.RefreshAccessTokenTimerTask;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.time.TimeUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 // Activated via ElexisEnvironmentServiceActivator
 public class ElexisEnvironmentService implements IElexisEnvironmentService {

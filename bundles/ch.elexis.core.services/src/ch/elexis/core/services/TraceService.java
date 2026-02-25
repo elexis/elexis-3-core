@@ -11,7 +11,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 
 @Component

@@ -18,9 +18,9 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 import ch.elexis.core.types.DocumentStatus;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class BriefDocumentStoreTest extends AbstractServiceTest {
 

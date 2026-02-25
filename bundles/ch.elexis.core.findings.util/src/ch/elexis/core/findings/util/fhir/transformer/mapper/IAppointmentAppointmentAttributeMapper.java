@@ -30,10 +30,10 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentAppointmentAttributeMapper
 		implements IdentifiableDomainResourceAttributeMapper<IAppointment, Appointment> {

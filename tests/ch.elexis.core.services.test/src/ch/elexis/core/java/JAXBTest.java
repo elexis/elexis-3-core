@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.common.DBConnection.DBType;
-import ch.elexis.core.utils.DBConnectionUtil;
+import ch.elexis.core.rcp.utils.DBConnectionUtil;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;

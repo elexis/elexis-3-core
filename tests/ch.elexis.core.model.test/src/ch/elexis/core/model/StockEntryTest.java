@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.model.test.StoreToStringServiceHolder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStoreToStringContribution;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class StockEntryTest {
 	private IModelService modelService;

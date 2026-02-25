@@ -1,4 +1,4 @@
-package ch.elexis.core.utils;
+package ch.elexis.core.rcp.utils;
 
 import java.util.Collection;
 import java.util.Collections;
