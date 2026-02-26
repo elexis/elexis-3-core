@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -52,8 +53,25 @@ public class FixPatientEncounters extends ExternalMaintenance {
 			checked++;
 		}
 
+		int checkedCoverage = 0;
+		int fixedCoverage = 0;
+
+		List<ICoverage> allCoverage = patient.getCoverages();
+		pm.beginTask("Fixing coverages", allCoverage.size());
+		for (ICoverage iCoverage : allCoverage) {
+			String s = iCoverage.getDescription();
+			String noControlChar = filterNonPrintable(s);
+			if (noControlChar.toCharArray().length != s.toCharArray().length) {
+				iCoverage.setDescription(noControlChar);
+				CoreModelServiceHolder.get().save(iCoverage);
+				fixedCoverage++;
+			}
+			checkedCoverage++;
+		}
+
 		pm.done();
-		return fixed + " invalid encounters fixed of " + checked + " overall";
+		return fixed + " invalid encounters fixed of " + checked + " overall\n" + fixedCoverage
+				+ " invalid coverages of " + checkedCoverage;
 	}
 
 	private String filterNonPrintable(String input) {
