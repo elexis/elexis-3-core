@@ -11,6 +11,9 @@
  ******************************************************************************/
 package ch.elexis.core.data.propertyTester;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.UserServiceHolder;
 
 public class ACETester extends PropertyTester {
 
@@ -39,6 +43,23 @@ public class ACETester extends PropertyTester {
 						} else {
 							return AccessControlServiceHolder.get().evaluate(EvACE.of(right));
 						}
+					}
+				}
+			}
+		} else if ("ROLE".equals(property)) {
+			if (args.length > 0) {
+				if (ContextServiceHolder.get().getActiveUser().isPresent()) {
+					if (args[0] instanceof String) {
+
+						// ict-administrator, poweruser
+						Set<String> rolesCollection = new HashSet<>();
+						for (Object arg : args) {
+							if (arg instanceof String) {
+								rolesCollection.add((String) arg);
+							}
+						}
+						return UserServiceHolder.get().hasRole(ContextServiceHolder.get().getActiveUser().get(),
+								rolesCollection);
 					}
 				}
 			}
