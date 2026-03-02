@@ -124,13 +124,15 @@ public class ManagedInsuranceWizardPage4 extends WizardPage {
 							monitor.beginTask("Organisationen und Versicherungen Änderungen werden übernommen.",
 									currentManagedInsuranceModel.getMapping().size());
 							currentManagedInsuranceModel.getMapping().forEach((o, i) -> {
-								IOrganization organization = CoreModelServiceHolder.get().load(o, IOrganization.class)
-										.get();
-								IOrganization insurance = CoreModelServiceHolder.get().load(i, IOrganization.class)
-										.get();
-								ChangeOrganizationToInsurance change = new ChangeOrganizationToInsurance(organization,
-										insurance);
-								change.run();
+								if (currentManagedInsuranceModel.getConfirmed().contains(o)) {
+									IOrganization organization = CoreModelServiceHolder.get()
+											.load(o, IOrganization.class).get();
+									IOrganization insurance = CoreModelServiceHolder.get().load(i, IOrganization.class)
+											.get();
+									ChangeOrganizationToInsurance change = new ChangeOrganizationToInsurance(
+											organization, insurance);
+									change.run();
+								}
 							});
 						}
 					});
