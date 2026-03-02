@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -34,26 +32,24 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IDocumentStore.Capability;
 import ch.elexis.core.utils.FileUtil;
+import io.quarkus.arc.All;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component(service = DocumentStore.class)
 public class DocumentStore {
 
 	private static final String DEFAULT_STORE_ID = "ch.elexis.data.store.omnivore";
 	public static final String ID_WITH_STOREID_SPLIT = ":-:-:";
 
-	final ConcurrentMap<String, IDocumentStore> services = new ConcurrentHashMap<>();
-
+	@Inject
+	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	void addDocumentStore(IDocumentStore store) {
-		services.put(store.getId(), store);
-	}
-
-	void removeDocumentStore(IDocumentStore store) {
-		services.remove(store.getId());
-	}
+	private List<IDocumentStore> services;
 
 	public IDocumentStore getServiceById(String serviceId) {
-		return services.get(serviceId);
+		return services.stream().filter(s -> serviceId.equals(s.getId())).findFirst().orElse(null);
 	}
 
 	/**
@@ -67,7 +63,7 @@ public class DocumentStore {
 	 */
 	public List<IDocument> getDocuments(String patientId, String authorId, ICategory category, List<ITag> tag) {
 		List<IDocument> documents = new ArrayList<>();
-		services.values()
+		services.stream()
 				.forEach(service -> documents.addAll(service.getDocuments(patientId, authorId, category, tag)));
 		return documents;
 	}
@@ -341,7 +337,7 @@ public class DocumentStore {
 	}
 
 	private IDocumentStore getService(String storeId) {
-		IDocumentStore iDocumentStore = services.get(storeId);
+		IDocumentStore iDocumentStore = getServiceById(storeId);
 		if (iDocumentStore != null) {
 			return iDocumentStore;
 		}

@@ -10,7 +10,6 @@
 		<version>3.13.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core</artifactId>
-	<version>3.13.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<name>[bundle] Elexis 3 Core</name>
 	<organization>
