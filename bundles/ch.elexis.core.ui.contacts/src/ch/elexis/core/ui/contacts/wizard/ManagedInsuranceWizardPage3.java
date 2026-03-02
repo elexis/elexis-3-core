@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -80,12 +79,11 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 		column.getColumn().setWidth(450);
 		column.getColumn().setText("Organisation");
 		column.setLabelProvider(new ColumnLabelProvider() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
-				if (element instanceof Entry) {
+				if (element instanceof String) {
 					IOrganization organization = CoreModelServiceHolder.get()
-							.load(((Entry<String, String>) element).getKey(), IOrganization.class).get();
+							.load((String) element, IOrganization.class).get();
 					return organization.getLabel();
 				}
 				return "?";
@@ -97,13 +95,15 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 		column.getColumn().setWidth(450);
 		column.getColumn().setText("Versicherung");
 		column.setLabelProvider(new ColumnLabelProvider() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public String getText(Object element) {
-				if (element instanceof Entry) {
-					IOrganization organization = CoreModelServiceHolder.get()
-							.load(((Entry<String, String>) element).getValue(), IOrganization.class).get();
-					return organization.getLabel();
+				if (element instanceof String) {
+					String mappedId = currentManagedInsuranceModel.getMapping().get(element);
+					Optional<IOrganization> organization = CoreModelServiceHolder.get().load(mappedId,
+							IOrganization.class);
+					if (organization.isPresent()) {
+						return organization.get().getLabel();
+					}
 				}
 				return "?";
 			}
@@ -116,7 +116,7 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public Image getImage(Object element) {
-				if (element instanceof Entry) {
+				if (element instanceof String) {
 					return Images.IMG_DELETE.getImage();
 				}
 				return super.getImage(element);
@@ -130,19 +130,6 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 
 		comparator = new AssignedViewerComparator();
 		assignedOrganizationsTable.setComparator(comparator);
-		
-		assignedOrganizationsTable.addFilter(new ViewerFilter() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (element instanceof Entry) {
-					return currentManagedInsuranceModel.getConfirmed()
-							.contains(((Entry<String, String>) element).getKey());
-				}
-				return false;
-			}
-		});
 
 		// connect double click on column to actions
 		Table table = assignedOrganizationsTable.getTable();
@@ -172,8 +159,7 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 			private void unconfirmSelection() {
 				IStructuredSelection selection = assignedOrganizationsTable.getStructuredSelection();
 				if (!selection.isEmpty()) {
-					@SuppressWarnings("unchecked")
-					String id = ((Entry<String, String>) selection.getFirstElement()).getKey();
+					String id = (String) selection.getFirstElement();
 					if (currentManagedInsuranceModel.getConfirmed().contains(id)) {
 						currentManagedInsuranceModel.getConfirmed().remove(id);
 						currentManagedInsuranceModel.save();
@@ -202,8 +188,7 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 	}
 
 	private void refreshTable() {
-		List<Entry<String, String>> entryList = new ArrayList<>(currentManagedInsuranceModel.getMapping().entrySet());
-		assignedOrganizationsTable.setInput(entryList);
+		assignedOrganizationsTable.setInput(currentManagedInsuranceModel.getConfirmed());
 	}
 
 	public boolean finish() {
@@ -224,7 +209,7 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 		return selectionAdapter;
 	}
 
-	private class AssignedViewerComparator extends ViewerComparator implements Comparator<Entry<String, String>> {
+	private class AssignedViewerComparator extends ViewerComparator implements Comparator<String> {
 		private int propertyIndex;
 		private static final int DESCENDING = 1;
 		private int direction = DESCENDING;
@@ -249,28 +234,25 @@ public class ManagedInsuranceWizardPage3 extends WizardPage {
 			}
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			Entry<String, String> left = (Entry<String, String>) e1;
-			Entry<String, String> right = (Entry<String, String>) e2;
-			return compare(left, right);
+			return compare((String) e1, (String) e2);
 		}
 
 		@Override
-		public int compare(Entry<String, String> left, Entry<String, String> right) {
+		public int compare(String left, String right) {
 			int rc = 0;
-			IOrganization lOrganization = null;
-			IOrganization rOrganization = null;
+			IOrganization lOrganization = CoreModelServiceHolder.get().load(left, IOrganization.class).get();
+			IOrganization rOrganization = CoreModelServiceHolder.get().load(right, IOrganization.class).get();
 			switch (propertyIndex) {
 			case 0:
-				lOrganization = CoreModelServiceHolder.get().load(left.getKey(), IOrganization.class).get();
-				rOrganization = CoreModelServiceHolder.get().load(right.getKey(), IOrganization.class).get();
 				rc = rOrganization.getLabel().compareTo(lOrganization.getLabel());
 				break;
 			case 1:
-				lOrganization = CoreModelServiceHolder.get().load(left.getValue(), IOrganization.class).get();
-				rOrganization = CoreModelServiceHolder.get().load(right.getValue(), IOrganization.class).get();
+				String mappedId = currentManagedInsuranceModel.getMapping().get(left);
+				lOrganization = CoreModelServiceHolder.get().load(mappedId, IOrganization.class).get();
+				mappedId = currentManagedInsuranceModel.getMapping().get(right);
+				rOrganization = CoreModelServiceHolder.get().load(mappedId, IOrganization.class).get();
 				rc = rOrganization.getLabel().compareTo(lOrganization.getLabel());
 				break;
 

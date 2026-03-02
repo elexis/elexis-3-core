@@ -42,6 +42,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
@@ -65,6 +66,8 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 	private List<IOrganization> notAssignedOrganizations;
 
 	private List<String> managedInsuranceIds;
+
+	private Button showIgnoredBtn;
 
 	protected ManagedInsuranceWizardPage2(String pageName, List<IOrganization> notAssignedOrganizations,
 			ManagedInsuranceModel currentManagedInsuranceModel) {
@@ -201,7 +204,8 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 			@Override
 			protected void setValue(Object element, Object value) {
 				if (value != null) {
-					currentManagedInsuranceModel.getMapping().put(((IOrganization) element).getId(), (String) value);
+					String id = ((IOrganization) element).getId();
+					currentManagedInsuranceModel.getMapping().put(id, (String) value);
 					notAssignedOrganizationsTable.refresh(element, true);
 					currentManagedInsuranceModel.save();
 				}
@@ -264,12 +268,22 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 					String mappedId = currentManagedInsuranceModel.getMapping().get(id);
 					if (StringUtils.isNotBlank(mappedId)) {
 						if (!currentManagedInsuranceModel.getConfirmed().contains(id)) {
+							currentManagedInsuranceModel.getIgnored().remove(id);
 							currentManagedInsuranceModel.getConfirmed().add(id);
 							currentManagedInsuranceModel.save();
 							notAssignedOrganizationsTable.refresh(true);
 						}
 					}
 				}
+			}
+		});
+
+		showIgnoredBtn = new Button(composite, SWT.CHECK);
+		showIgnoredBtn.setText("Ignorierte anzeigen");
+		showIgnoredBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				notAssignedOrganizationsTable.refresh(true);
 			}
 		});
 
@@ -283,11 +297,16 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 		initTable();
 
 		notAssignedOrganizationsTable.addFilter(new ViewerFilter() {
-
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof IOrganization) {
-					return !currentManagedInsuranceModel.getConfirmed().contains(((IOrganization) element).getId());
+					String id = ((IOrganization) element).getId();
+					if (!currentManagedInsuranceModel.getConfirmed().contains(id)) {
+						if (!showIgnoredBtn.getSelection()) {
+							return !currentManagedInsuranceModel.getIgnored().contains(id);
+						}
+						return true;
+					}
 				}
 				return false;
 			}
@@ -370,8 +389,8 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 			} else {
 				currentManagedInsuranceModel.getIgnored().remove(((IOrganization) o).getId());
 			}
-			tableViewer.refresh(o);
 			currentManagedInsuranceModel.save();
+			tableViewer.refresh(true);
 		}
 	}
 

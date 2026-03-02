@@ -51,9 +51,9 @@ public class OpenManagedInsuranceWizard extends AbstractHandler {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			MessageDialog.openError(activeshell, "BlueMedication",
-					"BlueMedication Check konnte nicht gestartet werden.");
-			LoggerFactory.getLogger(getClass()).error("Error on check", e);
+			MessageDialog.openError(activeshell, "Organisationen und Versicherungen",
+					"Organisationen und Versicherungen konnte nicht gestartet werden.");
+			LoggerFactory.getLogger(getClass()).error("Error open managed insurance wizard", e);
 		}
 		return wizard;
 	}

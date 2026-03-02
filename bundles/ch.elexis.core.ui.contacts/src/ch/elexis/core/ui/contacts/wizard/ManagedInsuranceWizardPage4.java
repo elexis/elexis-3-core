@@ -10,19 +10,28 @@
  *******************************************************************************/
 package ch.elexis.core.ui.contacts.wizard;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class ManagedInsuranceWizardPage4 extends WizardPage {
 
@@ -77,7 +86,7 @@ public class ManagedInsuranceWizardPage4 extends WizardPage {
 		amountLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Zuweisungen:");
+		label.setText("Bestätigt:");
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		mappedLabel = new Label(composite, SWT.NONE);
@@ -103,6 +112,35 @@ public class ManagedInsuranceWizardPage4 extends WizardPage {
 		applyBtn = new Button(composite, SWT.PUSH);
 		applyBtn.setText("Änderungen übernhemen");
 		applyBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		applyBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
+				try {
+					progressDialog.run(true, false, new IRunnableWithProgress() {
+						@Override
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
+							monitor.beginTask("Organisationen und Versicherungen Änderungen werden übernommen.",
+									currentManagedInsuranceModel.getMapping().size());
+							currentManagedInsuranceModel.getMapping().forEach((o, i) -> {
+								IOrganization organization = CoreModelServiceHolder.get().load(o, IOrganization.class)
+										.get();
+								IOrganization insurance = CoreModelServiceHolder.get().load(i, IOrganization.class)
+										.get();
+								ChangeOrganizationToInsurance change = new ChangeOrganizationToInsurance(organization,
+										insurance);
+								change.run();
+							});
+						}
+					});
+				} catch (InvocationTargetException | InterruptedException ex) {
+					MessageDialog.openError(getShell(), "Organisationen und Versicherungen",
+							"Organisationen und Versicherungen Änderungen konnten nicht übernommen werden.");
+					LoggerFactory.getLogger(getClass()).error("Error apply changes", ex);
+				}
+			}
+		});
 
 		setControl(composite);
 
@@ -118,12 +156,12 @@ public class ManagedInsuranceWizardPage4 extends WizardPage {
 	private void refresh() {
 		amountLabel.setText(Integer.toString(notAssignedOrganizations.size()));
 
-		mappedLabel.setText(Integer.toString(currentManagedInsuranceModel.getMapping().size()));
+		mappedLabel.setText(Integer.toString(currentManagedInsuranceModel.getConfirmed().size()));
 
 		ignoredLabel.setText(Integer.toString(currentManagedInsuranceModel.getIgnored().size()));
 
 		todoLabel.setText(
-				Integer.toString(notAssignedOrganizations.size() - (currentManagedInsuranceModel.getMapping().size()
+				Integer.toString(notAssignedOrganizations.size() - (currentManagedInsuranceModel.getConfirmed().size()
 						+ currentManagedInsuranceModel.getIgnored().size())));
 
 		if (isPageComplete()) {
