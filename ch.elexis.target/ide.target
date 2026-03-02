@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Elexis 2025-03-java21" sequenceNumber="1770899072">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Elexis 2025-03-java21" sequenceNumber="1772442786">
   <locations>
-    <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+    <location includeMode="slicer" includeAllPlatforms="true" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="21.0.4.v20240802-1551"/>
       <unit id="org.eclipse.platform.feature.group" version="4.35.0.v20250228-0640"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.2800.v20250227-1734"/>
@@ -165,21 +166,21 @@
       <unit id="com.googlecode.libphonenumber" version="8.13.42"/>
       <repository location="https://download.elexis.info/elexis/target/2025-03-java21/"/>
     </location>
-	  <location includeDependencyDepth="none" includeDependencyScopes="compile,test" includeSource="true" label="MavenDependencies" missingManifest="generate" type="Maven">
-		  <dependencies>
-			  <dependency>
-				  <groupId>io.quarkus.arc</groupId>
-				  <artifactId>arc</artifactId>
-				  <version>3.32.0</version>
-				  <type>jar</type>
-			  </dependency>
-			  <dependency>
-				  <groupId>org.eclipse.jdt</groupId>
-				  <artifactId>org.eclipse.jdt.annotation</artifactId>
-				  <version>2.0.0</version>
-				  <type>jar</type>
-			  </dependency>
-		  </dependencies>
-	  </location>
+    <location includeDependencyDepth="infinite" includeDependencyScopes="compile,test" includeSource="true" missingManifest="generate" type="Maven" label="MavenDependencies">
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse.jdt</groupId>
+          <artifactId>org.eclipse.jdt.annotation</artifactId>
+          <version>2.0.0</version>
+          <type>jar</type>
+        </dependency>
+        <dependency>
+          <groupId>io.quarkus.arc</groupId>
+          <artifactId>arc</artifactId>
+          <version>3.32.0</version>
+          <type>jar</type>
+        </dependency>
+      </dependencies>
+    </location>
   </locations>
 </target>
