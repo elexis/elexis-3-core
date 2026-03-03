@@ -2153,6 +2153,8 @@ public class Messages extends NLS {
 	public static String HeaderSumTotal;
 	public static String HeaderSumVat;
 	public static String HeaderTarmedPart;
+	public static String HeaderTardocPart;
+	public static String HeaderAmbulatoryAllowancePart;
 	public static String HeaderTaxPointValue;
 	public static String HeaderText;
 	public static String HeaderTotal;
@@ -4630,6 +4632,11 @@ public class Messages extends NLS {
 	public static String TarmedZeitMpa;
 	public static String TarmedZeitTotal;
 	public static String TarmedZeit_Name;
+	public static String TardocZeitAbsent;
+	public static String TardocZeitMandator;
+	public static String TardocZeitMpa;
+	public static String TardocZeitTotal;
+	public static String TardocZeit_Name;
 	public static String TemplateComposite_OutputHeader;
 	public static String TemplateComposite_is_template;
 	public static String TemplateComposite_template_settings;
