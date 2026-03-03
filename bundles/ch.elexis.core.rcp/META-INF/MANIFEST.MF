@@ -58,4 +58,5 @@ Service-Component: OSGI-INF/ch.elexis.core.console.internal.ConsoleCommandPovide
  OSGI-INF/ch.elexis.core.console.internal.Prompt.xml,
  OSGI-INF/ch.elexis.core.jfr.JavaFlightRecorderService.xml,
  OSGI-INF/ch.elexis.core.osgi.ConsoleCommandPovider.xml,
+ OSGI-INF/ch.elexis.core.rcp.cdi.ServiceLoaderImpl.xml,
  OSGI-INF/ch.elexis.core.services.LocalConfigServiceImpl.xml

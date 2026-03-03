@@ -184,4 +184,8 @@
          id="ch.elexis.core.rcp"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.cdi"
+         version="0.0.0"/>
+
 </feature>

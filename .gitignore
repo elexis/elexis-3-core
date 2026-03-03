@@ -6,6 +6,7 @@
 *.ear
 .polyglot.*
 .DS_Store
+.m2
 rebel.xml
 bin/
 target/
