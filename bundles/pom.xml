@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>ch.elexis.core</module>
+		<module>ch.elexis.core.cdi</module>
 		<module>ch.elexis.core.rcp</module>
 		<module>ch.elexis.core.test</module>
 		<module>ch.elexis.core.test.context</module>
