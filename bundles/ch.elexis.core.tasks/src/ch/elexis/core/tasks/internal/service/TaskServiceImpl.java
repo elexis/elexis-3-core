@@ -391,18 +391,23 @@ public class TaskServiceImpl implements ITaskService {
 			TaskTriggerType triggerType, Map<String, Serializable> result) {
 		accessControl.doPrivileged(() -> {
 
-			ITaskDescriptor taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorId).orElse(null);
-			if (taskDescriptor == null) {
-				logger.warn("Invalid taskDescriptorId " + taskDescriptorId
-						+ " passed to updateCreateSingleLatestTaskResult()");
-				return;
+			try {
+				ITaskDescriptor taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorId).orElse(null);
+				if (taskDescriptor == null) {
+					logger.warn("Invalid taskDescriptorId " + taskDescriptorId
+							+ " passed to updateCreateSingleLatestTaskResult()");
+					return;
+				}
+
+				ITask existingLatest = taskModelService.load(taskDescriptorId, ITask.class).orElse(null);
+				if (existingLatest == null && taskDescriptor != null) {
+					existingLatest = new Task(taskDescriptor, taskState, triggerType, result);
+				}
+				taskModelService.save(existingLatest);
+			} catch (Exception e) {
+				logger.warn("[{}] Error updateCreateSingleLatestTaskResult ", taskDescriptorId, e);
 			}
 
-			ITask existingLatest = taskModelService.load(taskDescriptorId, ITask.class).orElse(null);
-			if (existingLatest == null && taskDescriptor != null) {
-				existingLatest = new Task(taskDescriptor, taskState, triggerType, result);
-			}
-			taskModelService.save(existingLatest);
 		});
 	}
 
