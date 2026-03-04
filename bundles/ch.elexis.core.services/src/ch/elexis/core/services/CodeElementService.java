@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 
 @Component
 public class CodeElementService implements ICodeElementService {
@@ -76,5 +79,35 @@ public class CodeElementService implements ICodeElementService {
 	@Override
 	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ, String codeSystemName) {
 		return Optional.ofNullable(contributions.get(codeSystemName.toLowerCase()));
+	}
+
+	@Override
+	public Map<Object, Object> createContext() {
+		HashMap<Object, Object> ret = new HashMap<>();
+		Optional<IEncounter> consultation = ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
+		if (consultation.isPresent()) {
+			ret.put(ContextKeys.CONSULTATION, consultation.get());
+			ret.put(ContextKeys.COVERAGE, consultation.get().getCoverage());
+		}
+		if (ret.get(ContextKeys.COVERAGE) == null) {
+			Optional<ICoverage> coverage = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
+			if (coverage.isPresent()) {
+				ret.put(ContextKeys.COVERAGE, coverage.get());
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public Map<Object, Object> createContext(IEncounter encounter) {
+		HashMap<Object, Object> ret = new HashMap<>();
+		if (encounter != null) {
+			ret.put(ContextKeys.CONSULTATION, encounter);
+			ICoverage coverage = encounter.getCoverage();
+			if (coverage != null) {
+				ret.put(ContextKeys.COVERAGE, coverage);
+			}
+		}
+		return ret;
 	}
 }

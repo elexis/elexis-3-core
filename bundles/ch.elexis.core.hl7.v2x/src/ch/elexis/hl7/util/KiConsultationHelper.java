@@ -7,9 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.text.model.Samdas;
 
 public class KiConsultationHelper {
@@ -27,7 +27,7 @@ public class KiConsultationHelper {
 				return false;
 			}
 
-			var encounterOpt = CoreModelServiceHolder.get().load(orderNumber.trim(), IEncounter.class);
+			var encounterOpt = PortableServiceLoader.getCoreModelService().load(orderNumber.trim(), IEncounter.class);
 			if (encounterOpt.isEmpty()) {
 				logger.warn("KI Consultation: Konsultation mit ID {} nicht gefunden", orderNumber);
 				return false;
@@ -44,7 +44,8 @@ public class KiConsultationHelper {
 					+ text.trim();
 			record.setText(oldText + newBlock);
 
-			EncounterServiceHolder.get().updateVersionedEntry(kons, samdas.toString(), "HL7 KI Import");
+			PortableServiceLoader.get(IEncounterService.class).updateVersionedEntry(kons, samdas.toString(),
+					"HL7 KI Import");
 
 			logger.info("KI Consultation in Kons-ID {} importiert ({} Zeichen)", orderNumber, text.length());
 			return true;

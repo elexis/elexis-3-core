@@ -2,10 +2,8 @@ package ch.elexis.core.services.holder;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
@@ -13,12 +11,10 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.Statistics;
 import ch.elexis.core.services.ICodeElementService;
-import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.IStoreToStringContribution;
 
 @Component
@@ -41,19 +37,7 @@ public class CodeElementServiceHolder {
 	 * @return
 	 */
 	public static Map<Object, Object> createContext() {
-		HashMap<Object, Object> ret = new HashMap<>();
-		Optional<IEncounter> consultation = ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
-		if (consultation.isPresent()) {
-			ret.put(ContextKeys.CONSULTATION, consultation.get());
-			ret.put(ContextKeys.COVERAGE, consultation.get().getCoverage());
-		}
-		if (ret.get(ContextKeys.COVERAGE) == null) {
-			Optional<ICoverage> coverage = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
-			if (coverage.isPresent()) {
-				ret.put(ContextKeys.COVERAGE, coverage.get());
-			}
-		}
-		return ret;
+		return codeElementService.createContext();
 	}
 
 	/**
@@ -63,15 +47,7 @@ public class CodeElementServiceHolder {
 	 * @return
 	 */
 	public static Map<Object, Object> createContext(IEncounter encounter) {
-		HashMap<Object, Object> ret = new HashMap<>();
-		if (encounter != null) {
-			ret.put(ContextKeys.CONSULTATION, encounter);
-			ICoverage coverage = encounter.getCoverage();
-			if (coverage != null) {
-				ret.put(ContextKeys.COVERAGE, coverage);
-			}
-		}
-		return ret;
+		return codeElementService.createContext(encounter);
 	}
 
 	/**
