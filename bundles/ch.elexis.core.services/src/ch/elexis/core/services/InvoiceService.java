@@ -228,7 +228,17 @@ public class InvoiceService implements IInvoiceService {
 		if (billable != null && "TMA".equals(billable.getCodeSystemCode())) {
 			return false;
 		}
+		// skip article if allowance is present
+		if (billable != null && isAllowanceEncounter(billed.getEncounter())
+				&& "402".equals(billable.getCodeSystemCode())) {
+			return false;
+		}
 		return true;
+	}
+
+	private boolean isAllowanceEncounter(IEncounter encounter) {
+		return encounter.getBilled().stream().filter(b -> "005".equals(b.getBillable().getCodeSystemCode())).findAny()
+				.isPresent();
 	}
 
 	private boolean isBillingCheckZero() {
