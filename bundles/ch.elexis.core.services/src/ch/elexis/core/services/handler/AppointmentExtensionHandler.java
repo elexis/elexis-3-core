@@ -179,6 +179,12 @@ public class AppointmentExtensionHandler {
 		if (extension == null || extension.isBlank()) {
 			return "";
 		}
-		return extension.split("\\|\\|", 2)[0];
+		String[] parts = extension.split("\\|\\|");
+		for (String part : parts) {
+			if (part.startsWith(MAIN_PREFIX) || part.startsWith(KOMBI_PREFIX)) {
+				return part;
+			}
+		}
+		return "";
 	}
 }
