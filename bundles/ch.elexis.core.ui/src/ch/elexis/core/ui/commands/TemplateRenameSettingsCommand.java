@@ -14,9 +14,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IDocumentTemplate;
+import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.views.textsystem.model.TextTemplate;
@@ -63,6 +66,7 @@ public class TemplateRenameSettingsCommand extends AbstractHandler {
 
 	private List<String> getExistingNames() {
 		IQuery<IDocumentTemplate> query = CoreModelServiceHolder.get().getQuery(IDocumentTemplate.class);
+		query.and(ModelPackage.Literals.IDOCUMENT__CATEGORY, COMPARATOR.EQUALS, BriefConstants.TEMPLATE);
 		List<IDocumentTemplate> existingTemplates = query.execute();
 		List<String> existingNames = new ArrayList<>();
 		for (IDocumentTemplate template : existingTemplates) {
