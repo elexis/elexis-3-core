@@ -13,10 +13,8 @@ package ch.elexis.core.ui.contacts.wizard;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -24,7 +22,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -33,6 +30,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -44,14 +42,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.views.controls.GenericSearchSelectionDialog;
 
 public class ManagedInsuranceWizardPage2 extends WizardPage {
 
@@ -70,7 +72,7 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 	private Button showIgnoredBtn;
 
 	protected ManagedInsuranceWizardPage2(String pageName, List<IOrganization> notAssignedOrganizations,
-			ManagedInsuranceModel currentManagedInsuranceModel) {
+			Map<String, Long> countCoveragesMap, ManagedInsuranceModel currentManagedInsuranceModel) {
 		super(pageName);
 		setTitle(pageName);
 		setMessage(
@@ -80,6 +82,7 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 		this.currentManagedInsuranceModel = currentManagedInsuranceModel;
 
 		this.notAssignedOrganizations = notAssignedOrganizations;
+		this.countCoveragesMap = countCoveragesMap;
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		notAssignedOrganizationsTable = new TableViewer(composite, SWT.BORDER);
+		notAssignedOrganizationsTable = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		notAssignedOrganizationsTable.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		notAssignedOrganizationsTable.getTable().setHeaderVisible(true);
@@ -160,35 +163,43 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 				if (element instanceof IOrganization) {
 					String mappedId = currentManagedInsuranceModel.getMapping().get(((IOrganization) element).getId());
 					if (StringUtils.isNoneBlank(mappedId)) {
-						return CoreModelServiceHolder.get().load(mappedId, IOrganization.class).get().getLabel();
+						IOrganization insurance = CoreModelServiceHolder.get().load(mappedId, IOrganization.class)
+								.get();
+						return getInsuranceLabel(insurance);
 					}
 				}
-				return "";
+				return "Hier klicken um die Versicherung zu zuweisen.";
 			}
 		});
 		column.setEditingSupport(new EditingSupport(notAssignedOrganizationsTable) {
 
-			private ComboBoxViewerCellEditor comboCellEditor;
-
 			@Override
 			protected CellEditor getCellEditor(Object element) {
-				if (comboCellEditor == null) {
-					comboCellEditor = new ComboBoxViewerCellEditor(notAssignedOrganizationsTable.getTable(),
-							SWT.READ_ONLY);
-					comboCellEditor.setLabelProvider(new LabelProvider() {
-						@Override
-						public String getText(Object element) {
-							if (element instanceof String) {
-								return CoreModelServiceHolder.get().load((String) element, IOrganization.class).get()
-										.getLabel();
-							}
-							return super.getText(element);
+				return new ContactSelectionDialogCellEditor(notAssignedOrganizationsTable.getTable(),
+						StringUtils.EMPTY, StringUtils.EMPTY) {
+					@Override
+					protected Object openDialogBox(Control cellEditorWindow) {
+						List<IContact> insurances = new ArrayList<>(managedInsuranceIds.stream()
+								.map(id -> CoreModelServiceHolder.get().load(id, IOrganization.class).get()).toList());
+						GenericSearchSelectionDialog dialog = new GenericSearchSelectionDialog(
+								cellEditorWindow.getShell(), insurances, "Versicherungen",
+								"Die passende Versicherung auswählen.", StringUtils.EMPTY, null,
+								SWT.SINGLE);
+						dialog.setCustomLabelProvider(new LabelProvider() {
+							@Override
+							public String getText(Object element) {
+								return getInsuranceLabel((IOrganization) element);
+							};
+						});
+
+						if (dialog.open() == Window.OK) {
+							return (IOrganization) dialog.getSelection().getFirstElement() != null
+									? ((IOrganization) dialog.getSelection().getFirstElement()).getId()
+									: null;
 						}
-					});
-					comboCellEditor.setContentProvider(new ArrayContentProvider());
-					comboCellEditor.setInput(managedInsuranceIds);
-				}
-				return comboCellEditor;
+						return null;
+					}
+				};
 			}
 
 			@Override
@@ -206,8 +217,8 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 				if (value != null) {
 					String id = ((IOrganization) element).getId();
 					currentManagedInsuranceModel.getMapping().put(id, (String) value);
-					notAssignedOrganizationsTable.refresh(element, true);
 					currentManagedInsuranceModel.save();
+					notAssignedOrganizationsTable.refresh(element);
 				}
 			}
 			
@@ -313,6 +324,19 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 		});
 	}
 
+	private String getInsuranceLabel(IOrganization insurance) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(insurance.getDescription1()).append(StringUtils.SPACE)
+				.append(StringUtils.defaultString(insurance.getDescription2()));
+		if (!StringUtils.isBlank(insurance.getInsuranceLawCode())) {
+			sb.append(" (").append(insurance.getInsuranceLawCode()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		sb.append(", ").append(StringUtils.defaultString(insurance.getStreet())).append(", ") //$NON-NLS-1$
+				.append(StringUtils.defaultString(insurance.getZip())).append(StringUtils.SPACE)
+				.append(StringUtils.defaultString(insurance.getCity()));
+		return sb.toString();
+	}
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
@@ -322,14 +346,7 @@ public class ManagedInsuranceWizardPage2 extends WizardPage {
 	}
 
 	private void initTable() {
-		countCoveragesMap = new HashMap<>();
-		CompletableFuture.runAsync(() -> {
-			Display.getDefault().asyncExec(() -> notAssignedOrganizationsTable.setInput(notAssignedOrganizations));
-			notAssignedOrganizations.forEach(o -> {
-				countCoveragesMap.put(o.getId(), new CountCoverageSupplier(o).get());
-			});
-			Display.getDefault().asyncExec(() -> notAssignedOrganizationsTable.refresh(true));
-		});
+		Display.getDefault().asyncExec(() -> notAssignedOrganizationsTable.setInput(notAssignedOrganizations));
 	}
 
 	public boolean finish() {

@@ -16,11 +16,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,13 @@ public class OpenManagedInsuranceWizard extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShellChecked(event),
-				getManagedInsuranceWizard(HandlerUtil.getActiveShell(event)));
+				getManagedInsuranceWizard(HandlerUtil.getActiveShell(event))) {
+			@Override
+			protected void createButtonsForButtonBar(Composite parent) {
+				super.createButtonsForButtonBar(parent);
+				getButton(IDialogConstants.CANCEL_ID).setText("Beenden");
+			}
+		};
 		dialog.open();
 		return null;
 	}
@@ -46,7 +54,9 @@ public class OpenManagedInsuranceWizard extends AbstractHandler {
 			progressDialog.run(true, false, new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Organisationen und Versicherungen werden geladen", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(
+							"Organisationen und Versicherungen werden geladen.",
+							IProgressMonitor.UNKNOWN);
 					wizard = new ManagedInsuranceWizard();
 				}
 			});

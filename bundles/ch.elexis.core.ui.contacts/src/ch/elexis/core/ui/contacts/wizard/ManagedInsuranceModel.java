@@ -20,6 +20,8 @@ public class ManagedInsuranceModel {
 
 	private List<String> confirmed;
 
+	private List<String> applied;
+
 	private Map<String, String> mapping;
 
 	public static ManagedInsuranceModel load() {
@@ -62,5 +64,12 @@ public class ManagedInsuranceModel {
 			confirmed = new ArrayList<String>();
 		}
 		return confirmed;
+	}
+
+	public List<String> getApplied() {
+		if (applied == null) {
+			applied = new ArrayList<String>();
+		}
+		return applied;
 	}
 }
