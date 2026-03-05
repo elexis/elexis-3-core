@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
@@ -24,6 +25,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
@@ -42,6 +44,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,7 @@ import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
@@ -59,6 +63,7 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
@@ -474,6 +479,25 @@ public class OrderManagementActionFactory {
 			}
 		};
 		addAction.setImageDescriptor(Images.IMG_ADDITEM.getImageDescriptor());
+
+		Action changeSupplierAction = new Action(Messages.OrderManagement_Action_ChangeSupplier) {
+			@Override
+			public void run() {
+				handleChangeSupplierForSelection();
+			}
+		};
+
+		changeSupplierAction.setImageDescriptor(Images.IMG_USER_SILHOUETTE.getImageDescriptor());
+
+		Action changeStockAction = new Action(Messages.OrderManagement_Action_ChangeStock) {
+			@Override
+			public void run() {
+				handleChangeStockForSelection();
+			}
+		};
+
+		changeStockAction.setImageDescriptor(Images.IMG_BAGGAGE_CART_BOX.getImageDescriptor());
+
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
@@ -481,16 +505,24 @@ public class OrderManagementActionFactory {
 			public void menuAboutToShow(IMenuManager manager) {
 				boolean hasOrder = actOrder != null;
 				boolean hasEntries = hasOrder && !actOrder.getEntries().isEmpty();
-				IOrderEntry selectedEntry = null;
 				IStructuredSelection sel = (IStructuredSelection) table.getSelection();
-				if (sel != null && !sel.isEmpty() && sel.getFirstElement() instanceof IOrderEntry) {
+				boolean hasSelection = sel != null && !sel.isEmpty();
+				boolean isSingleSelection = sel != null && sel.size() == 1;
+				IOrderEntry selectedEntry = null;
+				if (sel != null && hasSelection && sel.getFirstElement() instanceof IOrderEntry) {
 					selectedEntry = (IOrderEntry) sel.getFirstElement();
 				}
-				boolean enableEditRemove = hasEntries && selectedEntry != null;
-				removeAction.setEnabled(enableEditRemove);
-				editAction.setEnabled(enableEditRemove);
+				boolean firstIsOpen = selectedEntry != null
+						&& selectedEntry.getState() == OrderEntryState.OPEN;
+				removeAction.setEnabled(hasEntries && hasSelection);
+				editAction.setEnabled(hasEntries && isSingleSelection && firstIsOpen);
+				changeSupplierAction.setEnabled(hasEntries && hasSelection && firstIsOpen);
+				changeStockAction.setEnabled(hasEntries && hasSelection && firstIsOpen);
+
 				manager.add(removeAction);
 				manager.add(editAction);
+				manager.add(changeSupplierAction);
+				manager.add(changeStockAction);
 				manager.add(addAction);
 			}
 		});
@@ -513,6 +545,62 @@ public class OrderManagementActionFactory {
 			}
 		});
 		createOrderHistoryMenu(orderTable);
+	}
+
+	private void handleChangeSupplierForSelection() {
+		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
+		if (selection.isEmpty())
+			return;
+
+		ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
+				Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_ChangeSupplier_Message);
+
+		if (dialog.open() == Window.OK) {
+			IContact selectedContact = (IContact) dialog.getSelection();
+			if (selectedContact != null) {
+				for (Object obj : selection.toArray()) {
+					if (obj instanceof IOrderEntry entry && entry.getState() == OrderEntryState.OPEN) {
+						entry.setProvider(selectedContact);
+						CoreModelServiceHolder.get().save(entry);
+						if (orderService.getHistoryService() != null && actOrder != null) {
+							orderService.getHistoryService().logSupplierAdded(actOrder, entry,
+									selectedContact.getLabel());
+						}
+					}
+				}
+				view.refresh();
+			}
+		}
+	}
+
+	private void handleChangeStockForSelection() {
+		IStructuredSelection selection = (IStructuredSelection) view.tableViewer.getSelection();
+		if (selection.isEmpty())
+			return;
+
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(view.getSite().getShell(),
+				new LabelProvider() {
+					@Override
+					public String getText(Object element) {
+						return element instanceof IStock ? ((IStock) element).getCode() : StringUtils.EMPTY;
+					}
+				});
+		dialog.setElements(StockServiceHolder.get().getAllStocks(true, false).toArray());
+		dialog.setTitle(Messages.OrderManagement_SelectStock_Title);
+		dialog.setMessage(Messages.OrderManagement_ChangeStock_Message);
+
+		if (dialog.open() == Window.OK) {
+			IStock selectedStock = (IStock) dialog.getFirstResult();
+			if (selectedStock != null) {
+				for (Object obj : selection.toArray()) {
+					if (obj instanceof IOrderEntry entry && entry.getState() == OrderEntryState.OPEN) {
+						entry.setStock(selectedStock);
+						CoreModelServiceHolder.get().save(entry);
+					}
+				}
+				view.refresh();
+			}
+		}
 	}
 
 	public void createOrderHistoryMenu(TableViewer orderTableViewer) {
@@ -620,12 +708,6 @@ public class OrderManagementActionFactory {
 			orderService.getHistoryService().logRemove(order, entry);
 			CoreModelServiceHolder.get().delete(entry);
 			order.getEntries().remove(entry);
-		}
-
-		if (actOrder != null && actOrder.getEntries().isEmpty()) {
-			CoreModelServiceHolder.get().delete(actOrder);
-			actOrder = null;
-			view.setActOrder(null);
 		}
 
 		Display.getDefault().asyncExec(() -> {

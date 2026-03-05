@@ -3,8 +3,11 @@ package ch.elexis.core.ui.views.provider;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.Window;
@@ -18,8 +21,10 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.util.OrderManagementUtil;
@@ -33,6 +38,7 @@ public class GenericOrderEditingSupport extends EditingSupport {
 	private final IOrderService orderService;
 	private final OrderManagementView orderManagementView;
 	private final int columnIndex; 
+	private ComboBoxViewerCellEditor cachedStockEditor;
 
 	public GenericOrderEditingSupport(OrderManagementView orderManagementView, TableViewer viewer,
 			EditingColumnType columnType, IOrder order, int columnIndex,
@@ -64,146 +70,166 @@ public class GenericOrderEditingSupport extends EditingSupport {
 					return null;
 				}
 			};
+		case STOCK:
+			if (cachedStockEditor == null) {
+				cachedStockEditor = new ComboBoxViewerCellEditor(viewer.getTable(), SWT.READ_ONLY);
+				cachedStockEditor.setContentProvider(ArrayContentProvider.getInstance());
+				cachedStockEditor.setLabelProvider(new LabelProvider() {
+					@Override
+					public String getText(Object element) {
+						return element instanceof IStock ? ((IStock) element).getCode() : StringUtils.EMPTY;
+					}
+				});
+				cachedStockEditor.setInput(StockServiceHolder.get().getAllStocks(true, false));
+			}
+			return cachedStockEditor;
 		case DELIVERED:
 		case ORDERED:
 		default:
-			TextCellEditor textCellEditor = new TextCellEditor(viewer.getTable(), SWT.NONE);
-			Text text = (Text) textCellEditor.getControl();
-			text.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+				TextCellEditor textCellEditor = new TextCellEditor(viewer.getTable(), SWT.NONE);
+				Text text = (Text) textCellEditor.getControl();
+				text.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-			Runnable goNext = () -> {
-				int total = viewer.getTable().getItemCount();
-				int row = viewer.getTable().getSelectionIndex();
-				do {
-					row++;
-				} while (row < total && !canEdit(viewer.getElementAt(row)));
-				if (row < total) {
-					viewer.getTable().setSelection(row);
-					viewer.editElement(viewer.getElementAt(row), columnIndex);
-				} else {
-					orderManagementView.handleOrderButtonClick();
-				}
-			};
-			Runnable goPrev = () -> {
-				int row = viewer.getTable().getSelectionIndex();
-				do {
-					row--;
-				} while (row >= 0 && !canEdit(viewer.getElementAt(row)));
-				if (row >= 0) {
-					viewer.getTable().setSelection(row);
-					viewer.editElement(viewer.getElementAt(row), columnIndex);
-				}
-			};
-
-			text.addTraverseListener(e -> {
-				if (e.detail == SWT.TRAVERSE_RETURN || e.detail == SWT.TRAVERSE_TAB_NEXT) {
-					e.doit = false;
-					Display.getDefault().asyncExec(goNext);
-				} else if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-					e.doit = false;
-					Display.getDefault().asyncExec(goPrev);
-				}
-			});
-			text.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
-				@Override
-				public void keyPressed(org.eclipse.swt.events.KeyEvent e) {
-					if (e.keyCode == SWT.ARROW_DOWN) {
-						goNext.run();
-					} else if (e.keyCode == SWT.ARROW_UP) {
-						goPrev.run();
+				Runnable goNext = () -> {
+					int total = viewer.getTable().getItemCount();
+					int row = viewer.getTable().getSelectionIndex();
+					do {
+						row++;
+					} while (row < total && !canEdit(viewer.getElementAt(row)));
+					if (row < total) {
+						viewer.getTable().setSelection(row);
+						viewer.editElement(viewer.getElementAt(row), columnIndex);
+					} else {
+						orderManagementView.handleOrderButtonClick();
 					}
-				}
-			});
+				};
+				Runnable goPrev = () -> {
+					int row = viewer.getTable().getSelectionIndex();
+					do {
+						row--;
+					} while (row >= 0 && !canEdit(viewer.getElementAt(row)));
+					if (row >= 0) {
+						viewer.getTable().setSelection(row);
+						viewer.editElement(viewer.getElementAt(row), columnIndex);
+					}
+				};
 
-			return textCellEditor;
+				text.addTraverseListener(e -> {
+					if (e.detail == SWT.TRAVERSE_RETURN || e.detail == SWT.TRAVERSE_TAB_NEXT) {
+						e.doit = false;
+						Display.getDefault().asyncExec(goNext);
+					} else if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+						e.doit = false;
+						Display.getDefault().asyncExec(goPrev);
+					}
+				});
+				text.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+					@Override
+					public void keyPressed(org.eclipse.swt.events.KeyEvent e) {
+						if (e.keyCode == SWT.ARROW_DOWN) {
+							goNext.run();
+						} else if (e.keyCode == SWT.ARROW_UP) {
+							goPrev.run();
+						}
+					}
+				});
+				return textCellEditor;
+			}
 		}
-	}
 
-	@Override
-	protected boolean canEdit(Object element) {
-		if (!(element instanceof IOrderEntry entry)) {
-			return false;
-		}
-		return switch (columnType) {
-		case ORDERED -> entry.getState() == OrderEntryState.OPEN;
-		case DELIVERED -> orderManagementView.isDeliveryEditMode();
-		case SUPPLIER -> entry.getState() == OrderEntryState.OPEN;
-		};
-	}
-
-	@Override
-	protected Object getValue(Object element) {
-		if (!(element instanceof IOrderEntry entry)) {
-			return null;
+		@Override
+		protected boolean canEdit(Object element) {
+			if (!(element instanceof IOrderEntry entry)) {
+				return false;
+			}
+			return switch (columnType) {
+			case ORDERED -> entry.getState() == OrderEntryState.OPEN;
+			case DELIVERED -> orderManagementView.isDeliveryEditMode();
+			case SUPPLIER -> entry.getState() == OrderEntryState.OPEN;
+			case STOCK -> entry.getState() == OrderEntryState.OPEN; // Lager nur ändern, wenn noch offen
+			};
 		}
 
-		return switch (columnType) {
-		case ORDERED -> {
-			int amount = entry.getAmount();
-			yield amount > 0 ? String.valueOf(amount) : StringUtils.EMPTY;
-		}
-		case DELIVERED -> {
-			Integer pending = orderManagementView.getPendingDeliveredValues().get(entry);
-			yield (pending != null && pending != 0) ? String.valueOf(pending) : StringUtils.EMPTY;
-		}
-		case SUPPLIER -> entry.getProvider();
-		};
-	}
+		@Override
+		protected Object getValue(Object element) {
+			if (!(element instanceof IOrderEntry entry)) {
+				return null;
+			}
 
-    @Override
-    protected void setValue(Object element, Object value) {
-        if (!(element instanceof IOrderEntry entry)) {
-            return;
-        }
-        try {
-            switch (columnType) {
+			return switch (columnType) {
 			case ORDERED -> {
-				int newAmount = Integer.parseInt(value.toString().trim());
-				int oldAmount = entry.getAmount();
-				if (oldAmount != newAmount) {
-					entry.setAmount(newAmount);
-					CoreModelServiceHolder.get().save(entry);
-					viewer.refresh(entry);
-					if (orderService.getHistoryService() != null && order != null) {
-						orderService.getHistoryService().logChangedAmount(order, entry, oldAmount, newAmount);
-					}
-				}
+				int amount = entry.getAmount();
+				yield amount > 0 ? String.valueOf(amount) : StringUtils.EMPTY;
 			}
 			case DELIVERED -> {
-				String input = value.toString().trim();
-
-				if (input.isEmpty()) {
-					orderManagementView.getPendingDeliveredValues().remove(entry);
-					viewer.update(entry, null);
-					return;
-				}
-
-				try {
-					int part = Integer.parseInt(input);
-					orderManagementView.getPendingDeliveredValues().put(entry, part);
-					viewer.update(entry, null);
-				} catch (NumberFormatException e) {
-					// Invalid input ignore, but do not overwrite old value
-				}
+				Integer pending = orderManagementView.getPendingDeliveredValues().get(entry);
+				yield (pending != null && pending != 0) ? String.valueOf(pending) : StringUtils.EMPTY;
 			}
+			case SUPPLIER -> entry.getProvider();
+			case STOCK -> entry.getStock();
+			};
+		}
+
+		@Override
+		protected void setValue(Object element, Object value) {
+			if (!(element instanceof IOrderEntry entry)) {
+				return;
+			}
+
+			try {
+				switch (columnType) {
+				case ORDERED -> {
+					int newAmount = Integer.parseInt(value.toString().trim());
+					int oldAmount = entry.getAmount();
+					if (oldAmount != newAmount) {
+						entry.setAmount(newAmount);
+						CoreModelServiceHolder.get().save(entry);
+						viewer.refresh(entry);
+						if (orderService.getHistoryService() != null && order != null) {
+							orderService.getHistoryService().logChangedAmount(order, entry, oldAmount, newAmount);
+						}
+					}
+				}
+				case DELIVERED -> {
+					String input = value.toString().trim();
+					if (input.isEmpty()) {
+						orderManagementView.getPendingDeliveredValues().remove(entry);
+						viewer.update(entry, null);
+						return;
+					}
+					try {
+						int part = Integer.parseInt(input);
+						orderManagementView.getPendingDeliveredValues().put(entry, part);
+						viewer.update(entry, null);
+					} catch (NumberFormatException e) {
+					}
+				}
 				case SUPPLIER -> {
-                    if (value instanceof IContact contact) {
-                        entry.setProvider(contact);
+					if (value instanceof IContact contact) {
+						entry.setProvider(contact);
 						if (orderService.getHistoryService() != null && order != null) {
 							orderService.getHistoryService().logSupplierAdded(order, entry, contact.getLabel());
-                        }
-                        CoreModelServiceHolder.get().save(entry);
-                        viewer.refresh(entry);
+						}
+						CoreModelServiceHolder.get().save(entry);
+						viewer.refresh(entry);
 						orderManagementView.refresh();
-                    }
+					}
 				}
-            }
-        } catch (NumberFormatException e) {
-			// parseInt fehlgeschlagen -> Ignorieren
-        }
-    }
+				case STOCK -> {
+					if (value instanceof IStock stock) {
+						entry.setStock(stock);
+						CoreModelServiceHolder.get().save(entry);
+						viewer.refresh(entry);
+						orderManagementView.refresh();
+					}
+				}
+	            }
+	        } catch (NumberFormatException e) {
+				// parseInt fehlgeschlagen -> Ignorieren
+	        }
+	    }
 
-	public enum EditingColumnType {
-		ORDERED, DELIVERED, SUPPLIER
+		public enum EditingColumnType {
+			ORDERED, DELIVERED, SUPPLIER, STOCK
+		}
 	}
-}
