@@ -5286,10 +5286,13 @@ public class Messages extends NLS {
 	public static String RegiomedPreferencePage_InvalidMailTitle;
 	public static String RegiomedPreferencePage_EnterMailOrDisable;
 	public static String RegiomedPreferencePage_InvalidMailMessage;
+	public static String RegiomedPreferencePage_EditSettingsFor;
+	public static String RegiomedPreferencePage_OverrideGlobal;
+	public static String RegiomedPreferencePage_GlobalSettings;
+	public static String RegiomedPreferencePage_MandatorPrefix;
 	public static String RegiomedCheckDialog_Title;
 	public static String RegiomedCheckDialog_OrderBinding;
 	public static String RegiomedCheckDialog_Cancel;
-
 	public static String RegiomedCheckTemplate_OrderTitle;
 	public static String RegiomedCheckTemplate_CheckResult;
 	public static String RegiomedCheckTemplate_HintText;
@@ -5326,6 +5329,9 @@ public class Messages extends NLS {
 	public static String RegiomedCheckDialog_ItemRejected;
 	public static String RegiomedCheckDialog_Reason;
 	public static String RegiomedCheckDialog_NotOrderable;
+	public static String RegiomedCheckDialog_ConfirmOrderTitle;
+	public static String RegiomedCheckDialog_ConfirmOrderMsgPrefix;
+	public static String RegiomedCheckDialog_ConfirmOrderMsgSuffix;
 	public static String RegiomedCheckTemplate_SuccessApplied;
 	public static String RegiomedCheckTemplate_AllChecksSuccess;
 	public static String RegiomedCheckTemplate_NoResults;
@@ -5353,6 +5359,20 @@ public class Messages extends NLS {
 	public static String RegiomedCheckTemplate_SuccessAppliedPrefix;
 	public static String RegiomedCheckTemplate_QtyExceedsStock;
 	public static String RegiomedCheckTemplate_CorrectedItems;
+	public static String RegiomedSearchView_CartLabel;
+	public static String RegiomedSearchView_CreateOrderBtn;
+	public static String RegiomedSearchView_ColProductName;
+	public static String RegiomedSearchView_ColQuantity;
+	public static String RegiomedSearchView_ColLocalStock;
+	public static String RegiomedSearchView_ColRegioStock;
+	public static String RegiomedSearchView_ColEan;
+	public static String RegiomedSearchView_ColPrice;
+	public static String RegiomedSearchView_NotFoundTitle;
+	public static String RegiomedSearchView_NotFoundMessage;
+	public static String RegiomedSearchView_OrderPrefix;
+	public static String RegiomedSearchView_NewOrderTitle;
+	public static String RegiomedSearchView_NewOrderMessage;
+
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
