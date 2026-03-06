@@ -5490,6 +5490,26 @@ public class Messages extends NLS {
 	public static String RegiomedSearchView_OrderPrefix;
 	public static String RegiomedSearchView_NewOrderTitle;
 	public static String RegiomedSearchView_NewOrderMessage;
+	public static String CovercardImportDialog_TitleNew;
+	public static String CovercardImportDialog_MessageNew;
+	public static String CovercardImportDialog_TitleCompare;
+	public static String CovercardImportDialog_MessageCompare;
+	public static String CovercardImportDialog_ColPatientDetailsCovercard;
+	public static String CovercardImportDialog_ColPatientInputDB;
+	public static String CovercardImportDialog_ColCovercard;
+	public static String CovercardImportDialog_CaseInfo;
+	public static String CovercardImportDialog_HealthInsurance;
+	public static String CovercardImportDialog_BsvNumber;
+	public static String CovercardImportDialog_CardNumber;
+	public static String CovercardImportDialog_InsuredNumber;
+	public static String CovercardImportDialog_ClassAmbulatory;
+	public static String CovercardImportDialog_ClassHospital;
+	public static String CovercardImportDialog_ClassMaternity;
+	public static String CovercardImportDialog_BasicInsurance;
+	public static String CovercardImportDialog_NonListPreparations;
+	public static String CovercardImportDialog_ComplementaryMedicine;
+	public static String CovercardImportDialog_AccidentIncluded;
+	public static String CovercardImportDialog_WarningNoBasicInsurance;
 
 
 	static { // load message values from bundle file

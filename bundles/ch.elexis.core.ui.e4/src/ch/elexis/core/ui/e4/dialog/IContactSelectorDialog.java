@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -52,6 +53,9 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private String _title;
 	private String _assertOkMessageTemplate;
 	private DialogTrayWithSelectionListener dialogTray;
+	public static final int CREATE_NEW_ID = IDialogConstants.CLIENT_ID + 1;
+	private boolean showCreateNewButton = false;
+	private String finalSearchText;
 
 	/**
 	 * @wbp.parser.constructor
@@ -160,6 +164,12 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			if (dialogTray != null) {
 				dialogTray.selectionChanged(selectedContact);
 			}
+
+			Button okButton = getButton(IDialogConstants.OK_ID);
+			if (okButton != null) {
+				okButton.setEnabled(selectedContact != null);
+			}
+
 		});
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerContacts, SWT.NONE);
@@ -277,8 +287,26 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		if (showCreateNewButton) {
+			createButton(parent, CREATE_NEW_ID, "Neu erstellen", false);
+		}
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		getButton(IDialogConstants.OK_ID).setEnabled(selectedContact != null);
+	}
+
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if (text != null && !text.isDisposed()) {
+			finalSearchText = text.getText();
+		}
+
+		if (buttonId == CREATE_NEW_ID) {
+			setReturnCode(CREATE_NEW_ID);
+			close();
+		} else {
+			super.buttonPressed(buttonId);
+		}
 	}
 
 	public IContact getSelectedContact() {
@@ -309,4 +337,17 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		this.initialInput = initialInput;
 	}
 
+	public void setShowCreateNewButton(boolean show) {
+		this.showCreateNewButton = show;
+	}
+
+	public String getSearchText() {
+		if (finalSearchText != null) {
+			return finalSearchText;
+		}
+		if (text != null && !text.isDisposed()) {
+			return text.getText();
+		}
+		return initialSearchText;
+	}
 }
