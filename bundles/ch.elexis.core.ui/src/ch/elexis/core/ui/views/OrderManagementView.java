@@ -616,6 +616,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		addEditingSupportForSupplierColumn(plainViewer);
 		addEditingSupportForDeliveredColumn(plainViewer);
 		addEditingSupportForOrderColumn(plainViewer);
+		addEditingSupportForStockColumn(plainViewer);
 
 		plainDropTarget = new GenericObjectDropTarget("ArtikelDropTarget", plainViewer.getControl(), //$NON-NLS-1$
 				new OrderDropReceiver(this, orderService), false);
@@ -653,6 +654,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		addEditingSupportForSupplierColumn(checkboxViewer);
 		addEditingSupportForDeliveredColumn(checkboxViewer);
 		addEditingSupportForOrderColumn(checkboxViewer);
+		addEditingSupportForStockColumn(checkboxViewer);
 
 		checkboxDropTarget = new GenericObjectDropTarget("ArtikelDropTarget", checkboxViewer.getControl(), //$NON-NLS-1$
 				new OrderDropReceiver(this, orderService), false);
@@ -828,7 +830,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			tableViewer.setInput(java.util.Collections.emptyList());
 			tableViewer.refresh();
 		}
-
+		if (addArticleButton != null && !addArticleButton.isDisposed()) {
+			addArticleButton.setVisible(false);
+		}
 		titleLabel.setText(StringUtils.EMPTY);
 		createdLabelState.setText(StringUtils.EMPTY);
 		statusValue.setText(StringUtils.EMPTY);
@@ -886,10 +890,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 	@Override
 	public void setFocus() {
-		Control controlToFocus = (tableViewer != null) ? tableViewer.getControl() : topComposite;
-		if (controlToFocus != null && !controlToFocus.isDisposed()) {
-			controlToFocus.setFocus();
-		}
+
 	}
 
 	public void updateCheckIn() {
@@ -1094,6 +1095,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (tableViewer != null) {
 				tableViewer.setInput(Collections.emptyList());
 			}
+			if (addArticleButton != null && !addArticleButton.isDisposed()) {
+				addArticleButton.setVisible(false);
+			}
 			return;
 		}
 		boolean allOpen = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.OPEN);
@@ -1187,6 +1191,14 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		tvc.setLabelProvider(new EntryTableLabelProvider(OrderConstants.OrderTable.ORDERED, showDeliveredColumn, this));
 		tvc.setEditingSupport(new GenericOrderEditingSupport(this, v, EditingColumnType.ORDERED, actOrder,
 				OrderConstants.OrderTable.ORDERED, orderService));
+	}
+
+	private void addEditingSupportForStockColumn(TableViewer v) {
+		TableColumn col = v.getTable().getColumn(OrderConstants.OrderTable.STOCK);
+		TableViewerColumn tvc = new TableViewerColumn(v, col);
+		tvc.setLabelProvider(new EntryTableLabelProvider(OrderConstants.OrderTable.STOCK, showDeliveredColumn, this));
+		tvc.setEditingSupport(new GenericOrderEditingSupport(this, v, EditingColumnType.STOCK, actOrder,
+				OrderConstants.OrderTable.STOCK, orderService));
 	}
 
 	private void switchViewerFor(IOrder order) {

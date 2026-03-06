@@ -33,10 +33,19 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	@Override
 	public IOrderEntry addEntry(IArticle article, IStock stock, IContact provider, int amount) {
 		if (provider == null) {
-			String providerId = ModelUtil.getConfig(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
-			if (providerId != null) {
-				IContact defProvider = ModelUtil.load(providerId, IContact.class);
-				provider = defProvider;
+			if (stock != null && article != null) {
+				Optional<IStockEntry> stockEntryOpt = stock.getStockEntries().stream()
+						.filter(se -> se.getArticle() != null && se.getArticle().equals(article)).findFirst();
+				if (stockEntryOpt.isPresent() && stockEntryOpt.get().getProvider() != null) {
+					provider = stockEntryOpt.get().getProvider();
+				}
+			}
+			if (provider == null) {
+				String providerId = ModelUtil.getConfig(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
+				if (providerId != null) {
+					IContact defProvider = ModelUtil.load(providerId, IContact.class);
+					provider = defProvider;
+				}
 			}
 		}
 
