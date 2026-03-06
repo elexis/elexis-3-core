@@ -93,22 +93,6 @@
                style="toggle">
          </command>
       </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:help">
-         <command
-               commandId="ch.elexis.core.ui.contacts.wizard.managedinsurance"
-               label="Versicherungen verwalten"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-	            <test
-	                  args="ict-administrator,poweruser,mpk"
-	                  property="ch.elexis.commands.propertyTester.ROLE">
-	            </test>
-            </visibleWhen>
-         </command>
-      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -144,11 +128,6 @@
                class="org.eclipse.ui.handlers.RegistryToggleState:false"
                id="org.eclipse.ui.commands.toggleState">
          </state>            
-      </command>
-      <command
-            defaultHandler="ch.elexis.core.ui.contacts.command.OpenManagedInsuranceWizard"
-            id="ch.elexis.core.ui.contacts.wizard.managedinsurance"
-            name="managed insurance">
       </command>
    </extension>
    <extension
