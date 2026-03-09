@@ -2121,6 +2121,7 @@ public class Messages extends NLS {
 	public static String HeaderCodeSystemTL;
 	public static String HeaderCodeSystemTotal;
 	public static String HeaderCodeTL;
+	public static String HeaderCodeIPL;
 	public static String HeaderDate;
 	public static String HeaderDayTotal;
 	public static String HeaderInvoicingParty;
