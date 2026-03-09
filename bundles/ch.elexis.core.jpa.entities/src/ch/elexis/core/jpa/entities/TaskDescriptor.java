@@ -8,7 +8,6 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
@@ -35,8 +34,8 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 64)
 	protected String referenceId;
 
-	@JoinColumn
-	protected User owner;
+	@Column(length = 25)
+	protected String owner_id;
 
 	@Column
 	protected int notificationType = 0;
@@ -138,12 +137,12 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 		this.referenceId = referenceId;
 	}
 
-	public User getOwner() {
-		return owner;
+	public String getOwner() {
+		return owner_id;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwner(String owner) {
+		this.owner_id = owner;
 	}
 
 	@Override

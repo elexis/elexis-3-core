@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.ui.tasks.ITaskResultDetailContributions"/>
    </service>
-   <reference cardinality="0..n" field="taskResultDetailDialogContributors" interface="ch.elexis.core.ui.tasks.ITaskResultDetailContributor" name="taskResultDetailDialogContributors" policy="dynamic" policy-option="greedy"/>
+   <reference cardinality="0..n" field="taskResultDetailDialogContributors" field-collection-type="service" interface="ch.elexis.core.ui.tasks.ITaskResultDetailContributor" name="taskResultDetailDialogContributors" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.ui.tasks.internal.TaskResultDetailDialogContributions"/>
 </scr:component>

@@ -5,40 +5,16 @@ Bundle-SymbolicName: ch.elexis.core.tasks;singleton:=true
 Bundle-Version: 3.13.0.qualifier
 Bundle-ClassPath: lib/quartz-jobs-2.3.2.jar,
  lib/quartz-2.3.2.jar,
- lib/cron-utils-9.1.8.jar,
  lib/c3p0-0.9.5.2.jar,
  .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.tasks
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Export-Package: ch.elexis.core.tasks,
- ch.elexis.core.tasks.model,
- ch.elexis.core.tasks.model.impl,
- ch.elexis.core.tasks.model.util,
- com.cronutils,
- com.cronutils.builder,
- com.cronutils.descriptor,
- com.cronutils.descriptor.refactor,
- com.cronutils.mapper,
- com.cronutils.model,
- com.cronutils.model.definition,
- com.cronutils.model.field,
- com.cronutils.model.field.constraint,
- com.cronutils.model.field.definition,
- com.cronutils.model.field.expression,
- com.cronutils.model.field.expression.visitor,
- com.cronutils.model.field.value,
- com.cronutils.model.time,
- com.cronutils.model.time.generator,
- com.cronutils.parser,
- com.cronutils.utils,
- com.cronutils.validation,
- org.quartz
-Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
- org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
- ch.elexis.core;bundle-version="3.10.0";visibility:=reexport,
+Export-Package: ch.elexis.core.tasks
+Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
+ ch.elexis.core.tasks.model;bundle-version="3.13.0";visibility:=reexport,
+ ch.elexis.core;bundle-version="3.13.0";visibility:=reexport,
  ch.elexis.core.rcp;bundle-version="3.13.0",
  ch.elexis.core.jpa;bundle-version="3.10.0",
  ch.elexis.core.jpa.entities;bundle-version="3.10.0",

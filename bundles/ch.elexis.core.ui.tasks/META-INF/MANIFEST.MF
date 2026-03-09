@@ -3,14 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Tasks
 Bundle-SymbolicName: ch.elexis.core.ui.tasks;singleton:=true
 Bundle-Version: 3.13.0.qualifier
-Bundle-ClassPath: lib/cron-parser-core-3.5.jar,
- lib/joda-time-2.10.10.jar,
+Bundle-ClassPath: lib/joda-time-2.10.10.jar,
+ lib/cron-parser-core-3.5.jar,
  .
 Bundle-Vendor: elexis.ch
 Export-Package: ch.elexis.core.ui.tasks
 Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  ch.elexis.core.services;bundle-version="3.10.0",
- ch.elexis.core.tasks;bundle-version="3.10.0",
+ ch.elexis.core.tasks;bundle-version="3.13.0",
  ch.elexis.core.ui.e4;bundle-version="3.10.0",
  org.eclipse.ui;bundle-version="3.110.0",
  ch.elexis.core.ui.icons;bundle-version="3.3.0",
@@ -18,8 +18,7 @@ Require-Bundle: ch.elexis.core;bundle-version="3.10.0",
  org.eclipse.ui.forms
 Import-Package: jakarta.annotation;version="1.0.0";resolution:=optional,
  jakarta.inject;version="1.0.0",
- org.apache.commons.lang3;version="3.12.0",
- org.quartz
+ org.apache.commons.lang3;version="3.12.0"
 Automatic-Module-Name: ch.elexis.core.ui.tasks
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21
