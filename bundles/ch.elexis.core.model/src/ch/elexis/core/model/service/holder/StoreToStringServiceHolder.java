@@ -23,6 +23,7 @@ public class StoreToStringServiceHolder {
 		return storeToStringService;
 	}
 
+	@Deprecated
 	public static String getStoreToString(Object object) {
 		if (object instanceof Identifiable) {
 			return StoreToStringServiceHolder.get().storeToString((Identifiable) object)

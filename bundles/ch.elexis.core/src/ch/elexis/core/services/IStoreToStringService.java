@@ -8,6 +8,23 @@ import ch.elexis.core.model.Identifiable;
 public interface IStoreToStringService {
 
 	/**
+	 * Convenience method that checks if the provided object is an instanceof
+	 * {@link Identifiable}
+	 * 
+	 * @param object
+	 * @return the store-to-string if of type {@link Identifiable}
+	 * @throws IllegalArgumentException
+	 * @since 3.13
+	 */
+	public default String getStoreToString(Object object) {
+		if (object instanceof Identifiable identifiable) {
+			return storeToString(identifiable)
+					.orElseThrow(() -> new IllegalStateException("No storeToString for [" + object + "]"));
+		}
+		throw new IllegalArgumentException("No storeToString for [" + object + "]");
+	}
+
+	/**
 	 * Get a reference string that can be used to load the {@link Identifiable}
 	 * using {@link #loadFromString(String)}.
 	 *
