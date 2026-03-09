@@ -32,6 +32,10 @@ public class PortableServiceLoader {
 		return PortableServiceLoader.serviceLoader;
 	}
 
+	public synchronized static <T extends Object> Optional<T> getOptional(Class<T> clazz) {
+		return PortableServiceLoader.serviceLoader.getService(clazz);
+	}
+
 	public synchronized static <T extends Object> T get(Class<T> clazz) {
 		return PortableServiceLoader.serviceLoader.getService(clazz).get();
 	}
