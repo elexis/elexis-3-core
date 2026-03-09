@@ -5232,6 +5232,11 @@ public class Messages extends NLS {
 	public static String OrderManagement_Button_Book;
 	public static String OrderManagement_SelectSupplier_Title;
 	public static String OrderManagement_SelectSupplier_Message;
+	public static String OrderManagement_ChangeSupplier_Message;
+	public static String OrderManagement_SelectStock_Title;
+	public static String OrderManagement_ChangeStock_Message;
+	public static String OrderManagement_Action_ChangeSupplier;
+	public static String OrderManagement_Action_ChangeStock;
 	public static String OrderManagement_Button_MissingSupplier;
 	public static String OrderManagement_CreatedLabel;
 	public static String OrderManagement_DispatchedLabel;
@@ -5510,6 +5515,7 @@ public class Messages extends NLS {
 	public static String CovercardImportDialog_ComplementaryMedicine;
 	public static String CovercardImportDialog_AccidentIncluded;
 	public static String CovercardImportDialog_WarningNoBasicInsurance;
+
 
 
 	static { // load message values from bundle file
