@@ -17,13 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.mail.internal.DocumentStoreServiceHolder;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IDocumentConverter;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.utils.CoreUtil;
 
 public class AttachmentsUtil {
@@ -45,16 +45,12 @@ public class AttachmentsUtil {
 
 	private static Optional<File> getTempFile(IDocument iDocument) {
 		String extension = iDocument.getExtension();
-		Optional<IDocumentConverter> converterService = OsgiServiceUtil.getService(IDocumentConverter.class);
+		Optional<IDocumentConverter> converterService = PortableServiceLoader.getOptional(IDocumentConverter.class);
 		if (converterService.isPresent() && converterService.get().isAvailable() && extension != null
 				&& !extension.toLowerCase().endsWith("pdf")) {
-			try {
-				Optional<File> converted = converterService.get().convertToPdf(iDocument);
-				if (converted.isPresent()) {
-					return converted;
-				}
-			} finally {
-				OsgiServiceUtil.ungetService(converterService.get());
+			Optional<File> converted = converterService.get().convertToPdf(iDocument);
+			if (converted.isPresent()) {
+				return converted;
 			}
 		}
 		File tmpFile = new File(getAttachmentsFolder(), getFileName(iDocument));
@@ -157,7 +153,8 @@ public class AttachmentsUtil {
 		StringJoiner sj = new StringJoiner(":::");
 		String[] parts = documents.split(":::");
 		for (String string : parts) {
-			Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(string);
+			Optional<Identifiable> loaded = PortableServiceLoader.get(IStoreToStringService.class)
+					.loadFromString(string);
 			if (loaded.isPresent() && loaded.get() instanceof IDocument) {
 				getTempFile((IDocument) loaded.get()).ifPresent(f -> {
 					sj.add(f.getAbsolutePath());
@@ -175,7 +172,7 @@ public class AttachmentsUtil {
 	 * @return
 	 */
 	public static String toAttachment(String document) {
-		Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(document);
+		Optional<Identifiable> loaded = PortableServiceLoader.get(IStoreToStringService.class).loadFromString(document);
 		if (loaded.isPresent() && loaded.get() instanceof IDocument) {
 			Optional<File> file = getTempFile((IDocument) loaded.get());
 			if (file.isPresent()) {
@@ -195,7 +192,7 @@ public class AttachmentsUtil {
 		StringJoiner sj = new StringJoiner(":::");
 		for (Object object : iDocuments) {
 			if (object instanceof IDocument) {
-				sj.add(StoreToStringServiceHolder.getStoreToString(object));
+				sj.add(PortableServiceLoader.get(IStoreToStringService.class).getStoreToString(object));
 			}
 		}
 		return sj.toString();
@@ -211,7 +208,8 @@ public class AttachmentsUtil {
 		List<IDocument> ret = new ArrayList<>();
 		String[] documentsParts = documents.split(ATTACHMENT_DELIMITER);
 		for (String string : documentsParts) {
-			Optional<Identifiable> loaded = StoreToStringServiceHolder.get().loadFromString(string);
+			Optional<Identifiable> loaded = PortableServiceLoader.get(IStoreToStringService.class)
+					.loadFromString(string);
 			if (loaded.isPresent() && loaded.get() instanceof IDocument) {
 				ret.add((IDocument) loaded.get());
 			}

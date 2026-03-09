@@ -22,11 +22,11 @@ import com.icegreen.greenmail.junit4.GreenMailRule;
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import jakarta.mail.BodyPart;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
@@ -52,7 +52,7 @@ public class MailClientImapTest {
 
 	@BeforeClass
 	public static void beforeClass() {
-		client = OsgiServiceUtil.getService(IMailClient.class).get();
+		client = PortableServiceLoader.get(IMailClient.class);
 	}
 
 	@Before

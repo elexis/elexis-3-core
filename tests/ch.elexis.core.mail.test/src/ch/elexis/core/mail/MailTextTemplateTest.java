@@ -9,17 +9,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.ITextTemplate;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.ITextReplacementService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class MailTextTemplateTest {
 
@@ -27,15 +25,10 @@ public class MailTextTemplateTest {
 
 	@Before
 	public void before() {
-		IQuery<ITextTemplate> query = CoreModelServiceHolder.get().getQuery(ITextTemplate.class);
-		query.execute().forEach(t -> CoreModelServiceHolder.get().remove(t));
+		IQuery<ITextTemplate> query = PortableServiceLoader.getCoreModelService().getQuery(ITextTemplate.class);
+		query.execute().forEach(t -> PortableServiceLoader.getCoreModelService().remove(t));
 
-		textReplacement = OsgiServiceUtil.getService(ITextReplacementService.class).get();
-	}
-
-	@After
-	public void after() {
-		OsgiServiceUtil.ungetService(textReplacement);
+		textReplacement = PortableServiceLoader.get(ITextReplacementService.class);
 	}
 
 	@Test
@@ -56,11 +49,11 @@ public class MailTextTemplateTest {
 
 	@Test
 	public void imageTemplates() {
-		ContextServiceHolder.get().setNamed("ch.elexis.core.mail.image.elexismailappointmentqr",
+		PortableServiceLoader.get(IContextService.class).setNamed("ch.elexis.core.mail.image.elexismailappointmentqr",
 				new Supplier<IImage>() {
 					@Override
 					public IImage get() {
-						IImage ret = CoreModelServiceHolder.get().create(IImage.class);
+						IImage ret = PortableServiceLoader.getCoreModelService().create(IImage.class);
 						ret.setImage(new byte[1]);
 						ret.setTitle("test");
 						return ret;
@@ -68,7 +61,8 @@ public class MailTextTemplateTest {
 				});
 
 		String text = "text\n[Image.MailAppointmentQr]\n\n[Image.MailPraxisLogo]";
-		String replacedText = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(), text);
+		String replacedText = textReplacement
+				.performReplacement(PortableServiceLoader.get(IContextService.class).getRootContext(), text);
 
 		MailMessage message = new MailMessage().to("receiver@there.com").subject("subject").text(replacedText);
 		assertTrue(message.hasImage());
