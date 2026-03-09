@@ -11,7 +11,8 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Automatic-Module-Name: ch.elexis.core.tasks
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Export-Package: ch.elexis.core.tasks
+Export-Package: ch.elexis.core.tasks,
+ org.quartz
 Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
  ch.elexis.core.tasks.model;bundle-version="3.13.0";visibility:=reexport,
  ch.elexis.core;bundle-version="3.13.0";visibility:=reexport,
