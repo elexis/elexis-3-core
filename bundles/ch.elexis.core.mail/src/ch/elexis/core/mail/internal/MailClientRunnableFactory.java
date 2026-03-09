@@ -14,8 +14,10 @@ import ch.elexis.core.model.tasks.IIdentifiedRunnableFactory;
 import ch.elexis.core.tasks.model.ITaskService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component(immediate = true)
 public class MailClientRunnableFactory implements IIdentifiedRunnableFactory {
 
