@@ -9,12 +9,16 @@ import org.osgi.service.component.annotations.Component;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.docx.DocxTextPlugin;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 @Component
 public class DocxTextPluginService implements ITextPlugin {
 
 	private ThreadLocal<DocxTextPlugin> instance;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		instance = new ThreadLocal<>() {

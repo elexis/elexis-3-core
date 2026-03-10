@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.spotlight.ISpotlightService"/>
    </service>
-   <reference cardinality="1..n" field="resultContributors" interface="ch.elexis.core.spotlight.ISpotlightResultContributor" name="resultContributors" policy="dynamic" policy-option="greedy"/>
+   <reference cardinality="1..n" field="resultContributors" field-collection-type="service" interface="ch.elexis.core.spotlight.ISpotlightResultContributor" name="resultContributors" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.spotlight.internal.SpotlightService"/>
 </scr:component>
