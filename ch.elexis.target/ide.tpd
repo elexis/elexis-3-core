@@ -1,6 +1,6 @@
 target "Elexis 2025-03-java21" with source allEnvironments
 
-maven MavenDependencies scope=compile,test dependencyDepth=infinite missingManifest=generate includeSources {
+maven MavenDependencies scope=compile dependencyDepth=none missingManifest=generate includeSources {
 	dependency {
 		groupId="org.eclipse.jdt"
 		artifactId="org.eclipse.jdt.annotation"
