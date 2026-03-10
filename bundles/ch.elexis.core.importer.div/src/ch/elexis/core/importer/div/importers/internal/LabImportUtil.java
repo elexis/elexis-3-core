@@ -15,6 +15,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.exceptions.ElexisException;
@@ -36,15 +37,14 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.LabOrderState;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.model.OrcMessage;
@@ -240,14 +240,14 @@ public class LabImportUtil implements ILabImportUtil {
 						orderId = createdOrder.getOrderId();
 					}
 				}
-				LocalLockServiceHolder.get().acquireLock(labResult);
-				LocalLockServiceHolder.get().releaseLock(labResult);
+				PortableServiceLoader.get(ILocalLockService.class).acquireLock(labResult);
+				PortableServiceLoader.get(ILocalLockService.class).releaseLock(labResult);
 			} else {
 				for (ILabResult labResult : existing) {
 					if (overWriteAll) {
-						LocalLockServiceHolder.get().acquireLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						LocalLockServiceHolder.get().releaseLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).releaseLock(labResult);
 						continue;
 					}
 					// dont bother user if result has the same value
@@ -260,15 +260,15 @@ public class LabImportUtil implements ILabImportUtil {
 							labResult, transientLabResult);
 
 					if (retVal == ImportHandler.OverwriteState.OVERWRITE) {
-						LocalLockServiceHolder.get().acquireLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						LocalLockServiceHolder.get().releaseLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).releaseLock(labResult);
 						continue;
 					} else if (retVal == ImportHandler.OverwriteState.OVERWRITEALL) {
 						overWriteAll = true;
-						LocalLockServiceHolder.get().acquireLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).acquireLock(labResult);
 						transientLabResult.overwriteExisting(labResult);
-						LocalLockServiceHolder.get().releaseLock(labResult);
+						PortableServiceLoader.get(ILocalLockService.class).releaseLock(labResult);
 						continue;
 					} else {
 						logger.info("Will not overwrite labResult [" + labResult.getId() + "] due to user decision.");
@@ -330,7 +330,7 @@ public class LabImportUtil implements ILabImportUtil {
 			// case 2 try to find mandant via last consultation for patient
 			IPatient iPatient = transientLabResult.getPatient();
 			if (iPatient != null) {
-				Optional<IPatient> patient = CoreModelServiceHolder.get().load(iPatient.getId(), IPatient.class);
+				Optional<IPatient> patient = PortableServiceLoader.getCoreModelService().load(iPatient.getId(), IPatient.class);
 				if (patient.isPresent()) {
 					Optional<IEncounter> konsultation = encounterService.getLatestEncounter(patient.get());
 					if (konsultation.isPresent()) {
@@ -346,7 +346,7 @@ public class LabImportUtil implements ILabImportUtil {
 		}
 
 		// case 3 use the current mandant
-		Optional<IMandator> mandant = ContextServiceHolder.get().getActiveMandator();
+		Optional<IMandator> mandant = PortableServiceLoader.get(IContextService.class).getActiveMandator();
 		if (mandant.isPresent()) {
 			logger.debug("labimport - use the active selected mandantor [" + mandant.get().getId() + "]");
 			return modelService.load(mandant.get().getId(), IMandator.class).get();
@@ -545,7 +545,7 @@ public class LabImportUtil implements ILabImportUtil {
 			if (orderId != null) {
 				order.setOrderId(orderId);
 			}
-			ContextServiceHolder.get().getActiveUserContact().ifPresent(uc -> order.setUser(uc));
+			PortableServiceLoader.get(IContextService.class).getActiveUserContact().ifPresent(uc -> order.setUser(uc));
 			labOrder = order;
 
 		} else {
@@ -614,7 +614,7 @@ public class LabImportUtil implements ILabImportUtil {
 	@Override
 	public Optional<IPatient> getPatientByCode(String code) {
 		if (code != null) {
-			INamedQuery<IPatient> namedQuery = CoreModelServiceHolder.get().getNamedQuery(IPatient.class, "code");
+			INamedQuery<IPatient> namedQuery = PortableServiceLoader.getCoreModelService().getNamedQuery(IPatient.class, "code");
 			List<IPatient> found = namedQuery.executeWithParameters(namedQuery.getParameterMap("code", code));
 			if (!found.isEmpty()) {
 				if (found.size() > 1) {

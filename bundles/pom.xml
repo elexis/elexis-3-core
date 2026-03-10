@@ -17,6 +17,7 @@
 
 	<properties>
 		<jandex-plugin.version>3.2.7</jandex-plugin.version>
+		<org.apache.poi.version>5.5.1</org.apache.poi.version>
 	</properties>
 
 	<modules>

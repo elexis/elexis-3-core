@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
@@ -30,8 +31,8 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -170,8 +171,8 @@ public class DefaultPDFImportStrategy implements IFileImportStrategy {
 			sbFailed.append("; ");
 		}
 
-		if (ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA, false)) {
-			labName = ConfigServiceHolder.get().getLocal(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
+		if (PortableServiceLoader.get(IConfigService.class).getLocal(HL7Parser.CFG_IMPORT_ENCDATA, false)) {
+			labName = PortableServiceLoader.get(IConfigService.class).getLocal(HL7Parser.CFG_IMPORT_ENCDATA_CATEGORY, null);
 		}
 
 		if (labName == null || labName.isEmpty()) {

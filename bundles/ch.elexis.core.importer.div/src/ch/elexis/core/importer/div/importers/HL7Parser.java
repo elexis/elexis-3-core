@@ -21,14 +21,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.importer.div.service.holder.LabImportUtilHolder;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.HL7PatientResolver;
@@ -385,8 +386,8 @@ public class HL7Parser {
 	public Result<?> importFile(File hl7file, File archiveDir, ILabItemResolver labItemResolver,
 			ILabContactResolver labContactResolver, boolean bCreatePatientIfNotExists) throws IOException {
 
-		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(hl7file);
-		IVirtualFilesystemHandle archiveDirHandle = VirtualFilesystemServiceHolder.get().of(archiveDir);
+		IVirtualFilesystemHandle fileHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(hl7file);
+		IVirtualFilesystemHandle archiveDirHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(archiveDir);
 		return importFile(fileHandle, archiveDirHandle, labItemResolver, labContactResolver, bCreatePatientIfNotExists);
 	}
 
@@ -502,7 +503,7 @@ public class HL7Parser {
 	 * @throws IOException
 	 */
 	public Result<?> importFile(final String filepath, boolean bCreatePatientIfNotExists) throws IOException {
-		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(filepath);
+		IVirtualFilesystemHandle fileHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(filepath);
 		return importFile(fileHandle, null, bCreatePatientIfNotExists);
 	}
 
