@@ -14,6 +14,30 @@ import ch.elexis.core.model.Identifiable;
 public interface IConfigService {
 
 	/**
+	 * Convenience method
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 * @since 3.13
+	 */
+	public default String getGlobal(String key, String defaultValue) {
+		return get(key, defaultValue);
+	}
+
+	/**
+	 * Convenience method
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 * @since 3.13
+	 */
+	public default int getGlobal(String key, int defaultValue) {
+		return get(key, defaultValue);
+	}
+
+	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save
 	 * operation. Adds a trace entry.
 	 *
