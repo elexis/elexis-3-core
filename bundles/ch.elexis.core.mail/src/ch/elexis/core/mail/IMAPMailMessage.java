@@ -62,8 +62,9 @@ public class IMAPMailMessage {
 				extractOtherContent(contentType, content);
 			}
 
-		} catch (MessagingException | IOException e) {
-			LoggerFactory.getLogger(getClass()).warn("Error reading attachments on mail {}: {}", sender, subject);
+		} catch (Exception e) {
+			LoggerFactory.getLogger(getClass()).warn("Error reading attachments on mail {} {}: {}", sender, sentDate,
+					subject);
 			throw new MessagingException("Error reading attachments", e);
 		}
 	}
