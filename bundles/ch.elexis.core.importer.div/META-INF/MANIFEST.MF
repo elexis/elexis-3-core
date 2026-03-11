@@ -26,6 +26,7 @@ Export-Package: ch.elexis.core.importer.div.importers,
  ch.elexis.core.importer.div.tasks
 Bundle-ActivationPolicy: lazy
 Import-Package: com.healthmarketscience.jackcess;version="4.0.0",
+ io.smallrye.common.annotation;version="[2.14.0,3.0.0)";resolution:=optional,
  jakarta.annotation;version="[2.1.0,3.0.0)",
  jakarta.enterprise.context;version="[4.0.0,5.0.0)",
  jakarta.inject;version="[2.0.0,3.0.0)",

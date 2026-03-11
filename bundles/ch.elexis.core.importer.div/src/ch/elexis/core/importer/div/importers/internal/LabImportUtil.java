@@ -49,6 +49,7 @@ import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.hl7.model.OrcMessage;
 import ch.rgw.tools.TimeTool;
+import io.smallrye.common.annotation.Identifier;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -70,6 +71,7 @@ public class LabImportUtil implements ILabImportUtil {
 	IModelService modelService;
 
 	@Inject
+	@Identifier("ch.elexis.data.store.omnivore")
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL, target = "(storeid=ch.elexis.data.store.omnivore)")
 	private IDocumentStore documentStore;
 

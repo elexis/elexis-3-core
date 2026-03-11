@@ -11,6 +11,11 @@ maven MavenDependencies scope=compile dependencyDepth=none missingManifest=gener
 		artifactId="arc"
 		version="3.32.0"
 	}
+	dependency {
+		groupId="io.smallrye.common"
+		artifactId="smallrye-common-annotation"
+		version="2.14.0"
+	}
 }
 location "https://download.elexis.info/elexis/target/2025-03-java21/" {
 	// justj.21
