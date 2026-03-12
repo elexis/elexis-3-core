@@ -78,10 +78,12 @@ import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.services.IXidService.IXidDomain;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
+import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.elexis.core.text.ReplaceCallback;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
@@ -475,6 +477,15 @@ public class TextContainer {
 		// read using the default PersistentObject#get method
 		String ret = po.get(name);
 		if ((ret == null) || (ret.startsWith("**"))) { //$NON-NLS-1$
+			// test if domain is a simple name of a xid domain
+			IXidDomain domainBySimpleName = XidServiceHolder.get().getDomain(name);
+			if (domainBySimpleName != null) {
+				String domain = domainBySimpleName.getDomainName();
+				String xidValue = po.getXid(domain);
+				if (StringUtils.isNotBlank(xidValue)) {
+					return xidValue;
+				}
+			}
 
 			if (!(po.map(PersistentObject.FLD_EXTINFO).startsWith("**"))) { //$NON-NLS-1$
 				@SuppressWarnings("rawtypes")
