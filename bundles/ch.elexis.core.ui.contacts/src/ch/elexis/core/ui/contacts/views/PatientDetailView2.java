@@ -57,17 +57,17 @@ public class PatientDetailView2 extends ViewPart {
 
 		@Override
 		public void partActivated(IWorkbenchPartReference partRef) {
-			if (pb != null && !pb.isDisposed()) {
+			if (pb != null && !pb.isDisposed() && isMatchingPart(partRef)) {
 				pb.refreshUi();
 			}
 		}
 
 		@Override
 		public void partDeactivated(IWorkbenchPartReference partRef) {
-			if (pb != null && !pb.isDisposed() &&
-				    ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
-					pb.save();
-				}
+			if (pb != null && !pb.isDisposed() && isMatchingPart(partRef)
+					&& ElexisServerServiceHolder.get().getConnectionStatus() == ConnectionStatus.STANDALONE) {
+				pb.save();
+			}
 		}
 	};
 

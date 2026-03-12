@@ -35,7 +35,7 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		@Override
 		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef) {
 			super.partActivated(partRef);
-			if (tpc != null && !tpc.isDisposed()) {
+			if (tpc != null && !tpc.isDisposed() && isMatchingPart(partRef)) {
 				tpc.showMedicationDetailComposite(null);
 			}
 		};
