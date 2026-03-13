@@ -5511,6 +5511,8 @@ public class Messages extends NLS {
 	public static String CovercardImportDialog_ComplementaryMedicine;
 	public static String CovercardImportDialog_AccidentIncluded;
 	public static String CovercardImportDialog_WarningNoBasicInsurance;
+	public static String BestellView_ArticleNotFoundTitle;
+	public static String BestellView_ArticleNotFoundMessage;
 
 
 	static { // load message values from bundle file

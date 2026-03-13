@@ -674,4 +674,6 @@ public class Messages {
 	public static String OrderManagement_DeleteOrder = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder;
 	public static String OrderManagement_DeleteOrder_Title = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Title;
 	public static String OrderManagement_DeleteOrder_Message = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Message;
+	protected static String BestellView_ArticleNotFoundTitle = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundTitle;
+	protected static String BestellView_ArticleNotFoundMessage = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundMessage;
 }
