@@ -204,8 +204,34 @@ public class BestellView extends ViewPart {
 			@Override
 			public void drop(final DropTargetEvent event) {
 				if (event.data instanceof String) {
-					String[] parts = ((String) event.data).split(StringConstants.COMMA);
+					String data = (String) event.data;
 
+					if (data.startsWith(ExtensionPointConstantsUi.PAYLOAD_REGIOMED_ITEM)) {
+						try {
+							org.eclipse.ui.IViewPart view = BestellView.this.getViewSite().getPage()
+									.findView("ch.elexis.regiomed.order.ui.RegiomedSearchView");
+							if (view != null) {
+								java.lang.reflect.Method m = view.getClass().getMethod("getArticleForDropIndex",
+										String.class);
+								IArticle art = (IArticle) m.invoke(view, data);
+
+								if (art != null) {
+									BestellView.this.addItemsToOrder(Collections.singletonList(art));
+								} else {
+									MessageDialog.openWarning(BestellView.this.getViewSite().getShell(),
+											Messages.BestellView_ArticleNotFoundTitle,
+											Messages.BestellView_ArticleNotFoundMessage);
+								}
+							}
+						} catch (Exception ex) {
+							LoggerFactory.getLogger(BestellView.class).error("Error during Regiomed Drop processing",
+									ex);
+						}
+						return;
+					}
+
+					String[] parts = ((String) event.data).split(StringConstants.COMMA);
+					
 					if (actOrder == null) {
 						NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 								Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
