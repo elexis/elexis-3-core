@@ -18,5 +18,5 @@ jobs:
     - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
       run: |
         docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} \
-        mvn -V -T 1C -pl ch.elexis.core.l10n,ch.rgw.utility,ch.elexis.core,ch.elexis.core.cdi,ch.elexis.core.findings,ch.elexis.core.documents,ch.elexis.core.hl7.v2x,ch.elexis.core.importer.div,ch.elexis.core.mail,ch.elexis.core.spotlight,ch.elexis.core.tasks.model,ch.elexis.core.text.docx \
+        mvn -V -T 1C -f bundles/pom.xml -pl ch.elexis.core.l10n,ch.rgw.utility,ch.elexis.core,ch.elexis.core.cdi,ch.elexis.core.findings,ch.elexis.core.documents,ch.elexis.core.hl7.v2x,ch.elexis.core.importer.div,ch.elexis.core.mail,ch.elexis.core.spotlight,ch.elexis.core.tasks.model,ch.elexis.core.text.docx \
         clean deploy
