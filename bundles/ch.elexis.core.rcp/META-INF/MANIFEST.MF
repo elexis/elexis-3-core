@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: Elexis 3 Core RCP
 Bundle-SymbolicName: ch.elexis.core.rcp;singleton:=true
 Automatic-Module-Name: ch.elexis.core
 Bundle-Version: 3.13.0.qualifier
 Bundle-ClassPath: .
-Bundle-Vendor: %providerName
+Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy

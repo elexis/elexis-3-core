@@ -12,6 +12,7 @@
 	<artifactId>ch.elexis.core</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<name>[bundle] Elexis 3 Core</name>
+	<description>Elexis Types Model</description>
 	<organization>
 		<name>elexis.info</name>
 	</organization>
