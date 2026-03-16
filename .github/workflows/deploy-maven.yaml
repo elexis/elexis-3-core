@@ -1,0 +1,20 @@
+name: Deploy Maven Bundles
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  DEPLOY_SECRET: ${{ secrets.SSH_PRIVATE_KEY_ED25519_BASE64 }}
+  DOCKER_BUILD_IMAGE: ghcr.io/elexis/docker-build:2025-03-java21
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, x64, Docker]
+    steps:
+    - uses: actions/checkout@v4
+    - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
+    - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
+      run:  docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} \
+            mvn -V -T 1C -pl ch.elexis.core.l10n,ch.rgw.utility,ch.elexis.core,ch.elexis.core.cdi,ch.elexis.core.findings,ch.elexis.core.documents,ch.elexis.core.hl7.v2x,ch.elexis.core.importer.div,ch.elexis.core.mail,ch.elexis.core.spotlight,ch.elexis.core.tasks.model,ch.elexis.core.text.docx clean deploy
