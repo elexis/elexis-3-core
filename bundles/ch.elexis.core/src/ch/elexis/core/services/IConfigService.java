@@ -38,6 +38,18 @@ public interface IConfigService {
 	}
 
 	/**
+	 * Convenience method
+	 * 
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 * @since 3.13
+	 */
+	public default boolean getGlobal(String key, boolean defaultValue) {
+		return get(key, defaultValue);
+	}
+
+	/**
 	 * Set a global configuration entry. Overwrites existing values. Performs save
 	 * operation. Adds a trace entry.
 	 *
