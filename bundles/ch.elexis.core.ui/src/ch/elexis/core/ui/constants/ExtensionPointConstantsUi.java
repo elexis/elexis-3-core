@@ -43,5 +43,4 @@ public class ExtensionPointConstantsUi {
 	public static final String PAYLOAD_SIGNATURE = "signature"; //$NON-NLS-1$
 	public static final String PAYLOAD_BILLED = "billed"; //$NON-NLS-1$
 	public static final String ABORT_BY_USER = "ABORT_BY_USER"; //$NON-NLS-1$
-	public static final String PAYLOAD_REGIOMED_ITEM = "REGIOMED_ITEM:"; //$NON-NLS-1$
 }

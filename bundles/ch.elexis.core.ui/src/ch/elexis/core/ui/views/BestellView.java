@@ -204,15 +204,7 @@ public class BestellView extends ViewPart {
 			@Override
 			public void drop(final DropTargetEvent event) {
 				if (event.data instanceof String) {
-					String data = (String) event.data;
-
-					if (data.startsWith(ExtensionPointConstantsUi.PAYLOAD_REGIOMED_ITEM)) {
-						ContextServiceHolder.get().postEvent("ch/elexis/BestellenView/dropped", data); //$NON-NLS-1$
-						return;
-					}
-
 					String[] parts = ((String) event.data).split(StringConstants.COMMA);
-					
 					if (actOrder == null) {
 						NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 								Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
