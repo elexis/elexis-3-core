@@ -207,26 +207,7 @@ public class BestellView extends ViewPart {
 					String data = (String) event.data;
 
 					if (data.startsWith(ExtensionPointConstantsUi.PAYLOAD_REGIOMED_ITEM)) {
-						try {
-							org.eclipse.ui.IViewPart view = BestellView.this.getViewSite().getPage()
-									.findView("ch.elexis.regiomed.order.ui.RegiomedSearchView");
-							if (view != null) {
-								java.lang.reflect.Method m = view.getClass().getMethod("getArticleForDropIndex",
-										String.class);
-								IArticle art = (IArticle) m.invoke(view, data);
-
-								if (art != null) {
-									BestellView.this.addItemsToOrder(Collections.singletonList(art));
-								} else {
-									MessageDialog.openWarning(BestellView.this.getViewSite().getShell(),
-											Messages.BestellView_ArticleNotFoundTitle,
-											Messages.BestellView_ArticleNotFoundMessage);
-								}
-							}
-						} catch (Exception ex) {
-							LoggerFactory.getLogger(BestellView.class).error("Error during Regiomed Drop processing",
-									ex);
-						}
+						ContextServiceHolder.get().postEvent("ch/elexis/BestellenView/dropped", data); //$NON-NLS-1$
 						return;
 					}
 
