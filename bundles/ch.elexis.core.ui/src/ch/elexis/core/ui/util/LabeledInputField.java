@@ -451,6 +451,19 @@ public class LabeledInputField extends Composite {
 			sLimit = Text.LIMIT;
 		}
 
+		/**
+		 * create control of type STRING with {@link IContentProvider}
+		 * 
+		 * @param anzeige
+		 * @param cp
+		 */
+		public InputData(String anzeige, IContentProvider cp) {
+			sAnzeige = anzeige;
+			ext = cp;
+			tFeldTyp = Typ.STRING;
+			sLimit = Text.LIMIT;
+		}
+
 		public InputData(String anzeige, String feldname, String hashname, Typ typ,
 				org.eclipse.jface.viewers.IContentProvider contentProvider, ILabelProvider labelProvider,
 				IStructuredSelectionResolver selectionResolver, Object input) {
@@ -670,6 +683,10 @@ public class LabeledInputField extends Composite {
 			if (act == null) {
 				return;
 			}
+			// Typ.STRING with IContentProvider is read only
+			if (inp.tFeldTyp == InputData.Typ.STRING && inp.ext instanceof IContentProvider) {
+				return;
+			}
 			String val = StringTool.leer;
 			switch (inp.tFeldTyp) {
 
@@ -828,7 +845,12 @@ public class LabeledInputField extends Composite {
 					continue;
 				} else {
 					if (def[i].sHashname == null) {
-						val = o.get(def[i].sFeldname);
+						if (def[i].ext instanceof IContentProvider) {
+							((IContentProvider) def[i].ext).displayContent(o, def[i]);
+							continue;
+						} else {
+							val = o.get(def[i].sFeldname);
+						}
 					} else {
 						Map ext = o.getMap(def[i].sFeldname);
 						val = (String) ext.get(def[i].sHashname);
