@@ -205,7 +205,6 @@ public class BestellView extends ViewPart {
 			public void drop(final DropTargetEvent event) {
 				if (event.data instanceof String) {
 					String[] parts = ((String) event.data).split(StringConstants.COMMA);
-
 					if (actOrder == null) {
 						NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 								Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
