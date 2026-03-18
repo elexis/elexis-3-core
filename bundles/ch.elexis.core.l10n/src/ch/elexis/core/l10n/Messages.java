@@ -3500,6 +3500,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_civilState;
 	public static String Patientenblatt2_contactForAdditionalAddress;
 	public static String Patientenblatt2_increasedTreatment;
+	public static String Patientenblatt2_palliativeCare;
 	public static String Patientenblatt2_kindOfRelation;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_persAnamnesisLbl;

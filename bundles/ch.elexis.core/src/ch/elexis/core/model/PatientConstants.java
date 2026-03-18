@@ -7,6 +7,7 @@ public class PatientConstants {
 	public static final String FLD_EXTINFO_PROFESSION = "Profession";
 	public static final String FLD_EXTINFO_BIRTHNAME = "BirthName";
 	public static final String FLD_EXTINFO_INCREASEDTREATMENT = "IncreasedTreatment";
+	public static final String FLD_EXTINFO_PALLIATIVECARE = "PalliativeCare";
 	public static final String FLD_EXTINFO_BILLINGDIAGNOSIS = "BillingDiagnosis";
 
 	/**
@@ -19,5 +20,6 @@ public class PatientConstants {
 	 *
 	 * @deprecated
 	 */
+	@Deprecated
 	public static final String FLD_EXTINFO_CIVIL_STATE = "CivilState";
 }

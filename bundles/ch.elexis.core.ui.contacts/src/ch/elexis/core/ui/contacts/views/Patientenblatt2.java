@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -257,7 +259,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
-	private Button increasedTreatmentBtn;
+	private Button palliativeCareBtn;
+	private CDateTime palliativeCareDate;
 	ArrayList<InputData> fields;
 
 	@Inject
@@ -571,6 +574,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
+		deceasedBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		deceasedDate = new CDateTime(cPersonalien, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
 		deceasedDate.setLayoutData(new GridData());
 		((GridData) deceasedDate.getLayoutData()).exclude = false;
@@ -589,20 +593,49 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 
-		// "erhöhter Behandlungsbedarf"
-		increasedTreatmentBtn = tk.createButton(cPersonalien, Messages.Patientenblatt2_increasedTreatment, SWT.CHECK);
-		increasedTreatmentBtn.addSelectionListener(new SelectionAdapter() {
+		palliativeCareBtn = tk.createButton(cPersonalien, Messages.Patientenblatt2_palliativeCare, SWT.CHECK);
+		palliativeCareBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (actPatient != null) {
 					IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
-					patient.setExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT,
-							Boolean.toString(increasedTreatmentBtn.getSelection()));
-					CoreModelServiceHolder.get().save(patient);
+					if (palliativeCareBtn.getSelection()) {
+						patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE,
+								LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+						CoreModelServiceHolder.get().save(patient);
+
+						((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+						palliativeCareDate.setVisible(true);
+						palliativeCareDate.setFocus();
+					} else {
+						patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE, null);
+						CoreModelServiceHolder.get().save(patient);
+
+						((GridData) palliativeCareDate.getLayoutData()).exclude = true;
+						palliativeCareDate.setVisible(false);
+					}
+					refreshUi();
 				}
 			}
 		});
-		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		palliativeCareBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		palliativeCareDate = new CDateTime(cPersonalien, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
+		palliativeCareDate.setLayoutData(new GridData());
+		((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+		palliativeCareDate.setVisible(false);
+		palliativeCareDate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+				Date selected = palliativeCareDate.getSelection();
+				if (selected != null) {
+					patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE,
+							LocalDateTime.ofInstant(selected.toInstant(), ZoneId.systemDefault())
+									.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+				}
+				CoreModelServiceHolder.get().save(patient);
+			}
+		});
 
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
@@ -1012,19 +1045,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
 			billingDiagnosisText.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
-			increasedTreatmentBtn.setSelection(false);
+			palliativeCareBtn.setSelection(false);
 			inpZusatzAdresse.clear();
 			setUnlocked(false);
 			return;
 		}
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
-		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
-			increasedTreatmentBtn.setSelection(
-					Boolean.parseBoolean((String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
-		} else {
-			increasedTreatmentBtn.setSelection(false);
-		}
 		if (patient.isDeceased()) {
 			if (patient.getDateOfDeath() != null) {
 				deceasedDate
@@ -1034,10 +1061,29 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 			((GridData) deceasedDate.getLayoutData()).exclude = false;
 			deceasedDate.setVisible(true);
+			((GridData) deceasedBtn.getLayoutData()).horizontalSpan = 1;
 		} else {
 			deceasedDate.setSelection(null);
 			((GridData) deceasedDate.getLayoutData()).exclude = true;
 			deceasedDate.setVisible(false);
+			((GridData) deceasedBtn.getLayoutData()).horizontalSpan = 2;
+		}
+		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE) instanceof String) {
+			palliativeCareBtn.setSelection(true);
+			LocalDate palliativeCareLocalDate = LocalDate.parse(
+					(String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE),
+					DateTimeFormatter.ofPattern("yyyyMMdd"));
+			palliativeCareDate.setSelection(
+					Date.from(palliativeCareLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+			((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+			palliativeCareDate.setVisible(true);
+			((GridData) palliativeCareBtn.getLayoutData()).horizontalSpan = 1;
+		} else {
+			palliativeCareBtn.setSelection(false);
+			palliativeCareDate.setSelection(null);
+			((GridData) palliativeCareDate.getLayoutData()).exclude = true;
+			palliativeCareDate.setVisible(false);
+			((GridData) palliativeCareBtn.getLayoutData()).horizontalSpan = 2;
 		}
 
 		stickerComposite.setPatient(CoreModelServiceHolder.get().load(actPatient.getId(), IPatient.class).orElse(null));
