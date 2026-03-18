@@ -624,4 +624,6 @@ public class Messages {
 	public static String ProcessStatus_OVERDUE = ch.elexis.core.l10n.Messages.ProcessStatus_OVERDUE;
 	public static String ProcessStatus_DUE = ch.elexis.core.l10n.Messages.ProcessStatus_DUE;
 	public static String Core_today = ch.elexis.core.l10n.Messages.Core_today;	
+	protected static String BestellView_ArticleNotFoundTitle = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundTitle;
+	protected static String BestellView_ArticleNotFoundMessage = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundMessage;
 }
