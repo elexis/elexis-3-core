@@ -38,6 +38,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -483,7 +484,17 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public void addDefaultDiagnosis(IEncounter encounter) {
-		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
+		String diagnosisSts = (String) encounter.getPatient().getExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS);
+		if (StringUtils.isNotBlank(diagnosisSts)) {
+			Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnosisSts);
+			if (diagnose.isPresent()) {
+				encounter.addDiagnosis((IDiagnosis) diagnose.get());
+				coreModelService.save(encounter);
+				// ignore user default if patient has billing diagnosis
+				return;
+			}
+		}
+		diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnosisSts.length() > 1) {
 			Optional<Identifiable> diagnose = PortableServiceLoader.get(IStoreToStringService.class)
 					.loadFromString(diagnosisSts);

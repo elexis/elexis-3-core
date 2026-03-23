@@ -757,6 +757,7 @@ public class Messages extends NLS {
 	public static String Core_Automatic;
 	public static String Core_Backslash_could_not_be_printed;
 	public static String Core_Bill;
+	public static String Core_BillingDiagnosis;
 	public static String Core_Blue;
 	public static String Core_CSV_Full;
 	public static String Core_Cannot_add_consultation_to_closed_case;
