@@ -548,6 +548,14 @@
         <genParameters ecoreParameter="model.ecore#//IInvoice/removeAttachment/attachment"/>
       </genOperations>
     </genClasses>
+    <genClasses image="false" ecoreClass="model.ecore#//IInvoiceBillRecordInfo">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoiceBillRecordInfo/invoice"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IInvoiceBillRecordInfo/billed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoiceBillRecordInfo/billid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoiceBillRecordInfo/billrecordid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoiceBillRecordInfo/info"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IInvoiceBillRecordInfo/infocode"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="model.ecore#//IStock">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/code"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IStock/driverUuid"/>

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.elexis.core.model.IAccountTransaction;
+import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.InvoiceState;
@@ -98,4 +100,24 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public Optional<IAccountTransaction> getAccountTransaction(IPayment payment);
+
+	/**
+	 * Lookup a IInvoiceBillRecordInfo with matching provided billid and
+	 * billrecordid.
+	 * 
+	 * @param billid
+	 * @param billrecordid
+	 * @return
+	 */
+	public Optional<IInvoiceBillRecordInfo> getInvoiceInvoiceBillRecordInfo(String billid, String billrecordid);
+
+	/**
+	 * Lookup a IInvoiceBillRecordInfo with matching provided {@link IInvoice} and
+	 * {@link IBilled}.
+	 * 
+	 * @param invoice
+	 * @param billed
+	 * @return
+	 */
+	public Optional<IInvoiceBillRecordInfo> getInvoiceInvoiceBillRecordInfo(IInvoice invoice, IBilled billed);
 }

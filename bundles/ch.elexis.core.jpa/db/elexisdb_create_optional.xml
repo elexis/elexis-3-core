@@ -3150,4 +3150,67 @@ WHERE kontakt.id IN (
 			<column name="CODE" />
 		</createIndex>
 	</changeSet>
+	
+	<changeSet author="thomas" id="manual_table_INVOICE_BILL_RECORD_INFO">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="INVOICE_BILL_RECORD_INFO" />
+			</not>
+		</preConditions>
+		<createTable
+			tableName="INVOICE_BILL_RECORD_INFO">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true"
+					primaryKeyName="CONSTRAINT_ID_INVOICE_BILL_RECORD_INFO" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column name="INVOICE" type="VARCHAR(255)" />
+			<column name="BILLID" type="VARCHAR(255)" />
+			<column name="BILLRECORDID" type="VARCHAR(255)" />
+			<column name="BILLED" type="VARCHAR(255)" />
+			<column name="INFOCODE" type="VARCHAR(255)" />
+			<column name="INFO" type="CLOB" />
+		</createTable>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx_INVOICE_BILL_RECORD_INFO_BILLID">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="INVOICE_BILL_RECORD_INFO"
+					indexName="invoicebillrecord_billid_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="invoicebillrecord_billid_idx"
+			tableName="INVOICE_BILL_RECORD_INFO">
+			<column name="BILLID" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx_INVOICE_BILL_RECORD_INFO_INVOICE">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="INVOICE_BILL_RECORD_INFO"
+					indexName="invoicebillrecord_invoice_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="invoicebillrecord_invoice_idx"
+			tableName="INVOICE_BILL_RECORD_INFO">
+			<column name="INVOICE" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="thomas" id="manual_idx_INVOICE_BILL_RECORD_INFO_BILLED">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists
+					tableName="INVOICE_BILL_RECORD_INFO"
+					indexName="invoicebillrecord_billed_idx" />
+			</not>
+		</preConditions>
+		<createIndex indexName="invoicebillrecord_billed_idx"
+			tableName="INVOICE_BILL_RECORD_INFO">
+			<column name="BILLED" />
+		</createIndex>
+	</changeSet>	
+	
 </databaseChangeLog>

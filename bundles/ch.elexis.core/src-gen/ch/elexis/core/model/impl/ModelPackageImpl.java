@@ -55,6 +55,7 @@ import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -431,6 +432,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iInvoiceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iInvoiceBillRecordInfoEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3564,6 +3572,76 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getIInvoiceBillRecordInfo() {
+		return iInvoiceBillRecordInfoEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoiceBillRecordInfo_Invoice() {
+		return (EReference)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoiceBillRecordInfo_Billed() {
+		return (EReference)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Billid() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Billrecordid() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Info() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Infocode() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getIInvoice_StateDate() {
 		return (EAttribute)iInvoiceEClass.getEStructuralFeatures().get(14);
 	}
@@ -5803,6 +5881,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iInvoiceEClass, IINVOICE__TRANSACTIONS);
 		createEReference(iInvoiceEClass, IINVOICE__ATTACHMENTS);
 
+		iInvoiceBillRecordInfoEClass = createEClass(IINVOICE_BILL_RECORD_INFO);
+		createEReference(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INVOICE);
+		createEReference(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLED);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLID);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLRECORDID);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INFO);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INFOCODE);
+
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
 		createEAttribute(iStockEClass, ISTOCK__DRIVER_UUID);
@@ -6134,6 +6220,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iInvoiceEClass.getESuperTypes().add(this.getIdentifiable());
 		iInvoiceEClass.getESuperTypes().add(this.getDeleteable());
 		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
+		iInvoiceBillRecordInfoEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getDeleteable());
 		iStockEClass.getESuperTypes().add(this.getWithAssignableId());
@@ -6852,6 +6939,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		op = addEOperation(iInvoiceEClass, null, "removeAttachment", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIDocument(), "attachment", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(iInvoiceBillRecordInfoEClass, IInvoiceBillRecordInfo.class, "IInvoiceBillRecordInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIInvoiceBillRecordInfo_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoiceBillRecordInfo_Billed(), this.getIBilled(), null, "billed", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Billid(), ecorePackage.getEString(), "billid", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Billrecordid(), ecorePackage.getEString(), "billrecordid", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Info(), ecorePackage.getEString(), "info", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Infocode(), ecorePackage.getEString(), "infocode", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

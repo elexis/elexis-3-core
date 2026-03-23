@@ -886,6 +886,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachments" upperBound="-1"
         eType="#//IDocument"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IInvoiceBillRecordInfo" abstract="true"
+      interface="true" eSuperTypes="#//Identifiable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invoice" eType="#//IInvoice"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="billed" eType="#//IBilled"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="billid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="billrecordid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="info" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="infocode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IStock" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
     <eOperations name="isCommissioningSystem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
