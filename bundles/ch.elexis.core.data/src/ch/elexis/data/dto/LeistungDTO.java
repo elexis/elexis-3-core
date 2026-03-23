@@ -12,6 +12,7 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.services.holder.BillingServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -159,5 +160,9 @@ public class LeistungDTO {
 
 	public double getTpw() {
 		return tpw;
+	}
+
+	public IBilled getBilled() {
+		return CoreModelServiceHolder.get().load(id, IBilled.class).orElse(null);
 	}
 }
