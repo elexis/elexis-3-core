@@ -8,11 +8,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 /**
  * Allow bypassing the login dialog, eg. for automated GUI-tests. Example: when
@@ -42,7 +42,7 @@ public class EnvVarsLoginContributor implements ILoginContributor {
 		if (StringUtils.isNotEmpty(username)) {
 			LoggerFactory.getLogger(getClass()).warn("Bypassing LoginDialog with username " + username);
 			AccessControlServiceHolder.get().doPrivileged(() -> {
-				dbUser = CoreModelServiceHolder.get().load(username, IUser.class);
+				dbUser = PortableServiceLoader.getCoreModelService().load(username, IUser.class);
 			});
 			if (dbUser.isPresent()) {
 				IUser user = dbUser.get().login(username, password.toCharArray());

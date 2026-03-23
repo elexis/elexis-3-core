@@ -3,11 +3,11 @@ package ch.elexis.core.services.internal.text;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IUserService;
 
@@ -45,7 +45,7 @@ public class TextPlaceholderContext implements IContext {
 				IContact userContact = ((IUser) object).getAssignedContact();
 				setNamed(ACTIVE_USERCONTACT, userContact);
 				// try to set default mandator
-				Optional<IUserService> userService = OsgiServiceUtil.getService(IUserService.class);
+				Optional<IUserService> userService = PortableServiceLoader.getOptional(IUserService.class);
 				if (userService.isPresent()) {
 					Optional<IMandator> defaultMandator = userService.get()
 							.getDefaultExecutiveDoctorWorkingFor((IUser) object);

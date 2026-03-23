@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IArticleDefaultSignature;
@@ -21,8 +22,6 @@ import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 
 @Component
@@ -178,7 +177,8 @@ public class MedicationService implements IMedicationService {
 
 	@Override
 	public Optional<IArticleDefaultSignature> getDefaultSignature(IArticle article) {
-		IQuery<IArticleDefaultSignature> query = CoreModelServiceHolder.get().getQuery(IArticleDefaultSignature.class);
+		IQuery<IArticleDefaultSignature> query = PortableServiceLoader.getCoreModelService()
+				.getQuery(IArticleDefaultSignature.class);
 		query.and("article", COMPARATOR.LIKE, "%" + StoreToStringServiceHolder.getStoreToString(article));
 		Optional<IArticleDefaultSignature> ret = query.executeSingleResult();
 		if (!ret.isPresent()) {
@@ -190,7 +190,7 @@ public class MedicationService implements IMedicationService {
 	@Override
 	public Optional<IArticleDefaultSignature> getDefaultSignature(String atcCode) {
 		if (StringUtils.isNotBlank(atcCode)) {
-			IQuery<IArticleDefaultSignature> query = CoreModelServiceHolder.get()
+			IQuery<IArticleDefaultSignature> query = PortableServiceLoader.getCoreModelService()
 					.getQuery(IArticleDefaultSignature.class);
 			query.and("atccode", COMPARATOR.LIKE, atcCode);
 			return query.executeSingleResult();
@@ -200,14 +200,15 @@ public class MedicationService implements IMedicationService {
 
 	@Override
 	public IArticleDefaultSignature getTransientDefaultSignature(IArticle article) {
-		IArticleDefaultSignature ret = CoreModelServiceHolder.get().create(IArticleDefaultSignature.class);
+		IArticleDefaultSignature ret = PortableServiceLoader.getCoreModelService()
+				.create(IArticleDefaultSignature.class);
 		ret.setArticle(article);
 		return ret;
 	}
 
 	@Override
 	public IPrescription createPrescriptionCopy(IPrescription prescription) {
-		IPrescription ret = CoreModelServiceHolder.get().create(IPrescription.class);
+		IPrescription ret = PortableServiceLoader.getCoreModelService().create(IPrescription.class);
 		ret.setArticle(prescription.getArticle());
 		ret.setPatient(prescription.getPatient());
 		ret.setDosageInstruction(prescription.getDosageInstruction());
@@ -220,7 +221,7 @@ public class MedicationService implements IMedicationService {
 			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, extInfoValue);
 		}
 		ret.setDateFrom(LocalDateTime.now());
-		ret.setPrescriptor(ContextServiceHolder.get().getActiveUserContact().orElse(null));
+		ret.setPrescriptor(PortableServiceLoader.get(IContextService.class).getActiveUserContact().orElse(null));
 		return ret;
 	}
 
@@ -230,9 +231,9 @@ public class MedicationService implements IMedicationService {
 			stopDateTime = LocalDateTime.now();
 		}
 		prescription.setDateTo(stopDateTime);
-		if (ContextServiceHolder.get().getActiveUserContact().isPresent()) {
+		if (PortableServiceLoader.get(IContextService.class).getActiveUserContact().isPresent()) {
 			prescription.setExtInfo(Constants.FLD_EXT_STOPPED_BY,
-					ContextServiceHolder.get().getActiveUserContact().get().getId());
+					PortableServiceLoader.get(IContextService.class).getActiveUserContact().get().getId());
 		}
 		if (stopReason != null) {
 			prescription.setStopReason(stopReason);
@@ -243,8 +244,8 @@ public class MedicationService implements IMedicationService {
 	public IRecipe createRecipe(IPatient patient, List<IPrescription> prescRecipes) {
 		LocalDateTime now = LocalDateTime.now();
 		List<Identifiable> entries = new ArrayList<>();
-		IRecipe ret = new IRecipeBuilder(CoreModelServiceHolder.get(), patient,
-				ContextServiceHolder.get().getActiveMandator().orElse(null)).build();
+		IRecipe ret = new IRecipeBuilder(PortableServiceLoader.getCoreModelService(), patient,
+				PortableServiceLoader.get(IContextService.class).getActiveMandator().orElse(null)).build();
 		for (int i = 0; i < prescRecipes.size(); i++) {
 			IPrescription iPrescription = prescRecipes.get(i);
 			IPrescription copy = createPrescriptionCopy(iPrescription);
@@ -254,8 +255,8 @@ public class MedicationService implements IMedicationService {
 			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(i));
 			entries.add(copy);
 		}
-		CoreModelServiceHolder.get().save(ret);
-		CoreModelServiceHolder.get().save(entries);
+		PortableServiceLoader.getCoreModelService().save(ret);
+		PortableServiceLoader.getCoreModelService().save(entries);
 		return ret;
 	}
 

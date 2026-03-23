@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
@@ -38,9 +39,6 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -106,7 +104,7 @@ public class BillingService implements IBillingService {
 		boolean checkMandant = !accessControlService.evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
-		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
+		IMandator activeMandator = PortableServiceLoader.get(IContextService.class).getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
 
 		// if m is null, ignore checks (return true)
@@ -153,7 +151,7 @@ public class BillingService implements IBillingService {
 			return translateResult(editable);
 		}
 		IBillable beforeAdjust = billable;
-		CoreModelServiceHolder.get().refresh(encounter, true);
+		PortableServiceLoader.getCoreModelService().refresh(encounter, true);
 		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
 		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
 			billable = iBillableAdjuster.adjust(billable, encounter);
@@ -199,7 +197,7 @@ public class BillingService implements IBillingService {
 					}
 					if (optifierResult.isOK()) {
 						CodeElementServiceHolder.updateStatistics(billable,
-								ContextServiceHolder.get().getActiveUserContact().orElse(null));
+								PortableServiceLoader.get(IContextService.class).getActiveUserContact().orElse(null));
 						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
@@ -255,7 +253,8 @@ public class BillingService implements IBillingService {
 				IPrescription prescription = coreModelService.load((String) prescId, IPrescription.class).orElse(null);
 				if (prescription != null && EntryType.SELF_DISPENSED == prescription.getEntryType()) {
 					coreModelService.remove(prescription);
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, prescription);
+					PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_RELOAD,
+							prescription);
 				}
 			}
 		}
@@ -316,7 +315,7 @@ public class BillingService implements IBillingService {
 		}
 
 		IStatus ret = Status.OK_STATUS;
-		boolean bAllowOverrideStrict = ConfigServiceHolder.get()
+		boolean bAllowOverrideStrict = PortableServiceLoader.get(IConfigService.class)
 				.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
 
 		double difference = newAmount - oldAmount;

@@ -10,8 +10,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 
 @Component
@@ -51,13 +51,12 @@ public class TraceService implements ITraceService {
 	public void addTraceEntry(String action) {
 		String username = null;
 		String workstation = NetTool.hostname;
-		Optional<IContextService> contextService = OsgiServiceUtil.getService(IContextService.class);
+		Optional<IContextService> contextService = PortableServiceLoader.getOptional(IContextService.class);
 		if (contextService.isPresent()) {
 			Optional<IUser> user = contextService.get().getActiveUser();
 			if (user.isPresent()) {
 				username = user.get().getId();
 			}
-			OsgiServiceUtil.ungetService(contextService.get());
 		}
 		this.addTraceEntry(username, workstation, action);
 	}

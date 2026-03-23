@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IAppointment;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 public class AppointmentExtensionHandler {
 
@@ -57,7 +57,7 @@ public class AppointmentExtensionHandler {
 				part = part.trim();
 				if (part.startsWith(KOMBI_PREFIX)) {
 					String id = part.substring(KOMBI_PREFIX.length()).trim();
-					CoreModelServiceHolder.get().load(id, IAppointment.class).ifPresent(linkedAppointments::add);
+					PortableServiceLoader.getCoreModelService().load(id, IAppointment.class).ifPresent(linkedAppointments::add);
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class AppointmentExtensionHandler {
 		String mainAppointmentId = getMainAppointmentId(appointment);
 
 		if (mainAppointmentId != null && !mainAppointmentId.isEmpty()) {
-			Optional<IAppointment> mainAppointment = CoreModelServiceHolder.get().load(mainAppointmentId,
+			Optional<IAppointment> mainAppointment = PortableServiceLoader.getCoreModelService().load(mainAppointmentId,
 					IAppointment.class);
 			if (mainAppointment.isPresent()) {
 				allRelatedAppointments.add(mainAppointment.get());

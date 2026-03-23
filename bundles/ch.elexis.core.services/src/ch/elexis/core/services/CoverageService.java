@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.FallConstants;
@@ -29,9 +30,6 @@ import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.StringTool;
 
 @Component
@@ -76,7 +74,8 @@ public class CoverageService implements ICoverageService {
 						}
 					}
 					if (r[1].equals("K")) { //$NON-NLS-1$
-						Optional<IContact> contact = CoreModelServiceHolder.get().load(localReq, IContact.class);
+						Optional<IContact> contact = PortableServiceLoader.getCoreModelService().load(localReq,
+								IContact.class);
 						if (!contact.isPresent()) {
 							return false;
 						}
@@ -132,7 +131,7 @@ public class CoverageService implements ICoverageService {
 		if (StringUtils.isBlank(id)) {
 			return null;
 		}
-		return CoreModelServiceHolder.get().load(id, IContact.class).orElse(null);
+		return PortableServiceLoader.getCoreModelService().load(id, IContact.class).orElse(null);
 	}
 
 	@Override
@@ -188,9 +187,9 @@ public class CoverageService implements ICoverageService {
 	 */
 	@Override
 	public String getDefaultCoverageLabel() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASELABEL,
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(), Preferences.USR_DEFCASELABEL,
 					Preferences.USR_DEFCASELABEL_DEFAULT);
 		}
 		return Preferences.USR_DEFCASELABEL_DEFAULT;
@@ -204,9 +203,9 @@ public class CoverageService implements ICoverageService {
 	 */
 	@Override
 	public String getDefaultCoverageReason() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFCASEREASON,
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(), Preferences.USR_DEFCASEREASON,
 					Preferences.USR_DEFCASEREASON_DEFAULT);
 		}
 		return Preferences.USR_DEFCASEREASON_DEFAULT;
@@ -222,27 +221,29 @@ public class CoverageService implements ICoverageService {
 	 */
 	@Override
 	public String getDefaultCoverageLaw() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(), Preferences.USR_DEFLAW, "defaultBillingSystem");
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(), Preferences.USR_DEFLAW,
+					"defaultBillingSystem");
 		}
 		return "defaultBillingSystem";
-		// return ConfigServiceHolder.getUser(Preferences.USR_DEFLAW,
+		// return
+		// PortableServiceLoader.get(IConfigService.class).getUser(Preferences.USR_DEFLAW,
 		// BillingSystem.getAbrechnungsSysteme()[0]);
 	}
 
 	@Override
 	public ICoverage createCopy(ICoverage coverage) {
-		ICoverage ret = new ICoverageBuilder(CoreModelServiceHolder.get(), coverage).guarantor(coverage.getGuarantor())
-				.costBearer(coverage.getCostBearer()).billingProposalDate(coverage.getBillingProposalDate())
-				.dateFrom(coverage.getDateFrom()).build();
+		ICoverage ret = new ICoverageBuilder(PortableServiceLoader.getCoreModelService(), coverage)
+				.guarantor(coverage.getGuarantor()).costBearer(coverage.getCostBearer())
+				.billingProposalDate(coverage.getBillingProposalDate()).dateFrom(coverage.getDateFrom()).build();
 
 		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getRequirements(coverage.getBillingSystem())),
 				coverage, ret);
 		copyExtInfoFields(loadFieldKeys(BillingSystemServiceHolder.get().getOptionals(coverage.getBillingSystem())),
 				coverage, ret);
 
-		CoreModelServiceHolder.get().save(ret);
+		PortableServiceLoader.getCoreModelService().save(ret);
 		return ret;
 	}
 
@@ -293,7 +294,7 @@ public class CoverageService implements ICoverageService {
 
 	@Override
 	public Optional<ICoverage> getLatestOpenCoverage(IPatient patient) {
-		IQuery<ICoverage> openCoverageQuery = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		IQuery<ICoverage> openCoverageQuery = PortableServiceLoader.getCoreModelService().getQuery(ICoverage.class);
 		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
 		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__DATE_TO, COMPARATOR.EQUALS, null);
 		openCoverageQuery.orderBy(ModelPackage.Literals.ICOVERAGE__DATE_FROM, ORDER.DESC);
@@ -306,7 +307,7 @@ public class CoverageService implements ICoverageService {
 
 	@Override
 	public ICoverage createDefaultCoverage(IPatient patient) {
-		return new ICoverageBuilder(CoreModelServiceHolder.get(), patient, getDefaultCoverageLabel(),
+		return new ICoverageBuilder(PortableServiceLoader.getCoreModelService(), patient, getDefaultCoverageLabel(),
 				getDefaultCoverageReason(), getDefaultCoverageLaw()).buildAndSave();
 	}
 
@@ -327,9 +328,9 @@ public class CoverageService implements ICoverageService {
 	@Override
 	public boolean canDelete(ICoverage element) {
 		if (element != null) {
-			IQuery<ISickCertificate> sickCertQuery = CoreModelServiceHolder.get().getQuery(ISickCertificate.class)
-					.and("fall", COMPARATOR.EQUALS, element);
-			IQuery<IInvoice> invoiceQuery = CoreModelServiceHolder.get().getQuery(IInvoice.class)
+			IQuery<ISickCertificate> sickCertQuery = PortableServiceLoader.getCoreModelService()
+					.getQuery(ISickCertificate.class).and("fall", COMPARATOR.EQUALS, element);
+			IQuery<IInvoice> invoiceQuery = PortableServiceLoader.getCoreModelService().getQuery(IInvoice.class)
 					.and("fall", COMPARATOR.EQUALS, element);
 			return element.getEncounters().isEmpty() && sickCertQuery.execute().isEmpty()
 					&& invoiceQuery.execute().isEmpty();

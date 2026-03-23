@@ -13,11 +13,11 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 
 @Component
 public class CodeElementService implements ICodeElementService {
@@ -84,13 +84,13 @@ public class CodeElementService implements ICodeElementService {
 	@Override
 	public Map<Object, Object> createContext() {
 		HashMap<Object, Object> ret = new HashMap<>();
-		Optional<IEncounter> consultation = ContextServiceHolder.get().getRootContext().getTyped(IEncounter.class);
+		Optional<IEncounter> consultation = PortableServiceLoader.get(IContextService.class).getRootContext().getTyped(IEncounter.class);
 		if (consultation.isPresent()) {
 			ret.put(ContextKeys.CONSULTATION, consultation.get());
 			ret.put(ContextKeys.COVERAGE, consultation.get().getCoverage());
 		}
 		if (ret.get(ContextKeys.COVERAGE) == null) {
-			Optional<ICoverage> coverage = ContextServiceHolder.get().getRootContext().getTyped(ICoverage.class);
+			Optional<ICoverage> coverage = PortableServiceLoader.get(IContextService.class).getRootContext().getTyped(ICoverage.class);
 			if (coverage.isPresent()) {
 				ret.put(ContextKeys.COVERAGE, coverage.get());
 			}

@@ -15,6 +15,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
@@ -36,10 +37,6 @@ import ch.elexis.core.model.builder.IAccountTransactionBuilder;
 import ch.elexis.core.model.builder.IInvoiceBilledBuilder;
 import ch.elexis.core.model.builder.IPaymentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoverageServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
@@ -82,7 +79,8 @@ public class InvoiceService implements IInvoiceService {
 		}
 
 		for (IEncounter encounter : encounters) {
-			if (encounter.getBilled().isEmpty() || EncounterServiceHolder.get().getSales(encounter).isZero()) {
+			if (encounter.getBilled().isEmpty()
+					|| PortableServiceLoader.get(IEncounterService.class).getSales(encounter).isZero()) {
 				LoggerFactory.getLogger(getClass())
 						.warn("Ignoring encounter [" + encounter.getLabel() + "] with sales amount zero.");
 			} else {
@@ -170,14 +168,14 @@ public class InvoiceService implements IInvoiceService {
 			if (actDate.isAfter(endDate)) {
 				endDate = endDate.with(actDate);
 			}
-			sum.addMoney(EncounterServiceHolder.get().getSales(encounter));
+			sum.addMoney(PortableServiceLoader.get(IEncounterService.class).getSales(encounter));
 		}
 		// perform some checks
 		if (coverage == null) {
 			result = result.add(Result.SEVERITY.ERROR, 8,
 					"Die Rechnung ist keinem Fall zugeordnet (" + getInvoiceDesc(ret) + ")", ret, true);
 		} else {
-			if (isBillingStrict() && !CoverageServiceHolder.get().isValid(coverage)) {
+			if (isBillingStrict() && !PortableServiceLoader.get(ICoverageService.class).isValid(coverage)) {
 				result = result.add(Result.SEVERITY.ERROR, 8,
 						"Die Rechnung hat keinen gültigen Fall (" + getInvoiceDesc(ret) + ")", ret, true);
 			}
@@ -207,8 +205,7 @@ public class InvoiceService implements IInvoiceService {
 			// save all verrechnet of this rechnung
 			List<IBilled> encounterBilled = encounter.getBilled();
 			for (IBilled billed : encounterBilled) {
-				IInvoiceBilled invoiceBilled = new IInvoiceBilledBuilder(coreModelService, ret, billed)
-						.build();
+				IInvoiceBilled invoiceBilled = new IInvoiceBilledBuilder(coreModelService, ret, billed).build();
 				newInvoiceBilled.add(invoiceBilled);
 			}
 		}
@@ -220,7 +217,7 @@ public class InvoiceService implements IInvoiceService {
 			if (coverage != null) {
 				IAccountTransaction invoiceBilled = new IAccountTransactionBuilder(coreModelService, ret,
 						coverage.getPatient(), sum.negate(), ret.getDate(), "Rn " + ret.getNumber() + " erstellt.")
-								.buildAndSave();
+						.buildAndSave();
 			}
 		}
 		return result.add(SEVERITY.OK, 0, "Ok", ret, false);
@@ -246,18 +243,18 @@ public class InvoiceService implements IInvoiceService {
 	}
 
 	private boolean isBillingCheckZero() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(),
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(),
 					ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false);
 		}
 		return false;
 	}
 
 	private boolean isBillingStrict() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(),
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(),
 					ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, true);
 		}
 		return true;
@@ -336,8 +333,7 @@ public class InvoiceService implements IInvoiceService {
 
 	@Override
 	public List<IInvoice> getInvoices(IEncounter encounter) {
-		INamedQuery<IInvoiceBilled> query = coreModelService.getNamedQuery(IInvoiceBilled.class,
-				"encounter");
+		INamedQuery<IInvoiceBilled> query = coreModelService.getNamedQuery(IInvoiceBilled.class, "encounter");
 		List<IInvoiceBilled> invoicebilled = query.executeWithParameters(query.getParameterMap("encounter", encounter));
 		HashSet<IInvoice> uniqueInvoices = new HashSet<>();
 		invoicebilled.stream().filter(ib -> ib.getInvoice() != null).forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
@@ -361,7 +357,7 @@ public class InvoiceService implements IInvoiceService {
 	public String getCombinedId(IInvoice invoice) {
 		IPatient patient = invoice.getCoverage().getPatient();
 		String pid;
-		if (ConfigServiceHolder.get().get("PatIDMode", "number").equals("number")) {
+		if (PortableServiceLoader.get(IConfigService.class).get("PatIDMode", "number").equals("number")) {
 			pid = StringUtils.leftPad(patient.getCode(), 6, '0');
 		} else {
 			pid = new TimeTool(patient.getDateOfBirth()).toString(TimeTool.DATE_COMPACT);

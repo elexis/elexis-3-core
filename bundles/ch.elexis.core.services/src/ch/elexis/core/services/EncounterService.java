@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.lock.types.LockResponse;
@@ -41,13 +42,6 @@ import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.holder.BillingServiceHolder;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.CoverageServiceHolder;
-import ch.elexis.core.services.holder.LocalLockServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -75,7 +69,7 @@ public class EncounterService implements IEncounterService {
 
 	@Reference
 	private IStoreToStringService storeToStringService;
-	
+
 	@Reference
 	private ICoverageService coverageService;
 
@@ -112,11 +106,11 @@ public class EncounterService implements IEncounterService {
 
 		// transfer encounter and save to clear dirty flag
 		encounter.setMandator(mandator);
-		CoreModelServiceHolder.get().save(encounter);
+		PortableServiceLoader.getCoreModelService().save(encounter);
 
 		result = reBillEncounter(encounter);
 		coreModelService.save(encounter);
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 
 		return result;
 	}
@@ -142,7 +136,7 @@ public class EncounterService implements IEncounterService {
 		}
 		encounter.addUpdated(ModelPackage.Literals.IENCOUNTER__COVERAGE);
 		coreModelService.save(encounter);
-		ContextServiceHolder.get().setActiveCoverage(coverage);
+		PortableServiceLoader.get(IContextService.class).setActiveCoverage(coverage);
 		return result;
 	}
 
@@ -207,7 +201,8 @@ public class EncounterService implements IEncounterService {
 	private void addVerrechnet(IEncounter encounter, ICodeElement billable, double amount, Result<IEncounter> result) {
 		// no locking required, PersistentObject create events are passed to server (RH)
 		for (int i = 0; i < amount; i++) {
-			Result<IBilled> addRes = BillingServiceHolder.get().bill((IBillable) billable, encounter, 1);
+			Result<IBilled> addRes = PortableServiceLoader.get(IBillingService.class).bill((IBillable) billable,
+					encounter, 1);
 			if (!addRes.isOK()) {
 				String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
 						+ " automatisch entfernt.\n" + addRes.toString();
@@ -218,15 +213,15 @@ public class EncounterService implements IEncounterService {
 
 	private void removeVerrechnet(IEncounter encounter, IBilled billed, Result<IEncounter> result) {
 		// acquire lock before removing
-		LockResponse lockResult = LocalLockServiceHolder.get().acquireLockBlocking(billed, 10,
+		LockResponse lockResult = PortableServiceLoader.get(ILocalLockService.class).acquireLockBlocking(billed, 10,
 				new NullProgressMonitor());
 		if (lockResult.isOk()) {
-			Result<?> removeRes = BillingServiceHolder.get().removeBilled(billed, encounter);
+			Result<?> removeRes = PortableServiceLoader.get(IBillingService.class).removeBilled(billed, encounter);
 			if (!removeRes.isOK()) {
 				String message = "Achtung: Position " + billed.getCode() + " konnte nicht entfernt werden.";
 				result.addMessage(SEVERITY.WARNING, message, encounter);
 			}
-			LocalLockServiceHolder.get().releaseLock(lockResult.getLockInfo());
+			PortableServiceLoader.get(ILocalLockService.class).releaseLock(lockResult.getLockInfo());
 		} else {
 			String message = "Achtung: Locking von Position " + billed.getCode() + " fehlgeschlagen.";
 			result.addMessage(SEVERITY.WARNING, message, encounter);
@@ -347,7 +342,7 @@ public class EncounterService implements IEncounterService {
 		IMandator encounterMandator = encounter.getMandator();
 		boolean checkMandant = !accessControlService.evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandatorOK = true;
-		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
+		IMandator activeMandator = PortableServiceLoader.get(IContextService.class).getActiveMandator().orElse(null);
 		boolean mandatorLoggedIn = (activeMandator != null);
 
 		// if m is null, ignore checks (return true)
@@ -363,15 +358,15 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public Optional<IEncounter> getLatestEncounter(IPatient patient, boolean create) {
-		if (!ContextServiceHolder.get().getActiveMandator().isPresent()) {
+		if (!PortableServiceLoader.get(IContextService.class).getActiveMandator().isPresent()) {
 			return Optional.empty();
 		}
-		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().get();
-		IContact userContact = ContextServiceHolder.get().getActiveUserContact().get();
-		IQuery<IEncounter> encounterQuery = CoreModelServiceHolder.get().getQuery(IEncounter.class);
+		IMandator activeMandator = PortableServiceLoader.get(IContextService.class).getActiveMandator().get();
+		IContact userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact().get();
+		IQuery<IEncounter> encounterQuery = PortableServiceLoader.getCoreModelService().getQuery(IEncounter.class);
 
 		// if not configured otherwise load only consultations of active mandant
-		if (!ConfigServiceHolder.get().get(userContact, Preferences.USR_DEFLOADCONSALL, false)) {
+		if (!PortableServiceLoader.get(IConfigService.class).get(userContact, Preferences.USR_DEFLOADCONSALL, false)) {
 			encounterQuery.and(ModelPackage.Literals.IENCOUNTER__MANDATOR, COMPARATOR.EQUALS, activeMandator);
 		}
 
@@ -401,11 +396,12 @@ public class EncounterService implements IEncounterService {
 	}
 
 	private Optional<IEncounter> createCoverageAndEncounter(IPatient patient) {
-		ICoverage coverage = CoverageServiceHolder.get().createDefaultCoverage(patient);
-		Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
+		ICoverage coverage = PortableServiceLoader.get(ICoverageService.class).createDefaultCoverage(patient);
+		Optional<IMandator> activeMandator = PortableServiceLoader.get(IContextService.class).getActiveMandator();
 		if (activeMandator.isPresent()) {
 			return Optional.of(
-					new IEncounterBuilder(CoreModelServiceHolder.get(), coverage, activeMandator.get()).buildAndSave());
+					new IEncounterBuilder(PortableServiceLoader.getCoreModelService(), coverage, activeMandator.get())
+							.buildAndSave());
 		}
 		return Optional.empty();
 	}
@@ -415,9 +411,9 @@ public class EncounterService implements IEncounterService {
 		List<IEncounter> result = null;
 		Optional<ACEAccessBitMapConstraint> aoboOrSelf = accessControlService
 				.isAoboOrSelf(EvACE.of(IEncounter.class, Right.READ));
-		if(aoboOrSelf.isPresent()) {
-			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
-					IEncounter.class, "Behandlung.patient.last.aobo");
+		if (aoboOrSelf.isPresent()) {
+			INamedQuery<IEncounter> query = PortableServiceLoader.getCoreModelService()
+					.getNamedQueryByName(IEncounter.class, IEncounter.class, "Behandlung.patient.last.aobo");
 			if (aoboOrSelf.get() == ACEAccessBitMapConstraint.AOBO) {
 				result = query.executeWithParameters(query.getParameterMap("patient", patient, "aoboids",
 						accessControlService.getAoboMandatorIdsForSqlIn()));
@@ -426,8 +422,8 @@ public class EncounterService implements IEncounterService {
 						Collections.singletonList(accessControlService.getSelfMandatorId())));
 			}
 		} else {
-			INamedQuery<IEncounter> query = CoreModelServiceHolder.get().getNamedQueryByName(IEncounter.class,
-					IEncounter.class, "Behandlung.patient.last");
+			INamedQuery<IEncounter> query = PortableServiceLoader.getCoreModelService()
+					.getNamedQueryByName(IEncounter.class, IEncounter.class, "Behandlung.patient.last");
 			result = query.executeWithParameters(query.getParameterMap("patient", patient));
 		}
 		if (result != null && !result.isEmpty()) {
@@ -438,7 +434,7 @@ public class EncounterService implements IEncounterService {
 
 	private String getVersionRemark() {
 		String remark = "edit";
-		java.util.Optional<IUser> activeUser = ContextServiceHolder.get().getActiveUser();
+		java.util.Optional<IUser> activeUser = PortableServiceLoader.get(IContextService.class).getActiveUser();
 		if (activeUser.isPresent()) {
 			remark = activeUser.get().getLabel();
 		}
@@ -469,7 +465,7 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public List<IEncounter> getAllEncountersForPatient(IPatient patient) {
-		IQuery<ICoverage> query = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		IQuery<ICoverage> query = PortableServiceLoader.getCoreModelService().getQuery(ICoverage.class);
 		query.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
 		List<ICoverage> coverages = query.execute();
 		List<IEncounter> collect = coverages.stream().flatMap(cv -> cv.getEncounters().stream())
@@ -479,8 +475,8 @@ public class EncounterService implements IEncounterService {
 
 	@Override
 	public List<IBilled> getBilledByBillable(IEncounter encounter, IBillable billable) {
-		INamedQuery<IBilled> query = CoreModelServiceHolder.get().getNamedQuery(IBilled.class, "behandlung",
-				"leistungenCode");
+		INamedQuery<IBilled> query = PortableServiceLoader.getCoreModelService().getNamedQuery(IBilled.class,
+				"behandlung", "leistungenCode");
 		return query.executeWithParameters(
 				query.getParameterMap("behandlung", encounter, "leistungenCode", billable.getId()));
 	}
@@ -489,7 +485,8 @@ public class EncounterService implements IEncounterService {
 	public void addDefaultDiagnosis(IEncounter encounter) {
 		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnosisSts.length() > 1) {
-			Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnosisSts);
+			Optional<Identifiable> diagnose = PortableServiceLoader.get(IStoreToStringService.class)
+					.loadFromString(diagnosisSts);
 			if (diagnose.isPresent()) {
 				encounter.addDiagnosis((IDiagnosis) diagnose.get());
 				coreModelService.save(encounter);
@@ -500,7 +497,7 @@ public class EncounterService implements IEncounterService {
 	@Override
 	public void addXRef(IEncounter encounter, String provider, String id, int pos, String text) {
 		// fire prerelease triggers save
-		ContextServiceHolder.get().sendEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, encounter);
+		PortableServiceLoader.get(IContextService.class).sendEvent(ElexisEventTopics.EVENT_LOCK_PRERELEASE, encounter);
 
 		VersionedResource vr = encounter.getVersionedEntry();
 		String ntext = vr.getHead();
@@ -519,7 +516,7 @@ public class EncounterService implements IEncounterService {
 		record.add(xref);
 		updateVersionedEntry(encounter, samdas); // XRefs may always be added
 		// update with the added content
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+		PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -527,7 +524,7 @@ public class EncounterService implements IEncounterService {
 	public Result<IEncounter> setEncounterDate(IEncounter encounter, LocalDate newDate) {
 		// modify the date
 		encounter.setDate(newDate);
-		CoreModelServiceHolder.get().save(encounter);
+		PortableServiceLoader.getCoreModelService().save(encounter);
 
 		Result<IEncounter> ret = new Result<IEncounter>(encounter);
 		List<IBillableVerifier> verifiers = new ArrayList<>();

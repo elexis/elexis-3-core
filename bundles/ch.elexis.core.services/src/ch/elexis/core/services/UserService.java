@@ -26,6 +26,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -33,9 +34,7 @@ import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.rgw.tools.PasswordEncryptionService;
 
 @Component
@@ -141,7 +140,7 @@ public class UserService implements IUserService {
 	public void setDefaultExecutiveDoctorWorkingFor(IUser user, IMandator mandator) {
 		if (user.getAssignedContact() != null) {
 			user.getAssignedContact().setExtInfo("StdMandant", mandator.getId());
-			CoreModelServiceHolder.get().save(user.getAssignedContact());
+			PortableServiceLoader.getCoreModelService().save(user.getAssignedContact());
 		} else {
 			LoggerFactory.getLogger(getClass())
 					.warn("Can not set executive doctors for user [" + user + "] with no assigned contact");
@@ -161,7 +160,7 @@ public class UserService implements IUserService {
 				edList.isEmpty() ? StringUtils.EMPTY
 						: (String) edList.stream().map(o -> o.toString())
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
-		CoreModelServiceHolder.get().save(user.getAssignedContact());
+		PortableServiceLoader.getCoreModelService().save(user.getAssignedContact());
 		userExecutiveDoctorsWorkingForCache.invalidateAll();
 	}
 
@@ -178,7 +177,7 @@ public class UserService implements IUserService {
 				edList.isEmpty() ? StringUtils.EMPTY
 						: (String) edList.stream().map(o -> o.toString())
 								.reduce((u, t) -> u + StringConstants.COMMA + t).get());
-		CoreModelServiceHolder.get().save(userGroup);
+		PortableServiceLoader.getCoreModelService().save(userGroup);
 		userExecutiveDoctorsWorkingForCache.invalidateAll();
 		groupExecutiveDoctorsWorkingForCache.invalidateAll();
 	}
@@ -264,10 +263,10 @@ public class UserService implements IUserService {
 		while (result.hasNext()) {
 			String next = result.next().toString();
 			if (accessControlService != null) {
-				accessControlService
-						.doPrivileged(() -> ret.add(CoreModelServiceHolder.get().load(next, IUserGroup.class).get()));
+				accessControlService.doPrivileged(
+						() -> ret.add(PortableServiceLoader.getCoreModelService().load(next, IUserGroup.class).get()));
 			} else {
-				ret.add(CoreModelServiceHolder.get().load(next, IUserGroup.class).get());
+				ret.add(PortableServiceLoader.getCoreModelService().load(next, IUserGroup.class).get());
 			}
 		}
 		return ret;
@@ -275,7 +274,7 @@ public class UserService implements IUserService {
 
 	private IAccessControlService getAccessControlService() {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.get(IAccessControlService.class);
 		}
 		return accessControlService;
 	}

@@ -8,13 +8,13 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.ObjectStatus;
 
 /**
@@ -48,7 +48,7 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		IMessage idbMessage = prepareMessage(receiver, message);
 
 		try {
-			CoreModelServiceHolder.get().save(idbMessage);
+			PortableServiceLoader.getCoreModelService().save(idbMessage);
 			return ObjectStatus.OK_STATUS(idbMessage.getId(), null);
 		} catch (IllegalStateException e) {
 			return ObjectStatus.ERROR_STATUS("Could not save message", e);

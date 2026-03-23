@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
@@ -21,7 +22,6 @@ import ch.elexis.core.model.format.PatientFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContext;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
 
@@ -112,7 +112,7 @@ public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver 
 		}
 		// fallback to contact properties
 		if (contactTextPlaceholderResolver != null) {
-			IContact contact = CoreModelServiceHolder.get().load(patient.getId(), IContact.class).get();
+			IContact contact = PortableServiceLoader.getCoreModelService().load(patient.getId(), IContact.class).get();
 			TextPlaceholderContext context = new TextPlaceholderContext(contact);
 			Optional<String> contactReplacement = contactTextPlaceholderResolver.replaceByTypeAndAttribute(context,
 					lcAttribute);
