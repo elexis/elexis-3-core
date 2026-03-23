@@ -104,6 +104,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.PatientConstants;
@@ -111,6 +112,7 @@ import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.actions.GlobalActions;
@@ -118,6 +120,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
+import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -248,6 +251,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
+	private Hyperlink billingDiagnosisLink;
+	private FormText billingDiagnosisText;
 	private InputData comboGeschlecht;
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
@@ -616,6 +621,33 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		inpData.widthHint = CoreUiUtil.getStringExtent(hHA, hHA.getText()).x;
 		inpAdresse.setLayoutData(inpData);
 
+		billingDiagnosisLink = tk.createHyperlink(cPersonalien, Messages.Core_BillingDiagnosis, SWT.NONE); // $NON-NLS-1$
+		billingDiagnosisLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				DiagnoseSelektor dsl = new DiagnoseSelektor(getShell());
+				if (dsl.open() == Dialog.OK) {
+					Object[] sel = dsl.getResult();
+					if (sel != null && sel.length > 0) {
+						Identifiable diagnose = (Identifiable) sel[0];
+						String storeToString = StoreToStringServiceHolder.getStoreToString(diagnose);
+						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS,
+								storeToString);
+						billingDiagnosisText.setText(diagnose.getLabel(), false, false);
+					} else {
+						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS, null);
+						billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
+					}
+				}
+			}
+		});
+		billingDiagnosisLink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+		billingDiagnosisText = tk.createFormText(cPersonalien, false);
+		billingDiagnosisText.setText(StringUtils.EMPTY, false, false); // $NON-NLS-1$
+		inpData = SWTHelper.getFillGridData(1, true, 1, false);
+		inpData.widthHint = CoreUiUtil.getStringExtent(billingDiagnosisLink, billingDiagnosisLink.getText()).x;
+		billingDiagnosisText.setLayoutData(inpData);
+
 		IExpansionListener ecExpansionListener = new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanging(final ExpansionEvent e) {
@@ -978,6 +1010,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (actPatient == null) {
 			form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
+			billingDiagnosisText.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
 			increasedTreatmentBtn.setSelection(false);
 			inpZusatzAdresse.clear();
@@ -1012,6 +1045,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				+ StringTool.unNull(actPatient.getVorname()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
+		if (actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS) instanceof String) {
+			java.util.Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(
+					(String) actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS));
+			if (diagnose.isPresent()) {
+				billingDiagnosisText.setText(diagnose.get().getLabel(), false, false);
+			}
+		} else {
+			billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
+		}
 		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
@@ -1698,6 +1740,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp.setUnlocked(unlocked);
 		inpZusatzAdresse.setUnlocked(unlocked);
 		hHA.setEnabled(unlocked);
+		billingDiagnosisLink.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
 		removeAdditionalAddressAction.setEnabled(unlocked);
@@ -1705,9 +1748,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		dmd.setUnlocked(unlocked);
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
+			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		} else {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
-
+			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 		}
 	}
 

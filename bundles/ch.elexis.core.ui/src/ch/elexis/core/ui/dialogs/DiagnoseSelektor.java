@@ -12,6 +12,7 @@ package ch.elexis.core.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -40,12 +42,14 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
 	private List<IDiagnosis> diagnoses = new ArrayList<>();
 
+	private NoDiagnose noDiagnose = new NoDiagnose();
+
 	@SuppressWarnings("unchecked")
 	public DiagnoseSelektor(Shell shell) {
 		super(shell);
 		setTitle(Messages.DiagnoseSelektorDialog_Title);
 
-		diagnoses.add(new NoDiagnose());
+		diagnoses.add(noDiagnose);
 
 		List<ICodeElementServiceContribution> diagnoseContributions = CodeElementServiceHolder.get()
 				.getContributionsByTyp(CodeElementTyp.DIAGNOSE);
@@ -113,6 +117,31 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 	@Override
 	protected IStatus validateItem(Object item) {
 		return Status.OK_STATUS;
+	}
+
+	@Override
+	protected void setResult(List newResult) {
+		if (newResult != null && newResult.contains(noDiagnose)) {
+			super.setResult(null);
+		} else {
+			super.setResult(newResult);
+		}
+	}
+
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
+		createButton(parent, IDialogConstants.NO_ID, "Keine", false);
+	}
+
+	@Override
+	protected void buttonPressed(int buttonId) {
+		super.buttonPressed(buttonId);
+		if (IDialogConstants.NO_ID == buttonId) {
+			setResult(Collections.singletonList(noDiagnose));
+			updateStatus(Status.OK_STATUS);
+			okPressed();
+		}
 	}
 
 	@Override
