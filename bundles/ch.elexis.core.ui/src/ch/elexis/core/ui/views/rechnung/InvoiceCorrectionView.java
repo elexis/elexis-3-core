@@ -1077,7 +1077,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				LeistungDTO leistungDTO = (LeistungDTO) element;
 				java.util.Optional<IInvoiceBillRecordInfo> invoiceBillRecordInfo = InvoiceServiceHolder.get()
 						.getInvoiceInvoiceBillRecordInfo(invoiceCorrectionDTO.getInvoice(), leistungDTO.getBilled());
-				if (invoiceBillRecordInfo.isPresent()) {
+				if (invoiceBillRecordInfo.isPresent()
+						&& StringUtils.isNotBlank(invoiceBillRecordInfo.get().getInfo())) {
 					return CoreUiUtil.getColorForString("FFDDDD");
 				}
 				return super.getBackground(element);
@@ -1088,7 +1089,8 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				LeistungDTO leistungDTO = (LeistungDTO) element;
 				java.util.Optional<IInvoiceBillRecordInfo> invoiceBillRecordInfo = InvoiceServiceHolder.get()
 						.getInvoiceInvoiceBillRecordInfo(invoiceCorrectionDTO.getInvoice(), leistungDTO.getBilled());
-				if (invoiceBillRecordInfo.isPresent()) {
+				if (invoiceBillRecordInfo.isPresent()
+						&& StringUtils.isNotBlank(invoiceBillRecordInfo.get().getInfo())) {
 					return invoiceBillRecordInfo.get().getInfo();
 				}
 				return super.getToolTipText(element);
