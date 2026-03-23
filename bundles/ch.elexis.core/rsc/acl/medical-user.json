@@ -78,6 +78,7 @@
 		"ch.elexis.core.model.IImage": "cruvdx",
 		"ch.elexis.core.model.IInvoice": "cruvdx:aobo",
 		"ch.elexis.core.model.IInvoiceBilled": "cruvdx",
+		"ch.elexis.core.model.IInvoiceBillRecordInfo": "cruvdx",
 		"ch.elexis.core.model.ILabItem": "cruvdx",
 		"ch.elexis.core.model.ILabMapping": "cruvdx",
 		"ch.elexis.core.model.ILaboratory": "cruvdx",

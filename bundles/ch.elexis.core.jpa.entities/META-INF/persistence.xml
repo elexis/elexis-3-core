@@ -62,6 +62,7 @@
 		<class>ch.elexis.core.jpa.entities.ICPCEpisodeDiagnosisLink</class>
 		<class>ch.elexis.core.jpa.entities.InboxElement</class>
 		<class>ch.elexis.core.jpa.entities.Invoice</class>
+		<class>ch.elexis.core.jpa.entities.InvoiceBillRecordInfo</class>
 		<class>ch.elexis.core.jpa.entities.Kontakt</class>
 		<class>ch.elexis.core.jpa.entities.KontaktAdressJoint</class>
 		<class>ch.elexis.core.jpa.entities.LabOrder</class>

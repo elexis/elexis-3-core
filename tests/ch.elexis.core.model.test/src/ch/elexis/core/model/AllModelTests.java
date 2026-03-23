@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		LocalServiceTest.class, DiagnosisReferenceTest.class, BilledTest.class, PrescriptionTest.class,
 		FreeTextDiagnosisTest.class, RecipeTest.class, DefaultSignatureTest.class, PersonTest.class, MessageTest.class,
 		MandatorTest.class, TextTemplateTest.class, SickCertificateTest.class, InvoiceTest.class, DayMessageTest.class,
-		BlobTest.class, ReminderTest.class, VaccinationTest.class })
+		BlobTest.class, ReminderTest.class, VaccinationTest.class, InvoiceBillRecordInfoTest.class })
 public class AllModelTests {
 
 }
