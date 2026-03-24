@@ -88,12 +88,15 @@ public class InvoiceBillRecordInfoTest extends AbstractTest {
 
 		IQuery<IInvoiceBillRecordInfo> query = coreModelService.getQuery(IInvoiceBillRecordInfo.class);
 		query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__INVOICE, COMPARATOR.EQUALS, invoice);
+		query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLED, COMPARATOR.EQUALS, billed);
 		List<IInvoiceBillRecordInfo> result = query.execute();
 
 		assertTrue(result.contains(info));
 
 		query = coreModelService.getQuery(IInvoiceBillRecordInfo.class);
 		query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLID, COMPARATOR.EQUALS, "test_bill_id");
+		query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLRECORDID, COMPARATOR.EQUALS,
+				"test_bill_record_id");
 		result = query.execute();
 
 		assertTrue(result.contains(info));
