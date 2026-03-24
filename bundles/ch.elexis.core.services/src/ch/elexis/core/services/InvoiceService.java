@@ -414,7 +414,7 @@ public class InvoiceService implements IInvoiceService {
 		if (StringUtils.isNotBlank(billid) && StringUtils.isNotBlank(billrecordid)) {
 			IQuery<IInvoiceBillRecordInfo> query = coreModelService.getQuery(IInvoiceBillRecordInfo.class);
 			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLID, COMPARATOR.EQUALS, billid);
-			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLID, COMPARATOR.EQUALS, billrecordid);
+			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLRECORDID, COMPARATOR.EQUALS, billrecordid);
 			return query.executeSingleResult();
 		}
 		return Optional.empty();
