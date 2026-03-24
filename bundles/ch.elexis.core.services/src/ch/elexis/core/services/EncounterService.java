@@ -486,7 +486,7 @@ public class EncounterService implements IEncounterService {
 	public void addDefaultDiagnosis(IEncounter encounter) {
 		String diagnosisSts = (String) encounter.getPatient().getExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS);
 		if (StringUtils.isNotBlank(diagnosisSts)) {
-			Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnosisSts);
+			Optional<Identifiable> diagnose = storeToStringService.loadFromString(diagnosisSts);
 			if (diagnose.isPresent()) {
 				encounter.addDiagnosis((IDiagnosis) diagnose.get());
 				coreModelService.save(encounter);
