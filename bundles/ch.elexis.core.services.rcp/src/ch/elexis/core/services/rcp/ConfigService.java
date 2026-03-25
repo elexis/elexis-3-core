@@ -19,6 +19,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jpa.entities.Config;
 import ch.elexis.core.jpa.entities.Userconfig;
@@ -39,10 +40,8 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.ITraceService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
 
@@ -65,7 +64,7 @@ public class ConfigService implements IConfigService {
 
 	private Map<Object, LocalLock> managedLocks;
 
-	@Reference
+	// lazy initialized
 	private ITraceService traceService;
 
 	@Activate
@@ -144,6 +143,9 @@ public class ConfigService implements IConfigService {
 	}
 
 	private void addTraceEntry(String action) {
+		if (traceService == null) {
+			traceService = OsgiServiceUtil.getService(ITraceService.class).get();
+		}
 		String userId = contextService.getActiveUser().map(IUser::getId).orElse("unknown");
 		traceService.addTraceEntry(userId, NetTool.hostname, action);
 	}
@@ -341,8 +343,8 @@ public class ConfigService implements IConfigService {
 	public String get(IContact contact, String key, String defaultValue, boolean refreshCache) {
 		if (contact != null) {
 
-			INamedQuery<IUserConfig> configQuery = CoreModelServiceHolder.get().getNamedQuery(IUserConfig.class,
-					refreshCache, "ownerid", "param");
+			INamedQuery<IUserConfig> configQuery = modelService.getNamedQuery(IUserConfig.class, refreshCache,
+					"ownerid", "param");
 			Optional<IUserConfig> config = configQuery.executeWithParametersSingleResult(
 					configQuery.getParameterMap("ownerid", contact.getId(), "param", key));
 			if (config.isPresent()) {
@@ -379,7 +381,7 @@ public class ConfigService implements IConfigService {
 	@Override
 	public List<String> getSubNodes(String key, boolean refreshCache) {
 		Set<String> ret = new HashSet<>();
-		IQuery<IConfig> query = CoreModelServiceHolder.get().getQuery(IConfig.class, refreshCache, false);
+		IQuery<IConfig> query = modelService.getQuery(IConfig.class, refreshCache, false);
 		query.and("param", COMPARATOR.LIKE, key + "/%");
 		List<IConfig> found = query.execute();
 		for (IConfig iConfig : found) {
@@ -413,7 +415,7 @@ public class ConfigService implements IConfigService {
 		if (contact == null) {
 			throw new IllegalArgumentException();
 		}
-		IQuery<IUserConfig> query = CoreModelServiceHolder.get().getQuery(IUserConfig.class);
+		IQuery<IUserConfig> query = modelService.getQuery(IUserConfig.class);
 		query.and("ownerid", COMPARATOR.EQUALS, contact.getId());
 		List<IUserConfig> entries = query.execute();
 		Map<Object, Object> ret = buildMap(entries);
@@ -594,7 +596,7 @@ public class ConfigService implements IConfigService {
 			if (object instanceof String) {
 				lockString = "local_" + (String) object + "_lock";
 			} else if (object instanceof Identifiable) {
-				String storeToString = StoreToStringServiceHolder.getStoreToString(object);
+				String storeToString = PortableServiceLoader.get(IStoreToStringService.class).getStoreToString(object);
 				lockString = "local_" + storeToString + "_lock"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				throw new IllegalStateException("Unknown object type [" + object + "]");
@@ -654,7 +656,8 @@ public class ConfigService implements IConfigService {
 					return false;
 				} else {
 					String user = "system";
-					Optional<IContact> activeUserContact = ContextServiceHolder.get().getActiveUserContact();
+					Optional<IContact> activeUserContact = PortableServiceLoader.get(IContextService.class)
+							.getActiveUserContact();
 					if (activeUserContact.isPresent()) {
 						user = activeUserContact.get().getLabel();
 					}

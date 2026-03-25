@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.BriefConstants;
@@ -42,8 +44,8 @@ public class DocumentService implements IDocumentService {
 
 	@Inject
 	@All
-	@Reference
-	List<IDocumentStore> documentStores;
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IDocumentStore> documentStores;
 
 	private Map<String, IDirectTemplateReplacement> directTemplateReplacement;
 

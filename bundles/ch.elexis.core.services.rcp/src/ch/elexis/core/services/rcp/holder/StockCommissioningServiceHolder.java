@@ -16,7 +16,7 @@ public class StockCommissioningServiceHolder {
 	// Please see
 	// info.elexis.server.core.connector.elexis.internal.services.scs.StockCommissioningSystemService
 	// for explanation
-	@Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+	@Reference(policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
 	public void setStockCommissioningSystemService(IStockCommissioningSystemService stockService) {
 		LoggerFactory.getLogger(getClass()).info("Setting " + stockService);
 		StockCommissioningServiceHolder.stockService = stockService;

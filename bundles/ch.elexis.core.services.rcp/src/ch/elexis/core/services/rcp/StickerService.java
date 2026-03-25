@@ -27,7 +27,6 @@ import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStoreToStringService;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
@@ -102,7 +101,7 @@ public class StickerService implements IStickerService {
 	public <T> List<T> getObjectsWithSticker(ISticker sticker, Class<T> type) {
 		List<StickerObjectLink> objectLinks = getStickerObjectLinksForSticker(sticker);
 		if (!objectLinks.isEmpty()) {
-			return objectLinks.stream().map(ol -> CoreModelServiceHolder.get().load(ol.getObj(), type).orElse(null))
+			return objectLinks.stream().map(ol -> coreModelService.load(ol.getObj(), type).orElse(null))
 					.filter(o -> o != null).collect(Collectors.toList());
 		}
 		return Collections.emptyList();

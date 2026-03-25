@@ -29,7 +29,7 @@ public class StoreToStringService implements IStoreToStringService {
 	@Inject
 	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	List<IStoreToStringContribution> contributions;
+	volatile List<IStoreToStringContribution> contributions;
 
 	private Map<Class<?>, IStoreToStringContribution> classToContributionMap = new HashMap<>();
 

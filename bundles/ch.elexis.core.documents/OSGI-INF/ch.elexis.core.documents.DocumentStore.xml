@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.documents.DocumentStore"/>
    </service>
-   <reference cardinality="0..n" field="services" interface="ch.elexis.core.services.IDocumentStore" name="services" policy="static" policy-option="greedy"/>
+   <reference cardinality="0..n" field="services" field-collection-type="service" interface="ch.elexis.core.services.IDocumentStore" name="services" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.documents.DocumentStore"/>
 </scr:component>

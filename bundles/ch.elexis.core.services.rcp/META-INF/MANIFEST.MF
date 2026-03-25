@@ -37,7 +37,6 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.13.0",
  ch.elexis.core.cdi;bundle-version="3.13.0",
  ch.elexis.core.rcp;bundle-version="3.13.0",
- ch.elexis.core.services;bundle-version="3.13.0",
  ch.elexis.core.jpa.entities;bundle-version="3.13.0"
 Service-Component: OSGI-INF/ch.elexis.core.services.rcp.ConfigService.xml,
  OSGI-INF/ch.elexis.core.services.rcp.RoleBasedAccessControlService.xml,

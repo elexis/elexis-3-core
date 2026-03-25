@@ -31,7 +31,7 @@ public class TextReplacementService implements ITextReplacementService {
 	@Inject
 	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	List<ITextPlaceholderResolver> placeholderResolvers;
+	volatile List<ITextPlaceholderResolver> placeholderResolvers;
 
 	private Pattern matchTemplate;
 

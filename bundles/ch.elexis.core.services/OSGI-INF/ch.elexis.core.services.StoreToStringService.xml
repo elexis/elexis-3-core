@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IStoreToStringService"/>
    </service>
-   <reference cardinality="0..n" field="contributions" interface="ch.elexis.core.services.IStoreToStringContribution" name="contributions" policy-option="greedy"/>
+   <reference cardinality="0..n" field="contributions" interface="ch.elexis.core.services.IStoreToStringContribution" name="contributions" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.services.StoreToStringService"/>
 </scr:component>

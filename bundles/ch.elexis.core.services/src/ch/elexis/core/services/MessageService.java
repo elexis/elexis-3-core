@@ -10,7 +10,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.model.message.TransientMessage;
@@ -29,8 +28,8 @@ public class MessageService implements IMessageService {
 
 	@Inject
 	@All
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
-	List<IMessageTransporter> _messageTransporters;
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IMessageTransporter> _messageTransporters;
 
 	@PostConstruct
 	@Activate

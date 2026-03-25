@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,13 +68,13 @@ public class BillingService implements IBillingService {
 
 	@Inject
 	@All
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
-	List<IBilledAdjuster> billedAdjusters;
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IBilledAdjuster> billedAdjusters;
 
 	@Inject
 	@All
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
-	List<IBillableAdjuster> billableAdjusters;
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IBillableAdjuster> billableAdjusters;
 
 	@Override
 	public Result<IEncounter> isEditable(IEncounter encounter) {

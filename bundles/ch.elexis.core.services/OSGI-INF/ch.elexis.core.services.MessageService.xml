@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IMessageService"/>
    </service>
-   <reference cardinality="0..n" field="_messageTransporters" interface="ch.elexis.core.services.IMessageTransporter" name="_messageTransporters" policy="static" policy-option="greedy"/>
+   <reference cardinality="0..n" field="_messageTransporters" interface="ch.elexis.core.services.IMessageTransporter" name="_messageTransporters" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.services.MessageService"/>
 </scr:component>

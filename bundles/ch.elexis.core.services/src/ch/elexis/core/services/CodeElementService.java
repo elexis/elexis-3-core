@@ -33,7 +33,7 @@ public class CodeElementService implements ICodeElementService {
 	@Inject
 	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	List<ICodeElementServiceContribution> _contributions;
+	volatile List<ICodeElementServiceContribution> _contributions;
 
 	@Activate
 	@PostConstruct

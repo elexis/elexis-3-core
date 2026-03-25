@@ -40,7 +40,7 @@ import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.utils.CoreUtil;
 
-@Component(immediate = true)
+@Component
 public class RoleBasedAccessControlService implements IAccessControlService {
 
 	private Logger logger;

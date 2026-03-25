@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +45,8 @@ public class DocumentStore {
 
 	@Inject
 	@All
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
-	private List<IDocumentStore> services;
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IDocumentStore> services;
 
 	public IDocumentStore getServiceById(String serviceId) {
 		return services.stream().filter(s -> serviceId.equals(s.getId())).findFirst().orElse(null);
