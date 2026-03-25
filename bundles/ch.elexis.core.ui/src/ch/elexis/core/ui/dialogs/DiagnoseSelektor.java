@@ -26,8 +26,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -44,8 +47,16 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
 	private NoDiagnose noDiagnose = new NoDiagnose();
 
-	@SuppressWarnings("unchecked")
+	private List<String> filterCodes;
+
+	private String info;
+
 	public DiagnoseSelektor(Shell shell) {
+		this(shell, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public DiagnoseSelektor(Shell shell, String codeSystemName) {
 		super(shell);
 		setTitle(Messages.DiagnoseSelektorDialog_Title);
 
@@ -55,8 +66,11 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 				.getContributionsByTyp(CodeElementTyp.DIAGNOSE);
 
 		for (ICodeElementServiceContribution iCodeElementServiceContribution : diagnoseContributions) {
-			diagnoses.addAll((Collection<? extends IDiagnosis>) iCodeElementServiceContribution
-					.getElements(CodeElementServiceHolder.createContext()));
+			if (codeSystemName == null
+					|| codeSystemName.equalsIgnoreCase(iCodeElementServiceContribution.getSystem())) {
+				diagnoses.addAll((Collection<? extends IDiagnosis>) iCodeElementServiceContribution
+						.getElements(CodeElementServiceHolder.createContext()));
+			}
 		}
 
 		setListLabelProvider(new LabelProvider() {
@@ -83,6 +97,15 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		if (StringUtils.isNotBlank(info)) {
+			Label infoLabel = new Label(parent, SWT.WRAP);
+			GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			gd.horizontalIndent = 5;
+			gd.verticalIndent = 5;
+			infoLabel.setLayoutData(gd);
+			infoLabel.setText(info);
+		}
+
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 
 		setMessage(Messages.DiagnoseSelektorDialog_Message);
@@ -101,6 +124,10 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 				diagnoses.add((IDiagnosis) object);
 			}
 		}
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	@Override
@@ -140,25 +167,46 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		if (IDialogConstants.NO_ID == buttonId) {
 			setResult(Collections.singletonList(noDiagnose));
 			updateStatus(Status.OK_STATUS);
-			okPressed();
+			// ok pressed would set selection as result
+			setReturnCode(OK);
+			close();
 		}
 	}
 
 	@Override
 	protected ItemsFilter createFilter() {
-		return new ItemsFilter() {
-			@Override
-			public boolean isConsistentItem(Object item) {
-				return true;
-			}
+		return new DefaultSubstringItemsFilter();
+	}
 
-			@Override
-			public boolean matchItem(Object item) {
-				IDiagnosis diag = (IDiagnosis) item;
-
-				return matches(diag.getLabel());
+	private class DefaultSubstringItemsFilter extends ItemsFilter {
+		
+		public DefaultSubstringItemsFilter() {
+			super();
+			if (!(patternMatcher.getPattern().startsWith("*") || patternMatcher.getPattern().startsWith("?"))) {
+				patternMatcher.setPattern("?*" + patternMatcher.getPattern());
 			}
-		};
+		}
+
+		@Override
+		public boolean isConsistentItem(Object item) {
+			return true;
+		}
+
+		@Override
+		public boolean matchItem(Object item) {
+			IDiagnosis diag = (IDiagnosis) item;
+			if (filterCodes != null) {
+				if (!filterCodes.contains(diag.getCode())) {
+					return false;
+				}
+			}
+			return matches(diag.getLabel());
+		}
+
+	}
+
+	public void setFilterCodes(List<String> filterCodes) {
+		this.filterCodes = filterCodes;
 	}
 
 	@Override
