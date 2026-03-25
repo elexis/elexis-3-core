@@ -60,7 +60,7 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 	private Map<String, AccessControlList> roleAclMap;
 	private Map<IUser, AccessControlList> userAclMap;
 
-	private ThreadLocal<Boolean> privileged;
+	private static ThreadLocal<Boolean> privileged = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
 	private String[] aoboObjects = { "IEncounter", "IInvoice" };
 
@@ -68,8 +68,6 @@ public class RoleBasedAccessControlService implements IAccessControlService {
 		logger = LoggerFactory.getLogger(getClass());
 		roleAclMap = Collections.synchronizedMap(new HashMap<>());
 		userAclMap = Collections.synchronizedMap(new HashMap<>());
-
-		privileged = ThreadLocal.withInitial(() -> Boolean.FALSE);
 	}
 
 	@Override
