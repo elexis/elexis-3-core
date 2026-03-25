@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.importer.div.importers.DefaultPersistenceHandler;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
 import ch.elexis.core.importer.div.importers.multifile.MultiFileParser;
-import ch.elexis.core.importer.div.importers.DefaultPersistenceHandler;
 import ch.elexis.core.ui.importer.div.importers.TestHL7Parser;
 import ch.elexis.core.ui.importer.div.importers.multifile.strategy.DefaultImportStrategyFactory;
 import ch.rgw.tools.Result;
@@ -67,6 +67,24 @@ public class MultiFileParserTests {
 	}
 
 	@Test
+	public void testImportFromFileAtStartOfDay() {
+		// requires omnivore
+		File hl7File = new File(workDir.toString(), "Synlab/StartDay_Labor-Befund.HL7");
+		Result<Object> result = mfParser.importFromFile(hl7File, new DefaultImportStrategyFactory(), hl7Parser,
+				persistenceHandler);
+		if (result.isOK()) {
+			assertTrue(true); // show import was successful
+			assertEquals(2, result.getMessages().size());
+			removeAllPatientsAndDependants();
+		} else {
+			String msg = "Import of 'StartDay_Labor-Befund.HL7' failed";
+			if (msg.contains("Omnivore") && System.getProperty("doNotFailOnMissingOmnivore") == null) {
+				fail(msg + " " + result.toString());
+			}
+		}
+	}
+
+	@Test
 	public void testImportFromDirectory() {
 		File synlabDir = new File(workDir.toString(), "Synlab");
 
@@ -74,7 +92,7 @@ public class MultiFileParserTests {
 				persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
-			assertEquals(4, result.getMessages().size());
+			assertEquals(6, result.getMessages().size());
 			removeAllPatientsAndDependants();
 		} else {
 			String msg = "Import of 'Laborbefund-Musterfrau.HL7' failed";
@@ -92,7 +110,7 @@ public class MultiFileParserTests {
 				new DefaultImportStrategyFactory().setMoveAfterImport(true), hl7Parser, persistenceHandler);
 		if (result.isOK()) {
 			assertTrue(true); // show import was successful
-			assertEquals(4, result.getMessages().size());
+			assertEquals(6, result.getMessages().size());
 
 			assertTrue(new File(moveAfterImportDir, "archive").exists());
 			assertFalse(new File(moveAfterImportDir, "error").exists());
