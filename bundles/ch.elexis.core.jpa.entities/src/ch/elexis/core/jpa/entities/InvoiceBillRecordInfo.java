@@ -1,19 +1,23 @@
 package ch.elexis.core.jpa.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.Cache;
+
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "INVOICE_BILL_RECORD_INFO")
+@Cache(expiry = 15000)
 @EntityListeners({ EntityWithIdListener.class })
 public class InvoiceBillRecordInfo extends AbstractEntityWithId implements EntityWithId {
 
