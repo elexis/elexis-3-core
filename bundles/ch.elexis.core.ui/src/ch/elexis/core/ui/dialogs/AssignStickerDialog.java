@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.TableItem;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStickerService;
-import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.ILockHandler;

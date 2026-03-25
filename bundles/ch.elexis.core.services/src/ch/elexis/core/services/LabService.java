@@ -30,12 +30,16 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class LabService implements ILabService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 

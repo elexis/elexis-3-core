@@ -19,7 +19,7 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=insurances", service = IReferenceDataImporter.class)
 public class InsurancesReferenceDataImporter extends AbstractReferenceDataImporter {

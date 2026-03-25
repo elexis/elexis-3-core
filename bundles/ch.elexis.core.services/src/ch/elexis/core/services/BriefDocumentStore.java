@@ -24,14 +24,20 @@ import ch.elexis.core.model.ITag;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
+import io.smallrye.common.annotation.Identifier;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
+@Identifier("ch.elexis.data.store.brief")
 @Component(property = "storeid=ch.elexis.data.store.brief")
 public class BriefDocumentStore implements IDocumentStore {
 
 	private static final String STORE_ID = "ch.elexis.data.store.brief";
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public String getId() {

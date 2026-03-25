@@ -21,23 +21,33 @@ import ch.elexis.core.services.internal.text.RecipeDocumentTemplateReplacement;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.ReplaceCallback;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class DocumentService implements IDocumentService {
 
 	public static final String MATCH_DIRECTTEMPLATE = "\\[[-a-zA-ZäöüÄÖÜéàè_]+\\]";
 
+	@Inject
 	@Reference
-	private ITextPlugin textPlugin;
+	ITextPlugin textPlugin;
 
+	@Inject
 	@Reference
 	private ITextReplacementService textReplacementService;
 
+	@Inject
+	@All
 	@Reference
-	private List<IDocumentStore> documentStores;
+	List<IDocumentStore> documentStores;
 
 	private Map<String, IDirectTemplateReplacement> directTemplateReplacement;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		directTemplateReplacement = new HashMap<>();

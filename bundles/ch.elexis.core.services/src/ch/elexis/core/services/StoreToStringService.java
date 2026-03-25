@@ -6,34 +6,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import ch.elexis.core.model.Identifiable;
+import io.quarkus.arc.All;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class StoreToStringService implements IStoreToStringService {
 
-	private List<IStoreToStringContribution> contributions = new CopyOnWriteArrayList<>();
-
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public synchronized void setCodeElementServiceContribution(IStoreToStringContribution contribution) {
-		contributions.add(contribution);
-	}
-
-	public synchronized void unsetCodeElementServiceContribution(IStoreToStringContribution contribution) {
-		contributions.remove(contribution);
-	}
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	List<IStoreToStringContribution> contributions;
 
 	private Map<Class<?>, IStoreToStringContribution> classToContributionMap = new HashMap<>();
 

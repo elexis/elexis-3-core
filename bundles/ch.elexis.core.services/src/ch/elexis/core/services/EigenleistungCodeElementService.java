@@ -12,12 +12,16 @@ import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICustomService;
 import ch.elexis.core.model.localservice.Constants;
 import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class EigenleistungCodeElementService implements ICodeElementServiceContribution {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public String getSystem() {

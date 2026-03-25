@@ -37,7 +37,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ISticker;
-import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.ui.actions.FlatDataLoader;
 import ch.elexis.core.ui.actions.PersistentObjectLoader;

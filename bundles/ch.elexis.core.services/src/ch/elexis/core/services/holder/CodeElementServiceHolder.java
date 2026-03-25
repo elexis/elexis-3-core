@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IEncounter;
@@ -17,17 +15,10 @@ import ch.elexis.core.model.Statistics;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IStoreToStringContribution;
 
-@Component
 public class CodeElementServiceHolder {
-	private static ICodeElementService codeElementService;
-
-	@Reference
-	public void setContextService(ICodeElementService codeElementService) {
-		CodeElementServiceHolder.codeElementService = codeElementService;
-	}
 
 	public static ICodeElementService get() {
-		return codeElementService;
+		return PortableServiceLoader.get(ICodeElementService.class);
 	}
 
 	/**
@@ -37,7 +28,7 @@ public class CodeElementServiceHolder {
 	 * @return
 	 */
 	public static Map<Object, Object> createContext() {
-		return codeElementService.createContext();
+		return CodeElementServiceHolder.get().createContext();
 	}
 
 	/**
@@ -47,7 +38,7 @@ public class CodeElementServiceHolder {
 	 * @return
 	 */
 	public static Map<Object, Object> createContext(IEncounter encounter) {
-		return codeElementService.createContext(encounter);
+		return CodeElementServiceHolder.get().createContext(encounter);
 	}
 
 	/**

@@ -23,7 +23,9 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.prescription.Methods;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 @Component
 public class MedicationService implements IMedicationService {
 

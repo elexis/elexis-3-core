@@ -18,8 +18,8 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StickerServiceHolder;
 import ch.elexis.core.services.holder.XidServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
 
 public class XidsFromExtInfo extends ExternalMaintenance {

@@ -28,12 +28,16 @@ import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class OrderService implements IOrderService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
 	@Override
 	public IOrderHistoryService getHistoryService() {

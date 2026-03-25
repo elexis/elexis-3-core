@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -18,24 +19,28 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class CodeElementService implements ICodeElementService {
 
 	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
 
+	@Inject
+	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	public void setCodeElementServiceContribution(ICodeElementServiceContribution contribution) {
-		ICodeElementServiceContribution previous = contributions.put(contribution.getSystem().toLowerCase(),
-				contribution);
-		if (previous != null) {
-			LoggerFactory.getLogger(getClass()).warn("Possible ICodeElementServiceContribution collision previous ["
-					+ previous + "] new [" + contribution + "]");
-		}
-	}
+	List<ICodeElementServiceContribution> _contributions;
 
-	public void unsetCodeElementServiceContribution(ICodeElementServiceContribution store) {
-		contributions.remove(store.getSystem().toLowerCase());
+	@Activate
+	@PostConstruct
+	void postConstruct() {
+		_contributions.forEach(contrib -> {
+			contributions.put(contrib.getSystem().toLowerCase(), contrib);
+		});
 	}
 
 	@Override
@@ -84,13 +89,15 @@ public class CodeElementService implements ICodeElementService {
 	@Override
 	public Map<Object, Object> createContext() {
 		HashMap<Object, Object> ret = new HashMap<>();
-		Optional<IEncounter> consultation = PortableServiceLoader.get(IContextService.class).getRootContext().getTyped(IEncounter.class);
+		Optional<IEncounter> consultation = PortableServiceLoader.get(IContextService.class).getRootContext()
+				.getTyped(IEncounter.class);
 		if (consultation.isPresent()) {
 			ret.put(ContextKeys.CONSULTATION, consultation.get());
 			ret.put(ContextKeys.COVERAGE, consultation.get().getCoverage());
 		}
 		if (ret.get(ContextKeys.COVERAGE) == null) {
-			Optional<ICoverage> coverage = PortableServiceLoader.get(IContextService.class).getRootContext().getTyped(ICoverage.class);
+			Optional<ICoverage> coverage = PortableServiceLoader.get(IContextService.class).getRootContext()
+					.getTyped(ICoverage.class);
 			if (coverage.isPresent()) {
 				ret.put(ContextKeys.COVERAGE, coverage.get());
 			}

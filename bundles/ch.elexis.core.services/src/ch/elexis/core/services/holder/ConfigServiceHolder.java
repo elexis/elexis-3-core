@@ -9,48 +9,36 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.services.IConfigService;
 
-@Component
 public class ConfigServiceHolder {
 
-	private static IConfigService configService;
-
-	@Reference
-	public void setModelService(IConfigService modelService) {
-		ConfigServiceHolder.configService = modelService;
-	}
-
 	public static IConfigService get() {
-		if (configService == null) {
-			throw new IllegalStateException("No IConfigService available");
-		}
-		return configService;
+		return PortableServiceLoader.get(IConfigService.class);
 	}
 
 	public static boolean isPresent() {
-		return configService != null;
+		return ConfigServiceHolder.get() != null;
 	}
 
 	// global access methods
 
 	public static String getGlobal(String key, String defaultValue) {
-		return configService.get(key, defaultValue);
+		return ConfigServiceHolder.get().get(key, defaultValue);
 	}
 
 	public static String getGlobalCached(String key, String defaultValue) {
-		return configService.get(key, defaultValue, false);
+		return ConfigServiceHolder.get().get(key, defaultValue, false);
 	}
 
 	public static int getGlobal(String key, int defaultValue) {
-		return configService.get(key, defaultValue);
+		return ConfigServiceHolder.get().get(key, defaultValue);
 	}
 
 	public static boolean getGlobal(String key, boolean defaultValue) {
-		return configService.get(key, defaultValue);
+		return ConfigServiceHolder.get().get(key, defaultValue);
 	}
 
 	public static String[] getGlobalStringArray(String key) {
@@ -63,59 +51,59 @@ public class ConfigServiceHolder {
 
 	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, String value) {
-		return configService.set(key, value);
+		return ConfigServiceHolder.get().set(key, value);
 	}
 
 	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, boolean value) {
-		return configService.set(key, value);
+		return ConfigServiceHolder.get().set(key, value);
 	}
 
 	public static void setGlobalAsList(String key, List<String> values) {
 		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
-			configService.set(key, value.get());
+			ConfigServiceHolder.get().set(key, value.get());
 		} else {
-			configService.set(key, null);
+			ConfigServiceHolder.get().set(key, null);
 		}
 	}
 
 	public static boolean setGlobal(String key, int value) {
-		return configService.set(key, value);
+		return ConfigServiceHolder.get().set(key, value);
 	}
 
 	public static List<String> getSubNodes(String key) {
-		return configService.getSubNodes(key);
+		return ConfigServiceHolder.get().getSubNodes(key);
 	}
 
 	// active user access methods
 
 	public static String getUser(String key, String defaultValue) {
-		return configService.getActiveUserContact(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveUserContact(key, defaultValue);
 	}
 
 	public static String getUserCached(String key, String defaultValue) {
-		return configService.getActiveUserContact(key, defaultValue, false);
+		return ConfigServiceHolder.get().getActiveUserContact(key, defaultValue, false);
 	}
 
 	public static boolean getUser(String key, boolean defaultValue) {
-		return configService.getActiveUserContact(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveUserContact(key, defaultValue);
 	}
 
 	public static Integer getUser(String key, int defaultValue) {
-		return configService.getActiveUserContact(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveUserContact(key, defaultValue);
 	}
 
 	public static boolean setUser(String key, String value) {
-		return configService.setActiveUserContact(key, value);
+		return ConfigServiceHolder.get().setActiveUserContact(key, value);
 	}
 
 	public static boolean setUser(String key, boolean value) {
-		return configService.setActiveUserContact(key, value);
+		return ConfigServiceHolder.get().setActiveUserContact(key, value);
 	}
 
 	public static boolean setUser(String key, int value) {
-		return configService.setActiveUserContact(key, value);
+		return ConfigServiceHolder.get().setActiveUserContact(key, value);
 	}
 
 	public static List<String> getUserAsList(String key) {
@@ -132,44 +120,44 @@ public class ConfigServiceHolder {
 	public static void setUserAsList(String key, List<String> values) {
 		Optional<String> value = values.stream().map(o -> o.toString()).reduce((u, t) -> u + "," + t);
 		if (value.isPresent()) {
-			configService.setActiveUserContact(key, value.get());
+			ConfigServiceHolder.get().setActiveUserContact(key, value.get());
 		} else {
-			configService.setActiveUserContact(key, null);
+			ConfigServiceHolder.get().setActiveUserContact(key, null);
 		}
 	}
 
 	public static void setUserFromMap(Map<Object, Object> map) {
-		configService.setActiveUserContact(map);
+		ConfigServiceHolder.get().setActiveUserContact(map);
 	}
 
 	public static Map<Object, Object> getUserAsMap() {
-		return configService.getActiveUserContactAsMap();
+		return ConfigServiceHolder.get().getActiveUserContactAsMap();
 	}
 
 	// active mandator access methods
 
 	public static String getMandator(String key, String defaultValue) {
-		return configService.getActiveMandator(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveMandator(key, defaultValue);
 	}
 
 	public static String getMandatorCached(String key, String defaultValue) {
-		return configService.getActiveMandator(key, defaultValue, false);
+		return ConfigServiceHolder.get().getActiveMandator(key, defaultValue, false);
 	}
 
 	public static boolean getMandator(String key, boolean defaultValue) {
-		return configService.getActiveMandator(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveMandator(key, defaultValue);
 	}
 
 	public static int getMandator(String key, int defaultValue) {
-		return configService.getActiveMandator(key, defaultValue);
+		return ConfigServiceHolder.get().getActiveMandator(key, defaultValue);
 	}
 
 	public static void setMandator(String key, String value) {
-		configService.setActiveMandator(key, value);
+		ConfigServiceHolder.get().setActiveMandator(key, value);
 	}
 
 	public static void setMandator(String key, boolean value) {
-		configService.setActiveMandator(key, value);
+		ConfigServiceHolder.get().setActiveMandator(key, value);
 	}
 
 	public static List<String> getMandatorAsList(String key) {
@@ -186,25 +174,25 @@ public class ConfigServiceHolder {
 	// local access methods
 
 	public static boolean getLocal(String key, boolean defaultValue) {
-		return configService.getLocal(key, defaultValue);
+		return ConfigServiceHolder.get().getLocal(key, defaultValue);
 	}
 
 	public static String getLocal(String key, String defaultValue) {
-		return configService.getLocal(key, defaultValue);
+		return ConfigServiceHolder.get().getLocal(key, defaultValue);
 	}
 
 	public static int getLocal(String key, int defaultValue) {
-		return configService.getLocal(key, defaultValue);
+		return ConfigServiceHolder.get().getLocal(key, defaultValue);
 	}
 
 	private static List<Runnable> waitForConfigService;
 
 	public synchronized static void runIfConfigServiceAvailable(Runnable runnable) {
-		if (configService == null) {
+		if (ConfigServiceHolder.get() == null) {
 			if (waitForConfigService == null) {
 				CompletableFuture.runAsync(() -> {
 					// wait for configService
-					while (configService == null) {
+					while (ConfigServiceHolder.get() == null) {
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {

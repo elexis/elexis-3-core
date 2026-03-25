@@ -41,14 +41,18 @@ import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class InvoiceService implements IInvoiceService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InvoiceService.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@SuppressWarnings("unchecked")
 	@Override

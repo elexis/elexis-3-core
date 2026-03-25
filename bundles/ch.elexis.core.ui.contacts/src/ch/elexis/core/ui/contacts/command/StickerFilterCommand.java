@@ -15,7 +15,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.ui.contacts.views.PatientenListeView;
 import ch.elexis.core.ui.dialogs.StickerSelectionDialog;
 import ch.elexis.core.ui.util.viewers.CommonViewerContentProvider.QueryFilter;

@@ -12,7 +12,9 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.interfaces.IReferenceDataImporter;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 @Component
 public class ReferenceDataImporterService implements IReferenceDataImporterService {
 

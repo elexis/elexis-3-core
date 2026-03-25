@@ -18,7 +18,7 @@ import org.osgi.service.event.EventHandler;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.server.ILockService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.icons.Images;
 

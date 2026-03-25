@@ -56,7 +56,6 @@
 	</build>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.l10n</artifactId>

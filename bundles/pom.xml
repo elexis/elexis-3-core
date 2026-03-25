@@ -19,6 +19,7 @@
 		<jandex-plugin.version>3.2.7</jandex-plugin.version>
 		<org.apache.poi.version>5.5.1</org.apache.poi.version>
 		<docx4j.version>11.5.11</docx4j.version>
+		<jcifs-ng.version>2.1.10</jcifs-ng.version>
 	</properties>
 
 	<modules>
@@ -30,6 +31,7 @@
 		<module>ch.elexis.core.test.logging</module>
 		<module>ch.elexis.core.coding</module>
 		<module>ch.elexis.core.services</module>
+		<module>ch.elexis.core.services.rcp</module>
 		<module>ch.elexis.core.model</module>
 		<module>ch.elexis.core.jpa</module>
 		<module>ch.elexis.core.jpa.ui</module>

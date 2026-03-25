@@ -24,7 +24,7 @@ import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
 import ch.elexis.core.ui.icons.Images;

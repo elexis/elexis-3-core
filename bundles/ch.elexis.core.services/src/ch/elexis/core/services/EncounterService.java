@@ -49,30 +49,40 @@ import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.Result.msg;
 import ch.rgw.tools.VersionedResource;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class EncounterService implements IEncounterService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@Inject
 	@Reference
-	private ICodeElementService codeElementService;
+	ICodeElementService codeElementService;
 
+	@Inject
 	@Reference
-	private IBillingService billingService;
+	IBillingService billingService;
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
+	@Inject
 	@Reference
-	private IStoreToStringService storeToStringService;
+	IStoreToStringService storeToStringService;
 
+	@Inject
 	@Reference
-	private ICoverageService coverageService;
+	ICoverageService coverageService;
 
 	@Override
 	public boolean isEditable(IEncounter encounter) {

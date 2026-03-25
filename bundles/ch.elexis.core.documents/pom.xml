@@ -46,11 +46,5 @@
 			<artifactId>ch.elexis.core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.quarkus.arc</groupId>
-			<artifactId>arc</artifactId>
-			<version>3.27.0</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 </project>

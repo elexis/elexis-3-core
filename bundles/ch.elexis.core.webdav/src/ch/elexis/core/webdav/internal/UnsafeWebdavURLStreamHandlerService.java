@@ -1,6 +1,7 @@
 package ch.elexis.core.webdav.internal;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -21,7 +22,7 @@ public class UnsafeWebdavURLStreamHandlerService extends AbstractURLStreamHandle
 			throw new IOException("No unencrypted, authenticated communication to external hosts allowed. Use davs.");
 		}
 		String replaced = url.toString().replaceFirst("dav", "http");
-		return new WebdavFile(new URL(replaced));
+		return new WebdavFile(URI.create(replaced).toURL());
 	}
 
 }

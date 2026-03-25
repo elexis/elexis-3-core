@@ -57,7 +57,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IConfigService;
-import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
+import ch.elexis.core.services.rcp.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;

@@ -23,7 +23,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.icons.Images;

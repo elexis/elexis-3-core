@@ -54,7 +54,11 @@ import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class AppointmentService implements IAppointmentService {
 
@@ -74,23 +78,27 @@ public class AppointmentService implements IAppointmentService {
 	private static final int STATE_DEFAULT = 1; // standard
 
 	private List<String> states = null;
-
-	@Reference
-	private IAccessControlService accessControlService;
-
-	@Reference
-	private IConfigService configService;
-
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
-
-	@Reference
-	private IContextService contextService;
-
-	@Reference
-	private IAppointmentHistoryManagerService appointmentHistoryManagerService;
-
 	private LoadingCache<String, Map<String, Area>> cache;
+
+	@Inject
+	@Reference
+	IAccessControlService accessControlService;
+
+	@Inject
+	@Reference
+	IConfigService configService;
+
+	@Inject
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	IModelService coreModelService;
+
+	@Inject
+	@Reference
+	IContextService contextService;
+
+	@Inject
+	@Reference
+	IAppointmentHistoryManagerService appointmentHistoryManagerService;
 
 	@Override
 	public IAppointment clone(IAppointment appointment) {
@@ -105,9 +113,9 @@ public class AppointmentService implements IAppointmentService {
 		return newAppointment;
 	}
 
+	@PostConstruct
 	@Activate
 	public void activate() {
-		// @TODO server support ?
 		accessControlService.doPrivileged(() -> {
 			states = getStates();
 			cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(new AreaLoader());

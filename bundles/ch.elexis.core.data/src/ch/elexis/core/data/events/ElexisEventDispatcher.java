@@ -37,7 +37,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;

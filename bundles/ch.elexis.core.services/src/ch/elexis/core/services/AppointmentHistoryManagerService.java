@@ -13,15 +13,20 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.rgw.tools.StringTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class AppointmentHistoryManagerService implements IAppointmentHistoryManagerService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
 	/**
 	 * Adds a new entry to the appointment's status history.

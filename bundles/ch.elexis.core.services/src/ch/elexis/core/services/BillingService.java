@@ -3,7 +3,6 @@ package ch.elexis.core.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,53 +41,41 @@ import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import io.quarkus.arc.All;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class BillingService implements IBillingService {
 
 	private static Logger logger = LoggerFactory.getLogger(BillingService.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@Inject
 	@Reference
-	private IStockService stockService;
+	IStockService stockService;
 
+	@Inject
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
-	private List<IBilledAdjuster> billedAdjusters = new ArrayList<>();
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+	List<IBilledAdjuster> billedAdjusters;
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBilledAdjuster(IBilledAdjuster adjuster) {
-		if (!billedAdjusters.contains(adjuster)) {
-			billedAdjusters.add(adjuster);
-		}
-	}
-
-	public void unsetBilledAdjuster(IBilledAdjuster adjuster) {
-		if (billedAdjusters.contains(adjuster)) {
-			billedAdjusters.remove(adjuster);
-		}
-	}
-
-	private List<IBillableAdjuster> billableAdjusters = new ArrayList<>();
-
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBillableAdjuster(IBillableAdjuster adjuster) {
-		if (!billableAdjusters.contains(adjuster)) {
-			billableAdjusters.add(adjuster);
-		}
-	}
-
-	public void unsetBillableAdjuster(IBillableAdjuster adjuster) {
-		if (billableAdjusters.contains(adjuster)) {
-			billableAdjusters.remove(adjuster);
-		}
-	}
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+	List<IBillableAdjuster> billableAdjusters;
 
 	@Override
 	public Result<IEncounter> isEditable(IEncounter encounter) {

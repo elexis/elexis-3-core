@@ -19,12 +19,19 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.types.Gender;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class TextReplacementService implements ITextReplacementService {
 
+	@Inject
+	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
-	private List<ITextPlaceholderResolver> placeholderResolvers;
+	List<ITextPlaceholderResolver> placeholderResolvers;
 
 	private Pattern matchTemplate;
 
@@ -32,6 +39,7 @@ public class TextReplacementService implements ITextReplacementService {
 
 	private Pattern matchDataAccess;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		matchTemplate = Pattern.compile(MATCH_TEMPLATE);

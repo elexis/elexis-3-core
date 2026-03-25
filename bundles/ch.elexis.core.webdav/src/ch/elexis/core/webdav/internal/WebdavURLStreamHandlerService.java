@@ -1,6 +1,7 @@
 package ch.elexis.core.webdav.internal;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -20,7 +21,7 @@ public class WebdavURLStreamHandlerService extends AbstractURLStreamHandlerServi
 
 		String replaced = url.toString().replaceFirst("davs", "https");
 		// TODO fetch token from context?
-		return new WebdavFile(new URL(replaced));
+		return new WebdavFile(URI.create(replaced).toURL());
 	}
 
 }

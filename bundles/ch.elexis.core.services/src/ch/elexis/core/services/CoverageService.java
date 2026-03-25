@@ -31,15 +31,20 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.rgw.tools.StringTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class CoverageService implements ICoverageService {
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@Inject
 	@Reference
-	private IStoreToStringService storeToStringService;
+	IStoreToStringService storeToStringService;
 
 	@Override
 	public boolean isValid(ICoverage coverage) {

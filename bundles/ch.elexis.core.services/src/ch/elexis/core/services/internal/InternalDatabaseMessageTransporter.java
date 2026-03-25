@@ -16,16 +16,20 @@ import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.status.ObjectStatus;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * Transport the message via the Elexis internal (database-based) message
  * system.
  */
+@Dependent
 @Component
 public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public IStatus send(TransientMessage message) {

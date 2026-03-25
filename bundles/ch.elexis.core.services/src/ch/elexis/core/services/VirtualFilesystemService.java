@@ -12,12 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.services.internal.VirtualFilesystemHandle;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class VirtualFilesystemService implements IVirtualFilesystemService {
 
+	@Inject
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
 	@Override
 	public IVirtualFilesystemHandle of(String uriString, boolean performVariableReplacement) throws IOException {

@@ -22,12 +22,16 @@ import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver {
 
+	@Inject
 	@Reference(target = "(type=Kontakt)")
-	private ITextPlaceholderResolver contactTextPlaceholderResolver;
+	ITextPlaceholderResolver contactTextPlaceholderResolver;
 
 	@Override
 	public String getSupportedType() {

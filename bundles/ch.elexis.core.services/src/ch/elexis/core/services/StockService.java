@@ -25,9 +25,11 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
-import ch.elexis.core.services.holder.StockCommissioningServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class StockService implements IStockService {
 
@@ -35,14 +37,17 @@ public class StockService implements IStockService {
 
 	private static Logger log = LoggerFactory.getLogger(StockService.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
+	@Inject
 	@Reference
-	private IStoreToStringService storeToStringService;
+	IStoreToStringService storeToStringService;
 
 	@Override
 	public Long getCumulatedStockForArticle(IArticle article) {
@@ -97,7 +102,14 @@ public class StockService implements IStockService {
 					return Status.OK_STATUS;
 				}
 			}
-			return StockCommissioningServiceHolder.get().performArticleOutlay(se, count, null);
+
+			Optional<IStockCommissioningSystemService> scs = PortableServiceLoader
+					.getOptional(IStockCommissioningSystemService.class);
+			if (scs.isPresent()) {
+				return scs.get().performArticleOutlay(se, count, null);
+			} else {
+				return Status.error("Could not get IStockCommissioningSystemService to outlay " + article);
+			}
 
 		} else {
 			LockResponse lr = PortableServiceLoader.get(ILocalLockService.class).acquireLockBlocking(se, 1,
