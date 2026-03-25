@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -20,7 +19,6 @@ import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import io.quarkus.arc.All;
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -28,34 +26,28 @@ import jakarta.inject.Inject;
 @Component
 public class CodeElementService implements ICodeElementService {
 
-	private HashMap<String, ICodeElementServiceContribution> contributions = new HashMap<>();
-
 	@Inject
 	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	volatile List<ICodeElementServiceContribution> _contributions;
 
-	@Activate
-	@PostConstruct
-	void postConstruct() {
-		_contributions.forEach(contrib -> {
-			contributions.put(contrib.getSystem().toLowerCase(), contrib);
-		});
-	}
-
 	@Override
 	public Optional<ICodeElement> loadFromString(String system, String code, Map<Object, Object> context) {
-		ICodeElementServiceContribution contribution = contributions.get(system.toLowerCase());
-		if (contribution != null) {
+		Optional<ICodeElementServiceContribution> contribution = findContributionBySystem(system);
+		if (contribution.isPresent()) {
 			if (context == null) {
 				context = Collections.emptyMap();
 			}
-			return contribution.loadFromCode(code, context);
+			return contribution.get().loadFromCode(code, context);
 		} else {
 			LoggerFactory.getLogger(getClass())
 					.warn("No ICodeElementServiceContribution for system [" + system + "] code [" + code + "]");
 		}
 		return Optional.empty();
+	}
+
+	private Optional<ICodeElementServiceContribution> findContributionBySystem(String system) {
+		return _contributions.stream().filter(e -> e.getSystem().equalsIgnoreCase(system)).findFirst();
 	}
 
 	@Override
@@ -77,13 +69,13 @@ public class CodeElementService implements ICodeElementService {
 
 	@Override
 	public List<ICodeElementServiceContribution> getContributionsByTyp(CodeElementTyp typ) {
-		return contributions.values().stream().filter(contribution -> contribution.getTyp() == typ)
+		return _contributions.stream().filter(contribution -> contribution.getTyp() == typ)
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ, String codeSystemName) {
-		return Optional.ofNullable(contributions.get(codeSystemName.toLowerCase()));
+		return findContributionBySystem(codeSystemName.toLowerCase());
 	}
 
 	@Override
