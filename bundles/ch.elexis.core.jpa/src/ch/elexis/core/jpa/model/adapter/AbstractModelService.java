@@ -47,6 +47,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.ILabOrder;
 import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
@@ -679,8 +680,10 @@ public abstract class AbstractModelService implements IModelService {
 		if (getAccessControlService() != null) {
 			ret = getAccessControlService().evaluate(EvACE.of(clazz, right));
 			if (!ret) {
-				String message = "(ACL " + System.currentTimeMillis() + ") User has no right [" + right
-						+ "] for class [" + clazz.getName() + "]";
+				String userId = ContextServiceHolder.get().getActiveUser().map(IUser::getId).orElse("?");
+				String privileged = getAccessControlService().isPrivileged() ? "P" : "";
+				String message = "(ACL " + System.currentTimeMillis() + ") +" + privileged + "  User " + userId
+						+ " has no right [" + right + "] for class [" + clazz.getName() + "]";
 				if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION) {
 					fullNotify(message, new Throwable());
 				} else {
