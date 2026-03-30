@@ -215,22 +215,8 @@ public class OrderManagementUtil {
 
 				orderService.getHistoryService().logEdit(actOrder, orderEntry, oldQuantity, newQuantity);
 			} else {
-
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().map(IMandator::getId).orElse(null);
-				List<IStock> allStocks = StockServiceHolder.get().getAllStocks(true, false);
-				IStock stock = null;
-				if (mandatorId != null) {
-					stock = allStocks.stream()
-							.filter(s -> s.getOwner() != null && mandatorId.equals(s.getOwner().getId()))
-							.max((s1, s2) -> Integer.compare(s1.getPriority(), s2.getPriority())).orElse(null);
-				}
-				if (stock == null && !allStocks.isEmpty()) {
-					stock = allStocks.stream().max((s1, s2) -> Integer.compare(s1.getPriority(), s2.getPriority()))
-							.orElse(null);
-				}
-				if (stock == null) {
-					stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
-				}
+				IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
 				IOrderEntry newOrderEntry = actOrder.addEntry(article, stock, null, quantity);
 				orderService.getHistoryService().logChangedAmount(actOrder, newOrderEntry, 0, quantity);
 				CoreModelServiceHolder.get().save(newOrderEntry);

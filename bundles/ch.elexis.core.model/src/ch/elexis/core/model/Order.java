@@ -14,6 +14,8 @@ import ch.elexis.core.jpa.entities.Bestellung;
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
 import ch.elexis.core.model.service.holder.CoreModelServiceHolder;
 import ch.elexis.core.model.util.internal.ModelUtil;
+import ch.elexis.core.services.IStockService;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.rgw.tools.TimeTool;
 
 public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entities.Bestellung>
@@ -34,12 +36,13 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 	public IOrderEntry addEntry(IArticle article, IStock stock, IContact provider, int amount) {
 		if (provider == null) {
 			if (stock != null && article != null) {
-				Optional<IStockEntry> stockEntryOpt = stock.getStockEntries().stream()
-						.filter(se -> se.getArticle() != null && se.getArticle().equals(article)).findFirst();
-				if (stockEntryOpt.isPresent() && stockEntryOpt.get().getProvider() != null) {
-					provider = stockEntryOpt.get().getProvider();
+				IStockService stockService = StockServiceHolder.get();
+				IStockEntry stockEntry = stockService.findStockEntryForArticleInStock(stock, article);
+				if (stockEntry != null && stockEntry.getProvider() != null) {
+					provider = stockEntry.getProvider();
 				}
 			}
+
 			if (provider == null) {
 				String providerId = ModelUtil.getConfig(Preferences.INVENTORY_DEFAULT_ARTICLE_PROVIDER, null);
 				if (providerId != null) {
