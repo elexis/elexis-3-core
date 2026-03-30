@@ -24,6 +24,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import io.smallrye.common.annotation.Identifier;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -32,6 +33,7 @@ import jakarta.inject.Inject;
 public class PatientTextPlaceholderResolver implements ITextPlaceholderResolver {
 
 	@Inject
+	@Identifier("type=Kontakt")
 	@Reference(target = "(type=Kontakt)")
 	ITextPlaceholderResolver contactTextPlaceholderResolver;
 

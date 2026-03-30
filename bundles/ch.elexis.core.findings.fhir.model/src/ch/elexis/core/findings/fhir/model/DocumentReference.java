@@ -7,12 +7,13 @@ import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.IDocumentReference;
-import ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder;
 import ch.elexis.core.findings.util.fhir.accessor.DocumentReferenceAccessor;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IXid;
+import ch.elexis.core.services.IDocumentService;
 
 public class DocumentReference extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.DocumentReference>
 		implements IDocumentReference {
@@ -58,7 +59,8 @@ public class DocumentReference extends AbstractFindingModelAdapter<ch.elexis.cor
 
 	@Override
 	public IDocument getDocument() {
-		return DocumentStoreHolder.getDocument(getEntity().getDocumentStoreId(), getEntity().getDocumentId())
+		return PortableServiceLoader.get(IDocumentService.class)
+				.getDocument(getEntity().getDocumentStoreId(), getEntity().getDocumentId())
 				.orElse(null);
 	}
 

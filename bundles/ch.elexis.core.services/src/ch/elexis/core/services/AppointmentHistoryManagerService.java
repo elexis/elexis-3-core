@@ -134,8 +134,7 @@ public class AppointmentHistoryManagerService implements IAppointmentHistoryMana
 	}
 
 	private String getCurrentUser() {
-		return contextService != null && contextService.getActiveUser().isPresent()
-				? contextService.getActiveUser().get().getLabel()
+		return contextService != null && contextService.getActiveUserId() != null ? contextService.getActiveUserId()
 				: Messages.UNKNOWN;
 	}
 

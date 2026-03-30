@@ -35,14 +35,23 @@ public interface IDocumentService {
 	Map<String, Boolean> validateTemplate(IDocumentTemplate template, IContext context);
 
 	/**
+	 * Return a document providing a document store id
+	 * 
+	 * @param documentStoreId
+	 * @param documentId
+	 * @return
+	 * @since 3.13
+	 */
+	Optional<IDocument> getDocument(String documentStoreId, String documentId);
+
+	/**
 	 * Add an {@link IDirectTemplateReplacement} that will be called for matching
 	 * template found in a {@link IDocumentTemplate}.
 	 * 
 	 * @param template
 	 * @param textTemplateConsumer
 	 */
-	void addDirectTemplateReplacement(String template,
-			IDirectTemplateReplacement textTemplateConsumer);
+	void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer);
 
 	/**
 	 * Interface for direct template replacement using provided {@link ITextPlugin}

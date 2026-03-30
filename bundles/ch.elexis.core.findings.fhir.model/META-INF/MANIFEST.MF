@@ -7,6 +7,7 @@ Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.findings.fhir.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core.cdi;bundle-version="3.13.0",
  ch.elexis.core.findings;bundle-version="3.13.0",
  ch.elexis.core.jpa;bundle-version="3.13.0",
  ch.elexis.core.jpa.entities;bundle-version="3.13.0",
@@ -18,7 +19,6 @@ Import-Package: jakarta.persistence;version="[3.2.0,4.0.0)",
  org.apache.commons.lang3;version="3.1.0",
  org.osgi.service.event;version="[1.4.0,2.0.0)"
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.model.service.CodingService.xml,
- OSGI-INF/ch.elexis.core.findings.fhir.model.service.DocumentStoreHolder.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelService.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder.xml,
  OSGI-INF/ch.elexis.core.findings.fhir.model.service.FindingsService.xml,

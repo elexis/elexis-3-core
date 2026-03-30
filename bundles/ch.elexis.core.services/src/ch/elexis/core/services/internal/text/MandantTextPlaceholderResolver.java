@@ -22,6 +22,7 @@ import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import io.smallrye.common.annotation.Identifier;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -30,6 +31,7 @@ import jakarta.inject.Inject;
 public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver {
 
 	@Inject
+	@Identifier("type=Kontakt")
 	@Reference(target = "(type=Kontakt)")
 	ITextPlaceholderResolver contactTextPlaceholderResolver;
 
@@ -76,8 +78,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 			switch (mandantAttribut) {
 			case Anrede:
 				if (mandator.isPerson()) {
-					return PersonFormatUtil
-							.getSalutation(PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get());
+					return PersonFormatUtil.getSalutation(
+							PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get());
 				} else {
 					return StringUtils.EMPTY;
 				}
@@ -87,7 +89,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 				return mandator.getDescription2();
 			case Titel:
 				if (mandator.isPerson()) {
-					return PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get().getTitel();
+					return PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get()
+							.getTitel();
 				}
 			case TarmedSpezialität:
 				return (String) mandator.getExtInfo("TarmedSpezialität");

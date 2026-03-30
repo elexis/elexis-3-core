@@ -90,12 +90,12 @@ public class BillingService implements IBillingService {
 		boolean checkMandant = !accessControlService.evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
-		IMandator activeMandator = PortableServiceLoader.get(IContextService.class).getActiveMandator().orElse(null);
-		boolean mandatorLoggedIn = (activeMandator != null);
+		String activeMandatorId = PortableServiceLoader.get(IContextService.class).getActiveMandatorId();
+		boolean mandatorLoggedIn = (activeMandatorId != null);
 
 		// if m is null, ignore checks (return true)
-		if (encounterMandator != null && activeMandator != null) {
-			if (checkMandant && !(encounterMandator.getId().equals(activeMandator.getId()))) {
+		if (encounterMandator != null && activeMandatorId != null) {
+			if (checkMandant && !(encounterMandator.getId().equals(activeMandatorId))) {
 				mandatorOk = false;
 			}
 
@@ -150,7 +150,7 @@ public class BillingService implements IBillingService {
 
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
-							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
+							contextService.getActiveMandatorId());
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
 					}
@@ -230,8 +230,8 @@ public class BillingService implements IBillingService {
 
 			// TODO stock return via event
 			IArticle article = (IArticle) billable;
-			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
-			stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
+			String mandatorId = contextService.getActiveMandatorId();
+            stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
 
 			// TODO prescription via event
 			Object prescId = billed.getExtInfo(Constants.FLD_EXT_PRESC_ID);
@@ -351,7 +351,7 @@ public class BillingService implements IBillingService {
 		IBillable billable = billed.getBillable();
 		if (billable instanceof IArticle) {
 			IArticle art = (IArticle) billable;
-			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
+			String mandatorId = contextService.getActiveMandatorId();
 			double difference = newAmount - oldAmount;
 			if (difference > 0) {
 				stockService.performSingleDisposal(art, (int) difference, mandatorId);

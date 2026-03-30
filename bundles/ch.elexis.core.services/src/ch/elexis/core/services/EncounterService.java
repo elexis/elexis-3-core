@@ -35,7 +35,6 @@ import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.PatientConstants;
@@ -445,11 +444,8 @@ public class EncounterService implements IEncounterService {
 
 	private String getVersionRemark() {
 		String remark = "edit";
-		java.util.Optional<IUser> activeUser = PortableServiceLoader.get(IContextService.class).getActiveUser();
-		if (activeUser.isPresent()) {
-			remark = activeUser.get().getLabel();
-		}
-		return remark;
+		String activeUserId = PortableServiceLoader.get(IContextService.class).getActiveUserId();
+		return remark + " " + activeUserId;
 	}
 
 	@Override

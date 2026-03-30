@@ -179,6 +179,20 @@ public class DocumentService implements IDocumentService {
 	}
 
 	@Override
+	public Optional<IDocument> getDocument(String documentStoreId, String documentId) {
+		if (StringUtils.isNotBlank(documentStoreId) && StringUtils.isNotBlank(documentId)) {
+			IDocumentStore store = getDocumentStore(documentStoreId);
+			if (store != null) {
+				return store.loadDocument(documentId);
+			} else {
+				LoggerFactory.getLogger(DocumentService.class)
+						.warn("Could not get store for id [" + documentStoreId + "]");
+			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
 	public void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer) {
 		if (directTemplateReplacement.containsKey(template)) {
 			LoggerFactory.getLogger(getClass())

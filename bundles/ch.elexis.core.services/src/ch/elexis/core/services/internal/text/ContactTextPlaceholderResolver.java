@@ -15,9 +15,11 @@ import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import io.smallrye.common.annotation.Identifier;
 import jakarta.enterprise.context.Dependent;
 
 @Dependent
+@Identifier("type=Kontakt")
 @Component(property = { "type=Kontakt" })
 public class ContactTextPlaceholderResolver implements ITextPlaceholderResolver {
 
