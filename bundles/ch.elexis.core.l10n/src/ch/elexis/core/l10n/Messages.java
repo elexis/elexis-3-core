@@ -2787,6 +2787,7 @@ public class Messages extends NLS {
 	public static String LagerView_vkPreis;
 	public static String LagerverwaltungPrefs_checkForInvalid;
 	public static String LagerverwaltungPrefs_ignoreOrderedArticleOnNextOrder;
+	public static String LagerverwaltungPrefs_activeMandatorStockOnAutoOrder;
 	public static String LagerverwaltungPrefs_markOrdered;
 	public static String LagerverwaltungPrefs_orderCriteria;
 	public static String LagerverwaltungPrefs_orderWhenAtMin;
