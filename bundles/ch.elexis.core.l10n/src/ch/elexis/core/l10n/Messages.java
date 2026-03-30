@@ -5515,6 +5515,22 @@ public class Messages extends NLS {
 	public static String CovercardImportDialog_WarningNoBasicInsurance;
 	public static String BestellView_ArticleNotFoundTitle;
 	public static String BestellView_ArticleNotFoundMessage;
+	public static String ImageViewAll_Confirm_delete;
+	public static String ImageViewAll_DeleteEmptyGroup;
+	public static String ImageViewAll_DeleteGroupWithImages;
+	public static String ImageViewAll_DeleteMultipleGroups;
+	public static String ImageViewAll_DeleteMultipleImages;
+	public static String ImageViewAll_DeleteSingleImage;
+	public static String ImageViewAll_DeleteSelectedElements;
+	public static String ImageViewAll_FileAction;
+	public static String ImageViewAll_FileExistsAction;
+	public static String ImageViewAll_Overwrite;
+	public static String ImageViewAll_Rename;
+	public static String ImageViewAll_Cancel;
+	public static String ImageViewAll_CreateThumbnails;
+	public static String ImageViewAll_CreateThumbnailFor;
+	public static String ImageViewAll_EnterNewFilename;
+	public static String ImageViewAll_PleaseEnterNewFilename;
 
 
 	static { // load message values from bundle file
