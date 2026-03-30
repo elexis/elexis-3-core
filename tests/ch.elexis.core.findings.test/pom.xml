@@ -65,6 +65,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.opencsv</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.apache.httpcomponents.httpcore</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -76,6 +81,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.registry</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -160,6 +170,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.client5.httpclient5</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.osgi-resource-locator</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -175,6 +190,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.osgi.util.promise</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -186,6 +206,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.console</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5-h2</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
