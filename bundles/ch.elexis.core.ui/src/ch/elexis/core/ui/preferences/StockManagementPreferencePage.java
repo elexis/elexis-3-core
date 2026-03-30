@@ -78,6 +78,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 
 	private Button btnChkStoreInvalidNumbers;
 	private Button btnIgnoreOrderedArticlesOnNextOrder;
+	private Button btnActiveMandatorStockOnAutoOrder;
 
 	private WritableValue<IStock> stockDetail = new WritableValue<>(null, IStock.class);
 	private TableViewer tableViewer;
@@ -432,6 +433,11 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 		btnIgnoreOrderedArticlesOnNextOrder.setSelection(getPreferenceStore()
 				.getBoolean(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER));
 
+		btnActiveMandatorStockOnAutoOrder = new Button(container, SWT.CHECK);
+		btnActiveMandatorStockOnAutoOrder.setText(Messages.LagerverwaltungPrefs_activeMandatorStockOnAutoOrder);
+		btnActiveMandatorStockOnAutoOrder.setSelection(
+				getPreferenceStore().getBoolean(Preferences.INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER));
+
 		btnChkStoreInvalidNumbers = new Button(container, SWT.CHECK);
 		btnChkStoreInvalidNumbers.setText(Messages.LagerverwaltungPrefs_checkForInvalid);
 		btnChkStoreInvalidNumbers
@@ -554,6 +560,8 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 				btnChkStoreInvalidNumbers.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
 				btnIgnoreOrderedArticlesOnNextOrder.getSelection());
+		getPreferenceStore().setValue(Preferences.INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER,
+				btnActiveMandatorStockOnAutoOrder.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_OUTLAY_PARTIAL_PACKAGES,
 				btnMachineOutlayPartialPackages.getSelection());
 		getPreferenceStore().setValue(Preferences.INVENTORY_MACHINE_STORE_ONLY_STOCKED_ARTICLES,
