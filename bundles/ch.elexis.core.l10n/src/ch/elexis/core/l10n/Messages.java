@@ -5531,6 +5531,7 @@ public class Messages extends NLS {
 	public static String ImageViewAll_CreateThumbnailFor;
 	public static String ImageViewAll_EnterNewFilename;
 	public static String ImageViewAll_PleaseEnterNewFilename;
+	public static String AgendaDefinitionen_useColorizedPatientSearch;
 
 
 	static { // load message values from bundle file
