@@ -215,7 +215,6 @@ public class OrderManagementUtil {
 
 				orderService.getHistoryService().logEdit(actOrder, orderEntry, oldQuantity, newQuantity);
 			} else {
-
 				String mandatorId = ContextServiceHolder.get().getActiveMandator().map(IMandator::getId).orElse(null);
 				IStock stock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
 				IOrderEntry newOrderEntry = actOrder.addEntry(article, stock, null, quantity);
