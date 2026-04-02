@@ -5537,8 +5537,52 @@ public class Messages extends NLS {
 	public static String ImageViewAll_CreateThumbnailFor;
 	public static String ImageViewAll_EnterNewFilename;
 	public static String ImageViewAll_PleaseEnterNewFilename;
-
-
+	public static String CreateSelectedMedform_FormSelection;
+	public static String CreateSelectedMedform_SelectRecipientMessage;
+	public static String CreateSelectedMedform_ContinueWithoutRecipientTitle;
+	public static String CreateSelectedMedform_ContinueWithoutRecipientMessage;
+	public static String CreateSelectedMedform_Error;
+	public static String CreateSelectedMedform_ErrorSavingPdf;
+	public static String CreateSelectedMedform_ErrorCreatingPdf;
+	public static String CreateSelectedMedform_ErrorQueryingMedforms;
+	public static String CreateSelectedMedform_ErrorNoApiKey;
+	public static String CreateSelectedMedform_ErrorOpeningPdf;
+	public static String MedformListSelectionDialog_RemoveFromFavorites;
+	public static String MedformListSelectionDialog_AddToFavorites;
+	public static String MedformListSelectionDialog_DeactivateAddressQuery;
+	public static String MedformListSelectionDialog_ActivateAddressQuery;
+	// --- NEU: Strings für den MedformDialogTitleHelper ---
+	public static String MedformDialogTitleHelper_SelectPhysio;
+	public static String MedformDialogTitleHelper_SelectErgo;
+	public static String MedformDialogTitleHelper_SelectLogo;
+	public static String MedformDialogTitleHelper_SelectNutritionist;
+	public static String MedformDialogTitleHelper_SelectPodiatrist;
+	public static String MedformDialogTitleHelper_SelectMassage;
+	public static String MedformDialogTitleHelper_SelectChiro;
+	public static String MedformDialogTitleHelper_SelectSpitex;
+	public static String MedformDialogTitleHelper_SelectCardio;
+	public static String MedformDialogTitleHelper_SelectRadio;
+	public static String MedformDialogTitleHelper_SelectOphthalmo;
+	public static String MedformDialogTitleHelper_SelectNeuro;
+	public static String MedformDialogTitleHelper_SelectPediatrician;
+	public static String MedformDialogTitleHelper_SelectENT;
+	public static String MedformDialogTitleHelper_SelectOnco;
+	public static String MedformDialogTitleHelper_SelectPneumo;
+	public static String MedformDialogTitleHelper_SelectRheuma;
+	public static String MedformDialogTitleHelper_SelectUro;
+	public static String MedformDialogTitleHelper_SelectAngio;
+	public static String MedformDialogTitleHelper_SelectDermato;
+	public static String MedformDialogTitleHelper_SelectEndo;
+	public static String MedformDialogTitleHelper_SelectGastro;
+	public static String MedformDialogTitleHelper_SelectGyn;
+	public static String MedformDialogTitleHelper_SelectPsych;
+	public static String MedformDialogTitleHelper_SelectOrthoTech;
+	public static String MedformDialogTitleHelper_SelectSurgeon;
+	public static String MedformDialogTitleHelper_SelectLab;
+	public static String MedformDialogTitleHelper_SelectInsurance;
+	public static String MedformDialogTitleHelper_SelectAuthority;
+	public static String MedformDialogTitleHelper_SelectHospital;
+	public static String MedformDialogTitleHelper_SelectRecipient;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
