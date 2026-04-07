@@ -38,7 +38,6 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IModelService;
-import io.quarkus.arc.All;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -53,7 +52,7 @@ public class DocumentReferenceIDocumentReferenceTransformer
 	IModelService coreModelService;
 
 	@Inject
-	@All
+//	@All
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
 	List<IDocumentStore> documentStores;
 

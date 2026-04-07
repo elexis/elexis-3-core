@@ -13,7 +13,6 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.model.Identifiable;
-import io.quarkus.arc.All;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -22,7 +21,7 @@ import jakarta.inject.Inject;
 public class FhirTransformerRegistry implements IFhirTransformerRegistry {
 
 	@Inject
-	@All
+//	@All
 	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 	volatile List<IFhirTransformer<?, ?>> transformers;
 
