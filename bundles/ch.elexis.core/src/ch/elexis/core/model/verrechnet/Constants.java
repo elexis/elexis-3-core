@@ -15,6 +15,8 @@ public class Constants {
 
 	public static final String FLD_EXT_INDICATIONCODE = "indicationcode";
 
+	public static final String FLD_EXT_NOFRANCHISEFREE = "nofranchisefree";
+
 	public static final String FLD_EXT_SIDE = "Seite";
 	public static final String SIDE_L = "l";
 	public static final String SIDE_R = "r";
