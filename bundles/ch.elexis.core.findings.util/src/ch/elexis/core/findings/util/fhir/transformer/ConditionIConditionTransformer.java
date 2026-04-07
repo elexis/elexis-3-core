@@ -20,15 +20,20 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ConditionIConditionTransformer implements IFhirTransformer<Condition, ICondition> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
 	private ConditionAccessor accessor = new ConditionAccessor();
 

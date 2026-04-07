@@ -17,13 +17,17 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class CareTeamUserGroupTransformer implements IFhirTransformer<CareTeam, IUserGroup> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public Optional<CareTeam> getFhirObject(IUserGroup localObject, SummaryEnum summaryEnum, Set<Include> includes) {

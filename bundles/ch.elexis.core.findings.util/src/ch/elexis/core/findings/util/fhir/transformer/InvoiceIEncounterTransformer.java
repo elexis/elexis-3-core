@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.r4.model.ChargeItem;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Invoice;
@@ -22,6 +21,8 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttri
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * Transforms an {@link IEncounter} into an {@link Invoice} of
@@ -29,21 +30,20 @@ import ch.elexis.core.services.IModelService;
  * is only a depiction of the current "billing state" of an Encounter. The resp.
  * Encounter is referenced via {@link Invoice#getSubject()}.
  */
+@Dependent
 @Component
 public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, IEncounter> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
-	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
-			+ "=ChargeItem.IBilled)")
-	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
+	@Inject
+	@org.osgi.service.component.annotations.Reference
+	ChargeItemIBilledTransformer chargeItemTransformer;
 
 	private IInvoiceInvoiceAttributeMapper attributeMapper;
-
-	public InvoiceIEncounterTransformer() {
-	}
 
 	@Activate
 	public void activate() {

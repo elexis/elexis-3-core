@@ -15,20 +15,21 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IOrganizationOrganizationAttributeMapper;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class OrganizationKontaktTransformer implements IFhirTransformer<Organization, IOrganization> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IXidService xidService;
-
-	@Reference
-	private IUserService userService;
+	IXidService xidService;
 
 	private IOrganizationOrganizationAttributeMapper attributeMapper;
 

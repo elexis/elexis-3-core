@@ -17,12 +17,16 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemUtil;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class CodeSystemStringTransformer implements IFhirTransformer<CodeSystem, String> {
 
+	@Inject
 	@Reference
-	private ICodingService codingService;
+	ICodingService codingService;
 
 	private HashMap<String, CodeSystem> idMap = new HashMap<>();
 

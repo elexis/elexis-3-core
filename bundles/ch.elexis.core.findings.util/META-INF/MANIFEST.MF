@@ -7,11 +7,9 @@ Bundle-Vendor: medevit.at
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
  ch.elexis.core;bundle-version="3.13.0",
- ch.elexis.core.rcp;bundle-version="3.13.0",
+ ch.elexis.core.cdi;bundle-version="3.13.0",
  ch.elexis.core.services;bundle-version="3.13.0",
- ch.elexis.core.services.rcp;bundle-version="3.13.0",
- ch.elexis.core.findings;bundle-version="3.13.0",
- info.elexis.target.hapi.fhir;bundle-version="7.2.3"
+ ch.elexis.core.findings;bundle-version="3.13.0"
 Export-Package: ch.elexis.core.findings.scripting,
  ch.elexis.core.findings.util,
  ch.elexis.core.findings.util.commands,
@@ -19,11 +17,27 @@ Export-Package: ch.elexis.core.findings.scripting,
  ch.elexis.core.findings.util.fhir.accessor,
  ch.elexis.core.findings.util.fhir.transformer.helper,
  ch.elexis.core.findings.util.model
-Import-Package: com.google.common.cache;version="[33.4.0,34.0.0)",
+Import-Package: ca.uhn.fhir.context;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.model.api;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.model.primitive;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.parser;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.rest.api;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.rest.param;version="[7.2.0,8.0.0)",
+ ca.uhn.fhir.rest.server.exceptions;version="[7.2.0,8.0.0)",
+ com.google.common.cache;version="[33.4.0,34.0.0)",
  com.google.gson;version="2.8.0",
+ io.quarkus.arc;version="[3.32.0,4.0.0)";resolution:=optional,
+ jakarta.annotation;version="[2.1.0,3.0.0)",
+ jakarta.enterprise.context;version="[4.0.0,5.0.0)",
+ jakarta.inject;version="[2.0.0,3.0.0)",
  org.apache.commons.codec.digest;version="1.14.0",
  org.apache.commons.io;version="2.8.0",
  org.apache.commons.lang3.math;version="3.1.0",
- org.apache.commons.text;version="1.9.0"
+ org.apache.commons.text;version="1.9.0",
+ org.hl7.fhir.exceptions;version="[6.1.0,7.0.0)",
+ org.hl7.fhir.instance.model.api;version="[7.2.0,8.0.0)",
+ org.hl7.fhir.r4.model;version="[6.1.0,7.0.0)",
+ org.hl7.fhir.r4.model.codesystems;version="[6.1.0,7.0.0)",
+ org.hl7.fhir.utilities.xhtml;version="[6.1.0,7.0.0)"
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/*.xml

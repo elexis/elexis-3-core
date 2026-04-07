@@ -19,22 +19,30 @@ import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class AppointmentTerminTransformer implements IFhirTransformer<Appointment, IAppointment> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IAppointmentService appointmentService;
+	IAppointmentService appointmentService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IConfigService configService;
+	IConfigService configService;
 
 	private IAppointmentAppointmentAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IAppointmentAppointmentAttributeMapper(appointmentService, coreModelService,

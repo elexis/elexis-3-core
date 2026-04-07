@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.Organization;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
@@ -19,7 +20,6 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=insurances", service = IReferenceDataImporter.class)
 public class InsurancesReferenceDataImporter extends AbstractReferenceDataImporter {
@@ -70,8 +70,8 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 						if (!stickerService.hasSticker(insurance, sticker)) {
 							stickerService.addSticker(sticker, insurance);
 						}
-						if (readOnlySticker.isPresent()
-								&& !StickerServiceHolder.get().hasSticker(insurance, readOnlySticker.get())) {
+						if (readOnlySticker.isPresent() && !PortableServiceLoader.get(IStickerService.class)
+								.hasSticker(insurance, readOnlySticker.get())) {
 							stickerService.addSticker(readOnlySticker.get(), insurance);
 						}
 					}

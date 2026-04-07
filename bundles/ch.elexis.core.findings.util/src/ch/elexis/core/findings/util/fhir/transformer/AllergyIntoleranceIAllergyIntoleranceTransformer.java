@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.AllergyIntolerance;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -21,25 +20,24 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class AllergyIntoleranceIAllergyIntoleranceTransformer
 		implements IFhirTransformer<AllergyIntolerance, IAllergyIntolerance> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
 	private AllergyIntoleranceAccessor accessor = new AllergyIntoleranceAccessor();
-
-	private FindingsContentHelper contentHelper;
-
-	@Activate
-	public void activate() {
-		contentHelper = new FindingsContentHelper();
-	}
+	private FindingsContentHelper contentHelper = new FindingsContentHelper();
 
 	@Override
 	public Optional<AllergyIntolerance> getFhirObject(IAllergyIntolerance localObject, SummaryEnum summaryEnum,

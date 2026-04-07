@@ -2,7 +2,6 @@ package ch.elexis.core.findings.util.fhir.transformer;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.hl7.fhir.r4.model.Patient;
 import org.osgi.service.component.annotations.Activate;
@@ -18,37 +17,33 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Patient.IPatient")
 public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPatient> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IXidService xidService;
+	IXidService xidService;
 
 	private IPatientPatientAttributeMapper attributeMapper;
-
-	private FhirTransformerCache<Patient> cache;
 
 	@Activate
 	private void activate() {
 		attributeMapper = new IPatientPatientAttributeMapper(modelService, xidService);
-
-		cache = new FhirTransformerCache<Patient>();
 	}
 
 	@Override
 	public Optional<Patient> getFhirObject(IPatient localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		return cache.get(localObject, summaryEnum, includes, new Callable<Patient>() {
-			@Override
-			public Patient call() throws Exception {
-				Patient ret = new Patient();
-				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
-				return ret;
-			}
-		});
+		Patient patient = new Patient();
+		attributeMapper.elexisToFhir(localObject, patient, summaryEnum, includes);
+		return Optional.of(patient);
 	}
 
 	@Override
@@ -80,7 +75,6 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 
 	@Override
 	public Optional<IPatient> updateLocalObject(Patient fhirObject, IPatient localObject) {
-		cache.invalidate(localObject);
 		attributeMapper.fhirToElexis(fhirObject, localObject);
 		modelService.save(localObject);
 		return Optional.of(localObject);

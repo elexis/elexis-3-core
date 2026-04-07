@@ -46,22 +46,28 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class MedicationStatementPrescriptionTransformer
 		implements IFhirTransformer<MedicationStatement, IPrescription> {
 
 	public static final String EXTENSION_PRESCRIPTION_ENTRYTYPE_URL = "www.elexis.info/extensions/prescription/entrytype";
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IContextService contextService;
+	IContextService contextService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private ICodeElementService codeElementService;
+	ICodeElementService codeElementService;
 
 	private PrescriptionEntryTypeFactory entryTypeFactory = new PrescriptionEntryTypeFactory();
 
@@ -227,13 +233,11 @@ public class MedicationStatementPrescriptionTransformer
 	private String getArticleAtc(IPrescription localObject) {
 		IArticle localArticle = localObject.getArticle();
 		if (localArticle != null) {
-		
+
 			return localArticle.getAtcCode();
 		}
 		return null;
 	}
-	
-	
 
 	private String getArticleLabel(IPrescription localObject) {
 		IArticle localArticle = localObject.getArticle();

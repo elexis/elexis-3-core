@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.hl7.fhir.r4.model.RelatedPerson;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -14,19 +13,18 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonRelatedPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class RelatedPersonIPersonTransformer implements IFhirTransformer<RelatedPerson, IPerson> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
-	
-	private IPersonRelatedPersonAttributeMapper attributeMapper;
+	IModelService modelService;
 
-	@Activate
-	private void activate() {
-		attributeMapper = new IPersonRelatedPersonAttributeMapper();
-	}
+	private IPersonRelatedPersonAttributeMapper attributeMapper = new IPersonRelatedPersonAttributeMapper();
 
 	@Override
 	public Optional<RelatedPerson> getFhirObject(IPerson localObject, SummaryEnum summaryEnum, Set<Include> includes) {

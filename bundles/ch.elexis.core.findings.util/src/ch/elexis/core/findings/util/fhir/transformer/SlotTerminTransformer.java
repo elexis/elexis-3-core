@@ -17,16 +17,21 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment")
 public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointment> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IAppointmentService appointmentService;
+	IAppointmentService appointmentService;
 
 	private IAppointmentSlotAttributeMapper attributeMapper;
 

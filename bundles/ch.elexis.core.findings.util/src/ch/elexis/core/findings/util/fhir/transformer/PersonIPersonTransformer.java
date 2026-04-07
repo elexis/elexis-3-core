@@ -16,20 +16,21 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPersonAttribu
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Person.IPerson")
 public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerson> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IXidService xidService;
-
-	@Reference
-	private IUserService userService;
+	IXidService xidService;
 
 	private IPersonPersonAttributeMapper attributeMapper;
 

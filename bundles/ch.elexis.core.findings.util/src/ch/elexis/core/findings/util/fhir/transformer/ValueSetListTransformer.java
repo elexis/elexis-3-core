@@ -17,7 +17,9 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.model.ICodeElement;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class ValueSetListTransformer implements IFhirTransformer<ValueSet, List<ICodeElement>> {
 

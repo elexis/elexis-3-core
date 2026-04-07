@@ -23,14 +23,16 @@ import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
-import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import ch.elexis.core.cdi.PortableServiceLoader;
+import ch.elexis.core.findings.util.fhir.transformer.PatientIPatientTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.PractitionerIPersonTransformer;
+import ch.elexis.core.findings.util.fhir.transformer.SlotTerminTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IAppointmentHelper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
@@ -71,14 +73,11 @@ public class IAppointmentAppointmentAttributeMapper
 
 		Reference slotReference = new Reference(new IdType(Slot.class.getSimpleName(), localObject.getId()));
 		if (includes.contains(new Include("Appointment:slot"))) {
-			@SuppressWarnings("rawtypes")
-			Optional<IFhirTransformer> _slotTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
-					"(" + IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment)");
+			Optional<SlotTerminTransformer> _slotTransformer = PortableServiceLoader
+					.getOptional(SlotTerminTransformer.class);
 			if (_slotTransformer.isPresent()) {
-				@SuppressWarnings("unchecked")
 				Slot _slot = (Slot) _slotTransformer.get().getFhirObject(localObject).orElse(null);
 				slotReference.setResource(_slot);
-				OsgiServiceUtil.ungetService(_slotTransformer.get());
 			} else {
 				LoggerFactory.getLogger(getClass()).error("Could not get slotTransformer service");
 			}
@@ -93,17 +92,14 @@ public class IAppointmentAppointmentAttributeMapper
 					new IdDt(Practitioner.class.getSimpleName(), assignedContact.get().getId()));
 
 			if (includes.contains(new Include("Appointment:actor"))) {
-				@SuppressWarnings("rawtypes")
-				Optional<IFhirTransformer> _practitionerTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
-						"(" + IFhirTransformer.TRANSFORMERID + "=Practitioner.IPerson)");
+				Optional<PractitionerIPersonTransformer> _practitionerTransformer = PortableServiceLoader
+						.getOptional(PractitionerIPersonTransformer.class);
 				if (_practitionerTransformer.isPresent()) {
 					IMandator localMandator = coreModelService.load(assignedContact.get().getId(), IMandator.class)
 							.get();
-					@SuppressWarnings("unchecked")
 					Practitioner _practitioner = (Practitioner) _practitionerTransformer.get()
 							.getFhirObject(localMandator.asIPerson()).get();
 					practitionerReference.setResource(_practitioner);
-					OsgiServiceUtil.ungetService(_practitionerTransformer.get());
 				} else {
 					LoggerFactory.getLogger(getClass()).error("Could not get patientTransformer service");
 				}
@@ -123,15 +119,12 @@ public class IAppointmentAppointmentAttributeMapper
 
 			if (includes.contains(new Include("Appointment:actor"))
 					|| includes.contains(new Include("Appointment:patient"))) {
-				@SuppressWarnings("rawtypes")
-				Optional<IFhirTransformer> _patientTransformer = OsgiServiceUtil.getService(IFhirTransformer.class,
-						"(" + IFhirTransformer.TRANSFORMERID + "=Patient.IPatient)");
+				Optional<PatientIPatientTransformer> _patientTransformer = PortableServiceLoader
+						.getOptional(PatientIPatientTransformer.class);
 				if (_patientTransformer.isPresent()) {
 					IPatient localPatient = coreModelService.load(contact.getId(), IPatient.class).get();
-					@SuppressWarnings("unchecked")
 					Patient _patient = (Patient) _patientTransformer.get().getFhirObject(localPatient).get();
 					patientReference.setResource(_patient);
-					OsgiServiceUtil.ungetService(_patientTransformer.get());
 				} else {
 					LoggerFactory.getLogger(getClass()).error("Could not get patientTransformer service");
 				}
