@@ -183,7 +183,7 @@ public class DiagnoseSelektor extends FilteredItemsSelectionDialog {
 		public DefaultSubstringItemsFilter() {
 			super();
 			if (!(patternMatcher.getPattern().startsWith("*") || patternMatcher.getPattern().startsWith("?"))) {
-				patternMatcher.setPattern("?*" + patternMatcher.getPattern());
+				patternMatcher.setPattern("*" + patternMatcher.getPattern());
 			}
 		}
 
