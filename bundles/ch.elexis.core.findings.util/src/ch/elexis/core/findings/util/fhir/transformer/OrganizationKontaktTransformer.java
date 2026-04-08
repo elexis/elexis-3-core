@@ -16,6 +16,7 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IOrganizationOrganiz
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -33,6 +34,7 @@ public class OrganizationKontaktTransformer implements IFhirTransformer<Organiza
 
 	private IOrganizationOrganizationAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		attributeMapper = new IOrganizationOrganizationAttributeMapper(xidService);

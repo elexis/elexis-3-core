@@ -17,6 +17,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -34,6 +35,7 @@ public class PatientIPatientTransformer implements IFhirTransformer<Patient, IPa
 
 	private IPatientPatientAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IPatientPatientAttributeMapper(modelService, xidService);

@@ -15,6 +15,7 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPractitionerA
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -38,6 +39,7 @@ public class PractitionerIPersonTransformer implements IFhirTransformer<Practiti
 
 	private IPersonPractitionerAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IPersonPractitionerAttributeMapper(xidService);

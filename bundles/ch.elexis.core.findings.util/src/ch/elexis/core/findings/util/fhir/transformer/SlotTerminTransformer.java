@@ -17,6 +17,7 @@ import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -35,6 +36,7 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 
 	private IAppointmentSlotAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IAppointmentSlotAttributeMapper(appointmentService);

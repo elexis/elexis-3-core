@@ -21,6 +21,7 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttri
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -45,6 +46,7 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 
 	private IInvoiceInvoiceAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
