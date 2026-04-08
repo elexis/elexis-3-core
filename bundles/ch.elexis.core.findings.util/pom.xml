@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ch.elexis.core</groupId>
+		<artifactId>ch.elexis.core.bundles</artifactId>
+		<version>3.13.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>ch.elexis.core.findings.util</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<name>[bundle] Core Findings Util</name>
+	<organization>
+		<name>medevit.at</name>
+	</organization>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>io.smallrye</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
+				<version>${jandex-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>make-index</id>
+						<goals>
+							<goal>jandex</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.rgw.utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.findings</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.services</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<scope>provided</scope>
+			<version>${hapi-fhir.version}</version>
+		</dependency>
+	</dependencies>
+</project>
