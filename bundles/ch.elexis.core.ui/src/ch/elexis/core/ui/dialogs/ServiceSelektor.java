@@ -51,7 +51,7 @@ public class ServiceSelektor extends FilteredItemsSelectionDialog {
 
 	public ServiceSelektor(Shell shell, String codeSystemName, boolean multi) {
 		super(shell, multi);
-		setTitle(Messages.DiagnoseSelektorDialog_Title);
+		setTitle(Messages.ServiceSelektorDialog_Title);
 
 		List<ICodeElementServiceContribution> serviceContributions = CodeElementServiceHolder.get()
 				.getContributionsByTyp(CodeElementTyp.SERVICE);
@@ -108,7 +108,7 @@ public class ServiceSelektor extends FilteredItemsSelectionDialog {
 
 		String oldListLabel = WorkbenchMessages.FilteredItemsSelectionDialog_listLabel;
 
-		setMessage(Messages.DiagnoseSelektorDialog_Message);
+		setMessage(Messages.ServiceSelektorDialog_Message);
 		WorkbenchMessages.FilteredItemsSelectionDialog_listLabel = StringUtils.EMPTY;
 		Control ret = super.createDialogArea(parent);
 
