@@ -40,10 +40,11 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.preferences.inputs.DecoratedStringChooser;
 import ch.elexis.core.ui.util.DecoratedString;
 import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType;
+import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType.ReminderColorType;
 import ch.elexis.data.Reminder;
 
 public class ReminderPrefences extends PreferencePage implements IWorkbenchPreferencePage {
-	DecoratedString[] strings;
+	private DecoratedString[] strings;
 	private Button showRemindersOnPatientSelectionEventBtn;
 	private ListViewer lViewerChoosen, lViewerAvailable;
 	private String[] choosenFields;
@@ -52,16 +53,14 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private String prefixPrevLabel = Messages.ReminderPrefences_PrefixPrevLabel;
 	private Button defaultPatientRelated;
 	private Button defaultResponsibleSelf;
-	private ListViewer lViewerVisible, lViewerHidden;
+	private ListViewer lViewerVisible, lViewerHidden, lViewerCustomStatuses;
+
+	private Composite chooserParent;
+	private DecoratedStringChooser chooser;
 
 	public ReminderPrefences() {
 		super(Messages.ReminderPrefences_Reminders);
-		strings = new DecoratedString[5];
-		strings[0] = new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name());
-		strings[1] = new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText(), ProcessStatus.IN_PROGRESS.name());
-		strings[2] = new DecoratedString(ProcessStatus.DUE.getLocaleText(), ProcessStatus.DUE.name());
-		strings[3] = new DecoratedString(ProcessStatus.OVERDUE.getLocaleText(), ProcessStatus.OVERDUE.name());
-		strings[4] = new DecoratedString(ProcessStatus.CLOSED.getLocaleText(), ProcessStatus.CLOSED.name());
+
 		choosenFields = ConfigServiceHolder
 				.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, Reminder.LabelFields.LASTNAME.toString())
 				.split(","); //$NON-NLS-1$
@@ -72,7 +71,6 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 			availableFields = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE, defValue)
 					.split(","); //$NON-NLS-1$
 		}
-
 	}
 
 	@Override
@@ -80,9 +78,17 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		Composite ret = new Composite(parent, SWT.NONE);
 		int nrElementsInTop = 3;
 		ret.setLayout(new GridLayout(nrElementsInTop, true));
+
 		new Label(ret, SWT.NONE).setText(Messages.ReminderPrefences_SetColors);
-		DecoratedStringChooser chooser = new DecoratedStringChooser(ret, Preferences.USR_REMINDERCOLORS, strings);
-		chooser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
+
+		chooserParent = new Composite(ret, SWT.NONE);
+		GridLayout cpLayout = new GridLayout(1, false);
+		cpLayout.marginWidth = 0;
+		cpLayout.marginHeight = 0;
+		chooserParent.setLayout(cpLayout);
+		chooserParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, nrElementsInTop, 1));
+
+		refreshColorChooser(false);
 
 		showRemindersOnPatientSelectionEventBtn = new Button(ret, SWT.CHECK);
 		showRemindersOnPatientSelectionEventBtn.setText(Messages.ReminderPrefences_ShowPatientSelectionRedminders);
@@ -96,7 +102,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultPatientRelated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
 						defaultPatientRelated.getSelection());
 			}
 		});
@@ -109,13 +115,88 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultResponsibleSelf.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF,
+				ConfigServiceHolder.setUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF,
 						defaultResponsibleSelf.getSelection());
 			}
 		});
 		defaultResponsibleSelf
 				.setSelection(ConfigServiceHolder.getUser(Preferences.USR_REMINDER_DEFAULT_RESPONSIBLE_SELF, false));
 		defaultResponsibleSelf.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
+
+		Label lblSeparatorCustom = new Label(ret, SWT.HORIZONTAL | SWT.SEPARATOR);
+		lblSeparatorCustom.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+
+		Label lblCustomTitle = new Label(ret, SWT.NONE);
+		lblCustomTitle.setText(Messages.ReminderPrefences_CustomStatusesTitle);
+		lblCustomTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+
+		Composite customStatusInputComp = new Composite(ret, SWT.NONE);
+		customStatusInputComp.setLayout(new GridLayout(3, false));
+		customStatusInputComp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+
+		org.eclipse.swt.widgets.Text txtNewStatus = new org.eclipse.swt.widgets.Text(customStatusInputComp, SWT.BORDER);
+		txtNewStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		txtNewStatus.setMessage(Messages.ReminderPrefences_NewStatusMessage);
+
+		Button btnAddStatus = new Button(customStatusInputComp, SWT.PUSH);
+		btnAddStatus.setImage(Images.IMG_NEW.getImage());
+		btnAddStatus.setToolTipText(Messages.ReminderPrefences_AddStatusTooltip);
+
+		Button btnRemoveStatus = new Button(customStatusInputComp, SWT.PUSH);
+		btnRemoveStatus.setImage(Images.IMG_DELETE.getImage());
+		btnRemoveStatus.setToolTipText(Messages.ReminderPrefences_RemoveStatusTooltip);
+
+		lViewerCustomStatuses = new ListViewer(ret, SWT.BORDER | SWT.V_SCROLL);
+		GridData gdCustomList = new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1);
+		gdCustomList.heightHint = 80;
+		lViewerCustomStatuses.getList().setLayoutData(gdCustomList);
+		lViewerCustomStatuses.setContentProvider(new ArrayContentProvider());
+
+		String loadedCustoms = ConfigServiceHolder.getGlobal(Preferences.USR_REMINDER_CUSTOM_STATUSES_GLOBAL,
+				StringUtils.EMPTY);
+		String[] customArray = loadedCustoms.isEmpty() ? new String[0] : loadedCustoms.split(",");
+		lViewerCustomStatuses.setInput(new java.util.ArrayList<>(java.util.Arrays.asList(customArray)));
+
+		txtNewStatus.addTraverseListener(e -> {
+			if (e.detail == SWT.TRAVERSE_RETURN) {
+				e.doit = false;
+				
+				String newStat = txtNewStatus.getText().trim();
+				newStat = newStat.replace(",", StringUtils.EMPTY);
+
+				if (!newStat.isEmpty()) {
+					lViewerCustomStatuses.add(newStat);
+					txtNewStatus.setText(StringUtils.EMPTY);
+					refreshColorChooser(true);
+				}
+			}
+		});
+
+		btnAddStatus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String newStat = txtNewStatus.getText().trim();
+				newStat = newStat.replace(",", StringUtils.EMPTY);
+
+				if (!newStat.isEmpty()) {
+					lViewerCustomStatuses.add(newStat);
+					txtNewStatus.setText(StringUtils.EMPTY);
+					refreshColorChooser(true);
+				}
+			}
+		});
+
+		btnRemoveStatus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = (IStructuredSelection) lViewerCustomStatuses.getSelection();
+				if (!sel.isEmpty()) {
+					lViewerCustomStatuses.remove(sel.getFirstElement());
+					refreshColorChooser(true);
+				}
+			}
+		});
+
 
 		new Label(ret, SWT.NONE);
 		new Label(ret, SWT.NONE);
@@ -275,6 +356,54 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		return ret;
 	}
 
+	private void refreshColorChooser(boolean forceLayout) {
+		if (chooser != null && !chooser.isDisposed()) {
+			chooser.dispose();
+		}
+
+		java.util.List<DecoratedString> dynStrings = new java.util.ArrayList<>();
+		dynStrings.add(new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name()));
+		dynStrings
+				.add(new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText(), ProcessStatus.IN_PROGRESS.name()));
+		dynStrings.add(new DecoratedString(ProcessStatus.DUE.getLocaleText(), ProcessStatus.DUE.name()));
+		dynStrings.add(new DecoratedString(ProcessStatus.OVERDUE.getLocaleText(), ProcessStatus.OVERDUE.name()));
+		dynStrings.add(new DecoratedString(ProcessStatus.CLOSED.getLocaleText(), ProcessStatus.CLOSED.name()));
+		dynStrings.add(new DecoratedString(Messages.ReminderPrefences_DateFuture, ReminderColorType.FUTURE.name()));
+		dynStrings.add(new DecoratedString(Messages.ReminderPrefences_DateNoDate, ReminderColorType.NO_DATE.name()));
+
+		if (lViewerCustomStatuses != null && !lViewerCustomStatuses.getControl().isDisposed()) {
+			String[] customArray = lViewerCustomStatuses.getList().getItems();
+			for (String custom : customArray) {
+				dynStrings.add(new DecoratedString(custom, Preferences.USR_REMINDER_CUSTOM_COLOR_PREFIX + custom));
+			}
+		} else {
+			String globalCustoms = ConfigServiceHolder.getGlobal(Preferences.USR_REMINDER_CUSTOM_STATUSES_GLOBAL,
+					StringUtils.EMPTY);
+			String[] customArray = globalCustoms.isEmpty() ? new String[0] : globalCustoms.split(",");
+			for (String custom : customArray) {
+				dynStrings.add(new DecoratedString(custom, Preferences.USR_REMINDER_CUSTOM_COLOR_PREFIX + custom));
+			}
+		}
+
+		strings = dynStrings.toArray(new DecoratedString[0]);
+
+		chooser = new DecoratedStringChooser(chooserParent, Preferences.USR_REMINDERCOLORS, strings);
+		chooser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		if (forceLayout) {
+			Composite current = chooserParent;
+			while (current != null) {
+				current.layout(true, true);
+				if (current instanceof org.eclipse.swt.custom.ScrolledComposite) {
+					org.eclipse.swt.custom.ScrolledComposite sc = (org.eclipse.swt.custom.ScrolledComposite) current;
+					sc.setMinSize(sc.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT));
+					break;
+				}
+				current = current.getParent();
+			}
+		}
+	}
+
 	private String getPreviewLabel() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < lViewerChoosen.getList().getItems().length; i++) {
@@ -292,11 +421,18 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 
 	@Override
 	protected void performApply() {
+		saveData();
 		super.performApply();
 	}
 
 	@Override
 	public boolean performOk() {
+		saveData();
+		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IReminder.class);
+		return super.performOk();
+	}
+
+	private void saveData() {
 		ConfigServiceHolder.setUser(Preferences.USR_SHOWPATCHGREMINDER,
 				showRemindersOnPatientSelectionEventBtn.getSelection());
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_DEFAULT_PATIENT_RELATED,
@@ -311,8 +447,10 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 				getListAsString(lViewerVisible.getList().getItems()));
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN,
 				getListAsString(lViewerHidden.getList().getItems()));
-		ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IReminder.class);
-		return super.performOk();
+
+		String[] currentCustomStatuses = lViewerCustomStatuses.getList().getItems();
+		String joinedCustoms = String.join(",", currentCustomStatuses);
+		ConfigServiceHolder.get().set(Preferences.USR_REMINDER_CUSTOM_STATUSES_GLOBAL, joinedCustoms);
 	}
 
 	private String getListAsString(String[] items) {
@@ -323,5 +461,4 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		}
 		return sb.toString();
 	}
-
 }
