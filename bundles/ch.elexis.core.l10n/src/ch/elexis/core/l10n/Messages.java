@@ -5538,7 +5538,14 @@ public class Messages extends NLS {
 	public static String ImageViewAll_EnterNewFilename;
 	public static String ImageViewAll_PleaseEnterNewFilename;
 	public static String AgendaDefinitionen_useColorizedPatientSearch;
-
+	public static String ReminderPrefences_DatePast;
+	public static String ReminderPrefences_DateToday;
+	public static String ReminderPrefences_DateFuture;
+	public static String ReminderPrefences_DateNoDate;
+	public static String ReminderPrefences_CustomStatusesTitle;
+	public static String ReminderPrefences_NewStatusMessage;
+	public static String ReminderPrefences_AddStatusTooltip;
+	public static String ReminderPrefences_RemoveStatusTooltip;
 
 
 	static { // load message values from bundle file

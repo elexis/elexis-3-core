@@ -10,14 +10,13 @@
  */
 package ch.elexis.core.model;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
 import ch.elexis.core.model.issue.Visibility;
-
-import java.time.LocalDate;
-
-import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,6 +46,12 @@ import java.util.List;
  * @generated
  */
 public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
+
+	/**
+	 * Key for storing the custom status in the ExtInfo blob.
+	 */
+	public static final String EXTINFO_CUSTOM_STATUS = "custom_status";
+
 	/**
 	 * Returns the value of the '<em><b>Creator</b></em>' reference.
 	 * <!-- begin-user-doc -->
