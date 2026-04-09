@@ -1434,6 +1434,8 @@ public class Messages extends NLS {
 	public static String DeviceView_tblclmnNoKommastellen_toolTipText;
 	public static String DiagnoseSelektorDialog_Message;
 	public static String DiagnoseSelektorDialog_Title;
+	public static String ServiceSelektorDialog_Message;
+	public static String ServiceSelektorDialog_Title;
 	public static String DiagnosenDisplay_AddDiagnosis;
 	public static String DiagnosenDisplay_AddTextDiagnosis;
 	public static String DiagnosenDisplay_Diagnoses;
