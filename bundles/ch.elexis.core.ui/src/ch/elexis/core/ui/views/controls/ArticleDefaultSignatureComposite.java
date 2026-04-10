@@ -57,7 +57,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Text txtSignatureEvening;
 	private Text txtSignatureNight;
 	private Text txtSignatureComment;
-
+	private Text txtDisposalComment;
 	private Composite medicationType;
 	private Button btnSymtomatic;
 	private Button btnReserve;
@@ -194,7 +194,19 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		txtSignatureComment = new Text(this, SWT.BORDER);
 		txtSignatureComment.setMessage(Messages.Prescription_Instruction);
 		txtSignatureComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
-
+		txtDisposalComment = new Text(this, SWT.BORDER);
+		txtDisposalComment.setMessage(Messages.Prescription_Reason);
+		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
+		txtDisposalComment.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				IArticleDefaultSignature sig = getSignature();
+				if (sig != null) {
+					sig.setExtInfo("disposalComment", txtDisposalComment.getText());
+				}
+			}
+		});
+		
 		medicationType = new Composite(this, SWT.NONE);
 		medicationType.setLayout(new RowLayout());
 		medicationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));

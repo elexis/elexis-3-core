@@ -25,4 +25,5 @@ public class Messages {
 
 	public static String StockDetailComposite_availableInStock = ch.elexis.core.l10n.Messages.StockDetailComposite_availableInStock;
 	public static String ArticleDefaultSignatureComposite_Discharge = ch.elexis.core.l10n.Messages.ArticleDefaultSignatureComposite_Discharge;
+	public static String Prescription_Reason = ch.elexis.core.l10n.Messages.Prescription_Reason;
 }
