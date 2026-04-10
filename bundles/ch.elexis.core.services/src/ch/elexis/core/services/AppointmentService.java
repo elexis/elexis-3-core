@@ -69,7 +69,7 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
 	public static final String AG_TIMEPREFERENCES = "agenda/zeitvorgaben"; //$NON-NLS-1$
 	public static final String AG_KOMBITERMINE = "agenda/kombitermine/"; // $NON-NLS-1$
-
+	public static final String AG_KEY_STD = "std";
 	private static final int TYPE_FREE = 0; // frei
 	private static final int TYPE_RESERVED = 1; // reserviert
 	private static final int TYPE_DEFAULT = 2; // standard
@@ -695,8 +695,8 @@ public class AppointmentService implements IAppointmentService {
 					}
 				}
 			}
-			if (ret.get("std") == null) { //$NON-NLS-1$
-				ret.put("std", 30); //$NON-NLS-1$
+			if (ret.get(AG_KEY_STD) == null) {
+				ret.put(AG_KEY_STD, 30);
 			}
 		}
 		return ret;
