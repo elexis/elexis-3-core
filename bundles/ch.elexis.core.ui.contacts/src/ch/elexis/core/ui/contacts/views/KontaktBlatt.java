@@ -162,6 +162,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(),
 							NoPoUtil.loadAsIdentifiable((Kontakt) po, IContact.class).orElse(null),
 							extFlds.toArray(new String[0]));
+					dlg.setEditable(LocalLockServiceHolder.get().isLockedLocal(po));
 					dlg.open();
 
 				}
