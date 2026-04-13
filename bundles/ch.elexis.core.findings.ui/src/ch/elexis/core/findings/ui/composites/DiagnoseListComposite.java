@@ -116,10 +116,10 @@ public class DiagnoseListComposite extends Composite {
 
 						ConditionStatus status = condition.getStatus();
 						text.append(status.getLocalized());
-
+						text.append("<br/>");
 						Optional<String> start = condition.getStart();
 						if (start.isPresent() && StringUtils.isNotBlank(start.get())) {
-							text.append(" ").append(start.get());
+							text.append(start.get());
 						}
 
 						Optional<String> end = condition.getEnd();
