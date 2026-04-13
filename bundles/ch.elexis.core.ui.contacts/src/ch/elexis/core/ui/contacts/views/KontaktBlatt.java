@@ -127,7 +127,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Mail2, Kontakt.FLD_E_MAIL2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null).alwaysEdit(),
 			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
 			// (non-visible) but needs a
 			// resolvable value to avoid
