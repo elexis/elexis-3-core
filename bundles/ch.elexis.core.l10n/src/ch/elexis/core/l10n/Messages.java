@@ -5578,6 +5578,8 @@ public class Messages extends NLS {
 	public static String ReminderPrefences_AddStatusTooltip;
 	public static String ReminderPrefences_RemoveStatusTooltip;
 	public static String ReminderStatusSubMenu_NoSelection;
+	public static String AgendaFarben_SpecialAppointments;
+	public static String AgendaFarben_RecurringAppointment;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
