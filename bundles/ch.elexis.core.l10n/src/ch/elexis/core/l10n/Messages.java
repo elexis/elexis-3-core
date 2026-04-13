@@ -5558,6 +5558,8 @@ public class Messages extends NLS {
 	public static String ImageViewAll_EnterNewFilename;
 	public static String ImageViewAll_PleaseEnterNewFilename;
 	public static String AgendaDefinitionen_useColorizedPatientSearch;
+	public static String AgendaFarben_SpecialAppointments;
+	public static String AgendaFarben_RecurringAppointment;
 
 
 
