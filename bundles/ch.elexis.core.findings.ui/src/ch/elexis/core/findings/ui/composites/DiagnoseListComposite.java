@@ -35,18 +35,24 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
+import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -86,12 +92,85 @@ public class DiagnoseListComposite extends Composite {
 					public Object getDataValue(ICondition condition, int columnIndex) {
 						switch (columnIndex) {
 						case 0:
-							return getFormattedDescriptionText(condition);
+							boolean useStructured = ConfigServiceHolder
+									.getGlobal(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+							boolean useAlternativeFormat = LocalConfigService
+									.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
+
+							if (useStructured && useAlternativeFormat) {
+								return getAlternativeFormattedText(condition);
+							} else {
+								return getStandardFormattedText(condition);
+							}
 						}
 						return StringUtils.EMPTY;
 					}
 
-					private Object getFormattedDescriptionText(ICondition condition) {
+					/**
+					 * NEW: Alternative formatting (bold title, bulleted text, spacing)
+					 */
+					private Object getAlternativeFormattedText(ICondition condition) {
+						StringBuilder text = new StringBuilder();
+
+						text.append("<strong>");
+
+						ConditionStatus status = condition.getStatus();
+						text.append(status.getLocalized());
+
+						Optional<String> start = condition.getStart();
+						if (start.isPresent() && StringUtils.isNotBlank(start.get())) {
+							text.append(" ").append(start.get());
+						}
+
+						Optional<String> end = condition.getEnd();
+						if (end.isPresent() && StringUtils.isNotBlank(end.get())) {
+							text.append(" - ").append(end.get());
+						}
+
+						List<ICoding> codings = condition.getCoding();
+						if (codings != null && !codings.isEmpty()) {
+							for (ICoding iCoding : codings) {
+								text.append(" [").append(CodingServiceComponent.getService().getShortLabel(iCoding))
+										.append("]");
+							}
+						}
+						text.append("</strong>");
+
+						boolean hasText = condition.getText().isPresent()
+								&& StringUtils.isNotBlank(condition.getText().get());
+						boolean hasNotes = !condition.getNotes().isEmpty();
+
+						if (hasText || hasNotes) {
+							text.append("<br/><br/>");
+						}
+
+						if (hasText) {
+							String[] lines = condition.getText().get().split("\\r?\\n");
+							for (String line : lines) {
+								if (StringUtils.isNotBlank(line)) {
+									text.append("&#8226; ").append(line.trim()).append("<br/>");
+								}
+							}
+						}
+
+						if (hasNotes) {
+							for (String note : condition.getNotes()) {
+								if (StringUtils.isNotBlank(note)) {
+									text.append("&#8226; ").append(note.trim().replaceAll("\\r?\\n", "<br/>"))
+											.append("<br/>");
+								}
+							}
+						}
+
+						text.append("<br/>");
+
+						return text.toString();
+					}
+
+					/**
+					 * OLD / STANDARD layout (used when checkboxes are disabled)
+					 */
+					private Object getStandardFormattedText(ICondition condition) {
 						StringBuilder text = new StringBuilder();
 
 						StringBuilder contentText = new StringBuilder();
@@ -205,6 +284,19 @@ public class DiagnoseListComposite extends Composite {
 		});
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
+
+		Display.getDefault().asyncExec(() -> {
+			if (!isDisposed()) {
+				Composite parent = getParent();
+				while (parent != null) {
+					if (parent instanceof ScrolledForm) {
+						((ScrolledForm) parent).reflow(true);
+						break;
+					}
+					parent = parent.getParent();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -301,7 +393,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public void run() {
-			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
+			IPatient selectedPatient = ContextServiceHolder.get().getActivePatient().orElse(null);
 			if (selectedPatient != null) {
 				ConditionEditDialog dialog = new ConditionEditDialog(ConditionCategory.PROBLEMLISTITEM, getShell());
 				if (dialog.open() == Dialog.OK) {
@@ -375,7 +467,5 @@ public class DiagnoseListComposite extends Composite {
 				}
 			});
 		}
-
 	}
-
 }
