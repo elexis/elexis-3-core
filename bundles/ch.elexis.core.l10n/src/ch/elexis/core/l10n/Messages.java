@@ -5558,6 +5558,7 @@ public class Messages extends NLS {
 	public static String ImageViewAll_EnterNewFilename;
 	public static String ImageViewAll_PleaseEnterNewFilename;
 	public static String AgendaDefinitionen_useColorizedPatientSearch;
+	public static String PreferencesServer_suffixModeLabel;
 
 
 
