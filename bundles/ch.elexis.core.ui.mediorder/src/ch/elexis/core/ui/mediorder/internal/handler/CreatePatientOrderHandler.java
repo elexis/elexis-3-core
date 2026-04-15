@@ -96,9 +96,9 @@ public class CreatePatientOrderHandler {
 		}
 		eventBroker.post(ElexisEventTopics.EVENT_RELOAD, IStock.class);
 
-		MPart orderPart = partService.findPart("ch.elexis.OrderManagementView");
+		MPart orderPart = partService.findPart("ch.elexis.ordermanagement.ui.views.OrderManagementView");
 		if (orderPart == null) {
-			orderPart = partService.createPart("ch.elexis.OrderManagementView");
+			orderPart = partService.createPart("ch.elexis.ordermanagement.ui.views.OrderManagementView");
 		}
 		partService.showPart(orderPart, PartState.VISIBLE);
 		contextService.setTyped(order);
