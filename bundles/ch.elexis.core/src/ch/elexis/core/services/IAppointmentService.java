@@ -17,6 +17,8 @@ import ch.elexis.core.types.AppointmentType;
 
 public interface IAppointmentService {
 
+	public static final String AG_KEY_STD = "std";
+
 	/**
 	 * Create a transient clone of the provided {@link IAppointment}.
 	 *
