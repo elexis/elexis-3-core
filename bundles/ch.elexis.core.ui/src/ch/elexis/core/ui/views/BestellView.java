@@ -234,8 +234,10 @@ public class BestellView extends ViewPart {
 									return;
 								}
 								// use StockEntry if possible
+								Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
 								IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
-										StoreToStringServiceHolder.getStoreToString(art), null);
+										StoreToStringServiceHolder.getStoreToString(art),
+										activeMandator.isPresent() ? activeMandator.get().getId() : null);
 
 								if (stockEntry != null) {
 									stockEntriesToOrder.add(stockEntry);
