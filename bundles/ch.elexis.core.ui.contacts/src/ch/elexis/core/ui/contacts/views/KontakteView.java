@@ -98,6 +98,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getContentProvider().startListening();
 		vc.getControlFieldProvider().addChangeListener(this);
 		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
@@ -114,6 +115,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		});
 	}
 
+	@Override
 	public void dispose() {
 		vc.getContentProvider().stopListening();
 		vc.getControlFieldProvider().removeChangeListener(this);
@@ -125,10 +127,12 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getControlFieldProvider().setFocus();
 	}
 
+	@Override
 	public void changed(HashMap<String, String> values) {
 		ElexisEventDispatcher.clearSelection(Kontakt.class);
 	}
 
+	@Override
 	public void reorder(String field) {
 		loader.reorder(field);
 	}
@@ -137,6 +141,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
+	@Override
 	public void selected() {
 		StructuredViewer viewer = cv.getViewerWidget();
 		Object[] elements = cv.getConfigurer().getContentProvider().getElements(viewer.getInput());
@@ -196,6 +201,17 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 					// cv.getViewerWidget().refresh();
 				}
 			}
+
+			@Override
+			public boolean isEnabled() {
+				// disable for mandator contacts
+				Object[] o = cv.getSelection();
+				if (o != null) {
+					Kontakt k = (Kontakt) o[0];
+					return !k.istMandant();
+				}
+				return false;
+			}
 		};
 		createKontakt = new Action(Messages.KontakteView_create) { // $NON-NLS-1$
 			@Override
@@ -213,6 +229,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				setToolTipText("Die in der Liste markierten Kontakte als Tabelle ausdrucken");
 			}
 
+			@Override
 			public void run() {
 				Object[] sel = cv.getSelection();
 				String[][] adrs = new String[sel.length][];
