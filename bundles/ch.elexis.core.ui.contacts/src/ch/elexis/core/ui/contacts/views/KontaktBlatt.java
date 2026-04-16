@@ -569,6 +569,11 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		afDetails.setUnlocked(unlocked);
+		for (Button button : bTypes) {
+			if (button != null && !button.isDisposed()) {
+				button.setEnabled(unlocked);
+			}
+		}
 	}
 
 	@Override
