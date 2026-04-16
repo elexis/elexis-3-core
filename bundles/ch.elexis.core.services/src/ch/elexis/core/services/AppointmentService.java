@@ -694,10 +694,8 @@ public class AppointmentService implements IAppointmentService {
 					}
 				}
 			}
-			if (ret.get(AG_KEY_STD) == null) {
-				ret.put(AG_KEY_STD, 30);
-			}
 		}
+		ret.putIfAbsent(AG_KEY_STD, 30);
 		return ret;
 	}
 
