@@ -5559,6 +5559,9 @@ public class Messages extends NLS {
 	public static String ImageViewAll_PleaseEnterNewFilename;
 	public static String AgendaDefinitionen_useColorizedPatientSearch;
 	public static String Zeitvorgaben_LegendBlueDeviations;
+	public static String Zeitvorgaben_HintRightClickReset;
+	public static String Zeitvorgaben_RestoreDefaultsForArea;
+	public static String Zeitvorgaben_SelectAreaToReset;
 
 
 

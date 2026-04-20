@@ -206,6 +206,14 @@ public interface IAppointmentService {
 	public Map<String, Integer> getPreferredDurations(String areaName);
 
 	/**
+	 * Set the configured preferred durations with appointment type as key. * @param
+	 * areaName
+	 * 
+	 * @param durations
+	 */
+	public void setPreferredDurations(String areaName, Map<String, Integer> durations);
+
+	/**
 	 * Resolves the contact this area is allocated to. That is: If the the given
 	 * area is a contact allocated area, the respective allocated contact is
 	 * returned.

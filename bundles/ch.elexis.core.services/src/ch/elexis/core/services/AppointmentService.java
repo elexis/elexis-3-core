@@ -700,6 +700,15 @@ public class AppointmentService implements IAppointmentService {
 	}
 
 	@Override
+	public void setPreferredDurations(String areaName, Map<String, Integer> durations) {
+		if (StringUtils.isNotBlank(areaName) && durations != null) {
+			String formattedString = durations.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
+					.collect(Collectors.joining("::"));
+			configService.set(AG_TIMEPREFERENCES + "/" + areaName, formattedString);
+		}
+	}
+
+	@Override
 	public List<Area> getAoboAreas() {
 		Optional<IUser> user = contextService.getActiveUser();
 		if (user.isPresent()) {
