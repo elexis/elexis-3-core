@@ -56,9 +56,7 @@ import ch.elexis.core.ui.util.viewers.SimpleWidgetProvider;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer;
 import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.data.Kontakt;
-import ch.elexis.data.Organisation;
 import ch.elexis.data.PersistentObject;
-import ch.elexis.data.Person;
 import ch.elexis.data.Query;
 import ch.rgw.tools.StringTool;
 import jakarta.inject.Inject;
@@ -68,7 +66,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	public static final String ID = "ch.elexis.Kontakte"; //$NON-NLS-1$
 	private CommonViewer cv;
 	private ViewerConfigurer vc;
-	IAction dupKontakt, delKontakt, createKontakt, printList;
+	IAction delKontakt, createKontakt, printList;
 	PersistentObjectLoader loader;
 
 	private final String[] fields = { Kontakt.FLD_SHORT_LABEL + Query.EQUALS + Messages.Core_Kuerzel, // $NON-NLS-1$
@@ -96,12 +94,13 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		makeActions();
 		cv.setObjectCreateAction(getViewSite(), createKontakt);
 		menu = new ViewMenus(getViewSite());
-		menu.createViewerContextMenu(cv.getViewerWidget(), delKontakt, dupKontakt);
+		menu.createViewerContextMenu(cv.getViewerWidget(), delKontakt);
 		menu.createMenu(printList);
 		menu.createToolbar(printList);
 		vc.getContentProvider().startListening();
 		vc.getControlFieldProvider().addChangeListener(this);
 		cv.addDoubleClickListener(new CommonViewer.PoDoubleClickListener() {
+			@Override
 			public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 				try {
 					KontaktDetailView kdv = (KontaktDetailView) getSite().getPage().showView(KontaktDetailView.ID);
@@ -118,6 +117,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		});
 	}
 
+	@Override
 	public void dispose() {
 		vc.getContentProvider().stopListening();
 		vc.getControlFieldProvider().removeChangeListener(this);
@@ -129,10 +129,12 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 		vc.getControlFieldProvider().setFocus();
 	}
 
+	@Override
 	public void changed(HashMap<String, String> values) {
 		ElexisEventDispatcher.clearSelection(Kontakt.class);
 	}
 
+	@Override
 	public void reorder(String field) {
 		loader.reorder(field);
 	}
@@ -141,6 +143,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 	 * ENTER has been pressed in the control fields, select the first listed patient
 	 */
 	// this is also implemented in PatientenListeView
+	@Override
 	public void selected() {
 		StructuredViewer viewer = cv.getViewerWidget();
 		Object[] elements = cv.getConfigurer().getContentProvider().getElements(viewer.getInput());
@@ -181,26 +184,6 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				return (Kontakt) cv.getViewerWidgetFirstSelection();
 			}
 		};
-		dupKontakt = new Action(Messages.KontakteView_duplicate) { // $NON-NLS-1$
-			@Override
-			public void run() {
-				Object[] o = cv.getSelection();
-				if (o != null) {
-					Kontakt k = (Kontakt) o[0];
-					Kontakt dup;
-					if (k.istPerson()) {
-						Person p = Person.load(k.getId());
-						dup = new Person(p.getName(), p.getVorname(), p.getGeburtsdatum(), p.getGeschlecht());
-					} else {
-						Organisation org = Organisation.load(k.getId());
-						dup = new Organisation(org.get(Organisation.FLD_NAME1), org.get(Organisation.FLD_NAME2));
-					}
-					dup.setAnschrift(k.getAnschrift());
-					cv.getConfigurer().getControlFieldProvider().fireChangedEvent();
-					// cv.getViewerWidget().refresh();
-				}
-			}
-		};
 		createKontakt = new Action(Messages.KontakteView_create) { // $NON-NLS-1$
 			@Override
 			public void run() {
@@ -217,6 +200,7 @@ public class KontakteView extends ViewPart implements ControlFieldListener {
 				setToolTipText("Die in der Liste markierten Kontakte als Tabelle ausdrucken");
 			}
 
+			@Override
 			public void run() {
 				Object[] sel = cv.getSelection();
 				String[][] adrs = new String[sel.length][];

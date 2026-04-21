@@ -270,9 +270,9 @@ public class AppointmentService implements IAppointmentService {
 		query.and("tag", COMPARATOR.EQUALS, date);
 		String typReserved = getType(AppointmentType.BOOKED);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__TYPE, COMPARATOR.EQUALS, typReserved);
+		query.and(ModelPackage.Literals.IAPPOINTMENT__CREATED_BY, COMPARATOR.EQUALS, null);
 		List<IAppointment> resList = query.execute();
 		if (resList.isEmpty()) {
-
 			// we did not find any entries of type reserved for this day,
 			// thus we initialize them
 			String stateEmpty = getState(AppointmentState.EMPTY);

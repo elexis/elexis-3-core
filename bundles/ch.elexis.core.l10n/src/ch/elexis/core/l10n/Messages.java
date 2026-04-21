@@ -5562,6 +5562,7 @@ public class Messages extends NLS {
 	public static String Zeitvorgaben_HintRightClickReset;
 	public static String Zeitvorgaben_RestoreDefaultsForArea;
 	public static String Zeitvorgaben_SelectAreaToReset;
+	public static String PreferencesServer_suffixModeLabel;
 
 
 
