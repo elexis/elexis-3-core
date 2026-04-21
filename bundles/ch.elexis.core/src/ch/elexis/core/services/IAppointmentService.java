@@ -17,6 +17,8 @@ import ch.elexis.core.types.AppointmentType;
 
 public interface IAppointmentService {
 
+	public static final String AG_KEY_STD = "std";
+
 	/**
 	 * Create a transient clone of the provided {@link IAppointment}.
 	 *
@@ -202,6 +204,14 @@ public interface IAppointmentService {
 	 * @return
 	 */
 	public Map<String, Integer> getPreferredDurations(String areaName);
+
+	/**
+	 * Set the configured preferred durations with appointment type as key. * @param
+	 * areaName
+	 * 
+	 * @param durations
+	 */
+	public void setPreferredDurations(String areaName, Map<String, Integer> durations);
 
 	/**
 	 * Resolves the contact this area is allocated to. That is: If the the given
