@@ -112,6 +112,11 @@ public class BillingProcessor {
 						billed.getId());
 				prescription.setEntryType(signature.getDisposalType());
 				prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
+				if (signature.getEndDate() != null) {
+					prescription.setDateTo(signature.getEndDate().atStartOfDay());
+				} else {
+					prescription.setDateTo(null);
+				}
 				CoreModelServiceHolder.get().save(prescription);
 			}
 		}
@@ -160,6 +165,7 @@ public class BillingProcessor {
 					prescription.setDosageInstruction(lastPrescription.getDosageInstruction());
 	            prescription.setRemark(lastPrescription.getRemark());
 	            prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
+					prescription.setDateTo(lastPrescription.getDateTo());
 	            CoreModelServiceHolder.get().save(prescription);
 	        }));
 	}
