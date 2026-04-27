@@ -2387,6 +2387,7 @@ public class Messages extends NLS {
 	public static String InvoiceListView_tblclmnInvoiceNo_text;
 	public static String InvoiceListView_tblclmnReceiver_text;
 	public static String InvoiceListView_tblclmnTreatmentperiod_text;
+	public static String InvoiceOutputter_Copy;
 	public static String InvoiceOutputter_Error;
 	public static String InvoiceOutputter_ErrorCreateZip;
 	public static String InvoiceOutputter_ErrorHttpPost;
