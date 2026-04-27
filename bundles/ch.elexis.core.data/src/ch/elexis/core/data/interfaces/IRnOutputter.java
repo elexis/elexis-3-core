@@ -118,7 +118,7 @@ public interface IRnOutputter {
 		// do no customization
 	}
 
-	public default void openOutput(IInvoice invoice, LocalDateTime timestamp, InvoiceState invoiceState) {
+	public default void openOutput(IInvoice invoice, LocalDateTime timestamp, InvoiceState invoiceState, TYPE type) {
 		// outputter specific lookup of the output to open
 	}
 }
