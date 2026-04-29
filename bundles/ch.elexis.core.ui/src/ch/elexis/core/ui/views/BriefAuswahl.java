@@ -72,10 +72,12 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IDocumentService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.LocalConfigService;
@@ -107,10 +109,14 @@ import jakarta.inject.Named;
 
 public class BriefAuswahl extends ViewPart implements IRefreshable {
 
+	@Inject
+	private IDocumentService documentService;
+
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private Form form;
-	private Action briefNeuAction, briefLadenAction, editNameAction, startLocalEditAction, endLocalEditAction,
+	private Action briefNeuAction, briefCopyAction, briefLadenAction, editNameAction, startLocalEditAction,
+			endLocalEditAction,
 			cancelLocalEditAction;
 	private Action deleteAction;
 	private ViewMenus menus;
@@ -212,10 +218,10 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			sPage page = new sPage(ctab, cat);
 			pages.add(page);
 			if (LocalConfigService.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
-				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction,
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction, briefCopyAction,
 						startLocalEditAction, endLocalEditAction, cancelLocalEditAction);
 			} else {
-				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction);
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction, briefCopyAction);
 			}
 			ct.setData(page.cv);
 			ct.setControl(page);
@@ -494,6 +500,20 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
+		};
+		
+		briefCopyAction = new Action(Messages.Core_Copy) {
+			@Override
+			public void run() {
+				IDocumentLetter selectedLetter = getSelected();
+				if (selectedLetter != null) {
+					IDocument copy = documentService.createCopy(selectedLetter);
+					if (copy != null) {
+						CommonViewer cv = (CommonViewer) ctab.getSelection().getData();
+						cv.notify(CommonViewer.Message.update);
+					}
+				}
+			};
 		};
 
 		briefLadenAction = new Action(Messages.Core_Open) { // $NON-NLS-1$

@@ -54,6 +54,15 @@ public interface IDocumentService {
 	void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer);
 
 	/**
+	 * Create a copy of the provided {@link IDocument}. Copy of all properties, and
+	 * set create date to today.
+	 * 
+	 * @param source
+	 * @return
+	 */
+	IDocument createCopy(IDocument source);
+
+	/**
 	 * Interface for direct template replacement using provided {@link ITextPlugin}
 	 * and {@link IContext}.
 	 */
