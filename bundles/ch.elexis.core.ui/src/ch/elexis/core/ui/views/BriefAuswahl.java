@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -503,7 +504,8 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			}
 		};
 		
-		briefCopyAction = new Action(Messages.Core_Copy) {
+		briefCopyAction = new Action(
+				ch.elexis.core.l10n.Messages.InvoiceOutputter_Copy + StringUtils.SPACE + Messages.Core_Open) {
 			@Override
 			public void run() {
 				IDocumentLetter selectedLetter = getSelected();
@@ -511,7 +513,12 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					IDocument copy = documentService.createCopy(selectedLetter);
 					if (copy != null) {
 						CommonViewer cv = (CommonViewer) ctab.getSelection().getData();
+						// refresh make copy available for selection
 						cv.notify(CommonViewer.Message.update);
+						cv.getViewerWidget().refresh(true);
+						cv.getViewerWidget().setSelection(new StructuredSelection(copy), true);
+						// open the copy
+						briefLadenAction.run();
 					}
 				}
 			};
