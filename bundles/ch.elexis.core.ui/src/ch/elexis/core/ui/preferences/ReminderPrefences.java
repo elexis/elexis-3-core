@@ -12,12 +12,17 @@
 
 package ch.elexis.core.ui.preferences;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -26,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -54,7 +60,6 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 	private Button defaultPatientRelated;
 	private Button defaultResponsibleSelf;
 	private ListViewer lViewerVisible, lViewerHidden, lViewerCustomStatuses;
-
 	private Composite chooserParent;
 	private DecoratedStringChooser chooser;
 
@@ -98,7 +103,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 				.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 
 		defaultPatientRelated = new Button(ret, SWT.CHECK);
-		defaultPatientRelated.setText(ch.elexis.core.l10n.Messages.ReminderPref_defaultPatientRelated);
+		defaultPatientRelated.setText(Messages.ReminderPref_defaultPatientRelated);
 		defaultPatientRelated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
@@ -111,7 +116,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		defaultPatientRelated.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, nrElementsInTop, 1));
 
 		defaultResponsibleSelf = new Button(ret, SWT.CHECK);
-		defaultResponsibleSelf.setText(ch.elexis.core.l10n.Messages.ReminderPref_defaultReponsibleSelf);
+		defaultResponsibleSelf.setText(Messages.ReminderPref_defaultReponsibleSelf);
 		defaultResponsibleSelf.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
@@ -134,7 +139,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		customStatusInputComp.setLayout(new GridLayout(3, false));
 		customStatusInputComp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
-		org.eclipse.swt.widgets.Text txtNewStatus = new org.eclipse.swt.widgets.Text(customStatusInputComp, SWT.BORDER);
+		Text txtNewStatus = new Text(customStatusInputComp, SWT.BORDER);
 		txtNewStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		txtNewStatus.setMessage(Messages.ReminderPrefences_NewStatusMessage);
 
@@ -155,7 +160,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		String loadedCustoms = ConfigServiceHolder.getGlobal(Preferences.USR_REMINDER_CUSTOM_STATUSES_GLOBAL,
 				StringUtils.EMPTY);
 		String[] customArray = loadedCustoms.isEmpty() ? new String[0] : loadedCustoms.split(",");
-		lViewerCustomStatuses.setInput(new java.util.ArrayList<>(java.util.Arrays.asList(customArray)));
+		lViewerCustomStatuses.setInput(new ArrayList<>(Arrays.asList(customArray)));
 
 		txtNewStatus.addTraverseListener(e -> {
 			if (e.detail == SWT.TRAVERSE_RETURN) {
@@ -299,7 +304,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 		String hiddenValue = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, StringUtils.EMPTY);
 		String[] hiddenColumns = hiddenValue.split(","); //$NON-NLS-1$
 
-		java.util.List<String> cleanedHidden = new java.util.ArrayList<>();
+		List<String> cleanedHidden = new ArrayList<>();
 		for (String s : hiddenColumns) {
 			if (s != null && !s.trim().isEmpty()) {
 				cleanedHidden.add(s.trim());
@@ -361,7 +366,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 			chooser.dispose();
 		}
 
-		java.util.List<DecoratedString> dynStrings = new java.util.ArrayList<>();
+		List<DecoratedString> dynStrings = new ArrayList<>();
 		dynStrings.add(new DecoratedString(ProcessStatus.OPEN.getLocaleText(), ProcessStatus.OPEN.name()));
 		dynStrings
 				.add(new DecoratedString(ProcessStatus.IN_PROGRESS.getLocaleText(), ProcessStatus.IN_PROGRESS.name()));
@@ -394,8 +399,8 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 			Composite current = chooserParent;
 			while (current != null) {
 				current.layout(true, true);
-				if (current instanceof org.eclipse.swt.custom.ScrolledComposite) {
-					org.eclipse.swt.custom.ScrolledComposite sc = (org.eclipse.swt.custom.ScrolledComposite) current;
+				if (current instanceof ScrolledComposite) {
+					ScrolledComposite sc = (ScrolledComposite) current;
 					sc.setMinSize(sc.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT));
 					break;
 				}

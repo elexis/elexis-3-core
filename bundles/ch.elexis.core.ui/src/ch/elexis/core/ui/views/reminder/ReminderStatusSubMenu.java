@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -82,7 +83,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 					}
 				}
 			} else {
-				manager.add(new Action("Multiple selection / No selection") {
+				manager.add(new Action(Messages.ReminderStatusSubMenu_NoSelection) {
 					@Override
 					public boolean isEnabled() {
 						return false;

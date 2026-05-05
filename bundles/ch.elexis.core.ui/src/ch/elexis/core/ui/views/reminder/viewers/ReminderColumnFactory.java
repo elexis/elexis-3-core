@@ -21,6 +21,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
@@ -33,6 +35,38 @@ import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType.ReminderColorType;
 
+/**
+ * Factory class responsible for creating and configuring columns in the
+ * {@link TableViewer} of the Reminder View.
+ * <p>
+ * Each column represents a specific aspect of a reminder (type, date,
+ * responsible user, status, patient, description, etc.) and provides custom
+ * rendering (labels, icons, colors, and fonts) via individual
+ * {@link ColumnLabelProvider} implementations.
+ * </p>
+ *
+ * <p>
+ * The factory also supports:
+ * <ul>
+ * <li>Dynamic hiding of columns based on user preferences</li>
+ * <li>Automatic resizing of the last column to fit available space</li>
+ * <li>Sorting of table data via {@link ReminderComparator}</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Colors and icons are used to visually highlight the status of each reminder,
+ * such as overdue, in progress, due today, or closed.
+ * </p>
+ *
+ * <p>
+ * This class is typically used by {@code ReminderView} during initialization to
+ * build and configure the reminder table.
+ * </p>
+ *
+ * @author Dalibor Aksic
+ * @since 2025
+ */
 public class ReminderColumnFactory {
 
 	private final Font boldFont;
@@ -41,10 +75,20 @@ public class ReminderColumnFactory {
 		this.boldFont = boldFont;
 	}
 
+	/**
+	 * Creates and configures the specified columns for the given TableViewer.
+	 * Columns hidden via user preferences are automatically omitted. Also registers
+	 * a resize listener to fluidly adjust the last column's width.
+	 *
+	 * @param viewer The TableViewer where the columns will be added.
+	 * @param types  The defined column types to generate.
+	 */
 	public void createColumns(TableViewer viewer, ReminderColumnType... types) {
-		String hiddenPref = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, "");
-		Set<String> hiddenCols = Arrays.stream(hiddenPref.split(",")).map(String::trim).filter(s -> !s.isEmpty())
+		String hiddenPref = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, StringUtils.EMPTY);
+		Set<String> hiddenCols = Arrays.stream(hiddenPref.split(",")).map(String::trim)
+				.filter(s -> !s.isEmpty())
 				.collect(Collectors.toSet());
+
 		int index = 0;
 		for (ReminderColumnType type : types) {
 			String header = type.getTitle();
@@ -84,13 +128,21 @@ public class ReminderColumnFactory {
 		});
 	}
 
+	/**
+	 * Determines the text representation of the reminder's status. It checks for
+	 * custom statuses first, falling back to the default locale text.
+	 *
+	 * @param r The reminder whose status text should be extracted.
+	 * @return The localized display text of the status, or an empty string if
+	 *         undefined.
+	 */
 	public static String getStatusDisplayText(IReminder r) {
 		if (r == null)
 			return StringUtils.EMPTY;
 
 		Object customStatusObj = r.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
-		if (customStatusObj != null && !customStatusObj.toString().isEmpty()) {
-			return customStatusObj.toString();
+		if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
+			return customStatusStr;
 		}
 		if (r.getStatus() != null) {
 			return r.getStatus().getLocaleText();
@@ -186,16 +238,24 @@ public class ReminderColumnFactory {
 					return getContrastColor(getBackground(element));
 				}
 
-				Color fg = null;
+				Color foreground = determineBaseForegroundColor(r);
+				Color background = getBackground(element);
+
+				return calculateForegroundContrastColor(foreground, background);
+			}
+
+			private Color determineBaseForegroundColor(IReminder r) {
 				Object customStatusObj = r.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
 
-				if (customStatusObj != null && !customStatusObj.toString().isEmpty()) {
+				if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
 					String prefPath = Preferences.USR_REMINDERCOLORS + "/"
-							+ Preferences.USR_REMINDER_CUSTOM_COLOR_PREFIX + customStatusObj.toString();
+							+ Preferences.USR_REMINDER_CUSTOM_COLOR_PREFIX + customStatusStr;
 					String rgb = ConfigServiceHolder.getUser(prefPath, "FFFFFF");
-					fg = UiDesk.getColorFromRGB(rgb);
-				} else if (r.getStatus() != null) {
-					fg = switch (r.getStatus()) {
+					return UiDesk.getColorFromRGB(rgb);
+				}
+
+				if (r.getStatus() != null) {
+					return switch (r.getStatus()) {
 					case OPEN -> ReminderColorType.OPEN.getColor();
 					case IN_PROGRESS -> ReminderColorType.IN_PROGRESS.getColor();
 					case DUE -> ReminderColorType.DUE.getColor();
@@ -205,38 +265,7 @@ public class ReminderColumnFactory {
 					default -> null;
 					};
 				}
-
-				Color bg = getBackground(element);
-
-				if (fg != null && bg != null) {
-					if (fg.getRed() == bg.getRed() && fg.getGreen() == bg.getGreen() && fg.getBlue() == bg.getBlue()) {
-						return getContrastColor(bg);
-					}
-
-					double lumFg = 0.299 * fg.getRed() + 0.587 * fg.getGreen() + 0.114 * fg.getBlue();
-					double lumBg = 0.299 * bg.getRed() + 0.587 * bg.getGreen() + 0.114 * bg.getBlue();
-
-					if (lumFg > 200 && lumBg > 128) {
-						return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-					}
-
-					if (lumFg < 50 && lumBg <= 128) {
-						return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
-					}
-				}
-
-				if (fg != null && bg == null) {
-					double luminance = 0.299 * fg.getRed() + 0.587 * fg.getGreen() + 0.114 * fg.getBlue();
-					if (luminance > 240) {
-						return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-					}
-				}
-
-				if (fg == null) {
-					return getContrastColor(bg);
-				}
-
-				return fg;
+				return null;
 			}
 		});
 		col.getColumn().addSelectionListener(createSortSelectionAdapter(viewer, col.getColumn(), index));
@@ -351,6 +380,8 @@ public class ReminderColumnFactory {
 	}
 
 	public static class ReminderComparator extends ViewerComparator implements Comparator<IReminder> {
+		private static final Logger log = LoggerFactory.getLogger(ReminderComparator.class);
+
 		private int column = -1;
 		private int direction = SWT.DOWN;
 
@@ -387,7 +418,8 @@ public class ReminderColumnFactory {
 				}
 				default -> result = compareByDate(r1, r2);
 				}
-			} catch (Exception e) {
+			} catch (NullPointerException | ClassCastException | IllegalArgumentException e) {
+				log.error("Failed to compare reminders during table sorting", e);
 				result = 0;
 			}
 			return (direction == SWT.UP) ? -result : result;
@@ -423,8 +455,9 @@ public class ReminderColumnFactory {
 		}
 
 		private String getResponsibleString(IReminder r) {
-			if (r.isResponsibleAll())
-				return "Alle";
+			if (r.isResponsibleAll()) {
+				return Messages.Core_All;
+			}
 			return r.getResponsible().stream()
 					.map(c -> c.isMandator() ? c.getDescription1() + StringUtils.SPACE + c.getDescription2()
 							: c.getLabel())
@@ -445,11 +478,69 @@ public class ReminderColumnFactory {
 		}
 	}
 
-	private Color getContrastColor(Color bg) {
-		if (bg == null)
-			return null;
+	/**
+	 * Calculates the perceived luminance of a given color based on standard RGB
+	 * weighting.
+	 * 
+	 * @param color The color to calculate the luminance for.
+	 * @return The calculated luminance value, or 0.0 if the provided color is null.
+	 */
+	private double calculateLuminance(Color color) {
+		if (color == null) {
+			return 0.0;
+		}
+		return 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
+	}
 
-		double luminance = 0.299 * bg.getRed() + 0.587 * bg.getGreen() + 0.114 * bg.getBlue();
+	/**
+	 * Determines a high-contrast foreground color to ensure readability against a
+	 * given background. If the intended foreground color lacks sufficient contrast
+	 * or is identical to the background, a fallback color (black or white) is
+	 * returned.
+	 * 
+	 * @param fg The intended base foreground color.
+	 * @param bg The background color the text will be rendered on.
+	 * @return The original foreground color, or an adjusted high-contrast color if
+	 *         necessary.
+	 */
+	private Color calculateForegroundContrastColor(Color fg, Color bg) {
+		if (fg != null && bg != null) {
+			if (fg.getRed() == bg.getRed() && fg.getGreen() == bg.getGreen() && fg.getBlue() == bg.getBlue()) {
+				return getContrastColor(bg);
+			}
+
+			double lumFg = calculateLuminance(fg);
+			double lumBg = calculateLuminance(bg);
+
+			if (lumFg > 200 && lumBg > 128) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+			}
+
+			if (lumFg < 50 && lumBg <= 128) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+			}
+		}
+
+		if (fg != null && bg == null) {
+			double luminance = calculateLuminance(fg);
+			if (luminance > 240) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+			}
+		}
+
+		if (fg == null) {
+			return getContrastColor(bg);
+		}
+
+		return fg;
+	}
+
+	private Color getContrastColor(Color bg) {
+		if (bg == null) {
+			return null;
+		}
+
+		double luminance = calculateLuminance(bg);
 
 		if (luminance > 128) {
 			return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);

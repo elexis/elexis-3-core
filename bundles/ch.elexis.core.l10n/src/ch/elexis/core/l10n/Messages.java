@@ -5577,6 +5577,7 @@ public class Messages extends NLS {
 	public static String ReminderPrefences_NewStatusMessage;
 	public static String ReminderPrefences_AddStatusTooltip;
 	public static String ReminderPrefences_RemoveStatusTooltip;
+	public static String ReminderStatusSubMenu_NoSelection;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
