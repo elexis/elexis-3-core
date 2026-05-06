@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hl7.fhir.r4.model.Extension;
@@ -73,6 +74,8 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 							Extension extension = fhirInsurance.getMeta()
 									.getExtensionByUrl("http://fhir.ch/ig/ch-orf/CodeSystem/ch-orf-cs-coveragetype");
 							insurance.setInsuranceLawCode(extension.getValue().toString());
+							// clear description2 of insurance
+							insurance.setDescription2(StringUtils.EMPTY);
 							CoreModelServiceHolder.get().save(insurance);
 						}
 						if (!stickerService.hasSticker(insurance, sticker)) {
