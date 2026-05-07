@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Barcode;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -47,7 +48,6 @@ import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.icons.Images;
-import ch.elexis.core.ui.views.ordermanagement.Messages;
 import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
 import ch.elexis.core.utils.Extensions;
 import ch.elexis.data.Bestellung;

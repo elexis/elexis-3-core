@@ -379,7 +379,6 @@ public class OrderManagementActionFactory {
 					try {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
-						System.out.println("sender.canHandle(actOrder) " + sender.canHandle(actOrder));
 						if (sender.canHandle(actOrder)) {
 							try {
 								sender.store(actOrder);

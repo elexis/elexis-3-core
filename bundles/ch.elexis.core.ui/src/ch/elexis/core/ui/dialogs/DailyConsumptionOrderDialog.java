@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
@@ -44,7 +45,6 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.ui.views.ordermanagement.Messages;
 import ch.rgw.tools.TimeTool;
 import jakarta.inject.Inject;
 

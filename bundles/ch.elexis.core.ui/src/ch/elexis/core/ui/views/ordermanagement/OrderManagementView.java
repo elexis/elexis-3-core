@@ -65,6 +65,7 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Barcode;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
