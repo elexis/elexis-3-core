@@ -197,15 +197,6 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		txtDisposalComment = new Text(this, SWT.BORDER);
 		txtDisposalComment.setMessage(Messages.Prescription_Reason);
 		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
-		txtDisposalComment.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				IArticleDefaultSignature sig = getSignature();
-				if (sig != null) {
-					sig.setExtInfo("disposalComment", txtDisposalComment.getText());
-				}
-			}
-		});
 		
 		medicationType = new Composite(this, SWT.NONE);
 		medicationType.setLayout(new RowLayout());
@@ -461,6 +452,15 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureCommentObserveWidget,
 				itemSignatureCommentObserveDetailValue, targetToModelStrategy, null);
+
+		IObservableValue<String> observeTextDisposalCommentObserveWidget = WidgetProperties
+				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtDisposalComment);
+		IObservableValue<String> itemSignatureDisposalCommentObserveDetailValue = PojoProperties
+				.value(IArticleDefaultSignature.class, "disposalComment", String.class).observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
+		databindingContext.bindValue(observeTextDisposalCommentObserveWidget,
+				itemSignatureDisposalCommentObserveDetailValue, targetToModelStrategy, null);
 
 		return databindingContext;
 	}

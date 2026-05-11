@@ -118,9 +118,9 @@ public class BillingProcessor {
 				IPrescription prescription = prescriptionOpt.get();
 				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 				prescription.setRemark(signature.getComment());
-				Object reasonObj = signature.getExtInfo("disposalComment");
-				if (reasonObj != null && !reasonObj.toString().isEmpty()) {
-					prescription.setDisposalComment(reasonObj.toString());
+				String disposalComment = signature.getDisposalComment();
+				if (disposalComment != null && !disposalComment.isEmpty()) {
+					prescription.setDisposalComment(disposalComment);
 				}
 				prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
 						billed.getId());

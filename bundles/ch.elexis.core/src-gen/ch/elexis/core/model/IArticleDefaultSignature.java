@@ -34,6 +34,7 @@ import java.time.LocalDate;
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalType <em>Disposal Type</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getEndDate <em>End Date</em>}</li>
  *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getStartDate <em>Start Date</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment <em>Disposal Comment</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIArticleDefaultSignature()
@@ -346,5 +347,19 @@ public interface IArticleDefaultSignature extends Deleteable, Identifiable, With
 	 * @generated
 	 */
 	String getSignatureAsDosisString();
+	
+	/**
+	 * Returns the justification text for the disposal.
+	 *
+	 * @return the disposal comment as a String
+	 */
+	String getDisposalComment();
+
+	/**
+	 * Sets the justification text for the disposal.
+	 *
+	 * @param value the new disposal comment
+	 */
+	void setDisposalComment(String value);
 
 } // IArticleDefaultSignature

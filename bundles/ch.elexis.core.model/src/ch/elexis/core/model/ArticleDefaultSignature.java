@@ -16,6 +16,7 @@ public class ArticleDefaultSignature extends AbstractIdDeleteModelAdapter<ch.ele
 
 	private LocalDate startDate;
 	private LocalDate endDate;
+	private static final String EXT_FLD_DISPOSAL_COMMENT = "disposalComment";
 
 	public ArticleDefaultSignature(DefaultSignature entity) {
 		super(entity);
@@ -199,5 +200,18 @@ public class ArticleDefaultSignature extends AbstractIdDeleteModelAdapter<ch.ele
 	@Override
 	public void setStartDate(LocalDate value) {
 		this.startDate = value;
+	}
+
+	@Override
+	public String getDisposalComment() {
+		return (String) getExtInfo(EXT_FLD_DISPOSAL_COMMENT);
+	}
+
+	@Override
+	public void setDisposalComment(String value) {
+		if (value == null) {
+			value = StringUtils.EMPTY;
+		}
+		setExtInfo(EXT_FLD_DISPOSAL_COMMENT, value);
 	}
 }

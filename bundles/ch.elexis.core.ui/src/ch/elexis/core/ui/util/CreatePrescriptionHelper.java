@@ -93,9 +93,9 @@ public class CreatePrescriptionHelper {
 						.build();
 		prescription.setRemark(signature.getComment());
 
-		Object reasonObj = signature.getExtInfo("disposalComment");
-		if (reasonObj != null && !reasonObj.toString().isEmpty()) {
-			prescription.setDisposalComment(reasonObj.toString());
+		String disposalComment = signature.getDisposalComment();
+		if (disposalComment != null && !disposalComment.isEmpty()) {
+			prescription.setDisposalComment(disposalComment);
 		}
 
 		prescription.setEntryType(signature.getMedicationType());
@@ -188,7 +188,7 @@ public class CreatePrescriptionHelper {
 
 	private boolean isArticleAlreadyBilled(IArticle article, IEncounter encounter) {
 		return encounter.getBilled().stream().anyMatch(billed -> billed.getBillable() instanceof IArticle
-				&& ((IArticle) billed.getBillable()).getId().equals(article.getId()));
+				&& billed.getBillable().getId().equals(article.getId()));
 	}
 
 	private boolean shouldUpdateToArtikelstamm() {
