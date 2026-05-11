@@ -293,16 +293,18 @@ public class OrderManagementUtil {
 			final boolean isCompletelyDelivered = (actOrder != null) ? orderService.isOrderCompletelyDelivered(actOrder)
 					: false;
 			final String finishedOrderId = (actOrder != null) ? actOrder.getId() : null;
-
 			Display.getDefault().asyncExec(() -> {
 				view.loadOpenOrders();
 				view.loadCompletedOrders(view.getCompletedContainer());
 				if (finishedOrderId != null) {
-					IOrder reloaded = orderService.getSelectedOrder(finishedOrderId, isCompletelyDelivered);
+					IOrder reloaded = CoreModelServiceHolder.get().load(finishedOrderId, IOrder.class).orElse(null);
 					if (reloaded != null) {
-						view.setActOrder(reloaded);
-						view.selectOrderInHistory(reloaded);
-						view.refresh();
+						boolean isNowCompleted = orderService.isOrderCompletelyDelivered(reloaded);
+						if (isNowCompleted == isCompletelyDelivered || reloaded.getEntries().isEmpty()) {
+							view.setActOrder(reloaded);
+							view.selectOrderInHistory(reloaded);
+							view.refresh();
+						}
 					}
 				}
 				view.updateUI();

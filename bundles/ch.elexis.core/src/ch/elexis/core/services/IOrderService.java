@@ -192,15 +192,6 @@ public interface IOrderService {
 	IOrder addItemsToExistingOrder(IOrder actOrder, List<IArticle> articlesToOrder, @Nullable IMandator mandator);
 
 	/**
-	 * Finds an order by its ID, taking the completion state into account.
-	 * 
-	 * @param orderId     the ID of the order to find
-	 * @param isCompleted the expected completion state
-	 * @return the matched {@link IOrder}, or null if not found
-	 */
-	IOrder getSelectedOrder(String orderId, boolean isCompleted);
-
-	/**
 	 * Retrieves the output log entry associated with a specific order.
 	 * 
 	 * @param order the order to fetch the log for

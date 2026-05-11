@@ -359,14 +359,6 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public IOrder getSelectedOrder(String orderId, boolean isCompleted) {
-		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
-		return query.execute().stream()
-				.filter(o -> o.getId().equals(orderId) && (o.isDone() == isCompleted || o.getEntries().isEmpty()))
-				.findFirst().orElse(null);
-	}
-
-	@Override
 	public IOutputLog getOrderLogEntry(IOrder order) {
 		if (order == null) {
 			return null;

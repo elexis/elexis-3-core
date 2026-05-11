@@ -815,6 +815,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	@Override
 	public void refresh() {
 		if (actOrder != null) {
+			if (actOrder.getId() != null) {
+				historyCache.remove(actOrder.getId());
+			}
 			loadOrderDetails(actOrder);
 			updateOrderDetails(actOrder);
 		}
