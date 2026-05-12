@@ -38,27 +38,36 @@ import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.IModelService;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class DocumentReferenceIDocumentReferenceTransformer
 		implements IFhirTransformer<DocumentReference, IDocumentReference> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
+	@All
 	@Reference(policyOption = ReferencePolicyOption.GREEDY)
-	private List<IDocumentStore> documentStores;
+	List<IDocumentStore> documentStores;
 
+	@Inject
 	@Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
-	private FindingsContentHelper contentHelper;
+	private FindingsContentHelper contentHelper = new FindingsContentHelper();
 
 	private IDocumentAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
-		contentHelper = new FindingsContentHelper();
 		attributeMapper = new IDocumentAttributeMapper(documentStores);
 	}
 

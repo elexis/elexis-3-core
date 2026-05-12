@@ -60,12 +60,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IStock;
@@ -204,7 +206,6 @@ public class BestellView extends ViewPart {
 			public void drop(final DropTargetEvent event) {
 				if (event.data instanceof String) {
 					String[] parts = ((String) event.data).split(StringConstants.COMMA);
-
 					if (actOrder == null) {
 						NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 								Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
@@ -233,8 +234,10 @@ public class BestellView extends ViewPart {
 									return;
 								}
 								// use StockEntry if possible
+								Optional<IMandator> activeMandator = ContextServiceHolder.get().getActiveMandator();
 								IStockEntry stockEntry = StockServiceHolder.get().findPreferredStockEntryForArticle(
-										StoreToStringServiceHolder.getStoreToString(art), null);
+										StoreToStringServiceHolder.getStoreToString(art),
+										activeMandator.isPresent() ? activeMandator.get().getId() : null);
 
 								if (stockEntry != null) {
 									stockEntriesToOrder.add(stockEntry);
@@ -404,7 +407,7 @@ public class BestellView extends ViewPart {
 			@Override
 			public void run() {
 				String valueToSet = listenToBarcodeInputAction.isChecked() ? BestellView.class.getName() : null;
-				ContextServiceHolder.get().getRootContext().setNamed("barcodeInputConsumer", valueToSet);
+				ContextServiceHolder.get().getRootContext().setNamed(Barcode.BARCODE_CONSUMER_KEY, valueToSet);
 			}
 		};
 		removeAction = new Action(Messages.BestellView_RemoveArticle) {
@@ -481,6 +484,10 @@ public class BestellView extends ViewPart {
 						Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER,
 						Preferences.INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT);
 
+				boolean activeMandatorStock = ContextServiceHolder.get().getActiveMandator().isPresent()
+						&& ConfigServiceHolder.get().get(Preferences.INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER,
+								Preferences.INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER_DEFAULT);
+				
 				IQuery<IStockEntry> query = CoreModelServiceHolder.get().getQuery(IStockEntry.class);
 				query.andFeatureCompare(ModelPackage.Literals.ISTOCK_ENTRY__CURRENT_STOCK,
 						isInventoryBelow ? COMPARATOR.LESS : COMPARATOR.LESS_OR_EQUAL,
@@ -492,6 +499,13 @@ public class BestellView extends ViewPart {
 							IOrderEntry open = OrderServiceHolder.get().findOpenOrderEntryForStockEntry(stockEntry);
 							// only add if not on an open order
 							if (open != null) {
+								continue;
+							}
+						}
+						if(activeMandatorStock) {
+							IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().get();
+							if (stockEntry.getStock().getOwner() == null
+									|| !stockEntry.getStock().getOwner().getId().equals(activeMandator.getId())) {
 								continue;
 							}
 						}
@@ -704,7 +718,7 @@ public class BestellView extends ViewPart {
 	public void barcodeEvent(@UIEventTopic(ElexisEventTopics.BASE_EVENT + "barcodeinput") Object event,
 			IContextService contextService) {
 		if (event instanceof IArticle && StringUtils.equals(BestellView.class.getName(),
-				(String) contextService.getNamed("barcodeInputConsumer").orElse(null))) {
+				(String) contextService.getNamed(Barcode.BARCODE_CONSUMER_KEY).orElse(null))) {
 			addItemsToOrder(Collections.singletonList((IArticle) event));
 		}
 	}

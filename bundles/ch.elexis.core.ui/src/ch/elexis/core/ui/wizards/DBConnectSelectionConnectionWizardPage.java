@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Label;
 import ch.elexis.core.common.DBConnection;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.rcp.utils.DBConnectionUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.data.PersistentObject;
@@ -131,7 +132,7 @@ public class DBConnectSelectionConnectionWizardPage extends DBConnectWizardPage 
 						Clipboard cb = new Clipboard(UiDesk.getDisplay());
 						TextTransfer textTransfer = TextTransfer.getInstance();
 						try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-							dbc.marshall(bos);
+							DBConnectionUtil.marshall(bos, dbc);
 							cb.setContents(new Object[] { bos.toString() }, new Transfer[] { textTransfer });
 						} catch (JAXBException | IOException e1) {
 							MessageDialog.openError(UiDesk.getTopShell(), "Error", e1.getMessage());

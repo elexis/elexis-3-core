@@ -1,0 +1,451 @@
+From 2dfa7fba8ca6541c6cf5f5d2e4ccc75cab22fd4a Mon Sep 17 00:00:00 2001
+From: Marco Descher <marco@descher.at>
+Date: Tue, 24 Feb 2026 11:04:15 +0100
+Subject: [PATCH] move TransientCoding/MedicamentCoding to core.findings
+
+---
+ .../core/findings/fhir/model/LocalCoding.java |  2 +-
+ .../po/dataaccess/FindingsDataAccessor.java   |  2 +-
+ .../findings/fhir/po/dataaccess/TextUtil.java |  3 +-
+ .../fhir/po/migrator/MigratorService.java     |  2 +-
+ .../fhir/po/text/AllergiesResolver.java       |  1 -
+ .../ui/composite/FindingsDetailComposite.java |  2 +-
+ .../ui/composites/CodingComposite.java        |  2 +-
+ .../composites/CodingSelectionComposite.java  |  2 +-
+ .../PersonalAnamnesisComposite.java           |  2 +-
+ .../findings/ui/composites/RiskComposite.java |  2 +-
+ .../ui/preferences/FindingsSettings.java      |  2 +-
+ ...ReferenceIDocumentReferenceTransformer.xml |  2 +-
+ ....DocumentReferenceIDocumentTransformer.xml |  2 +-
+ .../ImmunizationVaccinationTransformer.java   |  2 +-
+ ...icationRequestPrescriptionTransformer.java |  2 +-
+ ...ationStatementPrescriptionTransformer.java |  2 +-
+ .../transformer/helper/CodeSystemUtil.java    |  2 +-
+ .../transformer/helper/IMedicationHelper.java |  2 +-
+ .../IEncounterEncounterAttributeMapper.java   |  2 +-
+ ...accinationImmunizationAttributeMapper.java |  2 +-
+ .../findings/util/model/TransientCoding.java  | 59 -------------------
+ .../findings/codes}/MedicamentCoding.java     | 10 ++--
+ .../core/findings/MigratorServiceTest.java    |  2 +-
+ .../findings/codings/CodingServiceTest.java   |  1 -
+ 24 files changed, 25 insertions(+), 87 deletions(-)
+ delete mode 100644 bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/model/TransientCoding.java
+ rename bundles/{ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir => ch.elexis.core.findings/src/ch/elexis/core/findings/codes}/MedicamentCoding.java (68%)
+
+diff --git a/bundles/ch.elexis.core.findings.fhir.model/src/ch/elexis/core/findings/fhir/model/LocalCoding.java b/bundles/ch.elexis.core.findings.fhir.model/src/ch/elexis/core/findings/fhir/model/LocalCoding.java
+index e2bb4519b7..4e54d8b3b8 100644
+--- a/bundles/ch.elexis.core.findings.fhir.model/src/ch/elexis/core/findings/fhir/model/LocalCoding.java
++++ b/bundles/ch.elexis.core.findings.fhir.model/src/ch/elexis/core/findings/fhir/model/LocalCoding.java
+@@ -10,7 +10,7 @@
+ import ch.elexis.core.findings.ICoding;
+ import ch.elexis.core.findings.ILocalCoding;
+ import ch.elexis.core.findings.codes.CodingSystem;
+-import ch.elexis.core.findings.util.model.TransientCoding;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
+ import ch.elexis.core.model.IXid;
+ 
+diff --git a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/FindingsDataAccessor.java b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/FindingsDataAccessor.java
+index 792ab8d153..a93e91b421 100644
+--- a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/FindingsDataAccessor.java
++++ b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/FindingsDataAccessor.java
+@@ -1,12 +1,12 @@
+ package ch.elexis.core.findings.fhir.po.dataaccess;
+ 
+-import org.apache.commons.lang3.StringUtils;
+ import java.time.LocalDate;
+ import java.time.Month;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.stream.Collectors;
+ 
++import org.apache.commons.lang3.StringUtils;
+ import org.osgi.framework.BundleContext;
+ import org.osgi.framework.FrameworkUtil;
+ import org.osgi.framework.ServiceReference;
+diff --git a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/TextUtil.java b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/TextUtil.java
+index 3d3e0611df..f03bfc212a 100644
+--- a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/TextUtil.java
++++ b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/dataaccess/TextUtil.java
+@@ -1,9 +1,10 @@
+ package ch.elexis.core.findings.fhir.po.dataaccess;
+ 
+-import org.apache.commons.lang3.StringUtils;
+ import java.util.List;
+ import java.util.Optional;
+ 
++import org.apache.commons.lang3.StringUtils;
++
+ import ch.elexis.core.findings.IAllergyIntolerance;
+ import ch.elexis.core.findings.ICoding;
+ import ch.elexis.core.findings.ICondition;
+diff --git a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/migrator/MigratorService.java b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/migrator/MigratorService.java
+index a9776d11e0..5b039df161 100644
+--- a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/migrator/MigratorService.java
++++ b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/migrator/MigratorService.java
+@@ -25,10 +25,10 @@
+ import ch.elexis.core.findings.IObservation.ObservationCategory;
+ import ch.elexis.core.findings.IObservation.ObservationCode;
+ import ch.elexis.core.findings.codes.CodingSystem;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.migration.IMigratorContribution;
+ import ch.elexis.core.findings.migration.IMigratorService;
+ import ch.elexis.core.findings.util.ModelUtil;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ import ch.elexis.core.services.IModelService;
+ import ch.elexis.core.services.IQuery;
+ import ch.elexis.core.services.IQuery.COMPARATOR;
+diff --git a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/text/AllergiesResolver.java b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/text/AllergiesResolver.java
+index f1b765526e..2b494df24e 100644
+--- a/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/text/AllergiesResolver.java
++++ b/bundles/ch.elexis.core.findings.fhir.po/src/ch/elexis/core/findings/fhir/po/text/AllergiesResolver.java
+@@ -2,7 +2,6 @@
+ 
+ import java.util.Optional;
+ 
+-import ch.elexis.core.data.activator.CoreHub;
+ import ch.elexis.core.data.interfaces.text.ITextResolver;
+ import ch.elexis.core.findings.fhir.po.dataaccess.FindingsDataAccessor;
+ import ch.elexis.core.findings.migration.IMigratorService;
+diff --git a/bundles/ch.elexis.core.findings.templates.ui/src/ch/elexis/core/findings/templates/ui/composite/FindingsDetailComposite.java b/bundles/ch.elexis.core.findings.templates.ui/src/ch/elexis/core/findings/templates/ui/composite/FindingsDetailComposite.java
+index 73c63c451e..333a075643 100644
+--- a/bundles/ch.elexis.core.findings.templates.ui/src/ch/elexis/core/findings/templates/ui/composite/FindingsDetailComposite.java
++++ b/bundles/ch.elexis.core.findings.templates.ui/src/ch/elexis/core/findings/templates/ui/composite/FindingsDetailComposite.java
+@@ -46,6 +46,7 @@
+ import ch.elexis.core.data.interfaces.ICodeElement;
+ import ch.elexis.core.exceptions.ElexisException;
+ import ch.elexis.core.findings.codes.CodingSystem;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.templates.model.CodeElement;
+ import ch.elexis.core.findings.templates.model.DataType;
+ import ch.elexis.core.findings.templates.model.FindingsTemplate;
+@@ -62,7 +63,6 @@
+ import ch.elexis.core.findings.templates.model.Type;
+ import ch.elexis.core.findings.templates.ui.dlg.FindingsSelectionDialog;
+ import ch.elexis.core.findings.templates.ui.util.FindingsServiceHolder;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ import ch.elexis.core.ui.UiDesk;
+ import ch.elexis.core.ui.dialogs.base.InputDialog;
+ import ch.elexis.core.ui.e4.util.CoreUiUtil;
+diff --git a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingComposite.java b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingComposite.java
+index 731c2d644f..c98ccfe5e0 100644
+--- a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingComposite.java
++++ b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingComposite.java
+@@ -15,7 +15,7 @@
+ import org.eclipse.swt.widgets.Text;
+ 
+ import ch.elexis.core.findings.ICoding;
+-import ch.elexis.core.findings.util.model.TransientCoding;
++import ch.elexis.core.findings.codes.TransientCoding;
+ 
+ public class CodingComposite extends Composite {
+ 
+diff --git a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingSelectionComposite.java b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingSelectionComposite.java
+index 0d31e31f47..079d3c4fd0 100644
+--- a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingSelectionComposite.java
++++ b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/CodingSelectionComposite.java
+@@ -31,9 +31,9 @@
+ 
+ import ch.elexis.core.findings.ICoding;
+ import ch.elexis.core.findings.codes.CodingSystem;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.ui.dialogs.CodingEditDialog;
+ import ch.elexis.core.findings.ui.services.CodingServiceComponent;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ 
+ public class CodingSelectionComposite extends Composite implements ISelectionProvider {
+ 
+diff --git a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/PersonalAnamnesisComposite.java b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/PersonalAnamnesisComposite.java
+index 61d0096726..a1e7772d5a 100644
+--- a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/PersonalAnamnesisComposite.java
++++ b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/PersonalAnamnesisComposite.java
+@@ -17,10 +17,10 @@
+ import ch.elexis.core.findings.IObservation;
+ import ch.elexis.core.findings.IObservation.ObservationCategory;
+ import ch.elexis.core.findings.IObservation.ObservationCode;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.ui.model.AbstractBeanAdapter;
+ import ch.elexis.core.findings.ui.model.ObservationBeanAdapter;
+ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ 
+ public class PersonalAnamnesisComposite extends Composite {
+ 
+diff --git a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/RiskComposite.java b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/RiskComposite.java
+index 4a79e89b8c..080f8c1ca0 100644
+--- a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/RiskComposite.java
++++ b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/composites/RiskComposite.java
+@@ -17,10 +17,10 @@
+ import ch.elexis.core.findings.IObservation;
+ import ch.elexis.core.findings.IObservation.ObservationCategory;
+ import ch.elexis.core.findings.IObservation.ObservationCode;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.ui.model.AbstractBeanAdapter;
+ import ch.elexis.core.findings.ui.model.ObservationBeanAdapter;
+ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ 
+ public class RiskComposite extends Composite {
+ 
+diff --git a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/preferences/FindingsSettings.java b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/preferences/FindingsSettings.java
+index 683d2801f1..34f0c46ae4 100644
+--- a/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/preferences/FindingsSettings.java
++++ b/bundles/ch.elexis.core.findings.ui/src/ch/elexis/core/findings/ui/preferences/FindingsSettings.java
+@@ -31,10 +31,10 @@
+ import ch.elexis.core.findings.IObservation;
+ import ch.elexis.core.findings.IObservation.ObservationCategory;
+ import ch.elexis.core.findings.IObservation.ObservationCode;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.migration.IMigratorService;
+ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+ import ch.elexis.core.findings.ui.services.MigratorServiceComponent;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
+ import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
+ import ch.elexis.data.Patient;
+diff --git a/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentReferenceTransformer.xml b/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentReferenceTransformer.xml
+index 7553caf10d..2f31e15c55 100644
+--- a/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentReferenceTransformer.xml
++++ b/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentReferenceTransformer.xml
+@@ -4,7 +4,7 @@
+       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
+    </service>
+    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+-   <reference cardinality="0..n" field="documentStores" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
++   <reference cardinality="0..n" field="documentStores" field-collection-type="service" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
+    <reference cardinality="1..1" field="findingsService" interface="ch.elexis.core.findings.IFindingsService" name="findingsService"/>
+    <implementation class="ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentReferenceTransformer"/>
+ </scr:component>
+\ No newline at end of file
+diff --git a/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer.xml b/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer.xml
+index 9e5a6729dd..ac5165dc6a 100644
+--- a/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer.xml
++++ b/bundles/ch.elexis.core.findings.util/OSGI-INF/ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer.xml
+@@ -4,6 +4,6 @@
+       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
+    </service>
+    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
+-   <reference cardinality="0..n" field="documentStores" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
++   <reference cardinality="0..n" field="documentStores" field-collection-type="service" interface="ch.elexis.core.services.IDocumentStore" name="documentStores" policy-option="greedy"/>
+    <implementation class="ch.elexis.core.findings.util.fhir.transformer.DocumentReferenceIDocumentTransformer"/>
+ </scr:component>
+\ No newline at end of file
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/ImmunizationVaccinationTransformer.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/ImmunizationVaccinationTransformer.java
+index 99a1f77964..02af8a3d14 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/ImmunizationVaccinationTransformer.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/ImmunizationVaccinationTransformer.java
+@@ -14,8 +14,8 @@
+ 
+ import ca.uhn.fhir.model.api.Include;
+ import ca.uhn.fhir.rest.api.SummaryEnum;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+ import ch.elexis.core.findings.util.fhir.transformer.mapper.IVaccinationImmunizationAttributeMapper;
+ import ch.elexis.core.model.IArticle;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationRequestPrescriptionTransformer.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationRequestPrescriptionTransformer.java
+index f637c58923..c4db899c8c 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationRequestPrescriptionTransformer.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationRequestPrescriptionTransformer.java
+@@ -34,9 +34,9 @@
+ import ca.uhn.fhir.model.api.Include;
+ import ca.uhn.fhir.rest.api.SummaryEnum;
+ import ch.elexis.core.findings.IdentifierSystem;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.findings.util.ModelUtil;
+ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+ import ch.elexis.core.model.IArticle;
+ import ch.elexis.core.model.IMandator;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationStatementPrescriptionTransformer.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationStatementPrescriptionTransformer.java
+index 6a33c5496c..764f19681f 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationStatementPrescriptionTransformer.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/MedicationStatementPrescriptionTransformer.java
+@@ -28,9 +28,9 @@
+ 
+ import ca.uhn.fhir.model.api.Include;
+ import ca.uhn.fhir.rest.api.SummaryEnum;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.findings.util.ModelUtil;
+ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+ import ch.elexis.core.model.IArticle;
+ import ch.elexis.core.model.IMandator;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/CodeSystemUtil.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/CodeSystemUtil.java
+index 223fb2d910..06432af5c3 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/CodeSystemUtil.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/CodeSystemUtil.java
+@@ -11,7 +11,7 @@
+ 
+ import ch.elexis.core.fhir.CodeSystem;
+ import ch.elexis.core.findings.codes.CodingSystem;
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.model.ICodeElement;
+ import ch.elexis.core.services.ICodeElementService;
+ import ch.elexis.core.services.ICodeElementServiceContribution;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/IMedicationHelper.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/IMedicationHelper.java
+index 6879c7278c..6447780581 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/IMedicationHelper.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/helper/IMedicationHelper.java
+@@ -9,7 +9,7 @@
+ import org.hl7.fhir.r4.model.Ratio;
+ import org.hl7.fhir.r4.model.SimpleQuantity;
+ 
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.model.IArticle;
+ 
+ public class IMedicationHelper {
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IEncounterEncounterAttributeMapper.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IEncounterEncounterAttributeMapper.java
+index 8f8f3f40a6..9b7f207597 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IEncounterEncounterAttributeMapper.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IEncounterEncounterAttributeMapper.java
+@@ -13,9 +13,9 @@
+ import ca.uhn.fhir.rest.api.SummaryEnum;
+ import ch.elexis.core.findings.ICoding;
+ import ch.elexis.core.findings.codes.CodingSystem;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.util.ModelUtil;
+ import ch.elexis.core.findings.util.fhir.accessor.EncounterAccessor;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ import ch.elexis.core.model.ICoverage;
+ import ch.elexis.core.model.IEncounter;
+ import ch.elexis.core.model.IPatient;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IVaccinationImmunizationAttributeMapper.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IVaccinationImmunizationAttributeMapper.java
+index 3433097a7b..16cca06ef9 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IVaccinationImmunizationAttributeMapper.java
++++ b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/transformer/mapper/IVaccinationImmunizationAttributeMapper.java
+@@ -18,7 +18,7 @@
+ 
+ import ca.uhn.fhir.model.api.Include;
+ import ca.uhn.fhir.rest.api.SummaryEnum;
+-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
++import ch.elexis.core.findings.codes.MedicamentCoding;
+ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
+ import ch.elexis.core.model.IMandator;
+ import ch.elexis.core.model.IVaccination;
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/model/TransientCoding.java b/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/model/TransientCoding.java
+deleted file mode 100644
+index 8b50da7e65..0000000000
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/model/TransientCoding.java
++++ /dev/null
+@@ -1,59 +0,0 @@
+-package ch.elexis.core.findings.util.model;
+-
+-import java.util.Objects;
+-
+-import org.apache.commons.lang3.StringUtils;
+-
+-import ch.elexis.core.findings.ICoding;
+-import ch.elexis.core.findings.IObservation.ObservationCode;
+-
+-public class TransientCoding implements ICoding {
+-
+-	private String system;
+-	private String code;
+-	private String display;
+-
+-	public TransientCoding(String system, String code, String display) {
+-		this.system = system;
+-		this.code = code;
+-		this.display = display;
+-	}
+-
+-	public TransientCoding(ObservationCode code) {
+-		this.system = code.getIdentifierSystem().getSystem();
+-		this.code = code.getCode();
+-		this.display = StringUtils.EMPTY;
+-	}
+-
+-	@Override
+-	public String getSystem() {
+-		return system;
+-	}
+-
+-	@Override
+-	public String getCode() {
+-		return code;
+-	}
+-
+-	@Override
+-	public String getDisplay() {
+-		return display;
+-	}
+-
+-	@Override
+-	public int hashCode() {
+-		return Objects.hash(code, system);
+-	}
+-
+-	@Override
+-	public boolean equals(Object obj) {
+-		if (this == obj)
+-			return true;
+-		if (obj == null)
+-			return false;
+-		if (getClass() != obj.getClass())
+-			return false;
+-		TransientCoding other = (TransientCoding) obj;
+-		return Objects.equals(code, other.code) && Objects.equals(system, other.system);
+-	}
+-}
+diff --git a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/MedicamentCoding.java b/bundles/ch.elexis.core.findings/src/ch/elexis/core/findings/codes/MedicamentCoding.java
+similarity index 68%
+rename from bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/MedicamentCoding.java
+rename to bundles/ch.elexis.core.findings/src/ch/elexis/core/findings/codes/MedicamentCoding.java
+index 8202fc660a..00f560fcd0 100644
+--- a/bundles/ch.elexis.core.findings.util/src/ch/elexis/core/findings/util/fhir/MedicamentCoding.java
++++ b/bundles/ch.elexis.core.findings/src/ch/elexis/core/findings/codes/MedicamentCoding.java
+@@ -1,7 +1,6 @@
+-package ch.elexis.core.findings.util.fhir;
++package ch.elexis.core.findings.codes;
+ 
+ import org.apache.commons.lang3.StringUtils;
+-import org.hl7.fhir.r4.model.Coding;
+ 
+ public enum MedicamentCoding {
+ 	NAME("http://www.elexis.info/medication/name", StringUtils.EMPTY),
+@@ -25,10 +24,9 @@ public String getOid() {
+ 		return "urn:oid:" + oid;
+ 	}
+ 
+-	public boolean isCodeSystemOf(Coding coding) {
+-		if (coding != null && StringUtils.isNotBlank(coding.getSystem())) {
+-			return coding.getSystem().equals(oid) || coding.getSystem().equals(url)
+-					|| coding.getSystem().equals(getOid());
++	public boolean isCodeSystemOf(String system) {
++		if (system != null && StringUtils.isNotBlank(system)) {
++			return system.equals(oid) || system.equals(url) || system.equals(getOid());
+ 		}
+ 		return false;
+ 	}
+diff --git a/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/MigratorServiceTest.java b/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/MigratorServiceTest.java
+index 5d4dbf65b0..ee1063b113 100644
+--- a/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/MigratorServiceTest.java
++++ b/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/MigratorServiceTest.java
+@@ -13,8 +13,8 @@
+ import org.junit.Test;
+ 
+ import ch.elexis.core.findings.IObservation.ObservationCode;
++import ch.elexis.core.findings.codes.TransientCoding;
+ import ch.elexis.core.findings.test.AllTests;
+-import ch.elexis.core.findings.util.model.TransientCoding;
+ import ch.elexis.data.Patient;
+ 
+ public class MigratorServiceTest {
+diff --git a/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/codings/CodingServiceTest.java b/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/codings/CodingServiceTest.java
+index ce4bba4924..542d168aa0 100644
+--- a/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/codings/CodingServiceTest.java
++++ b/tests/ch.elexis.core.findings.test/src/ch/elexis/core/findings/codings/CodingServiceTest.java
+@@ -13,7 +13,6 @@
+ import ch.elexis.core.findings.ICoding;
+ import ch.elexis.core.findings.codes.CodingSystem;
+ import ch.elexis.core.findings.codes.ICodingService;
+-import ch.elexis.core.findings.codes.ILocalCodingContribution;
+ 
+ public class CodingServiceTest {
+ 

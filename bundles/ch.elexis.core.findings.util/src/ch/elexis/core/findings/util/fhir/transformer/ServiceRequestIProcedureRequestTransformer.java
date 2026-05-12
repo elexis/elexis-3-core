@@ -1,10 +1,10 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ServiceRequest;
 import org.osgi.service.component.annotations.Component;
@@ -30,29 +30,31 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.VersionedResource;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * STU3: ProcedureRequest -> R4: ServiceRequest
  */
+@Dependent
 @Component
 public class ServiceRequestIProcedureRequestTransformer implements IFhirTransformer<ServiceRequest, IProcedureRequest> {
 
 	private static Logger logger = LoggerFactory.getLogger(ServiceRequestIProcedureRequestTransformer.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
+	@Inject
 	@Reference
-	private ICodingService codingService;
+	ICodingService codingService;
 
-	private FindingsContentHelper contentHelper;
-
-	public void activate() {
-		contentHelper = new FindingsContentHelper();
-	}
+	private FindingsContentHelper contentHelper = new FindingsContentHelper();
 
 	@Override
 	public Optional<ServiceRequest> getFhirObject(IProcedureRequest localObject, SummaryEnum summaryEnum,
@@ -146,7 +148,6 @@ public class ServiceRequestIProcedureRequestTransformer implements IFhirTransfor
 
 	private String getProcedureText(ch.elexis.core.model.IEncounter behandlung) {
 		StringBuilder ret = new StringBuilder();
-		@SuppressWarnings("unchecked")
 		List<IProcedureRequest> procedureRequests = (findingsService.getConsultationsFindings(behandlung.getId(),
 				IProcedureRequest.class));
 		if (procedureRequests != null && !procedureRequests.isEmpty()) {

@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -129,6 +130,23 @@ public interface IModelService {
 	 * @return
 	 */
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)  throws AccessControlException;
+
+	/**
+	 * Load a model object of type clazz by the id. If Deleted entries should be
+	 * loaded can be specified with the includeDeleted parameter. If the entity
+	 * should be refreshed from the db can be specified with the refreshCache
+	 * parameter.
+	 *
+	 * @param <T>
+	 * @param id
+	 * @param clazz
+	 * @param includeDeleted
+	 * @param refreshCache
+	 * @param eagerLoadAttributes name of attributes to perform eager loading on
+	 * @return
+	 */
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache,
+			Set<String> eagerLoadAttributes) throws AccessControlException;
 
 	/**
 	 * Save the model object.
@@ -429,6 +447,14 @@ public interface IModelService {
 	 * @return
 	 */
 	public <T> long getHighestLastUpdate(Class<T> clazz);
+
+	/**
+	 * Returns the lastUpdate for a specific entity. Ignores deleted value.
+	 * 
+	 * @return the lastUpdate value for the given entity, or -1 if not loadable.
+	 * @since 3.13
+	 */
+	public <T extends Identifiable> long getLastUpdate(Class<T> clazz, String id);
 
 	/**
 	 * Set a list of {@link ElexisEventTopics} to be blocked. These events will not

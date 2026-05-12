@@ -42,20 +42,28 @@ public class FormatValidator {
 
 	private static boolean isControlDigitValid(final String ahvNum) {
 		final String unformattedAHVNum = getUnformattedAHVNum(ahvNum);
-		int factor = 3;
-		int total = 0;
-		int nextToLastIndex = AHV_NUM_LEN_WITHOUT_SEP - 2;
 
-		for (int i = nextToLastIndex; i >= 0; i--) {
-			int value = Character.getNumericValue(unformattedAHVNum.charAt(i));
-			total += (value * factor);
-			factor = (factor == 3) ? 1 : 3;
+		// validate CH AHV
+		if (unformattedAHVNum.startsWith("756")) {
+			int factor = 3;
+			int total = 0;
+			int nextToLastIndex = AHV_NUM_LEN_WITHOUT_SEP - 2;
+
+			for (int i = nextToLastIndex; i >= 0; i--) {
+				int value = Character.getNumericValue(unformattedAHVNum.charAt(i));
+				total += (value * factor);
+				factor = (factor == 3) ? 1 : 3;
+			}
+
+			int nextMultipleOfTen = (int) Math.ceil((double) total / 10) * 10;
+			int expectedControlDigit = nextMultipleOfTen - total;
+
+			return getControlDigit(ahvNum) == expectedControlDigit;
+		} else {
+			// LI AHV not validated
+			return unformattedAHVNum.matches("438[0-9]{10}");
 		}
 
-		int nextMultipleOfTen = (int) Math.ceil((double) total / 10) * 10;
-		int expectedControlDigit = nextMultipleOfTen - total;
-
-		return getControlDigit(ahvNum) == expectedControlDigit;
 	}
 
 	public static boolean hasAHVNumFormat(final String ahvNum) {

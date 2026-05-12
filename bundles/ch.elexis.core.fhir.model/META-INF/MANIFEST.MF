@@ -8,7 +8,8 @@ Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.fhir.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: info.elexis.target.hapi.fhir;visibility:=reexport,
- ch.elexis.core
+ ch.elexis.core,
+ ch.elexis.core.rcp;bundle-version="3.13.0"
 Import-Package: ch.elexis.core.findings,
  ch.elexis.core.findings.util.fhir.transformer.helper,
  ch.elexis.core.services.holder,

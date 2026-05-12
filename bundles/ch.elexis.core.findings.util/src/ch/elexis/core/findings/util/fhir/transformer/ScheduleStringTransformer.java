@@ -19,16 +19,21 @@ import ch.elexis.core.model.agenda.Area;
 import ch.elexis.core.model.agenda.AreaType;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ScheduleStringTransformer implements IFhirTransformer<Schedule, String> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IAppointmentService appointmentService;
+	IAppointmentService appointmentService;
 
 	@Override
 	public Optional<Schedule> getFhirObject(String localObject, SummaryEnum summaryEnum, Set<Include> includes) {

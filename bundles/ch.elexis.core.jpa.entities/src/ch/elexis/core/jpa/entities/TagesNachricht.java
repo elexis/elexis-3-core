@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import jakarta.persistence.Column;
@@ -15,7 +13,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "CH_ELEXIS_AGENDA_DAYMSG")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 public class TagesNachricht extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

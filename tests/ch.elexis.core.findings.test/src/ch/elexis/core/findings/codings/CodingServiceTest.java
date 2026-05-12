@@ -13,7 +13,6 @@ import org.junit.Test;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.findings.codes.ICodingService;
-import ch.elexis.core.findings.codes.ILocalCodingContribution;
 
 public class CodingServiceTest {
 

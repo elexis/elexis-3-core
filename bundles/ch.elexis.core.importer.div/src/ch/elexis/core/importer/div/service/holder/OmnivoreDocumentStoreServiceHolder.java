@@ -4,10 +4,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.services.IDocumentStore;
-import io.quarkus.runtime.Startup;
 import jakarta.inject.Inject;
 
-@Startup
 @Component
 public class OmnivoreDocumentStoreServiceHolder {
 

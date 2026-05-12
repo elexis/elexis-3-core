@@ -1,8 +1,9 @@
 package ch.elexis.core.findings.fhir.po.dataaccess;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;

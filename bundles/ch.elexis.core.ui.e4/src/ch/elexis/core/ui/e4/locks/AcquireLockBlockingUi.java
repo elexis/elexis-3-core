@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.LocalLockServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 
 public class AcquireLockBlockingUi {
 	private static Logger logger = LoggerFactory.getLogger(AcquireLockBlockingUi.class);

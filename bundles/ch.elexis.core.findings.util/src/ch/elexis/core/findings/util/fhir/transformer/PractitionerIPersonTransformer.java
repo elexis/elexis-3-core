@@ -15,6 +15,9 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPractitionerA
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IXidService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * A person who is directly or indirectly involved in the provisioning of
@@ -22,17 +25,21 @@ import ch.elexis.core.services.IXidService;
  * 
  * @see https://hl7.org/fhir/R4B/practitioner.html
  */
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Practitioner.IPerson")
 public class PractitionerIPersonTransformer implements IFhirTransformer<Practitioner, IPerson> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IXidService xidService;
+	IXidService xidService;
 
 	private IPersonPractitionerAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IPersonPractitionerAttributeMapper(xidService);

@@ -473,6 +473,13 @@ public class ModelSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.IINVOICE_BILL_RECORD_INFO: {
+				IInvoiceBillRecordInfo iInvoiceBillRecordInfo = (IInvoiceBillRecordInfo)theEObject;
+				T1 result = caseIInvoiceBillRecordInfo(iInvoiceBillRecordInfo);
+				if (result == null) result = caseIdentifiable(iInvoiceBillRecordInfo);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.ISTOCK: {
 				IStock iStock = (IStock)theEObject;
 				T1 result = caseIStock(iStock);
@@ -1395,6 +1402,21 @@ public class ModelSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIInvoice(IInvoice object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>IInvoice Bill Record Info</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>IInvoice Bill Record Info</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseIInvoiceBillRecordInfo(IInvoiceBillRecordInfo object) {
 		return null;
 	}
 

@@ -1,9 +1,7 @@
 package ch.elexis.core.findings.util.fhir.transformer;
 
-
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.hl7.fhir.r4.model.Task;
 import org.osgi.service.component.annotations.Activate;
@@ -16,23 +14,25 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.IReminderTaskAttributeMapper;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
-	private IReminderTaskAttributeMapper attributeMapper;
+	IReminderTaskAttributeMapper attributeMapper;
 
-	private FhirTransformerCache<Task> cache;
-
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IReminderTaskAttributeMapper(coreModelService);
-
-		cache = new FhirTransformerCache<Task>();
 	}
 
 	@Override
@@ -63,19 +63,13 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 
 	@Override
 	public Optional<Task> getFhirObject(IReminder localObject, SummaryEnum summaryEnum, Set<Include> includes) {
-		return cache.get(localObject, summaryEnum, includes, new Callable<Task>() {
-			@Override
-			public Task call() throws Exception {
-				Task ret = new Task();
-				attributeMapper.elexisToFhir(localObject, ret, summaryEnum, includes);
-				return ret;
-			}
-		});
+		Task task = new Task();
+		attributeMapper.elexisToFhir(localObject, task, summaryEnum, includes);
+		return Optional.of(task);
 	}
 
 	@Override
 	public Optional<IReminder> updateLocalObject(Task fhirObject, IReminder localObject) {
-		cache.invalidate(localObject);
 		attributeMapper.fhirToElexis(fhirObject, localObject);
 		coreModelService.save(localObject);
 		return Optional.of(localObject);

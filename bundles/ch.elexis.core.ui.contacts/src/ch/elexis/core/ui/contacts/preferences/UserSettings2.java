@@ -52,7 +52,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQueryCursor;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StickerServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.views.Patientenblatt2;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;

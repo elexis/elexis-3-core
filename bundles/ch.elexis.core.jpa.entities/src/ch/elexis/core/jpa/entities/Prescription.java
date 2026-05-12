@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDateTime;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PrescriptionEntryTypeConverter;
@@ -23,7 +21,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "patient_artikel_joint")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 public class Prescription extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener

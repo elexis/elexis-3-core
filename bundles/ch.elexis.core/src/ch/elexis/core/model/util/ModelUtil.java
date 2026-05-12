@@ -15,7 +15,7 @@ public class ModelUtil {
 	 */
 	public static Optional<Money> getMoneyForCentString(String string) {
 		try {
-			int cent = Integer.parseInt(string);
+			int cent = Integer.parseInt(string != null ? string.trim() : null);
 			return Optional.of(new Money(cent));
 		} catch (NumberFormatException e) {
 			// ignore
@@ -32,7 +32,7 @@ public class ModelUtil {
 	 */
 	public static Optional<Money> getMoneyForPriceString(String string) {
 		try {
-			double amount = Double.parseDouble(string);
+			double amount = Double.parseDouble(string != null ? string.trim() : null);
 			return Optional.of(new Money(amount));
 		} catch (NumberFormatException e) {
 			// ignore

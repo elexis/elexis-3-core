@@ -25,13 +25,13 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IDocumentConverter;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.spotlight.ISpotlightResultEntry;
 import ch.elexis.core.spotlight.ISpotlightResultEntry.Category;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")

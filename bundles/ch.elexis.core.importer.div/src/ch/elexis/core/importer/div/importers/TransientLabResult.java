@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabOrder;
@@ -12,8 +13,7 @@ import ch.elexis.core.model.ILaboratory;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.LabResultConstants;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
@@ -140,7 +140,7 @@ public class TransientLabResult {
 						new PathologicDescription(Description.PATHO_IMPORT_NO_INFO, rawAbnormalFlags));
 			}
 		}
-		CoreModelServiceHolder.get().save(labResult);
+		PortableServiceLoader.getCoreModelService().save(labResult);
 	}
 
 	public ILabResult persist(ILabOrder labOrder, String orderId, IMandator mandantor, TimeTool time,
@@ -180,7 +180,7 @@ public class TransientLabResult {
 			}
 			// MPF Rule #11231
 			if (origin != null) {
-				List<String> mpfRuleContactIds = ConfigServiceHolder.get().getAsList(
+				List<String> mpfRuleContactIds = PortableServiceLoader.get(IConfigService.class).getAsList(
 						Preferences.LABSETTINGS_MISSING_PATH_FLAG_MEANS_NON_PATHOLOGIC_FOR_LABORATORIES,
 						Collections.emptyList());
 				if (mpfRuleContactIds.contains(origin.getId())) {
@@ -190,7 +190,7 @@ public class TransientLabResult {
 				}
 			}
 		}
-		CoreModelServiceHolder.get().save(labResult);
+		PortableServiceLoader.getCoreModelService().save(labResult);
 		return labResult;
 	}
 

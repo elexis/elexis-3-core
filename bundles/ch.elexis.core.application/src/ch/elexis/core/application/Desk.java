@@ -33,6 +33,8 @@ import ch.elexis.core.data.extension.ICoreOperationAdvisor;
 import ch.elexis.core.data.util.LocalLock;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.rcp.utils.DBConnectionUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IElexisDataSource;
@@ -43,7 +45,6 @@ import ch.elexis.core.status.StatusUtil;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.StatusDialog;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectDataSourceActivator;
 import ch.rgw.io.FileTool;
@@ -83,7 +84,7 @@ public class Desk implements IApplication {
 		if (connectionStatus == null) {
 			// no connection provided by DataSource - use the connection
 			// configure in CoreHub.localCfg
-			Optional<DBConnection> connection = CoreUtil.getDBConnection(CoreHub.localCfg);
+			Optional<DBConnection> connection = DBConnectionUtil.getDBConnection(CoreHub.localCfg);
 			if (!connection.isPresent()) {
 				// none found in CoreHub.localCfg - need to configure
 				CoreOperationAdvisorHolder.get().requestDatabaseConnectionConfiguration();

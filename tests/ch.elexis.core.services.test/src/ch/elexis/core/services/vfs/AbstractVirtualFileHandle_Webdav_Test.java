@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.url.URLStreamHandlerService;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public abstract class AbstractVirtualFileHandle_Webdav_Test {
 

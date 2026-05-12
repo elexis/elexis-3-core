@@ -3,7 +3,6 @@ package ch.elexis.core.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,12 +13,12 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.EvACE;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.model.IArticle;
@@ -38,59 +37,44 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CodeElementServiceHolder;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
+import io.quarkus.arc.All;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class BillingService implements IBillingService {
 
 	private static Logger logger = LoggerFactory.getLogger(BillingService.class);
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@Inject
 	@Reference
-	private IStockService stockService;
+	IStockService stockService;
 
+	@Inject
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
-	private List<IBilledAdjuster> billedAdjusters = new ArrayList<>();
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IBilledAdjuster> billedAdjusters;
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBilledAdjuster(IBilledAdjuster adjuster) {
-		if (!billedAdjusters.contains(adjuster)) {
-			billedAdjusters.add(adjuster);
-		}
-	}
-
-	public void unsetBilledAdjuster(IBilledAdjuster adjuster) {
-		if (billedAdjusters.contains(adjuster)) {
-			billedAdjusters.remove(adjuster);
-		}
-	}
-
-	private List<IBillableAdjuster> billableAdjusters = new ArrayList<>();
-
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setBillableAdjuster(IBillableAdjuster adjuster) {
-		if (!billableAdjusters.contains(adjuster)) {
-			billableAdjusters.add(adjuster);
-		}
-	}
-
-	public void unsetBillableAdjuster(IBillableAdjuster adjuster) {
-		if (billableAdjusters.contains(adjuster)) {
-			billableAdjusters.remove(adjuster);
-		}
-	}
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IBillableAdjuster> billableAdjusters;
 
 	@Override
 	public Result<IEncounter> isEditable(IEncounter encounter) {
@@ -106,12 +90,12 @@ public class BillingService implements IBillingService {
 		boolean checkMandant = !accessControlService.evaluate(EvACE.of("LSTG_CHARGE_FOR_ALL"));
 		boolean mandatorOk = true;
 		boolean invoiceOk = true;
-		IMandator activeMandator = ContextServiceHolder.get().getActiveMandator().orElse(null);
-		boolean mandatorLoggedIn = (activeMandator != null);
+		String activeMandatorId = PortableServiceLoader.get(IContextService.class).getActiveMandatorId();
+		boolean mandatorLoggedIn = (activeMandatorId != null);
 
 		// if m is null, ignore checks (return true)
-		if (encounterMandator != null && activeMandator != null) {
-			if (checkMandant && !(encounterMandator.getId().equals(activeMandator.getId()))) {
+		if (encounterMandator != null && activeMandatorId != null) {
+			if (checkMandant && !(encounterMandator.getId().equals(activeMandatorId))) {
 				mandatorOk = false;
 			}
 
@@ -153,7 +137,7 @@ public class BillingService implements IBillingService {
 			return translateResult(editable);
 		}
 		IBillable beforeAdjust = billable;
-		CoreModelServiceHolder.get().refresh(encounter, true);
+		PortableServiceLoader.getCoreModelService().refresh(encounter, true);
 		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
 		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
 			billable = iBillableAdjuster.adjust(billable, encounter);
@@ -166,7 +150,7 @@ public class BillingService implements IBillingService {
 
 				if (billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
-							contextService.getActiveMandator().map(m -> m.getId()).orElse(null));
+							contextService.getActiveMandatorId());
 					if (!status.isOK()) {
 						StatusUtil.logStatus(logger, status, true);
 					}
@@ -199,7 +183,7 @@ public class BillingService implements IBillingService {
 					}
 					if (optifierResult.isOK()) {
 						CodeElementServiceHolder.updateStatistics(billable,
-								ContextServiceHolder.get().getActiveUserContact().orElse(null));
+								PortableServiceLoader.get(IContextService.class).getActiveUserContact().orElse(null));
 						CodeElementServiceHolder.updateStatistics(billable, encounter.getPatient());
 					}
 				}
@@ -246,8 +230,8 @@ public class BillingService implements IBillingService {
 
 			// TODO stock return via event
 			IArticle article = (IArticle) billable;
-			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
-			stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
+			String mandatorId = contextService.getActiveMandatorId();
+            stockService.performSingleReturn(article, (int) billed.getAmount(), mandatorId);
 
 			// TODO prescription via event
 			Object prescId = billed.getExtInfo(Constants.FLD_EXT_PRESC_ID);
@@ -255,7 +239,8 @@ public class BillingService implements IBillingService {
 				IPrescription prescription = coreModelService.load((String) prescId, IPrescription.class).orElse(null);
 				if (prescription != null && EntryType.SELF_DISPENSED == prescription.getEntryType()) {
 					coreModelService.remove(prescription);
-					ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, prescription);
+					PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_RELOAD,
+							prescription);
 				}
 			}
 		}
@@ -316,7 +301,7 @@ public class BillingService implements IBillingService {
 		}
 
 		IStatus ret = Status.OK_STATUS;
-		boolean bAllowOverrideStrict = ConfigServiceHolder.get()
+		boolean bAllowOverrideStrict = PortableServiceLoader.get(IConfigService.class)
 				.getActiveUserContact(Preferences.LEISTUNGSCODES_ALLOWOVERRIDE_STRICT, false);
 
 		double difference = newAmount - oldAmount;
@@ -366,7 +351,7 @@ public class BillingService implements IBillingService {
 		IBillable billable = billed.getBillable();
 		if (billable instanceof IArticle) {
 			IArticle art = (IArticle) billable;
-			String mandatorId = contextService.getActiveMandator().map(m -> m.getId()).orElse(null);
+			String mandatorId = contextService.getActiveMandatorId();
 			double difference = newAmount - oldAmount;
 			if (difference > 0) {
 				stockService.performSingleDisposal(art, (int) difference, mandatorId);

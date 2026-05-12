@@ -47,8 +47,10 @@ import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.ILocalConfigService;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
@@ -244,8 +246,10 @@ public class CoreHub implements BundleActivator {
 		loadLocalCfg(config);
 
 		int instanceNo = initializeLock();
-		stationIdentifier = LocalConfigService.get(Preferences.STATION_IDENT_ID,
+		ILocalConfigService iLocalConfigService = OsgiServiceUtil.getService(ILocalConfigService.class).get();
+		stationIdentifier = iLocalConfigService.get(Preferences.STATION_IDENT_ID,
 				"notset_" + System.currentTimeMillis());
+		OsgiServiceUtil.ungetService(iLocalConfigService);
 		if (instanceNo > 0) {
 			stationIdentifier += "$" + instanceNo;
 		}

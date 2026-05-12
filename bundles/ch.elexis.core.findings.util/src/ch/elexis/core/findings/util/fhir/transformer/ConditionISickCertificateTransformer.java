@@ -14,12 +14,16 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.mapper.ISickCertificateConditionAttributeMapper;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Condition.ISickCertificate")
 public class ConditionISickCertificateTransformer implements IFhirTransformer<Condition, ISickCertificate> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	private ISickCertificateConditionAttributeMapper attributeMapper;
 

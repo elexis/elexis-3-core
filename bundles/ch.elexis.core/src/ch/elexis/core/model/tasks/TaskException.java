@@ -1,6 +1,7 @@
 package ch.elexis.core.model.tasks;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.rgw.tools.Result;
 
 public class TaskException extends Exception {

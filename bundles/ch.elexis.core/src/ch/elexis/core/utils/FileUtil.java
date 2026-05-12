@@ -1,9 +1,9 @@
 package ch.elexis.core.utils;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;

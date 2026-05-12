@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IAppointmentSeries;
 import ch.elexis.core.model.IContact;
@@ -21,7 +22,6 @@ import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.XidServiceHolder;
 
 public class AppointmentSeries implements IAppointmentSeries {
@@ -56,7 +56,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 		groupId = appointment.getLinkgroup();
 		// load including already deleted root appointment, no special handling on
 		// delete of root needed
-		Optional<IAppointment> foundRoot = CoreModelServiceHolder.get().load(groupId, IAppointment.class, true);
+		Optional<IAppointment> foundRoot = PortableServiceLoader.getCoreModelService().load(groupId, IAppointment.class, true);
 		rootPresistent = foundRoot.isPresent();
 		rootAppointment = foundRoot.orElse(appointment);
 
@@ -474,7 +474,7 @@ public class AppointmentSeries implements IAppointmentSeries {
 		if (StringUtils.isBlank(getLinkgroup())) {
 			return Collections.singletonList(this);
 		}
-		IQuery<IAppointment> query = CoreModelServiceHolder.get().getQuery(IAppointment.class);
+		IQuery<IAppointment> query = PortableServiceLoader.getCoreModelService().getQuery(IAppointment.class);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__LINKGROUP, COMPARATOR.EQUALS, getLinkgroup());
 		return query.execute();
 	}

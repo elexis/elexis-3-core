@@ -6,36 +6,35 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.internal.Bundle;
 import ch.elexis.core.status.ObjectStatus;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class MessageService implements IMessageService {
 
-	private Map<String, IMessageTransporter> messageTransporters;
+	private Map<String, IMessageTransporter> messageTransporters = new HashMap<>();
 
-	public MessageService() {
-		messageTransporters = new HashMap<>();
-	}
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IMessageTransporter> _messageTransporters;
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public void setMessageTransporter(IMessageTransporter messageTransporter) {
-		if (!messageTransporters.containsKey(messageTransporter.getUriScheme())) {
-			messageTransporters.put(messageTransporter.getUriScheme(), messageTransporter);
-		}
-	}
-
-	public void unsetMessageTransporter(IMessageTransporter messageTransporter) {
-		if (messageTransporters.containsKey(messageTransporter.getUriScheme())) {
-			messageTransporters.remove(messageTransporter.getUriScheme());
-		}
+	@PostConstruct
+	@Activate
+	public void activate() {
+		_messageTransporters.forEach(mt -> messageTransporters.put(mt.getUriScheme(), mt));
 	}
 
 	@Override

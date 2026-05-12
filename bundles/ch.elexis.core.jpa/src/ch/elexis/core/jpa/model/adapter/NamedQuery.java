@@ -12,10 +12,10 @@ import org.eclipse.persistence.queries.ScrollableCursor;
 
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQueryCursor;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 

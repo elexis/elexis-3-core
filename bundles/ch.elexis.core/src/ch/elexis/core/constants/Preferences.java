@@ -206,6 +206,8 @@ public class Preferences {
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER = "inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
 	public static final boolean INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT = false;
+	public static final String INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER = "inventory/active_mandator_stock_auto_order"; //$NON-NLS-1$
+	public static final boolean INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER_DEFAULT = false;
 
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
@@ -240,9 +242,12 @@ public class Preferences {
 	public final static String LEISTUNGSCODES_COLOR = "billing/color/"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_EIGENLEISTUNG_USEMULTI_SYSTEMS = "billing/eigenleistung/usemultiplier/systems"; //$NON-NLS-1$
 	public final static String LEISTUNGSCODES_ALLOWOVERRIDE_STRICT = "billing/allowoverride/strict"; //$NON-NLS-1$
+	public static final String LEISTUNGSCODES_BILLINGLAW = "defaultBillingLaw"; //$NON-NLS-1$
+	public static final String LEISTUNGSCODES_NOCOSTBEARER = "noCostBearer"; //$NON-NLS-1$
 
 	// Fall
-	public static final String COVERAGE_COPY_TO_PATIENT = "coverage/copytopatient";
+	public static final String COVERAGE_COPY_TO_PATIENT_KVG = "coverage/copytopatient";
+	public static final String COVERAGE_COPY_TO_PATIENT_OTHERS = "coverage/copytopatientothers";
 
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT = "medication/settings/emediplanHeaderComment";

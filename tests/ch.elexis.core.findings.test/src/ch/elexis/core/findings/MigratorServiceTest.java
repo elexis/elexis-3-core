@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.findings.IObservation.ObservationCode;
+import ch.elexis.core.findings.codes.TransientCoding;
 import ch.elexis.core.findings.test.AllTests;
-import ch.elexis.core.findings.util.model.TransientCoding;
 import ch.elexis.data.Patient;
 
 public class MigratorServiceTest {

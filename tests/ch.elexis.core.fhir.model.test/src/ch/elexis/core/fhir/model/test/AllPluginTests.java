@@ -10,8 +10,8 @@ import ch.elexis.core.fhir.model.FhirModelServiceTest;
 import ch.elexis.core.fhir.model.FhirReminderTest;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactoryTest;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * Test requires bundles from elexis server, therefore it can only be run via

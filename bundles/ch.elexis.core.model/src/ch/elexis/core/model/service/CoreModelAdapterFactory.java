@@ -59,6 +59,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -93,6 +94,7 @@ import ch.elexis.core.model.IVaccination;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Invoice;
+import ch.elexis.core.model.InvoiceBillRecordInfo;
 import ch.elexis.core.model.InvoiceBilled;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
@@ -257,6 +259,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(
 				new MappingEntry(IOutputLog.class, OutputLog.class, ch.elexis.core.jpa.entities.OutputLogEntity.class));
 
+		addMapping(new MappingEntry(IInvoiceBillRecordInfo.class, InvoiceBillRecordInfo.class,
+				ch.elexis.core.jpa.entities.InvoiceBillRecordInfo.class));
 	}
 
 	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter) {

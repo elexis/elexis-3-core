@@ -6,8 +6,8 @@ import java.net.InetAddress;
 import org.junit.BeforeClass;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFileHandle_SmbFile_Test {
 

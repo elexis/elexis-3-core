@@ -32,6 +32,9 @@ import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
 import jakarta.activation.MailcapCommandMap;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.mail.AuthenticationFailedException;
 import jakarta.mail.Flags;
 import jakarta.mail.Flags.Flag;
@@ -51,6 +54,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.search.SearchTerm;
 
+@ApplicationScoped
 @Component
 public class MailClient implements IMailClient {
 
@@ -61,13 +65,15 @@ public class MailClient implements IMailClient {
 
 	private static final String ACCOUNTS_SEPARATOR = ",";
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
 	private ErrorTyp lastError;
 
 	@Activate
-	private void activate() {
+	@PostConstruct
+	void activate() {
 		MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
 		mc.addMailcap("text/html;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_html");
 		mc.addMailcap("text/xml;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_xml");

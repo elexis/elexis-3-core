@@ -1,31 +1,40 @@
 package ch.elexis.core.findings.util.importer;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Organization;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.interfaces.AbstractReferenceDataImporter;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
+import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StickerServiceHolder;
 
 @Component(property = IReferenceDataImporter.REFERENCEDATAID + "=insurances", service = IReferenceDataImporter.class)
 public class InsurancesReferenceDataImporter extends AbstractReferenceDataImporter {
 
 	private static final String REFERENCEDATA_MANAGEDINSURANCE_VERSION = "referencedata/managedinsurance/version";
 
+	private static final String MANAGEDINSURANCE_STICKER_ID = "managedinsurance";
+	
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
 
@@ -65,13 +74,15 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 							Extension extension = fhirInsurance.getMeta()
 									.getExtensionByUrl("http://fhir.ch/ig/ch-orf/CodeSystem/ch-orf-cs-coveragetype");
 							insurance.setInsuranceLawCode(extension.getValue().toString());
+							// clear description2 of insurance
+							insurance.setDescription2(StringUtils.EMPTY);
 							CoreModelServiceHolder.get().save(insurance);
 						}
 						if (!stickerService.hasSticker(insurance, sticker)) {
 							stickerService.addSticker(sticker, insurance);
 						}
-						if (readOnlySticker.isPresent()
-								&& !StickerServiceHolder.get().hasSticker(insurance, readOnlySticker.get())) {
+						if (readOnlySticker.isPresent() && !PortableServiceLoader.get(IStickerService.class)
+								.hasSticker(insurance, readOnlySticker.get())) {
 							stickerService.addSticker(readOnlySticker.get(), insurance);
 						}
 					}
@@ -85,12 +96,27 @@ public class InsurancesReferenceDataImporter extends AbstractReferenceDataImport
 	}
 
 	private ISticker getOrCreateInsuranceSticker() {
-		ISticker insuranceSticker = coreModelService.load("managedinsurance", ISticker.class).orElse(null);
+		ISticker insuranceSticker = coreModelService.load(MANAGEDINSURANCE_STICKER_ID, ISticker.class).orElse(null);
 		if (insuranceSticker == null) {
 			insuranceSticker = coreModelService.create(ISticker.class);
-			insuranceSticker.setId("managedinsurance");
+			insuranceSticker.setImportance(1001);
+			insuranceSticker.setId(MANAGEDINSURANCE_STICKER_ID);
 			insuranceSticker.setName("Versicherung");
 			insuranceSticker.setBackground("e0e1e8");
+			try {
+				IImage stickerImage = coreModelService.create(IImage.class);
+				stickerImage.setId("stkr_" + MANAGEDINSURANCE_STICKER_ID);
+				stickerImage.setTitle(MANAGEDINSURANCE_STICKER_ID);
+				stickerImage.setDate(LocalDate.now());
+				stickerImage
+						.setImage(IOUtils.toByteArray(getClass().getResourceAsStream("/rsc/sticker_image_16x16.png")));
+				MimeType mimeType = MimeType.getByExtension("png");
+				stickerImage.setMimeType(mimeType);
+				coreModelService.save(stickerImage);
+				insuranceSticker.setImage(stickerImage);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).error("Error creating sticker image", e);
+			}
 			coreModelService.save(insuranceSticker);
 
 			stickerService.setStickerAddableToClass(IOrganization.class, insuranceSticker);

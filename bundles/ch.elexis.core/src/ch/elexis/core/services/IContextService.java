@@ -31,6 +31,23 @@ public interface IContextService {
 	}
 
 	/**
+	 * 
+	 * @return the id of the active user or <code>null</code>
+	 * @since 3.13
+	 */
+	default String getActiveUserId() {
+		return getActiveUser().map(IUser::getId).orElse(null);
+	}
+
+	/**
+	 * @return the contactId of the active IMandator, or <code>null</code>
+	 * @since 3.13
+	 */
+	default String getActiveMandatorId() {
+		return getActiveMandator().map(IMandator::getId).orElse(null);
+	}
+
+	/**
 	 * Set the active {@link IUser} of the root context.
 	 *
 	 * @param user or <code>null</code> to unset

@@ -11,7 +11,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -22,6 +24,7 @@ import ch.elexis.core.model.IBillingSystemFactor;
 import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.IBilledAdjuster;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -40,13 +43,17 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 
 	private ServiceReference<ICodeElementService> serviceRef;
 
+	protected IBilledAdjuster vatAdjuster;
+
+	private List<ServiceReference<IBilledAdjuster>> vatServiceRef;
+
 	private boolean currentMandantOnly;
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		Integer count = 0;
-
 		if (initCodeElementService()) {
+			initVatAdjuster();
 			getCurrentMandantOnly();
 
 			// make sure not billing strict
@@ -54,7 +61,8 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 			ConfigServiceHolder.setUser(Preferences.LEISTUNGSCODES_BILLING_STRICT, false);
 
 			List<Konsultation> consultations = getKonsultation(getBeginOfYear(), getEndOfYear());
-			pm.beginTask("Bitte warten, Taxpunktwert Ambulantepauschalen werden neu gesetzt", consultations.size());
+			pm.beginTask("Bitte warten, Taxpunktwert und MWSt Info Ambulantepauschalen werden neu gesetzt",
+					consultations.size());
 			for (Konsultation konsultation : consultations) {
 				// only still open Konsultation
 				if (konsultation.getRechnung() != null)
@@ -74,6 +82,9 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 						Optional<ICodeElement> matchingVerrechenbar = codeElementService.loadFromString(
 								verrechenbar.getCodeSystemName(), verrechenbar.getCode(), getContext(encounter));
 						if (matchingVerrechenbar.isPresent()) {
+							if (vatAdjuster != null) {
+								vatAdjuster.adjust(ambulatoryVerr);
+							}
 							IBillableOptifier<?> optifier = verrechenbar.getOptifier();
 							Optional<IBillingSystemFactor> factor = optifier.getFactor(encounter);
 							if (factor.isPresent()) {
@@ -96,6 +107,7 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 
 			pm.done();
 			deInitCodeElementService();
+			deInitVatAdjuster();
 		}
 
 		return "Ambulantepauschalen von [" + count + "] Konsultationen des Jahres ["
@@ -155,6 +167,27 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 		}
 	}
 
+	private void deInitVatAdjuster() {
+		BundleContext context = FrameworkUtil.getBundle(SetAmbulatoryFactorOpenCons.class).getBundleContext();
+		if (vatServiceRef != null && !vatServiceRef.isEmpty()) {
+			context.ungetService(vatServiceRef.get(0));
+			vatAdjuster = null;
+		}
+	}
+
+	private void initVatAdjuster() {
+		try {
+			BundleContext context = FrameworkUtil.getBundle(SetAmbulatoryFactorOpenCons.class).getBundleContext();
+			vatServiceRef = new ArrayList<>(
+					context.getServiceReferences(IBilledAdjuster.class, "(id=VatVerrechnetAdjuster)"));
+			if (vatServiceRef != null && !vatServiceRef.isEmpty()) {
+				vatAdjuster = context.getService(vatServiceRef.get(0));
+			}
+		} catch (InvalidSyntaxException e) {
+			LoggerFactory.getLogger(getClass()).error("Error getting vat adjuster");
+		}
+	}
+
 	private List<IBilled> getAmbulatoryOnly(List<IBilled> list) {
 		List<IBilled> ret = new ArrayList<>();
 		for (IBilled verrechnet : list) {
@@ -195,6 +228,6 @@ public class SetAmbulatoryFactorOpenCons extends ExternalMaintenance {
 
 	@Override
 	public String getMaintenanceDescription() {
-		return "Taxpunktwert Ambulanterpauschalen aller offenen Konsultationen dieses Jahres neu setzen";
+		return "Taxpunktwert und MWSt Info Ambulanterpauschalen aller offenen Konsultationen dieses Jahres neu setzen";
 	}
 }

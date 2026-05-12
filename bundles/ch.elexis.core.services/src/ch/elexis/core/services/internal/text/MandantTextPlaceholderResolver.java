@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
@@ -19,15 +20,20 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import io.smallrye.common.annotation.Identifier;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver {
 
+	@Inject
+	@Identifier("type=Kontakt")
 	@Reference(target = "(type=Kontakt)")
-	private ITextPlaceholderResolver contactTextPlaceholderResolver;
+	ITextPlaceholderResolver contactTextPlaceholderResolver;
 
 	@Override
 	public String getSupportedType() {
@@ -72,8 +78,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 			switch (mandantAttribut) {
 			case Anrede:
 				if (mandator.isPerson()) {
-					return PersonFormatUtil
-							.getSalutation(CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get());
+					return PersonFormatUtil.getSalutation(
+							PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get());
 				} else {
 					return StringUtils.EMPTY;
 				}
@@ -83,7 +89,8 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 				return mandator.getDescription2();
 			case Titel:
 				if (mandator.isPerson()) {
-					return CoreModelServiceHolder.get().load(mandator.getId(), IPerson.class).get().getTitel();
+					return PortableServiceLoader.getCoreModelService().load(mandator.getId(), IPerson.class).get()
+							.getTitel();
 				}
 			case TarmedSpezialität:
 				return (String) mandator.getExtInfo("TarmedSpezialität");
@@ -105,7 +112,7 @@ public class MandantTextPlaceholderResolver implements ITextPlaceholderResolver 
 		}
 		// fallback to contact properties
 		if (contactTextPlaceholderResolver != null) {
-			IContact contact = CoreModelServiceHolder.get().load(mandator.getId(), IContact.class).get();
+			IContact contact = PortableServiceLoader.getCoreModelService().load(mandator.getId(), IContact.class).get();
 			TextPlaceholderContext context = new TextPlaceholderContext(contact);
 			Optional<String> contactReplacement = contactTextPlaceholderResolver.replaceByTypeAndAttribute(context,
 					lcAttribute);

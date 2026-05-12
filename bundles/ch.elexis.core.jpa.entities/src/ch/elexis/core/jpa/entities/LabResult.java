@@ -4,8 +4,6 @@ import java.beans.Transient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.PathologicDescriptionConverter;
@@ -28,7 +26,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "laborwerte")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "LabResult.patient.item", query = "SELECT lr FROM LabResult lr WHERE lr.deleted = false AND lr.patient = :patient AND lr.item = :item")
 @NamedQuery(name = "LabResult.patient.itemtype.includesDeleted", query = "SELECT lr FROM LabResult lr WHERE lr.patient = :patient AND lr.item.typ = :itemtype")
 public class LabResult extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {

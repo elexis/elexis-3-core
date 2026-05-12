@@ -20,8 +20,10 @@ import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBU
 import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -105,6 +107,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.PatientConstants;
@@ -112,6 +115,7 @@ import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -121,6 +125,7 @@ import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
+import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -262,11 +267,14 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
+	private Hyperlink billingDiagnosisLink;
+	private FormText billingDiagnosisText;
 	private InputData comboGeschlecht;
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
-	private Button increasedTreatmentBtn;
+	private Button palliativeCareBtn;
+	private CDateTime palliativeCareDate;
 	ArrayList<InputData> fields;
 
 	@Inject
@@ -672,6 +680,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				}
 			}
 		});
+		deceasedBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		deceasedDate = new CDateTime(cPersonalien, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
 		deceasedDate.setLayoutData(new GridData());
 		((GridData) deceasedDate.getLayoutData()).exclude = false;
@@ -690,20 +699,49 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 		});
 
-		// "erhöhter Behandlungsbedarf"
-		increasedTreatmentBtn = tk.createButton(cPersonalien, Messages.Patientenblatt2_increasedTreatment, SWT.CHECK);
-		increasedTreatmentBtn.addSelectionListener(new SelectionAdapter() {
+		palliativeCareBtn = tk.createButton(cPersonalien, Messages.Patientenblatt2_palliativeCare, SWT.CHECK);
+		palliativeCareBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (actPatient != null) {
 					IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
-					patient.setExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT,
-							Boolean.toString(increasedTreatmentBtn.getSelection()));
-					CoreModelServiceHolder.get().save(patient);
+					if (palliativeCareBtn.getSelection()) {
+						patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE,
+								LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+						CoreModelServiceHolder.get().save(patient);
+
+						((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+						palliativeCareDate.setVisible(true);
+						palliativeCareDate.setFocus();
+					} else {
+						patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE, null);
+						CoreModelServiceHolder.get().save(patient);
+
+						((GridData) palliativeCareDate.getLayoutData()).exclude = true;
+						palliativeCareDate.setVisible(false);
+					}
+					refreshUi();
 				}
 			}
 		});
-		increasedTreatmentBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		palliativeCareBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		palliativeCareDate = new CDateTime(cPersonalien, CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TEXT_TRAIL);
+		palliativeCareDate.setLayoutData(new GridData());
+		((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+		palliativeCareDate.setVisible(false);
+		palliativeCareDate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
+				Date selected = palliativeCareDate.getSelection();
+				if (selected != null) {
+					patient.setExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE,
+							LocalDateTime.ofInstant(selected.toInstant(), ZoneId.systemDefault())
+									.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+				}
+				CoreModelServiceHolder.get().save(patient);
+			}
+		});
 
 		List<IViewContribution> _buttonTabContributions = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(buttonTabContributions, 0);
@@ -721,6 +759,33 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		GridData inpData = SWTHelper.getFillGridData(1, true, 1, false);
 		inpData.widthHint = CoreUiUtil.getStringExtent(hHA, hHA.getText()).x;
 		inpAdresse.setLayoutData(inpData);
+
+		billingDiagnosisLink = tk.createHyperlink(cPersonalien, Messages.Core_BillingDiagnosis, SWT.NONE); // $NON-NLS-1$
+		billingDiagnosisLink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				DiagnoseSelektor dsl = new DiagnoseSelektor(getShell());
+				if (dsl.open() == Dialog.OK) {
+					Object[] sel = dsl.getResult();
+					if (sel != null && sel.length > 0) {
+						Identifiable diagnose = (Identifiable) sel[0];
+						String storeToString = StoreToStringServiceHolder.getStoreToString(diagnose);
+						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS,
+								storeToString);
+						billingDiagnosisText.setText(diagnose.getLabel(), false, false);
+					} else {
+						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS, null);
+						billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
+					}
+				}
+			}
+		});
+		billingDiagnosisLink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+		billingDiagnosisText = tk.createFormText(cPersonalien, false);
+		billingDiagnosisText.setText(StringUtils.EMPTY, false, false); // $NON-NLS-1$
+		inpData = SWTHelper.getFillGridData(1, true, 1, false);
+		inpData.widthHint = CoreUiUtil.getStringExtent(billingDiagnosisLink, billingDiagnosisLink.getText()).x;
+		billingDiagnosisText.setLayoutData(inpData);
 
 		IExpansionListener ecExpansionListener = new ExpansionAdapter() {
 			@Override
@@ -1142,20 +1207,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		if (actPatient == null) {
 			titleLabel.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
+			billingDiagnosisText.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
-			increasedTreatmentBtn.setSelection(false);
+			palliativeCareBtn.setSelection(false);
 			inpZusatzAdresse.clear();
 			setUnlocked(false);
 			return;
 		}
 		IPatient patient = NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).get();
 		deceasedBtn.setSelection(patient.isDeceased());
-		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT) instanceof String) {
-			increasedTreatmentBtn.setSelection(
-					Boolean.parseBoolean((String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_INCREASEDTREATMENT)));
-		} else {
-			increasedTreatmentBtn.setSelection(false);
-		}
 		if (patient.isDeceased()) {
 			if (patient.getDateOfDeath() != null) {
 				deceasedDate
@@ -1165,10 +1225,29 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			}
 			((GridData) deceasedDate.getLayoutData()).exclude = false;
 			deceasedDate.setVisible(true);
+			((GridData) deceasedBtn.getLayoutData()).horizontalSpan = 1;
 		} else {
 			deceasedDate.setSelection(null);
 			((GridData) deceasedDate.getLayoutData()).exclude = true;
 			deceasedDate.setVisible(false);
+			((GridData) deceasedBtn.getLayoutData()).horizontalSpan = 2;
+		}
+		if (patient.getExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE) instanceof String) {
+			palliativeCareBtn.setSelection(true);
+			LocalDate palliativeCareLocalDate = LocalDate.parse(
+					(String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_PALLIATIVECARE),
+					DateTimeFormatter.ofPattern("yyyyMMdd"));
+			palliativeCareDate.setSelection(
+					Date.from(palliativeCareLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+			((GridData) palliativeCareDate.getLayoutData()).exclude = false;
+			palliativeCareDate.setVisible(true);
+			((GridData) palliativeCareBtn.getLayoutData()).horizontalSpan = 1;
+		} else {
+			palliativeCareBtn.setSelection(false);
+			palliativeCareDate.setSelection(null);
+			((GridData) palliativeCareDate.getLayoutData()).exclude = true;
+			palliativeCareDate.setVisible(false);
+			((GridData) palliativeCareBtn.getLayoutData()).horizontalSpan = 2;
 		}
 
 		String street = actPatient.get(Kontakt.FLD_STREET);
@@ -1222,6 +1301,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				+ StringTool.unNull(actPatient.getGeburtsdatum()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
+		if (actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS) instanceof String) {
+			java.util.Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(
+					(String) actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS));
+			if (diagnose.isPresent()) {
+				billingDiagnosisText.setText(diagnose.get().getLabel(), false, false);
+			}
+		} else {
+			billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
+		}
 		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
@@ -1930,6 +2018,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp.setUnlocked(unlocked);
 		inpZusatzAdresse.setUnlocked(unlocked);
 		hHA.setEnabled(unlocked);
+		billingDiagnosisLink.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
 		removeAdditionalAddressAction.setEnabled(unlocked);
@@ -1937,9 +2026,10 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		dmd.setUnlocked(unlocked);
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
+			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		} else {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
-
+			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 		}
 	}
 

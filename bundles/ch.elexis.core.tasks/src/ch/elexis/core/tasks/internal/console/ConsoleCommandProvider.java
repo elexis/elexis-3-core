@@ -127,7 +127,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(t.getId(), 27);
 			prflp(td.getReferenceId(), 27);
 			prflp(TimeUtil.formatSafe(t.getRunAt()), 25);
-			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
+			String owner = (td.getOwner() != null) ? td.getOwner() : "null";
 			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 
@@ -138,7 +138,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(StringUtils.EMPTY, 27);
 			prflp(td.getReferenceId(), 27);
 			prflp("NR " + (String) td.getTransientData().get("cron-next-exectime"), 25);
-			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
+			String owner = (td.getOwner() != null) ? td.getOwner() : "null";
 			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 
@@ -161,7 +161,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			prflp(StringUtils.EMPTY, 27);
 			prflp((td.isSystem() ? "S-" : StringUtils.EMPTY) + td.getReferenceId(), 27);
 			prflp(StringUtils.EMPTY, 25);
-			String owner = (td.getOwner() != null) ? td.getOwner().getId() : "null";
+			String owner = (td.getOwner() != null) ? td.getOwner() : "null";
 			prflp(owner + " / " + formatRunner(td.getRunner()) + " / " + td.getIdentifiedRunnableId(), 70, true);
 		});
 	}
@@ -261,7 +261,7 @@ public class ConsoleCommandProvider extends AbstractConsoleCommandProvider {
 			case "owner":
 				IUser user = CoreModelServiceHolder.get().load(value, IUser.class).orElse(null);
 				if (user != null) {
-					taskDescriptor.setOwner(user);
+					taskDescriptor.setOwner(user.getId());
 				} else {
 					return "userId not found";
 				}

@@ -3,7 +3,6 @@ package ch.elexis.core.importer.div.tasks.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osgi.service.component.ComponentException;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -61,8 +60,7 @@ public class HL7ImporterIdentifiedRunnableFactory implements IIdentifiedRunnable
 				HL7ImporterTemplateTaskDescriptor.assertTemplate(taskService);
 				BillLabResultOnCreationTemplateTaskDescriptor.assertTemplate(taskService);
 			} catch (TaskException e) {
-				LoggerFactory.getLogger(getClass()).error("initialize", e);
-				throw new ComponentException(e);
+				LoggerFactory.getLogger(getClass()).error("Could not assert templates", e);
 			}
 			taskService.bindIIdentifiedRunnableFactory(this);
 		});

@@ -33,7 +33,11 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.XidQuality;
 import ch.elexis.core.services.internal.TransientXid;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class XidService implements IXidService {
 
@@ -47,15 +51,19 @@ public class XidService implements IXidService {
 		domainMap = new HashMap<>();
 	}
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IAccessControlService accessControlService;
+	IAccessControlService accessControlService;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		accessControlService.doPrivileged(() -> {

@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ERSCodeTypeConverter;
 import ch.elexis.core.jpa.entities.converter.ERSRejectCodeTypeConverter;
@@ -24,7 +22,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "esrrecords")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 public class EsrRecord extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

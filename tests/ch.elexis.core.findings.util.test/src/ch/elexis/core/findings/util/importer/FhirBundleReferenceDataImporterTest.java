@@ -12,8 +12,8 @@ import org.junit.Test;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.interfaces.IReferenceDataImporter;
 import ch.elexis.core.model.IOrganization;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IXidService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class FhirBundleReferenceDataImporterTest {
 

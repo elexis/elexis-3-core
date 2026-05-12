@@ -8,7 +8,6 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.codesystems.ObservationCategory;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
@@ -17,16 +16,13 @@ import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.ILabResultHelper;
 import ch.elexis.core.model.ILabResult;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class ObservationLabResultTransformer implements IFhirTransformer<Observation, ILabResult> {
 
-	private ILabResultHelper labResultHelper;
-
-	@Activate
-	public void activate() {
-		labResultHelper = new ILabResultHelper();
-	}
+	private ILabResultHelper labResultHelper = new ILabResultHelper();
 
 	@Override
 	public Optional<Observation> getFhirObject(ILabResult localObject, SummaryEnum summaryEnum, Set<Include> includes) {

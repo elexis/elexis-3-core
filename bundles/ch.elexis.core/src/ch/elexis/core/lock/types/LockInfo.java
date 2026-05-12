@@ -1,15 +1,15 @@
 package ch.elexis.core.lock.types;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
+import ch.elexis.core.constants.StringConstants;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import ch.elexis.core.constants.StringConstants;
-
-@XmlRootElement
+@XmlRootElement(namespace = "http://elexis.ch/core/lock")
 public class LockInfo {
 
 	@XmlTransient

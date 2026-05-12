@@ -15,5 +15,6 @@ Import-Package: ch.elexis.core.model,
  org.osgi.service.component;version="[1.5.0,2.0.0)",
  org.slf4j;version="[1.7.0,2.0.0)"
 Require-Bundle: ch.elexis.core.mail;bundle-version="3.13.0",
- ch.elexis.core.tasks;bundle-version="3.13.0"
+ ch.elexis.core.tasks;bundle-version="3.13.0",
+ ch.elexis.core.rcp;bundle-version="3.13.0"
 Service-Component: OSGI-INF/ch.elexis.core.mediorder.mail.task.MediorderMailRunnableFactory.xml

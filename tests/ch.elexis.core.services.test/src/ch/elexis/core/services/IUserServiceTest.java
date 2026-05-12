@@ -21,8 +21,8 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.test.TestEntities;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IUserServiceTest extends AbstractServiceTest {
 

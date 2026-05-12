@@ -8,16 +8,15 @@ import java.time.LocalDateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.elexis.core.constants.ExtInfoConstants;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.time.TimeUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ITextReplacementServiceTest extends AbstractServiceTest {
 

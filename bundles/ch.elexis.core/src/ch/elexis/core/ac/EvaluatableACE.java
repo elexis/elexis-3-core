@@ -1,13 +1,10 @@
 package ch.elexis.core.ac;
 
 import ch.elexis.core.services.IAccessControlService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 // getEvaluatable -> to evaluate if the current user has the required rights
 // 	evaluated via IAccessControlService
 public abstract class EvaluatableACE {
-
-	private static IAccessControlService iacs;
 
 	protected byte[] requestedRightMap;
 
@@ -17,15 +14,8 @@ public abstract class EvaluatableACE {
 		requestedRightMap = new byte[Right.values().length];
 	}
 
-	private IAccessControlService getAccessControlService() {
-		if (iacs == null) {
-			iacs = OsgiServiceUtil.getService(IAccessControlService.class).get();
-		}
-		return iacs;
-	}
-
-	public boolean eval() {
-		return getAccessControlService().evaluate(this);
+	public boolean eval(IAccessControlService accessControlService) {
+		return accessControlService.evaluate(this);
 	}
 
 	/**
