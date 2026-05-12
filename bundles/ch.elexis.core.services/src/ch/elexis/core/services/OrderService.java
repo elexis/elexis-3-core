@@ -31,6 +31,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -41,6 +42,7 @@ import jakarta.inject.Inject;
 public class OrderService implements IOrderService {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+	private static final int RECENT_ORDERS_YEARS = 2;
 
 	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
@@ -191,8 +193,8 @@ public class OrderService implements IOrderService {
 		IQuery<IOrderEntry> entryQuery = modelService.getQuery(IOrderEntry.class);
 		entryQuery.and(ModelPackage.Literals.IORDER_ENTRY__STATE, COMPARATOR.IN,
 				List.of(OrderEntryState.OPEN.ordinal(), OrderEntryState.ORDERED.ordinal()));
-		entryQuery.and("lastupdate", COMPARATOR.GREATER_OR_EQUAL, startMillis);
-		entryQuery.and("lastupdate", COMPARATOR.LESS_OR_EQUAL, endMillis);
+		entryQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, startMillis);
+		entryQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.LESS_OR_EQUAL, endMillis);
 
 		List<IOrderEntry> matchingEntries = entryQuery.execute();
 		return matchingEntries.stream().map(IOrderEntry::getOrder).filter(Objects::nonNull).distinct()
@@ -248,18 +250,25 @@ public class OrderService implements IOrderService {
 
 	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {
 		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
-		List<IOrder> orders = query.execute();
 		if (!showAllYears) {
-			LocalDateTime twoYearsAgo = LocalDateTime.now().minusYears(2);
-			orders = orders.stream().filter(order -> {
-				LocalDateTime orderTimestamp = order.getTimestamp();
-				return orderTimestamp != null && orderTimestamp.isAfter(twoYearsAgo);
-			}).collect(Collectors.toList());
+			LocalDateTime timeThreshold = LocalDateTime.now().minusYears(RECENT_ORDERS_YEARS);
+			long thresholdMillis = timeThreshold.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, thresholdMillis);
 		}
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		List<IOrder> orders = query.execute();
 		return orders.stream()
-				.filter(order -> (completed && order.isDone() && !order.getEntries().isEmpty())
-						|| (!completed && (!order.isDone() || order.getEntries().isEmpty())))
-				.sorted((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp())).collect(Collectors.toList());
+				.filter(order -> matchesCompletionState(order, completed))
+				.collect(Collectors.toList());
+	}
+
+	private boolean matchesCompletionState(IOrder order, boolean completed) {
+		boolean isDone = order.isDone();
+		boolean hasEntries = !order.getEntries().isEmpty();
+		if (completed) {
+			return isDone && hasEntries;
+		}
+		return !isDone || !hasEntries;
 	}
 
 	@Override

@@ -409,7 +409,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	    }
 	    CoreModelServiceHolder.get().save(entry);
 	    if (actOrder != null && actOrder.getId() != null) {
-	        historyCache.remove(actOrder.getId());
+			actHistory = null;
 	    }
 	    tableViewer.refresh(entry);
 	}
@@ -816,7 +816,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	public void refresh() {
 		if (actOrder != null) {
 			if (actOrder.getId() != null) {
-				historyCache.remove(actOrder.getId());
+				actHistory = null;
 			}
 			loadOrderDetails(actOrder);
 			updateOrderDetails(actOrder);
@@ -1265,10 +1265,8 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		if (order == null || order.getId() == null) {
 			return new OrderHistorySummary(null, null, null, null);
 		}
-		String id = order.getId();
-		OrderHistorySummary cached = historyCache.get(id);
-		if (cached != null) {
-			return cached;
+		if (actHistory != null) {
+			return actHistory;
 		}
 
 		IOutputLog logEntry = orderService.getOrderLogEntry(order);
@@ -1304,7 +1302,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			}
 		}
 		OrderHistorySummary summary = new OrderHistorySummary(orderedUser, orderedDate, completedUser, completedDate);
-		historyCache.put(id, summary);
+		actHistory = summary;
 		return summary;
 	}
 
@@ -1565,6 +1563,5 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			this.completedDate = completedDate;
 		}
 	}
-
-	private final Map<String, OrderHistorySummary> historyCache = new HashMap<>();
+	private OrderHistorySummary actHistory;
 }
