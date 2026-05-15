@@ -38,7 +38,8 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 			lastQuery.and(ModelPackage.Literals.IDOCUMENT_LETTER__RECIPIENT, COMPARATOR.NOT_EQUALS, null);
 			lastQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 			for (IDocumentLetter document : lastQuery.execute()) {
-				if (document.getRecipient() != null && StringUtils.isNotBlank(document.getRecipient().getEmail())) {
+				if (document.getRecipient() != null && !document.getRecipient().isDeleted()
+						&& StringUtils.isNotBlank(document.getRecipient().getEmail())) {
 					String email = document.getRecipient().getEmail();
 					if (addressString != null && addressString.length() > 1) {
 						if (!(email.contains(addressString)
@@ -65,6 +66,7 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 			query.orJoinGroups();
 			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, null);
 			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, StringUtils.EMPTY);
+			query.and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.EQUALS, false);
 
 			for (IContact contact : query.execute()) {
 				if (!contacts.contains(contact)) {
