@@ -1949,6 +1949,7 @@ public class Messages extends NLS {
 	public static String FeedbackPreferencePage_ElexisLogLabel;
 	public static String FeedbackPreferencePage_EnableAutoLabel;
 	public static String FeedbackPreferencePage_Include_ID;
+	public static String FeedbackPreferencePage_Global_Include_ID;
 	public static String FeedbackPreferencePage_RedmineURLLabel;
 	public static String FeedbackPreferencePage_With_DBcheck;
 	public static String FieldDisplayView_BadDefinitionBody;
