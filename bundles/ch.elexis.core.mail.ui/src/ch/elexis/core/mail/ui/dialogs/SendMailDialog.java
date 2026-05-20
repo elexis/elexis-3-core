@@ -165,13 +165,13 @@ public class SendMailDialog extends TitleAreaDialog {
 					if (proposal instanceof IdentifiableContentProposal) {
 						@SuppressWarnings("unchecked")
 						IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
-						IContact contact = identifiableContentProposal.getIdentifiable();
+						String email = identifiableContentProposal.getAdditionalValue();
 						int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
 						StringBuilder sb = new StringBuilder();
 						if (index != 0) {
-							sb.append(toText.getText().substring(0, index)).append(", ").append(contact.getEmail());
+							sb.append(toText.getText().substring(0, index)).append(", ").append(email);
 						} else {
-							sb.append(contact.getEmail());
+							sb.append(email);
 						}
 						toText.setText(sb.toString());
 						toText.setSelection(toText.getText().length());
