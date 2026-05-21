@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -34,7 +35,11 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.viewers.DefaultLabelProvider;
 import ch.elexis.data.Anwender;
@@ -149,12 +154,13 @@ public class MakrosComposite extends Composite {
 	}
 
 	private void addCopyToUserActions(IMenuManager manager) {
-		List<Anwender> users = CoreHub.getUserList();
-		for (Anwender anwender : users) {
-			if (anwender.equals(CoreHub.getLoggedInContact())) {
-				continue;
+		Optional<IContact> activeUserContact = ContextServiceHolder.get().getActiveUserContact();
+		List<IUser> allUsers = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
+		for (IUser user : allUsers) {
+			if (user.isActive() && user.getAssignedContact() != null
+					&& !user.getAssignedContact().equals(activeUserContact.orElse(null))) {
+				manager.add(new CopyToUserAction(user, viewer));
 			}
-			manager.add(new CopyToUserAction(anwender, viewer));
 		}
 	}
 
@@ -244,11 +250,11 @@ public class MakrosComposite extends Composite {
 
 	private class CopyToUserAction extends Action {
 		private StructuredViewer viewer;
-		private Anwender user;
+		private IUser user;
 
-		public CopyToUserAction(Anwender anwender, StructuredViewer viewer) {
+		public CopyToUserAction(IUser user, StructuredViewer viewer) {
 			this.viewer = viewer;
-			this.user = anwender;
+			this.user = user;
 		}
 
 		@Override
@@ -283,14 +289,14 @@ public class MakrosComposite extends Composite {
 		}
 
 		private void copy(MakroDTO makro) {
-			MakroDTO copy = new MakroDTO(user.getId(), makro.getMakroParam(), makro.getMakroName(),
+			MakroDTO copy = new MakroDTO(user.getAssignedContact().getId(), makro.getMakroParam(), makro.getMakroName(),
 					makro.getMakroContent());
 			MakroDetailComposite.saveMakro(copy);
 		}
 
 		private boolean copyExists(MakroDTO makro) {
 			SqlSettings userSettings = new SqlSettings(PersistentObject.getDefaultConnection().getJdbcLink(),
-					"USERCONFIG", "Param", "Value", "UserID=" + JdbcLink.wrap(user.getId())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					"USERCONFIG", "Param", "Value", "UserID=" + JdbcLink.wrap(user.getAssignedContact().getId())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 			return userSettings.get(makro.getMakroParam(), null) != null;
 		}
