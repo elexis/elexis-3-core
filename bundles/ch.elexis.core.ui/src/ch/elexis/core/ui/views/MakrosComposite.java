@@ -94,6 +94,11 @@ public class MakrosComposite extends Composite {
 		});
 		viewer.setComparator(new ViewerComparator());
 
+		Optional<IContact> activeUserContact = ContextServiceHolder.get().getActiveUserContact();
+		List<IUser> otherUsers = CoreModelServiceHolder.get().getQuery(IUser.class).execute().stream()
+				.filter(u -> u.isActive() && u.getAssignedContact() != null
+						&& !u.getAssignedContact().equals(activeUserContact.orElse(null)))
+				.toList();
 		MenuManager menuManager = new MenuManager();
 		menuManager.add(new RemoveMakroAction(viewer));
 		MenuManager subMenu = new MenuManager("Makro zu Anwender kopieren");
@@ -101,10 +106,12 @@ public class MakrosComposite extends Composite {
 		subMenu.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				addCopyToUserActions(manager);
+				addCopyToUserActions(otherUsers, manager);
 			}
 		});
 		menuManager.add(subMenu);
+		menuManager.add(new CopyToUsersAction(otherUsers, viewer));
+
 
 		Menu menu = menuManager.createContextMenu(viewer.getTable());
 		viewer.getTable().setMenu(menu);
@@ -153,14 +160,9 @@ public class MakrosComposite extends Composite {
 		return Collections.emptyList();
 	}
 
-	private void addCopyToUserActions(IMenuManager manager) {
-		Optional<IContact> activeUserContact = ContextServiceHolder.get().getActiveUserContact();
-		List<IUser> allUsers = CoreModelServiceHolder.get().getQuery(IUser.class).execute();
-		for (IUser user : allUsers) {
-			if (user.isActive() && user.getAssignedContact() != null
-					&& !user.getAssignedContact().equals(activeUserContact.orElse(null))) {
+	private void addCopyToUserActions(List<IUser> activeUsers, IMenuManager manager) {
+		for (IUser user : activeUsers) {
 				manager.add(new CopyToUserAction(user, viewer));
-			}
 		}
 	}
 
@@ -248,6 +250,49 @@ public class MakrosComposite extends Composite {
 		}
 	}
 
+	private class CopyToUsersAction extends Action {
+		private StructuredViewer viewer;
+		private List<IUser> users;
+
+		public CopyToUsersAction(List<IUser> users, StructuredViewer viewer) {
+			this.viewer = viewer;
+			this.users = users;
+		}
+
+		@Override
+		public ImageDescriptor getImageDescriptor() {
+			return Images.IMG_GROUP.getImageDescriptor();
+		}
+
+		@Override
+		public String getText() {
+			return "zu allen kopieren";
+		}
+
+		@Override
+		public void run() {
+			StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+			if (selection != null && !selection.isEmpty()) {
+				for (Object obj : selection.toList()) {
+					if (obj instanceof MakroDTO) {
+						MakroDTO makro = (MakroDTO) obj;
+						for (IUser user : users) {
+							if (CopyToUserAction.copyExists(makro, user)) {
+								if (MessageDialog.openConfirm(getShell(), "Makro kopieren",
+										"Das Makro " + makro.getMakroName() + " existiert bei " + user.getLabel()
+												+ " bereits. Wollen Sie das Makro überschreiben?")) {
+									CopyToUserAction.copyTo(makro, user);
+								}
+							} else {
+								CopyToUserAction.copyTo(makro, user);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private class CopyToUserAction extends Action {
 		private StructuredViewer viewer;
 		private IUser user;
@@ -274,29 +319,30 @@ public class MakrosComposite extends Composite {
 				for (Object obj : selection.toList()) {
 					if (obj instanceof MakroDTO) {
 						MakroDTO makro = (MakroDTO) obj;
-						if (copyExists(makro)) {
+						if (copyExists(makro, user)) {
 							if (MessageDialog.openConfirm(getShell(), "Makro kopieren",
 									"Das Makro " + makro.getMakroName() + " existiert bei " + user.getLabel()
 											+ " bereits. Wollen Sie das Makro überschreiben?")) {
-								copy(makro);
+								copyTo(makro, user);
 							}
 						} else {
-							copy(makro);
+							copyTo(makro, user);
 						}
 					}
 				}
 			}
 		}
 
-		private void copy(MakroDTO makro) {
+		public static void copyTo(MakroDTO makro, IUser user) {
 			MakroDTO copy = new MakroDTO(user.getAssignedContact().getId(), makro.getMakroParam(), makro.getMakroName(),
 					makro.getMakroContent());
 			MakroDetailComposite.saveMakro(copy);
 		}
 
-		private boolean copyExists(MakroDTO makro) {
+		public static boolean copyExists(MakroDTO makro, IUser user) {
 			SqlSettings userSettings = new SqlSettings(PersistentObject.getDefaultConnection().getJdbcLink(),
-					"USERCONFIG", "Param", "Value", "UserID=" + JdbcLink.wrap(user.getAssignedContact().getId())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					"USERCONFIG", //$NON-NLS-1$
+					"Param", "Value", "UserID=" + JdbcLink.wrap(user.getAssignedContact().getId())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 			return userSettings.get(makro.getMakroParam(), null) != null;
 		}
