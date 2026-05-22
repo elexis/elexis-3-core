@@ -5441,7 +5441,16 @@ public class Messages extends NLS {
 	public static String Zeitvorgaben_HintRightClickReset;
 	public static String Zeitvorgaben_RestoreDefaultsForArea;
 	public static String Zeitvorgaben_SelectAreaToReset;
-
+	public static String PreferencesServer_suffixModeLabel;
+	public static String ReminderPrefences_DatePast;
+	public static String ReminderPrefences_DateToday;
+	public static String ReminderPrefences_DateFuture;
+	public static String ReminderPrefences_DateNoDate;
+	public static String ReminderPrefences_CustomStatusesTitle;
+	public static String ReminderPrefences_NewStatusMessage;
+	public static String ReminderPrefences_AddStatusTooltip;
+	public static String ReminderPrefences_RemoveStatusTooltip;
+	public static String ReminderStatusSubMenu_NoSelection;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -112,6 +112,10 @@ public class ReminderQueryService {
 			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
 			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.GREATER_OR_EQUAL, today);
 
+		} else if (cfg.showPastDueReminders) {
+
+			query.and(ModelPackage.Literals.IREMINDER__STATUS, COMPARATOR.NOT_EQUALS, ProcessStatus.CLOSED);
+			query.and(ModelPackage.Literals.IREMINDER__DUE, COMPARATOR.LESS, today);
 		} else if (cfg.filterDue && cfg.dueInDays > 0) {
 			applyDueDateFilter(query, true, cfg.dueInDays);
 		}
@@ -167,6 +171,7 @@ public class ReminderQueryService {
 		public boolean popupOnLogin;
 		public boolean popupOnPatientSelection;
 		public boolean filterDue;
+		public boolean showPastDueReminders;
 		public IPatient patient;
 		public boolean noPatient;
 		public int dueInDays = -1;
@@ -233,6 +238,12 @@ public class ReminderQueryService {
 
 		public Config dueInDays(int days) {
 			this.dueInDays = days;
+			return this;
+		}
+
+		/** Show reminders that are strictly in the past (due < today). */
+		public Config showPastDueReminders(boolean v) {
+			this.showPastDueReminders = v;
 			return this;
 		}
 	}

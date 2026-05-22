@@ -21,14 +21,18 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.Reminder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.reminder.viewers.ReminderColumnType.ReminderColorType;
 
@@ -68,77 +72,85 @@ public class ReminderColumnFactory {
 
 	private final Font boldFont;
 
-	/**
-	 * Constructs a new {@code ReminderColumnFactory}.
-	 *
-	 * @param boldFont the font to be used for high-priority reminder rows
-	 */
 	public ReminderColumnFactory(Font boldFont) {
 		this.boldFont = boldFont;
 	}
 
 	/**
-	 * Creates and adds the specified columns to the provided {@link TableViewer}.
-	 * <p>
-	 * Columns that are marked as hidden in user preferences will be skipped. After
-	 * creation, the last visible column automatically expands to fill remaining
-	 * horizontal space.
-	 * </p>
+	 * Creates and configures the specified columns for the given TableViewer.
+	 * Columns hidden via user preferences are automatically omitted. Also registers
+	 * a resize listener to fluidly adjust the last column's width.
 	 *
-	 * @param viewer the table viewer to which the columns are added
-	 * @param types  the column types to create, defined in
-	 *               {@link ReminderColumnType}
+	 * @param viewer The TableViewer where the columns will be added.
+	 * @param types  The defined column types to generate.
 	 */
 	public void createColumns(TableViewer viewer, ReminderColumnType... types) {
-	    String hiddenPref = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, "");
-	    Set<String> hiddenCols = Arrays.stream(hiddenPref.split(","))
-	            .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
-	    int index = 0;
-	    for (ReminderColumnType type : types) {
+		String hiddenPref = ConfigServiceHolder.getUser(Preferences.USR_REMINDER_COLUMNS_HIDDEN, StringUtils.EMPTY);
+		Set<String> hiddenCols = Arrays.stream(hiddenPref.split(",")).map(String::trim)
+				.filter(s -> !s.isEmpty())
+				.collect(Collectors.toSet());
+
+		int index = 0;
+		for (ReminderColumnType type : types) {
 			String header = type.getTitle();
 
 			if (hiddenCols.contains(header)) {
 				continue;
 			}
 
-	        TableViewerColumn col = switch (type) {
-	            case TYPE -> createTypeColumn(viewer, index);
-	            case DATE -> createDateColumn(viewer, index);
-	            case RESPONSIBLE -> createResponsibleColumn(viewer, index);
-	            case STATUS -> createStatusColumn(viewer, index);
-	            case PATIENT -> createPatientColumn(viewer, index);
+			TableViewerColumn col = switch (type) {
+			case TYPE -> createTypeColumn(viewer, index);
+			case DATE -> createDateColumn(viewer, index);
+			case RESPONSIBLE -> createResponsibleColumn(viewer, index);
+			case STATUS -> createStatusColumn(viewer, index);
+			case PATIENT -> createPatientColumn(viewer, index);
 			case DESCRIPTION -> createDescriptionColumn(viewer, index);
-	        };
+			};
 
-	        TableColumn column = col.getColumn();
+			TableColumn column = col.getColumn();
 			column.setResizable(true);
 			column.setMoveable(true);
 			column.setData("hidden", false);
 
-	        index++;
-	    }
+			index++;
+		}
 
-	    viewer.getTable().addListener(SWT.Resize, e -> {
-	        var table = viewer.getTable();
-	        if (table.getColumnCount() > 0) {
-	            int totalWidth = table.getClientArea().width;
-	            int fixedWidth = 0;
-	            for (int i = 0; i < table.getColumnCount() - 1; i++) {
-	                fixedWidth += table.getColumn(i).getWidth();
-	            }
-	            int remaining = Math.max(100, totalWidth - fixedWidth);
-	            table.getColumn(table.getColumnCount() - 1).setWidth(remaining);
-	        }
-	    });
+		viewer.getTable().addListener(SWT.Resize, e -> {
+			var table = viewer.getTable();
+			if (table.getColumnCount() > 0) {
+				int totalWidth = table.getClientArea().width;
+				int fixedWidth = 0;
+				for (int i = 0; i < table.getColumnCount() - 1; i++) {
+					fixedWidth += table.getColumn(i).getWidth();
+				}
+				int remaining = Math.max(100, totalWidth - fixedWidth);
+				table.getColumn(table.getColumnCount() - 1).setWidth(remaining);
+			}
+		});
 	}
 
-
-	// ====================== COLUMNS ======================
-
 	/**
-	 * Creates the "Type" column which displays an icon representing the reminder
-	 * type.
+	 * Determines the text representation of the reminder's status. It checks for
+	 * custom statuses first, falling back to the default locale text.
+	 *
+	 * @param r The reminder whose status text should be extracted.
+	 * @return The localized display text of the status, or an empty string if
+	 *         undefined.
 	 */
+	public static String getStatusDisplayText(IReminder r) {
+		if (r == null)
+			return StringUtils.EMPTY;
+
+		Object customStatusObj = r.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
+		if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
+			return customStatusStr;
+		}
+		if (r.getStatus() != null) {
+			return r.getStatus().getLocaleText();
+		}
+		return StringUtils.EMPTY;
+	}
+
 	private TableViewerColumn createTypeColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setWidth(ReminderColumnType.TYPE.getDefaultWidth());
@@ -176,10 +188,6 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
-	/**
-	 * Creates the "Date" column which shows the due date of the reminder and colors
-	 * rows based on the due state (overdue, due, or open).
-	 */
 	private TableViewerColumn createDateColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.DATE.getTitle());
@@ -194,32 +202,19 @@ public class ReminderColumnFactory {
 			}
 
 			@Override
+			public Color getForeground(Object element) {
+				return getContrastColor(getBackground(element));
+			}
+
+			@Override
 			public Color getBackground(Object element) {
-				if (!(element instanceof IReminder r))
-					return null;
-				LocalDate now = LocalDate.now();
-				LocalDate due = r.getDue();
-				if (r.getStatus() != null && r.getStatus().toString().equalsIgnoreCase("IN_PROGRESS")) {
-					return ReminderColorType.IN_PROGRESS.getColor();
-				}
-				if (due != null) {
-					if (due.isBefore(now))
-						return ReminderColorType.OVERDUE.getColor();
-					if (due.isEqual(now))
-						return ReminderColorType.DUE.getColor();
-					return ReminderColorType.OPEN.getColor();
-				}
-				return null;
+				return getRowBackground(element);
 			}
 		});
 		col.getColumn().addSelectionListener(createSortSelectionAdapter(viewer, col.getColumn(), index));
 		return col;
 	}
 
-	/**
-	 * Creates the "Status" column which displays the localized process status text
-	 * and applies color highlighting depending on reminder state.
-	 */
 	private TableViewerColumn createStatusColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.STATUS.getTitle());
@@ -227,51 +222,49 @@ public class ReminderColumnFactory {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof IReminder r && r.getStatus() != null) {
-					return r.getStatus().getLocaleText();
+				if (element instanceof IReminder r) {
+					return getStatusDisplayText(r);
 				}
 				return StringUtils.EMPTY;
 			}
 
 			@Override
-			public Color getForeground(Object element) {
-				if (!(element instanceof IReminder r))
-					return null;
-				LocalDate now = LocalDate.now();
-				LocalDate due = r.getDue();
-				if (r.getStatus() != null && r.getStatus().toString().equalsIgnoreCase("IN_PROGRESS")) {
-					return ReminderColorType.IN_PROGRESS.getColor();
-				}
-				if (due != null) {
-					if (due.isBefore(now))
-						return ReminderColorType.OVERDUE.getColor();
-					if (due.isEqual(now))
-						return ReminderColorType.DUE.getColor();
-					return ReminderColorType.OPEN.getColor();
-				}
-				if (r.getStatus() != null) {
-					switch (r.getStatus()) {
-					case CLOSED -> {
-						return Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
-					}
-					case OPEN -> {
-						return ReminderColorType.OPEN.getColor();
-					}
-					case ON_HOLD -> {
-						return Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
-					}
-					default -> {
-						return null;
-					}
-					}
-				}
-				return null;
+			public Color getBackground(Object element) {
+				return getRowBackground(element);
 			}
 
 			@Override
-			public Color getBackground(Object element) {
-				if (element instanceof IReminder r && isClosed(r)) {
-					return ReminderColorType.CLOSED.getColor();
+			public Color getForeground(Object element) {
+				if (!(element instanceof IReminder r)) {
+					return getContrastColor(getBackground(element));
+				}
+
+				Color foreground = determineBaseForegroundColor(r);
+				Color background = getBackground(element);
+
+				return calculateForegroundContrastColor(foreground, background);
+			}
+
+			private Color determineBaseForegroundColor(IReminder r) {
+				Object customStatusObj = r.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
+
+				if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
+					String prefPath = Preferences.USR_REMINDERCOLORS + "/"
+							+ Preferences.USR_REMINDER_CUSTOM_COLOR_PREFIX + customStatusStr;
+					String rgb = ConfigServiceHolder.getUser(prefPath, "FFFFFF");
+					return UiDesk.getColorFromRGB(rgb);
+				}
+
+				if (r.getStatus() != null) {
+					return switch (r.getStatus()) {
+					case OPEN -> ReminderColorType.OPEN.getColor();
+					case IN_PROGRESS -> ReminderColorType.IN_PROGRESS.getColor();
+					case DUE -> ReminderColorType.DUE.getColor();
+					case OVERDUE -> ReminderColorType.OVERDUE.getColor();
+					case CLOSED -> ReminderColorType.CLOSED.getColor();
+					case ON_HOLD -> Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW);
+					default -> null;
+					};
 				}
 				return null;
 			}
@@ -280,9 +273,6 @@ public class ReminderColumnFactory {
 		return col;
 	}
 
-	/**
-	 * Creates the "Patient" column which shows the linked patient's full name.
-	 */
 	private TableViewerColumn createPatientColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.PATIENT.getTitle());
@@ -296,23 +286,20 @@ public class ReminderColumnFactory {
 				}
 				return StringUtils.EMPTY;
 			}
+			@Override
+			public Color getForeground(Object element) {
+				return getContrastColor(getBackground(element));
+			}
 
 			@Override
 			public Color getBackground(Object element) {
-				if (element instanceof IReminder r && isClosed(r)) {
-					return ReminderColorType.CLOSED.getColor();
-				}
-				return null;
+				return getRowBackground(element);
 			}
 		});
 		col.getColumn().addSelectionListener(createSortSelectionAdapter(viewer, col.getColumn(), index));
 		return col;
 	}
 
-	/**
-	 * Creates the "Description" column which displays the subject or message text.
-	 * High-priority reminders are shown in bold.
-	 */
 	private TableViewerColumn createDescriptionColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.DESCRIPTION.getTitle());
@@ -331,23 +318,20 @@ public class ReminderColumnFactory {
 				}
 				return null;
 			}
+			@Override
+			public Color getForeground(Object element) {
+				return getContrastColor(getBackground(element));
+			}
 
 			@Override
 			public Color getBackground(Object element) {
-				if (element instanceof IReminder r && isClosed(r)) {
-					return ReminderColorType.CLOSED.getColor();
-				}
-				return null;
+				return getRowBackground(element);
 			}
 		});
 		col.getColumn().addSelectionListener(createSortSelectionAdapter(viewer, col.getColumn(), index));
 		return col;
 	}
 
-	/**
-	 * Creates the "Responsible" column which lists all responsible users or
-	 * mandators.
-	 */
 	private TableViewerColumn createResponsibleColumn(TableViewer viewer, int index) {
 		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText(ReminderColumnType.RESPONSIBLE.getTitle());
@@ -366,129 +350,77 @@ public class ReminderColumnFactory {
 				}
 				return StringUtils.EMPTY;
 			}
+			@Override
+			public Color getForeground(Object element) {
+				return getContrastColor(getBackground(element));
+			}
 
 			@Override
 			public Color getBackground(Object element) {
-				if (element instanceof IReminder r && isClosed(r)) {
-					return ReminderColorType.CLOSED.getColor();
-				}
-				return null;
+				return getRowBackground(element);
 			}
 		});
 		col.getColumn().addSelectionListener(createSortSelectionAdapter(viewer, col.getColumn(), index));
 		return col;
 	}
 
-	/**
-	 * Checks whether the given reminder is in {@link ProcessStatus#CLOSED}.
-	 *
-	 * @param r reminder instance
-	 * @return {@code true} if the reminder is closed, {@code false} otherwise
-	 */
-	private boolean isClosed(IReminder r) {
-		return r.getStatus() == ProcessStatus.CLOSED;
-	}
-
-	// =====================================================================
-	// Sorting support
-	// =====================================================================
-
-	/**
-	 * Creates a {@link SelectionAdapter} that updates the current sorting column
-	 * and direction whenever a table column header is clicked.
-	 *
-	 * @param viewer the table viewer being sorted
-	 * @param column the clicked column
-	 * @param index  the column index
-	 * @return the configured selection adapter
-	 */
 	private SelectionAdapter createSortSelectionAdapter(final TableViewer viewer, final TableColumn column, final int index) {
-	    return new SelectionAdapter() {
-	        @Override
-	        public void widgetSelected(SelectionEvent e) {
-	            ViewerComparator comp = viewer.getComparator();
-	            if (comp instanceof ReminderComparator rc) {
-	                rc.setColumn(index);
-	                int dir = rc.getDirection();
-	                viewer.getTable().setSortColumn(column);
-	                viewer.getTable().setSortDirection(dir);
-	                viewer.refresh(true);
-	            }
-	        }
-	    };
+		return new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ViewerComparator comp = viewer.getComparator();
+				if (comp instanceof ReminderComparator rc) {
+					rc.setColumn(index);
+					int dir = rc.getDirection();
+					viewer.getTable().setSortColumn(column);
+					viewer.getTable().setSortDirection(dir);
+					viewer.refresh(true);
+				}
+			}
+		};
 	}
 
-	/**
-	 * Comparator used for sorting {@link IReminder} entries in the reminder table.
-	 * <p>
-	 * This comparator defines the sorting logic for all reminder table columns,
-	 * such as type, date, responsible user, status, patient, and description.
-	 * </p>
-	 *
-	 * <p>
-	 * The {@code column} field determines which column is currently sorted, while
-	 * the {@code direction} field controls the sort order (ascending or
-	 * descending).
-	 * </p>
-	 *
-	 * <p>
-	 * Sorting is performed in a null-safe way and never throws an exception. If an
-	 * unexpected error occurs, the comparator returns equality (0) to prevent UI
-	 * crashes.
-	 * </p>
-	 *
-	 * <h3>Supported columns:</h3>
-	 * <ul>
-	 * <li><b>0:</b> Type</li>
-	 * <li><b>1:</b> Date</li>
-	 * <li><b>2:</b> Responsible</li>
-	 * <li><b>3:</b> Status</li>
-	 * <li><b>4:</b> Patient</li>
-	 * <li><b>5:</b> Description</li>
-	 * </ul>
-	 *
-	 * <p>
-	 * The default sort direction is {@link SWT#DOWN}.
-	 * </p>
-	 */
 	public static class ReminderComparator extends ViewerComparator implements Comparator<IReminder> {
+		private static final Logger log = LoggerFactory.getLogger(ReminderComparator.class);
+
 		private int column = -1;
 		private int direction = SWT.DOWN;
+
 		@Override
 		public int compare(IReminder r1, IReminder r2) {
 			int result = 0;
 			try {
 				switch (column) {
-				case 0 -> { // TYPE
+				case 0 -> {
 					String t1 = (r1.getType() != null) ? r1.getType().getLocaleText() : StringUtils.EMPTY;
 					String t2 = (r2.getType() != null) ? r2.getType().getLocaleText() : StringUtils.EMPTY;
 					result = compareByString(t1, t2);
 				}
-				case 1 -> result = compareByDate(r1, r2); // DATE
-				case 2 -> { // RESPONSIBLE
+				case 1 -> result = compareByDate(r1, r2);
+				case 2 -> {
 					String resp1 = getResponsibleString(r1);
 					String resp2 = getResponsibleString(r2);
 					result = compareByString(resp1, resp2);
 				}
-				case 3 -> { // STATUS
-					String s1 = (r1.getStatus() != null) ? r1.getStatus().getLocaleText() : StringUtils.EMPTY;
-					String s2 = (r2.getStatus() != null) ? r2.getStatus().getLocaleText() : StringUtils.EMPTY;
+				case 3 -> {
+					String s1 = getStatusDisplayText(r1);
+					String s2 = getStatusDisplayText(r2);
 					result = compareByString(s1, s2);
 				}
-				case 4 -> { // PATIENT
+				case 4 -> {
 					String p1 = getPatientName(r1);
 					String p2 = getPatientName(r2);
 					result = compareByString(p1, p2);
 				}
-				case 5 -> { // DESCRIPTION
+				case 5 -> {
 					String subj1 = (StringUtils.isNotEmpty(r1.getSubject())) ? r1.getSubject() : r1.getMessage();
 					String subj2 = (StringUtils.isNotEmpty(r2.getSubject())) ? r2.getSubject() : r2.getMessage();
 					result = compareByString(subj1, subj2);
 				}
 				default -> result = compareByDate(r1, r2);
 				}
-			} catch (Exception e) {
-				// fallback: never crash sorting
+			} catch (NullPointerException | ClassCastException | IllegalArgumentException e) {
+				log.error("Failed to compare reminders during table sorting", e);
 				result = 0;
 			}
 			return (direction == SWT.UP) ? -result : result;
@@ -524,8 +456,9 @@ public class ReminderColumnFactory {
 		}
 
 		private String getResponsibleString(IReminder r) {
-			if (r.isResponsibleAll())
-				return "Alle";
+			if (r.isResponsibleAll()) {
+				return Messages.Core_All;
+			}
 			return r.getResponsible().stream()
 					.map(c -> c.isMandator() ? c.getDescription1() + StringUtils.SPACE + c.getDescription2()
 							: c.getLabel())
@@ -540,8 +473,104 @@ public class ReminderColumnFactory {
 				direction = SWT.DOWN;
 			}
 		}
+
 		public int getDirection() {
 			return direction;
+		}
+	}
+
+	/**
+	 * Calculates the perceived luminance of a given color based on standard RGB
+	 * weighting.
+	 * 
+	 * @param color The color to calculate the luminance for.
+	 * @return The calculated luminance value, or 0.0 if the provided color is null.
+	 */
+	private double calculateLuminance(Color color) {
+		if (color == null) {
+			return 0.0;
+		}
+		return 0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue();
+	}
+
+	/**
+	 * Determines a high-contrast foreground color to ensure readability against a
+	 * given background. If the intended foreground color lacks sufficient contrast
+	 * or is identical to the background, a fallback color (black or white) is
+	 * returned.
+	 * 
+	 * @param fg The intended base foreground color.
+	 * @param bg The background color the text will be rendered on.
+	 * @return The original foreground color, or an adjusted high-contrast color if
+	 *         necessary.
+	 */
+	private Color calculateForegroundContrastColor(Color fg, Color bg) {
+		if (fg != null && bg != null) {
+			if (fg.getRed() == bg.getRed() && fg.getGreen() == bg.getGreen() && fg.getBlue() == bg.getBlue()) {
+				return getContrastColor(bg);
+			}
+
+			double lumFg = calculateLuminance(fg);
+			double lumBg = calculateLuminance(bg);
+
+			if (lumFg > 200 && lumBg > 128) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+			}
+
+			if (lumFg < 50 && lumBg <= 128) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+			}
+		}
+
+		if (fg != null && bg == null) {
+			double luminance = calculateLuminance(fg);
+			if (luminance > 240) {
+				return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+			}
+		}
+
+		if (fg == null) {
+			return getContrastColor(bg);
+		}
+
+		return fg;
+	}
+
+	private Color getContrastColor(Color bg) {
+		if (bg == null) {
+			return null;
+		}
+
+		double luminance = calculateLuminance(bg);
+
+		if (luminance > 128) {
+			return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+		} else {
+			return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+		}
+	}
+
+	private Color getRowBackground(Object element) {
+		if (!(element instanceof IReminder r))
+			return null;
+
+		if (r.getStatus() == ProcessStatus.DUE) {
+			return ReminderColorType.DUE.getColor();
+		} else if (r.getStatus() == ProcessStatus.OVERDUE) {
+			return ReminderColorType.OVERDUE.getColor();
+		}
+
+		LocalDate now = LocalDate.now();
+		LocalDate due = r.getDue();
+
+		if (due == null) {
+			return ReminderColorType.NO_DATE.getColor();
+		} else if (due.isBefore(now)) {
+			return ReminderColorType.OVERDUE.getColor();
+		} else if (due.isEqual(now)) {
+			return ReminderColorType.DUE.getColor();
+		} else {
+			return ReminderColorType.FUTURE.getColor();
 		}
 	}
 }
