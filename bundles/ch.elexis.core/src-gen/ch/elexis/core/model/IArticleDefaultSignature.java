@@ -10,14 +10,14 @@
  */
 package ch.elexis.core.model;
 
-import ch.elexis.core.model.prescription.EntryType;
 import java.time.LocalDate;
+
+import ch.elexis.core.model.prescription.EntryType;
 
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IArticle Default Signature</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>IArticle
+ * Default Signature</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -325,6 +325,28 @@ public interface IArticleDefaultSignature extends Deleteable, Identifiable, With
 	void setStartDate(LocalDate value);
 
 	/**
+	 * Returns the value of the '<em><b>Disposal Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Disposal Comment</em>' attribute.
+	 * @see #setDisposalComment(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIArticleDefaultSignature_DisposalComment()
+	 * @model
+	 * @generated
+	 */
+	String getDisposalComment();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment <em>Disposal Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Disposal Comment</em>' attribute.
+	 * @see #getDisposalComment()
+	 * @generated
+	 */
+	void setDisposalComment(String value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model
@@ -347,19 +369,6 @@ public interface IArticleDefaultSignature extends Deleteable, Identifiable, With
 	 * @generated
 	 */
 	String getSignatureAsDosisString();
-	
-	/**
-	 * Returns the justification text for the disposal.
-	 *
-	 * @return the disposal comment as a String
-	 */
-	String getDisposalComment();
 
-	/**
-	 * Sets the justification text for the disposal.
-	 *
-	 * @param value the new disposal comment
-	 */
-	void setDisposalComment(String value);
 
 } // IArticleDefaultSignature
