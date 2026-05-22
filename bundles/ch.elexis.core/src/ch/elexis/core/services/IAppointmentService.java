@@ -17,8 +17,8 @@ import ch.elexis.core.types.AppointmentType;
 
 public interface IAppointmentService {
 
-	public static final String AG_KEY_STD = "std";
-
+	public static final String AG_KEY_STD = "std"; //$NON-NLS-1$
+	public static final String AG_SERIES_COLOR = "ag_series_color"; //$NON-NLS-1$
 	/**
 	 * Create a transient clone of the provided {@link IAppointment}.
 	 *
