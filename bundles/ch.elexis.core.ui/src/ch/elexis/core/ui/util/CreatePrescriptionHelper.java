@@ -92,6 +92,12 @@ public class CreatePrescriptionHelper {
 				article, ContextServiceHolder.get().getActivePatient().get(), signature.getSignatureAsDosisString())
 						.build();
 		prescription.setRemark(signature.getComment());
+
+		String disposalComment = signature.getDisposalComment();
+		if (disposalComment != null && !disposalComment.isEmpty()) {
+			prescription.setDisposalComment(disposalComment);
+		}
+
 		prescription.setEntryType(signature.getMedicationType());
 		// a new symptomatic medication can have a stop date
 		if (EntryType.SYMPTOMATIC_MEDICATION.equals(signature.getMedicationType()) && signature.getEndDate() != null) {
@@ -182,7 +188,7 @@ public class CreatePrescriptionHelper {
 
 	private boolean isArticleAlreadyBilled(IArticle article, IEncounter encounter) {
 		return encounter.getBilled().stream().anyMatch(billed -> billed.getBillable() instanceof IArticle
-				&& ((IArticle) billed.getBillable()).getId().equals(article.getId()));
+				&& billed.getBillable().getId().equals(article.getId()));
 	}
 
 	private boolean shouldUpdateToArtikelstamm() {

@@ -4281,13 +4281,22 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE_DEFAULT_SIGNATURE__START_DATE = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_COMMENT = DELETEABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IArticle Default Signature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
+	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
@@ -10594,6 +10603,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticleDefaultSignature_StartDate();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment <em>Disposal Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Disposal Comment</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_DisposalComment();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15351,6 +15371,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IARTICLE_DEFAULT_SIGNATURE__START_DATE = eINSTANCE.getIArticleDefaultSignature_StartDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Disposal Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_COMMENT = eINSTANCE.getIArticleDefaultSignature_DisposalComment();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.

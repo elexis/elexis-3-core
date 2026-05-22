@@ -118,9 +118,13 @@ public class BillingProcessor {
 				IPrescription prescription = prescriptionOpt.get();
 				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 				prescription.setRemark(signature.getComment());
+				String disposalComment = signature.getDisposalComment();
+				if (disposalComment != null && !disposalComment.isEmpty()) {
+					prescription.setDisposalComment(disposalComment);
+				}
 				prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
 						billed.getId());
-				prescription.setEntryType(signature.getDisposalType());
+				prescription.setEntryType(signature.getMedicationType());
 				prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
 				if (signature.getEndDate() != null) {
 					prescription.setDateTo(signature.getEndDate().atStartOfDay());
