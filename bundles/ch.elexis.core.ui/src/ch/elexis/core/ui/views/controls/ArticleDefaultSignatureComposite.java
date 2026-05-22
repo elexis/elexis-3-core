@@ -57,7 +57,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 	private Text txtSignatureEvening;
 	private Text txtSignatureNight;
 	private Text txtSignatureComment;
-
+	private Text txtDisposalComment;
 	private Composite medicationType;
 	private Button btnSymtomatic;
 	private Button btnReserve;
@@ -194,7 +194,10 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		txtSignatureComment = new Text(this, SWT.BORDER);
 		txtSignatureComment.setMessage(Messages.Prescription_Instruction);
 		txtSignatureComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
-
+		txtDisposalComment = new Text(this, SWT.BORDER);
+		txtDisposalComment.setMessage(Messages.Prescription_Reason);
+		txtDisposalComment.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
+		
 		medicationType = new Composite(this, SWT.NONE);
 		medicationType.setLayout(new RowLayout());
 		medicationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
@@ -449,6 +452,15 @@ public class ArticleDefaultSignatureComposite extends Composite {
 		targetToModelStrategies.add(targetToModelStrategy);
 		databindingContext.bindValue(observeTextTextSignatureCommentObserveWidget,
 				itemSignatureCommentObserveDetailValue, targetToModelStrategy, null);
+
+		IObservableValue<String> observeTextDisposalCommentObserveWidget = WidgetProperties
+				.text(new int[] { SWT.Modify, SWT.FocusOut }).observeDelayed(100, txtDisposalComment);
+		IObservableValue<String> itemSignatureDisposalCommentObserveDetailValue = PojoProperties
+				.value(IArticleDefaultSignature.class, "disposalComment", String.class).observeDetail(signatureItem);
+		targetToModelStrategy = new SavingTargetToModelStrategy(this);
+		targetToModelStrategies.add(targetToModelStrategy);
+		databindingContext.bindValue(observeTextDisposalCommentObserveWidget,
+				itemSignatureDisposalCommentObserveDetailValue, targetToModelStrategy, null);
 
 		return databindingContext;
 	}
