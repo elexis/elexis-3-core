@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.Reminder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IReminder;
@@ -140,7 +141,7 @@ public class ReminderColumnFactory {
 		if (r == null)
 			return StringUtils.EMPTY;
 
-		Object customStatusObj = r.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
+		Object customStatusObj = r.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
 		if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
 			return customStatusStr;
 		}
@@ -245,7 +246,7 @@ public class ReminderColumnFactory {
 			}
 
 			private Color determineBaseForegroundColor(IReminder r) {
-				Object customStatusObj = r.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
+				Object customStatusObj = r.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
 
 				if (customStatusObj instanceof String customStatusStr && !customStatusStr.isEmpty()) {
 					String prefPath = Preferences.USR_REMINDERCOLORS + "/"

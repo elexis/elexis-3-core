@@ -48,11 +48,6 @@ import ch.elexis.core.model.issue.Visibility;
 public interface IReminder extends Deleteable, Identifiable, WithExtInfo {
 
 	/**
-	 * Key for storing the custom status in the ExtInfo blob.
-	 */
-	public static final String EXTINFO_CUSTOM_STATUS = "custom_status";
-
-	/**
 	 * Returns the value of the '<em><b>Creator</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

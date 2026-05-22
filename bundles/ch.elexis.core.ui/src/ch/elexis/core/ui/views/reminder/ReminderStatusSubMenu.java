@@ -13,6 +13,7 @@ import org.eclipse.swt.SWT;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.constants.Reminder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -101,7 +102,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 				this.representedStatus = representedStatus;
 				this.reminder = reminder;
 
-				Object customStatus = reminder.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
+				Object customStatus = reminder.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
 				boolean hasCustom = customStatus != null && !customStatus.toString().isEmpty();
 				setChecked(representedStatus == reminder.getStatus() && !hasCustom);
 			}
@@ -114,7 +115,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 			@Override
 			public void doRun(IReminder element) {
 				element.setStatus(representedStatus);
-				element.setExtInfo(IReminder.EXTINFO_CUSTOM_STATUS, null);
+				element.setExtInfo(Reminder.EXTINFO_CUSTOM_STATUS, null);
 				CoreModelServiceHolder.get().save(element);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 			}
@@ -129,7 +130,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 				this.customStatus = customStatus;
 				this.reminder = reminder;
 
-				Object currentCustom = reminder.getExtInfo(IReminder.EXTINFO_CUSTOM_STATUS);
+				Object currentCustom = reminder.getExtInfo(Reminder.EXTINFO_CUSTOM_STATUS);
 				setChecked(customStatus.equals(currentCustom));
 			}
 
@@ -141,7 +142,7 @@ public class ReminderStatusSubMenu extends MenuManager {
 			@Override
 			public void doRun(IReminder element) {
 				element.setStatus(ProcessStatus.IN_PROGRESS);
-				element.setExtInfo(IReminder.EXTINFO_CUSTOM_STATUS, customStatus);
+				element.setExtInfo(Reminder.EXTINFO_CUSTOM_STATUS, customStatus);
 				CoreModelServiceHolder.get().save(element);
 				ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, element);
 			}
