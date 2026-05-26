@@ -233,12 +233,17 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 		}
 
 		private Optional<IBillable> getBillable(String system, String code, ch.elexis.core.model.IEncounter cons) {
+			Map<Object, Object> context = new HashMap<>();
+			context.put(ICodeElementService.ContextKeys.CONSULTATION, cons);
 			if (system.equals(CodingSystem.ELEXIS_TARMED_CODESYSTEM.getSystem())) {
-				Map<Object, Object> context = new HashMap<>();
-				context.put(ICodeElementService.ContextKeys.CONSULTATION, cons);
 				Optional<ICodeElement> tarmed = codeElementService.loadFromString("Tarmed", code, context);
 				if (tarmed.isPresent()) {
 					return tarmed.filter(IBillable.class::isInstance).map(IBillable.class::cast);
+				}
+			} else if (system.equals("www.elexis.info/billing/tardoc")) {
+				Optional<ICodeElement> tardoc = codeElementService.loadFromString("Tardoc", code, context);
+				if (tardoc.isPresent()) {
+					return tardoc.filter(IBillable.class::isInstance).map(IBillable.class::cast);
 				}
 			}
 			LoggerFactory.getLogger(ClaimVerrechnetTransformer.class)
@@ -255,9 +260,13 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 						for (Coding coding : diagnoseCoding.getCoding()) {
 							IDiagnosisReference diag = modelService.create(IDiagnosisReference.class);
 							diag.setCode(coding.getCode());
-							diag.setText((coding.getDisplay() != null) ? coding.getDisplay() : "MISSING");
+							diag.setText((coding.getDisplay() != null) ? coding.getDisplay() : coding.getCode());
 							if (CodingSystem.ELEXIS_DIAGNOSE_TESSINERCODE.getSystem().equals(coding.getSystem())) {
 								diag.setReferredClass("ch.elexis.data.TICode");
+							} else if (CodingSystem.ICD_DE_CODESYSTEM.getSystem().equals(coding.getSystem())) {
+								diag.setReferredClass("ch.elexis.data.ICD10");
+							} else {
+								diag.setReferredClass("ch.elexis.data.FreeTextDiagnose");
 							}
 							ret.add(diag);
 						}
