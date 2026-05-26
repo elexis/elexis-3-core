@@ -12,6 +12,7 @@ import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.r4.model.Encounter.EncounterParticipantComponent;
+import org.hl7.fhir.r4.model.Encounter.EncounterStatus;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
@@ -21,6 +22,7 @@ import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IdentifierSystem;
 import ch.elexis.core.findings.util.ModelUtil;
+import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 
@@ -114,6 +116,71 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 	public void setPatientId(DomainResource resource, String patientId) {
 		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		fhirEncounter.setSubject(new Reference(new IdDt("Patient", patientId)));
+	}
+
+	/**
+	 * Patch: read Coverage (Elexis Fall) reference from Encounter.account[*].
+	 * Allows FHIR clients to explicitly assign a consultation to a specific
+	 * Fall instead of being forced into the auto-created "online" default fall.
+	 */
+	public Optional<String> getCoverageId(DomainResource resource) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
+		if (fhirEncounter.hasAccount()) {
+			for (Reference account : fhirEncounter.getAccount()) {
+				if (account != null && FhirUtil.isReferenceType(account, "Coverage")) {
+					return FhirUtil.getId(account);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Patch: expose the Elexis Fall id as Encounter.account[0] so that FHIR
+	 * clients can see which Fall a consultation belongs to.
+	 */
+	public void setCoverageId(DomainResource resource, String coverageId) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
+		fhirEncounter.getAccount().clear();
+		if (coverageId != null && !coverageId.isEmpty()) {
+			fhirEncounter.addAccount(new Reference(new IdDt("Coverage", coverageId)));
+		}
+	}
+
+	/**
+	 * Patch: map Elexis IEncounter.billable to FHIR Encounter.status. A billable
+	 * (still editable) consultation maps to in-progress, a non-billable
+	 * (closed/billed) one to finished.
+	 */
+	public void setStatus(DomainResource resource, boolean billable) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
+		fhirEncounter.setStatus(billable ? EncounterStatus.INPROGRESS : EncounterStatus.FINISHED);
+	}
+
+	/**
+	 * Patch: derive the billable flag from FHIR Encounter.status, so that clients
+	 * can reopen / close a consultation via PUT.
+	 */
+	public Optional<Boolean> getBillable(DomainResource resource) {
+		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
+		if (!fhirEncounter.hasStatus()) {
+			return Optional.empty();
+		}
+		switch (fhirEncounter.getStatus()) {
+		case PLANNED:
+		case ARRIVED:
+		case TRIAGED:
+		case INPROGRESS:
+		case ONLEAVE:
+			return Optional.of(Boolean.TRUE);
+		case FINISHED:
+		case CANCELLED:
+		case ENTEREDINERROR:
+		case UNKNOWN:
+		case NULL:
+		default:
+			return Optional.of(Boolean.FALSE);
+		}
 	}
 
 	public void setConsultationId(DomainResource resource, String consultationId) {

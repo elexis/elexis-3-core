@@ -55,6 +55,12 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 	public Optional<Encounter> getFhirObject(IEncounter localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Optional<IBaseResource> resource = contentHelper.getResource(localObject);
 		if (resource.isPresent()) {
+			// Patch: re-sync FHIR Encounter from the underlying Elexis Behandlung,
+			// so that account (Fall) and status reflect the current DB state and
+			// not just the cached findings-store copy.
+			Optional<ch.elexis.core.model.IEncounter> behandlung = coreModelService.load(localObject.getConsultationId(),
+					ch.elexis.core.model.IEncounter.class);
+			behandlung.ifPresent(cons -> attributeMapper.elexisToFhir(cons, (Encounter) resource.get(), summaryEnum, includes));
 			return Optional.of((Encounter) resource.get());
 		}
 		return Optional.empty();
@@ -94,7 +100,9 @@ public class EncounterIEncounterTransformer implements IFhirTransformer<Encounte
 			contentHelper.setResource(fhirObject, iEncounter);
 			patientKontakt.ifPresent(k -> iEncounter.setPatientId(k.getId()));
 			performerKontakt.ifPresent(k -> iEncounter.setMandatorId(k.getId()));
-			encounterHelper.createIEncounter(iEncounter).ifPresent(cons -> {
+			// Patch: pass an explicit Coverage id from Encounter.account through so
+			// the consultation gets assigned to the caller-chosen Fall.
+			encounterHelper.createIEncounter(iEncounter, attributeMapper.getCoverageId(fhirObject)).ifPresent(cons -> {
 				iEncounter.setConsultationId(cons.getId());
 				attributeMapper.fhirToElexis(fhirObject, cons);
 				coreModelService.save(cons);
