@@ -1178,6 +1178,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 		buttonTabContributions.forEach(dc -> dc.setDetailObject(actPatient, null));
 
+		billingDiagnosisComponent.setPatient(NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null));
+
 		if (actPatient == null) {
 			titleLabel.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -20,17 +19,12 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
-import ch.elexis.core.ui.e4.util.CoreUiUtil;
-import jakarta.inject.Inject;
 
 public class BillingDiagnosisComposite extends Composite {
-
-	@Inject
-	private IEncounterService encounterService;
 
 	private IPatient patient;
 
@@ -38,7 +32,6 @@ public class BillingDiagnosisComposite extends Composite {
 
 	public BillingDiagnosisComposite(Composite parent, int style) {
 		super(parent, SWT.NONE);
-		CoreUiUtil.injectServices(this);
 
 		currentDiagnosis = new ArrayList<>();
 
@@ -46,23 +39,10 @@ public class BillingDiagnosisComposite extends Composite {
 		createContent();
 	}
 
-	@Override
-	public void dispose() {
-		CoreUiUtil.uninjectServices(this);
-		super.dispose();
-	}
-
-	@Inject
-	void activePatient(@Optional IPatient patient) {
-		CoreUiUtil.runAsyncIfActive(() -> {
-			setPatient(patient);
-		}, this);
-	}
-
-	private void setPatient(IPatient patient) {
+	public void setPatient(IPatient patient) {
 		this.patient = patient;
 		if (patient != null) {
-			currentDiagnosis = new ArrayList<>(encounterService.getBillingDiagnosis(patient));
+			currentDiagnosis = new ArrayList<>(EncounterServiceHolder.get().getBillingDiagnosis(patient));
 			updateContent();
 		} else {
 			clear();
@@ -137,14 +117,14 @@ public class BillingDiagnosisComposite extends Composite {
 						}
 						IDiagnosis diagnose = (IDiagnosis) sel[0];
 						currentDiagnosis.add(diagnose);
-						encounterService.setBillingDiagnosis(currentDiagnosis, patient);
+						EncounterServiceHolder.get().setBillingDiagnosis(currentDiagnosis, patient);
 						CoreModelServiceHolder.get().save(patient);
 						updateContent();
 					} else {
 						IDiagnosis selDiagnosis = (IDiagnosis) e.widget.getData(IDiagnosis.class.getSimpleName());
 						if (selDiagnosis != null) {
 							currentDiagnosis.remove(selDiagnosis);
-							encounterService.setBillingDiagnosis(currentDiagnosis, patient);
+							EncounterServiceHolder.get().setBillingDiagnosis(currentDiagnosis, patient);
 							CoreModelServiceHolder.get().save(patient);
 							updateContent();							
 						}
@@ -163,33 +143,6 @@ public class BillingDiagnosisComposite extends Composite {
 		if (isFirstLine()) {
 			diagnosisLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
-//			ToolBarManager menuManager = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
-//			menuManager.add(new Action(StringUtils.EMPTY, Action.AS_PUSH_BUTTON) { // $NON-NLS-1$
-//				@Override
-//				public void run() {
-//					DiagnoseSelektor dsl = new DiagnoseSelektor(getShell());
-//					if (dsl.open() == Dialog.OK) {
-//						Object[] sel = dsl.getResult();
-//						if (sel != null && sel.length > 0) {
-//							IDiagnosis diagnose = (IDiagnosis) sel[0];
-//							currentDiagnosis.add(diagnose);
-//							encounterService.setBillingDiagnosis(currentDiagnosis, patient);
-//							CoreModelServiceHolder.get().save(patient);
-//							updateContent();
-//							BillingDiagnosisComposite.this.getParent().layout();
-//						}
-//					}
-//				}
-//
-//				@Override
-//				public ImageDescriptor getImageDescriptor() {
-//					return Images.IMG_NEW.getImageDescriptor();
-//				}
-//			});
-//			ToolBar toolbar = menuManager.createControl(this);
-//			toolbar.setBackground(getBackground());
-//			toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-
 			Hyperlink addDiagnosisLink = new Hyperlink(this, SWT.NONE);
 			addDiagnosisLink.setUnderlined(true);
 			addDiagnosisLink.setText(Messages.Core_Add);
@@ -204,7 +157,7 @@ public class BillingDiagnosisComposite extends Composite {
 						if (sel != null && sel.length > 0) {
 							IDiagnosis diagnose = (IDiagnosis) sel[0];
 							currentDiagnosis.add(diagnose);
-							encounterService.setBillingDiagnosis(currentDiagnosis, patient);
+							EncounterServiceHolder.get().setBillingDiagnosis(currentDiagnosis, patient);
 							CoreModelServiceHolder.get().save(patient);
 							updateContent();
 						}
