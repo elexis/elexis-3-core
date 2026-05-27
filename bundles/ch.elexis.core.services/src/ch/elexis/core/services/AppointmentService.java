@@ -432,10 +432,6 @@ public class AppointmentService implements IAppointmentService {
 
 		String coldesc = configService.get(userContact, prefKey, "3a87ad", false);
 
-		if (coldesc.contains(",")) {
-			return "rgb(" + coldesc + ")";
-		}
-
 		String ret = coldesc.startsWith("#") ? coldesc : "#" + coldesc;
 		if (isValidColor(ret)) {
 			return ret;
@@ -464,9 +460,6 @@ public class AppointmentService implements IAppointmentService {
 
 	private boolean isValidColor(String colorString) {
 		if (StringUtils.isNotBlank(colorString)) {
-			if (colorString.startsWith("rgb(")) {
-				return true;
-			}
 			return colorString.length() == 6 || colorString.length() == 7;
 		}
 		return false;
