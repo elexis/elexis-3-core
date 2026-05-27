@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,7 @@ import ch.elexis.core.model.billable.DefaultVerifier;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IQuery.ORDER;
+import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
@@ -489,18 +491,49 @@ public class EncounterService implements IEncounterService {
 	}
 
 	@Override
-	public void addDefaultDiagnosis(IEncounter encounter) {
-		String diagnosisSts = (String) encounter.getPatient().getExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS);
+	public List<IDiagnosis> getBillingDiagnosis(IPatient patient) {
+		String diagnosisSts = (String) patient.getExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS);
 		if (StringUtils.isNotBlank(diagnosisSts)) {
-			Optional<Identifiable> diagnose = storeToStringService.loadFromString(diagnosisSts);
-			if (diagnose.isPresent()) {
-				encounter.addDiagnosis((IDiagnosis) diagnose.get());
-				coreModelService.save(encounter);
-				// ignore user default if patient has billing diagnosis
-				return;
+			List<IDiagnosis> ret = new ArrayList<>();
+			String[] parts = diagnosisSts.split("\\|\\|"); // $NON-NLS-N$
+			for (String sts : parts) {
+				storeToStringService.loadFromString(sts).ifPresent(d -> ret.add((IDiagnosis) d));
+			}
+			return ret;
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public void setBillingDiagnosis(List<IDiagnosis> diagnosis, IPatient patient) {
+		if (diagnosis != null) {
+			if (diagnosis.isEmpty()) {
+				patient.setExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS, null);
+			} else {
+				StringJoiner sj = new StringJoiner("||");
+				for (Identifiable diagnose : diagnosis) {
+					String storeToString = StoreToStringServiceHolder.getStoreToString(diagnose);
+					if (StringUtils.isNotBlank(storeToString)) {
+						sj.add(storeToString);
+					}
+				}
+				patient.setExtInfo(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS, sj.toString());
 			}
 		}
-		diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
+	}
+
+	@Override
+	public void addDefaultDiagnosis(IEncounter encounter) {
+		List<IDiagnosis> diagnosis = getBillingDiagnosis(encounter.getPatient());
+		if (!diagnosis.isEmpty()) {
+			for (Identifiable diagnose : diagnosis) {
+				encounter.addDiagnosis((IDiagnosis) diagnose);
+			}
+			coreModelService.save(encounter);
+			// ignore user default if patient has billing diagnosis
+			return;
+		}
+		String diagnosisSts = configService.getActiveUserContact(Preferences.USR_DEFDIAGNOSE, StringUtils.EMPTY);
 		if (diagnosisSts.length() > 1) {
 			Optional<Identifiable> diagnose = PortableServiceLoader.get(IStoreToStringService.class)
 					.loadFromString(diagnosisSts);
