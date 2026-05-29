@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ import ch.elexis.core.mail.AttachmentsUtil;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceConstants;
 import ch.elexis.core.preferences.PreferencesUtil;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemhandleFilter;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -120,7 +123,7 @@ public class SendInvoiceAsMailHandler extends AbstractHandler {
 		List<File> movedFiles = new ArrayList<>();
 		for (File file : pdfs) {
 			try {
-				if (file.getName().endsWith("_esr.pdf")) {
+				if (file.getName().contains("_esr")) {
 					Path destination = file.toPath()
 							.resolveSibling(iInvoice.getNumber() + "_Rechnungskopie_Einzahlungsschein.pdf");
 					if (destination.toFile().exists()) {
@@ -128,9 +131,16 @@ public class SendInvoiceAsMailHandler extends AbstractHandler {
 					}
 					Files.move(file.toPath(), destination);
 					movedFiles.add(destination.toFile());
-				} else if (file.getName().endsWith("_rf.pdf")) {
+				} else if (file.getName().contains("_rf")) {
 					Path destination = file.toPath()
 							.resolveSibling(iInvoice.getNumber() + "_Rechnungskopie_Formular.pdf");
+					if (destination.toFile().exists()) {
+						destination.toFile().delete();
+					}
+					Files.move(file.toPath(), destination);
+					movedFiles.add(destination.toFile());
+				} else if (file.getName().contains("_qr")) {
+					Path destination = file.toPath().resolveSibling(iInvoice.getNumber() + "_Rechnungskopie_Codes.pdf");
 					if (destination.toFile().exists()) {
 						destination.toFile().delete();
 					}
@@ -180,15 +190,25 @@ public class SendInvoiceAsMailHandler extends AbstractHandler {
 	private List<File> getPdfs(IInvoice iInvoice) {
 		try {
 			String pdfOutputDir = OutputterUtil.getPdfOutputDir("qrpdf-output/");
-			File esrFile = VirtualFilesystemServiceHolder.get()
-					.of(pdfOutputDir + File.separator + iInvoice.getNumber() + "_esr.pdf").toFile().orElse(null); //$NON-NLS-1$
-			File rfFile = VirtualFilesystemServiceHolder.get()
-					.of(pdfOutputDir + File.separator + iInvoice.getNumber() + "_rf.pdf").toFile().orElse(null); //$NON-NLS-1$
-			if (esrFile.exists() && rfFile.exists()) {
-				List<File> ret = new ArrayList<>();
-				ret.add(esrFile);
-				ret.add(rfFile);
-				return ret;
+			IVirtualFilesystemHandle outputDir = VirtualFilesystemServiceHolder.get().of(pdfOutputDir);
+			List<IVirtualFilesystemHandle> allFilesForInvoice = Arrays
+					.asList(outputDir
+					.listHandles(new IVirtualFilesystemhandleFilter() {
+				
+				@Override
+				public boolean accept(IVirtualFilesystemHandle handle) {
+									if (handle.getName().startsWith(iInvoice.getNumber())) {
+						return true;
+					}
+					return false;
+				}
+			}));
+			// filname has copy since change to QrRnOutputter in pdfBills of elexis-3-base
+			List<IVirtualFilesystemHandle> retFiles = allFilesForInvoice.stream()
+					.filter(vf -> vf.getName().contains("copy")).toList();
+			if (!retFiles.isEmpty()) {
+				return retFiles.stream().map(vf -> vf.toFile().orElse(null))
+						.filter(f -> f != null && f.exists() && f.canRead()).toList();
 			}
 		} catch (IOException e) {
 			LoggerFactory.getLogger(getClass()).warn("Could not access qr pdf output", e); //$NON-NLS-1$
