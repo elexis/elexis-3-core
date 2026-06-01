@@ -28,6 +28,7 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IPatient#getRisk <em>Risk</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getFamilyAnamnese <em>Family Anamnese</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getPersonalAnamnese <em>Personal Anamnese</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IPatient#getSocialAnamnese <em>Social Anamnese</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}</li>
  *   <li>{@link ch.elexis.core.model.IPatient#getCoverages <em>Coverages</em>}</li>
  * </ul>
@@ -166,6 +167,28 @@ public interface IPatient extends IPerson {
 	 * @generated
 	 */
 	void setPersonalAnamnese(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Social Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Social Anamnese</em>' attribute.
+	 * @see #setSocialAnamnese(String)
+	 * @see ch.elexis.core.model.ModelPackage#getIPatient_SocialAnamnese()
+	 * @model
+	 * @generated
+	 */
+	String getSocialAnamnese();
+
+	/**
+	 * Sets the value of the '{@link ch.elexis.core.model.IPatient#getSocialAnamnese <em>Social Anamnese</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Social Anamnese</em>' attribute.
+	 * @see #getSocialAnamnese()
+	 * @generated
+	 */
+	void setSocialAnamnese(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Allergies</b></em>' attribute.

@@ -87,5 +87,17 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 	<changeSet id="manual_update_usergroupuserjoint_userid_len" author="thomas">
 		<modifyDataType tableName="USERGROUP_USER_JOINT" columnName="ID" newDataType="VARCHAR(80)"/>
 	</changeSet>
-	
+	<changeSet id="manual_update_kontakt_sozanamnese" author="dalibor">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="KONTAKT" />
+				<not>
+					<columnExists tableName="KONTAKT" columnName="SozAnamnese" />
+				</not>
+			</and>
+		</preConditions>
+		<addColumn tableName="KONTAKT">
+			<column name="SozAnamnese" type="LONGBLOB" afterColumn="PersAnamnese"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

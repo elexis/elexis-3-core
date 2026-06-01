@@ -1865,13 +1865,22 @@ public interface ModelPackage extends EPackage {
 	int IPATIENT__PERSONAL_ANAMNESE = IPERSON_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Social Anamnese</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IPATIENT__SOCIAL_ANAMNESE = IPERSON_FEATURE_COUNT + 5;
+
+	/**
 	 * The feature id for the '<em><b>Allergies</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 5;
+	int IPATIENT__ALLERGIES = IPERSON_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Coverages</b></em>' reference list.
@@ -1880,7 +1889,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT__COVERAGES = IPERSON_FEATURE_COUNT + 6;
+	int IPATIENT__COVERAGES = IPERSON_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>IPatient</em>' class.
@@ -1889,7 +1898,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 7;
+	int IPATIENT_FEATURE_COUNT = IPERSON_FEATURE_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IMandator <em>IMandator</em>}' class.
@@ -9041,6 +9050,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIPatient_PersonalAnamnese();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getSocialAnamnese <em>Social Anamnese</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Social Anamnese</em>'.
+	 * @see ch.elexis.core.model.IPatient#getSocialAnamnese()
+	 * @see #getIPatient()
+	 * @generated
+	 */
+	EAttribute getIPatient_SocialAnamnese();
+
+	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IPatient#getAllergies <em>Allergies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14175,6 +14195,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IPATIENT__PERSONAL_ANAMNESE = eINSTANCE.getIPatient_PersonalAnamnese();
+
+		/**
+		 * The meta object literal for the '<em><b>Social Anamnese</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IPATIENT__SOCIAL_ANAMNESE = eINSTANCE.getIPatient_SocialAnamnese();
 
 		/**
 		 * The meta object literal for the '<em><b>Allergies</b></em>' attribute feature.

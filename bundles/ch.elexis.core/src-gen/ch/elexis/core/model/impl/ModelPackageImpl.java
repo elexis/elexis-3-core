@@ -1262,7 +1262,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIPatient_Allergies() {
+	public EAttribute getIPatient_SocialAnamnese() {
 		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1272,8 +1272,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIPatient_Allergies() {
+		return (EAttribute)iPatientEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getIPatient_Coverages() {
-		return (EReference)iPatientEClass.getEStructuralFeatures().get(6);
+		return (EReference)iPatientEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -5629,6 +5639,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iPatientEClass, IPATIENT__RISK);
 		createEAttribute(iPatientEClass, IPATIENT__FAMILY_ANAMNESE);
 		createEAttribute(iPatientEClass, IPATIENT__PERSONAL_ANAMNESE);
+		createEAttribute(iPatientEClass, IPATIENT__SOCIAL_ANAMNESE);
 		createEAttribute(iPatientEClass, IPATIENT__ALLERGIES);
 		createEReference(iPatientEClass, IPATIENT__COVERAGES);
 
@@ -6430,6 +6441,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIPatient_Risk(), ecorePackage.getEString(), "risk", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_FamilyAnamnese(), ecorePackage.getEString(), "familyAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_PersonalAnamnese(), ecorePackage.getEString(), "personalAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIPatient_SocialAnamnese(), ecorePackage.getEString(), "socialAnamnese", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIPatient_Allergies(), ecorePackage.getEString(), "allergies", null, 0, 1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIPatient_Coverages(), this.getICoverage(), null, "coverages", null, 0, -1, IPatient.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
