@@ -9,7 +9,8 @@ Bundle-Localization: plugin
 Require-Bundle: ch.elexis.core.data;bundle-version="3.10.0",
  ch.elexis.core.ui;bundle-version="3.10.0",
  ch.elexis.core.ui.medication;bundle-version="3.0.0",
- org.eclipse.ui.views.properties.tabbed;bundle-version="3.9.100"
+ org.eclipse.ui.views.properties.tabbed;bundle-version="3.9.100",
+ org.opencv;bundle-version="4.10.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.contacts.dialogs,
@@ -20,28 +21,4 @@ Import-Package: com.google.gson;version="[2.12.0,3.0.0)",
  org.apache.commons.beanutils;version="[1.9.0,2.0.0)",
  org.apache.commons.jexl2;version="2.1.1",
  org.apache.commons.lang3;version="3.12.0"
-Bundle-ClassPath: .,
- lib/javacpp-1.5.11.jar,
- lib/javacpp-1.5.11-linux-x86_64.jar,
- lib/javacpp-1.5.11-macosx-arm64.jar,
- lib/javacpp-1.5.11-macosx-x86_64.jar,
- lib/javacpp-1.5.11-windows-x86_64.jar,
- lib/javacpp-platform-1.5.11.jar,
- lib/javacv-1.5.11.jar,
- lib/javacv-1.5.11-sources.jar,
- lib/javacv-platform-1.5.11.jar,
- lib/openblas-0.3.28-1.5.11.jar,
- lib/openblas-0.3.28-1.5.11-linux-x86_64.jar,
- lib/openblas-0.3.28-1.5.11-macosx-arm64.jar,
- lib/openblas-0.3.28-1.5.11-macosx-x86_64.jar,
- lib/openblas-0.3.28-1.5.11-windows-x86_64.jar,
- lib/openblas-platform-0.3.28-1.5.11.jar,
- lib/opencv-4.10.0-1.5.11.jar,
- lib/opencv-4.10.0-1.5.11-linux-x86_64.jar,
- lib/opencv-4.10.0-1.5.11-macosx-arm64.jar,
- lib/opencv-4.10.0-1.5.11-macosx-x86_64.jar,
- lib/opencv-4.10.0-1.5.11-windows-x86_64.jar,
- lib/opencv-platform-4.10.0-1.5.11.jar,
- lib/videoinput-0.200-1.5.9.jar,
- lib/videoinput-0.200-1.5.9-windows-x86_64.jar,
- lib/videoinput-platform-0.200-1.5.9.jar
+Bundle-ClassPath: .
