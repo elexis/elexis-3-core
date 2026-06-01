@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -189,16 +188,28 @@ public class OrderService implements IOrderService {
 	public List<IOrder> findOpenOrdersByDate(LocalDate date) {
 		long startMillis = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 		long endMillis = date.plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - 1;
-
-		IQuery<IOrderEntry> entryQuery = modelService.getQuery(IOrderEntry.class);
-		entryQuery.and(ModelPackage.Literals.IORDER_ENTRY__STATE, COMPARATOR.IN,
-				List.of(OrderEntryState.OPEN.ordinal(), OrderEntryState.ORDERED.ordinal()));
-		entryQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, startMillis);
-		entryQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.LESS_OR_EQUAL, endMillis);
-
-		List<IOrderEntry> matchingEntries = entryQuery.execute();
-		return matchingEntries.stream().map(IOrderEntry::getOrder).filter(Objects::nonNull).distinct()
+		IQuery<IOrder> orderQuery = modelService.getQuery(IOrder.class);
+		orderQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, startMillis);
+		orderQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.LESS_OR_EQUAL, endMillis);
+		List<IOrder> ordersInRange = orderQuery.execute();
+		return ordersInRange.stream().filter(this::hasOpenOrOrderedEntries)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Checks if the given order contains any entries that are either OPEN or
+	 * ORDERED.
+	 *
+	 * @param order The order to check
+	 * @return true if open or ordered entries exist, false otherwise
+	 */
+	private boolean hasOpenOrOrderedEntries(IOrder order) {
+		if (order == null || order.getEntries() == null) {
+			return false;
+		}
+
+		return order.getEntries().stream().anyMatch(
+				entry -> entry.getState() == OrderEntryState.OPEN || entry.getState() == OrderEntryState.ORDERED);
 	}
 
 	@Override
