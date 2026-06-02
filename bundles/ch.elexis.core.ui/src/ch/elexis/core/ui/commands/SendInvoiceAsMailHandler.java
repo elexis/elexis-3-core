@@ -192,17 +192,16 @@ public class SendInvoiceAsMailHandler extends AbstractHandler {
 			String pdfOutputDir = OutputterUtil.getPdfOutputDir("qrpdf-output/");
 			IVirtualFilesystemHandle outputDir = VirtualFilesystemServiceHolder.get().of(pdfOutputDir);
 			List<IVirtualFilesystemHandle> allFilesForInvoice = Arrays
-					.asList(outputDir
-					.listHandles(new IVirtualFilesystemhandleFilter() {
-				
-				@Override
-				public boolean accept(IVirtualFilesystemHandle handle) {
-									if (handle.getName().startsWith(iInvoice.getNumber())) {
-						return true;
-					}
-					return false;
-				}
-			}));
+					.asList(outputDir.listHandles(new IVirtualFilesystemhandleFilter() {
+
+						@Override
+						public boolean accept(IVirtualFilesystemHandle handle) {
+							if (handle.getName().startsWith(iInvoice.getNumber() + "_")) {
+								return true;
+							}
+							return false;
+						}
+					}));
 			// filname has copy since change to QrRnOutputter in pdfBills of elexis-3-base
 			List<IVirtualFilesystemHandle> retFiles = allFilesForInvoice.stream()
 					.filter(vf -> vf.getName().contains("copy")).toList();
