@@ -10,7 +10,7 @@ Require-Bundle: ch.elexis.core.data;bundle-version="3.10.0",
  ch.elexis.core.ui;bundle-version="3.10.0",
  ch.elexis.core.ui.medication;bundle-version="3.0.0",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.9.100",
- org.opencv;bundle-version="4.10.0"
+ org.opencv;bundle-version="[4.13.0,5.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.contacts.dialogs,
