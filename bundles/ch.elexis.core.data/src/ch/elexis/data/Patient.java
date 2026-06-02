@@ -88,6 +88,7 @@ public class Patient extends Person {
 	public static final String FLD_FAX = "Fax";
 	public static final String FLD_BALANCE = "Konto";
 	public static final String FLD_PERS_ANAMNESE = "PersAnamnese";
+	public static final String FLD_SOZ_ANAMNESE = "SozAnamnese";
 	public static final String FLD_SYS_ANAMNESE = "SysAnamnese";
 	public static final String FLD_FAM_ANAMNESE = "FamilienAnamnese";
 
@@ -95,7 +96,8 @@ public class Patient extends Person {
 
 	static {
 		addMapping(Kontakt.TABLENAME, FLD_DIAGNOSES + "    	=S:C:Diagnosen", FLD_PERS_ANAMNESE + "	=S:C:PersAnamnese",
-				"SystemAnamnese	 	=S:C:SysAnamnese", "FamilienAnamnese	=S:C:FamAnamnese", FLD_RISKS, FLD_ALLERGIES,
+				FLD_SOZ_ANAMNESE + "	=S:C:SozAnamnese", "SystemAnamnese	 	=S:C:SysAnamnese",
+				"FamilienAnamnese	=S:C:FamAnamnese", FLD_RISKS, FLD_ALLERGIES,
 				"Faelle				=LIST:PatientID:FAELLE:DatumVon",
 				"Garanten			=JOINT:GarantID:PatientID:PATIENT_GARANT_JOINT:" + Kontakt.class.getCanonicalName(),
 				"Dauermedikation	=JOINT:ArtikelID:PatientID:PATIENT_ARTIKEL_JOINT:"
@@ -111,9 +113,14 @@ public class Patient extends Person {
 		return get("PersAnamnese");
 	}
 
+	public String getSocialAnamnese() {
+		return get(FLD_SOZ_ANAMNESE);
+	}
+
 	/**
 	 * @deprecated unused, to be removed
 	 */
+	@Deprecated
 	public String getSystemAnamnese() {
 		return get("Systemanamnese");
 	}
@@ -238,6 +245,7 @@ public class Patient extends Person {
 	 * @deprecated does not filter by EntryType, use
 	 *             {@link Patient#getMedication(EntryType)} instead.
 	 */
+	@Deprecated
 	public Prescription[] getFixmedikation() {
 		Query<Prescription> qbe = new Query<>(Prescription.class);
 		qbe.add(Prescription.FLD_PATIENT_ID, Query.EQUALS, getId());
@@ -704,6 +712,10 @@ public class Patient extends Person {
 
 	public void setPersonalAnamnese(String anamnese) {
 		set(FLD_PERS_ANAMNESE, anamnese);
+	}
+
+	public void setSocialAnamnese(String anamnese) {
+		set(FLD_SOZ_ANAMNESE, anamnese);
 	}
 
 	public String getComment() {

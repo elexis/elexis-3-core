@@ -16,6 +16,11 @@ public interface IMigratorService {
 	public static final String PERSANAM_SETTINGS_USE_STRUCTURED = "persanamnese/settings/useStructured";
 
 	/**
+	 * Preference if social anamnesis is used structured, saved in global config
+	 */
+	public static final String SOCANAM_SETTINGS_USE_STRUCTURED = "socanamnese/settings/useStructured";
+
+	/**
 	 * Preference if risk factors is used structured, saved in global config
 	 */
 	public static final String RISKFACTOR_SETTINGS_USE_STRUCTURED = "riskfactor/settings/useStructured";
