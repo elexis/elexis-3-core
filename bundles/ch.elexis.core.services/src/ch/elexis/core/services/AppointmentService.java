@@ -426,8 +426,13 @@ public class AppointmentService implements IAppointmentService {
 		if (userContact == null) {
 			userContact = contextService.getActiveUserContact().orElse(null);
 		}
-		String ret = "#" + configService // $NON-NLS-1$
-				.get(userContact, "agenda/farben/typ/" + appointmentType, "3a87ad", false); //$NON-NLS-1$
+
+		String prefKey = AG_SERIES_COLOR.equals(appointmentType) ? AG_SERIES_COLOR
+				: "agenda/farben/typ/" + appointmentType;
+
+		String coldesc = configService.get(userContact, prefKey, "3a87ad", false);
+
+		String ret = coldesc.startsWith("#") ? coldesc : "#" + coldesc;
 		if (isValidColor(ret)) {
 			return ret;
 		} else {
@@ -455,7 +460,6 @@ public class AppointmentService implements IAppointmentService {
 
 	private boolean isValidColor(String colorString) {
 		if (StringUtils.isNotBlank(colorString)) {
-			// ffffff or #ffffff
 			return colorString.length() == 6 || colorString.length() == 7;
 		}
 		return false;
