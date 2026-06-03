@@ -304,10 +304,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIPrescriptionAdapter();
 			}
 			@Override
-			public Adapter caseIRight(IRight object) {
-				return createIRightAdapter();
-			}
-			@Override
 			public Adapter caseIBillingSystem(IBillingSystem object) {
 				return createIBillingSystemAdapter();
 			}
@@ -1190,20 +1186,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIPrescriptionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IRight <em>IRight</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IRight
-	 * @generated
-	 */
-	public Adapter createIRightAdapter() {
 		return null;
 	}
 

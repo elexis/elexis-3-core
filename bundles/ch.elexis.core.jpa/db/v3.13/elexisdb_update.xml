@@ -87,5 +87,19 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 	<changeSet id="manual_update_usergroupuserjoint_userid_len" author="thomas">
 		<modifyDataType tableName="USERGROUP_USER_JOINT" columnName="ID" newDataType="VARCHAR(80)"/>
 	</changeSet>
+
+	<changeSet author="marco" id="drop-table-role_right_joint">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="ROLE_RIGHT_JOINT" />
+		</preConditions>
+		<dropTable cascadeConstraints="true"
+			tableName="ROLE_RIGHT_JOINT" />
+	</changeSet>
+	<changeSet author="marco" id="drop-table-right">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="RIGHT_" />
+		</preConditions>
+		<dropTable cascadeConstraints="true" tableName="RIGHT_" />
+	</changeSet>
 	
 </databaseChangeLog>
