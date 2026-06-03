@@ -3,7 +3,6 @@ package ch.elexis.core.ui.util;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,6 +56,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.model.builder.IOrderBuilder;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -167,9 +167,7 @@ public class OrderManagementActionFactory {
 		if (reuseExistingOrder) {
 			orderToUse = actOrder;
 		} else {
-			orderToUse = CoreModelServiceHolder.get().create(IOrder.class);
-			orderToUse.setTimestamp(LocalDateTime.now());
-			orderToUse.setName(Messages.BestellView_AutomaticDaily);
+			orderToUse = new IOrderBuilder(CoreModelServiceHolder.get(), Messages.BestellView_AutomaticDaily).build();
 		}
 
 		DailyConsumptionOrderDialog doDlg = new DailyConsumptionOrderDialog(view.getSite().getShell(), orderToUse);
@@ -230,7 +228,8 @@ public class OrderManagementActionFactory {
 			actOrder = reusableStockOrder;
 			clearOpenEntries(actOrder);
 		} else {
-			actOrder = orderService.createOrder(Messages.OrderManagement_StockOrder_DefaultName);
+			actOrder = new IOrderBuilder(CoreModelServiceHolder.get(), Messages.OrderManagement_StockOrder_DefaultName)
+					.buildAndSave();
 		}
 		int trigger = ConfigServiceHolder.get().get(Preferences.INVENTORY_ORDER_TRIGGER,
 				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
@@ -271,7 +270,7 @@ public class OrderManagementActionFactory {
 		NeueBestellungDialog nbDlg = new NeueBestellungDialog(view.getSite().getShell(),
 				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 		if (nbDlg.open() == Dialog.OK) {
-			actOrder = orderService.createOrder(nbDlg.getTitle());
+			actOrder = new IOrderBuilder(CoreModelServiceHolder.get(), nbDlg.getTitle()).buildAndSave();
 			view.setActOrder(actOrder);
 			OrderManagementView.setBarcodeScannerActivated(true);
 			view.reload();

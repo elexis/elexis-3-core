@@ -268,28 +268,15 @@ public class OrderService implements IOrderService {
 		}
 		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<IOrder> orders = query.execute();
-		return orders.stream()
-				.filter(order -> matchesCompletionState(order, completed))
+
+		return orders.stream().filter(order -> completed ? isCompleted(order) : !isCompleted(order))
 				.collect(Collectors.toList());
 	}
 
-	private boolean matchesCompletionState(IOrder order, boolean completed) {
+	private boolean isCompleted(IOrder order) {
 		boolean isDone = order.isDone();
 		boolean hasEntries = !order.getEntries().isEmpty();
-		if (completed) {
-			return isDone && hasEntries;
-		}
-		return !isDone || !hasEntries;
-	}
-
-	@Override
-	public IOrder createOrder(String name) {
-		IOrder order = modelService.create(IOrder.class);
-		order.setTimestamp(LocalDateTime.now());
-		order.setName(name);
-		modelService.save(order);
-		getHistoryService().logCreateOrder(order);
-		return order;
+		return isDone && hasEntries;
 	}
 
 	@Override

@@ -157,14 +157,6 @@ public interface IOrderService {
 	List<IOrder> getCompletedOrders(boolean showAllYears);
 
 	/**
-	 * Creates a new order with the given name and the current timestamp.
-	 * 
-	 * @param name the name for the new order
-	 * @return the newly created {@link IOrder}
-	 */
-	IOrder createOrder(String name);
-
-	/**
 	 * Saves a partial delivery for a specific order entry and updates the stock.
 	 * 
 	 * @param entry           the order entry to update

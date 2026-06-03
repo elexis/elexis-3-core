@@ -29,5 +29,6 @@ Import-Package: bsh,
  jcifs.smb,
  org.apache.commons.codec;version="[1.17.0,2.0.0)",
  org.apache.commons.io;version="[2.18.0,3.0.0)",
- org.apache.commons.text.similarity;version="[1.13.0,2.0.0)"
+ org.apache.commons.text.similarity;version="[1.13.0,2.0.0)",
+ org.osgi.service.event;version="[1.4.0,2.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
