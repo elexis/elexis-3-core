@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 
-import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.core.ui.views.OrderManagementView;
+import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
 
 /**
  * OrderManagementHelper – contains business logic that should not be in the
@@ -52,7 +52,7 @@ public class OrderManagementHelper {
 			entry.setAmount(newValue);
 			view.getOrderService().getHistoryService().logEdit(order, entry, oldValue, newValue);
 		} else {
-			OrderManagementUtil.saveSingleDelivery(entry, newValue, view.getOrderService());
+			view.getOrderService().saveSingleDelivery(entry, newValue);
 		}
 
 		CoreModelServiceHolder.get().save(entry);

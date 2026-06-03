@@ -35,9 +35,11 @@ public class ShowPatientOrderHandler {
 			if (orderEntry != null) {
 				IOrder order = orderEntry.getOrder();
 				if (order != null) {
-					MPart orderPart = partService.findPart("ch.elexis.OrderManagementView");
+					MPart orderPart = partService
+							.findPart("ch.elexis.core.ui.views.ordermanagement.OrderManagementView");
 					if (orderPart == null) {
-						orderPart = partService.createPart("ch.elexis.OrderManagementView");
+						orderPart = partService
+								.createPart("ch.elexis.core.ui.views.ordermanagement.OrderManagementView");
 					}
 					partService.showPart(orderPart, PartState.VISIBLE);
 					contextService.setTyped(order);

@@ -1,4 +1,5 @@
-package ch.elexis.core.ui.views;
+package ch.elexis.core.ui.views.ordermanagement;
+
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -64,8 +65,7 @@ import com.google.gson.Gson;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Barcode;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.service.StockServiceHolder;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -79,6 +79,8 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.events.RefreshingPartListener;
@@ -90,6 +92,7 @@ import ch.elexis.core.ui.util.OrderManagementHelper;
 import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.util.TableSortController;
 import ch.elexis.core.ui.util.dnd.OrderDropReceiver;
+import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.core.ui.views.provider.CompletedOrderTableLabelProvider;
 import ch.elexis.core.ui.views.provider.EntryTableLabelProvider;
 import ch.elexis.core.ui.views.provider.GenericOrderEditingSupport;
@@ -97,9 +100,10 @@ import ch.elexis.core.ui.views.provider.GenericOrderEditingSupport.EditingColumn
 import ch.elexis.core.ui.views.provider.OrderTableLabelProvider;
 import jakarta.inject.Inject;
 
+
 public class OrderManagementView extends ViewPart implements IRefreshable {
 
-	public static final String ID = "ch.elexis.OrderManagementView"; //$NON-NLS-1$
+	public static final String ID = "ch.elexis.core.ui.views.ordermanagement.OrderManagementView"; //$NON-NLS-1$
 
 	private Composite topComposite;
 	private Composite middleComposite;
@@ -268,9 +272,13 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 
 			boolean activateDeliveryMode = false;
 
+			String currentMandatorId = ContextServiceHolder.get().getActiveMandator().get().getId();
+			IStock currentStock = StockServiceHolder.get().getMandatorDefaultStock(currentMandatorId);
+
 			Optional<IOrderEntry> matchingEntry = actOrder.getEntries().stream()
 					.filter(entry -> entry.getArticle() != null
-							&& entry.getArticle().getCode().equals(scannedArticle.getCode()))
+							&& entry.getArticle().getCode().equals(scannedArticle.getCode()) && entry.getStock() != null
+							&& entry.getStock().equals(currentStock))
 					.findFirst();
 			if (matchingEntry.isPresent()) {
 				IOrderEntry entry = matchingEntry.get();
@@ -368,6 +376,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	public boolean isBarcodePortAvailable() {
+
 		String port = LocalConfigService.get(BarcodeScanner_COMPORT, StringUtils.EMPTY);
 		if (StringUtils.isBlank(port)) {
 			return false;
@@ -396,11 +405,11 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	        entry.setAmount(newValue);
 	        orderService.getHistoryService().logEdit(actOrder, entry, oldValue, newValue);
 	    } else {
-	        OrderManagementUtil.saveSingleDelivery(entry, newValue, orderService);
+			orderService.saveSingleDelivery(entry, newValue);
 	    }
 	    CoreModelServiceHolder.get().save(entry);
 	    if (actOrder != null && actOrder.getId() != null) {
-	        historyCache.remove(actOrder.getId());
+			actHistory = null;
 	    }
 	    tableViewer.refresh(entry);
 	}
@@ -806,6 +815,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	@Override
 	public void refresh() {
 		if (actOrder != null) {
+			if (actOrder.getId() != null) {
+				actHistory = null;
+			}
 			loadOrderDetails(actOrder);
 			updateOrderDetails(actOrder);
 		}
@@ -965,7 +977,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	public void loadOpenOrders() {
-		List<IOrder> orders = OrderManagementUtil.getOpenOrders();
+		List<IOrder> orders = orderService.getOpenOrders();
 		orderTable.setInput(orders);
 
 		if (actOrder != null && orders.contains(actOrder)) {
@@ -996,7 +1008,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		for (Control child : completedContainer.getChildren()) {
 	        child.dispose();
 	    }
-		List<IOrder> orders = OrderManagementUtil.getCompletedOrders(showAllYears);
+		List<IOrder> orders = orderService.getCompletedOrders(showAllYears);
 	    if (orders.isEmpty()) {
 	        return;
 	    }
@@ -1236,7 +1248,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			return;
 		}
 		String createdStr = OrderManagementUtil.formatDate(order.getTimestamp());
-		IOutputLog usierID = OrderManagementUtil.getOrderLogEntry(order);
+		IOutputLog usierID = orderService.getOrderLogEntry(order);
 		Image statusImage = OrderManagementUtil.getStatusIcon(order, false);
 		cartIcon.setImage(statusImage);
 		titleLabel.setText(order.getName());
@@ -1253,13 +1265,11 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		if (order == null || order.getId() == null) {
 			return new OrderHistorySummary(null, null, null, null);
 		}
-		String id = order.getId();
-		OrderHistorySummary cached = historyCache.get(id);
-		if (cached != null) {
-			return cached;
+		if (actHistory != null) {
+			return actHistory;
 		}
 
-		IOutputLog logEntry = OrderManagementUtil.getOrderLogEntry(order);
+		IOutputLog logEntry = orderService.getOrderLogEntry(order);
 		String jsonLog = (logEntry != null) ? logEntry.getOutputterStatus() : "[]"; //$NON-NLS-1$
 
 		OrderHistoryEntry[] historyEntries;
@@ -1292,7 +1302,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			}
 		}
 		OrderHistorySummary summary = new OrderHistorySummary(orderedUser, orderedDate, completedUser, completedDate);
-		historyCache.put(id, summary);
+		actHistory = summary;
 		return summary;
 	}
 
@@ -1412,7 +1422,7 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			if (tableViewer == null || tableViewer.getControl().isDisposed()) {
 				return;
 			}
-			boolean isDelivered = (actOrder != null) && OrderManagementUtil.isOrderCompletelyDelivered(actOrder);
+			boolean isDelivered = (actOrder != null) && orderService.isOrderCompletelyDelivered(actOrder);
 			boolean isOpenOrder = (actOrder != null) && !isDelivered;
 
 			if (isOpenOrder) {
@@ -1553,6 +1563,5 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			this.completedDate = completedDate;
 		}
 	}
-
-	private final Map<String, OrderHistorySummary> historyCache = new HashMap<>();
+	private OrderHistorySummary actHistory;
 }

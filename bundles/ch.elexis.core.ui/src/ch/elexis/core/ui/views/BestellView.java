@@ -75,6 +75,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.model.builder.IOrderBuilder;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -393,14 +394,14 @@ public class BestellView extends ViewPart {
 			return new Object[0];
 		}
 	}
-
-	private IOrder createOrder(String name) {
-		IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
-		order.setTimestamp(LocalDateTime.now());
-		order.setName(name);
-		CoreModelServiceHolder.get().save(order);
-		return order;
-	}
+//
+//	private IOrder createOrder(String name) {
+//		IOrder order = CoreModelServiceHolder.get().create(IOrder.class);
+//		order.setTimestamp(LocalDateTime.now());
+//		order.setName(name);
+//		CoreModelServiceHolder.get().save(order);
+//		return order;
+//	}
 
 	private void makeActions() {
 		listenToBarcodeInputAction = new Action(Messages.BestellView_ListenToBarcode, IAction.AS_CHECK_BOX) {
@@ -445,7 +446,8 @@ public class BestellView extends ViewPart {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
 						if (MessageDialog.openQuestion(getSite().getShell(), Messages.Core_Areas,
 								Messages.BestellView_WizardAskNewOrder)) {
-							setOrder(createOrder(Messages.Core_Automatic));
+							setOrder(new IOrderBuilder(CoreModelServiceHolder.get(), Messages.Core_Automatic)
+									.buildAndSave());
 						}
 					}
 				}
@@ -465,12 +467,13 @@ public class BestellView extends ViewPart {
 			@Override
 			public void run() {
 				if (actOrder == null) {
-					setOrder(createOrder(Messages.Core_Automatic));
+					setOrder(new IOrderBuilder(CoreModelServiceHolder.get(), Messages.Core_Automatic).buildAndSave());
 				} else {
 					if (!actOrder.getTimestamp().toLocalDate().equals(LocalDate.now())) {
 						if (MessageDialog.openQuestion(getSite().getShell(), Messages.Core_Areas,
 								Messages.BestellView_WizardAskNewOrder)) {
-							setOrder(createOrder(Messages.Core_Automatic));
+							setOrder(new IOrderBuilder(CoreModelServiceHolder.get(), Messages.Core_Automatic)
+									.buildAndSave());
 						}
 					}
 				}
@@ -525,7 +528,7 @@ public class BestellView extends ViewPart {
 				NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 						Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 				if (nbDlg.open() == Dialog.OK) {
-					setOrder(createOrder(nbDlg.getTitle()));
+					setOrder(new IOrderBuilder(CoreModelServiceHolder.get(), nbDlg.getTitle()).buildAndSave());
 				} else {
 					return;
 				}
@@ -740,7 +743,7 @@ public class BestellView extends ViewPart {
 			NeueBestellungDialog nbDlg = new NeueBestellungDialog(getViewSite().getShell(),
 					Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 			if (nbDlg.open() == Dialog.OK) {
-				setOrder(createOrder(nbDlg.getTitle()));
+				setOrder(new IOrderBuilder(CoreModelServiceHolder.get(), nbDlg.getTitle()).buildAndSave());
 			} else {
 				return;
 			}
