@@ -17,6 +17,8 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ca.uhn.fhir.model.primitive.IdDt;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
@@ -119,7 +121,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 	}
 
 	/**
-	 * Patch: read Coverage (Elexis Fall) reference from Encounter.account[*].
+	 * Read Coverage (Elexis Fall) reference from Encounter.account[*].
 	 * Allows FHIR clients to explicitly assign a consultation to a specific
 	 * Fall instead of being forced into the auto-created "online" default fall.
 	 */
@@ -136,19 +138,19 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 	}
 
 	/**
-	 * Patch: expose the Elexis Fall id as Encounter.account[0] so that FHIR
+	 * Expose the Elexis Fall id as Encounter.account[0] so that FHIR
 	 * clients can see which Fall a consultation belongs to.
 	 */
 	public void setCoverageId(DomainResource resource, String coverageId) {
 		org.hl7.fhir.r4.model.Encounter fhirEncounter = (org.hl7.fhir.r4.model.Encounter) resource;
 		fhirEncounter.getAccount().clear();
-		if (coverageId != null && !coverageId.isEmpty()) {
+		if (StringUtils.isNotBlank(coverageId)) {
 			fhirEncounter.addAccount(new Reference(new IdDt("Coverage", coverageId)));
 		}
 	}
 
 	/**
-	 * Patch: map Elexis IEncounter.billable to FHIR Encounter.status. A billable
+	 * Map Elexis IEncounter.billable to FHIR Encounter.status. A billable
 	 * (still editable) consultation maps to in-progress, a non-billable
 	 * (closed/billed) one to finished.
 	 */
@@ -158,7 +160,7 @@ public class EncounterAccessor extends AbstractFindingsAccessor {
 	}
 
 	/**
-	 * Patch: derive the billable flag from FHIR Encounter.status, so that clients
+	 * Derive the billable flag from FHIR Encounter.status, so that clients
 	 * can reopen / close a consultation via PUT.
 	 */
 	public Optional<Boolean> getBillable(DomainResource resource) {

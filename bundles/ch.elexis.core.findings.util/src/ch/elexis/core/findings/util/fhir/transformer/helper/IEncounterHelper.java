@@ -33,7 +33,7 @@ public class IEncounterHelper extends AbstractHelper {
 	}
 
 	/**
-	 * Patch: variant that honours an explicit Coverage (Fall) id supplied via
+	 * Variant that honours an explicit Coverage (Fall) id supplied via
 	 * FHIR Encounter.account. If the requested Fall exists and belongs to the
 	 * same patient, it is used. Otherwise the legacy default-fall behaviour
 	 * applies.
@@ -55,16 +55,9 @@ public class IEncounterHelper extends AbstractHelper {
 		return ret;
 	}
 
-	public Optional<ICoverage> getCoverage(String coverageId) {
-		if (coverageId != null && !coverageId.isEmpty()) {
-			return coreModelService.load(coverageId, ICoverage.class);
-		}
-		return Optional.empty();
-	}
-
 	private ICoverage getCoverageOrDefaultFall(IPatient patient, Optional<String> coverageId) {
 		if (coverageId.isPresent()) {
-			Optional<ICoverage> requestedCoverage = getCoverage(coverageId.get());
+			Optional<ICoverage> requestedCoverage = coreModelService.load(coverageId.get(), ICoverage.class);
 			if (requestedCoverage.isPresent() && requestedCoverage.get().getPatient() != null
 					&& patient.getId().equals(requestedCoverage.get().getPatient().getId())) {
 				return requestedCoverage.get();

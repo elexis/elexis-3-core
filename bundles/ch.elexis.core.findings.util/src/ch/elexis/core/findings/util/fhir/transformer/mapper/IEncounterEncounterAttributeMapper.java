@@ -19,6 +19,7 @@ import ch.elexis.core.findings.util.fhir.accessor.EncounterAccessor;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
@@ -29,10 +30,6 @@ public class IEncounterEncounterAttributeMapper
 
 	private EncounterAccessor accessor = new EncounterAccessor();
 
-	/**
-	 * Patch: expose the Coverage id extracted from FHIR Encounter.account so the
-	 * transformer can pass it on to IEncounterHelper.
-	 */
 	public Optional<String> getCoverageId(Encounter source) {
 		return accessor.getCoverageId(source);
 	}
@@ -48,7 +45,6 @@ public class IEncounterEncounterAttributeMapper
 		}
 		ICoverage coverage = source.getCoverage();
 		if (coverage != null) {
-			// Patch: surface Elexis Fall as Encounter.account[0]
 			accessor.setCoverageId(target, coverage.getId());
 			IPatient patient = coverage.getPatient();
 			if (patient != null) {
@@ -56,8 +52,7 @@ public class IEncounterEncounterAttributeMapper
 			}
 		}
 
-		// Patch: map IEncounter.billable to FHIR Encounter.status
-		accessor.setStatus(target, source.isBillable());
+		accessor.setStatus(target, BillingServiceHolder.get().isEditable(source).isOK());
 
 		if (source.getMandator() != null) {
 			accessor.setPrimaryPerformer(target, source.getMandator());
@@ -94,7 +89,6 @@ public class IEncounterEncounterAttributeMapper
 			updateConsText(source, target);
 		}
 
-		// Patch: derive billable flag from FHIR Encounter.status (PUT may flip it)
 		accessor.getBillable(source).ifPresent(billable -> target.setBillable(billable.booleanValue()));
 	}
 
