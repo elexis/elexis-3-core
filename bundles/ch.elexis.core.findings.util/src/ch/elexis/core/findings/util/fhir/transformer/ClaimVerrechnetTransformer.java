@@ -247,7 +247,7 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 				if (tarmed.isPresent()) {
 					return tarmed.filter(IBillable.class::isInstance).map(IBillable.class::cast);
 				}
-			} else if (system.equals("www.elexis.info/billing/tardoc")) {
+			} else if (system.equals(CodingSystem.ELEXIS_TARDOC_CODESYSTEM.getSystem())) {
 				Optional<ICodeElement> tardoc = codeElementService.loadFromString("Tardoc", code, context);
 				if (tardoc.isPresent()) {
 					return tardoc.filter(IBillable.class::isInstance).map(IBillable.class::cast);
