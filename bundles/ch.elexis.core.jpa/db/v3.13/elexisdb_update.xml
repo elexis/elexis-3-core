@@ -101,5 +101,17 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 		</preConditions>
 		<dropTable cascadeConstraints="true" tableName="RIGHT_" />
 	</changeSet>
+	<changeSet author="marco" id="drop-view-rights_per_role">
+		<preConditions onFail="MARK_RAN">
+			<viewExists viewName="RIGHTS_PER_ROLE" />
+		</preConditions>
+		<dropView viewName="RIGHTS_PER_ROLE" />
+	</changeSet>
+	<changeSet author="marco" id="drop-view-rights_per_user">
+		<preConditions onFail="MARK_RAN">
+			<viewExists viewName="RIGHTS_PER_USER" />
+		</preConditions>
+		<dropView viewName="RIGHTS_PER_USER" />
+	</changeSet>
 	
 </databaseChangeLog>
