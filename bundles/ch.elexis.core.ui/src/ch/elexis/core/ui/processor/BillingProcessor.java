@@ -69,8 +69,7 @@ public class BillingProcessor {
 	}
 
 	private void billArticleDirectly(IArticle selectedArticle) {
-		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter,
-				getSellingAmount(selectedArticle));
+		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
 		if (billResult.isOK()) {
 			IBilled billed = billResult.get();
 			CoreModelServiceHolder.get().refresh(actEncounter, true);
@@ -79,15 +78,6 @@ public class BillingProcessor {
 		} else {
 			ResultDialog.show(billResult);
 		}
-	}
-
-	private double getSellingAmount(IArticle article) {
-		double pkgSize = Math.abs(article.getPackageSize());
-		double vkUnits = article.getSellingSize();
-		if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
-			return 1.0 * (vkUnits / pkgSize);
-		}
-		return 1.0;
 	}
 
 	private void handleArticleBillingDialog(IArticle selectedArticle) {
@@ -216,11 +206,7 @@ public class BillingProcessor {
 	}
 
 	private void billCodeElement(IBillable element, List<String> notOkResults) {
-		double amount = 1.0;
-		if (element instanceof IArticle) {
-			amount = getSellingAmount((IArticle) element);
-		}
-		Result<?> billResult = BillingServiceHolder.get().bill(element, actEncounter, amount);
+		Result<?> billResult = BillingServiceHolder.get().bill(element, actEncounter, 1.0);
 		if (!billResult.isOK()) {
 			String message = element.getCode() + " - " + ResultDialog.getResultMessage(billResult);
 			if (!notOkResults.contains(message)) {
