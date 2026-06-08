@@ -11,7 +11,7 @@ import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
 import ch.elexis.core.ui.util.OrderManagementUtil;
-import ch.elexis.core.ui.views.OrderManagementView;
+import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
 
 public final class OrderDropReceiver implements GenericObjectDropTarget.IReceiver {
 

@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
@@ -243,8 +242,8 @@ public class TaskLogPart implements IDoubleClickListener, IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				ITask task = (ITask) element;
-				IUser owner = task.getTaskDescriptor().getOwner();
-				return (owner != null) ? owner.getId() : "NO-OWNER";
+				String owner = task.getTaskDescriptor().getOwner();
+				return (owner != null) ? owner : "NO-OWNER";
 			}
 		});
 		TableColumn tblclmnOwner = tvcOwner.getColumn();

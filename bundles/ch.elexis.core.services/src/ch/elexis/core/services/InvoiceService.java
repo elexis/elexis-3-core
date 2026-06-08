@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IAccountTransaction;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
@@ -22,6 +24,7 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IDiagnosisReference;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -34,20 +37,22 @@ import ch.elexis.core.model.builder.IAccountTransactionBuilder;
 import ch.elexis.core.model.builder.IInvoiceBilledBuilder;
 import ch.elexis.core.model.builder.IPaymentBuilder;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.CoverageServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class InvoiceService implements IInvoiceService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InvoiceService.class);
+
+	@Inject
+	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
+	IModelService coreModelService;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -73,12 +78,13 @@ public class InvoiceService implements IInvoiceService {
 				logger.warn("Patient [" + patient.getPatientNr()
 						+ "] is person was not set. Setting is person automatically.");
 				patient.setPerson(true);
-				CoreModelServiceHolder.get().save(patient);
+				coreModelService.save(patient);
 			}
 		}
 
 		for (IEncounter encounter : encounters) {
-			if (encounter.getBilled().isEmpty() || EncounterServiceHolder.get().getSales(encounter).isZero()) {
+			if (encounter.getBilled().isEmpty()
+					|| PortableServiceLoader.get(IEncounterService.class).getSales(encounter).isZero()) {
 				LoggerFactory.getLogger(getClass())
 						.warn("Ignoring encounter [" + encounter.getLabel() + "] with sales amount zero.");
 			} else {
@@ -102,7 +108,7 @@ public class InvoiceService implements IInvoiceService {
 			}
 		}
 
-		IInvoice ret = CoreModelServiceHolder.get().create(IInvoice.class);
+		IInvoice ret = coreModelService.create(IInvoice.class);
 
 		LocalDate startDate = LocalDate.of(2999, 12, 31);
 		LocalDate endDate = LocalDate.of(2000, 1, 1);
@@ -166,14 +172,14 @@ public class InvoiceService implements IInvoiceService {
 			if (actDate.isAfter(endDate)) {
 				endDate = endDate.with(actDate);
 			}
-			sum.addMoney(EncounterServiceHolder.get().getSales(encounter));
+			sum.addMoney(PortableServiceLoader.get(IEncounterService.class).getSales(encounter));
 		}
 		// perform some checks
 		if (coverage == null) {
 			result = result.add(Result.SEVERITY.ERROR, 8,
 					"Die Rechnung ist keinem Fall zugeordnet (" + getInvoiceDesc(ret) + ")", ret, true);
 		} else {
-			if (isBillingStrict() && !CoverageServiceHolder.get().isValid(coverage)) {
+			if (isBillingStrict() && !PortableServiceLoader.get(ICoverageService.class).isValid(coverage)) {
 				result = result.add(Result.SEVERITY.ERROR, 8,
 						"Die Rechnung hat keinen gültigen Fall (" + getInvoiceDesc(ret) + ")", ret, true);
 			}
@@ -195,28 +201,27 @@ public class InvoiceService implements IInvoiceService {
 			return result;
 		}
 		// create and persist invoice billed and invoice
-		CoreModelServiceHolder.get().save(ret);
+		coreModelService.save(ret);
 		List<IInvoiceBilled> newInvoiceBilled = new ArrayList<>();
 		for (IEncounter encounter : encounters) {
 			encounter.setInvoice(ret);
-			CoreModelServiceHolder.get().save(encounter);
+			coreModelService.save(encounter);
 			// save all verrechnet of this rechnung
 			List<IBilled> encounterBilled = encounter.getBilled();
 			for (IBilled billed : encounterBilled) {
-				IInvoiceBilled invoiceBilled = new IInvoiceBilledBuilder(CoreModelServiceHolder.get(), ret, billed)
-						.build();
+				IInvoiceBilled invoiceBilled = new IInvoiceBilledBuilder(coreModelService, ret, billed).build();
 				newInvoiceBilled.add(invoiceBilled);
 			}
 		}
-		CoreModelServiceHolder.get().save((List<Identifiable>) (List<?>) newInvoiceBilled);
+		coreModelService.save((List<Identifiable>) (List<?>) newInvoiceBilled);
 		if (ret.getOpenAmount().isZero()) {
 			ret.setState(InvoiceState.PAID);
-			CoreModelServiceHolder.get().save(ret);
+			coreModelService.save(ret);
 		} else {
 			if (coverage != null) {
-				IAccountTransaction invoiceBilled = new IAccountTransactionBuilder(CoreModelServiceHolder.get(), ret,
+				IAccountTransaction invoiceBilled = new IAccountTransactionBuilder(coreModelService, ret,
 						coverage.getPatient(), sum.negate(), ret.getDate(), "Rn " + ret.getNumber() + " erstellt.")
-								.buildAndSave();
+						.buildAndSave();
 			}
 		}
 		return result.add(SEVERITY.OK, 0, "Ok", ret, false);
@@ -228,22 +233,32 @@ public class InvoiceService implements IInvoiceService {
 		if (billable != null && "TMA".equals(billable.getCodeSystemCode())) {
 			return false;
 		}
+		// skip article if allowance is present
+		if (billable != null && isAllowanceEncounter(billed.getEncounter())
+				&& "402".equals(billable.getCodeSystemCode())) {
+			return false;
+		}
 		return true;
 	}
 
+	private boolean isAllowanceEncounter(IEncounter encounter) {
+		return encounter.getBilled().stream().filter(b -> "005".equals(b.getBillable().getCodeSystemCode())).findAny()
+				.isPresent();
+	}
+
 	private boolean isBillingCheckZero() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(),
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(),
 					ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_ZERO_CHECK, false);
 		}
 		return false;
 	}
 
 	private boolean isBillingStrict() {
-		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
+		Optional<IContact> userContact = PortableServiceLoader.get(IContextService.class).getActiveUserContact();
 		if (userContact.isPresent()) {
-			return ConfigServiceHolder.get().get(userContact.get(),
+			return PortableServiceLoader.get(IConfigService.class).get(userContact.get(),
 					ch.elexis.core.constants.Preferences.LEISTUNGSCODES_BILLING_STRICT, true);
 		}
 		return true;
@@ -286,10 +301,10 @@ public class InvoiceService implements IInvoiceService {
 				ret = removeEncounters(invoice);
 
 				invoice.setState(InvoiceState.CANCELLED);
-				CoreModelServiceHolder.get().save(invoice);
+				coreModelService.save(invoice);
 			} else {
 				invoice.setState(InvoiceState.DEPRECIATED);
-				CoreModelServiceHolder.get().save(invoice);
+				coreModelService.save(invoice);
 			}
 		} else if (reopen && InvoiceState.CANCELLED.equals(invoiceState)) {
 			// if bill is canceled ensure that all kons are opened
@@ -303,13 +318,13 @@ public class InvoiceService implements IInvoiceService {
 		for (IEncounter iEncounter : encounters) {
 			iEncounter.setInvoice(null);
 		}
-		CoreModelServiceHolder.get().save(encounters);
+		coreModelService.save(encounters);
 		return encounters;
 	}
 
 	@Override
 	public Optional<IInvoice> getInvoiceWithNumber(String number) {
-		INamedQuery<IInvoice> query = CoreModelServiceHolder.get().getNamedQuery(IInvoice.class, "number");
+		INamedQuery<IInvoice> query = coreModelService.getNamedQuery(IInvoice.class, "number");
 		List<IInvoice> found = query.executeWithParameters(query.getParameterMap("number", number));
 		if (!found.isEmpty()) {
 			if (found.size() > 1) {
@@ -322,8 +337,7 @@ public class InvoiceService implements IInvoiceService {
 
 	@Override
 	public List<IInvoice> getInvoices(IEncounter encounter) {
-		INamedQuery<IInvoiceBilled> query = CoreModelServiceHolder.get().getNamedQuery(IInvoiceBilled.class,
-				"encounter");
+		INamedQuery<IInvoiceBilled> query = coreModelService.getNamedQuery(IInvoiceBilled.class, "encounter");
 		List<IInvoiceBilled> invoicebilled = query.executeWithParameters(query.getParameterMap("encounter", encounter));
 		HashSet<IInvoice> uniqueInvoices = new HashSet<>();
 		invoicebilled.stream().filter(ib -> ib.getInvoice() != null).forEach(ib -> uniqueInvoices.add(ib.getInvoice()));
@@ -347,7 +361,7 @@ public class InvoiceService implements IInvoiceService {
 	public String getCombinedId(IInvoice invoice) {
 		IPatient patient = invoice.getCoverage().getPatient();
 		String pid;
-		if (ConfigServiceHolder.get().get("PatIDMode", "number").equals("number")) {
+		if (PortableServiceLoader.get(IConfigService.class).get("PatIDMode", "number").equals("number")) {
 			pid = StringUtils.leftPad(patient.getCode(), 6, '0');
 		} else {
 			pid = new TimeTool(patient.getDateOfBirth()).toString(TimeTool.DATE_COMPACT);
@@ -358,21 +372,21 @@ public class InvoiceService implements IInvoiceService {
 
 	@Override
 	public Optional<IAccountTransaction> getAccountTransaction(IPayment payment) {
-		IQuery<IAccountTransaction> query = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		IQuery<IAccountTransaction> query = coreModelService.getQuery(IAccountTransaction.class);
 		query.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PAYMENT, COMPARATOR.EQUALS, payment);
 		return query.executeSingleResult();
 	}
 
 	@Override
 	public void removePayment(IPayment payment) {
-		IQuery<IAccountTransaction> query = CoreModelServiceHolder.get().getQuery(IAccountTransaction.class);
+		IQuery<IAccountTransaction> query = coreModelService.getQuery(IAccountTransaction.class);
 		query.and(ModelPackage.Literals.IACCOUNT_TRANSACTION__PAYMENT, COMPARATOR.EQUALS, payment);
-		CoreModelServiceHolder.get().remove(query.execute());
+		coreModelService.remove(query.execute());
 
 		if (payment.getInvoice() != null) {
 			payment.getInvoice().addTrace(InvoiceConstants.CORRECTION, "Zahlung gelöscht");
 		}
-		CoreModelServiceHolder.get().delete(payment);
+		coreModelService.delete(payment);
 	}
 
 	@Override
@@ -380,8 +394,8 @@ public class InvoiceService implements IInvoiceService {
 		Money oldOpen = invoice.getOpenAmount();
 		InvoiceState oldInvoiceState = invoice.getState();
 
-		IPayment payment = new IPaymentBuilder(CoreModelServiceHolder.get(), invoice, amount, remark).buildAndSave();
-		new IAccountTransactionBuilder(CoreModelServiceHolder.get(), payment).buildAndSave();
+		IPayment payment = new IPaymentBuilder(coreModelService, invoice, amount, remark).buildAndSave();
+		new IAccountTransactionBuilder(coreModelService, payment).buildAndSave();
 
 		if (modifyState) {
 			Money newOffen = invoice.getOpenAmount();
@@ -393,9 +407,31 @@ public class InvoiceService implements IInvoiceService {
 				invoice.setState(InvoiceState.PARTIAL_PAYMENT);
 			}
 			if (invoice.getState() != oldInvoiceState) {
-				CoreModelServiceHolder.get().save(invoice);
+				coreModelService.save(invoice);
 			}
 		}
 		return payment;
+	}
+
+	@Override
+	public Optional<IInvoiceBillRecordInfo> getInvoiceInvoiceBillRecordInfo(String billid, String billrecordid) {
+		if (StringUtils.isNotBlank(billid) && StringUtils.isNotBlank(billrecordid)) {
+			IQuery<IInvoiceBillRecordInfo> query = coreModelService.getQuery(IInvoiceBillRecordInfo.class);
+			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLID, COMPARATOR.EQUALS, billid);
+			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLRECORDID, COMPARATOR.EQUALS, billrecordid);
+			return query.executeSingleResult();
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<IInvoiceBillRecordInfo> getInvoiceInvoiceBillRecordInfo(IInvoice invoice, IBilled billed) {
+		if (invoice != null && billed != null) {
+			IQuery<IInvoiceBillRecordInfo> query = coreModelService.getQuery(IInvoiceBillRecordInfo.class);
+			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__INVOICE, COMPARATOR.EQUALS, invoice);
+			query.and(ModelPackage.Literals.IINVOICE_BILL_RECORD_INFO__BILLED, COMPARATOR.EQUALS, billed);
+			return query.executeSingleResult();
+		}
+		return Optional.empty();
 	}
 }

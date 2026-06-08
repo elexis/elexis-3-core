@@ -260,19 +260,24 @@ public class Task extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 		ITaskDescriptor originTaskDescriptor = getTaskDescriptor();
 
 		try {
-			IUser owner;
+			String ownerId;
 			if (isTriggerSync) {
-				owner = ContextServiceHolder.get().getActiveUser().orElse(null);
+				ownerId = ContextServiceHolder.get().getActiveUser().map(IUser::getId).orElse(null);
 			} else {
-				owner = originTaskDescriptor.getOwner();
-				if (owner == null) {
+				ownerId = originTaskDescriptor.getOwner();
+				if (ownerId == null) {
 					throw new TaskException(TaskException.EXECUTION_REJECTED, "No task owner defined");
 				}
 			}
 
 			if (isThreadLocalContextService()) {
-				ContextServiceHolder.get().setActiveUser(owner);
-				IContact user_assignedContact = owner.getAssignedContact();
+				// this code only runs in Elexis RCP, so if a task will be executed there
+				// that references a non-db-local user it will not execute at the moment.
+				IUser _owner = CoreModelServiceHolder.get().load(ownerId, IUser.class)
+						.orElseThrow(() -> new TaskException(TaskException.EXECUTION_REJECTED,
+								"No db-local owner provided. Unsupported."));
+				ContextServiceHolder.get().setActiveUser(_owner);
+				IContact user_assignedContact = _owner.getAssignedContact();
 				if (user_assignedContact != null && user_assignedContact.isMandator()) {
 					IMandator mandator = CoreModelServiceHolder.get()
 							.load(user_assignedContact.getId(), IMandator.class).orElse(null);

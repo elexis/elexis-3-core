@@ -4,8 +4,8 @@ import org.osgi.service.component.annotations.Component;
 
 import ch.elexis.core.console.AbstractConsoleCommandProvider;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * Register a function with the go shell that can be used as prompt by setting

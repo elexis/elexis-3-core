@@ -1,16 +1,19 @@
 package ch.elexis.core.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IArticle;
@@ -21,19 +24,28 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class OrderService implements IOrderService {
 
+	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+	private static final int RECENT_ORDERS_YEARS = 2;
+
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
 	@Override
 	public IOrderHistoryService getHistoryService() {
@@ -176,16 +188,28 @@ public class OrderService implements IOrderService {
 	public List<IOrder> findOpenOrdersByDate(LocalDate date) {
 		long startMillis = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 		long endMillis = date.plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - 1;
-
-		IQuery<IOrderEntry> entryQuery = modelService.getQuery(IOrderEntry.class);
-		entryQuery.and(ModelPackage.Literals.IORDER_ENTRY__STATE, COMPARATOR.IN,
-				List.of(OrderEntryState.OPEN.ordinal(), OrderEntryState.ORDERED.ordinal()));
-		entryQuery.and("lastupdate", COMPARATOR.GREATER_OR_EQUAL, startMillis);
-		entryQuery.and("lastupdate", COMPARATOR.LESS_OR_EQUAL, endMillis);
-
-		List<IOrderEntry> matchingEntries = entryQuery.execute();
-		return matchingEntries.stream().map(IOrderEntry::getOrder).filter(Objects::nonNull).distinct()
+		IQuery<IOrder> orderQuery = modelService.getQuery(IOrder.class);
+		orderQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, startMillis);
+		orderQuery.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.LESS_OR_EQUAL, endMillis);
+		List<IOrder> ordersInRange = orderQuery.execute();
+		return ordersInRange.stream().filter(this::hasOpenOrOrderedEntries)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Checks if the given order contains any entries that are either OPEN or
+	 * ORDERED.
+	 *
+	 * @param order The order to check
+	 * @return true if open or ordered entries exist, false otherwise
+	 */
+	private boolean hasOpenOrOrderedEntries(IOrder order) {
+		if (order == null || order.getEntries() == null) {
+			return false;
+		}
+
+		return order.getEntries().stream().anyMatch(
+				entry -> entry.getState() == OrderEntryState.OPEN || entry.getState() == OrderEntryState.ORDERED);
 	}
 
 	@Override
@@ -223,6 +247,169 @@ public class OrderService implements IOrderService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<IOrder> getOpenOrders() {
+		return getOrders(false, true);
+	}
+
+	@Override
+	public List<IOrder> getCompletedOrders(boolean showAllYears) {
+		return getOrders(true, showAllYears);
+	}
+
+	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		if (!showAllYears) {
+			LocalDateTime timeThreshold = LocalDateTime.now().minusYears(RECENT_ORDERS_YEARS);
+			long thresholdMillis = timeThreshold.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, thresholdMillis);
+		}
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		List<IOrder> orders = query.execute();
+
+		return orders.stream().filter(order -> completed ? isCompleted(order) : !isCompleted(order))
+				.collect(Collectors.toList());
+	}
+
+	private boolean isCompleted(IOrder order) {
+		boolean isDone = order.isDone();
+		boolean hasEntries = !order.getEntries().isEmpty();
+		return isDone && hasEntries;
+	}
+
+	@Override
+	public void saveSingleDelivery(IOrderEntry entry, int partialDelivery) {
+		if (entry == null || partialDelivery == 0) {
+			return;
+		}
+
+		try {
+			int orderAmount = entry.getAmount();
+			int currentDelivered = entry.getDelivered();
+			int newDelivered = currentDelivered + partialDelivery;
+
+			if (newDelivered < 0) {
+				newDelivered = 0;
+			}
+
+			IStock stock = entry.getStock();
+			if (stock != null) {
+				updateStockEntry(stock, entry, partialDelivery);
+			}
+			getHistoryService().logDelivery(entry.getOrder(), entry, newDelivered, orderAmount);
+			entry.setDelivered(newDelivered);
+
+			if (newDelivered >= entry.getAmount()) {
+				entry.setState(OrderEntryState.DONE);
+			} else if (newDelivered > 0) {
+				entry.setState(OrderEntryState.PARTIAL_DELIVER);
+			} else {
+				entry.setState(OrderEntryState.ORDERED);
+			}
+			modelService.save(entry);
+
+			IOrder order = entry.getOrder();
+			boolean allDelivered = order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+			if (allDelivered) {
+				getHistoryService().logCompleteDelivery(order);
+			}
+
+		} catch (RuntimeException e) {
+			log.error("Failed to save partial delivery. Value: {}", partialDelivery, e);
+		}
+	}
+
+	@Override
+	public void saveAllDeliveries(List<IOrderEntry> entries) {
+		for (IOrderEntry entry : entries) {
+			int partialDelivery = entry.getAmount() - entry.getDelivered();
+			if (partialDelivery > 0) {
+				saveSingleDelivery(entry, partialDelivery);
+			}
+		}
+	}
+
+	@Override
+	public IOrder addItemsToExistingOrder(IOrder actOrder, List<IArticle> articlesToOrder,
+			@Nullable IMandator mandator) {
+		if (actOrder == null) {
+			return null;
+		}
+
+		String mandatorId = (mandator != null) ? mandator.getId() : null;
+		IStock currentStock = StockServiceHolder.get().getMandatorDefaultStock(mandatorId);
+
+		for (IArticle article : articlesToOrder) {
+			int quantity = 1;
+
+			Optional<IOrderEntry> existingEntry = actOrder.getEntries().stream().filter(
+					e -> e.getArticle().equals(article) && e.getStock() != null && e.getStock().equals(currentStock))
+					.findFirst();
+
+			if (existingEntry.isPresent()) {
+				IOrderEntry orderEntry = existingEntry.get();
+				int oldQuantity = orderEntry.getAmount();
+				int newQuantity = oldQuantity + quantity;
+				orderEntry.setAmount(newQuantity);
+				modelService.save(orderEntry);
+
+				getHistoryService().logEdit(actOrder, orderEntry, oldQuantity, newQuantity);
+			} else {
+				IOrderEntry newOrderEntry = actOrder.addEntry(article, currentStock, null, quantity);
+				getHistoryService().logChangedAmount(actOrder, newOrderEntry, 0, quantity);
+				modelService.save(newOrderEntry);
+			}
+		}
+		return actOrder;
+	}
+
+	@Override
+	public IOutputLog getOrderLogEntry(IOrder order) {
+		if (order == null) {
+			return null;
+		}
+		IQuery<IOutputLog> query = modelService.getQuery(IOutputLog.class);
+		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, order.getId());
+		return query.execute().isEmpty() ? null : query.execute().get(0);
+	}
+
+	@Override
+	public void updateStockEntry(IStock stock, IOrderEntry entry, int amountToAdd) {
+		if (stock == null || entry == null || entry.getArticle() == null) {
+			log.error("Failed to update stock entry. Invalid parameters provided.");
+			return;
+		}
+
+		Optional<IStockEntry> existingStockEntry = stock.getStockEntries().stream()
+				.filter(se -> se.getArticle().equals(entry.getArticle())).findFirst();
+
+		if (existingStockEntry.isPresent()) {
+			IStockEntry se = existingStockEntry.get();
+			int current = se.getCurrentStock();
+			int newStock = current + amountToAdd;
+			if (newStock < 0) {
+				newStock = 0;
+			}
+			se.setCurrentStock(newStock);
+			modelService.save(se);
+		} else {
+			int startStock = Math.max(0, amountToAdd);
+			IStockEntry newStockEntry = modelService.create(IStockEntry.class);
+			newStockEntry.setArticle(entry.getArticle());
+			newStockEntry.setStock(stock);
+			newStockEntry.setCurrentStock(startStock);
+			modelService.save(newStockEntry);
+		}
+	}
+
+	@Override
+	public boolean isOrderCompletelyDelivered(IOrder order) {
+		if (order == null || order.getEntries().isEmpty()) {
+			return false;
+		}
+		return order.getEntries().stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
 	}
 
 }

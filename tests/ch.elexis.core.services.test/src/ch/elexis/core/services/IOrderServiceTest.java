@@ -22,9 +22,9 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.builder.IArticleBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IOrderServiceTest extends AbstractServiceTest {
 

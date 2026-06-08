@@ -13,12 +13,16 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.Gender;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class ContactService implements IContactService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public List<IPerson> findPersonFuzzy(LocalDate dateOfBirth, Gender gender, String lastName, String firstName,

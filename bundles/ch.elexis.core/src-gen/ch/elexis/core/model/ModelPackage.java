@@ -4281,13 +4281,22 @@ public interface ModelPackage extends EPackage {
 	int IARTICLE_DEFAULT_SIGNATURE__START_DATE = DELETEABLE_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Disposal Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_COMMENT = DELETEABLE_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>IArticle Default Signature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 12;
+	int IARTICLE_DEFAULT_SIGNATURE_FEATURE_COUNT = DELETEABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
@@ -5013,22 +5022,13 @@ public interface ModelPackage extends EPackage {
 	int IROLE__SYSTEM_ROLE = IDENTIFIABLE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Assigned Rights</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IROLE__ASSIGNED_RIGHTS = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>IRole</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 2;
+	int IROLE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
@@ -5747,6 +5747,88 @@ public interface ModelPackage extends EPackage {
 	int IINVOICE_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 19;
 
 	/**
+	 * The meta object id for the '{@link ch.elexis.core.model.IInvoiceBillRecordInfo <em>IInvoice Bill Record Info</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo
+	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	int IINVOICE_BILL_RECORD_INFO = 47;
+
+	/**
+	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
+
+	/**
+	 * The feature id for the '<em><b>Invoice</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__INVOICE = IDENTIFIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Billed</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__BILLED = IDENTIFIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Billid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__BILLID = IDENTIFIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Billrecordid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__BILLRECORDID = IDENTIFIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Info</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__INFO = IDENTIFIABLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Infocode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO__INFOCODE = IDENTIFIABLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The number of structural features of the '<em>IInvoice Bill Record Info</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IINVOICE_BILL_RECORD_INFO_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 6;
+
+	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IStock <em>IStock</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5754,7 +5836,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStock()
 	 * @generated
 	 */
-	int ISTOCK = 47;
+	int ISTOCK = 48;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5863,7 +5945,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIStockEntry()
 	 * @generated
 	 */
-	int ISTOCK_ENTRY = 48;
+	int ISTOCK_ENTRY = 49;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -5963,7 +6045,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrderEntry()
 	 * @generated
 	 */
-	int IORDER_ENTRY = 49;
+	int IORDER_ENTRY = 50;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6063,7 +6145,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOutputLog()
 	 * @generated
 	 */
-	int IOUTPUT_LOG = 50;
+	int IOUTPUT_LOG = 51;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6154,7 +6236,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIOrder()
 	 * @generated
 	 */
-	int IORDER = 51;
+	int IORDER = 52;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6218,7 +6300,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIAddress()
 	 * @generated
 	 */
-	int IADDRESS = 52;
+	int IADDRESS = 53;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6327,7 +6409,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIImage()
 	 * @generated
 	 */
-	int IIMAGE = 53;
+	int IIMAGE = 54;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6346,7 +6428,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getWithAssignableId()
 	 * @generated
 	 */
-	int WITH_ASSIGNABLE_ID = 54;
+	int WITH_ASSIGNABLE_ID = 55;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IAppointment <em>IAppointment</em>}' class.
@@ -6439,7 +6521,7 @@ public interface ModelPackage extends EPackage {
 	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIPrescription()
 	 * @generated
 	 */
-	int IPRESCRIPTION = 55;
+	int IPRESCRIPTION = 56;
 
 	/**
 	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
@@ -6594,70 +6676,6 @@ public interface ModelPackage extends EPackage {
 	 */
 	int IPRESCRIPTION_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 15;
 
-
-	/**
-	 * The meta object id for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ch.elexis.core.model.IRight
-	 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
-	 * @generated
-	 */
-	int IRIGHT = 56;
-
-	/**
-	 * The feature id for the '<em><b>Lastupdate</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__LASTUPDATE = IDENTIFIABLE__LASTUPDATE;
-
-	/**
-	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__DELETED = IDENTIFIABLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__NAME = IDENTIFIABLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Localized Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__LOCALIZED_NAME = IDENTIFIABLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT__PARENT = IDENTIFIABLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>IRight</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IRIGHT_FEATURE_COUNT = IDENTIFIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.
@@ -10512,6 +10530,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getIArticleDefaultSignature_StartDate();
 
 	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment <em>Disposal Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Disposal Comment</em>'.
+	 * @see ch.elexis.core.model.IArticleDefaultSignature#getDisposalComment()
+	 * @see #getIArticleDefaultSignature()
+	 * @generated
+	 */
+	EAttribute getIArticleDefaultSignature_DisposalComment();
+
+	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10905,17 +10934,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIRole_SystemRole();
-
-	/**
-	 * Returns the meta object for the reference list '{@link ch.elexis.core.model.IRole#getAssignedRights <em>Assigned Rights</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Assigned Rights</em>'.
-	 * @see ch.elexis.core.model.IRole#getAssignedRights()
-	 * @see #getIRole()
-	 * @generated
-	 */
-	EReference getIRole_AssignedRights();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}'.
@@ -11450,6 +11468,82 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIInvoice_Attachments();
+
+	/**
+	 * Returns the meta object for class '{@link ch.elexis.core.model.IInvoiceBillRecordInfo <em>IInvoice Bill Record Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>IInvoice Bill Record Info</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo
+	 * @generated
+	 */
+	EClass getIInvoiceBillRecordInfo();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getInvoice <em>Invoice</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Invoice</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getInvoice()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EReference getIInvoiceBillRecordInfo_Invoice();
+
+	/**
+	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getBilled <em>Billed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Billed</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getBilled()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EReference getIInvoiceBillRecordInfo_Billed();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getBillid <em>Billid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Billid</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getBillid()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EAttribute getIInvoiceBillRecordInfo_Billid();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getBillrecordid <em>Billrecordid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Billrecordid</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getBillrecordid()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EAttribute getIInvoiceBillRecordInfo_Billrecordid();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getInfo <em>Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Info</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getInfo()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EAttribute getIInvoiceBillRecordInfo_Info();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoiceBillRecordInfo#getInfocode <em>Infocode</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Infocode</em>'.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo#getInfocode()
+	 * @see #getIInvoiceBillRecordInfo()
+	 * @generated
+	 */
+	EAttribute getIInvoiceBillRecordInfo_Infocode();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IInvoice#getStateDate <em>State Date</em>}'.
@@ -12189,49 +12283,6 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIPrescription_Billed();
-
-	/**
-	 * Returns the meta object for class '{@link ch.elexis.core.model.IRight <em>IRight</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IRight</em>'.
-	 * @see ch.elexis.core.model.IRight
-	 * @generated
-	 */
-	EClass getIRight();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRight#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see ch.elexis.core.model.IRight#getName()
-	 * @see #getIRight()
-	 * @generated
-	 */
-	EAttribute getIRight_Name();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ch.elexis.core.model.IRight#getLocalizedName <em>Localized Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Localized Name</em>'.
-	 * @see ch.elexis.core.model.IRight#getLocalizedName()
-	 * @see #getIRight()
-	 * @generated
-	 */
-	EAttribute getIRight_LocalizedName();
-
-	/**
-	 * Returns the meta object for the reference '{@link ch.elexis.core.model.IRight#getParent <em>Parent</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Parent</em>'.
-	 * @see ch.elexis.core.model.IRight#getParent()
-	 * @see #getIRight()
-	 * @generated
-	 */
-	EReference getIRight_Parent();
 
 	/**
 	 * Returns the meta object for class '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}'.
@@ -15195,6 +15246,14 @@ public interface ModelPackage extends EPackage {
 		EAttribute IARTICLE_DEFAULT_SIGNATURE__START_DATE = eINSTANCE.getIArticleDefaultSignature_StartDate();
 
 		/**
+		 * The meta object literal for the '<em><b>Disposal Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_COMMENT = eINSTANCE.getIArticleDefaultSignature_DisposalComment();
+
+		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IDiagnosis <em>IDiagnosis</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -15513,14 +15572,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute IROLE__SYSTEM_ROLE = eINSTANCE.getIRole_SystemRole();
-
-		/**
-		 * The meta object literal for the '<em><b>Assigned Rights</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IROLE__ASSIGNED_RIGHTS = eINSTANCE.getIRole_AssignedRights();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBlob <em>IBlob</em>}' class.
@@ -15923,6 +15974,64 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IINVOICE__ATTACHMENTS = eINSTANCE.getIInvoice_Attachments();
+
+		/**
+		 * The meta object literal for the '{@link ch.elexis.core.model.IInvoiceBillRecordInfo <em>IInvoice Bill Record Info</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ch.elexis.core.model.IInvoiceBillRecordInfo
+		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIInvoiceBillRecordInfo()
+		 * @generated
+		 */
+		EClass IINVOICE_BILL_RECORD_INFO = eINSTANCE.getIInvoiceBillRecordInfo();
+
+		/**
+		 * The meta object literal for the '<em><b>Invoice</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE_BILL_RECORD_INFO__INVOICE = eINSTANCE.getIInvoiceBillRecordInfo_Invoice();
+
+		/**
+		 * The meta object literal for the '<em><b>Billed</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IINVOICE_BILL_RECORD_INFO__BILLED = eINSTANCE.getIInvoiceBillRecordInfo_Billed();
+
+		/**
+		 * The meta object literal for the '<em><b>Billid</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE_BILL_RECORD_INFO__BILLID = eINSTANCE.getIInvoiceBillRecordInfo_Billid();
+
+		/**
+		 * The meta object literal for the '<em><b>Billrecordid</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE_BILL_RECORD_INFO__BILLRECORDID = eINSTANCE.getIInvoiceBillRecordInfo_Billrecordid();
+
+		/**
+		 * The meta object literal for the '<em><b>Info</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE_BILL_RECORD_INFO__INFO = eINSTANCE.getIInvoiceBillRecordInfo_Info();
+
+		/**
+		 * The meta object literal for the '<em><b>Infocode</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IINVOICE_BILL_RECORD_INFO__INFOCODE = eINSTANCE.getIInvoiceBillRecordInfo_Infocode();
 
 		/**
 		 * The meta object literal for the '<em><b>State Date</b></em>' attribute feature.
@@ -16485,40 +16594,6 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference IPRESCRIPTION__BILLED = eINSTANCE.getIPrescription_Billed();
-
-		/**
-		 * The meta object literal for the '{@link ch.elexis.core.model.IRight <em>IRight</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ch.elexis.core.model.IRight
-		 * @see ch.elexis.core.model.impl.ModelPackageImpl#getIRight()
-		 * @generated
-		 */
-		EClass IRIGHT = eINSTANCE.getIRight();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IRIGHT__NAME = eINSTANCE.getIRight_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Localized Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IRIGHT__LOCALIZED_NAME = eINSTANCE.getIRight_LocalizedName();
-
-		/**
-		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IRIGHT__PARENT = eINSTANCE.getIRight_Parent();
 
 		/**
 		 * The meta object literal for the '{@link ch.elexis.core.model.IBillingSystem <em>IBilling System</em>}' class.

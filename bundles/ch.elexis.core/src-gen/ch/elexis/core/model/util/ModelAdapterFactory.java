@@ -264,6 +264,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createIInvoiceAdapter();
 			}
 			@Override
+			public Adapter caseIInvoiceBillRecordInfo(IInvoiceBillRecordInfo object) {
+				return createIInvoiceBillRecordInfoAdapter();
+			}
+			@Override
 			public Adapter caseIStock(IStock object) {
 				return createIStockAdapter();
 			}
@@ -298,10 +302,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseIPrescription(IPrescription object) {
 				return createIPrescriptionAdapter();
-			}
-			@Override
-			public Adapter caseIRight(IRight object) {
-				return createIRightAdapter();
 			}
 			@Override
 			public Adapter caseIBillingSystem(IBillingSystem object) {
@@ -1050,6 +1050,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IInvoiceBillRecordInfo <em>IInvoice Bill Record Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ch.elexis.core.model.IInvoiceBillRecordInfo
+	 * @generated
+	 */
+	public Adapter createIInvoiceBillRecordInfoAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IStock <em>IStock</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1172,20 +1186,6 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIPrescriptionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link ch.elexis.core.model.IRight <em>IRight</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see ch.elexis.core.model.IRight
-	 * @generated
-	 */
-	public Adapter createIRightAdapter() {
 		return null;
 	}
 

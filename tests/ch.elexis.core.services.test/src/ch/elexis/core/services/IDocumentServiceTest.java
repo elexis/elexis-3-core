@@ -27,13 +27,13 @@ import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.internal.dto.CategoryDocumentDTO;
 import ch.elexis.core.test.context.TestContext;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IDocumentServiceTest extends AbstractServiceTest {
 

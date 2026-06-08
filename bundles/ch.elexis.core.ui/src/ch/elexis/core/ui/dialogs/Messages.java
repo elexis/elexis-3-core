@@ -232,6 +232,8 @@ public class Messages {
 	public static String SelectFallDialog_selectFall = ch.elexis.core.l10n.Messages.SelectFallDialog_selectFall;
 	public static String DiagnoseSelektorDialog_Title = ch.elexis.core.l10n.Messages.DiagnoseSelektorDialog_Title;
 	public static String DiagnoseSelektorDialog_Message = ch.elexis.core.l10n.Messages.DiagnoseSelektorDialog_Message;
+	public static String ServiceSelektorDialog_Title = ch.elexis.core.l10n.Messages.ServiceSelektorDialog_Title;
+	public static String ServiceSelektorDialog_Message = ch.elexis.core.l10n.Messages.ServiceSelektorDialog_Message;
 	public static String LocalDocumentsDialog_abortall = ch.elexis.core.l10n.Messages.LocalDocumentsDialog_abortall;
 
 	public static String LocalDocumentsDialog_abortquestion = ch.elexis.core.l10n.Messages.LocalDocumentsDialog_abortquestion;

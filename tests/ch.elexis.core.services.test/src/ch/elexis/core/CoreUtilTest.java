@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import ch.elexis.core.utils.DBConnectionUtil;
+import ch.elexis.core.rcp.utils.DBConnectionUtil;
 
 public class CoreUtilTest {
 

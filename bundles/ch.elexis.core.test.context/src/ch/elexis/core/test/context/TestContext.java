@@ -8,9 +8,9 @@ import java.util.function.Supplier;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IUserService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class TestContext implements IContext {
 

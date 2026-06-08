@@ -3,6 +3,8 @@ package ch.elexis.core.ui.e4.dialog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -18,8 +20,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -52,6 +56,9 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	private String _title;
 	private String _assertOkMessageTemplate;
 	private DialogTrayWithSelectionListener dialogTray;
+	public static final int CREATE_NEW_ID = IDialogConstants.CLIENT_ID + 1;
+	private boolean showCreateNewButton = false;
+	private String finalSearchText;
 
 	/**
 	 * @wbp.parser.constructor
@@ -160,6 +167,12 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			if (dialogTray != null) {
 				dialogTray.selectionChanged(selectedContact);
 			}
+
+			Button okButton = getButton(IDialogConstants.OK_ID);
+			if (okButton != null) {
+				okButton.setEnabled(selectedContact != null);
+			}
+
 		});
 
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerContacts, SWT.NONE);
@@ -196,12 +209,50 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		return area;
 	}
 
+	private ResultsSupplier currentSupplier;
+
 	private void refresh() {
 		String _text = text.getText().trim();
 		if (StringUtils.isNotBlank(_text) && _text.length() > 2) {
-			String[] originalPatterns = _text.split("\\s+");
-			List<? extends IContact> allMatches = executeDatabaseSearch(originalPatterns[0], _text);
+			if (currentSupplier != null) {
+				currentSupplier.cancel();
+			}
+			currentSupplier = new ResultsSupplier(_text);
+			CompletableFuture.supplyAsync(currentSupplier).thenAccept((list) -> {
+				if (list != null) {
+					Display.getDefault().asyncExec(() -> {
+						tableViewerContacts.setInput(list);
+					});
+				}
+			});
+		} else {
+			tableViewerContacts.setInput(Collections.emptyList());
+		}
+	}
+
+	private class ResultsSupplier implements Supplier<List<? extends IContact>> {
+
+		private boolean cancel;
+		private String text;
+
+		public ResultsSupplier(String text) {
+			this.text = text;
+		}
+
+		@Override
+		public List<? extends IContact> get() {
+			String[] originalPatterns = text.split("\\s+");
+			if (cancel) {
+				return null;
+			}
+			List<? extends IContact> allMatches = executeDatabaseSearch(originalPatterns[0], text);
+			if (cancel) {
+				return null;
+			}
 			List<? extends IContact> bestMatches = filterResults(new ArrayList<>(allMatches), originalPatterns);
+			if (cancel) {
+				return null;
+			}
 			List<IContact> finalDisplayList = new ArrayList<>();
 			finalDisplayList.addAll(bestMatches);
 			for (IContact contact : allMatches) {
@@ -209,10 +260,11 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 					finalDisplayList.add(contact);
 				}
 			}
-			tableViewerContacts.setInput(finalDisplayList);
+			return cancel ? null : finalDisplayList;
+		}
 
-		} else {
-			tableViewerContacts.setInput(Collections.emptyList());
+		public void cancel() {
+			cancel = true;
 		}
 	}
 
@@ -221,8 +273,8 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 
 		String sqlSearchTerm = fullSearchText.toLowerCase().replace("ae", "%").replace("oe", "%").replace("ue", "%");
 		String sqlFirstWord = sqlSearchTerm.split("\\s+")[0];
-
-		if (sqlFirstWord.matches("[a-zA-Z0-9-%_]+")) {
+		boolean possibleDate = possibleDate(firstWord);
+		if (!possibleDate) {
 			String value = "%" + sqlFirstWord + "%";
 			query.startGroup();
 			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, value, true);
@@ -231,7 +283,7 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 			query.or(ModelPackage.Literals.ICONTACT__CODE, COMPARATOR.LIKE, value, true);
 			query.andJoinGroups();
 			return query.execute();
-		} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate(firstWord)) {
+		} else if (IPerson.class.isAssignableFrom(queryClass) && possibleDate) {
 			query.and(ModelPackage.Literals.IPERSON__DATE_OF_BIRTH, COMPARATOR.EQUALS,
 					new TimeTool(firstWord).toLocalDate(), true);
 			return query.execute();
@@ -277,8 +329,26 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		if (showCreateNewButton) {
+			createButton(parent, CREATE_NEW_ID, "Neu erstellen", false);
+		}
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		getButton(IDialogConstants.OK_ID).setEnabled(selectedContact != null);
+	}
+
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if (text != null && !text.isDisposed()) {
+			finalSearchText = text.getText();
+		}
+
+		if (buttonId == CREATE_NEW_ID) {
+			setReturnCode(CREATE_NEW_ID);
+			close();
+		} else {
+			super.buttonPressed(buttonId);
+		}
 	}
 
 	public IContact getSelectedContact() {
@@ -309,4 +379,17 @@ public class IContactSelectorDialog extends TitleAreaDialog {
 		this.initialInput = initialInput;
 	}
 
+	public void setShowCreateNewButton(boolean show) {
+		this.showCreateNewButton = show;
+	}
+
+	public String getSearchText() {
+		if (finalSearchText != null) {
+			return finalSearchText;
+		}
+		if (text != null && !text.isDisposed()) {
+			return text.getText();
+		}
+		return initialSearchText;
+	}
 }

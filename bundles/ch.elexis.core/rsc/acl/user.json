@@ -61,7 +61,6 @@
 		"ch.elexis.core.model.IRelatedContact": "rv",
 		"ch.elexis.core.model.IReminder": "cruvd",
 		"ch.elexis.core.model.IReminderResponsibleLink": "cruvd",
-		"ch.elexis.core.model.IRight": "rv",
 		"ch.elexis.core.model.IRole": "rv",
 		"ch.elexis.core.model.IUser": "rv",
 		"ch.elexis.core.model.IUserConfig": "cruv",

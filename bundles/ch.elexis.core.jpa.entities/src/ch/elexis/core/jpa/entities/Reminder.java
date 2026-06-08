@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.ReminderPriorityConverter;
 import ch.elexis.core.jpa.entities.converter.ReminderProcessStatusConverter;
@@ -33,7 +31,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "reminders")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 public class Reminder extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String ALL_RESPONSIBLE = "ALL";

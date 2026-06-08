@@ -1,26 +1,14 @@
 package ch.elexis.core.services.holder;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IStoreToStringService;
 
-@Component
 public class StoreToStringServiceHolder {
 
-	private static IStoreToStringService storeToStringService;
-
-	@Reference
-	public void setStoreToStringService(IStoreToStringService modelService) {
-		StoreToStringServiceHolder.storeToStringService = modelService;
-	}
 
 	public static IStoreToStringService get() {
-		if (storeToStringService == null) {
-			throw new IllegalStateException("No IModelService available");
-		}
-		return storeToStringService;
+		return PortableServiceLoader.get(IStoreToStringService.class);
 	}
 
 	public static String getStoreToString(Object object) {

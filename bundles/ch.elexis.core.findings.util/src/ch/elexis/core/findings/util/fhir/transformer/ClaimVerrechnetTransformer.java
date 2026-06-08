@@ -41,22 +41,29 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IModelService;
 import ch.rgw.tools.Result;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<IBilled>> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IBillingService billingService;
+	IBillingService billingService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private ICodeElementService codeElementService;
+	ICodeElementService codeElementService;
 
 	@Override
 	public Optional<Claim> getFhirObject(List<IBilled> localObject, SummaryEnum summaryEnum, Set<Include> includes) {

@@ -1,12 +1,6 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
-import com.google.gson.annotations.JsonAdapter;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.gson.AbstractEntityWithIdJsonAdapter;
-import ch.elexis.core.jpa.entities.gson.RawJsonMapStringAdapter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.Column;
@@ -14,14 +8,12 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
 @EntityListeners(EntityWithIdListener.class)
 @Table(name = "TASKDESCRIPTOR")
-@Cache(expiry = 15000)
 public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
@@ -42,9 +34,8 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 64)
 	protected String referenceId;
 
-	@JsonAdapter(AbstractEntityWithIdJsonAdapter.class)
-	@JoinColumn
-	protected User owner;
+	@Column(length = 25)
+	protected String owner_id;
 
 	@Column
 	protected int notificationType = 0;
@@ -52,7 +43,6 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column(length = 64)
 	protected String runnableId;
 
-	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String runContext;
@@ -60,7 +50,6 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 	@Column
 	protected int triggerType = 0;
 
-	@JsonAdapter(RawJsonMapStringAdapter.class)
 	@Column
 	@Lob
 	protected String triggerParameters;
@@ -148,12 +137,12 @@ public class TaskDescriptor extends AbstractEntityWithId implements EntityWithId
 		this.referenceId = referenceId;
 	}
 
-	public User getOwner() {
-		return owner;
+	public String getOwner() {
+		return owner_id;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setOwner(String owner) {
+		this.owner_id = owner;
 	}
 
 	@Override

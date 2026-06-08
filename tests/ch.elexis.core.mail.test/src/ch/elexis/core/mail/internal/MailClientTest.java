@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +17,11 @@ import org.junit.Test;
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import jakarta.mail.MessagingException;
 
 public class MailClientTest {
@@ -33,7 +32,7 @@ public class MailClientTest {
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
-		client = OsgiServiceUtil.getService(IMailClient.class).get();
+		client = PortableServiceLoader.get(IMailClient.class);
 	}
 
 	@Before

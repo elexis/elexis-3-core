@@ -26,8 +26,8 @@ import org.eclipse.osgi.framework.console.CommandProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 /**
  * This abstract class eases implementation of console commands. In order to use

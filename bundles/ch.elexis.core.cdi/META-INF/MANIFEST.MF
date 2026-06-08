@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Portable Service Loader
+Bundle-SymbolicName: ch.elexis.core.cdi
+Bundle-Version: 3.13.0.qualifier
+Export-Package: ch.elexis.core.cdi
+Import-Package: jakarta.inject;version="2.0.1"
+Require-Bundle: ch.elexis.core;bundle-version="3.13.0"
+Service-Component: OSGI-INF/ch.elexis.core.cdi.PortableServiceLoader.xml
+Bundle-Vendor: elexis.ch
+Automatic-Module-Name: ch.elexis.core.cdi
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21

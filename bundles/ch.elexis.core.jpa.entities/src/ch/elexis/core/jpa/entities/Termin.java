@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.time.LocalDate;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -20,7 +18,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "AGNTERMINE")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "Termin.dayfrom.dayto", query = "SELECT te FROM Termin te WHERE te.deleted = false AND te.tag >= :dayfrom AND te.tag <= :dayto")
 public class Termin extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
@@ -70,7 +67,6 @@ public class Termin extends AbstractEntityWithId implements EntityWithId, Entity
 
 	@Column
 	private int palmId;
-
 
 	@Column(length = 10)
 	@Convert(converter = IntegerStringConverter.class)

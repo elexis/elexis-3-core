@@ -18,12 +18,16 @@ import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class CoverageTextPlaceholderResolver implements ITextPlaceholderResolver {
 
+	@Inject
 	@Reference
-	private ICoverageService coverageService;
+	ICoverageService coverageService;
 
 	@Override
 	public String getSupportedType() {

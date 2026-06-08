@@ -97,7 +97,7 @@ public class TaskServiceTest {
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 
 		taskDescriptor.setSingleton(true);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskService.setActive(taskDescriptor, true);
 
 		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
@@ -111,7 +111,7 @@ public class TaskServiceTest {
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 
 		taskDescriptor.setSingleton(true);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskDescriptor.setRunContext(Collections.singletonMap(ReturnParameter.MARKER_WARN, Boolean.TRUE));
 		taskService.setActive(taskDescriptor, true);
 		ITask task = taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
@@ -129,7 +129,7 @@ public class TaskServiceTest {
 
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 		taskDescriptor.setSingleton(true);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskService.setActive(taskDescriptor, true);
 		taskService.saveTaskDescriptor(taskDescriptor);
 
@@ -156,7 +156,7 @@ public class TaskServiceTest {
 		createFile.toFile().deleteOnExit();
 
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskDescriptor.setTriggerType(TaskTriggerType.CRON);
 		taskDescriptor.setRunContextParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
 				createFile.toString());
@@ -186,7 +186,7 @@ public class TaskServiceTest {
 	@Test
 	public void triggerSysEvent_LabItemCreate() throws TaskException, InterruptedException {
 		taskDescriptor = taskService.createTaskDescriptor(rwcLogContext);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskDescriptor.setTriggerType(TaskTriggerType.SYSTEM_EVENT);
 		taskDescriptor.setTriggerParameter("topic", ElexisEventTopics.PERSISTENCE_EVENT_CREATE);
 		taskDescriptor.setTriggerParameter(ElexisEventTopics.PROPKEY_CLASS, "ch.elexis.data.Patient");
@@ -210,7 +210,7 @@ public class TaskServiceTest {
 	public void logOnlyLatestExecution() throws TaskException {
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 		taskDescriptor.setSingleton(true);
-		taskDescriptor.setOwner(owner);
+		taskDescriptor.setOwner(owner.getId());
 		taskDescriptor.setRunContext(
 				Collections.singletonMap(IIdentifiedRunnable.ReturnParameter.MARKER_DO_NOT_PERSIST, Boolean.TRUE));
 		taskService.setActive(taskDescriptor, true);

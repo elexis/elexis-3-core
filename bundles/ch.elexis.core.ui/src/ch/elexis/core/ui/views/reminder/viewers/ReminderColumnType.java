@@ -38,8 +38,10 @@ public enum ReminderColumnType {
 
 	public enum ReminderColorType {
 
-		IN_PROGRESS("IN_PROGRESS", "FFFFFF"), DUE("DUE", "FFFFFF"), OVERDUE("OVERDUE", "FFFFFF"),
-		OPEN("OPEN", "FFFFFF"), CLOSED("CLOSED", "FFFFFF");
+		IN_PROGRESS("IN_PROGRESS", "FFFFFF"), OPEN("OPEN", "FFFFFF"), CLOSED("CLOSED", "FFFFFF"),
+		DUE("DUE", "FFFFFF"), OVERDUE("OVERDUE", "FFFFFF"),
+
+		FUTURE("FUTURE", "FFFFFF"), NO_DATE("NO_DATE", "FFFFFF");
 
 		private final String key;
 		private final String defaultRGB;
@@ -48,7 +50,6 @@ public enum ReminderColumnType {
 			this.key = key;
 			this.defaultRGB = defaultRGB;
 		}
-
 
 		public Color getColor() {
 			String prefPath = Preferences.USR_REMINDERCOLORS + "/" + key;

@@ -69,8 +69,7 @@ public class BillingProcessor {
 	}
 
 	private void billArticleDirectly(IArticle selectedArticle) {
-		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter,
-				getSellingAmount(selectedArticle));
+		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
 		if (billResult.isOK()) {
 			IBilled billed = billResult.get();
 			CoreModelServiceHolder.get().refresh(actEncounter, true);
@@ -79,15 +78,6 @@ public class BillingProcessor {
 		} else {
 			ResultDialog.show(billResult);
 		}
-	}
-
-	private double getSellingAmount(IArticle article) {
-		double pkgSize = Math.abs(article.getPackageSize());
-		double vkUnits = article.getSellingSize();
-		if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
-			return 1.0 * (vkUnits / pkgSize);
-		}
-		return 1.0;
 	}
 
 	private void handleArticleBillingDialog(IArticle selectedArticle) {
@@ -118,10 +108,19 @@ public class BillingProcessor {
 				IPrescription prescription = prescriptionOpt.get();
 				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 				prescription.setRemark(signature.getComment());
+				String disposalComment = signature.getDisposalComment();
+				if (disposalComment != null && !disposalComment.isEmpty()) {
+					prescription.setDisposalComment(disposalComment);
+				}
 				prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
 						billed.getId());
-				prescription.setEntryType(signature.getDisposalType());
+				prescription.setEntryType(signature.getMedicationType());
 				prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
+				if (signature.getEndDate() != null) {
+					prescription.setDateTo(signature.getEndDate().atStartOfDay());
+				} else {
+					prescription.setDateTo(null);
+				}
 				CoreModelServiceHolder.get().save(prescription);
 			}
 		}
@@ -170,6 +169,7 @@ public class BillingProcessor {
 					prescription.setDosageInstruction(lastPrescription.getDosageInstruction());
 	            prescription.setRemark(lastPrescription.getRemark());
 	            prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
+					prescription.setDateTo(lastPrescription.getDateTo());
 	            CoreModelServiceHolder.get().save(prescription);
 	        }));
 	}

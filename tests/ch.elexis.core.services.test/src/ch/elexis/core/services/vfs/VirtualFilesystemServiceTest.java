@@ -10,10 +10,10 @@ import java.util.Date;
 import org.junit.Test;
 
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemServiceTest {
 

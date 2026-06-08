@@ -23,12 +23,16 @@ import ch.elexis.core.model.BillingSystem;
 import ch.elexis.core.model.FallConstants;
 import ch.elexis.core.model.IBillingSystem;
 import ch.elexis.core.model.ch.BillingLaw;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class BillingSystemService implements IBillingSystemService {
 
+	@Inject
 	@Reference
-	public IConfigService configService;
+	IConfigService configService;
 
 	private LoadingCache<String, BillingSystem> cache;
 

@@ -3,20 +3,40 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<artifactId>ch.elexis.core.jpa.entities</artifactId>
-	<packaging>eclipse-plugin</packaging>
-	<version>3.13.0-SNAPSHOT</version>
-
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.bundles</artifactId>
 		<version>3.13.0-SNAPSHOT</version>
 	</parent>
 
+	<artifactId>ch.elexis.core.jpa.entities</artifactId>
+	<packaging>eclipse-plugin</packaging>
+	<version>3.13.0-SNAPSHOT</version>
+	<name>[bundle] Elexis Core JPA</name>
+	<organization>
+		<name>elexis.info</name>
+	</organization>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>eclipse-classpath-add-source-6</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -33,7 +53,8 @@
 								-Aeclipselink.persistencexml=${basedir}/META-INF/persistence.xml
 							</compilerArguments>
 							<processors>
-								<processor>org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor>
+								<processor>
+									org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor>
 							</processors>
 							<outputDirectory>${basedir}/src-gen</outputDirectory>
 						</configuration>
@@ -42,7 +63,8 @@
 				<dependencies>
 					<dependency>
 						<groupId>org.eclipse.persistence</groupId>
-						<artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+						<artifactId>
+							org.eclipse.persistence.jpa.modelgen.processor</artifactId>
 						<version>4.0.5</version>
 					</dependency>
 				</dependencies>
@@ -58,7 +80,8 @@
 							<goal>weave</goal>
 						</goals>
 						<configuration>
-							<persistenceXMLLocation>../../META-INF/persistence.xml</persistenceXMLLocation>
+							<persistenceXMLLocation>
+								../../META-INF/persistence.xml</persistenceXMLLocation>
 							<logLevel>FINE</logLevel>
 						</configuration>
 					</execution>
@@ -74,7 +97,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!-- This plugin's configuration is used to store Eclipse m2e settings 
+				<!-- This plugin's configuration is used to store Eclipse m2e
+				settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -116,4 +140,22 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.rgw.utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class OtherModelUtil {
 

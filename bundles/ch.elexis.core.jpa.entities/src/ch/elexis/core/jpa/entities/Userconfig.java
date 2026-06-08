@@ -1,9 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.OptimisticLocking;
-import org.eclipse.persistence.annotations.OptimisticLockingType;
-
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,9 +14,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "userconfig")
 @EntityListeners(EntityWithIdListener.class)
-@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = { @Column(name = "LASTUPDATE") })
 @IdClass(UserconfigId.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "Userconfig.ownerid.param", query = "SELECT uc FROM Userconfig uc WHERE uc.ownerId = :ownerid AND uc.param = :param", hints = {
 		@QueryHint(name = "eclipselink.query-results-cache", value = "true"),
 		@QueryHint(name = "eclipselink.query-results-cache.size", value = "500"),

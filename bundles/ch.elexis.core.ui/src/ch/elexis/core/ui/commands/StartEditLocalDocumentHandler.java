@@ -33,7 +33,7 @@ import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.ILocalDocumentService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.AcquireLockUi;
 import ch.elexis.core.ui.locks.ILockHandler;

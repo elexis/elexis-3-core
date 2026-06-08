@@ -127,7 +127,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_E_Mail, Kontakt.FLD_E_MAIL, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Mail2, Kontakt.FLD_E_MAIL2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_www, Kontakt.FLD_WEBSITE, Typ.STRING, null),
-			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null),
+			new InputData(Messages.KontaktBlatt_shortLabel, Kontakt.FLD_SHORT_LABEL, Typ.STRING, null).alwaysEdit(),
 			new InputData(Messages.Core_Description_1, Kontakt.FLD_NAME1, Typ.STRING, null), // helper field
 			// (non-visible) but needs a
 			// resolvable value to avoid
@@ -162,6 +162,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					KontaktExtDialog dlg = new KontaktExtDialog(UiDesk.getTopShell(),
 							NoPoUtil.loadAsIdentifiable((Kontakt) po, IContact.class).orElse(null),
 							extFlds.toArray(new String[0]));
+					dlg.setEditable(LocalLockServiceHolder.get().isLockedLocal(po));
 					dlg.open();
 
 				}
@@ -568,6 +569,11 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	@Override
 	public void setUnlocked(boolean unlocked) {
 		afDetails.setUnlocked(unlocked);
+		for (Button button : bTypes) {
+			if (button != null && !button.isDisposed()) {
+				button.setEnabled(unlocked);
+			}
+		}
 	}
 
 	@Override

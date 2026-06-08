@@ -22,19 +22,25 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class EncounterCoreIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
-	private IEncounterEncounterAttributeMapper attributeMapper;
+	private IEncounterEncounterAttributeMapper attributeMapper = new IEncounterEncounterAttributeMapper();
+
 	private IEncounterHelper encounterHelper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
-		attributeMapper = new IEncounterEncounterAttributeMapper();
 		encounterHelper = new IEncounterHelper(coreModelService, null);
 	}
 
@@ -59,9 +65,9 @@ public class EncounterCoreIEncounterTransformer implements IFhirTransformer<Enco
 
 	@Override
 	public Optional<IEncounter> updateLocalObject(Encounter fhirObject, IEncounter localObject) {
-			attributeMapper.fhirToElexis(fhirObject, localObject);
-			coreModelService.save(localObject);
-			return Optional.of(localObject);
+		attributeMapper.fhirToElexis(fhirObject, localObject);
+		coreModelService.save(localObject);
+		return Optional.of(localObject);
 	}
 
 	@Override

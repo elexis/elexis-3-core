@@ -55,6 +55,7 @@ import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IHistory;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -76,7 +77,6 @@ import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
-import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IService;
 import ch.elexis.core.model.ISickCertificate;
@@ -437,6 +437,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass iInvoiceBillRecordInfoEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass iStockEClass = null;
 
 	/**
@@ -501,13 +508,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass iPrescriptionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass iRightEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2694,6 +2694,16 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getIArticleDefaultSignature_DisposalComment() {
+		return (EAttribute)iArticleDefaultSignatureEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getIDiagnosis() {
 		return iDiagnosisEClass;
 	}
@@ -3056,16 +3066,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EAttribute getIRole_SystemRole() {
 		return (EAttribute)iRoleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getIRole_AssignedRights() {
-		return (EReference)iRoleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3556,6 +3556,76 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EReference getIInvoice_Attachments() {
 		return (EReference)iInvoiceEClass.getEStructuralFeatures().get(17);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getIInvoiceBillRecordInfo() {
+		return iInvoiceBillRecordInfoEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoiceBillRecordInfo_Invoice() {
+		return (EReference)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getIInvoiceBillRecordInfo_Billed() {
+		return (EReference)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Billid() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Billrecordid() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Info() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getIInvoiceBillRecordInfo_Infocode() {
+		return (EAttribute)iInvoiceBillRecordInfoEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -4426,46 +4496,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	@Override
 	public EReference getIPrescription_Billed() {
 		return (EReference)iPrescriptionEClass.getEStructuralFeatures().get(13);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getIRight() {
-		return iRightEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getIRight_Name() {
-		return (EAttribute)iRightEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getIRight_LocalizedName() {
-		return (EAttribute)iRightEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getIRight_Parent() {
-		return (EReference)iRightEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -5707,6 +5737,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_TYPE);
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__END_DATE);
 		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__START_DATE);
+		createEAttribute(iArticleDefaultSignatureEClass, IARTICLE_DEFAULT_SIGNATURE__DISPOSAL_COMMENT);
 
 		iDiagnosisEClass = createEClass(IDIAGNOSIS);
 		createEAttribute(iDiagnosisEClass, IDIAGNOSIS__DESCRIPTION);
@@ -5756,7 +5787,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		iRoleEClass = createEClass(IROLE);
 		createEAttribute(iRoleEClass, IROLE__SYSTEM_ROLE);
-		createEReference(iRoleEClass, IROLE__ASSIGNED_RIGHTS);
 
 		iBlobEClass = createEClass(IBLOB);
 		createEAttribute(iBlobEClass, IBLOB__CONTENT);
@@ -5812,6 +5842,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iInvoiceEClass, IINVOICE__PAYMENTS);
 		createEReference(iInvoiceEClass, IINVOICE__TRANSACTIONS);
 		createEReference(iInvoiceEClass, IINVOICE__ATTACHMENTS);
+
+		iInvoiceBillRecordInfoEClass = createEClass(IINVOICE_BILL_RECORD_INFO);
+		createEReference(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INVOICE);
+		createEReference(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLED);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLID);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__BILLRECORDID);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INFO);
+		createEAttribute(iInvoiceBillRecordInfoEClass, IINVOICE_BILL_RECORD_INFO__INFOCODE);
 
 		iStockEClass = createEClass(ISTOCK);
 		createEAttribute(iStockEClass, ISTOCK__CODE);
@@ -5888,11 +5926,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		createEReference(iPrescriptionEClass, IPRESCRIPTION__PRESCRIPTOR);
 		createEReference(iPrescriptionEClass, IPRESCRIPTION__RECIPE);
 		createEReference(iPrescriptionEClass, IPRESCRIPTION__BILLED);
-
-		iRightEClass = createEClass(IRIGHT);
-		createEAttribute(iRightEClass, IRIGHT__NAME);
-		createEAttribute(iRightEClass, IRIGHT__LOCALIZED_NAME);
-		createEReference(iRightEClass, IRIGHT__PARENT);
 
 		iBillingSystemEClass = createEClass(IBILLING_SYSTEM);
 		createEAttribute(iBillingSystemEClass, IBILLING_SYSTEM__NAME);
@@ -6145,6 +6178,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iInvoiceEClass.getESuperTypes().add(this.getIdentifiable());
 		iInvoiceEClass.getESuperTypes().add(this.getDeleteable());
 		iInvoiceEClass.getESuperTypes().add(this.getWithExtInfo());
+		iInvoiceBillRecordInfoEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getIdentifiable());
 		iStockEClass.getESuperTypes().add(this.getDeleteable());
 		iStockEClass.getESuperTypes().add(this.getWithAssignableId());
@@ -6165,9 +6199,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		iPrescriptionEClass.getESuperTypes().add(this.getIdentifiable());
 		iPrescriptionEClass.getESuperTypes().add(this.getDeleteable());
 		iPrescriptionEClass.getESuperTypes().add(this.getWithExtInfo());
-		iRightEClass.getESuperTypes().add(this.getIdentifiable());
-		iRightEClass.getESuperTypes().add(this.getDeleteable());
-		iRightEClass.getESuperTypes().add(this.getWithAssignableId());
 		iRecipeEClass.getESuperTypes().add(this.getIdentifiable());
 		iRecipeEClass.getESuperTypes().add(this.getDeleteable());
 		iBlobSecondaryEClass.getESuperTypes().add(this.getIBlob());
@@ -6665,6 +6696,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEAttribute(getIArticleDefaultSignature_DisposalType(), theTypesPackage.getEntryType(), "disposalType", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticleDefaultSignature_EndDate(), theTypesPackage.getLocalDate(), "endDate", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIArticleDefaultSignature_StartDate(), theTypesPackage.getLocalDate(), "startDate", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIArticleDefaultSignature_DisposalComment(), ecorePackage.getEString(), "disposalComment", null, 0, 1, IArticleDefaultSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(iArticleDefaultSignatureEClass, null, "setArticle", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIArticle(), "article", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -6740,7 +6772,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(iRoleEClass, IRole.class, "IRole", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIRole_SystemRole(), ecorePackage.getEBoolean(), "systemRole", null, 0, 1, IRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIRole_AssignedRights(), this.getIRight(), null, "assignedRights", null, 0, -1, IRole.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBlobEClass, IBlob.class, "IBlob", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBlob_Content(), ecorePackage.getEByteArray(), "content", null, 0, 1, IBlob.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -6866,6 +6897,14 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		op = addEOperation(iInvoiceEClass, null, "removeAttachment", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIDocument(), "attachment", 1, 1, IS_UNIQUE, IS_ORDERED);
 
+		initEClass(iInvoiceBillRecordInfoEClass, IInvoiceBillRecordInfo.class, "IInvoiceBillRecordInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getIInvoiceBillRecordInfo_Invoice(), this.getIInvoice(), null, "invoice", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIInvoiceBillRecordInfo_Billed(), this.getIBilled(), null, "billed", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Billid(), ecorePackage.getEString(), "billid", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Billrecordid(), ecorePackage.getEString(), "billrecordid", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Info(), ecorePackage.getEString(), "info", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIInvoiceBillRecordInfo_Infocode(), ecorePackage.getEString(), "infocode", null, 0, 1, IInvoiceBillRecordInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(iStockEClass, IStock.class, "IStock", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIStock_Code(), ecorePackage.getEString(), "code", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIStock_DriverUuid(), ecorePackage.getEString(), "driverUuid", null, 0, 1, IStock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -6960,11 +6999,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		initEReference(getIPrescription_Prescriptor(), this.getIContact(), null, "prescriptor", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIPrescription_Recipe(), this.getIRecipe(), null, "recipe", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIPrescription_Billed(), this.getIBilled(), null, "billed", null, 0, 1, IPrescription.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(iRightEClass, IRight.class, "IRight", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIRight_Name(), ecorePackage.getEString(), "name", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIRight_LocalizedName(), ecorePackage.getEString(), "localizedName", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getIRight_Parent(), this.getIRight(), null, "parent", null, 0, 1, IRight.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(iBillingSystemEClass, IBillingSystem.class, "IBillingSystem", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIBillingSystem_Name(), ecorePackage.getEString(), "name", null, 0, 1, IBillingSystem.class, !IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

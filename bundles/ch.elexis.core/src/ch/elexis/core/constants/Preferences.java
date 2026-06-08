@@ -169,8 +169,10 @@ public class Preferences {
 	public static final String USR_SERVICES_DIAGNOSES_DIAGNOSE = "servicediagnose/diagnose";
 	public static final String USR_SERVICES_DIAGNOSES_CODES = "servicediagnose/codes";
 	public static final String USR_AGENDAFONT = "anwender/agendafont"; //$NON-NLS-1$
-	public static final String USR_REMINDER_COLUMNS_VISIBLE = "usr/reminder/columns/visible";
-	public static final String USR_REMINDER_COLUMNS_HIDDEN = "usr/reminder/columns/hidden";
+	public static final String USR_REMINDER_COLUMNS_VISIBLE = "usr/reminder/columns/visible"; //$NON-NLS-1$
+	public static final String USR_REMINDER_CUSTOM_COLOR_PREFIX = "CUSTOM_COLOR_"; //$NON-NLS-1$
+	public static final String USR_REMINDER_CUSTOM_STATUSES_GLOBAL = "reminder.custom.statuses.global"; //$NON-NLS-1$
+	public static final String USR_REMINDER_COLUMNS_HIDDEN = "usr/reminder/columns/hidden"; //$NON-NLS-1$
 
 	// Menu item "lock perspectives" (GlobalActions.fixLayoutAction)
 	public static final String USR_FIX_LAYOUT = "perspectives/fix_layout"; //$NON-NLS-1$
@@ -206,6 +208,8 @@ public class Preferences {
 	public static final int INVENTORY_ORDER_TRIGGER_DEFAULT = INVENTORY_ORDER_TRIGGER_BELOW;
 	public static final String INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER = "inventory/order_exclude_already_ordered_items"; //$NON-NLS-1$
 	public static final boolean INVENTORY_ORDER_EXCLUDE_ALREADY_ORDERED_ITEMS_ON_NEXT_ORDER_DEFAULT = false;
+	public static final String INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER = "inventory/active_mandator_stock_auto_order"; //$NON-NLS-1$
+	public static final boolean INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER_DEFAULT = false;
 
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$

@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -17,7 +15,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "net_medshare_percentile_checklist_question")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 public class PercentileChecklistQuestion extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

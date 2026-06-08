@@ -29,22 +29,30 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.CoreUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ImmunizationVaccinationTransformer implements IFhirTransformer<Immunization, IVaccination> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IContextService contextService;
+	IContextService contextService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private ICodeElementService codeElemetService;
+	ICodeElementService codeElemetService;
 
 	private IVaccinationImmunizationAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		attributeMapper = new IVaccinationImmunizationAttributeMapper(modelService);

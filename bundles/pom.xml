@@ -15,14 +15,24 @@
 		<version>3.13.0-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<jandex-plugin.version>3.2.7</jandex-plugin.version>
+		<org.apache.poi.version>5.5.1</org.apache.poi.version>
+		<docx4j.version>11.5.11</docx4j.version>
+		<jcifs-ng.version>2.1.10</jcifs-ng.version>
+		<hapi-fhir.version>8.6.7</hapi-fhir.version>
+	</properties>
+
 	<modules>
 		<module>ch.elexis.core</module>
+		<module>ch.elexis.core.cdi</module>
 		<module>ch.elexis.core.rcp</module>
 		<module>ch.elexis.core.test</module>
 		<module>ch.elexis.core.test.context</module>
 		<module>ch.elexis.core.test.logging</module>
 		<module>ch.elexis.core.coding</module>
 		<module>ch.elexis.core.services</module>
+		<module>ch.elexis.core.services.rcp</module>
 		<module>ch.elexis.core.model</module>
 		<module>ch.elexis.core.jpa</module>
 		<module>ch.elexis.core.jpa.ui</module>
@@ -59,6 +69,7 @@
 		<module>ch.elexis.core.spotlight</module>
 		<module>ch.elexis.core.spotlight.ui</module>
 		<module>ch.elexis.core.tasks</module>
+		<module>ch.elexis.core.tasks.model</module>
 		<module>ch.elexis.core.mediorder.mail.task</module>
 		<module>ch.elexis.core.ui.tasks</module>
 		<module>ch.elexis.core.ui.contacts</module>

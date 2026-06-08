@@ -3,7 +3,7 @@ package ch.elexis.core.data.propertyTester;
 import org.eclipse.core.expressions.PropertyTester;
 
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 
 public class ElexisPropertyTester extends PropertyTester {
 

@@ -32,16 +32,25 @@ import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.exceptions.AccessControlException;
+import ch.elexis.core.jpa.entities.Config;
 import ch.elexis.core.jpa.entities.DBLog;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
+import ch.elexis.core.jpa.entities.Invoice;
+import ch.elexis.core.jpa.entities.Kontakt;
+import ch.elexis.core.jpa.entities.LabOrder;
 import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
 import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
 import ch.elexis.core.jpa.model.util.OtherModelUtil;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.ILabOrder;
+import ch.elexis.core.model.IPerson;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
@@ -49,9 +58,9 @@ import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.Query;
 import jakarta.persistence.Table;
 import jakarta.persistence.metamodel.EntityType;
@@ -241,7 +250,9 @@ public abstract class AbstractModelService implements IModelService {
 				boolean newlyCreatedObject = (dbObject.get().getLastupdate() == null);
 				EntityManager em = getEntityManager(false);
 				try {
+					injectGeneratedValue(identifiable, dbObject.get());
 					em.getTransaction().begin();
+
 					EntityWithId merged = em.merge(dbObject.get());
 					em.getTransaction().commit();
 					// update model adapters and post events
@@ -605,13 +616,74 @@ public abstract class AbstractModelService implements IModelService {
 		return accessControlService;
 	}
 
+	/**
+	 * Adds a generated value if required. E.g. the patient number or the invoice
+	 * number ...
+	 * 
+	 * @param identifiable
+	 * @param entityWithId
+	 */
+	private void injectGeneratedValue(Identifiable identifiable, EntityWithId entityWithId) {
+		if (identifiable instanceof IPerson person) {
+			// an IPerson might be promoted, thus we check for IPerson
+			// an IPatient is automtically an instance of IPerson
+			if (person.isPatient() && person.getCode() == null) {
+				long patientNr = getAndIncrementNumeric("PatientNummer", 0);
+				((Kontakt) entityWithId).setCode(Long.toString(patientNr));
+			}
+		} else if (identifiable instanceof ILabOrder labOrder) {
+			// HACK value is originally stored in LabOrder#VERSION
+			// to not collide we start with 10.000.000
+			if (labOrder.getOrderId() == null) {
+				long orderNumber = getAndIncrementNumeric("LaborderNummer", 10000000);
+				((LabOrder) entityWithId).setOrderid(Long.toString(orderNumber));
+			}
+		} else if (identifiable instanceof IInvoice invoice) {
+			if (invoice.getNumber() == null) {
+				long invoiceNumber = getAndIncrementNumeric("RechnungsNr", 1);
+				((Invoice) entityWithId).setNumber(Long.toString(invoiceNumber));
+			}
+		}
+	}
+
+	/**
+	 * Generates an increasing number within a transaction
+	 * 
+	 * @param id           the id of the number, for patient number e.g.
+	 *                     "PatientNummer"
+	 * @param initialValue the value to start with if none found, e.g. "0"
+	 * @return the next number in the sequence
+	 * @since 3.13 to replace JPA KontaktEntityEventListener, ...
+	 */
+	private long getAndIncrementNumeric(String id, final long initialValue) {
+		try (EntityManager entityManager = getEntityManager(false)) {
+			entityManager.getTransaction().begin();
+			Config byId = entityManager.find(Config.class, id);
+			if (byId == null) {
+				byId = new Config();
+				byId.setId(id);
+				byId.setWert(Long.toString(initialValue));
+			} else {
+				entityManager.lock(byId, LockModeType.PESSIMISTIC_WRITE);
+			}
+			Long valueOf = Long.valueOf(byId.getWert());
+			long sum = Long.sum(valueOf, 1l);
+			byId.setWert(Long.toString(sum));
+			entityManager.merge(byId);
+			entityManager.getTransaction().commit();
+			return sum;
+		}
+	}
+
 	protected boolean evaluateRightNoException(Class<?> clazz, Right right) {
 		boolean ret = CoreUtil.isTestMode();
 		if (getAccessControlService() != null) {
 			ret = getAccessControlService().evaluate(EvACE.of(clazz, right));
 			if (!ret) {
-				String message = "(ACL " + System.currentTimeMillis() + ") User has no right [" + right
-						+ "] for class [" + clazz.getName() + "]";
+				String userId = ContextServiceHolder.get().getActiveUser().map(IUser::getId).orElse("?");
+				String privileged = getAccessControlService().isPrivileged() ? "P" : "";
+				String message = "(ACL " + System.currentTimeMillis() + ") +" + privileged + "  User " + userId
+						+ " has no right [" + right + "] for class [" + clazz.getName() + "]";
 				if (ElexisSystemPropertyConstants.VERBOSE_ACL_NOTIFICATION) {
 					fullNotify(message, new Throwable());
 				} else {

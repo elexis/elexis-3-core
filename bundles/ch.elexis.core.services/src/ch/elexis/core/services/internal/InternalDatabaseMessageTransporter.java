@@ -8,24 +8,28 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMessage;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IMessageTransporter;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.status.ObjectStatus;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * Transport the message via the Elexis internal (database-based) message
  * system.
  */
+@Dependent
 @Component
 public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public IStatus send(TransientMessage message) {
@@ -48,7 +52,7 @@ public class InternalDatabaseMessageTransporter implements IMessageTransporter {
 		IMessage idbMessage = prepareMessage(receiver, message);
 
 		try {
-			CoreModelServiceHolder.get().save(idbMessage);
+			PortableServiceLoader.getCoreModelService().save(idbMessage);
 			return ObjectStatus.OK_STATUS(idbMessage.getId(), null);
 		} catch (IllegalStateException e) {
 			return ObjectStatus.ERROR_STATUS("Could not save message", e);

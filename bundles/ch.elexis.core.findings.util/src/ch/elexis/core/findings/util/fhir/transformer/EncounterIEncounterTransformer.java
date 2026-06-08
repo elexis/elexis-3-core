@@ -24,31 +24,38 @@ import ch.elexis.core.findings.util.fhir.transformer.mapper.IEncounterEncounterA
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class EncounterIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	private IModelService findingsModelService;
+	IModelService findingsModelService;
+
+	@Inject
+	@Reference
+	IFindingsService findingsService;
 
 	@Reference
-	private IFindingsService findingsService;
+	IMigratorService migratorService;
 
-	@Reference
-	private IMigratorService migratorService;
+	private FindingsContentHelper contentHelper = new FindingsContentHelper();
+	private IEncounterEncounterAttributeMapper attributeMapper = new IEncounterEncounterAttributeMapper();
 
-	private FindingsContentHelper contentHelper;
 	private IEncounterHelper encounterHelper;
-	private IEncounterEncounterAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
-		contentHelper = new FindingsContentHelper();
 		encounterHelper = new IEncounterHelper(coreModelService, findingsModelService);
-		attributeMapper = new IEncounterEncounterAttributeMapper();
 	}
 
 	@Override

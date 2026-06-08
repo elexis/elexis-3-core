@@ -1,6 +1,6 @@
 package ch.elexis.core.services;
 
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class LocalConfigService {
 

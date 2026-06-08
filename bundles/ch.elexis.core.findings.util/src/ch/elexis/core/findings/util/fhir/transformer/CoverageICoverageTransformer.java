@@ -20,15 +20,21 @@ import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class CoverageICoverageTransformer implements IFhirTransformer<Coverage, ICoverage> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	private ICoverageCoverageAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		attributeMapper = new ICoverageCoverageAttributeMapper(coreModelService);

@@ -7,8 +7,8 @@ import java.util.Date;
 import org.junit.Test;
 
 import ch.elexis.core.eenv.AccessToken;
-import ch.elexis.core.services.oauth2.AccessTokenUtil;
-import ch.elexis.core.services.oauth2.KeycloakAccessTokenResponse;
+import ch.elexis.core.services.rcp.oauth2.AccessTokenUtil;
+import ch.elexis.core.services.rcp.oauth2.KeycloakAccessTokenResponse;
 
 public class KeycloakAccessTokenTest {
 

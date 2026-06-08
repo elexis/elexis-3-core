@@ -15,7 +15,9 @@ import ch.elexis.core.tasks.model.ITaskService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
+@Singleton
 @Component(immediate = true)
 public class MailClientRunnableFactory implements IIdentifiedRunnableFactory {
 

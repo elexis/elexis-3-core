@@ -11,13 +11,14 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.importer.div.importers.IPersistenceHandler;
-import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.Result.SEVERITY;
 
@@ -33,7 +34,7 @@ public class MultiFileParser implements IMultiFileParser {
 	public Result<Object> importFromFile(File hl7File, IFileImportStrategyFactory importStrategyFactory,
 			HL7Parser hl7parser, IPersistenceHandler persistenceHandler) {
 		try {
-			IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(hl7File);
+			IVirtualFilesystemHandle fileHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(hl7File);
 			return importFromHandle(fileHandle, importStrategyFactory, hl7parser, persistenceHandler);
 		} catch (IOException e) {
 			return new Result<>(SEVERITY.ERROR, null);
@@ -44,7 +45,7 @@ public class MultiFileParser implements IMultiFileParser {
 	public Result<Object> importFromDirectory(File directory, IFileImportStrategyFactory importStrategyFactory,
 			HL7Parser hl7parser, IPersistenceHandler persistenceHandler) {
 		try {
-			IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(directory);
+			IVirtualFilesystemHandle fileHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(directory);
 			return importFromHandle(fileHandle, importStrategyFactory, hl7parser, persistenceHandler);
 		} catch (IOException e) {
 			return new Result<>(e);

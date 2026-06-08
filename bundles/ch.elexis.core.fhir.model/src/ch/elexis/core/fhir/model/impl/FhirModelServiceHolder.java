@@ -1,7 +1,7 @@
 package ch.elexis.core.fhir.model.impl;
 
 import ch.elexis.core.fhir.model.IFhirModelService;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class FhirModelServiceHolder {
 
