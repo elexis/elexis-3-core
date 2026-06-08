@@ -138,6 +138,7 @@ public class BillingService implements IBillingService {
 		}
 		IBillable beforeAdjust = billable;
 		PortableServiceLoader.getCoreModelService().refresh(encounter, true);
+		amount = getSellingAmount(billable, amount);
 		logger.info("Billing [" + amount + "] of [" + billable + "] on [" + encounter + "]");
 		for (IBillableAdjuster iBillableAdjuster : billableAdjusters) {
 			billable = iBillableAdjuster.adjust(billable, encounter);
@@ -360,5 +361,25 @@ public class BillingService implements IBillingService {
 				stockService.performSingleReturn(art, (int) difference, mandatorId);
 			}
 		}
+	}
+
+	/**
+	 * Adjust the default amount to a selling amount or return provided default
+	 * amount if not needed. For example needed for articles with packages size not
+	 * equals selling size.
+	 * 
+	 * @param billable
+	 * @param defaultAmount
+	 * @return
+	 */
+	private double getSellingAmount(IBillable billable, double defaultAmount) {
+		if(billable instanceof IArticle) {
+			double pkgSize = Math.abs(((IArticle)billable).getPackageSize());
+			double vkUnits = ((IArticle)billable).getSellingSize();
+			if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
+				return defaultAmount * (vkUnits / pkgSize);
+			}
+		}
+		return defaultAmount;
 	}
 }
