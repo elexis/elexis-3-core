@@ -216,7 +216,11 @@ public class BillingProcessor {
 	}
 
 	private void billCodeElement(IBillable element, List<String> notOkResults) {
-		Result<?> billResult = BillingServiceHolder.get().bill(element, actEncounter, 1.0);
+		double amount = 1.0;
+		if (element instanceof IArticle) {
+			amount = getSellingAmount((IArticle) element);
+		}
+		Result<?> billResult = BillingServiceHolder.get().bill(element, actEncounter, amount);
 		if (!billResult.isOK()) {
 			String message = element.getCode() + " - " + ResultDialog.getResultMessage(billResult);
 			if (!notOkResults.contains(message)) {
