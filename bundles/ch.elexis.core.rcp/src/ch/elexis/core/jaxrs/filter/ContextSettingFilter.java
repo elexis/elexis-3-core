@@ -95,7 +95,7 @@ public class ContextSettingFilter implements Filter {
 				HashSet<String> rolesSet = new HashSet<>(roles.size());
 				roles.forEach(e -> rolesSet.add(e.getAsString()));
 
-				ch.elexis.core.eenv.AccessToken keycloakAccessToken = new ch.elexis.core.eenv.AccessToken(null,
+				ch.elexis.core.eenv.AccessToken keycloakAccessToken = new ch.elexis.core.eenv.AccessToken(null, null,
 						TimeUtil.toDate(exp), preferredUsername, null, null);
 
 				accessControlService.doPrivileged(() -> {
