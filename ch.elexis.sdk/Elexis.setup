@@ -222,27 +222,6 @@
     <description>Elexis 3 Base</description>
   </setupTask>
   <setupTask
-      xsi:type="git:GitCloneTask"
-      id="server.git.clone"
-      remoteURI="elexis/elexis-server">
-    <annotation
-        source="http://www.eclipse.org/oomph/setup/InducedChoices">
-      <detail
-          key="inherit">
-        <value>github.remoteURIs</value>
-      </detail>
-      <detail
-          key="label">
-        <value>${scope.project.label} Github repository</value>
-      </detail>
-      <detail
-          key="target">
-        <value>remoteURI</value>
-      </detail>
-    </annotation>
-    <description>Elexis Server</description>
-  </setupTask>
-  <setupTask
       xsi:type="setup.p2:P2Task">
     <requirement
         name="org.eclipse.cbi.targetplatform.feature.feature.group"/>
@@ -253,9 +232,6 @@
     <requirement
         name="org.eclipse.wb.rcp.feature.feature.group"/>
     <requirement
-        name="net.jeeeyul.pdetools.feature.feature.group"
-        filter=""/>
-    <requirement
         name="com.essiembre.eclipse.rbe.feature.group"/>
     <requirement
         name="at.medbits.tools.launchtopom.feature.feature.group"/>
@@ -265,8 +241,6 @@
         url="https://download.eclipse.org/technology/m2e/releases/latest/"/>
     <repository
         url="https://download.eclipse.org/cbi/updates/tpd/nightly/latest/"/>
-    <repository
-        url="https://eclipse.jeeeyul.net/update/"/>
     <repository
         url="https://download.medelexis.ch/public/at.medbits.tools.launchtopom/"/>
     <repository
@@ -286,12 +260,6 @@
       <predicate
           xsi:type="predicates:RepositoryPredicate"
           project="at.medevit.ch.artikelstamm.elexis.common"/>
-    </workingSet>
-    <workingSet
-        name="elexis-server">
-      <predicate
-          xsi:type="predicates:RepositoryPredicate"
-          project="es.core.connector.elexis"/>
     </workingSet>
   </setupTask>
   <setupTask
