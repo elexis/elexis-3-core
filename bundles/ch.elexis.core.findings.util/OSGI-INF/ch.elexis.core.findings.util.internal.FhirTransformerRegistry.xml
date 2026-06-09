@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry"/>
    </service>
-   <reference cardinality="0..n" field="transformers" field-collection-type="service" interface="ch.elexis.core.findings.util.fhir.IFhirTransformer" name="transformers" policy="dynamic" policy-option="greedy"/>
+   <reference cardinality="0..n" field="transformers" interface="ch.elexis.core.findings.util.fhir.IFhirTransformer" name="transformers" policy="dynamic" policy-option="greedy"/>
    <implementation class="ch.elexis.core.findings.util.internal.FhirTransformerRegistry"/>
 </scr:component>
