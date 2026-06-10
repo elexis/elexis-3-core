@@ -235,6 +235,8 @@
         name="com.essiembre.eclipse.rbe.feature.group"/>
     <requirement
         name="at.medbits.tools.launchtopom.feature.feature.group"/>
+    <requirement
+        name="org.eclipse.emf.ecoretools.design.feature.feature.group"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
@@ -270,8 +272,6 @@
     <sourceLocator
         rootFolder="${base.git.clone.location}"
         locateNestedProjects="true"/>
-    <sourceLocator
-        rootFolder="${server.git.clone.location}"/>
   </setupTask>
   <setupTask
       xsi:type="pde:TargetPlatformTask"
