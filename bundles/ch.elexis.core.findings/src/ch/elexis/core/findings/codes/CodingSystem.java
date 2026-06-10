@@ -3,9 +3,10 @@ package ch.elexis.core.findings.codes;
 import ch.elexis.core.fhir.FhirConstants;
 
 public enum CodingSystem {
-	ELEXIS_TARMED_CODESYSTEM("www.elexis.info/billing/tarmed"), 
+	ELEXIS_TARMED_CODESYSTEM("www.elexis.info/billing/tarmed"),
+	ELEXIS_TARDOC_CODESYSTEM("www.elexis.info/billing/tardoc"),
 	ELEXIS_LOCAL_CODESYSTEM("www.elexis.info/coding/local"),
-	ELEXIS_COVERAGE_TYPE("www.elexis.info/coverage/type"), 
+	ELEXIS_COVERAGE_TYPE("www.elexis.info/coverage/type"),
 	ELEXIS_COVERAGE_REASON("www.elexis.info/coverage/reason"),
 	ELEXIS_COVERAGE_UVG_ACCIDENTDATE("www.elexis.info/coverage/uvg/accidentdate"),
 	ELEXIS_DIAGNOSE_TESSINERCODE("www.elexis.info/diagnose/tessinercode"),
@@ -25,7 +26,7 @@ public enum CodingSystem {
 	 * The reason for the work incapacity, see {@link FhirConstants#DE_EAU_SYSTEM}
 	 */
 	ELEXIS_AUF_REASON("www.elexis.info/auf/reason"),
-	
+
 	ICD_DE_CODESYSTEM("http://hl7.org/fhir/sid/icd-10-de"), ICPC2_CODESYSTEM("http://hl7.org/fhir/sid/icpc-2"),
 
 	LOINC_CODESYSTEM("http://loinc.org");
