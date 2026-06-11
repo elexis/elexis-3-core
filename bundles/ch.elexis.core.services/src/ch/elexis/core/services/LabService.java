@@ -42,6 +42,7 @@ public class LabService implements ILabService {
 	IModelService modelService;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
+	private static final String VERSIONID = "VERSION";
 
 	@Override
 	public Result<String> evaluate(ILabResult labResult) {
@@ -217,6 +218,36 @@ public class LabService implements ILabService {
 		}
 
 		return results;
+	}
+
+
+
+	@Override
+	public synchronized String getNextOrderId() {
+		Optional<ILabOrder> version = modelService.load(VERSIONID, ILabOrder.class);
+		if (version.isEmpty()) {
+			log.warn("Could not load VERSION record from laborder table, returning -1");
+			return "-1";
+		}
+		String orderId = version.get().getOrderId();
+		String nextOrderId = "-1";
+		if (orderId != null && !orderId.isEmpty()) {
+			int intNextOrderId = Integer.parseInt(orderId) + 1;
+			// make sure it is still free
+			while (hasOrderWithId(Integer.toString(intNextOrderId))) {
+				intNextOrderId++;
+			}
+			nextOrderId = Integer.toString(intNextOrderId);
+		}
+		version.get().setOrderId(nextOrderId);
+		modelService.save(version.get());
+		return nextOrderId;
+	}
+
+	private boolean hasOrderWithId(String orderId) {
+		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
+		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS, orderId);
+		return query.executeSingleResult().isPresent();
 	}
 
 }

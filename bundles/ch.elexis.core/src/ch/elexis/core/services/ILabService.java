@@ -52,4 +52,12 @@ public interface ILabService {
 	 * @since 3.8
 	 */
 	public List<ILabOrder> getLabOrdersInSameOrderIdGroup(ILabOrder labOrder, boolean nonEmptyResultsOnly);
+
+	/**
+	 * Returns the next available sequential order ID by finding the highest
+	 * existing numeric order ID and incrementing it by one.
+	 *
+	 * @return the next order ID as a string
+	 */
+	public String getNextOrderId();
 }
