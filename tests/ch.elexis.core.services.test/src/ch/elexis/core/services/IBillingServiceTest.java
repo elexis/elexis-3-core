@@ -200,13 +200,13 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		Result<IBilled> billed = billingService.bill(customArticle_2, encounter, 1.0);
 		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		double billed_amount = billed.get().getAmount();
-		double billed_price = billed.get().getPrice().getCents();
+		double billed_total = billed.get().getTotal().getCents();
 
 		coreModelService.remove(billed.get());
 		coreModelService.remove(customArticle_2);
 
-		assertEquals(1, billed_amount, 0.1);
-		assertEquals(new Money(635).getCents(), billed_price, 0.1);
+		assertEquals(0.1, billed_amount, 0.1);
+		assertEquals(new Money(635).getCents(), billed_total, 0.1);
 	}
 
 }
