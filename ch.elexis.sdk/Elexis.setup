@@ -236,7 +236,7 @@
     <requirement
         name="at.medbits.tools.launchtopom.feature.feature.group"/>
     <requirement
-        name="org.eclipse.emf.ecoretools.design.feature.feature.group"/>
+        name="org.eclipse.emf.ecoretools.design.feature.group"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
