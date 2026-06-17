@@ -112,10 +112,6 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(name = "persAnamnese", columnDefinition = "BLOB")
 	protected String personalAnamnese;
 
-	@Convert(converter = ElexisDBCompressedStringConverter.class)
-	@Column(name = "SozAnamnese", columnDefinition = "BLOB")
-	protected String sozAnamnese;
-
 	@Column(length = 30)
 	protected String fax;
 
@@ -543,14 +539,6 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 
 	public void setPersonalAnamnese(String personalAnamnese) {
 		this.personalAnamnese = personalAnamnese;
-	}
-
-	public String getSozAnamnese() {
-		return sozAnamnese;
-	}
-
-	public void setSozAnamnese(String sozAnamnese) {
-		this.sozAnamnese = sozAnamnese;
 	}
 
 	@Override

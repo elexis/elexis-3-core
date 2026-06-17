@@ -48,8 +48,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 
 	private BooleanFieldEditor persAnamneseStructFieldEditor;
 
-	private BooleanFieldEditor socAnamneseStructFieldEditor;
-
 	private BooleanFieldEditor riskFactorStructFieldEditor;
 
 	private BooleanFieldEditor famAnamneseStructFieldEditor;
@@ -103,10 +101,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				"Persönliche Anamnese strukturiert anzeigen", getFieldEditorParent());
 		addField(persAnamneseStructFieldEditor);
 
-		socAnamneseStructFieldEditor = new BooleanFieldEditor(IMigratorService.SOCANAM_SETTINGS_USE_STRUCTURED,
-				"Sozialanamnese strukturiert anzeigen", getFieldEditorParent());
-		addField(socAnamneseStructFieldEditor);
-
 		riskFactorStructFieldEditor = new BooleanFieldEditor(IMigratorService.RISKFACTOR_SETTINGS_USE_STRUCTURED,
 				"Risiken strukturiert anzeigen", getFieldEditorParent());
 		addField(riskFactorStructFieldEditor);
@@ -136,8 +130,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 				diagPropertyChange(event);
 			} else if (event.getSource() == persAnamneseStructFieldEditor) {
 				persAnamnesePropertyChange(event);
-			} else if (event.getSource() == socAnamneseStructFieldEditor) {
-				socAnamnesePropertyChange(event);
 			} else if (event.getSource() == riskFactorStructFieldEditor) {
 				riskFactorPropertyChange(event);
 			} else if (event.getSource() == famAnamneseStructFieldEditor) {
@@ -567,93 +559,6 @@ public class FindingsSettings extends FieldEditorPreferencePage implements IWork
 					@Override
 					public void run() {
 						allergyIntoleranceStructFieldEditor.load();
-					}
-				});
-			}
-		}
-	}
-
-	private void socAnamnesePropertyChange(PropertyChangeEvent event) {
-		if (event.getNewValue().equals(Boolean.TRUE)) {
-			if (MessageDialog.openConfirm(getShell(), "Strukturierte Sozialanamnese",
-					"Bisher erfasste Sozialanamnese Einträge werden automatisch in strukturierte umgewandelt.\n"
-							+ "Wollen Sie wirklich von nun an strukturierte Sozialanamnese Einträge verwenden?")) {
-				ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(getShell());
-				try {
-					progressDialog.run(true, true, new IRunnableWithProgress() {
-						@Override
-						public void run(IProgressMonitor monitor)
-								throws InvocationTargetException, InterruptedException {
-							Query<Patient> query = new Query<>(Patient.class);
-							List<Patient> patients = query.execute();
-							monitor.beginTask("Strukturierte Sozialanamnese erzeugen", patients.size());
-							IFindingsService findingsService = FindingsServiceComponent.getService();
-							IMigratorService migratorService = MigratorServiceComponent.getService();
-							for (Patient patient : patients) {
-								String socAnamesis = patient.getSocialAnamnese();
-								List<IFinding> existing = getExistingSocAnamnese(patient.getId(), findingsService);
-								// only migrate if there is a soc anamnesis and no structured soc anamnesis
-								// already there
-								if (socAnamesis != null && !socAnamesis.isEmpty() && existing.isEmpty()) {
-									migratorService.migratePatientsFindings(patient.getId(), IObservation.class,
-											new TransientCoding(ObservationCode.ANAM_SOCIAL));
-								}
-								monitor.worked(1);
-								if (monitor.isCanceled()) {
-									break;
-								}
-							}
-							monitor.done();
-							Display.getDefault().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									MessageDialog.openInformation(getShell(), "Strukturierte Sozialanamnese",
-											"Strukturierte Sozialanamnese erfolgreich erzeugt. Bitte starten sie Elexis neu um mit den strukturierten Sozialanamnese Einträgen zu arbeiten.");
-								}
-							});
-						}
-
-						private List<IFinding> getExistingSocAnamnese(String patientId,
-								IFindingsService findingsService) {
-							return findingsService.getPatientsFindings(patientId, IObservation.class).stream()
-									.filter(oberservation -> {
-										if (oberservation.getCategory() == ObservationCategory.SOCIALHISTORY) {
-											for (ICoding code : oberservation.getCoding()) {
-												if (ObservationCode.ANAM_SOCIAL.isSame(code)) {
-													return true;
-												}
-											}
-										}
-										return false;
-									}).collect(Collectors.toList());
-						};
-					});
-				} catch (InvocationTargetException | InterruptedException e) {
-					MessageDialog.openError(getShell(), "Sozialanamnese konvertieren",
-							"Fehler beim erzeugen der strukturierten Sozialanamnese Einträgen.");
-					getLogger().error("Error creating structured anamnesis social", e);
-				}
-			} else {
-				getPreferenceStore().setValue(IMigratorService.SOCANAM_SETTINGS_USE_STRUCTURED, false);
-				getShell().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						socAnamneseStructFieldEditor.load();
-					}
-				});
-			}
-		} else {
-			if (MessageDialog.openConfirm(getShell(), "Strukturierte Sozialanamnese",
-					"Bisher erfasste strukturierte Sozialanamnese werden nicht in Text umgewandelt.\n"
-							+ "Wollen Sie wirklich von nun an Text Sozialanamnese verwenden?")) {
-				MessageDialog.openInformation(getShell(), "Text Sozialanamnese",
-						"Bitte starten sie Elexis neu um mit der Text Sozialanamnese zu arbeiten.");
-			} else {
-				getPreferenceStore().setValue(IMigratorService.SOCANAM_SETTINGS_USE_STRUCTURED, true);
-				getShell().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						socAnamneseStructFieldEditor.load();
 					}
 				});
 			}

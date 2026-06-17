@@ -68,16 +68,6 @@ public class Patient extends Person implements IPatient {
 	}
 
 	@Override
-	public String getSocialAnamnese() {
-		return getEntity().getSozAnamnese();
-	}
-
-	@Override
-	public void setSocialAnamnese(String value) {
-		getEntityMarkDirty().setSozAnamnese(value);
-	}
-
-	@Override
 	public String getAllergies() {
 		return getEntity().getAllergies();
 	}

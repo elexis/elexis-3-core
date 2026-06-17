@@ -232,7 +232,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_socialAnamnesisLbl,
+			Messages.Patientenblatt2_persAnamnesisLbl,
 			Messages.Patientenblatt2_famAnamnesisLbl,
 			Messages.Allergies,
 			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
@@ -240,7 +240,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private ArrayList<String> dfExpandable = new ArrayList<>(
 			Arrays.asList(ModelPackage.Literals.IPATIENT__DIAGNOSEN.getName(),
 					ModelPackage.Literals.IPATIENT__PERSONAL_ANAMNESE.getName(),
-					ModelPackage.Literals.IPATIENT__SOCIAL_ANAMNESE.getName(),
 					ModelPackage.Literals.IPATIENT__FAMILY_ANAMNESE.getName(),
 					ModelPackage.Literals.IPATIENT__ALLERGIES.getName(), ModelPackage.Literals.IPATIENT__RISK.getName(),
 					ModelPackage.Literals.ICONTACT__COMMENT.getName()));
@@ -783,12 +782,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 						dfExpandable.remove(ModelPackage.Literals.IPATIENT__DIAGNOSEN.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("PersonalAnamnesisViewContribution")) { //$NON-NLS-1$
-						lbExpandable.remove(Messages.Patientenblatt2_socialAnamnesisLbl);
-						dfExpandable.remove(ModelPackage.Literals.IPATIENT__PERSONAL_ANAMNESE.getName()); // $NON-NLS-1$
-					}
-					if (ivc.getClass().getSimpleName().equals("SocialAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_persAnamnesisLbl);
-						dfExpandable.remove(ModelPackage.Literals.IPATIENT__SOCIAL_ANAMNESE.getName()); // $NON-NLS-1$
+						dfExpandable.remove(ModelPackage.Literals.IPATIENT__PERSONAL_ANAMNESE.getName()); // $NON-NLS-1$
 					}
 					if (ivc.getClass().getSimpleName().equals("FamilyAnamnesisViewContribution")) { //$NON-NLS-1$
 						lbExpandable.remove(Messages.Patientenblatt2_famAnamnesisLbl);

@@ -111,7 +111,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/risk"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/familyAnamnese"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/personalAnamnese"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/socialAnamnese"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//IPatient/allergies"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference model.ecore#//IPatient/coverages"/>
       <genOperations ecoreOperation="model.ecore#//IPatient/getPatientNr"/>

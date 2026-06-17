@@ -100,18 +100,6 @@ public class FhirPatient extends AbstractFhirModelAdapter<Patient> implements IP
 	}
 
 	@Override
-	public String getSocialAnamnese() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setSocialAnamnese(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public String getAllergies() {
 		// TODO Auto-generated method stub
 		return null;
