@@ -1158,9 +1158,13 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					}
 					double oldAnzahl = billed.getAmount();
 					double difference = changeAnzahl - oldAnzahl;
-					IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
-					if (!status.isOK()) {
-						StatusDialog.show(status);
+					if (isChangedSellingAmount(billable)) {
+						BillingServiceHolder.get().changeAmount(billed, changeAnzahl);
+					} else {
+						IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
+						if (!status.isOK()) {
+							StatusDialog.show(status);
+						}
 					}
 					if (difference < 0) {
 						int itemsToRemove = (int) (-difference);
@@ -1182,6 +1186,15 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			}
 			ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IPrescription.class);
 		}
+	}
+
+	private boolean isChangedSellingAmount(IBillable billable) {
+		if (billable instanceof IArticle) {
+			double pkgSize = Math.abs(((IArticle) billable).getPackageSize());
+			double vkUnits = ((IArticle) billable).getSellingSize();
+			return ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits));
+		}
+		return false;
 	}
 
 	@Override
