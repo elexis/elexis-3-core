@@ -73,6 +73,19 @@ If you want a complete development environment, try
 This is the recommended (and the only supported) setup of an development environment
 for Elexis developers.
 
+### Building using devenv.sh
+
+For details consult [deven.sh](https://devenv.sh/). Resuming [getting started](https://devenv.sh/getting-started/) it should be sufficient to run these steps. Tested the multi-user installation under debian bookworm.
+
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    nix profile install --accept-flake-config nixpkgs#devenv --extra-experimental-features flakes --extra-experimental-features nix-command
+    # install direnv, eg. debian sudo apt install direnv
+    direnv allow
+
+Now you can test (build, running unit tests, building products) using the `devenv test` command.
+
+Or use use any maven command e.g `mvn -V clean verify  -Dtycho.localArtifacts=ignore -DskipTests` to just compile all code.
+
 ### Eclipse IDE-Preferences
 
 We recommend (and if you want to submit patches, you have to respect)
