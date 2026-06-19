@@ -83,11 +83,11 @@ public class AttachmentsUtil {
 		return null;
 	}
 
-	private static String getFileName(IImage iImage) {
+	public static String getFileName(IImage iImage) {
 		return iImage.getTitle();
 	}
 
-	private static String getFileName(IDocument iDocument) {
+	public static String getFileName(IDocument iDocument) {
 		StringBuilder ret = new StringBuilder();
 		ret.append(iDocument.getPatient().getCode()).append("_");
 		ret.append(iDocument.getPatient().getLastName()).append(StringUtils.SPACE);
