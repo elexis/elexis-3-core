@@ -42,7 +42,7 @@ public class TestExecutionContextIdentifiedRunnableFactory implements IIdentifie
 
 	@Override
 	public List<IIdentifiedRunnable> getProvidedRunnables() {
-		return Arrays.asList(new TestExecutionContextRunnable(contextService));
+		return Arrays.asList(new TestExecutionContextRunnable(contextService), new TestBlockingRunnable());
 	}
 
 }
