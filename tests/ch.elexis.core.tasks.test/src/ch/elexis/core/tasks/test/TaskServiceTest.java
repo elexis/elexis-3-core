@@ -43,6 +43,7 @@ import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
+import ch.elexis.core.tasks.test.runnable.TestBlockingRunnable;
 import ch.elexis.core.tasks.test.runnable.TestExecutionContextRunnable;
 import ch.elexis.core.types.Gender;
 
@@ -125,13 +126,15 @@ public class TaskServiceTest {
 	}
 
 	@Test(expected = TaskException.class)
-	public void reloadOnTaskDescriptorChangeDeleted() throws TaskException {
+	public void reloadOnTaskDescriptorChangeDeleted() throws TaskException, InterruptedException {
 
 		taskDescriptor = taskDescriptorOf(TestExecutionContextRunnable.ID);
 		taskDescriptor.setSingleton(true);
 		taskDescriptor.setOwner(owner.getId());
 		taskService.setActive(taskDescriptor, true);
 		taskService.saveTaskDescriptor(taskDescriptor);
+
+		Thread.sleep(50);
 
 		// side-lined modification of the taskdescriptor
 		String SQL = "UPDATE TASKDESCRIPTOR SET DELETED = '1', LASTUPDATE='" + System.currentTimeMillis()
@@ -140,6 +143,19 @@ public class TaskServiceTest {
 		assertEquals(1, executeNativeUpdate);
 
 		taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+	}
+
+	@Test(expected = TaskException.class)
+	public void doNotQueueMoreThanTenPerSingletonRunnable() throws TaskException {
+		taskDescriptor = taskDescriptorOf(TestBlockingRunnable.ID);
+		taskDescriptor.setSingleton(true);
+		taskDescriptor.setOwner(owner.getId());
+		taskService.setActive(taskDescriptor, true);
+		taskService.saveTaskDescriptor(taskDescriptor);
+
+		for (int i = 0; i < 13; i++) {
+			taskService.trigger(taskDescriptor, progressMonitor, TaskTriggerType.MANUAL, null);
+		}
 	}
 
 	/**
