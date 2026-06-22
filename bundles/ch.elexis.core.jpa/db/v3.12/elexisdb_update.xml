@@ -278,5 +278,16 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 	        <column name="GUELTIGBIS" value="20251231" />
 	        <where>GUELTIGBIS='21991231'</where>
 	    </update>
+	</changeSet>
+	
+	<changeSet id="manual_update_ARTIKELSTAMM_CH_pm" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="ARTIKELSTAMM_CH" columnName="PM" />
+			</not>
+		</preConditions>
+		<addColumn tableName="ARTIKELSTAMM_CH">
+			<column name="PM" type="CHAR(1)" defaultValue="0"/>
+		</addColumn>
 	</changeSet>	
 </databaseChangeLog>
