@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.slf4j.Logger;
 
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
@@ -35,12 +36,18 @@ public class TestBlockingRunnable implements IIdentifiedRunnable {
 
 		try {
 			logger.info("Sleeping for 10 seconds");
-			Thread.sleep(10 * 1000);
+			for (int i = 0; i < 20; i++) {
+				if (progressMonitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+				Thread.sleep(500);
+			}
 		} catch (InterruptedException e) {
 			logger.info("Being interrupted");
 			e.printStackTrace();
 		}
 
+		logger.info("Finishing up");
 		return runContext;
 	}
 

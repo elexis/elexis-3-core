@@ -140,7 +140,22 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Deactivate
-	private void deactivateComponent() {
+	protected void deactivateComponent() {
+		if (fileSystemChangeWatcher != null) {
+			fileSystemChangeWatcher.stopPolling();
+		}
+
+		parallelExecutorService.shutdown();
+		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
+
+		if (quartzExecutor != null) {
+			try {
+				quartzExecutor.shutdown();
+				quartzExecutor = null;
+			} catch (SchedulerException e) {
+				logger.warn("Error stopping quartz scheduler", e);
+			}
+		}
 
 		List<ITask> runningTasks = getRunningTasks();
 		long start = System.currentTimeMillis();
@@ -161,22 +176,6 @@ public class TaskServiceImpl implements ITaskService {
 		}
 
 		getRunningTasks().forEach(task -> logger.warn("Could not gracefully stop task " + task.getLabel()));
-
-		if (quartzExecutor != null) {
-			try {
-				quartzExecutor.shutdown();
-				quartzExecutor = null;
-			} catch (SchedulerException e) {
-				logger.warn("Error stopping quartz scheduler", e);
-			}
-		}
-
-		parallelExecutorService.shutdown();
-		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
-
-		if (fileSystemChangeWatcher != null) {
-			fileSystemChangeWatcher.stopPolling();
-		}
 	}
 
 	/**

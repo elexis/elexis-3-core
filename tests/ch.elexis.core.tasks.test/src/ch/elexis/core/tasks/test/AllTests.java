@@ -14,6 +14,7 @@ import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
+import ch.elexis.core.tasks.internal.service.TaskServiceTest;
 import ch.elexis.core.types.Gender;
 
 @RunWith(Suite.class)

@@ -1,4 +1,4 @@
-package ch.elexis.core.tasks.test;
+package ch.elexis.core.tasks.internal.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,7 +35,6 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.tasks.IdentifiedRunnableIdConstants;
 import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.internal.runnables.LogResultContextIdentifiedRunnable;
-import ch.elexis.core.tasks.internal.service.TaskServiceHolder;
 import ch.elexis.core.tasks.model.ITask;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.ITaskService;
@@ -43,6 +42,7 @@ import ch.elexis.core.tasks.model.ModelPackage;
 import ch.elexis.core.tasks.model.TaskState;
 import ch.elexis.core.tasks.model.TaskTriggerType;
 import ch.elexis.core.tasks.model.TaskTriggerTypeParameter;
+import ch.elexis.core.tasks.test.AllTests;
 import ch.elexis.core.tasks.test.runnable.TestBlockingRunnable;
 import ch.elexis.core.tasks.test.runnable.TestExecutionContextRunnable;
 import ch.elexis.core.types.Gender;
