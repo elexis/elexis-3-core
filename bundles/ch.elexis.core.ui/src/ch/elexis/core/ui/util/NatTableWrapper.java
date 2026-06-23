@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -145,6 +146,7 @@ public class NatTableWrapper implements ISelectionProvider {
 		selectionListener.remove(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setSelection(ISelection selection) {
 		if (selection instanceof StructuredSelection) {
@@ -155,6 +157,9 @@ public class NatTableWrapper implements ISelectionProvider {
 					rowIdx[i] = dataProvider.indexOfRowObject(list.get(i));
 				}
 				natTable.doCommand(new SelectRowsCommand(selectionLayer, 0, rowIdx, false, false, rowIdx[0]));
+				if (rowIdx[0] != -1 && selection instanceof IStructuredSelection) {
+					currentSelection = new ArrayList<>(((IStructuredSelection) selection).toList());
+				}
 			} else {
 				natTable.doCommand(new ClearAllSelectionsCommand());
 			}
