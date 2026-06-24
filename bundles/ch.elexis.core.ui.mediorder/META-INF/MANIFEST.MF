@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Patient Mediorder
 Bundle-SymbolicName: ch.elexis.core.ui.mediorder;singleton:=true
 Bundle-Vendor: ch.elexis
-Bundle-Version: 3.13.0.qualifier
-Require-Bundle: ch.elexis.core.ui;bundle-version="3.13.0",
+Bundle-Version: 3.14.0.qualifier
+Require-Bundle: ch.elexis.core.ui;bundle-version="3.14.0",
  ch.elexis.core.ui.e4;bundle-version="3.12.0",
  ch.elexis.core.ui.icons;bundle-version="3.12.0",
  ch.elexis.core.mail.ui,

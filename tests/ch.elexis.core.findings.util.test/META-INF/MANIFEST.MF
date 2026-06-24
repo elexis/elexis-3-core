@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-SymbolicName: ch.elexis.core.findings.util.test
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Fragment-Host: ch.elexis.core.findings.util;bundle-version="3.13.0"
 iBundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: ch.elexis.core.jpa.entities,

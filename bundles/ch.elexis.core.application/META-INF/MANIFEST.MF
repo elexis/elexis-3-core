@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Open Source Application
 Bundle-SymbolicName: ch.elexis.core.application;singleton:=true
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.13.0",
  ch.rgw.utility;bundle-version="3.13.0",
- ch.elexis.core;bundle-version="3.13.0",
- ch.elexis.core.data;bundle-version="3.13.0",
+ ch.elexis.core;bundle-version="3.14.0",
+ ch.elexis.core.data;bundle-version="3.14.0",
  ch.elexis.core.httpclient;bundle-version="3.13.0",
- ch.elexis.core.ui;bundle-version="3.13.0",
+ ch.elexis.core.ui;bundle-version="3.14.0",
  ch.elexis.core.ui.contacts;bundle-version="3.13.0",
  ch.elexis.core.ui.icons;bundle-version="3.13.0",
  ch.elexis.core.ui.laboratory;bundle-version="3.13.0",

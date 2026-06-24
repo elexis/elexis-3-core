@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ch.rgw.utility test fragment
 Bundle-SymbolicName: ch.rgw.utility.tests
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Vendor: elexis.ch
 Fragment-Host: ch.rgw.utility.legacy;bundle-version="3.13.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
