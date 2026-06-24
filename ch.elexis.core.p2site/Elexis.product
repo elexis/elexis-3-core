@@ -7,7 +7,7 @@
       <image path="rsc/elexislogo2.png"/>
       <text>
          Elexis 3.13 - www.elexis.info
-         Copyright 2005-2025 G. Weirich und Elexis-Team
+         Copyright 2005-2026 G. Weirich und Elexis-Team
       </text>
    </aboutInfo>
 
@@ -70,8 +70,8 @@
    </configurations>
 
    <repositories>
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-base" name="" enabled="true" />
-      <repository location="https://download.elexis.info/elexis/master/p2/elexis-3-core" name="" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/3.13/p2/elexis-3-base" name="" enabled="true" />
+      <repository location="https://download.elexis.info/elexis/3.13/p2/elexis-3-core" name="" enabled="true" />
    </repositories>
 
    <preferencesInfo>
