@@ -29,12 +29,23 @@ public class IEncounterHelper extends AbstractHelper {
 	}
 
 	public Optional<ch.elexis.core.model.IEncounter> createIEncounter(IEncounter iEncounter) {
+		return createIEncounter(iEncounter, Optional.empty());
+	}
+
+	/**
+	 * Variant that honours an explicit Coverage (Fall) id supplied via
+	 * FHIR Encounter.account. If the requested Fall exists and belongs to the
+	 * same patient, it is used. Otherwise the legacy default-fall behaviour
+	 * applies.
+	 */
+	public Optional<ch.elexis.core.model.IEncounter> createIEncounter(IEncounter iEncounter,
+			Optional<String> coverageId) {
 		Optional<ch.elexis.core.model.IEncounter> ret = getIEncounter(iEncounter);
 		if (!ret.isPresent()) {
 			Optional<IPatient> patient = getPatient(iEncounter);
 			Optional<IMandator> serviceProvider = getPerformer(iEncounter);
 			if (patient.isPresent() && serviceProvider.isPresent()) {
-				ICoverage fall = getOrCreateDefaultFall(patient.get());
+				ICoverage fall = getCoverageOrDefaultFall(patient.get(), coverageId);
 				ch.elexis.core.model.IEncounter encounter = new IEncounterBuilder(coreModelService, fall,
 						serviceProvider.get()).buildAndSave();
 				findingsModelService.save(encounter);
@@ -42,6 +53,17 @@ public class IEncounterHelper extends AbstractHelper {
 			}
 		}
 		return ret;
+	}
+
+	private ICoverage getCoverageOrDefaultFall(IPatient patient, Optional<String> coverageId) {
+		if (coverageId.isPresent()) {
+			Optional<ICoverage> requestedCoverage = coreModelService.load(coverageId.get(), ICoverage.class);
+			if (requestedCoverage.isPresent() && requestedCoverage.get().getPatient() != null
+					&& patient.getId().equals(requestedCoverage.get().getPatient().getId())) {
+				return requestedCoverage.get();
+			}
+		}
+		return getOrCreateDefaultFall(patient);
 	}
 
 	public ICoverage getOrCreateDefaultFall(IPatient patient) {
