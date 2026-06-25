@@ -67,6 +67,5 @@ Require-Bundle: ch.elexis.core.l10n;bundle-version="3.13.0",
  org.apache.commons.lang3;bundle-version="3.17.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.33.0";visibility:=reexport,
  org.eclipse.emf.ecore;bundle-version="2.38.0";visibility:=reexport,
- ch.elexis.core;visibility:=reexport,
  org.jdom.2;bundle-version="2.0.6"
 Eclipse-BundleShape: dir
