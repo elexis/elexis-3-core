@@ -232,7 +232,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_famAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_persAnamnesisLbl,
+			Messages.Patientenblatt2_famAnamnesisLbl,
+			Messages.Allergies,
 			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(
@@ -797,9 +799,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}
 			}
-			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			String titleKey = ivc.getLocalizedTitle();
+			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, titleKey);
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			// MacOs specific redraw bug workaround since 3.9
@@ -809,10 +811,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			// end
 			tk.adapt(ret);
 			ec.setClient(ret);
+			ec.setExpanded(true);
+			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + titleKey);
 		}
 
 		ecZA = WidgetFactory.createExpandableComposite(tk, form, Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
-		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, KEY_PATIENTENBLATT + Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 
 		ecZA.addExpansionListener(ecExpansionListener);
 
@@ -899,6 +903,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		// zusatz adressen
 		compAdditionalAddresses = WidgetFactory.createExpandableComposite(tk, form,
 				Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
+		UserSettings.setExpandedState(compAdditionalAddresses,
+				KEY_PATIENTENBLATT + Messages.Patientenblatt2_additionalAdresses);
 		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
 
 		additionalAddresses = new ListDisplay<>(compAdditionalAddresses, SWT.NONE,
@@ -944,7 +950,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
-			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i)); //$NON-NLS-1$
@@ -993,23 +998,27 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			});
 
 			ec.get(i).setClient(txExpandable.get(i));
+			ec.get(i).setExpanded(true);
+			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
-		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
 		ecdm.addExpansionListener(ecExpansionListener);
 		dmd = new FixMediDisplay(ecdm, site);
 		ecdm.setClient(dmd);
-
+		ecdm.setExpanded(true);
+		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
 		List<IViewContribution> lContrib = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(detailComposites, 1);
 		for (IViewContribution ivc : lContrib) {
-			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			String titleKey = ivc.getLocalizedTitle();
+			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, titleKey);
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			tk.adapt(ret);
 			ec.setClient(ret);
+			ec.setExpanded(true);
+			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + titleKey);
 		}
 
 		Menu popup = new Menu(photoLabel);
@@ -1276,13 +1285,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				+ StringTool.unNull(actPatient.getGeburtsdatum()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
-
-		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, KEY_PATIENTENBLATT + Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
 		}
-
+		UserSettings.setExpandedState(compAdditionalAddresses,
+				KEY_PATIENTENBLATT + Messages.Patientenblatt2_additionalAdresses);
 		additionalAddresses.clear();
 		for (ZusatzAdresse zusatzAdresse : actPatient.getZusatzAdressen()) {
 			additionalAddresses.add(zusatzAdresse);
