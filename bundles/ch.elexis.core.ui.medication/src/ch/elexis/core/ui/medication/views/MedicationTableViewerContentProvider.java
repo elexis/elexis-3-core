@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.medication.IArticleImageResolverUi;
 import ch.elexis.core.ui.medication.IMedicationInteractionUi;
 
 public class MedicationTableViewerContentProvider implements IStructuredContentProvider {
@@ -31,6 +32,8 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 	private int currentPageOffset;
 
 	private IMedicationInteractionUi interactionUi;
+
+	private IArticleImageResolverUi articleImageResolverUi;
 
 	public MedicationTableViewerContentProvider(StructuredViewer viewer) {
 		this.viewer = viewer;
@@ -74,6 +77,9 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 		if (interactionUi != null) {
 			interactionUi.setPrescriptions(input);
 			currentItems.stream().forEach(i -> i.setInteractionUi(interactionUi));
+		}
+		if (articleImageResolverUi != null) {
+			currentItems.stream().forEach(i -> i.setArticleImageResolverUi(articleImageResolverUi));
 		}
 	}
 
@@ -185,5 +191,9 @@ public class MedicationTableViewerContentProvider implements IStructuredContentP
 
 	public void setInteractionUi(IMedicationInteractionUi interactionUi) {
 		this.interactionUi = interactionUi;
+	}
+
+	public void setArticleImageResolverUi(IArticleImageResolverUi articleImageResolverUi) {
+		this.articleImageResolverUi = articleImageResolverUi;
 	}
 }
