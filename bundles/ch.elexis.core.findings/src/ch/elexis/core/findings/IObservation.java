@@ -53,7 +53,7 @@ public interface IObservation extends IFinding {
 
 	public enum ObservationCode {
 		ANAM_PERSONAL(IdentifierSystem.ELEXIS_ANAMNESE, "personal"),
-		ANAM_RISK(IdentifierSystem.ELEXIS_ANAMNESE, "risk");
+		ANAM_RISK(IdentifierSystem.ELEXIS_ANAMNESE, "risk"), ANAM_SOCIAL(IdentifierSystem.ELEXIS_ANAMNESE, "social");
 
 		private String code;
 		private IdentifierSystem identifierSystem;
