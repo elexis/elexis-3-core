@@ -171,6 +171,12 @@ public class MedicationView extends ViewPart implements IRefreshable {
 		return tpc;
 	}
 
+	public void setArticleMarkingColumnVisible(boolean visible) {
+		if (tpc != null && !tpc.isDisposed()) {
+			tpc.setArticleMarkingColumnVisible(visible);
+		}
+	}
+
 	@Optional
 	@Inject
 	public void setFixLayout(MPart part, @Named(Preferences.USR_FIX_LAYOUT) boolean currentState) {

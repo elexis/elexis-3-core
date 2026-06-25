@@ -231,6 +231,15 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		});
 	}
 
+	public void setArticleMarkingColumnVisible(boolean visible) {
+		if (medicationTableComposite != null && !medicationTableComposite.isDisposed()) {
+			medicationTableComposite.setArticleMarkingColumnVisible(visible);
+		}
+		if (medicationHistoryTableComposite != null && !medicationHistoryTableComposite.isDisposed()) {
+			medicationHistoryTableComposite.setArticleMarkingColumnVisible(visible);
+		}
+	}
+
 	public void setViewerSortOrder(ViewerSortOrder vso) {
 		sortOrder = vso;
 		medicationTableComposite.getTableViewer().setComparator(vso.vc);

@@ -151,6 +151,10 @@
             </parameter>
          </command>
          <command
+               commandId="ch.elexis.core.ui.medication.ResetColumnOrder"
+               style="push">
+         </command>
+         <command
                commandId="ch.elexis.core.ui.medication.Delete"
                icon="icon://IMG_DELETE"
                style="push">
@@ -360,6 +364,11 @@
       <command
             id="ch.elexis.core.ui.medication.OpenArticelDetailDialog"
             name="Open Article Detail">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.medication.handlers.ResetColumnOrderHandler"
+            id="ch.elexis.core.ui.medication.ResetColumnOrder"
+            name="Spaltenreihenfolge zurücksetzen">
       </command>
    </extension>
    <extension

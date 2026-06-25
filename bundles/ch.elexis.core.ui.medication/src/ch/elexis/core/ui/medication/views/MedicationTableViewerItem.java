@@ -23,6 +23,7 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.medication.IArticleImageResolverUi;
 import ch.elexis.core.ui.medication.IMedicationInteractionUi;
 
 /**
@@ -54,6 +55,7 @@ public class MedicationTableViewerItem {
 	private String prescriptorLabel;
 	private String stopReason;
 	private Image image;
+	private Image articleImage;
 
 	private Image interactionImage;
 	private String interactionText;
@@ -64,6 +66,8 @@ public class MedicationTableViewerItem {
 	private boolean resolving = false;
 
 	private IMedicationInteractionUi interactionUi;
+
+	private IArticleImageResolverUi articleImageResolverUi;
 
 	private MedicationTableViewerItem(IPrescription prescription, StructuredViewer viewer) {
 		this.viewer = viewer;
@@ -224,6 +228,22 @@ public class MedicationTableViewerItem {
 		return image != null ? image : Images.IMG_EMPTY_TRANSPARENT.getImage();
 	}
 
+	/**
+	 * @return the article marking {@link Image} (e.g. P/SL/nonPharma/blackbox) as
+	 *         shown in the article list, or <code>null</code> if no resolver is
+	 *         available or no marking applies.
+	 */
+	public Image getArticleImage() {
+		if (articleImageResolverUi == null) {
+			return null;
+		}
+		if (!resolved && !resolving) {
+			resolving = true;
+			executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
+		}
+		return articleImage;
+	}
+
 	public Image getInteractionImage() {
 		if (interactionImage == null) {
 			if (!resolved && !resolving) {
@@ -267,6 +287,7 @@ public class MedicationTableViewerItem {
 		public void run() {
 			resolveInteractionImage();
 			resolveImage();
+			resolveArticleImage();
 			resolveArticleLabel();
 			resolveLastDisposed();
 			resolveStopReason();
@@ -329,6 +350,12 @@ public class MedicationTableViewerItem {
 			}
 		}
 
+		private void resolveArticleImage() {
+			if (item.articleImageResolverUi != null && item.article != null) {
+				item.articleImage = item.articleImageResolverUi.getImage(item.article);
+			}
+		}
+
 		private void resolveInteractionImage() {
 			if (item.interactionUi != null) {
 				item.interactionImage = item.interactionUi.getImage(item.getPrescription());
@@ -382,5 +409,9 @@ public class MedicationTableViewerItem {
 
 	public void setInteractionUi(IMedicationInteractionUi interactionUi) {
 		this.interactionUi = interactionUi;
+	}
+
+	public void setArticleImageResolverUi(IArticleImageResolverUi articleImageResolverUi) {
+		this.articleImageResolverUi = articleImageResolverUi;
 	}
 }
