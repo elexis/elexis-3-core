@@ -673,10 +673,21 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				String orderString = ConfigServiceHolder.getUser("reminder.column.order." + cfg, null);
 				if (orderString != null) {
 					int[] order = Arrays.stream(orderString.split(",")).mapToInt(Integer::parseInt).toArray();
-					try {
-						tbl.setColumnOrder(order);
-					} catch (IllegalArgumentException ex) {
-						LoggerFactory.getLogger(getClass()).warn("Invalid column order for " + cfg, ex);
+					if (order.length == tbl.getColumnCount()) {
+						try {
+							tbl.setColumnOrder(order);
+						} catch (IllegalArgumentException ex) {
+							LoggerFactory.getLogger(getClass()).warn("Invalid column order for " + cfg, ex);
+						}
+					} else {
+						// Veralteten Eintrag direkt mit der aktuell gueltigen Reihenfolge ueberschreiben,
+						// damit er nicht bei jedem Start erneut verworfen werden muss.
+						String currentOrder = Arrays.stream(tbl.getColumnOrder()).mapToObj(String::valueOf)
+								.collect(Collectors.joining(","));
+						ConfigServiceHolder.setUser("reminder.column.order." + cfg, currentOrder);
+						LoggerFactory.getLogger(getClass()).info(
+								"Veraltete Spalten-Order fuer {} bereinigt (gespeichert: {}, aktuell: {} Spalten)", cfg,
+								order.length, tbl.getColumnCount());
 					}
 				}
 			}
