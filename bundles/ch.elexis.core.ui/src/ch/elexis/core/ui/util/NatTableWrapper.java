@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -88,6 +89,11 @@ public class NatTableWrapper implements ISelectionProvider {
 					int[] selectedIdxs = cellEvent.getSelectionLayer().getFullySelectedRowPositions();
 					for (int selectionIdx : selectedIdxs) {
 						currentSelection.add(dataProvider.getRowObject(selectionIdx));
+					}
+					Object[] listeners = selectionListener.getListeners();
+					for (Object object : listeners) {
+						((ISelectionChangedListener) object)
+								.selectionChanged(new SelectionChangedEvent(NatTableWrapper.this, getSelection()));
 					}
 				}
 			}
