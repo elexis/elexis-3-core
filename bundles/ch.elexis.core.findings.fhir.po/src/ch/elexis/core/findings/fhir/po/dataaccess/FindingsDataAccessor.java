@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.fhir.po.dataaccess;
+﻿package ch.elexis.core.findings.fhir.po.dataaccess;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -12,6 +12,8 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICondition;
@@ -168,6 +170,7 @@ public class FindingsDataAccessor implements IDataAccess {
 	}
 
 	private Result<Object> getDiagnosisText(Patient patient) {
+		boolean wordFormat = ConfigServiceHolder.getLocal(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
 		List<ICondition> findings = findingsService.getPatientsFindings(patient.getId(), ICondition.class);
 		List<ICondition> conditions = getDiagnosis(findings);
 		StringBuilder sb = new StringBuilder();
@@ -175,7 +178,7 @@ public class FindingsDataAccessor implements IDataAccess {
 			if (sb.length() > 0) {
 				sb.append(StringUtils.LF);
 			}
-			sb.append(TextUtil.getText(condition, codingService));
+			sb.append(TextUtil.getText(condition, codingService, wordFormat));
 		});
 		return new Result<>(sb.toString());
 	}

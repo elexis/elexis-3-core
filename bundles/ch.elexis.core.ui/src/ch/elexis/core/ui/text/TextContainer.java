@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
  * Copyright (c) 2006-2011, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -373,47 +373,50 @@ public class TextContainer {
 	}
 
 	private boolean isRelevantPatientField(String fieldName) {
-	    return "Patient.Diagnosen".equals(fieldName) || "Patient.FamilienAnamnese".equals(fieldName)
+		return "Patient.Diagnosen".equals(fieldName) || "Patient.Diagnosen".equals(fieldName)
+				|| "Patient.FamilienAnamnese".equals(fieldName)
 	            || "Patient.PersAnamnese".equals(fieldName) || "Patient.Risiken".equals(fieldName)
 	            || "Patient.Allergien".equals(fieldName);
 	}
 	
 	private String formatTextField(String diagnosesText, int maxLineLength) {
 		StringBuilder formattedText = new StringBuilder();
-	    String[] lines = diagnosesText.split("\n");
-		boolean inSideDiagnosis = false;
-		boolean newMainDiagnosis = false;
-		int currentIndentationLevel = 0;
-		String tab = "\t";
-	    for (String line : lines) {
+		String[] lines = diagnosesText.split("\n");
+		boolean firstMainDiagnosis = true;
+		for (String line : lines) {
 			String trimmedLine = line.trim();
-			if (trimmedLine.matches("^\\d+\\..*")) {
-				if (newMainDiagnosis) {
+			if (trimmedLine.isEmpty()) {
+				continue;
+			}
+			if (trimmedLine.startsWith("(")) {
+				if (!firstMainDiagnosis) {
 					formattedText.append("\n");
 				}
-				currentIndentationLevel = 0;
-				inSideDiagnosis = false;
-				newMainDiagnosis = true;
-			} else if (trimmedLine.matches("^\\-.*[^:]$") && !inSideDiagnosis) {
-				currentIndentationLevel = 1;
-			} else if (trimmedLine.matches(".*:$")) {
-				currentIndentationLevel = 2;
-				inSideDiagnosis = true;
-			} else if (trimmedLine.startsWith("-") && inSideDiagnosis) {
-				currentIndentationLevel = 3;
+				firstMainDiagnosis = false;
+				trimmedLine = trimmedLine.substring(1).trim();
+				trimmedLine = trimmedLine.replaceAll("\\s*-\\s*\\)\\s*-?\\s*$", "").trim();
+				formattedText.append(trimmedLine).append("\n\n");
+			} else if (!trimmedLine.startsWith("-")) {
+				formattedText.append(trimmedLine).append("\n");
+			} else {
+				trimmedLine = trimmedLine.substring(1);
+				if (!trimmedLine.isEmpty() && trimmedLine.charAt(0) == ' ') {
+					trimmedLine = trimmedLine.substring(1);
+				}
+				trimmedLine = trimmedLine.replaceAll("\\s*\\(\\d{2}\\.\\d{2}\\.\\d{4}\\)\\s*$", "").trim();
+				boolean firstPart = true;
+				while (trimmedLine.length() > maxLineLength) {
+					int breakPoint = trimmedLine.lastIndexOf(' ', maxLineLength);
+					if (breakPoint == -1)
+						breakPoint = maxLineLength;
+					formattedText.append(firstPart ? "•\t" : "\t").append(trimmedLine.substring(0, breakPoint)).append("\n");
+					trimmedLine = trimmedLine.substring(breakPoint).trim();
+					firstPart = false;
+				}
+				formattedText.append(firstPart ? "•\t" : "\t").append(trimmedLine).append("\n");
 			}
-			String indentation = tab.repeat(currentIndentationLevel);
-			while (trimmedLine.length() > maxLineLength) {
-				int breakPoint = trimmedLine.lastIndexOf(' ', maxLineLength);
-				if (breakPoint == -1)
-					breakPoint = maxLineLength;
-				formattedText.append(indentation).append(trimmedLine.substring(0, breakPoint)).append("\n ");
-				trimmedLine = trimmedLine.substring(breakPoint).trim();
-				indentation = tab.repeat(currentIndentationLevel);
-	        }
-			formattedText.append(indentation).append(trimmedLine).append("\n");
-	    }
-	    return formattedText.toString();
+		}
+		return formattedText.toString();
 	}
 
 	/**
