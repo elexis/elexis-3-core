@@ -38,6 +38,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import ch.elexis.core.ui.e4.util.CoreUiUtil;
+
 /**
  * Factory class for creating {@link NatTableWrapper} elements on a
  * {@link Composite}.
@@ -140,7 +142,7 @@ public class NatTableFactory {
 			selectionStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR,
 					Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 			selectionStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
-					Display.getCurrent().getSystemColor(SWT.COLOR_LIST_SELECTION));
+					CoreUiUtil.getColorForString("CCE0F8"));
 			selectionStyle.setAttributeValue(CellStyleAttributes.FONT, GUIHelper.DEFAULT_FONT);
 
 			configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, selectionStyle, DisplayMode.SELECT,
