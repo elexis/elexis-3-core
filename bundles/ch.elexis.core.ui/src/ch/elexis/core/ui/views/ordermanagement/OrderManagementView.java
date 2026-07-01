@@ -1256,12 +1256,12 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 				: Messages.UNKNOWN;
 		createdLabelState.setText(createdStr + ", " + "(" + creatorId + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		statusValue.setText(OrderManagementUtil.getStatusText(order));
-		updateOrderStatus(order);
+		updateOrderStatus(order, usierID);
 		actionFactory.setOrder(actOrder);
 		updateUI();
 	}
 
-	private OrderHistorySummary getHistorySummary(IOrder order) {
+	private OrderHistorySummary getHistorySummary(IOrder order, IOutputLog logEntry) {
 		if (order == null || order.getId() == null) {
 			return new OrderHistorySummary(null, null, null, null);
 		}
@@ -1269,7 +1269,9 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 			return actHistory;
 		}
 
-		IOutputLog logEntry = orderService.getOrderLogEntry(order);
+		if (logEntry == null) {
+			logEntry = orderService.getOrderLogEntry(order);
+		}
 		String jsonLog = (logEntry != null) ? logEntry.getOutputterStatus() : "[]"; //$NON-NLS-1$
 
 		OrderHistoryEntry[] historyEntries;
@@ -1307,12 +1309,16 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 	}
 
 	public void updateOrderStatus(IOrder order) {
+		updateOrderStatus(order, null);
+	}
+
+	public void updateOrderStatus(IOrder order, IOutputLog logEntry) {
 		if (order == null) {
 			return;
 		}
 		Table table = tableViewer.getTable();
 
-		OrderHistorySummary history = getHistorySummary(order);
+		OrderHistorySummary history = getHistorySummary(order, logEntry);
 
 		String orderedUser = history.orderedUser;
 		String orderedDate = history.orderedDate;
@@ -1443,10 +1449,6 @@ public class OrderManagementView extends ViewPart implements IRefreshable {
 		OrderManagementUtil.setCheckboxColumnVisible(this, false);
 		pendingDeliveredValues.clear();
 		OrderManagementHelper.updateSelectAllCheckbox(this, pendingDeliveredValues);
-
-		if (tableViewer != null) {
-			tableViewer.refresh();
-		}
 	}
 
 	public void restBarCode() {
