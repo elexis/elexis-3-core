@@ -18,6 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -27,6 +30,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -70,6 +74,7 @@ import ch.elexis.core.ui.util.LabeledInputField;
 import ch.elexis.core.ui.util.LabeledInputField.AutoForm;
 import ch.elexis.core.ui.util.LabeledInputField.InputData;
 import ch.elexis.core.ui.util.LabeledInputField.InputData.Typ;
+import ch.elexis.core.ui.util.LabeledInputField.IStructuredSelectionResolver;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.views.IRefreshable;
 import ch.elexis.data.Kontakt;
@@ -112,7 +117,23 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			new InputData(Messages.Core_Name, Kontakt.FLD_NAME1, Typ.STRING, null),
 			new InputData(Messages.Core_Firstname, Kontakt.FLD_NAME2, Typ.STRING, null),
 			new InputData(Messages.KontaktBlatt_Bez3, Kontakt.FLD_NAME3, Typ.STRING, null),
-			new InputData(Messages.Sex, Person.SEX, Typ.STRING, null),
+			new InputData(Messages.Sex, Person.SEX, null, Typ.COMBO_VIEWER, ArrayContentProvider.getInstance(),
+					new LabelProvider() {
+						@Override
+						public String getText(Object element) {
+							return element == null ? StringUtils.EMPTY : element.toString();
+						}
+					}, new IStructuredSelectionResolver() {
+						@Override
+						public StructuredSelection resolveStructuredSelection(String value) {
+							if (Person.FEMALE.equalsIgnoreCase(value)) {
+								return new StructuredSelection(Person.FEMALE);
+							} else if (Person.MALE.equalsIgnoreCase(value)) {
+								return new StructuredSelection(Person.MALE);
+							}
+							return new StructuredSelection(StringUtils.EMPTY);
+						}
+					}, new String[] { StringUtils.EMPTY, Person.MALE, Person.FEMALE }),
 			new InputData(Messages.KontaktBlatt_LawCode, Person.FLD_TITLE_SUFFIX, Typ.STRING, null),
 			new InputData(Messages.Core_Street, Kontakt.FLD_STREET, Typ.STRING, null),
 			new InputData(Messages.Core_Postal_code, Kontakt.FLD_ZIP, Typ.STRING, null, 6),
@@ -236,6 +257,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		bottom.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		actKontakt = (Kontakt) ElexisEventDispatcher.getSelected(Kontakt.class);
 		afDetails = new AutoForm(bottom, def);
+		restrictSexField();
 		((ColumnLayout) afDetails.getLayout()).minNumColumns = 5;
 		updateFieldsView();
 		setToolTipTextListeners();
@@ -348,6 +370,23 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		}
 	}
 
+	private void restrictSexField() {
+		if (def[3].getWidget() != null && def[3].getWidget().getControl() instanceof Combo) {
+			Combo cbSex = (Combo) def[3].getWidget().getControl();
+			cbSex.addVerifyListener(event -> {
+				String current = cbSex.getText();
+				String result = current.substring(0, event.start) + event.text + current.substring(event.end);
+				if (result.isEmpty()) {
+					return;
+				}
+				if (!result.equalsIgnoreCase(Person.MALE) && !result.equalsIgnoreCase(Person.FEMALE)) {
+					event.doit = false;
+				}
+			});
+			cbSex.addListener(SWT.MouseWheel, event -> event.doit = false);
+		}
+	}
+
 	/**
 	 * Adds listeners to the {@link LabeledInputField} components to update the
 	 * tooltip text when the content in the input field has been modified.
@@ -453,6 +492,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 			} else {
 				actKontakt.set(type, "0"); //$NON-NLS-1$
 			}
+			updateShortLabelEditable();
 			updateFieldsView();
 		}
 
@@ -474,6 +514,23 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private void setOrganisationFieldsVisible(boolean visible) {
 		def[4].getWidget().setVisible(visible);
 		def[9].getWidget().setVisible(visible);
+	}
+
+	private void updateShortLabelEditable() {
+		InputData shortLabel = getShortLabelField();
+		if (shortLabel != null && shortLabel.getWidget() != null) {
+			boolean isPatient = bTypes[3].getSelection();
+			shortLabel.getWidget().setEnabled(!isPatient);
+		}
+	}
+
+	private InputData getShortLabelField() {
+		for (InputData d : def) {
+			if (Messages.KontaktBlatt_shortLabel.equals(d.getLabel())) {
+				return d;
+			}
+		}
+		return null;
 	}
 
 	public void activation(boolean mode) {
@@ -502,12 +559,6 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 				bTypes[i].setSelection((ret[i] == null) ? false : StringConstants.ONE.equals(ret[i]));
 				bTypes[i].setEnabled(updateRight);
 			}
-			if (bTypes[3].getSelection() == true) {
-				// isPatient
-				def[17].getWidget().setEnabled(false);
-			} else {
-				def[17].getWidget().setEnabled(true);
-			}
 			if (bTypes[0].getSelection() == true) {
 				// isOrganisation
 				def[0].setLabel(BEZEICHNUNG);
@@ -529,6 +580,9 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		updateFieldsView();
 		form.reflow(true);
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(kontakt));
+		if (actKontakt != null) {
+			updateShortLabelEditable();
+		}
 
 		addListener(actKontakt);
 	}
