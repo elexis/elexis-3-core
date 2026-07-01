@@ -372,7 +372,8 @@ public class OrderService implements IOrderService {
 		}
 		IQuery<IOutputLog> query = modelService.getQuery(IOutputLog.class);
 		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, order.getId());
-		return query.execute().isEmpty() ? null : query.execute().get(0);
+		List<IOutputLog> result = query.execute();
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	@Override
