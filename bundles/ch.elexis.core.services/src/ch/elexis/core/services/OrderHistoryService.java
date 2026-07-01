@@ -57,7 +57,8 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (oldValue == newValue)
 			return;
 
-		String details = entry.getArticle().getLabel() + " changed from " + oldValue + " to " + newValue; //$NON-NLS-1$ //$NON-NLS-2$
+		String details = entry.getArticle().getLabel() + stockSuffix(entry) + " changed from " + oldValue + " to " //$NON-NLS-1$ //$NON-NLS-2$
+				+ newValue;
 		logOrderStatus(order, OrderHistoryAction.EDITED, details); // $NON-NLS-1$
 	}
 
@@ -91,7 +92,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 
 		OrderHistoryAction action;
 		String details;
-		String articleLabel = entry.getArticle().getLabel();
+		String articleLabel = entry.getArticle().getLabel() + stockSuffix(entry);
 
 		if (oldAmount == 0) {
 			action = OrderHistoryAction.ADDED;
@@ -214,6 +215,13 @@ public class OrderHistoryService implements IOrderHistoryService {
 		saveLogEntry(order, entry);
 	}
 
+	private String stockSuffix(IOrderEntry entry) {
+		if (entry != null && entry.getStock() != null && entry.getStock().getCode() != null) {
+			return " [" + entry.getStock().getCode() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return ""; //$NON-NLS-1$
+	}
+
 	private void saveLogEntry(IOrder order, OrderHistoryEntry entry) {
 		if (order == null) {
 			return;
@@ -239,7 +247,8 @@ public class OrderHistoryService implements IOrderHistoryService {
 				.filter(e -> Objects.equals(e.getAction(), entry.getAction())
 						&& Objects.equals(e.getUserId(), entry.getUserId())
 						&& Objects.equals(e.getDetails(), entry.getDetails())
-						&& Objects.equals(e.getExtraInfo(), entry.getExtraInfo()))
+						&& Objects.equals(e.getExtraInfo(), entry.getExtraInfo())
+						&& Objects.equals(e.getTimestamp(), entry.getTimestamp()))
 				.findFirst();
 	}
 
