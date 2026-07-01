@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -41,6 +42,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
@@ -183,6 +185,8 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		makeActions();
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
+			private boolean reformattingDob = false;
+
 			@Override
 			public void setQuery(IQuery<?> query) {
 				for (int i = 0; i < dbFields.length; i++) {
@@ -197,6 +201,73 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						}
 					}
 				}
+			}
+
+			@Override
+			public Composite createControl(final Composite parent) {
+				Composite ret = super.createControl(parent);
+				restrictFilterFields();
+				return ret;
+			}
+
+			@Override
+			public void updateFields(String[] flds, boolean redraw) {
+				super.updateFields(flds, redraw);
+				if (redraw) {
+					restrictFilterFields();
+				}
+			}
+
+			private void restrictFilterFields() {
+				for (int i = 0; i < selectors.length; i++) {
+					if (selectors[i] == null || !(selectors[i].getWidget() instanceof Text)) {
+						continue;
+					}
+					Text field = (Text) selectors[i].getWidget();
+					if ("code".equals(dbFields[i])) { //$NON-NLS-1$
+						field.addVerifyListener(event -> {
+							for (int c = 0; c < event.text.length(); c++) {
+								if (!Character.isDigit(event.text.charAt(c))) {
+									event.doit = false;
+									return;
+								}
+							}
+						});
+					} else if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
+						field.setTextLimit(10);
+						field.addModifyListener(e -> {
+							if (reformattingDob) {
+								return;
+							}
+							String current = field.getText();
+							String digits = current.replaceAll("[^0-9]", StringUtils.EMPTY); //$NON-NLS-1$
+							if (digits.length() > 8) {
+								digits = digits.substring(0, 8);
+							}
+							String formatted = formatDobFilter(digits);
+							if (!formatted.equals(current)) {
+								reformattingDob = true;
+								field.setText(formatted);
+								field.setSelection(formatted.length());
+								reformattingDob = false;
+							}
+						});
+					}
+				}
+			}
+
+			private String formatDobFilter(String d) {
+				int length = d.length();
+				if (length <= 4) {
+					// up to 4 digits: year or partial entry no points
+					return d;
+				}
+				// From the 5th digit onwards, it can no longer be just a year, date DD.MM.YYYY
+				StringBuilder sb = new StringBuilder();
+				sb.append(d, 0, 2).append('.');
+				sb.append(d, 2, 4).append('.');
+				sb.append(d, 4, Math.min(8, length));
+				return sb.toString();
 			}
 		};
 		updateFocusField();
