@@ -53,14 +53,6 @@
       </view>
       <view
             category="ch.elexis.abrechnungKategorie"
-            class="ch.elexis.core.ui.views.rechnung.KonsZumVerrechnenView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_red.png"
-            id="ch.elexis.BehandlungenVerrechnenView"
-            inject="true"
-            name="%elexis.openKonsView">
-      </view>
-      <view
-            category="ch.elexis.abrechnungKategorie"
             class="ch.elexis.core.ui.views.codesystems.LeistungenView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/leistung.png"
             id="ch.elexis.LeistungenView"
