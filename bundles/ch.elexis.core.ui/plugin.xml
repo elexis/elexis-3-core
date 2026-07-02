@@ -113,16 +113,6 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:ch.elexis.BehandlungenVerrechnenView">
-         <command
-               commandId="ch.elexis.core.command.linkViews"
-               icon="icon://IMG_SYNC"
-               label="%command.label.1"
-               style="toggle">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="toolbar:ch.elexis.FallDetailView">
          <command
                commandId="ch.elexis.core.command.copyFall"
@@ -676,15 +666,6 @@
             defaultHandler="ch.elexis.core.ui.commands.CreateEigenleistungUi"
             id="ch.elexis.eigenleistung.create"
             name="%command.name.5">
-      </command>
-      <command
-            defaultHandler="ch.elexis.core.ui.commands.KonsZumVerrechnenLinkCommand"
-            id="ch.elexis.core.command.linkViews"
-            name="%command.name.6">
-         <state
-               class="org.eclipse.ui.handlers.RegistryToggleState:true"
-               id="org.eclipse.ui.commands.toggleState">
-         </state>
       </command>
       <command
             id="ch.elexis.core.command.copyFall"
