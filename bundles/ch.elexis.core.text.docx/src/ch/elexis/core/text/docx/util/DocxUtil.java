@@ -11,6 +11,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.Jc;
 import org.docx4j.wml.JcEnumeration;
+import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.PPr;
 import org.docx4j.wml.PPrBase.Spacing;
@@ -27,7 +28,7 @@ import jakarta.xml.bind.JAXBElement;
 
 public class DocxUtil {
 
-	static org.docx4j.wml.ObjectFactory wmlObjectFactory = Context.getWmlObjectFactory();
+	static ObjectFactory wmlObjectFactory = Context.getWmlObjectFactory();
 
 	public static ContentAccessor getParentContentAccessor(Child child) {
 		Object parent = child.getParent();
@@ -63,7 +64,7 @@ public class DocxUtil {
 		Text ret = getLastText(r);
 		if (ret == null) {
 			ret = wmlObjectFactory.createText();
-			JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(ret);
+			JAXBElement<Text> textWrapped = wmlObjectFactory.createRT(ret);
 			r.getContent().add(textWrapped);
 			ret.setParent(r);
 		}
@@ -80,9 +81,9 @@ public class DocxUtil {
 		return appendText(r);
 	}
 
-	private static Text appendText(R r) {
+	public static Text appendText(R r) {
 		Text ret = wmlObjectFactory.createText();
-		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRT(ret);
+		JAXBElement<Text> textWrapped = wmlObjectFactory.createRT(ret);
 		r.getContent().add(textWrapped);
 		ret.setParent(r);
 		return ret;
@@ -168,18 +169,18 @@ public class DocxUtil {
 		return ret;
 	}
 
-	private static void appendTab(R r) {
+	public static void appendTab(R r) {
 		List<Object> content = r.getContent();
 		R.Tab rTab = wmlObjectFactory.createRTab();
-		JAXBElement<org.docx4j.wml.R.Tab> rtabWrapped = wmlObjectFactory.createRTab(rTab);
+		JAXBElement<R.Tab> rtabWrapped = wmlObjectFactory.createRTab(rTab);
 		content.add(rtabWrapped);
 		rTab.setParent(r);
 	}
 
-	private static void appendNewLine(R r) {
+	public static void appendNewLine(R r) {
 		List<Object> content = r.getContent();
 		Cr rCr = wmlObjectFactory.createRCr();
-		JAXBElement<org.docx4j.wml.R.Cr> rcrWrapped = wmlObjectFactory.createRCr(rCr);
+		JAXBElement<R.Cr> rcrWrapped = wmlObjectFactory.createRCr(rCr);
 		content.add(rcrWrapped);
 		rCr.setParent(r);
 	}

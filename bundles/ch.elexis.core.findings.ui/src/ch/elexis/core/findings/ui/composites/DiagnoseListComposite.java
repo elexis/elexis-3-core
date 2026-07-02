@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
  * Copyright (c) 2016-2022 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,10 +49,12 @@ import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.text.docx.util.TextUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -98,9 +100,11 @@ public class DiagnoseListComposite extends Composite {
 									.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
 
 							if (useStructured && useAlternativeFormat) {
-								return getAlternativeFormattedText(condition);
+								String rawHtml = (String) getAlternativeFormattedText(condition);
+								return TextUtil.sanitizeHtmlForNebula(rawHtml);
 							} else {
-								return getStandardFormattedText(condition);
+								String rawHtml = (String) getStandardFormattedText(condition);
+								return TextUtil.sanitizeHtmlForNebula(rawHtml);
 							}
 						}
 						return StringUtils.EMPTY;
@@ -147,17 +151,16 @@ public class DiagnoseListComposite extends Composite {
 						if (hasText) {
 							String[] lines = condition.getText().get().split("\\r?\\n");
 							for (String line : lines) {
-								if (StringUtils.isNotBlank(line)) {
-									text.append("&#8226; ").append(line.trim()).append("<br/>");
-								}
+								appendFormattedLine(text, line);
 							}
 						}
 
 						if (hasNotes) {
 							for (String note : condition.getNotes()) {
 								if (StringUtils.isNotBlank(note)) {
-									text.append("&#8226; ").append(note.trim().replaceAll("\\r?\\n", "<br/>"))
-											.append("<br/>");
+									for (String line : note.split("\\r?\\n")) {
+										appendFormattedLine(text, line);
+									}
 								}
 							}
 						}
@@ -263,6 +266,10 @@ public class DiagnoseListComposite extends Composite {
 		toolbar.setBackground(parent.getBackground());
 	}
 
+	private static void appendFormattedLine(StringBuilder text, String line) {
+		text.append(line.trim()).append("<br/>");
+	}
+
 	public void setInput(List<ICondition> conditions) {
 		dataList.clear();
 		conditions.sort(new Comparator<ICondition>() {
@@ -358,7 +365,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "Status " + status.getLocalized();
+			return Messages.DiagnoseListComposite_StatusPrefix + StringUtils.SPACE + status.getLocalized();
 		}
 
 		@Override
@@ -388,7 +395,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "erstellen";
+			return Messages.DiagnoseListComposite_Create;
 		}
 
 		@Override
@@ -419,7 +426,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "entfernen";
+			return Messages.DiagnoseListComposite_Remove;
 		}
 
 		@Override

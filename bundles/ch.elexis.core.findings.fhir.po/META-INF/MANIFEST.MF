@@ -15,5 +15,6 @@ Import-Package: ch.elexis.core.findings.templates.model,
  ch.elexis.core.findings.templates.service,
  ch.elexis.core.services.holder,
  org.apache.commons.io
+Export-Package: ch.elexis.core.findings.fhir.po.text
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.migrator.MigratorService.xml
