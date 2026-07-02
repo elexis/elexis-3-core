@@ -43,7 +43,7 @@ import ch.rgw.tools.Tree;
 //201512211341js: Info: This dialog starts the generation of output ONLY AFTER [OK] has been pressed.
 class RnListeExportDialog extends TitleAreaDialog implements ICallback {
 	ArrayList<Rechnung> rnn;
-	private Logger log = LoggerFactory.getLogger(RnActions.class);
+	private Logger log = LoggerFactory.getLogger(RnDialogs.class);
 	private String RnListExportFileName = new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'") //$NON-NLS-1$
 			.format(new Date());
 

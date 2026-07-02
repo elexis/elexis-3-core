@@ -230,14 +230,6 @@
             name="%elexis.billDetail">
       </view>
       <view
-            category="ch.elexis.abrechnungKategorie"
-            class="ch.elexis.core.ui.views.rechnung.RechnungsListeView"
-            icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/page_copy.png"
-            id="ch.elexis.RechnungsListeView"
-            inject="true"
-            name="%elexis.billsListView">
-      </view>
-      <view
             class="ch.elexis.core.ui.medication.views.DauerMediView"
             icon="platform:/plugin/ch.elexis.core.ui.icons/icons/16x16/pill.png"
             id="ch.elexis.dauermedikationview"
