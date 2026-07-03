@@ -67,7 +67,7 @@ public class OrderManagementHelper {
 			return List.of();
 		}
 		return order.getEntries().stream()
-				.filter(e -> e.getState() != OrderEntryState.OPEN && e.getDelivered() < e.getAmount())
+				.filter(e -> e.getState() == OrderEntryState.ORDERED || e.getState() == OrderEntryState.PARTIAL_DELIVER)
 				.collect(Collectors.toList());
 	}
 

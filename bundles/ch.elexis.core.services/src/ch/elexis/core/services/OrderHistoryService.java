@@ -36,20 +36,20 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (oldValue == newValue)
 			return;
 
-		String details = entry.getArticle().getLabel() + stockSuffix(entry) + " changed from " + oldValue + " to " //$NON-NLS-1$ //$NON-NLS-2$
+		String details = articleLabel(entry) + stockSuffix(entry) + " changed from " + oldValue + " to " //$NON-NLS-1$ //$NON-NLS-2$
 				+ newValue;
 		logOrderStatus(order, OrderHistoryAction.EDITED, details); // $NON-NLS-1$
 	}
 
 	@Override
 	public void logDelivery(IOrder order, IOrderEntry entry, int deliveredAmount, int orderAmaunt) {
-		String details = deliveredAmount + "x von " + orderAmaunt + " " + entry.getArticle().getLabel(); //$NON-NLS-1$ //$NON-NLS-2$
+		String details = deliveredAmount + "x von " + orderAmaunt + " " + articleLabel(entry); //$NON-NLS-1$ //$NON-NLS-2$
 		logOrderStatus(order, OrderHistoryAction.DELIVERED, details); // $NON-NLS-1$
 	}
 
 	@Override
 	public void logCreateEntry(IOrder order, IOrderEntry entry, int quantity) {
-		String details = entry.getArticle().getLabel() + "/" + quantity; //$NON-NLS-1$
+		String details = articleLabel(entry) + "/" + quantity; //$NON-NLS-1$
 		logOrderStatus(order, OrderHistoryAction.ADDMEDI, details); // $NON-NLS-1$
 	}
 
@@ -71,19 +71,19 @@ public class OrderHistoryService implements IOrderHistoryService {
 
 		OrderHistoryAction action;
 		String details;
-		String articleLabel = entry.getArticle().getLabel() + stockSuffix(entry);
+		String label = articleLabel(entry) + stockSuffix(entry);
 
 		if (oldAmount == 0) {
 			action = OrderHistoryAction.ADDED;
-			details = articleLabel + " (Neu: " + newAmount + ")";
+			details = label + " (Neu: " + newAmount + ")";
 		} else if (newAmount > oldAmount) {
 			int diff = newAmount - oldAmount;
 			action = OrderHistoryAction.INCREASED;
-			details = articleLabel + " (" + oldAmount + " \u2192 " + newAmount + ", +" + diff + ")";
+			details = label + " (" + oldAmount + " \u2192 " + newAmount + ", +" + diff + ")";
 		} else {
 			int diff = oldAmount - newAmount;
 			action = OrderHistoryAction.DECREASED;
-			details = articleLabel + " (" + oldAmount + " \u2192 " + newAmount + ", -" + diff + ")";
+			details = label + " (" + oldAmount + " \u2192 " + newAmount + ", -" + diff + ")";
 		}
 
 		logOrderStatus(order, action, details);
@@ -104,7 +104,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (order == null || entry == null)
 			return;
 
-		String details = entry.getArticle().getLabel() + "/" + entry.getAmount(); //$NON-NLS-1$
+		String details = articleLabel(entry) + "/" + entry.getAmount(); //$NON-NLS-1$
 		logOrderStatus(order, OrderHistoryAction.REMOVEDMEDI, details); // $NON-NLS-1$
 	}
 
@@ -122,7 +122,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (order == null || entry == null || supplier == null || supplier.isEmpty())
 			return;
 
-		String details = entry.getArticle().getLabel();
+		String details = articleLabel(entry);
 		logOrderStatus(order, OrderHistoryAction.SUPPLIERADDED, details, supplier); // $NON-NLS-1$
 	}
 
@@ -137,6 +137,13 @@ public class OrderHistoryService implements IOrderHistoryService {
 				.orElse("Unknown"); //$NON-NLS-1$
 		OrderHistoryEntry entry = new OrderHistoryEntry(action, userId, details, extraInfo);
 		saveLogEntry(order, entry);
+	}
+
+	private String articleLabel(IOrderEntry entry) {
+		if (entry != null && entry.getArticle() != null && entry.getArticle().getLabel() != null) {
+			return entry.getArticle().getLabel();
+		}
+		return "Unbekannter Artikel"; //$NON-NLS-1$
 	}
 
 	private String stockSuffix(IOrderEntry entry) {
