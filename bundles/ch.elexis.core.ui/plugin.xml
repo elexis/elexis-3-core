@@ -1018,6 +1018,16 @@
                </and>
             </enabledWhen>
          </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.ShowViewHandler"
+               commandId="org.eclipse.ui.views.showView">
+            <activeWhen>
+                  <test
+                        args="ACL_VIEW_SELECTION"
+                        property="ch.elexis.commands.propertyTester.ACE">
+                  </test>
+            </activeWhen>
+         </handler>
       </extension>
       <extension
             point="org.eclipse.core.expressions.propertyTesters">
