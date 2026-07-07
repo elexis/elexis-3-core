@@ -59,7 +59,7 @@ public final class OrderDropReceiver implements GenericObjectDropTarget.IReceive
 		}
 
 		if (changesMade) {
-			view.tableViewer.getTable().getDisplay().asyncExec(() -> view.reload());
+			view.tableViewer.getTable().getDisplay().asyncExec(() -> view.refresh());
 		}
 	}
 
