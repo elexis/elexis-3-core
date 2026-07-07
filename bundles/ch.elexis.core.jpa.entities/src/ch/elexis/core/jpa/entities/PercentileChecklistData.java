@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Cache;
@@ -23,6 +24,7 @@ import ch.elexis.core.model.util.ElexisIdGenerator;
 @Table(name = "net_medshare_percentile_checklist_data")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
+@NamedQuery(name = "PercentileChecklistData.question", query = "SELECT pqd FROM PercentileChecklistData pqd WHERE pqd.question = :question")
 public class PercentileChecklistData extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

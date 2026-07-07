@@ -4,8 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -16,17 +17,16 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 
 @Entity
-@Table(name = "net_medshare_percentile_checklist_form")
+@Table(name = "net_medshare_percentile_checklist_q2f")
 @EntityListeners(EntityWithIdListener.class)
 @Cache(expiry = 15000)
-@NamedQuery(name = "PercentileChecklistForm.title", query = "SELECT pcf FROM PercentileChecklistForm pcf WHERE pcf.formTitle = :title")
-public class PercentileChecklistForm extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
+@NamedQuery(name = "PercentileChecklistQ2F.form.question", query = "SELECT pqf FROM PercentileChecklistQ2F pqf WHERE pqf.form = :form AND pqf.question = :question")
+public class PercentileChecklistQ2F extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
 
 	@Id
-	@GeneratedValue(generator = "system-uuid")
 	@Column(unique = true, nullable = false, length = 25)
 	private String id = ElexisIdGenerator.generateId();
 
@@ -34,14 +34,16 @@ public class PercentileChecklistForm extends AbstractEntityWithId implements Ent
 	@Convert(converter = BooleanCharacterConverterSafe.class)
 	protected boolean deleted = false;
 
-	@Column(length = 255)
-	private String formTitle;
+	@ManyToOne
+	@JoinColumn(name = "FormId")
+	private PercentileChecklistForm form;
+
+	@ManyToOne
+	@JoinColumn(name = "QuestionId")
+	private PercentileChecklistQuestion question;
 
 	@Column(length = 11)
-	private String fromAge;
-
-	@Column(length = 11)
-	private String toAge;
+	private String sortorder;
 
 	@Override
 	public boolean isDeleted() {
@@ -73,27 +75,27 @@ public class PercentileChecklistForm extends AbstractEntityWithId implements Ent
 		this.lastupdate = lastupdate;
 	}
 
-	public String getFormTitle() {
-		return formTitle;
+	public PercentileChecklistForm getForm() {
+		return form;
 	}
 
-	public void setFormTitle(String formTitle) {
-		this.formTitle = formTitle;
+	public void setForm(PercentileChecklistForm form) {
+		this.form = form;
 	}
 
-	public String getFromAge() {
-		return fromAge;
+	public PercentileChecklistQuestion getQuestion() {
+		return question;
 	}
 
-	public void setFromAge(String fromAge) {
-		this.fromAge = fromAge;
+	public void setQuestion(PercentileChecklistQuestion question) {
+		this.question = question;
 	}
 
-	public String getToAge() {
-		return toAge;
+	public String getSortorder() {
+		return sortorder;
 	}
 
-	public void setToAge(String toAge) {
-		this.toAge = toAge;
+	public void setSortOrder(String sortorder) {
+		this.sortorder = sortorder;
 	}
 }
