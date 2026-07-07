@@ -149,10 +149,7 @@ public class DiagnoseListComposite extends Composite {
 						}
 
 						if (hasText) {
-							String[] lines = condition.getText().get().split("\\r?\\n");
-							for (String line : lines) {
-								appendFormattedLine(text, line);
-							}
+							text.append(TextUtil.blocksToNebulaBreaks(condition.getText().get()));
 						}
 
 						if (hasNotes) {
@@ -174,17 +171,12 @@ public class DiagnoseListComposite extends Composite {
 					 * OLD / STANDARD layout (used when checkboxes are disabled)
 					 */
 					private Object getStandardFormattedText(ICondition condition) {
-						StringBuilder text = new StringBuilder();
-
 						StringBuilder contentText = new StringBuilder();
-						// first display text
 						Optional<String> conditionText = condition.getText();
-						conditionText.ifPresent(t -> {
-							if (contentText.length() > 0) {
-								contentText.append(StringUtils.LF);
-							}
-							contentText.append(t);
-						});
+						if (conditionText.isPresent() && StringUtils.isNotBlank(conditionText.get())) {
+							contentText.append(
+									TextUtil.stripInlineFormatting(TextUtil.blocksToNebulaBreaks(conditionText.get())));
+						}
 						// then display the coding
 						List<ICoding> codings = condition.getCoding();
 						if (codings != null && !codings.isEmpty()) {
@@ -198,6 +190,7 @@ public class DiagnoseListComposite extends Composite {
 							}
 						}
 						// add additional information before content
+						StringBuilder text = new StringBuilder();
 						text.append("<strong>");
 						ConditionStatus status = condition.getStatus();
 						text.append(status.getLocalized());
@@ -211,13 +204,14 @@ public class DiagnoseListComposite extends Composite {
 						if (!notes.isEmpty()) {
 							text.append(" (" + notes.size() + ")");
 						}
-						if (contentText.toString().contains(StringUtils.LF)) {
-							text.append("</strong>\n").append(contentText.toString());
-						} else {
-							text.append("</strong> ").append(contentText.toString());
+						text.append("</strong>");
+						if (contentText.length() > 0) {
+							boolean multiLine = contentText.indexOf("<br") >= 0 || contentText.indexOf("<ul") >= 0
+									|| contentText.indexOf("<ol") >= 0;
+							text.append(multiLine ? "<br/>" : " ").append(contentText);
 						}
 
-						return text.toString().replaceAll(StringUtils.LF, "<br/>");
+						return text.toString();
 					}
 
 					@Override

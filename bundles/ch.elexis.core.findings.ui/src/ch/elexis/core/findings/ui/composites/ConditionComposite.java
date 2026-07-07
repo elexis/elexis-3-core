@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -31,6 +32,8 @@ import ch.elexis.core.findings.ui.composites.NoteListComposite.NotesAdapter;
 import ch.elexis.core.findings.ui.model.ConditionBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.ui.views.controls.RichTextEditorComposite;
 
 public class ConditionComposite extends Composite {
 
@@ -82,9 +85,11 @@ public class ConditionComposite extends Composite {
 
 		textOrCodingFolder = new TabFolder(this, SWT.NONE);
 
+		boolean useRichText = LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
+
 		TabItem textItem = new TabItem(textOrCodingFolder, SWT.NONE, 0);
 		textItem.setText(Messages.ConditionComposite_TabText);
-		textEditor = new RichTextEditorComposite(textOrCodingFolder, SWT.NONE);
+		textEditor = new RichTextEditorComposite(textOrCodingFolder, SWT.NONE, !useRichText);
 		textItem.setControl(textEditor);
 
 		TabItem codingItem = new TabItem(textOrCodingFolder, SWT.NONE, 1);

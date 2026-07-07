@@ -5581,14 +5581,6 @@ public class Messages extends NLS {
 	public static String ReminderStatusSubMenu_NoSelection;
 	public static String AgendaFarben_SpecialAppointments;
 	public static String AgendaFarben_RecurringAppointment;
-	public static String RichTextEditorComposite_Bold;
-	public static String RichTextEditorComposite_Italic;
-	public static String RichTextEditorComposite_Underline;
-	public static String RichTextEditorComposite_Strikethrough;
-	public static String RichTextEditorComposite_FontColor;
-	public static String RichTextEditorComposite_BackgroundColor;
-	public static String RichTextEditorComposite_BulletList;
-	public static String RichTextEditorComposite_NumberedList;
 	public static String ConditionComposite_StartHint;
 	public static String ConditionComposite_EndHint;
 	public static String ConditionComposite_TabText;
