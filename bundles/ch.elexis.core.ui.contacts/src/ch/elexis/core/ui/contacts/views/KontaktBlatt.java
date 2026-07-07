@@ -90,6 +90,7 @@ import jakarta.inject.Inject;
 public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable {
 
 	private static final String IS_USER = "istAnwender"; //$NON-NLS-1$
+	private static final String IS_PATIENT = "istPatient"; //$NON-NLS-1$
 
 	private static final String MOBIL = Messages.Core_Mobilephone; // $NON-NLS-1$
 	private static final String VORNAME = Messages.Core_Firstname; // $NON-NLS-1$
@@ -98,8 +99,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private static final String ANSPRECHPERSON = Messages.ContactPerson; // $NON-NLS-1$
 	private static final String ZUSATZ = Messages.Core_Additional; // $NON-NLS-1$
 	private static final String BEZEICHNUNG = Messages.Core_Description; // $NON-NLS-1$
-	static final String[] types = { "istOrganisation", "istLabor", "istPerson", "istPatient", IS_USER, "istMandant" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
-	}; // $NON-NLS-6$
+	static final String[] types = { "istOrganisation", "istLabor", "istPerson", IS_PATIENT, IS_USER, "istMandant" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+	}; // $NON-NLS-5$
 	static final String[] typLabels = { Messages.Core_Organisation, Messages.Core_Laboratory, Messages.Core_Person,
 			Messages.Core_Patient, Messages.Core_User, Messages.Core_Mandator };
 	private final Button[] bTypes = new Button[types.length];
@@ -108,6 +109,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	private final ScrolledForm form;
 	private final FormToolkit tk;
 	AutoForm afDetails;
+	private InputData genderCombo;
 	Listener mandantListener, checkIfContactExistsListener, changeEmailListener;
 	
 	@Inject
@@ -371,8 +373,10 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	private void restrictSexField() {
-		if (def[3].getWidget() != null && def[3].getWidget().getControl() instanceof Combo) {
-			Combo cbSex = (Combo) def[3].getWidget().getControl();
+		genderCombo = getInputFieldByLabel(Messages.Sex);
+		if (genderCombo != null && genderCombo.getWidget() != null
+				&& genderCombo.getWidget().getControl() instanceof Combo) {
+			Combo cbSex = (Combo) genderCombo.getWidget().getControl();
 			cbSex.addVerifyListener(event -> {
 				String current = cbSex.getText();
 				String result = current.substring(0, event.start) + event.text + current.substring(event.end);
@@ -481,7 +485,7 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 					setOrganisationFieldsVisible(false);
 					if ("istPerson".equals(type)) { //$NON-NLS-1$
 						select("0", "0", "1", "x", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-					} else if (type.equals("istPatient")) { //$NON-NLS-1$
+					} else if (type.equals(IS_PATIENT)) {
 						select("0", "0", "1", "1", "x", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					} else if (type.equals(IS_USER)) { // $NON-NLS-1$
 						select("0", "0", "1", "x", "1", "x"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
@@ -517,17 +521,27 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 	}
 
 	private void updateShortLabelEditable() {
-		InputData shortLabel = getShortLabelField();
-		if (shortLabel != null && shortLabel.getWidget() != null) {
-			boolean isPatient = bTypes[3].getSelection();
+		InputData shortLabel = getInputFieldByLabel(Messages.KontaktBlatt_shortLabel);
+		Button patientButton = getTypeButton(IS_PATIENT);
+		if (shortLabel != null && shortLabel.getWidget() != null && patientButton != null) {
+			boolean isPatient = patientButton.getSelection();
 			shortLabel.getWidget().setEnabled(!isPatient);
 		}
 	}
-
-	private InputData getShortLabelField() {
+	
+	private InputData getInputFieldByLabel(String label) {
 		for (InputData d : def) {
-			if (Messages.KontaktBlatt_shortLabel.equals(d.getLabel())) {
+			if (label.equals(d.getLabel())) {
 				return d;
+			}
+		}
+		return null;
+	}
+
+	private Button getTypeButton(String type) {
+		for (Button b : bTypes) {
+			if (b != null && type.equals(b.getData())) {
+				return b;
 			}
 		}
 		return null;

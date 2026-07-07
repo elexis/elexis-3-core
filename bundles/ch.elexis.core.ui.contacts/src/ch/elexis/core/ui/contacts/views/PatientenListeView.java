@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -74,6 +73,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.command.StickerFilterCommand;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -185,7 +185,6 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		makeActions();
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
-			private boolean reformattingDob = false;
 
 			@Override
 			public void setQuery(IQuery<?> query) {
@@ -225,49 +224,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 					}
 					Text field = (Text) selectors[i].getWidget();
 					if ("code".equals(dbFields[i])) { //$NON-NLS-1$
-						field.addVerifyListener(event -> {
-							for (int c = 0; c < event.text.length(); c++) {
-								if (!Character.isDigit(event.text.charAt(c))) {
-									event.doit = false;
-									return;
-								}
-							}
-						});
+						FilterFieldInputRestrictions.restrictToDigits(field);
 					} else if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
-						field.setTextLimit(10);
-						field.addModifyListener(e -> {
-							if (reformattingDob) {
-								return;
-							}
-							String current = field.getText();
-							String digits = current.replaceAll("[^0-9]", StringUtils.EMPTY); //$NON-NLS-1$
-							if (digits.length() > 8) {
-								digits = digits.substring(0, 8);
-							}
-							String formatted = formatDobFilter(digits);
-							if (!formatted.equals(current)) {
-								reformattingDob = true;
-								field.setText(formatted);
-								field.setSelection(formatted.length());
-								reformattingDob = false;
-							}
-						});
+						FilterFieldInputRestrictions.applyBirthdateFilterFormatting(field);
 					}
 				}
-			}
-
-			private String formatDobFilter(String d) {
-				int length = d.length();
-				if (length <= 4) {
-					// up to 4 digits: year or partial entry no points
-					return d;
-				}
-				// From the 5th digit onwards, it can no longer be just a year, date DD.MM.YYYY
-				StringBuilder sb = new StringBuilder();
-				sb.append(d, 0, 2).append('.');
-				sb.append(d, 2, 4).append('.');
-				sb.append(d, 4, Math.min(8, length));
-				return sb.toString();
 			}
 		};
 		updateFocusField();

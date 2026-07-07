@@ -115,7 +115,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 		tGebDat.addVerifyListener(event -> {
-			if (event.keyCode == 8 || event.keyCode == 127) {
+			if (event.keyCode == SWT.BS || event.keyCode == SWT.DEL) {
 				return;
 			}
 
