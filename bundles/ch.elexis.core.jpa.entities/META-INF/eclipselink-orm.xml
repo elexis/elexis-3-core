@@ -311,4 +311,16 @@
 			<expiry>15000</expiry>
 		</cache>
 	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileReference">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>
+	<entity
+		class="ch.elexis.core.jpa.entities.PercentileChecklistQ2F">
+		<cache>
+			<expiry>15000</expiry>
+		</cache>
+	</entity>	
 </entity-mappings>

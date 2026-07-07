@@ -82,7 +82,9 @@
 		<class>ch.elexis.core.jpa.entities.PercentileChecklistForm</class>
 		<class>ch.elexis.core.jpa.entities.PercentileChecklistQuestion</class>
 		<class>ch.elexis.core.jpa.entities.PercentileChecklistTitle</class>
+		<class>ch.elexis.core.jpa.entities.PercentileChecklistQ2F</class>
 		<class>ch.elexis.core.jpa.entities.PercentilePatient</class>
+		<class>ch.elexis.core.jpa.entities.PercentileReference</class>
 		<class>ch.elexis.core.jpa.entities.Prescription</class>
 		<class>ch.elexis.core.jpa.entities.PrivatLeistung</class>
 		<class>ch.elexis.core.jpa.entities.PhysioLeistung</class>
