@@ -181,7 +181,8 @@ public class OsgiServiceUtil {
 					return Optional.of(service);
 				} else {
 					ServiceComponentRuntime scr = getService(ServiceComponentRuntime.class).get();
-					String unsatisfiedComponents = UnsatisfiedComponentUtil.listUnsatisfiedComponents(scr, bundle);
+					String unsatisfiedComponents = UnsatisfiedComponentUtil.listUnsatisfiedComponents(scr,
+							bundle.getBundleContext().getBundles());
 					logger.warn("ERR getServiceWait [{}]: {}", clazz.getName(), unsatisfiedComponents);
 					ungetService(scr);
 				}
