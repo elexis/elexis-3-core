@@ -24,7 +24,7 @@ Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0",
  org.eclipse.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.perspective.service
-Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveImportService.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
- OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml
+Service-Component: OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveExportHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.handler.PerspektiveImportHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveExportService.xml,
+ OSGI-INF/ch.elexis.core.ui.perspective.service.internal.PerspectiveImportService.xml
