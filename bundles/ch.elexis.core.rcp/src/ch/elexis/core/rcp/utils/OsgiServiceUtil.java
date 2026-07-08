@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Constants;
+import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -133,6 +136,60 @@ public class OsgiServiceUtil {
 			logger.error("Could not get service", e);
 		} finally {
 			serviceTracker.close();
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Get a service from the OSGi service registry. Wait for it, it it's not
+	 * available yet. <b>Always</b> release the service using the
+	 * {@link OsgiServiceUtil#ungetService(Object)} method after usage.
+	 *
+	 * @param clazz
+	 * @param timeout milliseconds to wait for the service to become available
+	 * @return
+	 */
+	public synchronized static <T extends Object> Optional<T> getServiceWait(Class<T> clazz, String filterstring,
+			long timeout) {
+		Bundle bundle = FrameworkUtil.getBundle(clazz);
+		// fallback to our context ...
+		if (bundle == null || bundle.getBundleContext() == null) {
+			bundle = FrameworkUtil.getBundle(OsgiServiceUtil.class);
+		}
+		ServiceTracker<T, T> serviceTracker = null;
+		if (StringUtils.isNotBlank(filterstring)) {
+			try {
+				String andCompositeFilterString = "(&(" + Constants.OBJECTCLASS + "=" + clazz.getName() + ")"
+						+ filterstring + ")";
+				Filter filter = (filterstring == null) ? null
+						: bundle.getBundleContext().createFilter(andCompositeFilterString);
+				serviceTracker = new ServiceTracker<>(bundle.getBundleContext(), filter, null);
+			} catch (InvalidSyntaxException e) {
+				logger.error("Error getting service reference", e);
+			}
+
+		} else {
+			serviceTracker = new ServiceTracker<>(bundle.getBundleContext(), clazz, null);
+		}
+		if (serviceTracker != null) {
+			serviceTracker.open();
+			try {
+				T service = serviceTracker.waitForService(timeout);
+				if (service != null) {
+					ServiceReference<?> serviceReferenceTracker = serviceTracker.getServiceReference();
+					serviceReferences.put(service, serviceReferenceTracker);
+					return Optional.of(service);
+				} else {
+					ServiceComponentRuntime scr = getService(ServiceComponentRuntime.class).get();
+					String unsatisfiedComponents = UnsatisfiedComponentUtil.listUnsatisfiedComponents(scr, bundle);
+					logger.warn("ERR getServiceWait [{}]: {}", clazz.getName(), unsatisfiedComponents);
+					ungetService(scr);
+				}
+			} catch (InterruptedException e) {
+				logger.error("Could not get service", e);
+			} finally {
+				serviceTracker.close();
+			}
 		}
 		return Optional.empty();
 	}
