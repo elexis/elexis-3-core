@@ -83,7 +83,7 @@ public class AttachmentsUtil {
 		return null;
 	}
 
-	public static String getFileName(IImage iImage) {
+	private static String getFileName(IImage iImage) {
 		return iImage.getTitle();
 	}
 
