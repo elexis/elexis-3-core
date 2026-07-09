@@ -19,6 +19,7 @@ import ch.elexis.core.findings.util.fhir.accessor.EncounterAccessor;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.text.model.Samdas.Record;
@@ -28,6 +29,10 @@ public class IEncounterEncounterAttributeMapper
 		implements IdentifiableDomainResourceAttributeMapper<IEncounter, Encounter> {
 
 	private EncounterAccessor accessor = new EncounterAccessor();
+
+	public Optional<String> getCoverageId(Encounter source) {
+		return accessor.getCoverageId(source);
+	}
 
 	@Override
 	public void elexisToFhir(IEncounter source, Encounter target, SummaryEnum summaryEnum, Set<Include> includes) {
@@ -40,11 +45,14 @@ public class IEncounterEncounterAttributeMapper
 		}
 		ICoverage coverage = source.getCoverage();
 		if (coverage != null) {
+			accessor.setCoverageId(target, coverage.getId());
 			IPatient patient = coverage.getPatient();
 			if (patient != null) {
 				accessor.setPatientId(target, patient.getId());
 			}
 		}
+
+		accessor.setStatus(target, BillingServiceHolder.get().isEditable(source).isOK());
 
 		if (source.getMandator() != null) {
 			accessor.setPrimaryPerformer(target, source.getMandator());
@@ -80,6 +88,8 @@ public class IEncounterEncounterAttributeMapper
 		if (source.hasText()) {
 			updateConsText(source, target);
 		}
+
+		accessor.getBillable(source).ifPresent(billable -> target.setBillable(billable.booleanValue()));
 	}
 
 	private void updateConsText(Encounter fhirObject, ch.elexis.core.model.IEncounter cons) {
