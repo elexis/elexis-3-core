@@ -1,4 +1,4 @@
-﻿/*******************************************************************************
+/*******************************************************************************
  * Copyright (c) 2006-2011, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -373,8 +373,7 @@ public class TextContainer {
 	}
 
 	private boolean isRelevantPatientField(String fieldName) {
-		return "Patient.Diagnosen".equals(fieldName) || "Patient.Diagnosen".equals(fieldName)
-				|| "Patient.FamilienAnamnese".equals(fieldName)
+		return "Patient.Diagnosen".equals(fieldName) || "Patient.FamilienAnamnese".equals(fieldName)
 	            || "Patient.PersAnamnese".equals(fieldName) || "Patient.Risiken".equals(fieldName)
 	            || "Patient.Allergien".equals(fieldName);
 	}

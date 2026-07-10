@@ -14,11 +14,14 @@
 package ch.elexis.core.ui.views.controls;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.nebula.widgets.richtext.RichTextEditor;
 import org.eclipse.swt.SWT;
@@ -30,6 +33,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.osgi.framework.FrameworkUtil;
 import org.slf4j.LoggerFactory;
 
 import com.equo.chromium.swt.Browser;
@@ -46,7 +50,11 @@ public class RichTextEditorComposite extends Composite {
 
 	private static final String[] EXPECTED_BRIDGE_CALLBACKS = { "getAllOptions", "customizeToolbar", "focusIn",
 			"focusOut", "keyPressed", "keyReleased", "textModified" };
-	
+
+	private static final String PARAGRAPH_SPACING = "2px";
+
+	private static String customizationScript;
+
 	private boolean editorLoaded;
 	private String pendingText;
 
@@ -109,27 +117,12 @@ public class RichTextEditorComposite extends Composite {
 
 					verifyBridgeContract();
 
-					browser.execute(printColorAdjustJs());
-					browser.execute(revealOnReadyJs());
-					browser.execute(paragraphSpacingJs());
-					browser.execute(fixEnterKeyHandlerJs());
-					browser.execute(bulletAutoformatJs());
-					if (plainDisplay) {
-						browser.execute(plainDisplayJs());
-					}
+					browser.execute("window.elexisRichTextConfig = { paragraphSpacing: '" + PARAGRAPH_SPACING
+							+ "', plainDisplay: " + plainDisplay + " };");
+					browser.execute(getCustomizationScript());
 
 					browser.evaluate("initEditor();");
 					editorLoaded = true;
-					getDisplay().timerExec(250, RichTextEditorComposite.this::maximizeEditorHeight);
-					getDisplay().timerExec(3000, () -> {
-						if (browser != null && !browser.isDisposed()) {
-							try {
-								browser.execute("document.documentElement.style.visibility='visible';");
-							} catch (Exception ignore) {
-								// best effort
-							}
-						}
-					});
 				} catch (Exception e) {
 					LoggerFactory.getLogger(RichTextEditorComposite.class)
 							.error("Could not initialize CKEditor", e);
@@ -159,96 +152,26 @@ public class RichTextEditorComposite extends Composite {
 		}
 	}
 
-	private static String printColorAdjustJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" + "  try {" + "    var doc = ev.editor.document.$;"
-				+ "    var head = doc.head || doc.getElementsByTagName('head')[0];" + "    if (!head) { return; }"
-				+ "    var style = doc.createElement('style');"
-				+ "    style.setAttribute('data-print-color-adjust', '1');"
-				+ "    style.appendChild(doc.createTextNode("
-				+ "      '@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}}'));" //
-				+ "    head.appendChild(style);" + "  } catch (e) {}"
-				+ "});";
-	}
+	private static final String CUSTOMIZATION_SCRIPT_PATH = "rsc/js/richtexteditor.js";
 
-	private static final String PARAGRAPH_SPACING = "2px";
-
-	private static String paragraphSpacingJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" //
-				+ "  try {" //
-				+ "    var doc = ev.editor.document.$;" //
-				+ "    var head = doc.head || doc.getElementsByTagName('head')[0];" //
-				+ "    if (!head) { return; }" //
-				+ "    var style = doc.createElement('style');" //
-				+ "    style.appendChild(doc.createTextNode(" //
-				+ "      'p{margin-top:0 !important;margin-bottom:" + PARAGRAPH_SPACING + " !important;}'));" //
-				+ "    head.appendChild(style);" //
-				+ "  } catch (e) {}" //
-				+ "});";
-	}
-
-	private static String revealOnReadyJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" //
-				+ "  try { document.documentElement.style.visibility = 'visible'; } catch (e) {}" //
-				+ "});";
-	}
-
-	private static String bulletAutoformatJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" //
-				+ "  var editor = ev.editor;" //
-				+ "  var pendingLi = null;" //
-				+ "  function caretBlock() {" //
-				+ "    var sel = editor.getSelection();" //
-				+ "    if (!sel) { return null; }" //
-				+ "    var r = sel.getRanges()[0];" //
-				+ "    if (!r || !r.collapsed) { return null; }" //
-				+ "    return r.startPath().block;" //
-				+ "  }" //
-				+ "  editor.on('key', function(evt) {" //
-				+ "    var key = evt.data.keyCode;" //
-				+ "    if (key === 32) {" //
-				+ "      setTimeout(function() {" //
-				+ "        try {" //
-				+ "          var block = caretBlock();" //
-				+ "          if (!block || block.getName() === 'li') { return; }" //
-				+ "          var text = (block.getText() || '').replace(/\\u00a0/g, ' ').trim();" //
-				+ "          if (text !== '-') { return; }" //
-				+ "          editor.execCommand('bulletedlist');" //
-				+ "          var start = editor.getSelection().getStartElement();" //
-				+ "          var li = start ? (start.getName() === 'li' ? start : start.getAscendant('li', true)) : null;" //
-				+ "          if (li) {" //
-				+ "            li.setHtml('');" //
-				+ "            var r = editor.createRange();" //
-				+ "            r.moveToElementEditStart(li);" //
-				+ "            editor.getSelection().selectRanges([r]);" //
-				+ "            pendingLi = li;" //
-				+ "          }" //
-				+ "        } catch (e) {}" //
-				+ "      }, 0);" //
-				+ "    } else if (key === 8) {" //
-				+ "      try {" //
-				+ "        var block = caretBlock();" //
-				+ "        if (!block || block.getName() !== 'li' || !pendingLi) { return; }" //
-				+ "        if (!block.equals(pendingLi)) { return; }" //
-				+ "        var text = (block.getText() || '').replace(/\\u00a0/g, ' ').trim();" //
-				+ "        if (text !== '') { return; }" //
-				+ "        evt.cancel();" //
-				+ "        editor.execCommand('bulletedlist');" //
-				+ "        editor.insertText('- ');" //
-				+ "        pendingLi = null;" //
-				+ "      } catch (e) {}" //
-				+ "    }" //
-				+ "  });" //
-				+ "});";
-	}
-
-	private static String fixEnterKeyHandlerJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" //
-				+ "  ev.editor.on('key', function(evt) {" //
-				+ "    if (evt.data && evt.data.keyCode === 13) {" //
-				+ "      evt.stop();" //
-				+ "    }" //
-				+ "  }, null, null, 1);" //
-				+ "});";
+	private static synchronized String getCustomizationScript() {
+		if (customizationScript == null) {
+			URL entry = FrameworkUtil.getBundle(RichTextEditorComposite.class).getEntry(CUSTOMIZATION_SCRIPT_PATH);
+			if (entry == null) {
+				LoggerFactory.getLogger(RichTextEditorComposite.class)
+						.error("{} not found in bundle", CUSTOMIZATION_SCRIPT_PATH);
+				customizationScript = StringUtils.EMPTY;
+				return customizationScript;
+			}
+			try (InputStream in = entry.openStream()) {
+				customizationScript = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				LoggerFactory.getLogger(RichTextEditorComposite.class).error("Could not load {}",
+						CUSTOMIZATION_SCRIPT_PATH, e);
+				customizationScript = StringUtils.EMPTY;
+			}
+		}
+		return customizationScript;
 	}
 
 	private void maximizeEditorHeight() {
@@ -260,29 +183,6 @@ public class RichTextEditorComposite extends Composite {
 		} catch (Exception e) {
 			LoggerFactory.getLogger(RichTextEditorComposite.class).warn("Could not maximize editor height", e);
 		}
-	}
-
-	private static String plainDisplayJs() {
-		return "CKEDITOR.on('instanceReady', function(ev) {" //
-				+ "  try {" //
-				+ "    var doc = ev.editor.document.$;" //
-				+ "    var head = doc.head || doc.getElementsByTagName('head')[0];" //
-				+ "    if (head) {" //
-				+ "      var s = doc.createElement('style');" //
-				+ "      s.appendChild(doc.createTextNode(" //
-				+ "        'body,body *{font-weight:normal !important;font-style:normal !important;" //
-				+ "text-decoration:none !important;color:inherit !important;" //
-				+ "background-color:transparent !important;font-family:inherit !important;" //
-				+ "font-size:inherit !important;text-align:left !important;}" //
-				// reset paragraph alignment/indent but keep list indentation (ul/ol/li) intact
-				+ "p,div{text-indent:0 !important;margin-left:0 !important;padding-left:0 !important;}'));" //
-				+ "      head.appendChild(s);" //
-				+ "    }" //
-				+ "    var s2 = document.createElement('style');" //
-				+ "    s2.appendChild(document.createTextNode('.cke_top,.cke_bottom{display:none !important;}'));" //
-				+ "    document.head.appendChild(s2);" //
-				+ "  } catch (e) {}" //
-				+ "});";
 	}
 
 	private void verifyBridgeContract() {
@@ -411,7 +311,9 @@ public class RichTextEditorComposite extends Composite {
 			return markup;
 		}
 		String sanitized = markup.replace("&quot;", "\"").replace("&apos;", "'");
-		sanitized = sanitized.replaceAll("<span\\s+style\\s*=\\s*([^\"'>\\s]+)\\s*>", "<span style=\"$1\">");
+		// quote unquoted style values up to the closing '>', so multi-property
+		// values (style=color:#000; font-size:16px) are not split by the parser
+		sanitized = sanitized.replaceAll("(?i)\\bstyle\\s*=\\s*(?![\"'])([^>]*?)\\s*(?=/?>)", "style=\"$1\"");
 		return sanitized;
 	}
 

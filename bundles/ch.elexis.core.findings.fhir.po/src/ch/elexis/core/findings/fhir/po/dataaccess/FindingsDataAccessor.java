@@ -1,4 +1,4 @@
-﻿package ch.elexis.core.findings.fhir.po.dataaccess;
+package ch.elexis.core.findings.fhir.po.dataaccess;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -22,6 +22,7 @@ import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.text.RichTextMarker;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
@@ -180,6 +181,11 @@ public class FindingsDataAccessor implements IDataAccess {
 			}
 			sb.append(TextUtil.getText(condition, codingService, wordFormat));
 		});
+		if (wordFormat && sb.length() > 0) {
+			// mark as rich text so the text plugin renders the markup;
+			// unmarked values are always inserted as plain text
+			return new Result<>(RichTextMarker.wrap(sb.toString()));
+		}
 		return new Result<>(sb.toString());
 	}
 

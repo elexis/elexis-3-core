@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.docx4j.XmlUtils;
@@ -29,6 +28,8 @@ import org.jsoup.nodes.Node;
 import org.jvnet.jaxb2_commons.ppp.Child;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.text.RichTextMarker;
+
 public class TextUtil {
 
 	static ObjectFactory wmlObjectFactory = Context.getWmlObjectFactory();
@@ -48,7 +49,11 @@ public class TextUtil {
 		return replaceText(cursor, text, align, styleInfo, null);
 	}
 
-	/** Replace the cursor text. CKEditor markup is rendered via ImportXHTML when {@code pkg} is given. */
+	/**
+	 * Replace the cursor text. Rich text (HTML markup explicitly marked with
+	 * {@link RichTextMarker}) is rendered via ImportXHTML when {@code pkg} is
+	 * given; all unmarked text always takes the standard plain text path.
+	 */
 	public static Object replaceText(Object cursor, String text, int align, StyleInfo styleInfo,
 			WordprocessingMLPackage pkg) {
 		if (cursor instanceof R) {
@@ -60,8 +65,12 @@ public class TextUtil {
 	}
 
 	private static Object replaceText(R cursor, String text, StyleInfo styleInfo, WordprocessingMLPackage pkg) {
-		if (pkg != null && containsMarkup(text)) {
-			return renderWithImportXhtml(cursor, text, pkg);
+		if (RichTextMarker.isMarked(text)) {
+			if (pkg != null) {
+				return renderWithImportXhtml(cursor, RichTextMarker.unwrap(text), pkg);
+			}
+			// no package to render into: insert the markup as plain text
+			text = RichTextMarker.unwrap(text);
 		}
 		R ret = null;
 		boolean cursorInTbl = DocxUtil.getParentTbl(cursor) != null;
@@ -131,12 +140,6 @@ public class TextUtil {
 	}
 
 	// --- CKEditor markup -> WordprocessingML via docx4j-ImportXHTML ------------------------------
-
-	private static final Pattern HTML_TAG = Pattern.compile("<[a-zA-Z][^>]*>");
-
-	private static boolean containsMarkup(String text) {
-		return text != null && HTML_TAG.matcher(text).find();
-	}
 
 	/**
 	 * Converts CKEditor markup (nested lists, sub/superscript, inline formatting) to
@@ -304,9 +307,26 @@ public class TextUtil {
 			return rawHtml;
 		}
 		String sanitized = rawHtml.replace("&quot;", "\"").replace("&apos;", "'");
-		sanitized = sanitized.replaceAll("<span\\s+style\\s*=\\s*([^\"'>\\s]+)\\s*>", "<span style=\"$1\">");
+		sanitized = XHtmlDocxConverter.quoteUnquotedStyles(sanitized);
+		sanitized = dropInvalidAttributes(sanitized);
 		sanitized = bulletizeDashLines(sanitized);
 		return flattenHtmlLists(sanitized);
+	}
+
+	/**
+	 * Safety net for broken legacy markup (e.g. {@code <span style="color:#000;"
+	 * font-size:16px="">} persisted by earlier versions): drops attributes whose
+	 * names are not valid XML names, so the Nebula painter's XML parser can never
+	 * fail on them. Css-like leftovers are merged back into the style attribute.
+	 */
+	private static String dropInvalidAttributes(String html) {
+		if (html == null || html.indexOf('<') < 0) {
+			return html;
+		}
+		Document doc = Jsoup.parseBodyFragment(html);
+		doc.outputSettings().prettyPrint(false).syntax(Syntax.xml).escapeMode(EscapeMode.xhtml);
+		XHtmlDocxConverter.removeInvalidAttributes(doc);
+		return doc.body().html();
 	}
 
 	/**
