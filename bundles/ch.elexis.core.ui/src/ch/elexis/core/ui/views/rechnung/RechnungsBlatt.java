@@ -253,7 +253,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Optional
 	@Inject
 	void deletedInvoice(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IInvoice invoice) {
-		if (actRn != null && actRn.getId().equals(invoice.getId())) {
+		if (actRn != null && invoice != null && actRn.getId().equals(invoice.getId())) {
 			doSelect(null);
 		}
 	}
@@ -261,7 +261,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Optional
 	@Inject
 	void updateInvoice(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IInvoice invoice) {
-		doSelect(invoice);
+		if (actRn != null && invoice != null && actRn.getId().equals(invoice.getId())) {
+			doSelect(invoice);
+		}
 	}
 
 	@Inject
