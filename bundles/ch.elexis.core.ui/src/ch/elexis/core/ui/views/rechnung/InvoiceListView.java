@@ -213,10 +213,14 @@ public class InvoiceListView extends ViewPart implements IRefreshablePart, IDoub
 				InvoiceEntry firstElement = (InvoiceEntry) ss.getFirstElement();
 				IInvoice invoice = coreModelService.load(firstElement.getInvoiceId(), IInvoice.class)
 						.orElse(null);
-				ContextServiceHolder.get().setTyped(invoice);
-				if (invoice.getCoverage() != null) {
-					ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
-					ContextServiceHolder.get().setTyped(invoice.getCoverage());
+				if (invoice != null) {
+					ContextServiceHolder.get().setTyped(invoice);
+					if (invoice.getCoverage() != null) {
+						ContextServiceHolder.get().setTyped(invoice.getCoverage().getPatient());
+						ContextServiceHolder.get().setTyped(invoice.getCoverage());
+					}
+				} else {
+					ContextServiceHolder.get().removeTyped(IInvoice.class);
 				}
 			}
 		});
