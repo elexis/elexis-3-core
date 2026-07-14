@@ -5581,6 +5581,13 @@ public class Messages extends NLS {
 	public static String ReminderStatusSubMenu_NoSelection;
 	public static String AgendaFarben_SpecialAppointments;
 	public static String AgendaFarben_RecurringAppointment;
+	public static String ConditionComposite_StartHint;
+	public static String ConditionComposite_EndHint;
+	public static String ConditionComposite_TabText;
+	public static String ConditionComposite_TabCoding;
+	public static String DiagnoseListComposite_StatusPrefix;
+	public static String DiagnoseListComposite_Create;
+	public static String DiagnoseListComposite_Remove;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

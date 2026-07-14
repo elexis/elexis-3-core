@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -30,7 +31,9 @@ import ch.elexis.core.findings.ui.composites.CodingListComposite.CodingAdapter;
 import ch.elexis.core.findings.ui.composites.NoteListComposite.NotesAdapter;
 import ch.elexis.core.findings.ui.model.ConditionBeanAdapter;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
-import ch.elexis.core.ui.util.FilterNonPrintableModifyListener;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.ui.views.controls.RichTextEditorComposite;
 
 public class ConditionComposite extends Composite {
 
@@ -46,7 +49,7 @@ public class ConditionComposite extends Composite {
 	private Text startTxt;
 	private Text endTxt;
 
-	private Text textTxt;
+	private RichTextEditorComposite textEditor;
 
 	private CodingListComposite codingComposite;
 
@@ -74,22 +77,23 @@ public class ConditionComposite extends Composite {
 
 		startTxt = new Text(this, SWT.BORDER);
 		startTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		startTxt.setMessage("Beginn Datum oder Beschreibung");
+		startTxt.setMessage(Messages.ConditionComposite_StartHint);
 
 		endTxt = new Text(this, SWT.BORDER);
 		endTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		endTxt.setMessage("Ende Datum oder Beschreibung");
+		endTxt.setMessage(Messages.ConditionComposite_EndHint);
 
 		textOrCodingFolder = new TabFolder(this, SWT.NONE);
 
+		boolean useRichText = LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
+
 		TabItem textItem = new TabItem(textOrCodingFolder, SWT.NONE, 0);
-		textItem.setText("Text");
-		textTxt = new Text(textOrCodingFolder, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		textItem.setControl(textTxt);
-		FilterNonPrintableModifyListener.addTo(textTxt);
+		textItem.setText(Messages.ConditionComposite_TabText);
+		textEditor = new RichTextEditorComposite(textOrCodingFolder, SWT.NONE, !useRichText);
+		textItem.setControl(textEditor);
 
 		TabItem codingItem = new TabItem(textOrCodingFolder, SWT.NONE, 1);
-		codingItem.setText("Kodierung");
+		codingItem.setText(Messages.ConditionComposite_TabCoding);
 		codingComposite = new CodingListComposite(textOrCodingFolder, SWT.NONE);
 		codingComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		codingItem.setControl(codingComposite);
@@ -124,15 +128,13 @@ public class ConditionComposite extends Composite {
 				.observeDetail(conditionValue);
 		bindingContext.bindValue(targetObservable, modelObservable);
 
-		targetObservable = WidgetProperties.text(SWT.Modify).observe(textTxt);
-		modelObservable = PojoProperties.value(ConditionBeanAdapter.class, "text", String.class)
-				.observeDetail(conditionValue);
-		bindingContext.bindValue(targetObservable, modelObservable);
-
 		setCondition(null);
 	}
 
 	public Optional<ICondition> getCondition() {
+		if (conditionValue.getValue() != null) {
+			conditionValue.getValue().setText(textEditor.getText());
+		}
 		return condition;
 	}
 
@@ -154,6 +156,8 @@ public class ConditionComposite extends Composite {
 			conditionValue.setValue(new ConditionBeanAdapter(emptyCondition));
 			this.condition = Optional.of(emptyCondition);
 		}
+
+		textEditor.setText(conditionValue.getValue() != null ? conditionValue.getValue().getText() : null);
 
 		// provide access adapter to notes composite
 		notesComposite.setInput(new NotesAdapter() {

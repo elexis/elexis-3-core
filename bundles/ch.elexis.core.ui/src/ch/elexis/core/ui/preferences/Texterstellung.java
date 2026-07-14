@@ -90,9 +90,11 @@ public class Texterstellung extends FieldEditorPreferencePage implements IWorkbe
 		addField(new BooleanFieldEditor(Preferences.P_TEXT_EDIT_LOCAL, Messages.Texterstellung_texteditlocaldesc,
 				getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT,
-				Messages.Texterstellung_DiagnoseExportAlternativeFormat,
-				getFieldEditorParent()));
+		BooleanFieldEditor diagnoseExportFormat = new BooleanFieldEditor(
+				Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT,
+				Messages.Texterstellung_DiagnoseExportAlternativeFormat, getFieldEditorParent());
+		diagnoseExportFormat.setPreferenceStore(new ConfigServicePreferenceStore(Scope.LOCAL));
+		addField(diagnoseExportFormat);
 
 		if (LocalDocumentServiceHolder.getService().isPresent()) {
 			ILocalDocumentService documentService = LocalDocumentServiceHolder.getService().get();

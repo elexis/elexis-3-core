@@ -242,8 +242,12 @@ public class ModelUtil {
 	public static void setNarrativeFromString(Narrative narrative, String text) {
 		try {
 			text = fixXhtmlContent(text);
-			String divEncodedText = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("§", "'&sect;'")
-					.replaceAll("&", "&amp;").replaceAll("(\r\n|\r|\n)", "<br />");
+			// “&” must be escaped FIRST, otherwise the “&” characters in the
+            // subsequent &lt;/&gt; replacements will be escaped again (double encoding
+            // “&amp;lt;”). The <br /> replacement takes place after the & escaping, so that
+            // the inserted line break tags are not escaped.
+			String divEncodedText = text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+					.replaceAll("§", "'&sect;'").replaceAll("(\r\n|\r|\n)", "<br />");
 			divEncodedText = addDivToEncodedText(divEncodedText);
 			narrative.setDivAsString(divEncodedText);
 			narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
