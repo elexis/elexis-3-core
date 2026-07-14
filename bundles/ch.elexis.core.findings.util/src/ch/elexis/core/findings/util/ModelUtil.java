@@ -247,7 +247,7 @@ public class ModelUtil {
             // “&amp;lt;”). The <br /> replacement takes place after the & escaping, so that
             // the inserted line break tags are not escaped.
 			String divEncodedText = text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-					.replaceAll("§", "'&sect;'").replaceAll("(\r\n|\r|\n)", "<br />");
+					.replaceAll("§", "&sect;").replaceAll("(\r\n|\r|\n)", "<br />");
 			divEncodedText = addDivToEncodedText(divEncodedText);
 			narrative.setDivAsString(divEncodedText);
 			narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
