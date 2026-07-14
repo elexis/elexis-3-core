@@ -18,6 +18,9 @@ public class TextUtil {
 
 	/**
 	 * Test if an {@link IObservation} represents a risk factor.
+	 *
+	 * @param iFinding
+	 * @return
 	 */
 	public static boolean isRiskfactor(IObservation iFinding) {
 		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
@@ -32,6 +35,9 @@ public class TextUtil {
 
 	/**
 	 * Test if an {@link IObservation} represents a personal anamnesis.
+	 *
+	 * @param iFinding
+	 * @return
 	 */
 	public static boolean isPersAnamnese(IObservation iFinding) {
 		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
@@ -49,6 +55,7 @@ public class TextUtil {
 	 *
 	 * @param condition
 	 * @param codingService
+	 * @param wordFormat
 	 * @return
 	 */
 	public static String getText(ICondition condition, ICodingService codingService, boolean wordFormat) {
@@ -87,6 +94,10 @@ public class TextUtil {
 	/**
 	 * Text representation of an {@link IObservation} (personal anamnesis or risk
 	 * factor).
+	 *
+	 * @param observation
+	 * @param codingService
+	 * @return
 	 */
 	public static String getText(IObservation observation, ICodingService codingService) {
 		if (isPersAnamnese(observation) || isRiskfactor(observation)) {
@@ -97,6 +108,10 @@ public class TextUtil {
 
 	/**
 	 * Text representation of an {@link IAllergyIntolerance}.
+	 *
+	 * @param allergy
+	 * @param codingService
+	 * @return
 	 */
 	public static String getText(IAllergyIntolerance allergy, ICodingService codingService) {
 		return allergy.getText().orElse(StringUtils.EMPTY);
@@ -104,6 +119,10 @@ public class TextUtil {
 
 	/**
 	 * Text representation of an {@link IFamilyMemberHistory}.
+	 *
+	 * @param famanam
+	 * @param codingService
+	 * @return
 	 */
 	public static String getText(IFamilyMemberHistory famanam, ICodingService codingService) {
 		return famanam.getText().orElse(StringUtils.EMPTY);

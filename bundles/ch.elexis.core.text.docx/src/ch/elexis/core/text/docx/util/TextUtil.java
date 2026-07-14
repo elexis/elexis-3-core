@@ -34,7 +34,15 @@ public class TextUtil {
 
 	static ObjectFactory wmlObjectFactory = Context.getWmlObjectFactory();
 
-	/** Insert text after the cursor as new runs (splitting on {@code \n}, handling tabs). */
+	/**
+	 * Insert text after the cursor as new runs (splitting on {@code \n}, handling tabs).
+	 *
+	 * @param cursor
+	 * @param text
+	 * @param align
+	 * @param styleInfo
+	 * @return
+	 */
 	public static Object insertText(Object cursor, String text, int align, StyleInfo styleInfo) {
 		if (cursor instanceof R) {
 			return addText(((R) cursor), text, styleInfo);
@@ -44,7 +52,15 @@ public class TextUtil {
 		throw new IllegalStateException("Unknown cursor type [" + cursor + "]");
 	}
 
-	/** Convenience {@link #replaceText(Object, String, int, StyleInfo, WordprocessingMLPackage)} without a package. */
+	/**
+	 * Convenience {@link #replaceText(Object, String, int, StyleInfo, WordprocessingMLPackage)} without a package.
+	 *
+	 * @param cursor
+	 * @param text
+	 * @param align
+	 * @param styleInfo
+	 * @return
+	 */
 	public static Object replaceText(Object cursor, String text, int align, StyleInfo styleInfo) {
 		return replaceText(cursor, text, align, styleInfo, null);
 	}
@@ -53,6 +69,13 @@ public class TextUtil {
 	 * Replace the cursor text. Rich text (HTML markup explicitly marked with
 	 * {@link RichTextMarker}) is rendered via ImportXHTML when {@code pkg} is
 	 * given; all unmarked text always takes the standard plain text path.
+	 *
+	 * @param cursor
+	 * @param text
+	 * @param align
+	 * @param styleInfo
+	 * @param pkg
+	 * @return
 	 */
 	public static Object replaceText(Object cursor, String text, int align, StyleInfo styleInfo,
 			WordprocessingMLPackage pkg) {
@@ -64,6 +87,13 @@ public class TextUtil {
 		throw new IllegalStateException("Unknown cursor type [" + cursor + "]");
 	}
 
+	/**
+	 * @param cursor
+	 * @param text
+	 * @param styleInfo
+	 * @param pkg
+	 * @return
+	 */
 	private static Object replaceText(R cursor, String text, StyleInfo styleInfo, WordprocessingMLPackage pkg) {
 		if (RichTextMarker.isMarked(text)) {
 			if (pkg != null) {
@@ -91,6 +121,12 @@ public class TextUtil {
 		return ret;
 	}
 
+	/**
+	 * @param cursor
+	 * @param text
+	 * @param styleInfo
+	 * @return
+	 */
 	private static R addText(R cursor, String text, StyleInfo styleInfo) {
 		R ret = null;
 		List<String> lines = Arrays.asList(text.split(StringUtils.LF, -1));
@@ -106,6 +142,12 @@ public class TextUtil {
 		return ret;
 	}
 
+	/**
+	 * @param cursor
+	 * @param line
+	 * @param styleInfo
+	 * @return
+	 */
 	private static R insertLine(R cursor, String line, StyleInfo styleInfo) {
 		applyStyleInfo(cursor, styleInfo);
 		writeTabbedLine(cursor, DocxUtil.getOrCreateText(cursor), line);
