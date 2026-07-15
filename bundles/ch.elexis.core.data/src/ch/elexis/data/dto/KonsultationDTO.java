@@ -13,11 +13,11 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.data.Konsultation;
 import ch.elexis.data.Mandant;
-import ch.elexis.data.Verrechnet;
 import ch.rgw.tools.TimeTool;
 
 public class KonsultationDTO {
 	private final String id;
+	private IEncounter encounter;
 	private List<LeistungDTO> leistungDTOs = new ArrayList<>();
 	private List<DiagnosesDTO> diagnosesDTOs = new ArrayList<>();
 	private String date;
@@ -29,10 +29,11 @@ public class KonsultationDTO {
 	public KonsultationDTO(Konsultation konsultation) {
 		this.errors.clear();
 		this.id = konsultation.getId();
+		this.encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get();
 		this.date = konsultation.getDatum();
 		this.srcDate = new String(konsultation.getDatum());
 		this.mandant = konsultation.getMandant();
-		for (Verrechnet verrechnet : konsultation.getLeistungen()) {
+		for (IBilled verrechnet : encounter.getBilled()) {
 			try {
 				leistungDTOs.add(new LeistungDTO(verrechnet));
 			} catch (ElexisException e) {
@@ -40,8 +41,7 @@ public class KonsultationDTO {
 			}
 		}
 
-		for (IDiagnosisReference iDiagnose : NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).get()
-				.getDiagnoses()) {
+		for (IDiagnosisReference iDiagnose : encounter.getDiagnoses()) {
 			diagnosesDTOs.add(new DiagnosesDTO(iDiagnose));
 		}
 	}
