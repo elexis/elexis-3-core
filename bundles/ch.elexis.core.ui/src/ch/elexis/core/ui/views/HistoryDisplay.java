@@ -35,9 +35,11 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -169,15 +171,25 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 			lKons.clear();
 		}
 		if (fall != null) {
+			boolean filerByActiveMandator = ConfigServiceHolder.getUser(Preferences.USR_KONSLIST_FILTERMANDATOR, false);
 			// @TODO sort reverse
 			for (IEncounter k : fall.getEncounters()) {
 				if (AccessControlServiceHolder.get()
 						.evaluate(EvACE.of(IEncounter.class, Right.READ, StoreToStringServiceHolder.getStoreToString(k))
-								.and(Right.VIEW))) {
+								.and(Right.VIEW))
+						&& (!filerByActiveMandator || isActiveMandator(k))) {
 					lKons.add(k);
 				}
 			}
 		}
+	}
+
+	private boolean isActiveMandator(IEncounter encounter) {
+		IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+		if (activeMandator != null) {
+			return activeMandator.equals(encounter.getMandator());
+		}
+		return true;
 	}
 
 	public void showLoading() {
