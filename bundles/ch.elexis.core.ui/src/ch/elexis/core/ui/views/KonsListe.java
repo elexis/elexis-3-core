@@ -12,6 +12,7 @@
 
 package ch.elexis.core.ui.views;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -19,6 +20,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -27,8 +30,10 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.KonsFilter;
+import ch.elexis.core.ui.commands.HistoryFilterByActiveMandator;
 import ch.elexis.core.ui.dialogs.KonsFilterDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
@@ -119,6 +124,17 @@ public class KonsListe extends ViewPart implements IRefreshable {
 		menus = new ViewMenus(getViewSite());
 		menus.createToolbar(filterAction);
 		getSite().getPage().addPartListener(udpateOnVisible);
+
+		setHistoryFilterByActiveMandatorState(
+				ConfigServiceHolder.getUser(Preferences.USR_KONSLIST_FILTERMANDATOR, false));
+	}
+
+	public void setHistoryFilterByActiveMandatorState(boolean value) {
+		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command command = service.getCommand(HistoryFilterByActiveMandator.CMD_ID);
+		command.getState(HistoryFilterByActiveMandator.STATE_ID).setValue(value);
+		ConfigServiceHolder.setUser(Preferences.USR_KONSLIST_FILTERMANDATOR, value);
+		restart(false);
 	}
 
 	@Override
