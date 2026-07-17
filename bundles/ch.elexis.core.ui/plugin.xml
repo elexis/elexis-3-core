@@ -354,6 +354,11 @@
                icon="icon://IMG_NEW"
                style="push">
          </command>
+         <command
+               commandId="ch.elexis.core.ui.command.filterHistoryByMandator"
+               icon="icon://IMG_PERSON"
+               style="toggle">
+         </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -853,6 +858,15 @@
             defaultHandler="ch.elexis.core.ui.commands.SendInvoiceAsMailHandler"
             id="ch.elexis.core.ui.commands.SendInvoiceAsMail"
             name="%command.name.28">
+      </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.HistoryFilterByActiveMandator"
+            id="ch.elexis.core.ui.command.filterHistoryByMandator"
+            name="%command.name.29">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
    </extension>
       <extension
