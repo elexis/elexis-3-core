@@ -81,6 +81,7 @@ import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IDocumentService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.BriefDocumentStoreHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -130,6 +131,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	void activePatient(@Optional IPatient patient) {
 		ContextServiceHolder.get().getRootContext().removeTyped(IDocumentLetter.class);
 		Display.getDefault().asyncExec(() -> {
+			pages.forEach(sPage::resetQueryLimit);
 			if (form != null && !form.isDisposed()) {
 				if (patient == null) {
 					form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
@@ -286,10 +288,15 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	}
 
 	class sPage extends Composite {
+		private static final int QUERY_LIMIT_INCREMENT = 50;
+
 		private TableViewer tableViewer;
+		private Button loadMoreButton;
 		private LetterViewerComparator comparator;
 		private final CommonViewer cv;
 		private final ViewerConfigurer vc;
+		private int queryLimit = QUERY_LIMIT_INCREMENT;
+		private boolean hasMore;
 
 		public CommonViewer getCommonViewer() {
 			return cv;
@@ -304,8 +311,6 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					});
 			CommonViewerContentProvider contentProvider = new ch.elexis.core.ui.util.viewers.CommonViewerContentProvider(
 					cv) {
-
-				private static final int QUERY_LIMIT = 500;
 
 				@Override
 				public Object[] getElements(final Object inputElement) {
@@ -322,8 +327,12 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						// apply filters from control field provider
 						controlFieldProvider.setQuery(query);
 						List<?> elements = query.execute();
-						return elements.toArray(new Object[elements.size()]);
+						boolean hasMore = !ignoreLimit && elements.size() > queryLimit;
+						updateLoadMoreButton(hasMore);
+						List<?> visibleElements = hasMore ? elements.subList(0, queryLimit) : elements;
+						return visibleElements.toArray(new Object[visibleElements.size()]);
 					} else {
+						updateLoadMoreButton(false);
 						return new Object[0];
 					}
 				}
@@ -331,8 +340,10 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				@Override
 				protected IQuery<?> getBaseQuery() {
 					IQuery<IDocumentLetter> ret = CoreModelServiceHolder.get().getQuery(IDocumentLetter.class);
+					ret.orderBy("creationDate", ORDER.DESC); //$NON-NLS-1$
+					ret.orderBy("id", ORDER.DESC); //$NON-NLS-1$
 					if (!ignoreLimit) {
-						ret.limit(QUERY_LIMIT);
+						ret.limit(queryLimit + 1);
 					}
 					return ret;
 				}
@@ -365,6 +376,17 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			}
 
 			vc.getContentProvider().startListening();
+			loadMoreButton = tk.createButton(this, Messages.BriefAuswahlLoadMoreButtonText, SWT.PUSH);
+			loadMoreButton.setEnabled(hasMore);
+			loadMoreButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					queryLimit += QUERY_LIMIT_INCREMENT;
+					cv.notify(CommonViewer.Message.update);
+				}
+			});
+			loadMoreButton.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
 			Button bLoad = tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); // $NON-NLS-1$
 			bLoad.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -374,6 +396,17 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 			});
 			bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		}
+
+		private void resetQueryLimit() {
+			queryLimit = QUERY_LIMIT_INCREMENT;
+		}
+
+		private void updateLoadMoreButton(boolean enabled) {
+			hasMore = enabled;
+			if (loadMoreButton != null && !loadMoreButton.isDisposed()) {
+				loadMoreButton.setEnabled(enabled);
+			}
 		}
 
 		// create the columns for the table
