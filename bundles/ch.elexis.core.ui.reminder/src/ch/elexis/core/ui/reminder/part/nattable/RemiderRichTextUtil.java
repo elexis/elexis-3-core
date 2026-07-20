@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.reminder.part.nattable;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +21,9 @@ public class RemiderRichTextUtil {
 
 	public static String richText(IReminder reminder, boolean addDate) {
 		StringBuilder sb = new StringBuilder();
-		if (reminder.getPriority() == Priority.HIGH) {
+		Priority priority = reminder.getPriority();
+		LocalDate due = reminder.getDue();
+		if (priority == Priority.HIGH) {
 			sb.append("<strong><span style=\"font-size: 14; color:rgb(255,0,0);\">");
 			sb.append(" !! ");
 			sb.append("</span></strong>");
@@ -39,8 +42,8 @@ public class RemiderRichTextUtil {
 			});
 		}
 		sb.append("<addition>");
-		if (addDate && reminder.getDue() != null) {
-			sb.append(DateTimeFormatter.ofPattern("dd.MM").format(reminder.getDue()));
+		if (addDate && due != null) {
+			sb.append(DateTimeFormatter.ofPattern("dd.MM").format(due));
 		}
 		sb.append("</addition>");
 		return sb.toString();
@@ -70,10 +73,13 @@ public class RemiderRichTextUtil {
 	}
 
 	private static String getSubject(IReminder reminder) {
-		if (StringUtils.isNotBlank(reminder.getSubject())) {
-			return reminder.getSubject();
-		} else if (StringUtils.isNotBlank(reminder.getMessage())) {
-			return StringUtils.abbreviate(reminder.getMessage(), 80);
+		String subject = reminder.getSubject();
+		if (StringUtils.isNotBlank(subject)) {
+			return subject;
+		}
+		String message = reminder.getMessage();
+		if (StringUtils.isNotBlank(message)) {
+			return StringUtils.abbreviate(message, 80);
 		}
 		return StringUtils.EMPTY;
 	}
