@@ -73,7 +73,8 @@ public class Query<T> {
 	private final ArrayList<String> exttables = new ArrayList<>(2);
 
 	private final String[] ID_FETCH_VAL = new String[] { "ID" };
-	private final String[] fetchVals;
+	private final String[] selectVals;
+	private final String[] cacheVals;
 
 	/**
 	 * @param cl the class to apply the query on
@@ -145,21 +146,26 @@ public class Query<T> {
 				// resolve the delivered field names to the real database columns
 				// consider the resp. datatypes stored
 				List<String> mappedPrefetchValues = new ArrayList<>(Arrays.asList(ID_FETCH_VAL));
+				List<String> cachePrefetchValues = new ArrayList<>(Arrays.asList(ID_FETCH_VAL));
 				for (int i = 0; i < prefetch.length; i++) {
 					String map = PersistentObject.map(tableName, prefetch[i]);
 					if (!map.contains(":")) {
 						mappedPrefetchValues.add(map);
+						cachePrefetchValues.add(prefetch[i]);
 					} else if (map.startsWith("S:")) {
 						mappedPrefetchValues.add(map.substring(4));
+						cachePrefetchValues.add(prefetch[i]);
 					} else {
 						throw new UnsupportedOperationException(
 								"prefetch value not supported: " + prefetch[i] + " maps to " + map);
 					}
 				}
 
-				fetchVals = mappedPrefetchValues.toArray(new String[] {});
+				selectVals = mappedPrefetchValues.toArray(new String[] {});
+				cacheVals = cachePrefetchValues.toArray(new String[] {});
 			} else {
-				fetchVals = ID_FETCH_VAL;
+				selectVals = ID_FETCH_VAL;
+				cacheVals = ID_FETCH_VAL;
 			}
 			clear(false);
 
@@ -203,7 +209,8 @@ public class Query<T> {
 			sql = new StringBuilder(500);
 			sql.append(string);
 			ordering = null;
-			fetchVals = ArrayUtils.EMPTY_STRING_ARRAY;
+			selectVals = ArrayUtils.EMPTY_STRING_ARRAY;
+			cacheVals = ArrayUtils.EMPTY_STRING_ARRAY;
 			clearEntityCache = false;
 		} catch (Exception ex) {
 			ElexisStatus status = new ElexisStatus(ElexisStatus.ERROR, CoreHub.PLUGIN_ID, ElexisStatus.CODE_NONE,
@@ -236,9 +243,9 @@ public class Query<T> {
 		String table = template.getTableName();
 
 		sql.append("SELECT ");
-		for (int i = 0; i < fetchVals.length; i++) {
-			sql.append(fetchVals[i]);
-			if (i + 1 < fetchVals.length) {
+		for (int i = 0; i < selectVals.length; i++) {
+			sql.append(selectVals[i]);
+			if (i + 1 < selectVals.length) {
 				sql.append(", ");
 			}
 		}
@@ -658,10 +665,10 @@ public class Query<T> {
 					po.clearCachedAttributes();
 				}
 
-				if (fetchVals.length > 1) {
-					for (int i = 1; i < fetchVals.length; i++) {
+				if (selectVals.length > 1) {
+					for (int i = 1; i < selectVals.length; i++) {
 						Object prefetchVal = res.getObject(i + 1);
-						po.putInCache(fetchVals[i], prefetchVal);
+						po.putInCache(cacheVals[i], prefetchVal);
 					}
 				}
 

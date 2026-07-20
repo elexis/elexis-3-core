@@ -446,6 +446,7 @@ public class ReminderPrefences extends PreferencePage implements IWorkbenchPrefe
 				defaultResponsibleSelf.getSelection());
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN,
 				getListAsString(lViewerChoosen.getList().getItems()));
+		Reminder.invalidatePatientLabelConfigCache();
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_PAT_LABEL_AVAILABLE,
 				getListAsString(lViewerAvailable.getList().getItems()));
 		ConfigServiceHolder.setUser(Preferences.USR_REMINDER_COLUMNS_VISIBLE,
