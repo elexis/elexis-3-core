@@ -210,7 +210,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 	public ReminderView() {
 		qbe = new Query<>(Reminder.class, null, null, Reminder.TABLENAME, new String[] { Reminder.FLD_DUE,
-				Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE, Reminder.FLD_CREATOR, Reminder.FLD_KONTAKT_ID });
+				Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE, Reminder.FLD_CREATOR, Reminder.FLD_KONTAKT_ID,
+				Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE, Reminder.FLD_VISIBILITY, Reminder.FLD_STATUS });
 	}
 
 	@Override
