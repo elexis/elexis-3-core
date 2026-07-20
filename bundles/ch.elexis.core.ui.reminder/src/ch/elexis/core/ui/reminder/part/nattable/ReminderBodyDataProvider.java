@@ -77,26 +77,24 @@ public class ReminderBodyDataProvider implements ISpanningDataProvider {
 		LoggerFactory.getLogger(getClass()).info("RELOAD START");
 		List<Map<String, List<IReminder>>> dataListMap = new ArrayList<>();
 		Map<String, Integer> maxMap = new HashMap<>();
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
 		for (ReminderColumn reminderColumn : columns) {
 			List<IReminder> allReminders = reminderColumn.loadReminders();
-			List<IReminder> overDueReminders = getOverDue(allReminders);
-			List<IReminder> todayReminders = getToday(allReminders);
-			List<IReminder> tomorrowReminders = getTomorrow(allReminders);
-			List<IReminder> futureReminders = getFuture(allReminders);
-			List<IReminder> noDueReminders = getNoDue(allReminders);
-			dataListMap.add(Map.of("overdue", overDueReminders, "today", todayReminders, "tomorrow", tomorrowReminders,
-					"future", futureReminders, "nodue", noDueReminders));
+			ReminderBuckets buckets = bucketReminders(allReminders, today, tomorrow);
+			dataListMap.add(Map.of("overdue", buckets.overdue, "today", buckets.today, "tomorrow", buckets.tomorrow,
+					"future", buckets.future, "nodue", buckets.nodue));
 
 			maxMap.put("overdue", Math.max(maxMap.getOrDefault("overdue", 0),
-					overDueReminders.size()));
+					buckets.overdue.size()));
 			maxMap.put("today", Math.max(maxMap.getOrDefault("today", 0),
-					todayReminders.size()));
+					buckets.today.size()));
 			maxMap.put("tomorrow", Math.max(maxMap.getOrDefault("tomorrow", 0),
-					tomorrowReminders.size()));
+					buckets.tomorrow.size()));
 			maxMap.put("future", Math.max(maxMap.getOrDefault("future", 0),
-					futureReminders.size()));
+					buckets.future.size()));
 			maxMap.put("nodue", Math.max(maxMap.getOrDefault("nodue", 0),
-					noDueReminders.size()));
+					buckets.nodue.size()));
 		}
 		
 		dataMatrix = new Object[2 + maxMap.get("overdue") + 1 + maxMap.get("today") + 1 + maxMap.get("tomorrow") + 1
@@ -157,24 +155,31 @@ public class ReminderBodyDataProvider implements ISpanningDataProvider {
 		}
 	}
 
-	private List<IReminder> getNoDue(List<IReminder> all) {
-		return all.stream().filter(r -> r.getDue() == null).toList();
+	private ReminderBuckets bucketReminders(List<IReminder> all, LocalDate today, LocalDate tomorrow) {
+		ReminderBuckets ret = new ReminderBuckets();
+		for (IReminder reminder : all) {
+			LocalDate due = reminder.getDue();
+			if (due == null) {
+				ret.nodue.add(reminder);
+			} else if (due.isBefore(today)) {
+				ret.overdue.add(reminder);
+			} else if (due.isEqual(today)) {
+				ret.today.add(reminder);
+			} else if (due.isEqual(tomorrow)) {
+				ret.tomorrow.add(reminder);
+			} else {
+				ret.future.add(reminder);
+			}
+		}
+		return ret;
 	}
 
-	private List<IReminder> getFuture(List<IReminder> all) {
-		return all.stream().filter(r -> r.getDue() != null && r.getDue().isAfter(LocalDate.now().plusDays(1))).toList();
-	}
-
-	private List<IReminder> getTomorrow(List<IReminder> all) {
-		return all.stream().filter(r -> r.getDue() != null && r.getDue().isEqual(LocalDate.now().plusDays(1))).toList();
-	}
-
-	private List<IReminder> getToday(List<IReminder> all) {
-		return all.stream().filter(r -> r.getDue() != null && r.getDue().isEqual(LocalDate.now())).toList();
-	}
-
-	private List<IReminder> getOverDue(List<IReminder> all) {
-		return all.stream().filter(r -> r.getDue() != null && r.getDue().isBefore(LocalDate.now())).toList();
+	private static class ReminderBuckets {
+		private final List<IReminder> overdue = new ArrayList<>();
+		private final List<IReminder> today = new ArrayList<>();
+		private final List<IReminder> tomorrow = new ArrayList<>();
+		private final List<IReminder> future = new ArrayList<>();
+		private final List<IReminder> nodue = new ArrayList<>();
 	}
 
 	public void setColumns(List<ReminderColumn> columns) {
