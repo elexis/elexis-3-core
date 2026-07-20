@@ -41,6 +41,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
@@ -72,6 +73,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.command.StickerFilterCommand;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -183,6 +185,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		makeActions();
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
+
 			@Override
 			public void setQuery(IQuery<?> query) {
 				for (int i = 0; i < dbFields.length; i++) {
@@ -195,6 +198,35 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						} else {
 							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
 						}
+					}
+				}
+			}
+
+			@Override
+			public Composite createControl(final Composite parent) {
+				Composite ret = super.createControl(parent);
+				restrictFilterFields();
+				return ret;
+			}
+
+			@Override
+			public void updateFields(String[] flds, boolean redraw) {
+				super.updateFields(flds, redraw);
+				if (redraw) {
+					restrictFilterFields();
+				}
+			}
+
+			private void restrictFilterFields() {
+				for (int i = 0; i < selectors.length; i++) {
+					if (selectors[i] == null || !(selectors[i].getWidget() instanceof Text)) {
+						continue;
+					}
+					Text field = (Text) selectors[i].getWidget();
+					if ("code".equals(dbFields[i])) { //$NON-NLS-1$
+						FilterFieldInputRestrictions.restrictToDigits(field);
+					} else if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
+						FilterFieldInputRestrictions.applyBirthdateFilterFormatting(field);
 					}
 				}
 			}

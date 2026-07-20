@@ -101,4 +101,19 @@ public class FormatValidator {
 				.append(ahv4).toString();
 	}
 
+	public static String getFormattedBirthdateFilter(final String input) {
+		String digits = input.replaceAll("[^0-9]", StringUtils.EMPTY);
+		if (digits.length() > 8) {
+			digits = digits.substring(0, 8);
+		}
+		int length = digits.length();
+		if (length <= 4) {
+			return digits;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(digits, 0, 2).append('.');
+		sb.append(digits, 2, 4).append('.');
+		sb.append(digits, 4, Math.min(8, length));
+		return sb.toString();
+	}
 }
