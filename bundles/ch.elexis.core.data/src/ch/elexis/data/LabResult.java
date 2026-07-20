@@ -18,7 +18,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -968,14 +970,91 @@ public class LabResult extends PersistentObject implements ILabResult {
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> getGrouped(Patient pat) {
+		return getGrouped(pat, null);
+	}
+
+	/**
+	 * Get all active result dates of a patient, newest first. Only the date fields
+	 * are fetched, allowing views to choose a result window before loading the full
+	 * result data.
+	 */
+	public static List<TimeTool> getResultDates(Patient pat) {
+		List<TimeTool> dates = new ArrayList<>();
+		if (pat == null) {
+			return dates;
+		}
+
+		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement("SELECT LEFT(" + OBSERVATIONTIME //$NON-NLS-1$
+				+ ", 8) AS resultdate FROM " + TABLENAME + " WHERE " + PATIENT_ID //$NON-NLS-1$ //$NON-NLS-2$
+				+ " = ? AND DELETED = '0' AND " + OBSERVATIONTIME + " IS NOT NULL UNION SELECT " + DATE //$NON-NLS-1$ //$NON-NLS-2$
+				+ " AS resultdate FROM " + TABLENAME + " WHERE " + PATIENT_ID //$NON-NLS-1$ //$NON-NLS-2$
+				+ " = ? AND DELETED = '0' AND " + OBSERVATIONTIME + " IS NULL AND " + DATE //$NON-NLS-1$ //$NON-NLS-2$
+				+ " IS NOT NULL ORDER BY resultdate DESC"); //$NON-NLS-1$
+		try {
+			ps.setString(1, pat.getId());
+			ps.setString(2, pat.getId());
+			ResultSet result = ps.executeQuery();
+			while (result != null && result.next()) {
+				String resultDate = result.getString(1);
+				if (resultDate != null) {
+					dates.add(new TimeTool(resultDate));
+				}
+			}
+		} catch (SQLException e) {
+			log.error("Error fetching lab result dates", e); //$NON-NLS-1$
+		} finally {
+			PersistentObject.getConnection().releasePreparedStatement(ps);
+		}
+
+		return dates;
+	}
+
+	/**
+	 * Get results grouped by group, item and date, restricted to the requested
+	 * result dates. A {@code null} date collection retains the historic behavior
+	 * and loads the full patient history.
+	 */
+	public static HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> getGrouped(Patient pat,
+			Collection<TimeTool> resultDates) {
 		HashMap<String, HashMap<String, HashMap<String, List<LabResult>>>> ret = new HashMap<>();
 		if (pat == null) {
 			return ret;
 		}
 
-		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(QUERY_GROUP_ORDER);
+		LinkedHashSet<String> compactDates = null;
+		String query = QUERY_GROUP_ORDER;
+		if (resultDates != null) {
+			compactDates = new LinkedHashSet<>();
+			for (TimeTool resultDate : resultDates) {
+				if (resultDate != null) {
+					compactDates.add(resultDate.toString(TimeTool.DATE_COMPACT));
+				}
+			}
+			if (compactDates.isEmpty()) {
+				return ret;
+			}
+			StringBuilder dateFilter = new StringBuilder(" AND ("); //$NON-NLS-1$
+			for (int i = 0; i < compactDates.size(); i++) {
+				if (i > 0) {
+					dateFilter.append(" OR "); //$NON-NLS-1$
+				}
+				dateFilter.append("(LW.").append(OBSERVATIONTIME) //$NON-NLS-1$
+						.append(" LIKE ? OR (LW.").append(OBSERVATIONTIME) //$NON-NLS-1$
+						.append(" IS NULL AND LW.").append(DATE).append(" = ?))"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			query += dateFilter.append(')').toString();
+		}
+
+		PreparedStatement ps = PersistentObject.getConnection().getPreparedStatement(query);
 		try {
 			ps.setString(1, pat.getId());
+			if (compactDates != null) {
+				int parameter = 2;
+				for (String date : compactDates) {
+					ps.setString(parameter++, date + "%"); //$NON-NLS-1$
+					ps.setString(parameter++, date);
+				}
+			}
 			log.debug(ps.toString());
 			ResultSet resi = ps.executeQuery();
 
