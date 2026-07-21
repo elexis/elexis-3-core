@@ -54,7 +54,9 @@ public class TemplateRenameSettingsCommand extends AbstractHandler {
 						String newName = dialog.getValue();
 						Brief template = textTemplate.getTemplate();
 						if (template != null) {
+							byte[] contentToStore = template.loadBinary();
 							template.set(Brief.FLD_SUBJECT, newName);
+							template.save(contentToStore, template.getMimeType());
 							ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_RELOAD, IDocumentLetter.class);
 						}
 					}
