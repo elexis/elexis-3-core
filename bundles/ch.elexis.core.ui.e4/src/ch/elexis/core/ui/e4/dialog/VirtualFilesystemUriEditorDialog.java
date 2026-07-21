@@ -38,6 +38,7 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
+import ch.elexis.core.utils.CoreUtil;
 
 public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
@@ -468,6 +469,14 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		}
 
 		public void setUri(URI uri) {
+			if (CoreUtil.isWindows() && uri.toString().startsWith("file://")) {
+				try {
+					uri = new URI(uri.toString().replace("file://", "file:/"));
+				} catch (URISyntaxException e) {
+
+				}
+			}
+
 			setScheme(uri.getScheme());
 			setHost(uri.getHost());
 			setPort(uri.getPort());
