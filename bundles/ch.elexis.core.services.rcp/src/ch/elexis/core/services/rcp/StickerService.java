@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Activate;
@@ -14,6 +15,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.EntityWithId;
@@ -32,6 +36,16 @@ import jakarta.persistence.TypedQuery;
 
 @Component
 public class StickerService implements IStickerService {
+
+	private static final int STICKER_LINK_CACHE_SECONDS = 60;
+	private static final int STICKER_LINK_CACHE_MAXIMUM_SIZE = 5000;
+
+	private final Cache<String, List<StickerLink>> stickerLinksByObjectId = CacheBuilder.newBuilder()
+			.expireAfterWrite(STICKER_LINK_CACHE_SECONDS, TimeUnit.SECONDS)
+			.maximumSize(STICKER_LINK_CACHE_MAXIMUM_SIZE).build();
+
+	private record StickerLink(String stickerId, String data) {
+	}
 
 	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
@@ -62,11 +76,18 @@ public class StickerService implements IStickerService {
 		});
 	}
 
-	private List<StickerObjectLink> getStickerObjectLinksForId(String id) {
+	private List<StickerLink> getStickerLinksForId(String id) {
+		List<StickerLink> cachedLinks = stickerLinksByObjectId.getIfPresent(id);
+		if (cachedLinks != null) {
+			return cachedLinks;
+		}
 		EntityManager em = (EntityManager) entityManager.getEntityManager(true);
 		TypedQuery<StickerObjectLink> query = em.createNamedQuery("StickerObjectLink.obj", StickerObjectLink.class);
 		query.setParameter("obj", id);
-		return query.getResultList();
+		List<StickerLink> links = query.getResultList().stream()
+				.map(link -> new StickerLink(link.getEtikette(), link.getData())).toList();
+		stickerLinksByObjectId.put(id, links);
+		return links;
 	}
 
 	private List<StickerObjectLink> getStickerObjectLinksForSticker(ISticker iSticker) {
@@ -112,10 +133,10 @@ public class StickerService implements IStickerService {
 		if (identifiable == null) {
 			return Collections.emptyList();
 		}
-		List<StickerObjectLink> stickerObjectLinks = getStickerObjectLinksForId(identifiable.getId());
+		List<StickerLink> stickerLinks = getStickerLinksForId(identifiable.getId());
 		List<ISticker> loadedStickers = new ArrayList<>();
-		for (StickerObjectLink link : stickerObjectLinks) {
-			ISticker sticker = loadStickerForStickerObjectLink(link, identifiable);
+		for (StickerLink link : stickerLinks) {
+			ISticker sticker = loadSticker(link.stickerId(), link.data(), identifiable);
 			if (sticker != null) {
 				loadedStickers.add(sticker);
 			}
@@ -135,11 +156,14 @@ public class StickerService implements IStickerService {
 	}
 
 	private ISticker loadStickerForStickerObjectLink(StickerObjectLink stickerObjectLink, Identifiable identifiable) {
-		ISticker sticker = coreModelService.load(stickerObjectLink.getEtikette(), ISticker.class, false, false)
-				.orElse(null);
+		return loadSticker(stickerObjectLink.getEtikette(), stickerObjectLink.getData(), identifiable);
+	}
+
+	private ISticker loadSticker(String stickerId, String data, Identifiable identifiable) {
+		ISticker sticker = coreModelService.load(stickerId, ISticker.class, false, false).orElse(null);
 		if (sticker != null) {
 			sticker.setAttachedTo(identifiable);
-			sticker.setAttachedToData(stickerObjectLink.getData());
+			sticker.setAttachedToData(data);
 			return sticker;
 		}
 		return null;
@@ -169,6 +193,7 @@ public class StickerService implements IStickerService {
 		} finally {
 			entityManager.closeEntityManager(em);
 		}
+		stickerLinksByObjectId.invalidate(identifiable.getId());
 
 		handleUpdate(identifiable);
 
@@ -201,6 +226,7 @@ public class StickerService implements IStickerService {
 			} finally {
 				entityManager.closeEntityManager(em);
 			}
+			stickerLinksByObjectId.invalidate(identifiable.getId());
 		}
 		handleUpdate(identifiable);
 	}
