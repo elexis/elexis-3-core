@@ -112,4 +112,8 @@ public class URIFieldEditorComposite extends Composite {
 			storePath.setFixedScheme("file");
 		}
 	}
+
+	public void setEmptyStringAllowed(boolean value) {
+		storePath.setEmptyStringAllowed(value);
+	}
 }
