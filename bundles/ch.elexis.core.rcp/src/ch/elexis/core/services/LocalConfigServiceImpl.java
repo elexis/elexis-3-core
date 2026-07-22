@@ -79,18 +79,22 @@ public class LocalConfigServiceImpl implements ILocalConfigService {
 		localConfig.flush();
 	}
 
+	@Override
 	public String get(String key, String defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
+	@Override
 	public boolean get(String key, boolean defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
+	@Override
 	public int get(String key, int defaultValue) {
 		return localConfig.get(key, defaultValue);
 	}
 
+	@Override
 	public boolean set(String key, String value) {
 		boolean result;
 		if (value == null) {
@@ -104,6 +108,7 @@ public class LocalConfigServiceImpl implements ILocalConfigService {
 		return result;
 	}
 
+	@Override
 	public boolean set(String key, boolean value) {
 		boolean result = localConfig.set(key, value);
 		localConfig.flush();
@@ -111,6 +116,7 @@ public class LocalConfigServiceImpl implements ILocalConfigService {
 		return result;
 	}
 
+	@Override
 	public boolean set(String key, int value) {
 		localConfig.set(key, value);
 		localConfig.flush();
@@ -157,6 +163,15 @@ public class LocalConfigServiceImpl implements ILocalConfigService {
 		}
 
 		// default text module
+		if (get(Preferences.P_TEXT_SUPPORT_LEGACY, null) == null) {
+			localConfig.set(Preferences.P_TEXT_SUPPORT_LEGACY, true);
+		}
+		if (get(Preferences.P_TEXT_RENAME_WITH_F2, null) == null) {
+			localConfig.set(Preferences.P_TEXT_RENAME_WITH_F2, true);
+		}
+		if (get(Preferences.P_TEXT_EDIT_LOCAL, null) == null) {
+			localConfig.set(Preferences.P_TEXT_EDIT_LOCAL, true);
+		}
 		if (get(Preferences.P_TEXTMODUL, null) == null) {
 			localConfig.set(Preferences.P_TEXTMODUL, Preferences.P_TEXTMODUL_DEFAULT);
 		}
