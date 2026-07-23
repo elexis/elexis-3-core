@@ -82,7 +82,6 @@ import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBlob;
-import ch.elexis.core.model.ICodeElement;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -91,8 +90,7 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.services.ICodeElementService.CodeElementTyp;
-import ch.elexis.core.services.ICodeElementServiceContribution;
+import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContactService;
 import ch.elexis.core.services.IContextService;
@@ -105,7 +103,6 @@ import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.ITextReplacementService;
-import ch.elexis.core.services.holder.CodeElementServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.dialog.IContactSelectorDialog;
@@ -155,6 +152,9 @@ public class MediorderPart implements IRefreshablePart {
 
 	@Inject
 	IContactService contactService;
+
+	@Inject
+	ICodeElementService codeElementService;
 
 	@Inject
 	ITextReplacementService textReplacementService;
@@ -958,7 +958,7 @@ public class MediorderPart implements IRefreshablePart {
 			String gtin = entry.getKey();
 			int amount = entry.getValue();
 			try {
-				java.util.Optional<IArticle> article = findArticleByGtin(gtin);
+				java.util.Optional<IArticle> article = codeElementService.findArticleByGtin(gtin);
 				if (article.isPresent()) {
 					IStockEntry stockEntry = stockService.storeArticleInStock(stock, article.get());
 					stockEntry.setCurrentStock(0);
@@ -973,24 +973,6 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		}
 		return stock;
-	}
-
-	private java.util.Optional<IArticle> findArticleByGtin(String code) {
-		List<ICodeElementServiceContribution> articleContributions = CodeElementServiceHolder.get()
-				.getContributionsByTyp(CodeElementTyp.ARTICLE);
-		for (ICodeElementServiceContribution contribution : articleContributions) {
-			java.util.Optional<ICodeElement> loadFromCode = contribution.loadFromCode(code);
-			if (loadFromCode.isPresent()) {
-				ICodeElement element = loadFromCode.get();
-				if (element instanceof IArticle) {
-					return java.util.Optional.of((IArticle) element);
-				}
-				LoggerFactory.getLogger(getClass()).warn(
-						"Found article for gtin [{}] but is not castable to IArticle [{}]", code, //$NON-NLS-1$
-						loadFromCode.get().getClass().getName());
-			}
-		}
-		return java.util.Optional.empty();
 	}
 
 	private Label createDetailField(Composite parent, String labelText, String value) {
@@ -1205,7 +1187,7 @@ public class MediorderPart implements IRefreshablePart {
 			return;
 		}
 		List<ImportedArticleRow> rows = data.articleGtinsWithAmount.entrySet().stream().map(entry -> {
-			IArticle article = findArticleByGtin(entry.getKey()).orElse(null);
+			IArticle article = codeElementService.findArticleByGtin(entry.getKey()).orElse(null);
 			return new ImportedArticleRow(entry.getKey(), entry.getValue(), article);
 		}).collect(Collectors.toList());
 		tableViewerImportedArticles.setInput(rows);
