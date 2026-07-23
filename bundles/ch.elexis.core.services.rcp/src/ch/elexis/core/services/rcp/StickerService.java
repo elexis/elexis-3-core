@@ -37,7 +37,7 @@ import jakarta.persistence.TypedQuery;
 @Component
 public class StickerService implements IStickerService {
 
-	private static final int STICKER_LINK_CACHE_SECONDS = 60;
+	private static final int STICKER_LINK_CACHE_SECONDS = 15;
 	private static final int STICKER_LINK_CACHE_MAXIMUM_SIZE = 5000;
 
 	private final Cache<String, List<StickerLink>> stickerLinksByObjectId = CacheBuilder.newBuilder()
