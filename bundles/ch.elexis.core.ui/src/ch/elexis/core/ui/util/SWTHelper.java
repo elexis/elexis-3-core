@@ -15,6 +15,9 @@ package ch.elexis.core.ui.util;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -596,14 +599,32 @@ public class SWTHelper {
 				&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
 			IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(viewID);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(page);
-			Display.getDefault().timerExec(200, () -> {
-				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
-				} catch (PartInitException e) {
-					Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
-					StatusManager.getManager().handle(status, StatusManager.SHOW);
-				}
-			});
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
+			} catch (PartInitException e) {
+				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
+				StatusManager.getManager().handle(status, StatusManager.SHOW);
+			}
+		}
+	}
+
+	/**
+	 * Same as {@link SWTHelper#reloadViewPart(String)} but uses
+	 * {@link EPartService} if not null. If {@link EPartService} is null
+	 * {@link SWTHelper#reloadViewPart(String)} is called as fallback.
+	 * 
+	 * @param viewID
+	 * @param partService
+	 */
+	public static void reloadViewPart(String viewID, EPartService partService) {
+		if (partService != null) {
+			MPart viewPart = partService.findPart(viewID);
+			if (viewPart != null) {
+				partService.hidePart(viewPart);
+				partService.showPart(viewPart, PartState.ACTIVATE);
+			}
+		} else {
+			reloadViewPart(viewID);
 		}
 	}
 
