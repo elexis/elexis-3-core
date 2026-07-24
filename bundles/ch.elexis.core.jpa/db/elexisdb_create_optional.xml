@@ -1606,6 +1606,23 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
             <column name="PATID"/>
         </createIndex>
     </changeSet>
+	<changeSet author="julian" id="manual_idx_agntermine_patid_tag_deleted">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="AGNTERMINE" />
+				<not>
+					<indexExists tableName="AGNTERMINE"
+						indexName="AGN_PATID_TAG_DELETED" />
+				</not>
+			</and>
+		</preConditions>
+		<createIndex indexName="AGN_PATID_TAG_DELETED"
+			tableName="AGNTERMINE">
+			<column name="PATID" />
+			<column name="TAG" />
+			<column name="DELETED" />
+		</createIndex>
+	</changeSet>
     
     <changeSet author="thomas" id="agntermine_priority">
 		<preConditions onFail="MARK_RAN">
