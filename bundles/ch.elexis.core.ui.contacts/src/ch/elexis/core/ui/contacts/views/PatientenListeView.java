@@ -22,6 +22,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -117,11 +118,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private IContextService contextService;
 
 	@Inject
-	void activeUser(@Optional IUser user) {
+	void activeUser(@Optional IUser user, @Optional EPartService partService) {
 		actUser = user;
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
-				userChanged(user);
+				userChanged(user, partService);
 			});
 		}
 	}
@@ -556,15 +557,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
 				if (element instanceof IPatient) {
-					ContextServiceHolder.get().getRootContext().setTyped((IPatient) element);
+					ContextServiceHolder.get().getRootContext().setTyped(element);
 				}
 			}
 		}
 	}
 
-	public void userChanged(IUser user) {
+	public void userChanged(IUser user, EPartService partService) {
 		if (!Objects.equals(actUser, user)) {
-			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
+			// refresh whole parts to get correct toolbar
+			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID, partService);
 		}
 		if (!cv.getViewerWidget().getControl().isDisposed()) {
 			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));
