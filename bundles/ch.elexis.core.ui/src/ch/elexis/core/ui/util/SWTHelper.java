@@ -124,6 +124,7 @@ public class SWTHelper {
 	/** Eine Alertbox anzeigen (synchron) */
 	public static void alert(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				if (shell == null) {
@@ -146,6 +147,7 @@ public class SWTHelper {
 	public static void showError(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openError(shell, title, message);
@@ -162,6 +164,7 @@ public class SWTHelper {
 	public static void showError(final String logHeader, final String title, final String message) {
 		log.log(logHeader + ": " + title + "->" + message, Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				MessageDialog.openError(shell, title, message);
@@ -178,6 +181,7 @@ public class SWTHelper {
 	public static void showInfo(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openInformation(shell, title, message);
@@ -224,6 +228,7 @@ public class SWTHelper {
 			this.dialogButtonLabels = dialogButtonLabels;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.open(MessageDialog.QUESTION, shell, title, message, SWT.SHEET, dialogButtonLabels);
@@ -239,6 +244,7 @@ public class SWTHelper {
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.openConfirm(shell, title, message);
@@ -267,6 +273,7 @@ public class SWTHelper {
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			MessageDialog dialog = new MessageDialog(shell, title, null, // accept
@@ -484,11 +491,13 @@ public class SWTHelper {
 	public static void setSelectOnFocus(final Text text) {
 		if (selectOnFocusListener == null) {
 			selectOnFocusListener = new FocusListener() {
+				@Override
 				public void focusGained(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					t.selectAll();
 				}
 
+				@Override
 				public void focusLost(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					if (t.getSelectionCount() > 0) {
@@ -587,12 +596,14 @@ public class SWTHelper {
 				&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
 			IViewPart page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(viewID);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(page);
-			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
-			} catch (PartInitException e) {
-				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
-				StatusManager.getManager().handle(status, StatusManager.SHOW);
-			}
+			Display.getDefault().timerExec(200, () -> {
+				try {
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewID);
+				} catch (PartInitException e) {
+					Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
+					StatusManager.getManager().handle(status, StatusManager.SHOW);
+				}
+			});
 		}
 	}
 
