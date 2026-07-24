@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IMandator;
@@ -47,7 +53,7 @@ public class MediorderPartUtil {
 		}
 		return "?";
 	}
-	
+
 	public static void removeStockEntry(IStockEntry entry, IModelService coreModelService,
 			IContextService contextService, IStockService stockService) {
 		if (entry.getCurrentStock() > 0) {
@@ -162,5 +168,87 @@ public class MediorderPartUtil {
 		entry.setCurrentStock(amount);
 		coreModelService.save(article);
 		coreModelService.save(entry);
+	}
+
+	/**
+	 * extracts answer values from a list of FHIR QuestionnaireReponse items.
+	 * 
+	 * @param items
+	 * @return a map with the question text and answer
+	 */
+	public static Map<String, String> extractItemValues(JsonArray items) {
+		Map<String, String> values = new HashMap<>();
+		for (JsonElement itemElement : items) {
+			JsonObject item = itemElement.getAsJsonObject();
+			String text = item.get("text").getAsString();
+			JsonArray answers = item.getAsJsonArray("answer");
+			if (answers == null || answers.isEmpty()) {
+				continue;
+			}
+			JsonObject answer = answers.get(0).getAsJsonObject();
+			if (answer.has("valueString")) {
+				values.put(text, answer.get("valueString").getAsString());
+			} else if (answer.has("valueDate")) {
+				values.put(text, answer.get("valueDate").getAsString());
+			}
+		}
+		return values;
+	}
+
+	/**
+	 * extracts medications from the medication group of FHIR QuestionnaireResponse
+	 * 
+	 * @param items
+	 * @return a map with GTIN and order amount
+	 */
+	public static Map<String, Integer> extractMedications(JsonArray items) {
+		Map<String, Integer> articleGtinsWithAmount = new HashMap<>();
+		JsonObject medicationGroup = items.get(2).getAsJsonObject();
+		JsonArray medicationItems = medicationGroup.getAsJsonArray("item");
+		if (medicationItems == null) {
+			return articleGtinsWithAmount;
+		}
+
+		for (JsonElement medElement : medicationItems) {
+			JsonObject medItem = medElement.getAsJsonObject();
+
+			String gtin = null;
+			JsonArray extensions = medItem.getAsJsonArray("extension");
+			if (extensions != null) {
+				for (JsonElement extElement : extensions) {
+					JsonObject ext = extElement.getAsJsonObject();
+					if ("http://gs1.org/gtin".equals(ext.get("url").getAsString())) {
+						gtin = ext.get("valueString").getAsString();
+						break;
+					}
+				}
+			}
+
+			if (StringUtils.isBlank(gtin))
+				continue;
+
+			int amount = 1;
+			JsonArray subItems = medItem.getAsJsonArray("item");
+			if (subItems != null) {
+				for (JsonElement subElement : subItems) {
+					JsonObject subItem = subElement.getAsJsonObject();
+					String subText = subItem.get("text").getAsString();
+					if ("Anzahl".equals(subText)) {
+						JsonArray answers = subItem.getAsJsonArray("answer");
+						if (answers != null && !answers.isEmpty()) {
+							JsonObject answer = answers.get(0).getAsJsonObject();
+							if (answer.has("valueInteger")) {
+								amount = answer.get("valueInteger").getAsInt();
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			articleGtinsWithAmount.put(gtin, amount);
+		}
+
+		return articleGtinsWithAmount;
 	}
 }
