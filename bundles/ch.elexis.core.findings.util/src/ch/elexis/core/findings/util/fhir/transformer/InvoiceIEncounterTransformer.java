@@ -15,9 +15,9 @@ import org.osgi.service.component.annotations.Component;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
@@ -49,7 +49,7 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 	@PostConstruct
 	@Activate
 	public void activate() {
-		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
+		attributeMapper = new IInvoiceInvoiceAttributeMapper();
 	}
 
 	private final CodeableConcept TYPE_VIRTUAL = new CodeableConcept(
@@ -69,7 +69,7 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 
 		List<IBilled> billed = localObject.getBilled();
 		for (IBilled iBilled : billed) {
-			invoice.addLineItem(attributeMapper.toInvoiceLineItemComponent(iBilled, includes, sumTotal));
+			invoice.addLineItem(attributeMapper.toInvoiceLineItemComponent(iBilled, sumTotal));
 		}
 
 		invoice.setTotalGross(FhirUtil.toFhir(sumTotal));

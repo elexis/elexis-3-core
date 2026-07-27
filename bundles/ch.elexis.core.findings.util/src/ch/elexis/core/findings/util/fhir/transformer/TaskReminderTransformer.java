@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IReminderTaskAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IReminderTaskAttributeMapper;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.services.IModelService;
 import jakarta.annotation.PostConstruct;
@@ -64,7 +64,7 @@ public class TaskReminderTransformer implements IFhirTransformer<Task, IReminder
 	@Override
 	public Optional<Task> getFhirObject(IReminder localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Task task = new Task();
-		attributeMapper.elexisToFhir(localObject, task, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, task, summaryEnum);
 		return Optional.of(task);
 	}
 

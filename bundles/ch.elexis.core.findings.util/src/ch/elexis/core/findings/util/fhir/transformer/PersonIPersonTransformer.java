@@ -10,9 +10,9 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IPersonPersonAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
@@ -49,7 +49,7 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 	@Override
 	public Optional<Person> getFhirObject(IPerson localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Person person = new Person();
-		attributeMapper.elexisToFhir(localObject, person, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, person, summaryEnum);
 		return Optional.of(person);
 	}
 

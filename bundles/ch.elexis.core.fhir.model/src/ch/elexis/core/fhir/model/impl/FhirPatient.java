@@ -15,8 +15,8 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 
+import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.IdentifierSystem;
-import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
@@ -33,10 +33,20 @@ import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 
-public class FhirPatient extends AbstractFhirModelAdapter<Patient> implements IPatient {
+public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> implements IPatient {
 
 	public FhirPatient(Patient fhirResource) {
 		super(fhirResource);
+	}
+
+	@Override
+	public Class<Patient> getFhirType() {
+		return Patient.class;
+	}
+
+	@Override
+	public Class<?> getModelType() {
+		return IPatient.class;
 	}
 
 	@Override
@@ -683,13 +693,4 @@ public class FhirPatient extends AbstractFhirModelAdapter<Patient> implements IP
 		return PersonFormatUtil.getPersonalia(this);
 	}
 
-	@Override
-	public Class<Patient> getFhirType() {
-		return Patient.class;
-	}
-
-	@Override
-	public Class<?> getModelType() {
-		return IPatient.class;
-	}
 }

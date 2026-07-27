@@ -5,6 +5,7 @@
       <provide interface="ch.elexis.core.services.IStoreToStringContribution"/>
    </service>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
-   <reference cardinality="1..1" field="elexisServer" interface="ch.elexis.core.services.IElexisServerService" name="elexisServer"/>
+   <reference cardinality="1..1" field="elexisEnvironmentService" interface="ch.elexis.core.eenv.IElexisEnvironmentService" name="elexisEnvironmentService"/>
+   <reference cardinality="1..1" field="httpClient" interface="org.apache.hc.client5.http.impl.classic.CloseableHttpClient" name="httpClient"/>
    <implementation class="ch.elexis.core.fhir.model.service.FhirModelService"/>
 </scr:component>

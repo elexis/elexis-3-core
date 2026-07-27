@@ -6,11 +6,11 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.fhir.model.FhirModelServiceTest;
 import ch.elexis.core.fhir.model.FhirReminderTest;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactoryTest;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 
 /**
@@ -26,7 +26,7 @@ public class AllPluginTests {
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
-		fhirModelService = OsgiServiceUtil.getService(IFhirModelService.class).get();
+		fhirModelService = PortableServiceLoader.get(IFhirModelService.class);
 
 		assertTrue(waitRemote());
 	}
