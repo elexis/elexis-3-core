@@ -6,10 +6,9 @@ Bundle-Version: 3.14.0.qualifier
 Export-Package: ch.myelexis.server.api,
  ch.myelexis.server.client,
  ch.myelexis.server.model
-Import-Package: jakarta.annotation;version="2.1.1";resolution:=optional,
- org.eclipse.jdt.annotation;version="[2.0.0,3.0.0)"
+Import-Package: jakarta.annotation;version="2.1.1";resolution:=optional
 Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
- ch.elexis.core.httpclient;bundle-version="1.0.0"
+ ch.elexis.core.httpclient;bundle-version="3.14.0"
 Service-Component: OSGI-INF/ch.elexis.core.ee.openapi.OpenApiClientProvider.xml
 Bundle-Vendor: ch.elexis
 Automatic-Module-Name: ch.elexis.core.ee.openapi
