@@ -1,4 +1,4 @@
-package ch.elexis.core.findings.codes;
+package ch.elexis.core.findings.model;
 
 import java.util.Objects;
 
