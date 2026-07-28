@@ -21,6 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.common.InstanceStatus;
@@ -32,7 +33,6 @@ import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.server.IEventService;
 import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
@@ -141,13 +141,13 @@ public class ElexisServerService implements IElexisServerService {
 		}
 		if (restUrl == null) {
 			// Auto-Config via EE OR Standalone
-			Optional<IElexisEnvironmentService> eeService = OsgiServiceUtil.getService(IElexisEnvironmentService.class);
+			Optional<IElexisEnvironmentService> eeService = PortableServiceLoader
+					.getOptional(IElexisEnvironmentService.class);
 			if (eeService.isPresent()) {
 				connectionStatus = ConnectionStatus.LOCAL;
 				restUrl = eeService.get().getBaseUrl() + "/services";
 				lockServiceAdministrativelyDisabled = !eeService.get().getWellKnownRcp().config.enableLockService;
 				log.info("Bound to ES via EE " + restUrl);
-				OsgiServiceUtil.ungetService(eeService.get());
 				return;
 			}
 		}
