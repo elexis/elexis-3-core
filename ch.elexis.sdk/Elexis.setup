@@ -237,6 +237,8 @@
         name="at.medbits.tools.launchtopom.feature.feature.group"/>
     <requirement
         name="org.eclipse.emf.ecoretools.design.feature.group"/>
+    <requirement
+        name="org.projectlombok.feature.feature.group"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
     <repository
@@ -247,6 +249,8 @@
         url="https://download.medelexis.ch/public/at.medbits.tools.launchtopom/"/>
     <repository
         url="https://raw.githubusercontent.com/essiembre/eclipse-rbe/master/eclipse-rbe-update-site/"/>
+    <repository
+        url="https://projectlombok.org/p2"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
