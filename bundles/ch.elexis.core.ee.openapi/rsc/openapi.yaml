@@ -61,6 +61,9 @@ components:
           $ref: "#/components/schemas/LocalDateTime"
         remoteAddress:
           type: string
+        systemTime:
+          type: integer
+          format: int64
     LocalDateTime:
       type: string
       format: date-time
@@ -260,8 +263,10 @@ components:
       required:
       - runnableId
       - triggerType
+      - triggerParameters
       - ownerId
       - runner
+      - runContext
       - notificationType
     TaskResult:
       type: object
@@ -393,7 +398,7 @@ components:
     SecurityScheme:
       type: openIdConnect
       description: Authentication
-      openIdConnectUrl: https://ee-master.myelexis.ch/keycloak/auth/realms/ElexisEnvironment/.well-known/openid-configuration
+      openIdConnectUrl: http://localhost:50363/realms/ElexisEnvironment/.well-known/openid-configuration
 info:
   license:
     name: Eclipse Public License - v 2.0
@@ -411,9 +416,10 @@ tags:
   description: "Legacy API, will be removed in future versions"
 - name: config
   description: System configuration
+- name: trace
+  description: System trace
 - name: entity management
   description: Low-level operations for managing entities
-- name: trace
 - name: user management
   description: Operations to manage users and upstream sync with Keycloak. Only EER3
     - Data primary store is Elexis database.
@@ -2074,10 +2080,6 @@ paths:
       - required: true
         name: key
         in: query
-        schema:
-          type: string
-      - name: If-Modified-Since
-        in: header
         schema:
           type: string
       responses:
