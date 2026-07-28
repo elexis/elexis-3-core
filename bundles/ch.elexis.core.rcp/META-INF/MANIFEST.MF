@@ -10,7 +10,6 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.console,
- ch.elexis.core.constants,
  ch.elexis.core.events,
  ch.elexis.core.jaxrs.filter,
  ch.elexis.core.jfr,
