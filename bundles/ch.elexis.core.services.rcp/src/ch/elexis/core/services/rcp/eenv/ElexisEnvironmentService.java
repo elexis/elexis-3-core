@@ -15,10 +15,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.ee.json.WellKnownRcp;
 import ch.elexis.core.eenv.AccessToken;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.rcp.oauth2.OAuth2Service;
@@ -63,13 +63,13 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 		}
 
 		// TODO first try via LocalProperties?
-				// THEN Config DB Table ?
-				return configService.get(key, null);
+		// THEN Config DB Table ?
+		return configService.get(key, null);
 	}
 
 	@Override
 	public WellKnownRcp getWellKnownRcp() {
-		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
+		HttpClient client = PortableServiceLoader.get(HttpClient.class);
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.well-known/elexis-rcp"))
 				.build();
 		try {
@@ -77,8 +77,6 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return new Gson().fromJson(response.body(), WellKnownRcp.class);
 		} catch (IOException | InterruptedException e) {
 			logger.warn("Error obtaining /.well-known/elexis-rcp returning defaults", e);
-		} finally {
-			OsgiServiceUtil.ungetService(client);
 		}
 
 		return new WellKnownRcp();
@@ -86,7 +84,7 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 
 	@Override
 	public JsonObject getStatus() {
-		HttpClient client = OsgiServiceUtil.getService(HttpClient.class).get();
+		HttpClient client = PortableServiceLoader.get(HttpClient.class);
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(getBaseUrl() + "/.status.json")).build();
 
 		HttpResponse<String> response;
@@ -95,8 +93,6 @@ public class ElexisEnvironmentService implements IElexisEnvironmentService {
 			return JsonParser.parseString(response.body()).getAsJsonObject();
 		} catch (IOException | InterruptedException e) {
 			logger.warn("Error obtaining status", e);
-		} finally {
-			OsgiServiceUtil.ungetService(client);
 		}
 
 		return null;

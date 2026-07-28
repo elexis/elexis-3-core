@@ -30,7 +30,6 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserConfig;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
@@ -45,7 +44,7 @@ import ch.elexis.core.services.ITraceService;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
 
-@Component(immediate = true)
+@Component(name = ConfigServiceActivator.LEGACY, enabled = false)
 public class ConfigService implements IConfigService {
 
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
@@ -144,7 +143,7 @@ public class ConfigService implements IConfigService {
 
 	private void addTraceEntry(String action) {
 		if (traceService == null) {
-			traceService = OsgiServiceUtil.getService(ITraceService.class).get();
+			traceService = PortableServiceLoader.get(ITraceService.class);
 		}
 		String userId = contextService.getActiveUser().map(IUser::getId).orElse("unknown");
 		traceService.addTraceEntry(userId, NetTool.hostname, action);
@@ -179,7 +178,7 @@ public class ConfigService implements IConfigService {
 
 	@Override
 	public String getOrInsert(IContact contact, String key, Supplier<String> insertValue) {
-		IElexisEntityManager elexisEntityManager = OsgiServiceUtil.getService(IElexisEntityManager.class, null).get();
+		IElexisEntityManager elexisEntityManager = PortableServiceLoader.get(IElexisEntityManager.class);
 		EntityManager entityManager = (EntityManager) elexisEntityManager.getEntityManager(false);
 		String ret;
 		try {
