@@ -14,6 +14,7 @@ import org.junit.Test;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.Right;
 import ch.elexis.core.ac.SystemCommandConstants;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IEncounter;
@@ -27,7 +28,6 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IContactBuilder.PersonBuilder;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.services.AllServiceTests;
@@ -56,8 +56,8 @@ public class RoleBasedAccessControlServiceTest {
 
 	@BeforeClass
 	public static void beforeClass() {
-		accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).get();
-		contextService = OsgiServiceUtil.getService(IContextService.class).get();
+		accessControlService = PortableServiceLoader.get(IAccessControlService.class);
+		contextService = PortableServiceLoader.get(IContextService.class);
 
 		PersonBuilder personBuilder = new IContactBuilder.PersonBuilder(CoreModelServiceHolder.get(), "medical",
 				"practitioner", LocalDate.of(2000, 1, 1), Gender.FEMALE).mandator();
