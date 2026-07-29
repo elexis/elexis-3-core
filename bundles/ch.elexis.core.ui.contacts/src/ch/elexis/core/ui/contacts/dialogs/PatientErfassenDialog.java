@@ -42,6 +42,7 @@ import ch.elexis.core.model.format.FormatValidator;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -98,7 +99,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 			updateOkButtonState();
 		});
 		new Label(ret, SWT.NONE).setText(Messages.Sex); // $NON-NLS-1$
-		cbSex = new Combo(ret, SWT.SINGLE);
+		cbSex = new Combo(ret, SWT.SINGLE | SWT.READ_ONLY);
 		String toolTip = String.format(Messages.Patient_male_female_tooltip, Messages.Patient_male_short,
 				Messages.Patient_female_short, Messages.Patient_male_long, Messages.Patient_female_long);
 		cbSex.setToolTipText(toolTip);
@@ -112,6 +113,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		tGebDat = new Text(ret, SWT.BORDER);
 		tGebDat.setText(getField(Patient.FLD_DOB));
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		FilterFieldInputRestrictions.applyBirthdateFilterFormatting(tGebDat, true);
 
 		new Label(ret, SWT.NONE).setText(Messages.Core_Street); // $NON-NLS-1$
 		tStrasse = new Text(ret, SWT.BORDER);
