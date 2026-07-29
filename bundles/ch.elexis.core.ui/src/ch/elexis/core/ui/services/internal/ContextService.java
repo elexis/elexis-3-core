@@ -31,7 +31,6 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 
 /**
@@ -90,8 +89,8 @@ public class ContextService implements IContextService {
 			@Override
 			public synchronized ICoverage get() {
 				ret = null;
-				Optional<?> coverage = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.coverage"); //$NON-NLS-1$
-				Optional<?> billable = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.billable"); //$NON-NLS-1$
+				Optional<?> coverage = ContextService.this.getNamed("SelectFallNoObligationDialog.coverage"); //$NON-NLS-1$
+				Optional<?> billable = ContextService.this.getNamed("SelectFallNoObligationDialog.billable"); //$NON-NLS-1$
 				if (coverage.isPresent() && billable.isPresent()) {
 					Display.getDefault().syncExec(() -> {
 						SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog((ICoverage) coverage.get(),
