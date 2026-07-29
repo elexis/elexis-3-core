@@ -74,11 +74,11 @@ public class TypedModifier {
 
 			Optional<IMandator> defaultWorkingFor = getUserService().getDefaultExecutiveDoctorWorkingFor(userContact);
 			if (defaultWorkingFor.isPresent()) {
-				ContextServiceHolder.get().setActiveMandator(defaultWorkingFor.get());
+				context.setTyped(defaultWorkingFor.get());
 			} else {
 				Set<IMandator> workingFor = getUserService().getExecutiveDoctorsWorkingFor(user);
 				if (!workingFor.isEmpty()) {
-					ContextServiceHolder.get().setActiveMandator(workingFor.iterator().next());
+					context.setTyped(workingFor.iterator().next());
 				} else {
 					MessageEvent.fireError("Kein Mandant definiert",
 							"Sie können Elexis erst normal benutzen, wenn Sie für den Benutzer einen Mandanten definiert haben");
@@ -89,8 +89,8 @@ public class TypedModifier {
 
 	public void modifyRemove(Class<?> clazz) {
 		if (clazz.equals(IUser.class)) {
-			ContextServiceHolder.get().setActivePatient(null);
-			ContextServiceHolder.get().setActiveMandator(null);
+			context.removeTyped(IPatient.class);
+			context.removeTyped(IMandator.class);
 		}
 	}
 
