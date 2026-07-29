@@ -125,8 +125,10 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @see #setAssignedContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIUser_AssignedContact()
 	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='kontakt'"
-	 * @generated
+	 * @generated not
+	 * @deprecated replace with {@link #getAssociatedContactId()}
 	 */
+	@Deprecated(since = "3.14")
 	IContact getAssignedContact();
 	
 	/**
@@ -134,8 +136,10 @@ public interface IUser extends Deleteable, Identifiable {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Assigned Contact</em>' reference.
 	 * @see #getAssignedContact()
-	 * @generated
+	 * @generated not
+	 * @deprecated not supported anymore, value is set in IdP
 	 */
+	@Deprecated(since = "3.14")
 	void setAssignedContact(IContact value);
 	
 	/**
