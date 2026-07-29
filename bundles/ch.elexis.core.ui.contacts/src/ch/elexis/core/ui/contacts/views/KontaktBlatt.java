@@ -65,6 +65,7 @@ import ch.elexis.core.services.holder.AccessControlServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -377,17 +378,8 @@ public class KontaktBlatt extends Composite implements IRefreshable, IUnlockable
 		if (genderCombo != null && genderCombo.getWidget() != null
 				&& genderCombo.getWidget().getControl() instanceof Combo) {
 			Combo cbSex = (Combo) genderCombo.getWidget().getControl();
-			cbSex.addVerifyListener(event -> {
-				String current = cbSex.getText();
-				String result = current.substring(0, event.start) + event.text + current.substring(event.end);
-				if (result.isEmpty()) {
-					return;
-				}
-				if (!result.equalsIgnoreCase(Person.MALE) && !result.equalsIgnoreCase(Person.FEMALE)) {
-					event.doit = false;
-				}
-			});
-			cbSex.addListener(SWT.MouseWheel, event -> event.doit = false);
+			FilterFieldInputRestrictions.restrictToValuesIgnoreCase(cbSex, Person.MALE, Person.FEMALE);
+			FilterFieldInputRestrictions.disableMouseWheel(cbSex);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package ch.elexis.core.model.format;
 
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ public class FormatValidator {
 
 	private static final int AHV_NUM_LEN_WITHOUT_SEP = 13;
 	private static final String AHV_SEP = ".";
+	private static final int MAX_DATE_SEGMENTS = 3;
 
 	/**
 	 * Validates a AHV (swiss social number)
@@ -101,19 +103,75 @@ public class FormatValidator {
 				.append(ahv4).toString();
 	}
 
-	public static String getFormattedBirthdateFilter(final String input) {
-		String digits = input.replaceAll("[^0-9]", StringUtils.EMPTY);
-		if (digits.length() > 8) {
-			digits = digits.substring(0, 8);
+	public static String getFormattedBirthdate(final String input) {
+		if (StringUtils.isBlank(input)) {
+			return StringUtils.EMPTY;
 		}
-		int length = digits.length();
-		if (length <= 4) {
-			return digits;
+		StringBuilder digits = new StringBuilder();
+		String[] segments = input.replaceAll("[^0-9.]", StringUtils.EMPTY).split("\\.", -1);
+		for (int i = 0; i < segments.length; i++) {
+			String segment = segments[i];
+			boolean closedByUser = i < segments.length - 1;
+			if (closedByUser && i < 2 && segment.length() == 1) {
+				digits.append('0');
+			}
+			digits.append(segment);
 		}
+		String value = digits.length() > 8 ? digits.substring(0, 8) : digits.toString();
+		int length = value.length();
 		StringBuilder sb = new StringBuilder();
-		sb.append(digits, 0, 2).append('.');
-		sb.append(digits, 2, 4).append('.');
-		sb.append(digits, 4, Math.min(8, length));
+		sb.append(value, 0, Math.min(2, length));
+		if (length >= 2) {
+			sb.append('.');
+			sb.append(value, 2, Math.min(4, length));
+		}
+		if (length >= 4) {
+			sb.append('.');
+			sb.append(value, 4, length);
+		}
 		return sb.toString();
+	}
+
+	public static String getFormattedBirthdateFilter(final String input) {
+		if (StringUtils.isBlank(input)) {
+			return StringUtils.EMPTY;
+		}
+		String cleaned = input.replaceAll("[^0-9.]", StringUtils.EMPTY).replaceAll("\\.{2,}", ".")
+				.replaceAll("^\\.+", StringUtils.EMPTY);
+		if (cleaned.indexOf('.') < 0) {
+			String digits = cleaned.length() > 8 ? cleaned.substring(0, 8) : cleaned;
+			if (digits.length() <= 4) {
+				// might still be a year
+				return digits;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append(digits, 0, 2).append('.');
+			sb.append(digits, 2, 4).append('.');
+			sb.append(digits, 4, digits.length());
+			return sb.toString();
+		}
+		StringJoiner sj = new StringJoiner(".");
+		String overflow = StringUtils.EMPTY;
+		int segmentCount = 0;
+		for (String segment : cleaned.split("\\.", -1)) {
+			if (segmentCount >= MAX_DATE_SEGMENTS) {
+				break;
+			}
+			overflow = addDateSegment(sj, segmentCount++, overflow + segment);
+		}
+		while (!overflow.isEmpty() && segmentCount < MAX_DATE_SEGMENTS) {
+			overflow = addDateSegment(sj, segmentCount++, overflow);
+		}
+		return sj.toString();
+	}
+
+	private static String addDateSegment(final StringJoiner sj, final int index, final String segment) {
+		int maxLength = index < 2 ? 2 : 4;
+		if (segment.length() > maxLength) {
+			sj.add(segment.substring(0, maxLength));
+			return segment.substring(maxLength);
+		}
+		sj.add(segment);
+		return StringUtils.EMPTY;
 	}
 }

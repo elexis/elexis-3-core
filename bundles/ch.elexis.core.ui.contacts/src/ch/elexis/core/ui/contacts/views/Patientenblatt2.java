@@ -121,6 +121,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
@@ -271,7 +272,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 	private InputData comboGeschlecht;
 	private InputData dobField;
-	private static final int MAX_DOB_LENGTH = 10;
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
@@ -541,56 +541,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	private void applyInputRestrictions() {
-		if (dobField != null && dobField.getWidget() != null
-				&& dobField.getWidget().getControl() instanceof Text) {
-			Text tGebDat = (Text) dobField.getWidget().getControl();
-			tGebDat.setTextLimit(MAX_DOB_LENGTH);
-			tGebDat.addVerifyListener(event -> {
-				if (event.keyCode == SWT.BS || event.keyCode == SWT.DEL) {
-					return;
-				}
-				if (event.text.length() > 1) {
-					return;
-				}
-				String current = tGebDat.getText();
-				if (".".equals(event.text)) { //$NON-NLS-1$
-					int dotCount = current.length() - current.replace(".", StringUtils.EMPTY).length(); //$NON-NLS-1$
-					int lastDot = current.lastIndexOf('.');
-					String segment = current.substring(lastDot + 1);
-					if (dotCount >= 2 || segment.isEmpty()) {
-						event.doit = false;
-						return;
-					}
-					if (segment.length() == 1) {
-						event.doit = false;
-						String padded = current.substring(0, lastDot + 1) + "0" + segment + "."; //$NON-NLS-1$ //$NON-NLS-2$
-						tGebDat.setText(padded);
-						tGebDat.setSelection(padded.length());
-					}
-					return;
-				}
-				if (!StringUtils.isNumeric(event.text)) {
-					event.doit = false;
-					return;
-				}
-				if (current.length() == 2 || current.length() == 5) {
-					event.text = "." + event.text; //$NON-NLS-1$
-				}
-			});
+		if (dobField != null && dobField.getWidget() != null && dobField.getWidget().getControl() instanceof Text) {
+			FilterFieldInputRestrictions.applyBirthdateFilterFormatting((Text) dobField.getWidget().getControl(), true);
 		}
 		if (comboGeschlecht != null && comboGeschlecht.getWidget() != null
 				&& comboGeschlecht.getWidget().getControl() instanceof Combo) {
-			Combo combo = (Combo) comboGeschlecht.getWidget().getControl();
-			combo.addVerifyListener(event -> {
-				String current = combo.getText();
-				String result = current.substring(0, event.start) + event.text + current.substring(event.end);
-				if (result.isEmpty()) {
-					return;
-				}
-				if (!result.equals(Messages.Patient_male_short) && !result.equals(Messages.Patient_female_short)) {
-					event.doit = false;
-				}
-			});
+			FilterFieldInputRestrictions.restrictToValues((Combo) comboGeschlecht.getWidget().getControl(),
+					Messages.Patient_male_short, Messages.Patient_female_short);
 		}
 	}
 

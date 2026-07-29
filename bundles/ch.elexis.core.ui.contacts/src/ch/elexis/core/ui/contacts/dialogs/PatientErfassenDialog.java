@@ -42,6 +42,7 @@ import ch.elexis.core.model.format.FormatValidator;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.icons.ImageSize;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -60,7 +61,7 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 	Combo cbSex;
 	private IPatient patient;
 	Object po;
-	private static final int MAX_DOB_LENGTH = 10;
+
 	public IPatient getResult() {
 		return patient;
 	}
@@ -110,26 +111,9 @@ public class PatientErfassenDialog extends TitleAreaDialog {
 		}
 		new Label(ret, SWT.NONE).setText(Messages.Core_Enter_Birthdate); // $NON-NLS-1$
 		tGebDat = new Text(ret, SWT.BORDER);
-		tGebDat.setTextLimit(MAX_DOB_LENGTH);
 		tGebDat.setText(getField(Patient.FLD_DOB));
 		tGebDat.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
-
-		tGebDat.addVerifyListener(event -> {
-			if (event.keyCode == SWT.BS || event.keyCode == SWT.DEL) {
-				return;
-			}
-
-			if (!StringUtils.isNumeric(event.text)) {
-				event.doit = false;
-				return;
-			}
-
-			String currentText = tGebDat.getText();
-
-			if (currentText.length() == 2 || currentText.length() == 5) {
-				event.text = "." + event.text;
-			}
-		});
+		FilterFieldInputRestrictions.applyBirthdateFilterFormatting(tGebDat, true);
 
 		new Label(ret, SWT.NONE).setText(Messages.Core_Street); // $NON-NLS-1$
 		tStrasse = new Text(ret, SWT.BORDER);
