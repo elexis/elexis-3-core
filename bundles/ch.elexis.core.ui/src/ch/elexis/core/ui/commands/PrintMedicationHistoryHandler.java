@@ -36,6 +36,7 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IFormattedOutput;
 import ch.elexis.core.services.IFormattedOutputFactory;
@@ -223,6 +224,11 @@ public class PrintMedicationHistoryHandler extends AbstractHandler implements IH
 				this.to = p.getEndDate();
 			}
 			this.article = p.getArtikel() != null ? p.getArtikel().getLabel() : "?"; //$NON-NLS-1$
+			if (p.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE) instanceof String) {
+				this.article = this.article + "\nSLIndication="
+						+ p.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE);
+			}
+
 			this.dosage = p.getDosis();
 		}
 

@@ -252,12 +252,15 @@ public class MedicationService implements IMedicationService {
 			copy.setDateTo(now);
 			copy.setRecipe(ret);
 			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(i));
+			copy.setExtInfo(Constants.FLD_EXT_INDICATIONCODE,
+					iPrescription.getExtInfo(Constants.FLD_EXT_INDICATIONCODE));
 			entries.add(copy);
 		}
 		CoreModelServiceHolder.get().save(ret);
 		CoreModelServiceHolder.get().save(entries);
 		return ret;
 	}
+
 
 	private int getNextRecipeOrder(IRecipe recipe) {
 		List<IPrescription> prescriptions = recipe.getPrescriptions();
