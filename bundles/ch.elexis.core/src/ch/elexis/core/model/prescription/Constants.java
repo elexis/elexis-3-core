@@ -10,4 +10,5 @@ public class Constants {
 	public static final Object FLD_EXT_IS_APPLIED = "isApplied";
 	public static final String FLD_EXT_RECIPE_ORDER = "recipeOrder";
 	public static final String FLD_EXT_VERRECHNET_ID = "verrechnetId";
+	public static final String FLD_EXT_INDICATIONCODE = "indicationcode";
 }
