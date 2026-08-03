@@ -8,12 +8,12 @@ import org.hl7.fhir.r4.model.Resource;
 
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ch.elexis.core.exceptions.AccessControlException;
-import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IModelService;
 
-public interface IFhirModelService {
+public interface IFhirModelService extends ICompositeModelService {
 
 	/**
 	 * Get the connection Status to the FHIR Server, or empty if there is no server
@@ -30,17 +30,6 @@ public interface IFhirModelService {
 	 * @return
 	 */
 	public <T> T create(Class<T> clazz) throws AccessControlException;
-
-	/**
-	 * Load a model object of type clazz by the id. Deleted entries are not loaded.
-	 *
-	 * @param id
-	 * @param clazz
-	 * @return
-	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz) {
-		return load(id, clazz, false);
-	}
 
 	/**
 	 * Directly load the fhir resource
@@ -66,17 +55,6 @@ public interface IFhirModelService {
 	public <T> Optional<T> adapt(Object fhirObject, Class<T> clazz);
 
 	/**
-	 * Load a model object of type clazz by the id. If Deleted entries should be
-	 * loaded can be specified with the includeDeleted parameter.
-	 *
-	 * @param id
-	 * @param clazz
-	 * @param includeDeleted
-	 * @return
-	 */
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) throws AccessControlException;
-
-	/**
 	 * Save the model object.
 	 *
 	 * @param object
@@ -91,20 +69,6 @@ public interface IFhirModelService {
 	 * @throws IllegalStateException
 	 */
 	public void save(List<? extends Identifiable> identifiables) throws AccessControlException;
-
-	/**
-	 * Convenience method setting deleted property and save the
-	 * {@link Identifiable}.
-	 *
-	 * @param identifiable
-	 */
-	public void delete(Identifiable identifiable) throws AccessControlException;
-
-	/**
-	 * @see #delete(Deleteable)
-	 * @param identifiables
-	 */
-	public void delete(List<? extends Identifiable> identifiables) throws AccessControlException;
 
 	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including

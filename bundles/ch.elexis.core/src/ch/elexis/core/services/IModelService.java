@@ -19,7 +19,7 @@ import ch.elexis.core.model.Identifiable;
  * @author thomas
  *
  */
-public interface IModelService {
+public interface IModelService extends ICompositeModelService {
 
 	public final String SERVICEMODELNAME = "service.model.name";
 
@@ -35,16 +35,7 @@ public interface IModelService {
 	 */
 	public <T> T create(Class<T> clazz) throws AccessControlException;
 
-	/**
-	 * Load a model object of type clazz by the id. Deleted entries are not loaded.
-	 *
-	 * @param id
-	 * @param clazz
-	 * @return
-	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz) {
-		return load(id, clazz, false);
-	}
+
 
 	/**
 	 * Try to cast the {@link Identifiable} to the given class. Use this with
@@ -112,7 +103,8 @@ public interface IModelService {
 	 * @param includeDeleted
 	 * @return
 	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) throws AccessControlException {
+	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted)
+			throws AccessControlException {
 		return load(id, clazz, includeDeleted, true);
 	}
 
@@ -129,7 +121,8 @@ public interface IModelService {
 	 * @param refreshCache
 	 * @return
 	 */
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)  throws AccessControlException;
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)
+			throws AccessControlException;
 
 	/**
 	 * Load a model object of type clazz by the id. If Deleted entries should be
@@ -286,19 +279,6 @@ public interface IModelService {
 	 */
 	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String queryName);
-
-	/**
-	 * Convenience method setting deleted property and save the {@link Deleteable}.
-	 *
-	 * @param deletable
-	 */
-	public void delete(Deleteable deletable) throws AccessControlException;
-
-	/**
-	 * @see #delete(Deleteable)
-	 * @param deletables
-	 */
-	public void delete(List<? extends Deleteable> deletables) throws AccessControlException;
 
 	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including

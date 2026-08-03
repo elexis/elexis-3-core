@@ -25,6 +25,7 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -33,7 +34,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 @Component(property = IModelService.SERVICEMODELNAME + "=ch.elexis.core.model")
-public class CoreModelService extends AbstractModelService implements IModelService, IStoreToStringContribution {
+public class CoreModelService extends AbstractModelService
+		implements IModelService, ICompositeModelService, IStoreToStringContribution {
 
 	@Reference(target = "(id=default)")
 	private IElexisEntityManager entityManager;
@@ -145,7 +147,8 @@ public class CoreModelService extends AbstractModelService implements IModelServ
 	@Override
 	public <T> IQuery<T> getQuery(Class<T> clazz, boolean refreshCache, boolean includeDeleted) {
 		if (evaluateRightNoException(clazz, Right.READ)) {
-			return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(), includeDeleted);
+			return new CoreQuery<>(clazz, refreshCache, (EntityManager) entityManager.getEntityManager(),
+					includeDeleted);
 		}
 		return new EmptyQuery<>();
 	}
