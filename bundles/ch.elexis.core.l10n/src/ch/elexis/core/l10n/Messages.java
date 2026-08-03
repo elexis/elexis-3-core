@@ -5581,7 +5581,21 @@ public class Messages extends NLS {
 	public static String ReminderStatusSubMenu_NoSelection;
 	public static String AgendaFarben_SpecialAppointments;
 	public static String AgendaFarben_RecurringAppointment;
-
+	public static String DicomViewer_DialogTitle;
+	public static String DicomViewer_NotConfiguredPath;
+	public static String DicomViewer_NotConfiguredPathOrUrl;
+	public static String DicomViewer_NotConfiguredUrl;
+	public static String DicomViewer_NotExecutablePath;
+	public static String DicomViewer_NotExecutablePathOrUrl;
+	public static String DicomViewer_OperatingSystem;
+	public static String DicomViewer_OptionalParameters;
+	public static String DicomViewer_PathConfiguredButUrlNeeded;
+	public static String DicomViewer_PathOrUrl;
+	public static String DicomViewer_PatientId;
+	public static String DicomViewer_PatientName;
+	public static String DicomViewer_StudyIdentifier;
+	public static String DicomViewer_UrlConfiguredButPathNeeded;
+	public static String DicomViewer_Viewer;
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
