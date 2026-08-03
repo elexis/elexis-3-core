@@ -18,11 +18,11 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ILocalConfigService;
-import ch.elexis.core.services.rcp.ConfigServiceActivator;
+import ch.elexis.core.services.rcp.EEDependentServicesActivator;
 import ch.myelexis.server.api.UserApi;
 import ch.myelexis.server.client.ApiException;
 
-@Component(name = ConfigServiceActivator.EEDEP, enabled = false)
+@Component(name = EEDependentServicesActivator.CONFIGSERVICE_EEDEP, enabled = false)
 public class ConfigService implements IConfigService {
 
 	@Reference

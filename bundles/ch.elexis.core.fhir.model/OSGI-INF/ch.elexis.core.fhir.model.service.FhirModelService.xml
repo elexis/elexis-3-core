@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.fhir.model.service.FhirModelService">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" immediate="true" name="ch.elexis.core.fhir.model.service.FhirModelService">
    <service>
       <provide interface="ch.elexis.core.fhir.model.IFhirModelService"/>
+      <provide interface="ch.elexis.core.services.ICompositeModelService"/>
       <provide interface="ch.elexis.core.services.IStoreToStringContribution"/>
    </service>
    <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>

@@ -19,7 +19,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ca.uhn.fhir.rest.client.apache.ApacheHttp5RestfulClientFactory;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.gclient.IFetchConformanceUntyped;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ch.elexis.core.constants.StringConstants;
@@ -29,14 +28,15 @@ import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ElexisTypeMap;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactory;
 import ch.elexis.core.fhir.model.impl.AbstractFhirModelAdapter;
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IStoreToStringContribution;
-import ch.elexis.core.utils.CoreUtil;
 
-@Component
-public class FhirModelService implements IFhirModelService, IStoreToStringContribution {
+@Component(immediate = true)
+public class FhirModelService implements IFhirModelService, ICompositeModelService, IStoreToStringContribution {
 
 	/**
 	 * THOUGHTS: How to be prepare for R5? Queries should not fetch whole objects ->
@@ -74,13 +74,13 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 			context.setRestfulClientFactory(apacheHttp5RestfulClientFactory);
 
 			client = context.newRestfulGenericClient(elexisEnvironmentService.getBaseUrl() + "/fhir/r4");
-			if (CoreUtil.isTestMode()) {
-				// Create a logging interceptor
-				LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
-				loggingInterceptor.setLogRequestSummary(true);
-				loggingInterceptor.setLogRequestBody(true);
-				client.registerInterceptor(loggingInterceptor);
-			}
+//			if (Boolean.valueOf(System.getProperty("log.http"))) {
+//				// Create a logging interceptor
+//				LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
+//				loggingInterceptor.setLogRequestSummary(true);
+//				loggingInterceptor.setLogRequestBody(true);
+//				client.registerInterceptor(loggingInterceptor);
+//			}
 		}
 		return client;
 	}
@@ -113,7 +113,7 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 					return adapt(fhirObject, clazz);
 				}
 			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).warn(e.getMessage());
+				LoggerFactory.getLogger(getClass()).warn(e.getMessage(), e);
 			}
 		}
 		return Optional.empty();
@@ -150,17 +150,17 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	}
 
 	@Override
-	public void delete(Identifiable identifiable) throws AccessControlException {
-		if (identifiable instanceof AbstractFhirModelAdapter) {
-			getGenericClient().delete().resource(((AbstractFhirModelAdapter<?, ?>) identifiable).getFhirResource())
+	public void delete(Deleteable deletable) throws AccessControlException {
+		if (deletable instanceof AbstractFhirModelAdapter) {
+			getGenericClient().delete().resource(((AbstractFhirModelAdapter<?, ?>) deletable).getFhirResource())
 					.execute();
 		}
 	}
 
 	@Override
-	public void delete(List<? extends Identifiable> identifiables) throws AccessControlException {
-		if (identifiables != null) {
-			identifiables.stream().forEach(i -> delete(i));
+	public void delete(List<? extends Deleteable> deleteables) throws AccessControlException {
+		if (deleteables != null) {
+			deleteables.stream().forEach(i -> delete(i));
 		}
 	}
 
