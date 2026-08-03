@@ -3,10 +3,13 @@ package ch.elexis.core.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -251,12 +254,44 @@ public class OrderService implements IOrderService {
 
 	@Override
 	public List<IOrder> getOpenOrders() {
-		return getOrders(false, true);
+		return getOpenOrders(-1);
+	}
+
+	@Override
+	public List<IOrder> getOpenOrders(int limit) {
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		List<IOrder> orders = query.execute();
+
+		List<IOrder> open = new ArrayList<>();
+		for (IOrder order : orders) {
+			if (!isCompleted(order)) {
+				open.add(order);
+				if (limit > 0 && open.size() >= limit) {
+					break;
+				}
+			}
+		}
+		return open;
 	}
 
 	@Override
 	public List<IOrder> getCompletedOrders(boolean showAllYears) {
 		return getOrders(true, showAllYears);
+	}
+
+	@Override
+	public List<Integer> getOrderYears() {
+		List<IOrder> orders = modelService.getQuery(IOrder.class).execute();
+		return orders.stream().map(IOrder::getTimestamp).filter(Objects::nonNull).map(LocalDateTime::getYear)
+				.distinct().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<IOrder> getCompletedOrdersForYear(int year) {
+		List<IOrder> orders = modelService.getQuery(IOrder.class).execute();
+		return orders.stream().filter(o -> o.getTimestamp() != null && o.getTimestamp().getYear() == year)
+				.filter(this::isCompleted).sorted(this::compareTimestampsDesc).collect(Collectors.toList());
 	}
 
 	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {
@@ -274,9 +309,134 @@ public class OrderService implements IOrderService {
 	}
 
 	private boolean isCompleted(IOrder order) {
-		boolean isDone = order.isDone();
-		boolean hasEntries = !order.getEntries().isEmpty();
-		return isDone && hasEntries;
+		List<IOrderEntry> entries = order.getEntries();
+		if (entries.isEmpty()) {
+			return false;
+		}
+		return entries.stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+	}
+
+	@Override
+	public List<IOrder> searchOrders(String search, int limit) {
+		if (search == null || search.isBlank()) {
+			IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+			query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+			if (limit > 0) {
+				query.limit(limit);
+			}
+			return query.execute();
+		}
+
+		String trimmed = search.trim();
+		DateQuery dateQuery = parseDateQuery(trimmed);
+		if (dateQuery != null) {
+			List<IOrder> all = modelService.getQuery(IOrder.class).execute();
+			List<IOrder> filtered = all.stream().filter(o -> matchesDate(o, dateQuery))
+					.sorted((a, b) -> compareTimestampsDesc(a, b)).collect(Collectors.toList());
+			if (limit > 0 && filtered.size() > limit) {
+				filtered = filtered.subList(0, limit);
+			}
+			return filtered;
+		}
+
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		query.and("id", COMPARATOR.LIKE, "%" + trimmed + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		if (limit > 0) {
+			query.limit(limit);
+		}
+		return query.execute();
+	}
+
+	private int compareTimestampsDesc(IOrder a, IOrder b) {
+		LocalDateTime ta = a.getTimestamp();
+		LocalDateTime tb = b.getTimestamp();
+		if (ta == null && tb == null) {
+			return 0;
+		}
+		if (ta == null) {
+			return 1;
+		}
+		if (tb == null) {
+			return -1;
+		}
+		return tb.compareTo(ta);
+	}
+
+	private boolean matchesDate(IOrder order, DateQuery dateQuery) {
+		LocalDateTime ts = order.getTimestamp();
+		if (ts == null) {
+			return false;
+		}
+		if (dateQuery.year != null && ts.getYear() != dateQuery.year) {
+			return false;
+		}
+		if (dateQuery.month != null && ts.getMonthValue() != dateQuery.month) {
+			return false;
+		}
+		if (dateQuery.day != null && ts.getDayOfMonth() != dateQuery.day) {
+			return false;
+		}
+		return true;
+	}
+
+	private DateQuery parseDateQuery(String search) {
+		boolean onlyDateChars = search.chars()
+				.allMatch(c -> Character.isDigit(c) || c == '.' || c == '/' || c == '-' || Character.isWhitespace(c));
+		if (!onlyDateChars) {
+			return null;
+		}
+		boolean hasSeparator = search.matches(".*[./\\-\\s].*"); //$NON-NLS-1$
+		List<String> tokens = new ArrayList<>();
+		for (String p : search.split("[./\\-\\s]+")) { //$NON-NLS-1$
+			if (!p.isEmpty() && p.chars().allMatch(Character::isDigit)) {
+				tokens.add(p);
+			}
+		}
+		if (tokens.isEmpty()) {
+			return null;
+		}
+		if (!hasSeparator && !(tokens.size() == 1 && tokens.get(0).length() == 4)) {
+			return null;
+		}
+
+		Integer year = null;
+		List<Integer> dayMonth = new ArrayList<>();
+		for (String token : tokens) {
+			int value = Integer.parseInt(token);
+			if (token.length() == 4 && year == null) {
+				year = value;
+			} else {
+				dayMonth.add(value);
+			}
+		}
+		Integer day = null;
+		Integer month = null;
+		if (dayMonth.size() == 1) {
+			month = dayMonth.get(0);
+		} else if (dayMonth.size() >= 2) {
+			day = dayMonth.get(0);
+			month = dayMonth.get(1);
+		}
+		if (year == null && month == null && day == null) {
+			return null;
+		}
+		if ((month != null && (month < 1 || month > 12)) || (day != null && (day < 1 || day > 31))) {
+			return null;
+		}
+		return new DateQuery(day, month, year);
+	}
+
+	private static final class DateQuery {
+		final Integer day;
+		final Integer month;
+		final Integer year;
+
+		DateQuery(Integer day, Integer month, Integer year) {
+			this.day = day;
+			this.month = month;
+			this.year = year;
+		}
 	}
 
 	@Override
@@ -372,7 +532,8 @@ public class OrderService implements IOrderService {
 		}
 		IQuery<IOutputLog> query = modelService.getQuery(IOutputLog.class);
 		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, order.getId());
-		return query.execute().isEmpty() ? null : query.execute().get(0);
+		List<IOutputLog> result = query.execute();
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	@Override

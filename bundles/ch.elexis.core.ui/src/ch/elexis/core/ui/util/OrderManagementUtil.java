@@ -121,6 +121,16 @@ public class OrderManagementUtil {
 		if (entry == null)
 			return null;
 
+		if (entry.getState() == OrderEntryState.DONE) {
+			return Images.IMG_BULLET_GREEN.getImage();
+		}
+		if (entry.getState() == OrderEntryState.OPEN) {
+			return Images.IMG_BULLET_RED.getImage();
+		}
+		if (entry.getState() == OrderEntryState.PARTIAL_DELIVER) {
+			return Images.IMG_BULLET_YELLOW.getImage();
+		}
+
 		int delivered = entry.getDelivered();
 		int ordered = entry.getAmount();
 
@@ -220,6 +230,7 @@ public class OrderManagementUtil {
 			List<IContact> allowedSuppliers = loadConfiguredSuppliers();
 			ContactSelectionDialog dialog = new ContactSelectionDialog(view.getSite().getShell(), IContact.class,
 					Messages.OrderManagement_SelectSupplier_Title, Messages.OrderManagement_SelectSupplier_Message);
+			dialog.setAllowedContacts(allowedSuppliers);
 			if (dialog.open() == Dialog.OK) {
 				IContact selectedProvider = (IContact) dialog.getSelection();
 				if (selectedProvider != null && actOrder != null) {
@@ -296,19 +307,20 @@ public class OrderManagementUtil {
 			final String finishedOrderId = (actOrder != null) ? actOrder.getId() : null;
 			Display.getDefault().asyncExec(() -> {
 				view.loadOpenOrders();
-				view.loadCompletedOrders(view.getCompletedContainer());
-				if (finishedOrderId != null) {
-					IOrder reloaded = CoreModelServiceHolder.get().load(finishedOrderId, IOrder.class).orElse(null);
-					if (reloaded != null) {
-						boolean isNowCompleted = orderService.isOrderCompletelyDelivered(reloaded);
-						if (isNowCompleted == isCompletelyDelivered || reloaded.getEntries().isEmpty()) {
-							view.setActOrder(reloaded);
-							view.selectOrderInHistory(reloaded);
-							view.refresh();
+				view.loadCompletedOrders(view.getCompletedContainer(), () -> {
+					if (finishedOrderId != null) {
+						IOrder reloaded = CoreModelServiceHolder.get().load(finishedOrderId, IOrder.class).orElse(null);
+						if (reloaded != null) {
+							boolean isNowCompleted = orderService.isOrderCompletelyDelivered(reloaded);
+							if (isNowCompleted == isCompletelyDelivered || reloaded.getEntries().isEmpty()) {
+								view.setActOrder(reloaded);
+								view.selectOrderInHistory(reloaded);
+								view.refresh();
+							}
 						}
 					}
-				}
-				view.updateUI();
+					view.updateUI();
+				});
 			});
 
 			return;

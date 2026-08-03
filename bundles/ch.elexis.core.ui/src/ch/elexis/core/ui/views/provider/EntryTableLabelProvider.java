@@ -28,17 +28,11 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IOrderEntry entry) {
-			int ordered = entry.getAmount();
-
-			String articleName = (entry.getArticle() != null) ? entry.getArticle().getName() : StringUtils.EMPTY;
-			String providerLabel = (entry.getProvider() != null) ? entry.getProvider().getLabel() : "Unknown";
-			String stockCode = (entry.getStock() != null) ? entry.getStock().getCode() : "N/A";
-
 			switch (columnIndex) {
 			case OrderConstants.OrderTable.STATUS:
 				return StringUtils.SPACE;
 			case OrderConstants.OrderTable.ORDERED:
-				return String.valueOf(ordered);
+				return String.valueOf(entry.getAmount());
 			case OrderConstants.OrderTable.DELIVERED: {
 				int base = entry.getDelivered();
 				int delta = orderManagementView.getPendingDeliveredValues().getOrDefault(entry, 0);
@@ -57,11 +51,11 @@ public class EntryTableLabelProvider extends ColumnLabelProvider {
 				}
 				return StringUtils.EMPTY;
 			case OrderConstants.OrderTable.ARTICLE:
-				return articleName;
+				return (entry.getArticle() != null) ? entry.getArticle().getName() : StringUtils.EMPTY;
 			case OrderConstants.OrderTable.SUPPLIER:
-				return providerLabel;
+				return (entry.getProvider() != null) ? entry.getProvider().getLabel() : "Unknown";
 			case OrderConstants.OrderTable.STOCK:
-				return stockCode;
+				return (entry.getStock() != null) ? entry.getStock().getCode() : "N/A";
 			default:
 				return StringUtils.EMPTY;
 			}

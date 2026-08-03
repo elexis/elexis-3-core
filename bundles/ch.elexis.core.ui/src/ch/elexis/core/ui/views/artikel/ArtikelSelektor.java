@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -40,6 +41,8 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.ui.actions.CodeSelectorHandler;
+import ch.elexis.core.ui.actions.ICodeSelectorTarget;
 import ch.elexis.core.ui.commands.EditEigenartikelUi;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -103,6 +106,22 @@ public class ArtikelSelektor extends ViewPart {
 				}
 			}
 		});
+		tv.addDoubleClickListener(event -> {
+			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+			Object element = selection.getFirstElement();
+			if (element == null) {
+				return;
+			}
+			Object toSend = element;
+			if (element instanceof IStockEntry se && se.getArticle() != null) {
+				toSend = se.getArticle();
+			}
+			ICodeSelectorTarget target = CodeSelectorHandler.getInstance().getCodeSelectorTarget();
+			if (target == null) {
+				return;
+			}
+			target.codeSelected(toSend);
+		});
 		StockEntryLoader loader = new StockEntryLoader(tv);
 		loader.schedule();
 	}
@@ -163,6 +182,9 @@ public class ArtikelSelektor extends ViewPart {
 					CommonViewer cv = new CommonViewer();
 					CodeSystemDescription description = (CodeSystemDescription) top.getData(); // $NON-NLS-1$
 					ViewerConfigurer vc = description.getCodeSelectorFactory().createViewerConfigurer(cv);
+					if (vc.getContentType() == ViewerConfigurer.ContentType.GENERICOBJECT) {
+						vc.setDoubleClickListener(description.getCodeSelectorFactory().getDoubleClickListener());
+					}
 					Composite c = new Composite(ctab, SWT.NONE);
 					c.setLayout(new GridLayout());
 					cv.create(vc, c, SWT.V_SCROLL, getViewSite());

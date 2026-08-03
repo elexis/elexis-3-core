@@ -145,7 +145,8 @@ public class GenericOrderEditingSupport extends EditingSupport {
 			}
 			return switch (columnType) {
 			case ORDERED -> entry.getState() == OrderEntryState.OPEN;
-			case DELIVERED -> orderManagementView.isDeliveryEditMode();
+			case DELIVERED -> orderManagementView.isDeliveryEditMode() && (entry.getState() == OrderEntryState.ORDERED
+					|| entry.getState() == OrderEntryState.PARTIAL_DELIVER);
 			case SUPPLIER -> entry.getState() == OrderEntryState.OPEN;
 			case STOCK -> entry.getState() == OrderEntryState.OPEN; // Lager nur ändern, wenn noch offen
 			};
