@@ -35,7 +35,7 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IStoreToStringContribution;
 
-@Component(immediate = true)
+@Component
 public class FhirModelService implements IFhirModelService, ICompositeModelService, IStoreToStringContribution {
 
 	/**
