@@ -219,6 +219,11 @@ public class MedicationService implements IMedicationService {
 		if (extInfoValue != null && !extInfoValue.isEmpty()) {
 			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, extInfoValue);
 		}
+		extInfoValue = (String) prescription
+				.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_INDICATIONCODE);
+		if (extInfoValue != null && !extInfoValue.isEmpty()) {
+			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_INDICATIONCODE, extInfoValue);
+		}
 		ret.setDateFrom(LocalDateTime.now());
 		ret.setPrescriptor(ContextServiceHolder.get().getActiveUserContact().orElse(null));
 		return ret;
