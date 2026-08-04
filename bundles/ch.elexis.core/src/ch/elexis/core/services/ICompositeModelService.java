@@ -15,6 +15,14 @@ import ch.elexis.core.model.Deleteable;
 public interface ICompositeModelService {
 
 	/**
+	 * Create a new transient model instance of type clazz.
+	 *
+	 * @param clazz
+	 * @return
+	 */
+	public <T> T create(Class<T> clazz) throws AccessControlException;
+
+	/**
 	 * Load a model object of type clazz by the id. Deleted entries are not loaded.
 	 *
 	 * @param id
