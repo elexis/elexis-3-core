@@ -235,7 +235,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 					GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
 					data.exclude = false;
 				}
-				getParent().layout();
+				relayout();
 			}
 		});
 		
@@ -262,7 +262,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 
 		compositeMedicationTypeDetail = new Composite(parent, SWT.NONE);
 		compositeMedicationTypeDetail.setLayout(new GridLayout(4, false));
-		compositeMedicationTypeDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeMedicationTypeDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1));
 
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, false, false);
 		txtEnddate = new Text(compositeMedicationTypeDetail, SWT.BORDER | SWT.CENTER);
@@ -320,18 +320,25 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			compositeMedicationTypeDetail.setVisible(visible);
 			GridData data = (GridData) compositeMedicationTypeDetail.getLayoutData();
 			data.exclude = !visible;
-			// layout parents as size of composite changed
-			if (getParent().getParent() != null) {
-				getParent().getParent().layout();
-			} else if (getParent() != null) {
-				getParent().layout();
-			}
+			relayout();
 			if (visible && isSymptomaticEnabled()) {
 				int defaultDays = ConfigServiceHolder.getUser(MEDICATION_SETTINGS_SYMPTOM_DURATION, 30);
 				txtEnddate.setText(String.valueOf(defaultDays));
 			} else {
 				txtEnddate.setText(StringUtils.EMPTY);
 			}
+		}
+	}
+
+	private void relayout() {
+		if (isDisposed()) {
+			return;
+		}
+		layout(true, true);
+		Composite ancestor = getParent();
+		while (ancestor != null && !ancestor.isDisposed()) {
+			ancestor.layout(true, true);
+			ancestor = ancestor.getParent();
 		}
 	}
 
@@ -353,7 +360,7 @@ public class ArticleDefaultSignatureComposite extends Composite {
 			dateStart.setVisible(value);
 			GridData data = (GridData) dateStart.getLayoutData();
 			data.exclude = !value;
-			dateStart.getParent().layout();
+			relayout();
 		}
 	}
 
