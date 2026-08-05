@@ -46,6 +46,7 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.model.format.FormatValidator;
+import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.BillingSystemServiceHolder;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
@@ -537,6 +538,75 @@ public class BillingUtil {
 					return null;
 				}
 
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).orElse(null);
+					if (encounter != null) {
+						List<IBilled> artikelstammBilled = getArticleOnly(encounter.getBilled());
+						List<IBilled> artikelstammBilledNeedIndication = artikelstammBilled.stream()
+								.filter(v -> needIndication(v)).toList();
+						if (!artikelstammBilledNeedIndication.isEmpty()) {
+							List<IBilled> noIndication = artikelstammBilledNeedIndication.stream()
+									.filter(b -> hasNoIndication(b)).toList();
+							if (!noIndication.isEmpty()) {
+								String noBezugString = noIndication.stream().map(b -> b.getCode())
+										.collect(Collectors.joining(", "));
+								result.add(SEVERITY.OK, CODE_WARNING,
+										"Artikel " + noBezugString + " ohne Indikationscode", konsultation,
+										false);
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+
+				private boolean hasNoIndication(IBilled billed) {
+					return StringUtils.isBlank((String) billed.getExtInfo(Constants.FLD_EXT_INDICATIONCODE));
+				}
+
+				@Override
+				public String getId() {
+					return "artikelstammNoIndication";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Fehlender Indikationscode bei Artikel";
+				}
+
+				private List<IBilled> getArticleOnly(List<IBilled> list) {
+					List<IBilled> ret = new ArrayList<>();
+					for (IBilled verrechnet : list) {
+						IBillable billable = verrechnet.getBillable();
+						if (billable != null && billable.getCodeSystemName() != null
+								&& billable.getCodeSystemName().contains("Artikelstamm")) {
+							ret.add(verrechnet);
+						}
+					}
+					return ret;
+				}
+
+				private boolean needIndication(IBilled billed) {
+					IBillable verrechenbar = billed.getBillable();
+					return isPriceModelReflective(verrechenbar);
+				}
+
+				private Boolean isPriceModelReflective(IBillable billable) {
+					try {
+						Method getterMethod = billable.getClass().getMethod("isPm", (Class[]) null);
+						Object typ = getterMethod.invoke(billable, (Object[]) null);
+						if (typ instanceof Boolean) {
+							return (Boolean) typ;
+						}
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						LoggerFactory.getLogger(getClass()).warn("Could not get price model of [" + billable + "]",
+								e.getMessage());
+					}
+					return null;
+				}
 			} };
 
 	private static String getSSN(IPerson p) {
