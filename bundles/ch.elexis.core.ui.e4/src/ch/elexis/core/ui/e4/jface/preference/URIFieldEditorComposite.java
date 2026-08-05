@@ -26,15 +26,13 @@ import ch.elexis.core.utils.CoreUtil.OS;
  * {@link URIFieldEditor} for file system URIs. The value is stored per
  * operating system, see
  * {@link PreferencesUtil#getOsSpecificPreferenceName(OS, String)}.
- * <p>
- * The controls are laid out in three columns, with the operating system
- * selector placed above the path field:
- * </p>
+ * All controls sit on one row, the operating system selector between the label
+ * and the path field:
+ * 
+ *   Verzeichnis   [ WINDOWS v ]   [ **************** ]   [ Durchsuchen... ]
  *
- * <pre>
- *                       [ WINDOWS  v ]
- *   Verzeichnis         [ **************** ]   [ Durchsuchen... ]
- * </pre>
+ * Without a label text the first column is omitted, for callers that provide
+ * their own label next to this composite.
  */
 public class URIFieldEditorComposite extends Composite {
 
@@ -82,10 +80,7 @@ public class URIFieldEditorComposite extends Composite {
 	public void setPreferenceStore(IPreferenceStore preferenceStore) {
 		storePath.setPreferenceStore(preferenceStore);
 		storePath.load();
-
-		// add
 		storePath.setPropertyChangeListener(new IPropertyChangeListener() {
-
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				storePath.store();
@@ -94,9 +89,10 @@ public class URIFieldEditorComposite extends Composite {
 	}
 
 	private void createContent() {
-		setLayout(new GridLayout(3, false));
-
-		new Label(this, SWT.NONE);
+		storePath = new URIFieldEditor(
+				PreferencesUtil.getOsSpecificPreferenceName(CoreUtil.getOperatingSystemType(), defaultPreference),
+				labelText, this);
+		storePath.setEmptyStringAllowed(true);
 
 		Combo comboOs = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboOs.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -110,12 +106,22 @@ public class URIFieldEditorComposite extends Composite {
 		});
 		osCombo.setInput(CoreUtil.OS.values());
 
-		new Label(this, SWT.NONE);
+		Label label = storePath.getLabelControl(this);
+		comboOs.moveBelow(label);
 
-		storePath = new URIFieldEditor(
-				PreferencesUtil.getOsSpecificPreferenceName(CoreUtil.getOperatingSystemType(), defaultPreference),
-				labelText, this);
-		storePath.setEmptyStringAllowed(true);
+		boolean hasLabel = StringUtils.isNotBlank(labelText);
+		if (!hasLabel) {
+			GridData hidden = new GridData();
+			hidden.exclude = true;
+			label.setLayoutData(hidden);
+			label.setVisible(false);
+		}
+
+		GridLayout layout = new GridLayout(hasLabel ? 4 : 3, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing = 8;
+		setLayout(layout);
 
 		osCombo.addSelectionChangedListener(event -> {
 			CoreUtil.OS selection = (OS) event.getStructuredSelection().getFirstElement();
@@ -140,7 +146,7 @@ public class URIFieldEditorComposite extends Composite {
 	public void setFixedScheme(String scheme) {
 		this.scheme = scheme;
 		if (storePath != null) {
-			storePath.setFixedScheme(scheme);
+			storePath.setFixedScheme("file");
 		}
 	}
 
