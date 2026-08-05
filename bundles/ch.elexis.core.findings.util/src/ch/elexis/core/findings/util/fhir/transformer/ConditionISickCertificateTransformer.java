@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.hl7.fhir.r4.model.Condition;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -14,6 +15,7 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -27,7 +29,9 @@ public class ConditionISickCertificateTransformer implements IFhirTransformer<Co
 
 	private ISickCertificateConditionAttributeMapper attributeMapper;
 
-	public ConditionISickCertificateTransformer() {
+	@PostConstruct
+	@Activate
+	private void activate() {
 		attributeMapper = new ISickCertificateConditionAttributeMapper(coreModelService);
 	}
 
