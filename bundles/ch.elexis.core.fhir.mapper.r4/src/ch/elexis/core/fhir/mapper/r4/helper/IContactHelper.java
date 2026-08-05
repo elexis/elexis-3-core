@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
@@ -21,7 +22,7 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.MimeType;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IXidService;
 import ch.elexis.core.types.Country;
 
@@ -127,7 +128,7 @@ public class IContactHelper extends AbstractHelper {
 		return ret;
 	}
 
-	public void mapIdentifiers(IModelService modelService, List<Identifier> identifiers, IContact target) {
+	public void mapIdentifiers(ICompositeModelService modelService, List<Identifier> identifiers, IContact target) {
 		for (Identifier identifier : identifiers) {
 			String domain = IdentifierDomainMapper.FHIR_TO_ELEXIS(identifier.getSystem());
 			if (StringUtils.isNotBlank(domain)) {
@@ -177,7 +178,7 @@ public class IContactHelper extends AbstractHelper {
 				}
 				if (AddressType.POSTAL.equals(address.getType())) {
 					String postalAddressText = address.getText();
-					if (!StringUtils.equals(target.getPostalAddress(), postalAddressText)) {
+					if (!Strings.CS.equals(target.getPostalAddress(), postalAddressText)) {
 						target.setPostalAddress(postalAddressText);
 					}
 				}
@@ -226,7 +227,7 @@ public class IContactHelper extends AbstractHelper {
 		return contactImage;
 	}
 
-	public void mapContactImage(IModelService coreModelService, Attachment photo, IPerson target) {
+	public void mapContactImage(ICompositeModelService coreModelService, Attachment photo, IPerson target) {
 		if (photo != null && !photo.isEmpty()) {
 			Attachment fhirImage = photo;
 			IImage image = coreModelService.create(IImage.class);

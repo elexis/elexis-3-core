@@ -18,20 +18,20 @@ import ch.elexis.core.fhir.mapper.r4.util.FhirUtil;
 import ch.elexis.core.findings.codes.CodingSystem;
 import ch.elexis.core.model.BillingSystem;
 import ch.elexis.core.model.ICoverage;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.ICoverageService;
-import ch.elexis.core.services.IModelService;
 
 /**
  * @see https://hl7.org/fhir/R4/coverage.html
  */
 public class ICoverageCoverageAttributeMapper extends IdentifiableDomainResourceAttributeMapper<ICoverage, Coverage> {
 
-	private IModelService coreModelService;
+	private ICompositeModelService coreModelService;
 	private ICoverageService coverageService;
 
 	private ICoverageHelper coverageHelper;
 
-	public ICoverageCoverageAttributeMapper(IModelService coreModelService, ICoverageService coverageService) {
+	public ICoverageCoverageAttributeMapper(ICompositeModelService coreModelService, ICoverageService coverageService) {
 		super(Coverage.class);
 
 		this.coreModelService = coreModelService;

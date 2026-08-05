@@ -160,15 +160,18 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.cdi@default:default"/>
+        <setEntry value="ch.elexis.core.ee.openapi@default:default"/>
         <setEntry value="ch.elexis.core.fhir.mapper.r4@default:default"/>
+        <setEntry value="ch.elexis.core.fhir.model@default:default"/>
         <setEntry value="ch.elexis.core.findings.fhir.model@default:default"/>
         <setEntry value="ch.elexis.core.findings.util.test@default:false"/>
         <setEntry value="ch.elexis.core.findings.util@default:default"/>
         <setEntry value="ch.elexis.core.findings@default:default"/>
-        <setEntry value="ch.elexis.core.jcifs.test@default:default"/>
+        <setEntry value="ch.elexis.core.httpclient@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
-        <setEntry value="ch.elexis.core.jpa.entities.test@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.entities.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa.entities@3:true"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa.test@default:false"/>

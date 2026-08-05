@@ -21,7 +21,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ch.BillingLaw;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.rgw.tools.TimeTool;
 
 public class ICoverageHelper extends AbstractHelper {
@@ -65,7 +65,7 @@ public class ICoverageHelper extends AbstractHelper {
 		return null;
 	}
 
-	public Optional<IContact> getPolicyHolderByReference(IModelService coreModelService, Reference source) {
+	public Optional<IContact> getPolicyHolderByReference(ICompositeModelService coreModelService, Reference source) {
 		if (source != null) {
 			String id = source.getId() != null ? source.getId() : source.getReference();
 			Optional<String> localId = FhirUtil.getLocalId(id);
@@ -86,7 +86,7 @@ public class ICoverageHelper extends AbstractHelper {
 		return null;
 	}
 
-	public Optional<IContact> getPayorByReference(IModelService coreModelService, Reference payorFirstRep) {
+	public Optional<IContact> getPayorByReference(ICompositeModelService coreModelService, Reference payorFirstRep) {
 		if (payorFirstRep != null) {
 			Optional<String> localId = FhirUtil.getLocalId(payorFirstRep.getId());
 			if (localId.isPresent()) {

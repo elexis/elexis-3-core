@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Person;
@@ -15,16 +15,16 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.fhir.mapper.r4.helper.IPersonHelper;
 import ch.elexis.core.model.IPerson;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IXidService;
 
 public class IPersonPersonAttributeMapper extends IdentifiableDomainResourceAttributeMapper<IPerson, Person> {
 
-	private IModelService modelService;
+	private ICompositeModelService modelService;
 	private IXidService xidService;
 	private IPersonHelper personHelper;
 
-	public IPersonPersonAttributeMapper(IModelService modelService, IXidService xidService) {
+	public IPersonPersonAttributeMapper(ICompositeModelService modelService, IXidService xidService) {
 		super(Person.class);
 
 		this.modelService = modelService;
@@ -71,10 +71,10 @@ public class IPersonPersonAttributeMapper extends IdentifiableDomainResourceAttr
 		if (!target.isPatient() && !source.getLink().isEmpty()) {
 			Optional<Reference> patientReference = source.getLink().stream().filter(e -> Objects.nonNull(e.getTarget()))
 					.map(e -> e.getTarget())
-					.filter(e -> StringUtils.startsWith(e.getReference(), Patient.class.getSimpleName())).findFirst();
+					.filter(e -> Strings.CS.startsWith(e.getReference(), Patient.class.getSimpleName())).findFirst();
 			if (patientReference.isPresent()) {
 				String value = patientReference.get().getReference();
-				if (StringUtils.equals(value, Patient.class.getSimpleName() + "/" + target.getId())) {
+				if (Strings.CS.equals(value, Patient.class.getSimpleName() + "/" + target.getId())) {
 					target.setCode(null);
 					target.setPatient(true); // patient-number is transparently created on save
 				}
