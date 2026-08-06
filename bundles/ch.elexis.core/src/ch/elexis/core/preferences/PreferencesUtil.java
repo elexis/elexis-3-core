@@ -53,35 +53,7 @@ public class PreferencesUtil {
 		return StringUtils.isBlank(value) ? null : value;
 	}
 
-	public static boolean migrateToOsSpecificPreference(String defaultPreference, boolean global,
-			IConfigService configService) {
-		String osSpecificPreference = getOsSpecificPreferenceName(CoreUtil.getOperatingSystemType(), defaultPreference);
-		if (defaultPreference.equals(osSpecificPreference)) {
-			// OS.UNSPECIFIED - the base key already is the operating system specific key
-			return false;
-		}
-		if (StringUtils.isNotBlank(read(osSpecificPreference, global, configService))) {
-			return false;
-		}
-		String legacyValue = read(defaultPreference, global, configService);
-		if (StringUtils.isBlank(legacyValue)) {
-			return false;
-		}
-		write(osSpecificPreference, legacyValue, global, configService);
-		LoggerFactory.getLogger(PreferencesUtil.class).info("Migrated [{}] to [{}]", defaultPreference, //$NON-NLS-1$
-				osSpecificPreference);
-		return true;
-	}
-
 	private static String read(String key, boolean global, IConfigService configService) {
 		return global ? configService.get(key, null) : configService.getLocal(key, null);
-	}
-
-	private static void write(String key, String value, boolean global, IConfigService configService) {
-		if (global) {
-			configService.set(key, value);
-		} else {
-			configService.setLocal(key, value);
-		}
 	}
 }

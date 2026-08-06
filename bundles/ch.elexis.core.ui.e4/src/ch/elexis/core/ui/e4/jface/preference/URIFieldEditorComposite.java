@@ -79,13 +79,24 @@ public class URIFieldEditorComposite extends Composite {
 	 */
 	public void setPreferenceStore(IPreferenceStore preferenceStore) {
 		storePath.setPreferenceStore(preferenceStore);
-		storePath.load();
+		loadWithLegacyFallback();
 		storePath.setPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				storePath.store();
 			}
 		});
+	}
+
+	private void loadWithLegacyFallback() {
+		storePath.load();
+		if (storePath.getPreferenceStore() == null || StringUtils.isNotBlank(storePath.getStringValue())) {
+			return;
+		}
+		String legacyValue = storePath.getPreferenceStore().getString(defaultPreference);
+		if (StringUtils.isNotBlank(legacyValue)) {
+			storePath.getTextControl(this).setText(legacyValue);
+		}
 	}
 
 	private void createContent() {
@@ -128,7 +139,7 @@ public class URIFieldEditorComposite extends Composite {
 			String preferenceName = PreferencesUtil.getOsSpecificPreferenceName(selection, defaultPreference);
 			storePath.store();
 			storePath.setPreferenceName(preferenceName);
-			storePath.load();
+			loadWithLegacyFallback();
 		});
 
 		osCombo.setSelection(new StructuredSelection(CoreUtil.getOperatingSystemType()));
