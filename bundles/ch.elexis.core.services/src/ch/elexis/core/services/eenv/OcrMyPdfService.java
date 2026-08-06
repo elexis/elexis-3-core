@@ -45,7 +45,7 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 		}
 	}
 
-	private final String PARAMS = "-l deu";
+	private final String PARAMS = "-l deu --invalidate-digital-signatures";
 
 	/**
 	 * The OCRMyPdf service we use currently accepts one request only. We can assert
@@ -87,6 +87,9 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 					throw new OcrMyPdfException(OcrMyPdfException.TYPE.ENCRYPTED_FILE);
 				} else if (body.contains("dynamic XFA")) {
 					throw new OcrMyPdfException(OcrMyPdfException.TYPE.UNREADABLE_XFA_FORM_FILE);
+				} else if (body.contains("DigitalSignatureError")) {
+
+//					throw new OcrMyPdfException(OcrMyPdfException.TYPE.DIGITAL_SIGNATURE);
 				}
 				throw new OcrMyPdfException(OcrMyPdfException.TYPE.OTHER, re.getMessage() + " [" + body + "]");
 			}
