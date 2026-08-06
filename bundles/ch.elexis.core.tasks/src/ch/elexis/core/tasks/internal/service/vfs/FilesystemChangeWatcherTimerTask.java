@@ -1,6 +1,5 @@
 package ch.elexis.core.tasks.internal.service.vfs;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,18 +76,17 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 					listHandles = of.listHandles();
 				}
 
-			} catch (IOException e) {
+				for (IVirtualFilesystemHandle fileHandle : listHandles) {
+					try {
+						runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
+					} catch (TaskException e) {
+						logger.warn("[{}] Error triggering taskDescriptor", taskDescriptorId, e);
+					}
+				}
+
+			} catch (Exception e) {
 				logger.warn("[{}] Error on listHandle", taskDescriptorId, e);
 			}
-
-			for (IVirtualFilesystemHandle fileHandle : listHandles) {
-				try {
-					runTaskForFile(taskDescriptorId, fileHandle.getAbsolutePath());
-				} catch (TaskException e) {
-					logger.warn("[{}] Error triggering taskDescriptor", taskDescriptorId, e);
-				}
-			}
-
 		}
 
 	}
