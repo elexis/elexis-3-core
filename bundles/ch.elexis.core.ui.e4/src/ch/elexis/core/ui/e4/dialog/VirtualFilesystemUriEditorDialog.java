@@ -469,14 +469,6 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		}
 
 		public void setUri(URI uri) {
-			if (CoreUtil.isWindows() && uri.toString().startsWith("file://")) {
-				try {
-					uri = new URI(uri.toString().replace("file://", "file:/"));
-				} catch (URISyntaxException e) {
-
-				}
-			}
-
 			setScheme(uri.getScheme());
 			setHost(uri.getHost());
 			setPort(uri.getPort());
