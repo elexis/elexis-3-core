@@ -43,7 +43,6 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		setErrorMessage(JFaceResources.getString("DirectoryFieldEditor.errorMessage"));//$NON-NLS-1$
 		setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
 		createControl(parent);
-		getTextControl().setEchoChar('*');
 		getTextControl().setEnabled(false);
 	}
 
@@ -53,6 +52,37 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		if (getTextControl() != null) {
 			getTextControl().setText(value);
 			oldValue = value;
+		}
+		updateEchoChar();
+	}
+
+	@Override
+	protected void doLoadDefault() {
+		super.doLoadDefault();
+		updateEchoChar();
+	}
+
+	@Override
+	public void setStringValue(String value) {
+		super.setStringValue(value);
+		updateEchoChar();
+	}
+
+	private void updateEchoChar() {
+		if (getTextControl() != null && !getTextControl().isDisposed()) {
+			getTextControl().setEchoChar(containsPassword(getStringValue()) ? '*' : '\0');
+		}
+	}
+
+	private boolean containsPassword(String value) {
+		if (StringUtils.isBlank(value)) {
+			return false;
+		}
+		try {
+			String userInfo = new URI(value).getUserInfo();
+			return userInfo != null && userInfo.indexOf(':') > 0;
+		} catch (URISyntaxException e) {
+			return false;
 		}
 	}
 
