@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -469,11 +470,15 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		}
 
 		public void setUri(URI uri) {
-			if (CoreUtil.isWindows() && uri.toString().startsWith("file://")) {
-				try {
-					uri = new URI(uri.toString().replace("file://", "file:/"));
-				} catch (URISyntaxException e) {
+			if (CoreUtil.isWindows()) {
+				String regex = "^file://[^/]";
+				Pattern pattern = Pattern.compile(regex);
+				if (pattern.matcher(uri.toString()).find()) {
+					try {
+						uri = new URI(uri.toString().replace("file://", "file:/"));
+					} catch (URISyntaxException e) {
 
+					}
 				}
 			}
 
