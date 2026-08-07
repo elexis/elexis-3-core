@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -39,7 +38,6 @@ import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.utils.CoreUtil;
 
 public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 
@@ -470,18 +468,6 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 		}
 
 		public void setUri(URI uri) {
-			if (CoreUtil.isWindows()) {
-				String regex = "^file://[^/]";
-				Pattern pattern = Pattern.compile(regex);
-				if (pattern.matcher(uri.toString()).find()) {
-					try {
-						uri = new URI(uri.toString().replace("file://", "file:/"));
-					} catch (URISyntaxException e) {
-
-					}
-				}
-			}
-
 			setScheme(uri.getScheme());
 			setHost(uri.getHost());
 			setPort(uri.getPort());
