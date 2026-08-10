@@ -248,7 +248,6 @@ public class RichTextEditorComposite extends Composite {
 				+ "Paste,PasteText,PasteFromWord";
 		return "[" + "'allowedContent', true, "
 				+ "'removePlugins', 'scayt,wsc,contextmenu,liststyle,tabletools,tableselection,magicline', "
-				+ "'extraPlugins', 'elexisspacing', "
 				+ "'disableNativeSpellChecker', true, " + "'contentsLanguage', '" + language + "', "
 				+ "'removeButtons', '" + removeButtons + "'"
 				+ "]";
