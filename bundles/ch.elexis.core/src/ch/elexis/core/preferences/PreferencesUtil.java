@@ -37,8 +37,12 @@ public class PreferencesUtil {
 	public static String getOsSpecificGlobalPreference(String defaultPreference, IConfigService configService) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.GLOBAL, null, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.GLOBAL, null, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.LOCAL, null, configService);
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
+		}
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.LOCAL, null, configService);
+		}
 
 		return blankToNull(value);
 	}
@@ -46,8 +50,12 @@ public class PreferencesUtil {
 	public static String getOsSpecificLocalPreference(String defaultPreference, IConfigService configService) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.LOCAL, null, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.LOCAL, null, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.GLOBAL, null, configService);
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.LOCAL, null, configService);
+		}
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
+		}
 
 		return blankToNull(value);
 	}
@@ -55,41 +63,17 @@ public class PreferencesUtil {
 	public static String getOsSpecificContactPreference(String defaultPreference, IContact contact, IConfigService configService) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.CONTACT, contact, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.CONTACT, contact, configService);
-		value = orElse(value, osSpecificPreference, ConfigurationScope.GLOBAL, null, configService);
-		value = orElse(value, defaultPreference, ConfigurationScope.GLOBAL, null, configService);
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.CONTACT, contact, configService);
+		}
+		if (StringUtils.isBlank(value)) {
+			value = read(osSpecificPreference, ConfigurationScope.GLOBAL, null, configService);
+		}
+		if (StringUtils.isBlank(value)) {
+			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
+		}
 
 		return blankToNull(value);
-	}
-
-	public static boolean migrateToOsSpecificGlobalPreference(String defaultPreference, IConfigService configService) {
-		return migrate(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
-	}
-
-	public static boolean migrateToOsSpecificLocalPreference(String defaultPreference, IConfigService configService) {
-		return migrate(defaultPreference, ConfigurationScope.LOCAL, null, configService);
-	}
-
-	public static boolean migrateToOsSpecificContactPreference(String defaultPreference, IContact contact, IConfigService configService) {
-		return migrate(defaultPreference, ConfigurationScope.CONTACT, contact, configService);
-	}
-
-	private static boolean migrate(String defaultPreference, ConfigurationScope scope, IContact contact, IConfigService configService) {
-		String osSpecificPreference = osSpecificName(defaultPreference);
-
-		if (defaultPreference.equals(osSpecificPreference) ||
-			StringUtils.isNotBlank(read(osSpecificPreference, scope, contact, configService))) {
-			return false;
-		}
-
-		String legacyValue = read(defaultPreference, scope, contact, configService);
-		if (StringUtils.isBlank(legacyValue)) {
-			return false;
-		}
-
-		write(osSpecificPreference, legacyValue, scope, contact, configService);
-		LOG.info("Migrated [{}] to [{}] in scope [{}]", defaultPreference, osSpecificPreference, scope);
-		return true;
 	}
 
 	private static String osSpecificName(String defaultPreference) {
@@ -100,10 +84,6 @@ public class PreferencesUtil {
 		return StringUtils.isBlank(value) ? null : value;
 	}
 
-	private static String orElse(String value, String key, ConfigurationScope scope, IContact contact, IConfigService configService) {
-		return StringUtils.isNotBlank(value) ? value : read(key, scope, contact, configService);
-	}
-
 	private static String read(String key, ConfigurationScope scope, IContact contact, IConfigService configService) {
 		switch (scope) {
 		case GLOBAL:
@@ -112,24 +92,6 @@ public class PreferencesUtil {
 			return configService.getLocal(key, null);
 		case CONTACT:
 			return contact != null ? configService.get(contact, key, null) : null;
-		default:
-			throw new IllegalArgumentException(UNSUPPORTED_SCOPE_MSG + scope);
-		}
-	}
-
-	private static void write(String key, String value, ConfigurationScope scope, IContact contact, IConfigService configService) {
-		switch (scope) {
-		case GLOBAL:
-			configService.set(key, value);
-			break;
-		case LOCAL:
-			configService.setLocal(key, value);
-			break;
-		case CONTACT:
-			if (contact != null) {
-				configService.set(contact, key, value);
-			}
-			break;
 		default:
 			throw new IllegalArgumentException(UNSUPPORTED_SCOPE_MSG + scope);
 		}
