@@ -148,13 +148,61 @@ public interface IOrderService {
 	List<IOrder> getOpenOrders();
 
 	/**
+	 * Retrieves a list of open orders up to the specified limit.
+	 * <p>
+	 * Similar to {@link #getOpenOrders()}, but stops the classification process
+	 * as soon as the {@code limit} is reached. This is significantly faster for 
+	 * large databases as it avoids loading items for all orders.
+	 *
+	 * @param limit maximum number of open orders to retrieve; <= 0 acts like
+	 * {@link #getOpenOrders()} (returns all)
+	 * @return list of the first open {@link IOrder} objects, sorted descending by last modification
+	 */
+	List<IOrder> getOpenOrders(int limit);
+
+	/**
 	 * Retrieves a list of completed orders.
-	 * 
+	 *
 	 * @param showAllYears if true, returns orders from all years. If false, limits
 	 *                     the result to the last 2 years.
 	 * @return list of completed {@link IOrder} objects
 	 */
 	List<IOrder> getCompletedOrders(boolean showAllYears);
+
+	/**
+	 * Retrieves all years in which orders exist (independent of their state),
+	 * sorted in descending order.
+	 * <p>
+	 * This is a lightweight query that does not load order entries. It serves to 
+	 * build the year sections for completed orders without classifying all orders upfront.
+	 *
+	 * @return descending sorted list of years containing orders
+	 */
+	List<Integer> getOrderYears();
+
+	/**
+	 * Retrieves the completed orders for a specific year.
+	 * <p>
+	 * Allows lazy loading of a year's content upon expansion, preventing the 
+	 * classification of all years at once when opening the view.
+	 *
+	 * @param year the year to retrieve orders for
+	 * @return list of completed {@link IOrder} objects for the specified year, newest first
+	 */
+	List<IOrder> getCompletedOrdersForYear(int year);
+
+	/**
+	 * Searches for orders directly in the database based on a search text.
+	 * <p>
+	 * Searches via {@code id LIKE %search%} (since name and timestamp are part of the ID) 
+	 * without loading order entries. Returns a mix of open and completed matches, 
+	 * sorted descending by last modification.
+	 *
+	 * @param search the search text (name or date, e.g., year "2025"); empty means no restriction
+	 * @param limit  maximum number of results to return (<= 0 means unlimited)
+	 * @return list of matching {@link IOrder} objects
+	 */
+	List<IOrder> searchOrders(String search, int limit);
 
 	/**
 	 * Saves a partial delivery for a specific order entry and updates the stock.
