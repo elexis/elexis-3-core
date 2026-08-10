@@ -490,8 +490,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		}
 
 		URI _uri = null;
-		if (uri.getAuthority() != null && uri.getAuthority().length() > 0 && uri.getAuthority().charAt(1) == ':') {
-			// workaround - URIUtil "swallows" C: authority
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 1 && uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority. Only reachable for legacy
+			// file://C:/ uris, IVirtualFilesystemService#stringToURI does not create
+			// them anymore
 			String _cur = uri.toString();
 			if (!_cur.endsWith("/")) {
 				_cur += "/";
@@ -517,8 +519,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			throw new IllegalArgumentException("must not start with /");
 		}
 		URI _uri = null;
-		if (uri.getAuthority() != null && uri.getAuthority().length() > 0 && uri.getAuthority().charAt(1) == ':') {
-			// workaround - URIUtil "swallows" C: authority
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 1 && uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority. Only reachable for legacy
+			// file://C:/ uris, IVirtualFilesystemService#stringToURI does not create
+			// them anymore
 			try {
 				_uri = IVirtualFilesystemService.stringToURI(uri.toString() + subFile);
 			} catch (MalformedURLException | URISyntaxException e) {
