@@ -289,5 +289,46 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 		<addColumn tableName="ARTIKELSTAMM_CH">
 			<column name="PM" type="CHAR(1)" defaultValue="0"/>
 		</addColumn>
+	</changeSet>
+	
+    <changeSet author="kappisj" id="manual_table_CH_ELEXIS_ARZTTARIFE_CH_PS25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PS25" />
+			</not>
+		</preConditions>
+		<createTable tableName="CH_ELEXIS_ARZTTARIFE_CH_PS25">
+			<column name="ID" type="VARCHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_CH_ELEXIS_ARZTTARIFE_CH_PS25" />
+			</column>
+			<column name="LASTUPDATE" type="BIGINT" />
+			<column defaultValue="0" name="DELETED" type="CHAR(1)" />
+			<column name="CODE" type="VARCHAR(32)" />
+			<column name="HONORAREMPFAENGER" type="VARCHAR(255)" />
+			<column name="FACHGEBIETKAPITEL" type="VARCHAR(255)" />
+			<column name="UNTERKAPITEL" type="VARCHAR(255)" />
+			<column name="MEHRLEISTUNGBEI" type="VARCHAR(512)" />
+			<column name="SPEZIFIKATION" type="CLOB" />
+			<column name="ANWENDUNGSREGELN" type="CLOB" />
+			<column name="TAXPUNKTE" type="VARCHAR(16)" />
+			<column name="STUFE" type="VARCHAR(16)" />
+			<column name="MOEGLICHEKOMBINATION" type="VARCHAR(512)" />
+			<column name="MEHRLEISTUNGSTYP" type="VARCHAR(16)" />
+			<column name="MEHRLEISTUNG" type="VARCHAR(255)" />
+			<column name="VALIDFROM" type="CHAR(8)" />
+			<column name="VALIDUNTIL" type="CHAR(8)" />
+		</createTable>
+	</changeSet>
+
+	<changeSet author="kappisj" id="manual_index_CH_ELEXIS_ARZTTARIFE_CH_PS25_IDX1">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PS25"
+					indexName="CH_ELEXIS_ARZTTARIFE_CH_PS25_IDX1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="CH_ELEXIS_ARZTTARIFE_CH_PS25_IDX1" tableName="CH_ELEXIS_ARZTTARIFE_CH_PS25">
+			<column name="CODE" />
+		</createIndex>
 	</changeSet>	
 </databaseChangeLog>
