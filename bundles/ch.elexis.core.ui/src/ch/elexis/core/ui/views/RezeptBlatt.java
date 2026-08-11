@@ -228,7 +228,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
 			fields[i][3] = StringUtils.defaultString(p.getBemerkung());
 			// fields[i][4] = StringUtils.defaultString(p.getDisposalComment());
