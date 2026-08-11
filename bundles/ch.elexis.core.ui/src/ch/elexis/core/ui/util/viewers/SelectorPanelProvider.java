@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -65,16 +66,19 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		this.actions = actions;
 	}
 
+	@Override
 	public void addChangeListener(ControlFieldListener cl) {
 		listeners.add(cl);
 	}
 
+	@Override
 	public void clearValues() {
 		if (panel != null) {
 			panel.clearValues();
 		}
 	}
 
+	@Override
 	public Composite createControl(Composite parent) {
 		if (actions == null) {
 			panel = new SelectorPanel(parent);
@@ -114,14 +118,17 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		panel.setExclusive(bExclusive);
 		panel.addSelectorListener(new ActiveControlListener() {
 
+			@Override
 			public void contentsChanged(ActiveControl field) {
 				fireChangedEvent();
 			}
 
+			@Override
 			public void titleClicked(ActiveControl field) {
 				fireClickedEvent(field.getLabelText());
 			}
 
+			@Override
 			public void invalidContents(ActiveControl field) {
 				// TODO Auto-generated method stub
 
@@ -130,6 +137,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		return panel;
 	}
 
+	@Override
 	public IFilter createFilter() {
 		return new DefaultFilter(panel);
 	}
@@ -142,6 +150,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 
 	private volatile Runnable delayedChanged;
 
+	@Override
 	public void fireChangedEvent() {
 		if (changeDelay > 0) {
 			if (delayedChanged == null) {
@@ -166,12 +175,14 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		}
 	}
 
+	@Override
 	public void fireSortEvent(String text) {
 		for (ControlFieldListener cl : listeners) {
 			cl.reorder(text);
 		}
 	}
 
+	@Override
 	public String[] getValues() {
 		HashMap<String, String> vals = panel.getValues();
 		String[] ret = new String[fields.length];
@@ -181,6 +192,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		return ret;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		HashMap<String, String> vals = panel.getValues();
 		for (FieldDescriptor<?> fd : fields) {
@@ -191,10 +203,12 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		return true;
 	}
 
+	@Override
 	public void removeChangeListener(ControlFieldListener cl) {
 		listeners.remove(cl);
 	}
 
+	@Override
 	public void setFocus() {
 		List<ActiveControl> controls = panel.getControls();
 		if (controls != null && !controls.isEmpty()) {
@@ -205,6 +219,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 		}
 	}
 
+	@Override
 	public void setQuery(final Query<? extends PersistentObject> q) {
 		HashMap<String, String> vals = panel.getValues();
 		for (FieldDescriptor<?> field : fields) {
@@ -223,8 +238,8 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			String name = field.getFieldname();
 			String value = vals.get(name);
 			if (!StringTool.isNothing(value)) {
-				query.and(name, COMPARATOR.LIKE, (field.isValueToLower() ? value.toLowerCase() : value) + "%", //$NON-NLS-1$
-						field.isIgnoreCase());
+				query.and(name, COMPARATOR.LIKE, (field.isLikeAny() ? "%" : StringUtils.EMPTY) //$NON-NLS-1$
+						+ (field.isValueToLower() ? value.toLowerCase() : value) + "%", field.isIgnoreCase());
 			}
 		}
 	}
@@ -251,6 +266,7 @@ public class SelectorPanelProvider implements ControlFieldProvider {
 			return select(element);
 		}
 
+		@Override
 		public boolean select(Object element) {
 			PersistentObject po = null;
 			if (element instanceof Tree) {
