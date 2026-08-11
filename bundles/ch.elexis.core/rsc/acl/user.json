@@ -23,6 +23,7 @@
 		"ch.elexis.base.ch.arzttarife.nutrition.INutritionLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.occupational.IOccupationalLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.pandemie.IPandemieLeistung": "rv",
+		"ch.elexis.base.ch.arzttarife.ps25.IPs25Leistung": "rv",
 		"ch.elexis.base.ch.arzttarife.physio.IPhysioLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.psycho.IPsychoLeistung": "rv",
 		"ch.elexis.base.ch.arzttarife.rfe.IReasonForEncounter": "rv",
