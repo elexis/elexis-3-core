@@ -46,6 +46,12 @@ public class URIFieldEditorComposite extends Composite {
 
 	private String scheme;
 
+	private boolean hasLabel;
+
+	private boolean osSelectorVisible = true;
+
+	private CoreUtil.OS operatingSystem;
+
 	public URIFieldEditorComposite(String defaultPreference, Composite parent, int style) {
 		this(defaultPreference, StringUtils.EMPTY, parent, style);
 	}
@@ -100,8 +106,9 @@ public class URIFieldEditorComposite extends Composite {
 	}
 
 	private void createContent() {
+		operatingSystem = CoreUtil.getOperatingSystemType();
 		storePath = new URIFieldEditor(
-				PreferencesUtil.getOsSpecificPreferenceName(CoreUtil.getOperatingSystemType(), defaultPreference),
+				PreferencesUtil.getOsSpecificPreferenceName(operatingSystem, defaultPreference),
 				labelText, this);
 		storePath.setEmptyStringAllowed(true);
 
@@ -120,7 +127,7 @@ public class URIFieldEditorComposite extends Composite {
 		Label label = storePath.getLabelControl(this);
 		comboOs.moveBelow(label);
 
-		boolean hasLabel = StringUtils.isNotBlank(labelText);
+		hasLabel = StringUtils.isNotBlank(labelText);
 		if (!hasLabel) {
 			GridData hidden = new GridData();
 			hidden.exclude = true;
@@ -128,21 +135,55 @@ public class URIFieldEditorComposite extends Composite {
 			label.setVisible(false);
 		}
 
-		GridLayout layout = new GridLayout(hasLabel ? 4 : 3, false);
+		GridLayout layout = new GridLayout(getNumberOfColumns(), false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		layout.horizontalSpacing = 8;
 		setLayout(layout);
 
-		osCombo.addSelectionChangedListener(event -> {
-			CoreUtil.OS selection = (OS) event.getStructuredSelection().getFirstElement();
-			String preferenceName = PreferencesUtil.getOsSpecificPreferenceName(selection, defaultPreference);
-			storePath.store();
-			storePath.setPreferenceName(preferenceName);
-			loadWithLegacyFallback();
-		});
+		osCombo.addSelectionChangedListener(
+				event -> setOperatingSystem((OS) event.getStructuredSelection().getFirstElement()));
 
-		osCombo.setSelection(new StructuredSelection(CoreUtil.getOperatingSystemType()));
+		osCombo.setSelection(new StructuredSelection(operatingSystem));
+	}
+
+	private int getNumberOfColumns() {
+		return 2 + (hasLabel ? 1 : 0) + (osSelectorVisible ? 1 : 0);
+	}
+
+	public void setOperatingSystem(CoreUtil.OS system) {
+		if (system == null || system == operatingSystem) {
+			return;
+		}
+		operatingSystem = system;
+		storePath.store();
+		storePath.setPreferenceName(PreferencesUtil.getOsSpecificPreferenceName(system, defaultPreference));
+		loadWithLegacyFallback();
+		if (!osCombo.getCombo().isDisposed() && !system.equals(osCombo.getStructuredSelection().getFirstElement())) {
+			osCombo.setSelection(new StructuredSelection(system));
+		}
+	}
+
+	public CoreUtil.OS getOperatingSystem() {
+		return operatingSystem;
+	}
+
+	public void setOsSelectorVisible(boolean visible) {
+		if (osSelectorVisible == visible) {
+			return;
+		}
+		osSelectorVisible = visible;
+		Combo combo = osCombo.getCombo();
+		GridData comboData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+		comboData.exclude = !visible;
+		combo.setLayoutData(comboData);
+		combo.setVisible(visible);
+		((GridLayout) getLayout()).numColumns = getNumberOfColumns();
+		layout(true);
+	}
+
+	public Label getLabelControl() {
+		return storePath.getLabelControl(this);
 	}
 
 	public FieldEditor getFieldEditor() {
