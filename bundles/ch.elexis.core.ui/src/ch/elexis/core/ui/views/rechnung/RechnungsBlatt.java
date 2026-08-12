@@ -881,7 +881,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						}
 					}
 				}
-				if (actRn.getInvoiceState() == InvoiceState.DEFECTIVE) {
+				if (actRn.getInvoiceState() == InvoiceState.DEFECTIVE
+						|| actRn.getInvoiceState() == InvoiceState.REJECTED) {
 					List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
 					StringBuilder rjj = new StringBuilder();
 					for (String r : rejects) {
