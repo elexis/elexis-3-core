@@ -218,7 +218,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	@Override
 	public String getCode() {
 		IBillable billable = getBillable();
-		return billable != null ? billable.getCode() : getBillableStoreToString().orElse("?");
+		return billable != null ? StringUtils.defaultString(billable.getCode())
+				: getBillableStoreToString().orElse("?");
 	}
 
 	@Override
