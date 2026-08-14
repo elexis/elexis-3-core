@@ -45,7 +45,8 @@ import com.equo.chromium.swt.BrowserFunction;
  */
 public class RichTextEditorComposite extends Composite {
 
-	private final Browser browser;
+	private Browser browser;
+	private boolean browserCreated;
 	private final List<ModifyListener> modifyListeners = new ArrayList<>();
 
 	private static final String[] EXPECTED_BRIDGE_CALLBACKS = { "getAllOptions", "customizeToolbar", "focusIn",
@@ -57,6 +58,7 @@ public class RichTextEditorComposite extends Composite {
 
 	private boolean editorLoaded;
 	private String pendingText;
+	private boolean plainDisplay;
 
 	public RichTextEditorComposite(Composite parent) {
 		this(parent, SWT.NONE);
@@ -77,18 +79,32 @@ public class RichTextEditorComposite extends Composite {
 	 */
 	public RichTextEditorComposite(Composite parent, int style, boolean plainDisplay) {
 		super(parent, SWT.NONE);
+		this.plainDisplay = plainDisplay;
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		setLayout(layout);
+
+		addListener(SWT.Resize, e -> getDisplay().asyncExec(this::maximizeEditorHeight));
+		addListener(SWT.Paint, e -> createBrowser(plainDisplay));
+		addListener(SWT.Show, e -> createBrowser(plainDisplay));
+	}
+
+	public void preload() {
+		createBrowser(plainDisplay);
+	}
+
+	private void createBrowser(boolean plainDisplay) {
+		if (browserCreated || isDisposed()) {
+			return;
+		}
+		browserCreated = true;
 
 		browser = new Browser(this, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		browser.setJavascriptEnabled(true);
 
 		registerBridge();
-
-		addListener(SWT.Resize, e -> getDisplay().asyncExec(this::maximizeEditorHeight));
 
 		browser.addProgressListener(new ProgressListener() {
 			@Override
@@ -129,6 +145,8 @@ public class RichTextEditorComposite extends Composite {
 				}
 			}
 		});
+
+		layout(true, true);
 
 		String url = resolveTemplateUrl();
 		if (url != null) {
@@ -311,10 +329,18 @@ public class RichTextEditorComposite extends Composite {
 			return markup;
 		}
 		String sanitized = markup.replace("&quot;", "\"").replace("&apos;", "'");
-		// quote unquoted style values up to the closing '>', so multi-property
-		// values (style=color:#000; font-size:16px) are not split by the parser
 		sanitized = sanitized.replaceAll("(?i)\\bstyle\\s*=\\s*(?![\"'])([^>]*?)\\s*(?=/?>)", "style=\"$1\"");
-		return sanitized;
+		return newlinesToBreaks(sanitized);
+	}
+
+	private static String newlinesToBreaks(String markup) {
+		if (markup.indexOf('\n') < 0 && markup.indexOf('\r') < 0) {
+			return markup;
+		}
+		String s = markup.strip();
+		s = s.replaceAll(">[ \\t]*[\\r\\n]+[ \\t]*", ">");
+		s = s.replaceAll("[\\r\\n]+[ \\t]*<", "<");
+		return s.replaceAll("[\\r\\n]+", "<br />");
 	}
 
 	private static String escape(String text) {

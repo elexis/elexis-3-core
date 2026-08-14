@@ -30,6 +30,48 @@
 		}
 	}
 
+	function addPageStyle(css) {
+		try {
+			var style = document.createElement('style');
+			style.appendChild(document.createTextNode(css));
+			document.head.appendChild(style);
+		} catch (e) {
+			// best effort
+		}
+	}
+
+	var NON_MODAL_DIALOGS = { find: true };
+
+	addPageStyle('.elexis-dialog-nonmodal .cke_dialog_background_cover{display:none !important;}'
+			+ '.elexis-dialog-nonmodal .cke_dialog_body{border:1px solid #a0a0a0 !important;'
+			+ 'border-radius:3px;box-shadow:0 3px 14px rgba(0,0,0,0.3) !important;}');
+
+	function setNonModal(on) {
+		try {
+			var root = document.documentElement;
+			if (on) {
+				root.classList.add('elexis-dialog-nonmodal');
+			} else {
+				root.classList.remove('elexis-dialog-nonmodal');
+			}
+		} catch (e) {
+			// best effort
+		}
+	}
+
+	CKEDITOR.on('instanceReady', function(ev) {
+		var editor = ev.editor;
+		editor.setKeystroke(CKEDITOR.CTRL + 70 /* F */, 'find');
+		editor.on('dialogShow', function(evt) {
+			var dialog = evt.data;
+			var name = dialog && dialog.getName ? dialog.getName() : '';
+			setNonModal(NON_MODAL_DIALOGS[name] === true);
+		});
+		editor.on('dialogHide', function() {
+			setNonModal(false);
+		});
+	});
+
 	CKEDITOR.on('instanceReady', function(ev) {
 		addContentStyle(ev.editor,
 				'@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}}');

@@ -131,6 +131,12 @@ public class ConditionComposite extends Composite {
 		setCondition(null);
 	}
 
+	public void preload() {
+		if (textEditor != null && !textEditor.isDisposed()) {
+			textEditor.preload();
+		}
+	}
+
 	public Optional<ICondition> getCondition() {
 		if (conditionValue.getValue() != null) {
 			conditionValue.getValue().setText(textEditor.getText());
@@ -145,9 +151,7 @@ public class ConditionComposite extends Composite {
 			conditionValue.setValue(new ConditionBeanAdapter(condition));
 			// show coding if present
 			List<ICoding> coding = this.condition.get().getCoding();
-			if (coding != null && !coding.isEmpty()) {
-				textOrCodingFolder.setSelection(1);
-			}
+			textOrCodingFolder.setSelection(coding != null && !coding.isEmpty() ? 1 : 0);
 		} else {
 			ICondition emptyCondition = FindingsServiceComponent.getService().create(ICondition.class);
 			emptyCondition.setStatus(ConditionStatus.ACTIVE);
