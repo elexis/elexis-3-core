@@ -865,4 +865,8 @@
          id="org.jboss.logging.jboss-logging"
          version="0.0.0"/>
 
+   <plugin
+         id="org.jsoup"
+         version="0.0.0"/>
+
 </feature>
