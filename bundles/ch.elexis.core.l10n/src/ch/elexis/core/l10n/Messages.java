@@ -1012,6 +1012,7 @@ public class Messages extends NLS {
 	public static String Core_Number;
 	public static String Core_Ok;
 	public static String Core_Open;
+	public static String Core_OperatingSystem;
 	public static String Core_Open_Template;
 	public static String Core_Organisation;
 	public static String Core_Other;
