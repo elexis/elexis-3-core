@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -194,14 +196,15 @@ public class MediorderPart implements IRefreshablePart {
 
 	public Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	private List<IStock> filteredStocks = new ArrayList<>();
-	private List<Integer> currentFilterValue;
+	private List<Integer> currentFilterValue = List.of();
 	private boolean filterActive = false;
 	private boolean isDetailsViewActive = true;
 
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
 	private IPatient importedPatient, selectedImportedPatient;
-	private Button btnUseSelected, btnSelectNewPatient, btnNewPatient, btnError;
+	private Button btnUseSelected, btnSelectNewPatient, btnNewPatient, btnError, btnOpen, btnReady, btnFinished;
+	private final List<Button> filterButtons = new ArrayList<>();
 	private Label txtImportName, txtImportFirstName, txtImportDob, txtImportSex, txtImportStreet, txtImportPostalCode,
 			txtImportCity, txtImportEmail, txtImportMobile;
 	private Label txtExistingName, txtExistingFirstName, txtExistingDob, txtExistingSex, txtExistingStreet,
@@ -216,6 +219,17 @@ public class MediorderPart implements IRefreshablePart {
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
 	private static final String ONLY_NUMBER_REGEX = "\\d*";
+
+	private static final String FILTER_STATES_KEY = "mediorder.filterStates"; //$NON-NLS-1$
+
+	private static final List<Integer> FILTER_OPEN = List.of(2, 3);
+	private static final List<Integer> FILTER_READY = List.of(1);
+	private static final List<Integer> FILTER_FINISHED = List.of(4);
+
+	private static final String LABEL_FILTER_OPEN = "Offen";
+	private static final String LABEL_FILTER_READY = "Bereit";
+	private static final String LABEL_FILTER_FINISHED = "Abgeschlossen";
+	private static final String LABEL_FILTER_ERROR = "Fehlerhaft (%d)";
 
 	public static class PatientImportData {
 		public IPatient patient;
@@ -284,18 +298,46 @@ public class MediorderPart implements IRefreshablePart {
 
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
+		refreshStockTable();
+
+		getImportedPatients();
+		refreshImportedPatientsTable();
+	}
+
+	private void refreshStockTable() {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
-		List<IStock> stocks = filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
+		List<IStock> stocks = isStockFilterApplied() ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
 				: getStocksExcludingAwaitingRequests();
-		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) stock));
+		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, stock));
 		tableViewer.setInput(stocks);
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 		}
 		tableViewer.refresh(true);
+	}
 
-		getImportedPatients();
-		refreshImportedPatientsTable();
+	private boolean isStockFilterApplied() {
+		return filterActive && currentFilterValue != null && !currentFilterValue.isEmpty();
+	}
+
+	private void showImportErrorView(boolean show) {
+		btnError.setSelection(show);
+		if (show) {
+			filterButtons.forEach(button -> button.setSelection(false));
+			updateFilter(List.of(), false);
+
+			topStackLayout.topControl = cPatientError_table;
+			getImportedPatients();
+			refreshImportedPatientsTable();
+			mainSashForm.setWeights(new int[] { 100, 0 });
+			viewComposite.setVisible(false);
+		} else {
+			topStackLayout.topControl = cPatientList;
+			viewComposite.setVisible(true);
+			mainSashForm.setWeights(new int[] { 50, 50 });
+			refreshStockTable();
+		}
+		topViewComposite.layout();
 	}
 
 	@PostConstruct
@@ -307,33 +349,23 @@ public class MediorderPart implements IRefreshablePart {
 		medicationHistoryComparator = new MedicationHistoryComparator();
 
 		Composite filterComposite = new Composite(parent, SWT.NONE);
-		filterComposite.setLayout(new GridLayout(4, false));
+		filterComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		filterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		getImportedPatients();
 
 		btnError = new Button(filterComposite, SWT.TOGGLE);
-		btnError.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		updateErrorButtonText();
-		btnError.setText("Fehlerhaft (" + (importedPatients != null ? importedPatients.size() : 0) + ")");
 		btnError.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (btnError.getSelection()) {
-					topStackLayout.topControl = cPatientError_table;
-					getImportedPatients();
-					tableViewerImportedPatients.setInput(importedPatients);
-					tableViewerImportedPatients.refresh();
-					mainSashForm.setWeights(new int[] { 100, 0 });
-					viewComposite.setVisible(false);
-				} else {
-					topStackLayout.topControl = cPatientList;
-					viewComposite.setVisible(true);
-					mainSashForm.setWeights(new int[] { 50, 50 });
-				}
-				topViewComposite.layout();
+				showImportErrorView(btnError.getSelection());
 			}
 		});
+
+		btnOpen = createFilterButton(filterComposite, LABEL_FILTER_OPEN, FILTER_OPEN);
+		btnReady = createFilterButton(filterComposite, LABEL_FILTER_READY, FILTER_READY);
+		btnFinished = createFilterButton(filterComposite, LABEL_FILTER_FINISHED, FILTER_FINISHED);
 
 		mainSashForm = new SashForm(parent, SWT.VERTICAL);
 		mainSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -372,12 +404,27 @@ public class MediorderPart implements IRefreshablePart {
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
 	}
 
+	private Button createFilterButton(Composite parent, String text, List<Integer> states) {
+		Button button = new Button(parent, SWT.TOGGLE);
+		button.setText(text);
+		button.setData(FILTER_STATES_KEY, states);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				applyStockFilter(button, states);
+			}
+		});
+		filterButtons.add(button);
+		return button;
+	}
+
 	public MediorderActiveView toggleViews(MediorderActiveView view) {
 		mediorderActiveView = (mediorderActiveView == view) ? MediorderActiveView.DETAILS : view;
 		stackLayout.topControl = switch (mediorderActiveView) {
 		case DETAILS -> cDetails_table;
 		case HISTORY -> cHistory_table;
 		};
+		isDetailsViewActive = mediorderActiveView == MediorderActiveView.DETAILS;
 		viewComposite.layout();
 		saveFilterStatus();
 		return mediorderActiveView;
@@ -669,8 +716,8 @@ public class MediorderPart implements IRefreshablePart {
 		TableViewerColumn tvcImpDateOfBirth = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
 		tvcImpDateOfBirth.getColumn().setText(Messages.Core_Enter_Birthdate);
 		tcLayoutImport.setColumnData(tvcImpDateOfBirth.getColumn(), new ColumnWeightData(40, 80, true));
-		tvcImpDateOfBirth.setLabelProvider(ColumnLabelProvider.createTextProvider(
-				e -> ((IPatient) e).getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))));
+		tvcImpDateOfBirth.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getDateOfBirth().format(dateFormatter)));
 
 		TableViewerColumn tvcImpSex = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
 		tvcImpSex.getColumn().setText("Geschlecht");
@@ -793,7 +840,7 @@ public class MediorderPart implements IRefreshablePart {
 		txtImportName = createDetailField(colImport, Messages.Core_Name,
 				selectedImportedPatient != null ? selectedImportedPatient.getLastName() : "");
 		txtImportFirstName = createDetailField(colImport, Messages.Core_Firstname,
-				selectedImportedPatient != null ? selectedImportedPatient.getLastName() : "");
+				selectedImportedPatient != null ? selectedImportedPatient.getFirstName() : "");
 		txtImportDob = createDetailField(colImport, Messages.Core_Enter_Birthdate, "");
 		txtImportSex = createDetailField(colImport, "Geschlecht", "");
 		txtImportStreet = createDetailField(colImport, Messages.AddressSearchView_Street, "");
@@ -811,8 +858,6 @@ public class MediorderPart implements IRefreshablePart {
 		txtExistingCity = createDetailField(colExisting, Messages.AddressSearchView_City, "");
 		txtExistingPostalEmail = createDetailField(colExisting, Messages.KontaktErfassenDialog_email, "");
 		txtExistingPostalMobile = createDetailField(colExisting, Messages.Core_Phone, "");
-
-//		sashForm.setWeights(new int[] { 25, 25, 49 });
 
 		Composite actionBar = new Composite(detailComposite, SWT.BORDER);
 		actionBar.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
@@ -1101,7 +1146,8 @@ public class MediorderPart implements IRefreshablePart {
 
 	private void updateErrorButtonText() {
 		if (btnError != null) {
-			btnError.setText("Fehlerhaft (" + (importedPatients != null ? importedPatients.size() : 0) + ")");
+			btnError.setText(String.format(LABEL_FILTER_ERROR, importedPatients != null ? importedPatients.size() : 0));
+			btnError.requestLayout();
 		}
 	}
 
@@ -1798,12 +1844,11 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	public void saveFilterStatus() {
-		String filterValue = (currentFilterValue == null || currentFilterValue.isEmpty()) ? ""
+		String filterValue = (currentFilterValue == null || currentFilterValue.isEmpty()) ? StringUtils.EMPTY
 				: currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
-		boolean isFilterActive = filterValue.isEmpty() ? false : filterActive;
 
 		preferences.put(CURRENT_FILTER_VALUE, filterValue);
-		preferences.putBoolean(IS_FILTER_ACTIVE, isFilterActive);
+		preferences.putBoolean(IS_FILTER_ACTIVE, isStockFilterApplied());
 		preferences.putBoolean(LAST_ACTIVE_TABLEVIEWER, isDetailsViewActive);
 
 		try {
@@ -1813,23 +1858,62 @@ public class MediorderPart implements IRefreshablePart {
 		}
 	}
 
-	public void applySavedFilter() {
-		filterActive = preferences.getBoolean(IS_FILTER_ACTIVE, false);
+	private void updateFilter(List<Integer> values, boolean active) {
+		this.currentFilterValue = (values != null) ? values : List.of();
+		this.filterActive = active && !this.currentFilterValue.isEmpty();
+		saveFilterStatus();
+	}
 
-		String filterValue = preferences.get(CURRENT_FILTER_VALUE, "");
-		if (!filterValue.isEmpty() && filterActive) {
+	@SuppressWarnings("unchecked")
+	private void restoreFilterButtonSelection() {
+		filterButtons.forEach(button -> {
+			List<Integer> states = (List<Integer>) button.getData(FILTER_STATES_KEY);
+			button.setSelection(isStockFilterApplied() && containsSameStates(states, currentFilterValue));
+		});
+	}
+
+	private static boolean containsSameStates(List<Integer> states, List<Integer> other) {
+		if (states == null || other == null) {
+			return false;
+		}
+		return new HashSet<>(states).equals(new HashSet<>(other));
+	}
+
+	public void applySavedFilter() {
+		boolean savedFilterActive = preferences.getBoolean(IS_FILTER_ACTIVE, false);
+		String filterValue = preferences.get(CURRENT_FILTER_VALUE, StringUtils.EMPTY);
+
+		if (savedFilterActive && !filterValue.isEmpty()) {
 			currentFilterValue = Arrays.stream(filterValue.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
+			filterActive = true;
+		} else {
+			currentFilterValue = List.of();
+			filterActive = false;
 		}
 
-		stackLayout.topControl = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true) ? cDetails_table
-				: cHistory_table;
+		restoreFilterButtonSelection();
+
+		isDetailsViewActive = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true);
+		mediorderActiveView = isDetailsViewActive ? MediorderActiveView.DETAILS : MediorderActiveView.HISTORY;
+		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
 		viewComposite.layout();
 	}
 
+	private void applyStockFilter(Button source, List<Integer> states) {
+		filterButtons.stream().filter(button -> button != source).forEach(button -> button.setSelection(false));
+
+		if (btnError.getSelection()) {
+			showImportErrorView(false);
+		}
+
+		boolean selected = source.getSelection();
+		updateFilter(selected ? states : List.of(), selected);
+		refreshStockTable();
+	}
+
 	public void setFilterActive(boolean active) {
-		this.filterActive = active;
-		saveFilterStatus();
+		updateFilter(currentFilterValue, active);
 	}
 
 	public boolean isFilterActive() {
@@ -1845,8 +1929,7 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	public void setCurrentFilterValue(List<Integer> value) {
-		this.currentFilterValue = value;
-		saveFilterStatus();
+		updateFilter(value, filterActive);
 	}
 
 	public List<Integer> getCurrentFilterValue() {
