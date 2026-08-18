@@ -8,7 +8,8 @@ Require-Bundle: ch.elexis.core.ui;bundle-version="3.14.0",
  ch.elexis.core.ui.e4;bundle-version="3.12.0",
  ch.elexis.core.ui.icons;bundle-version="3.12.0",
  ch.elexis.core.mail.ui,
- ch.elexis.core.mail
+ ch.elexis.core.mail,
+ org.eclipse.e4.ui.services;bundle-version="[1.6.0,2.0.0)"
 Model-Fragment: fragment.e4xmi
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Localization: plugin
@@ -16,4 +17,6 @@ Automatic-Module-Name: ch.elexis.core.ui.mediorder
 Bundle-ActivationPolicy: lazy
 Export-Package: ch.elexis.core.ui.mediorder
 Import-Package: com.google.gson;version="[2.12.0,3.0.0)",
- com.google.i18n.phonenumbers;version="8.13.42"
+ com.google.i18n.phonenumbers;version="8.13.42",
+ freemarker.cache;version="[2.3.0,3.0.0)",
+ freemarker.template;version="[2.3.0,3.0.0)"

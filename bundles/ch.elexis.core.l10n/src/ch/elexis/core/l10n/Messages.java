@@ -5249,6 +5249,8 @@ public class Messages extends NLS {
 	public static String OrderHistory_RemovedMedi;
 	public static String OrderHistory_SupplierAdded;
 	public static String OrderHistory_CompleteDelivery;
+	public static String OrderHistory_Billed;
+	public static String OrderHistory_PickedUp;
 	public static String HistoryDialog_NoHistoryAvailable;
 	public static String HistoryDialog_Header;
 	public static String HistoryDialog_Description;
@@ -5295,6 +5297,7 @@ public class Messages extends NLS {
 	public static String OrderHistory_Added;
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
+	public static String OrderHistory_AmountAdjusted;
 	public static String HttpOrderTransportService_OrderAlreadySent_Title;
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;
 	public static String HttpOrderTransportService_LinkText;

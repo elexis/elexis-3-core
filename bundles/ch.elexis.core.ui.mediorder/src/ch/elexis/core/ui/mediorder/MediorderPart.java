@@ -1,7 +1,12 @@
 package ch.elexis.core.ui.mediorder;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +36,7 @@ import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -47,8 +53,15 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -63,6 +76,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -80,6 +94,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderBlobId;
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
@@ -112,6 +127,9 @@ import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder.JsonExport;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryRenderer;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -162,7 +180,7 @@ public class MediorderPart implements IRefreshablePart {
 	ITextReplacementService textReplacementService;
 
 	public enum MediorderActiveView {
-		DETAILS, HISTORY, // JSON_HISTORY
+		DETAILS, HISTORY
 	}
 
 	private MediorderActiveView mediorderActiveView = MediorderActiveView.DETAILS;
@@ -174,6 +192,10 @@ public class MediorderPart implements IRefreshablePart {
 	private TableViewer tableViewerHistory;
 	private TableViewer tableViewerImportedPatients;
 	private TableViewer tableViewerImportedArticles;
+
+	private Browser historyBrowser;
+	private MediorderHistoryRenderer historyRenderer;
+	private MediorderHistoryBuilder historyBuilder;
 
 	private Composite cDetails_table;
 	private Composite cHistory_table;
@@ -188,6 +210,7 @@ public class MediorderPart implements IRefreshablePart {
 	private MedicationComparator medicationComparator;
 	private MedicationHistoryComparator medicationHistoryComparator;
 	private final DateTimeFormatter dateFormatter;
+	private final DateTimeFormatter timeFormatter;
 
 	private MediorderStockFilter searchFilter;
 	private MediorderHistoryFilter orderHistoryFilter;
@@ -214,6 +237,7 @@ public class MediorderPart implements IRefreshablePart {
 
 	private List<IPatient> importedPatients;
 	private TableViewer tableViewerPatientError;
+
 
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
@@ -259,6 +283,7 @@ public class MediorderPart implements IRefreshablePart {
 
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		selectedDetailStock = new WritableValue<>();
 	}
 
@@ -314,6 +339,7 @@ public class MediorderPart implements IRefreshablePart {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 		}
 		tableViewer.refresh(true);
+		updateHistoryTimeline(selectedDetailStock.getValue());
 	}
 
 	private boolean isStockFilterApplied() {
@@ -616,7 +642,7 @@ public class MediorderPart implements IRefreshablePart {
 		}
 
 		IQuery<IBlob> query = coreModelService.getQuery(IBlob.class);
-		query.and("id", COMPARATOR.LIKE, "MEDIORDER_UNDEFINDED_%");
+		query.and("id", COMPARATOR.LIKE, MediorderBlobId.UNASSIGNED_PREFIX + "%");
 		List<IBlob> results = query.execute();
 
 		for (IBlob blob : results) {
@@ -988,10 +1014,14 @@ public class MediorderPart implements IRefreshablePart {
 		}
 		coreModelService.load(blobId, IBlob.class).ifPresent(oldBlob -> {
 			String originalContent = oldBlob.getStringContent();
+			LocalDate received = oldBlob.getDate() != null ? oldBlob.getDate() : LocalDate.now();
 			coreModelService.delete(oldBlob);
 
+			LocalDateTime receivedAt = LocalDateTime.of(received, LocalTime.now());
+
 			IBlob newBlob = coreModelService.create(IBlob.class);
-			newBlob.setId("MEDIORDER_" + patient.getId());
+			newBlob.setId(MediorderBlobId.create(patient.getId(), receivedAt));
+			newBlob.setDate(received);
 			newBlob.setStringContent(originalContent);
 			coreModelService.save(newBlob);
 		});
@@ -1248,8 +1278,11 @@ public class MediorderPart implements IRefreshablePart {
 
 		setCompositeTitle(cDetails_table, Messages.Mediorder_details);
 
-		Composite tableComposite = new Composite(cDetails_table, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		SashForm detailSashForm = new SashForm(cDetails_table, SWT.VERTICAL);
+		detailSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		detailSashForm.setSashWidth(5);
+
+		Composite tableComposite = new Composite(detailSashForm, SWT.NONE);
 		TableColumnLayout tcLayout_cDetails = new TableColumnLayout();
 		tableComposite.setLayout(tcLayout_cDetails);
 
@@ -1418,8 +1451,10 @@ public class MediorderPart implements IRefreshablePart {
 				String amount = (String) value;
 				if (StringUtils.isNotBlank(amount)) {
 					IStockEntry entry = (IStockEntry) element;
+					int previous = entry.getMinimumStock();
 					entry.setMinimumStock(Integer.parseInt(amount));
 					coreModelService.save(entry);
+					logAmountChange(entry, Messages.Mediorder_requested, previous, entry.getMinimumStock());
 					tableViewerDetails.refresh(true);
 					removeStockEntry(entry);
 					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
@@ -1463,8 +1498,10 @@ public class MediorderPart implements IRefreshablePart {
 				String amount = (String) value;
 				if (StringUtils.isNotBlank(amount)) {
 					IStockEntry entry = (IStockEntry) element;
+					int previous = entry.getMaximumStock();
 					entry.setMaximumStock(Integer.parseInt(amount));
 					coreModelService.save(entry);
+					logAmountChange(entry, Messages.Mediorder_approved, previous, entry.getMaximumStock());
 					tableViewerDetails.refresh(true);
 					removeStockEntry(entry);
 					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
@@ -1515,8 +1552,10 @@ public class MediorderPart implements IRefreshablePart {
 				if (defaultStockEntry == null) {
 					return;
 				}
+				int previous = entry.getCurrentStock();
 				MediorderPartUtil.useFromDefaultStock(entry, defaultStockEntry, (int) value, stockService,
 						coreModelService, contextService);
+				logAmountChange(entry, Messages.Mediorder_from_stock, previous, entry.getCurrentStock());
 				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
 				tableViewerDetails.refresh();
 				tableViewer.refresh();
@@ -1541,6 +1580,28 @@ public class MediorderPart implements IRefreshablePart {
 			}
 			return null;
 		}));
+
+		Composite historyComposite = new Composite(detailSashForm, SWT.NONE);
+		GridLayout glHistory = new GridLayout(1, false);
+		glHistory.marginWidth = 0;
+		glHistory.marginHeight = 0;
+		historyComposite.setLayout(glHistory);
+
+		historyRenderer = new MediorderHistoryRenderer();
+		historyBuilder = new MediorderHistoryBuilder(coreModelService, orderService, codeElementService,
+				dateFormatter, timeFormatter);
+		try {
+			historyBrowser = new Browser(historyComposite, SWT.NONE);
+			historyBrowser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			historyBrowser.addLocationListener(LocationListener.changingAdapter(this::handleHistoryJsonLink));
+		} catch (SWTError e) {
+			LoggerFactory.getLogger(getClass()).error("Failed to create the browser widget for the history.", e);
+			historyBrowser = null;
+		}
+
+		detailSashForm.setWeights(new int[] { 60, 40 });
+
+		selectedDetailStock.addChangeListener(sel -> updateHistoryTimeline(selectedDetailStock.getValue()));
 	}
 
 	private void createPatientorderHistory(Composite parent) {
@@ -1623,6 +1684,50 @@ public class MediorderPart implements IRefreshablePart {
 				refresh();
 			}
 		});
+	}
+
+	private void updateHistoryTimeline(IStock stock) {
+		if (historyBrowser == null || historyBrowser.isDisposed() || historyRenderer == null) {
+			return;
+		}
+		historyBrowser.setText(historyRenderer.renderSections(historyBuilder.buildSections(stock)));
+	}
+
+	private void handleHistoryJsonLink(LocationEvent event) {
+		if (!MediorderHistoryBuilder.isJsonLink(event.location)) {
+			return;
+		}
+		event.doit = false;
+		String location = event.location;
+		Display.getDefault().asyncExec(() -> historyBuilder.resolveJsonExport(location).ifPresent(export -> {
+			if (export.download()) {
+				downloadJsonData(export);
+			} else {
+				copyJsonData(export.json());
+			}
+		}));
+	}
+
+	private void downloadJsonData(JsonExport export) {
+		if (historyBrowser == null || historyBrowser.isDisposed()) {
+			return;
+		}
+		FileDialog dialog = new FileDialog(historyBrowser.getShell(), SWT.SAVE);
+		dialog.setText("JSON speichern");
+		dialog.setFilterExtensions(new String[] { "*.json", "*.*" });
+		dialog.setFileName(export.fileName());
+		dialog.setOverwrite(true);
+		String selected = dialog.open();
+		if (selected == null) {
+			return;
+		}
+		try {
+			Files.writeString(Path.of(selected), export.json(), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			LoggerFactory.getLogger(getClass()).error("Failed to save the JSON for blob {}.", export.blobId(), e);
+			MessageDialog.openError(historyBrowser.getShell(), "JSON speichern",
+					"Die Datei konnte nicht geschrieben werden.");
+		}
 	}
 
 	private TextCellEditor createTextCellEditor() {
@@ -1761,7 +1866,10 @@ public class MediorderPart implements IRefreshablePart {
 		}
 
 		IStockEntry stockEntry = stockService.findStockEntryForArticleInStock(stock, article);
+		boolean isNewArticle = stockEntry == null;
+		int previousMinimum = 0;
 		if (stockEntry != null) {
+			previousMinimum = stockEntry.getMinimumStock();
 			int value = stockEntry.getMinimumStock() + 1;
 			stockEntry.setMinimumStock(value);
 			value = stockEntry.getMaximumStock() + 1;
@@ -1773,13 +1881,23 @@ public class MediorderPart implements IRefreshablePart {
 			stockEntry.setMaximumStock(1);
 		}
 		coreModelService.save(stockEntry);
+		if (isNewArticle) {
+			if (stock.getOwner() != null) {
+				IPatient patient = stock.getOwner().asIPatient();
+				if (patient != null) {
+					orderService.getHistoryService().logMediorderArticleAdded(patient, article);
+				}
+			}
+		} else {
+			logAmountChange(stockEntry, Messages.Mediorder_requested, previousMinimum, stockEntry.getMinimumStock());
+		}
 		MediorderPartUtil.updateStockImageState(imageStockStates, stock);
 	}
 
 	/**
 	 * Retrieves a list of patient stocks that do not only have stockEntries with
 	 * the status {@link MediorderEntryState#AWAITING_REQUEST}
-	 * 
+	 *
 	 * @return
 	 */
 	private List<IStock> getStocksExcludingAwaitingRequests() {
@@ -1787,6 +1905,18 @@ public class MediorderPart implements IRefreshablePart {
 				.filter(stock -> stock.getStockEntries().stream().anyMatch(
 						entry -> !MediorderEntryState.AWAITING_REQUEST.equals(MediorderUtil.determineState(entry))))
 				.toList();
+	}
+
+	private void copyJsonData(String json) {
+		if (StringUtils.isBlank(json)) {
+			return;
+		}
+		Clipboard clipboard = new Clipboard(Display.getDefault());
+		try {
+			clipboard.setContents(new Object[] { json }, new Transfer[] { TextTransfer.getInstance() });
+		} finally {
+			clipboard.dispose();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1825,9 +1955,20 @@ public class MediorderPart implements IRefreshablePart {
 		return selectedDetailStock.getValue();
 	}
 
+	private void logAmountChange(IStockEntry entry, String amountLabel, int oldValue, int newValue) {
+		if (oldValue == newValue || entry.getStock() == null || entry.getStock().getOwner() == null) {
+			return;
+		}
+		IPatient patient = entry.getStock().getOwner().asIPatient();
+		if (patient != null) {
+			orderService.getHistoryService().logMediorderAmountChanged(patient, entry.getArticle(), amountLabel,
+					oldValue, newValue);
+		}
+	}
+
 	public void removeStockEntry(IStockEntry entry) {
 		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
-			MediorderPartUtil.removeStockEntry(entry, coreModelService, contextService, stockService);
+			MediorderPartUtil.removeStockEntry(entry, coreModelService, contextService, stockService, orderService);
 			refresh();
 		}
 	}
