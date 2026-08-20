@@ -218,7 +218,9 @@ public class EncounterService implements IEncounterService {
 			if (!addRes.isOK()) {
 				String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
 						+ " automatisch entfernt.\n" + addRes.toString();
-				result.addMessage(SEVERITY.WARNING, message, encounter);
+				if (result != null) {
+					result.addMessage(SEVERITY.WARNING, message, encounter);
+				}
 			}
 		}
 	}
@@ -231,12 +233,16 @@ public class EncounterService implements IEncounterService {
 			Result<?> removeRes = PortableServiceLoader.get(IBillingService.class).removeBilled(billed, encounter);
 			if (!removeRes.isOK()) {
 				String message = "Achtung: Position " + billed.getCode() + " konnte nicht entfernt werden.";
-				result.addMessage(SEVERITY.WARNING, message, encounter);
+				if (result != null) {
+					result.addMessage(SEVERITY.WARNING, message, encounter);
+				}
 			}
 			PortableServiceLoader.get(ILocalLockService.class).releaseLock(lockResult.getLockInfo());
 		} else {
 			String message = "Achtung: Locking von Position " + billed.getCode() + " fehlgeschlagen.";
-			result.addMessage(SEVERITY.WARNING, message, encounter);
+			if (result != null) {
+				result.addMessage(SEVERITY.WARNING, message, encounter);
+			}
 		}
 	}
 
@@ -251,7 +257,9 @@ public class EncounterService implements IEncounterService {
 			if (matchingVerrechenbar.isEmpty()) {
 				String message = "Achtung: durch den Fall wechsel wurde die Position " + billable.getCode()
 						+ " automatisch entfernt, da diese im neuen Fall nicht vorhanden ist.";
-				result.addMessage(SEVERITY.WARNING, message, encounter);
+				if (result != null) {
+					result.addMessage(SEVERITY.WARNING, message, encounter);
+				}
 			} else {
 				return matchingVerrechenbar;
 			}
@@ -592,6 +600,9 @@ public class EncounterService implements IEncounterService {
 			for (IBillableVerifier verifier : verifiers) {
 				Result<IBilled> result = verifier.verify(encounter);
 				if (!result.isOK()) {
+					if (ret.isOK()) {
+						ret = new Result<>(Result.SEVERITY.WARNING, 0, StringUtils.EMPTY, encounter, false);
+					}
 					// remove invalid billed on new date
 					List<Result<IBilled>.msg> messages = result.getMessages();
 					for (msg msg : messages) {
@@ -599,9 +610,10 @@ public class EncounterService implements IEncounterService {
 							IBilled billed = (IBilled) msg.getObject();
 							IBillable billable = billed.getBillable();
 							if (billable != null) {
-								encounter.removeBilled(billed);
+								// reCharge removes and adds max amount if lower amount is allowed
+								reCharge(Collections.singletonList(billed), encounter, null);
 								String message = "Achtung: durch die Änderung wurde die Position " + billable.getCode()
-										+ " automatisch entfernt.\nLimitation: " + msg.getText();
+										+ " automatisch angepasst oder entfernt.\nLimitation: " + msg.getText();
 								ret.addMessage(SEVERITY.WARNING, message, encounter);
 							}
 						}
