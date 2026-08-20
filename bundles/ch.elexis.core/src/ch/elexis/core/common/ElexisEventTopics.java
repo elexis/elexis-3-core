@@ -35,6 +35,10 @@ public class ElexisEventTopics {
 	 */
 	public static final String BASE_EVENT = BASE + "event/";
 
+	public static final String BASE_UI = BASE + "ui/";
+
+	public static final String BASE_UI_ACCESSCONTROL = BASE_UI + "accesscontrol/";
+
 	public static final String PROPKEY_ID = "id";
 	public static final String PROPKEY_CLASS = "class";
 	public static final String PROPKEY_USER = "user";
@@ -86,7 +90,8 @@ public class ElexisEventTopics {
 	public static final String NOTIFICATION_PROPKEY_STATUS = "status";
 
 	/**
-	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a model class.
+	 * Invalidate non persistence (JPA / PersistentObject) caches for specific a
+	 * model class.
 	 * 
 	 */
 	public static final String EVENT_INVALIDATE_CACHE = BASE_MODEL + "invalidatecache";

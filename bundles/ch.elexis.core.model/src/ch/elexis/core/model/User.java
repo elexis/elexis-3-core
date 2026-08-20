@@ -41,6 +41,11 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	}
 
 	@Override
+	public String getAssociatedContactId() {
+		return getAssignedContact().getId();
+	}
+
+	@Override
 	public void setHashedPassword(String value) {
 		getEntityMarkDirty().setHashedPassword(value);
 	}
@@ -63,6 +68,11 @@ public class User extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entiti
 	public List<IRole> getRoles() {
 		return getEntity().getRoles().parallelStream().map(r -> ModelUtil.getAdapter(r, IRole.class))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getRoleIds() {
+		return getRoles().stream().map(IRole::getId).toList();
 	}
 
 	@Override

@@ -224,6 +224,10 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowExternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="administrator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="associatedContactId" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roleIds" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IUserGroup" abstract="true" interface="true"
       eSuperTypes="#//Deleteable #//Identifiable #//WithExtInfo">
@@ -597,6 +601,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="disposalType" eType="ecore:EDataType types.ecore#//EntryType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startDate" eType="ecore:EDataType types.ecore#//LocalDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="disposalComment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IDiagnosis" abstract="true" interface="true"
       eSuperTypes="#//ICodeElement #//Identifiable">
@@ -726,8 +731,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="IRole" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//WithAssignableId #//WithExtInfo">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="systemRole" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRights" upperBound="-1"
-        eType="#//IRight" changeable="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBlob" abstract="true" interface="true"
       eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
@@ -1023,12 +1026,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="prescriptor" eType="#//IContact"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="recipe" eType="#//IRecipe"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billed" eType="#//IBilled"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IRight" abstract="true" interface="true"
-      eSuperTypes="#//Identifiable #//Deleteable #//WithAssignableId">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="localizedName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//IRight"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IBillingSystem" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

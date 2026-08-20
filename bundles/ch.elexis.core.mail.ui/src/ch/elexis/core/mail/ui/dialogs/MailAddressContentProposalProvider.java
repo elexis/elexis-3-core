@@ -38,20 +38,22 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 			lastQuery.and(ModelPackage.Literals.IDOCUMENT_LETTER__RECIPIENT, COMPARATOR.NOT_EQUALS, null);
 			lastQuery.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 			for (IDocumentLetter document : lastQuery.execute()) {
-				if (document.getRecipient() != null && StringUtils.isNotBlank(document.getRecipient().getEmail())) {
-					String email = document.getRecipient().getEmail();
-					if (addressString != null && addressString.length() > 1) {
-						if (!(email.contains(addressString)
-								|| document.getRecipient().getDescription1().contains(addressString)
-								|| document.getRecipient().getDescription2().contains(addressString))) {
-							continue;
-						}
+				if (document.getRecipient() != null && !document.getRecipient().isDeleted()
+						&& !contacts.contains(document.getRecipient())) {
+					boolean addedEmail = false;
+					boolean addedEmail2 = false;
+					if (StringUtils.isNotBlank(document.getRecipient().getEmail())) {
+						addedEmail = addDocumentContactEmailIfMatching(document.getRecipient().getEmail(),
+								addressString, document,
+								ret, false);
 					}
-					if (!contacts.contains(document.getRecipient())) {
+					if (StringUtils.isNotBlank(document.getRecipient().getEmail2())) {
+						addedEmail2 = addDocumentContactEmailIfMatching(document.getRecipient().getEmail2(),
+								addressString, document,
+								ret, true);
+					}
+					if (addedEmail || addedEmail2) {
 						contacts.add(document.getRecipient());
-						ret.add(new IdentifiableContentProposal<IContact>(
-								email + " - " + document.getRecipient().getLabel(),
-								document.getRecipient()));
 					}
 				}
 			}
@@ -59,21 +61,42 @@ public class MailAddressContentProposalProvider implements IContentProposalProvi
 		if (addressString != null && addressString.length() > 1) {
 			IQuery<IContact> query = CoreModelServiceHolder.get().getQuery(IContact.class);
 			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.LIKE, "%" + addressString + "%");
+			query.or(ModelPackage.Literals.ICONTACT__EMAIL2, COMPARATOR.LIKE, "%" + addressString + "%");
 			query.startGroup();
 			query.and(ModelPackage.Literals.ICONTACT__DESCRIPTION1, COMPARATOR.LIKE, "%" + addressString + "%");
 			query.or(ModelPackage.Literals.ICONTACT__DESCRIPTION2, COMPARATOR.LIKE, "%" + addressString + "%");
 			query.orJoinGroups();
 			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, null);
 			query.and(ModelPackage.Literals.ICONTACT__EMAIL, COMPARATOR.NOT_EQUALS, StringUtils.EMPTY);
+			query.and(ModelPackage.Literals.DELETEABLE__DELETED, COMPARATOR.EQUALS, false);
 
 			for (IContact contact : query.execute()) {
 				if (!contacts.contains(contact)) {
 					ret.add(new IdentifiableContentProposal<IContact>(contact.getEmail() + " - " + contact.getLabel(),
-							contact));
+							contact).withAdditionalValue(contact.getEmail()));
+					if (StringUtils.isNotBlank(contact.getEmail2())) {
+						ret.add(new IdentifiableContentProposal<IContact>(
+								contact.getEmail2() + " (privat) - " + contact.getLabel(), contact)
+								.withAdditionalValue(contact.getEmail2()));
+					}
 				}
 			}
 		}
 		return ret.toArray(new IContentProposal[ret.size()]);
+	}
+
+	private boolean addDocumentContactEmailIfMatching(String email, String addressString, IDocumentLetter document,
+			List<IContentProposal> ret, boolean privat) {
+		if (addressString != null && addressString.length() > 1) {
+			if (!(email.contains(addressString) || document.getRecipient().getDescription1().contains(addressString)
+					|| document.getRecipient().getDescription2().contains(addressString))) {
+				return false;
+			}
+		}
+		ret.add(new IdentifiableContentProposal<IContact>(
+				email + (privat ? " (privat)" : StringUtils.EMPTY) + " - " + document.getRecipient().getLabel(),
+				document.getRecipient()).withAdditionalValue(email));
+		return true;
 	}
 
 	private String getContentAddress(String contents) {

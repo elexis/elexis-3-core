@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hl7.fhir.r4.model.ChargeItem;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Invoice;
@@ -16,12 +15,15 @@ import org.osgi.service.component.annotations.Component;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * Transforms an {@link IEncounter} into an {@link Invoice} of
@@ -29,25 +31,25 @@ import ch.elexis.core.services.IModelService;
  * is only a depiction of the current "billing state" of an Encounter. The resp.
  * Encounter is referenced via {@link Invoice#getSubject()}.
  */
+@Dependent
 @Component
 public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, IEncounter> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
-	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
-			+ "=ChargeItem.IBilled)")
-	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
+	@Inject
+	@org.osgi.service.component.annotations.Reference
+	ChargeItemIBilledTransformer chargeItemTransformer;
 
 	private IInvoiceInvoiceAttributeMapper attributeMapper;
 
-	public InvoiceIEncounterTransformer() {
-	}
-
+	@PostConstruct
 	@Activate
 	public void activate() {
-		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
+		attributeMapper = new IInvoiceInvoiceAttributeMapper();
 	}
 
 	private final CodeableConcept TYPE_VIRTUAL = new CodeableConcept(
@@ -67,7 +69,7 @@ public class InvoiceIEncounterTransformer implements IFhirTransformer<Invoice, I
 
 		List<IBilled> billed = localObject.getBilled();
 		for (IBilled iBilled : billed) {
-			invoice.addLineItem(attributeMapper.toInvoiceLineItemComponent(iBilled, includes, sumTotal));
+			invoice.addLineItem(attributeMapper.toInvoiceLineItemComponent(iBilled, sumTotal));
 		}
 
 		invoice.setTotalGross(FhirUtil.toFhir(sumTotal));

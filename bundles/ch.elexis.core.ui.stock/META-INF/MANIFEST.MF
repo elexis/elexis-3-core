@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Stock
 Bundle-SymbolicName: ch.elexis.core.ui.stock;singleton:=true
 Bundle-Vendor: ch.elexis 
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",

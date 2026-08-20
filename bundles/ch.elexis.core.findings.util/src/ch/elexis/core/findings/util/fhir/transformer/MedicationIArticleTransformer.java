@@ -11,7 +11,6 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Medication;
 import org.hl7.fhir.r4.model.StringType;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
@@ -26,25 +25,25 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.types.ArticleTyp;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class MedicationIArticleTransformer implements IFhirTransformer<Medication, IArticle> {
 
 	public static final String EXTENSION_MEDICATION_ARTIKELSTAMMTYPE_URL = "www.elexis.info/extensions/medication/artikelstamm/type";
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IStoreToStringService storeToStringService;
+	IStoreToStringService storeToStringService;
 
-	private IMedicationHelper medicationHelper;
-
-	@Activate
-	private void activate() {
-		medicationHelper = new IMedicationHelper();
-	}
+	private IMedicationHelper medicationHelper = new IMedicationHelper();
 
 	@Override
 	public Optional<Medication> getFhirObject(IArticle localObject, SummaryEnum summaryEnum, Set<Include> includes) {

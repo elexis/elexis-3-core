@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: ch.elexis.core;singleton:=true
 Automatic-Module-Name: ch.elexis.core
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -13,10 +13,12 @@ Export-Package: ch.elexis,
  ch.elexis.core.ac,
  ch.elexis.core.common,
  ch.elexis.core.constants,
+ ch.elexis.core.ee,
  ch.elexis.core.ee.json,
  ch.elexis.core.eenv,
  ch.elexis.core.exceptions,
  ch.elexis.core.fhir,
+ ch.elexis.core.fhir.model.interfaces,
  ch.elexis.core.fhir.rdus,
  ch.elexis.core.interfaces,
  ch.elexis.core.jaxrs,
@@ -56,6 +58,7 @@ Export-Package: ch.elexis,
 Import-Package: com.google.gson;version="[2.11.0,3.0.0)",
  com.google.gson.annotations;version="[2.12.0,3.0.0)",
  jakarta.ws.rs;version="[3.1.0,4.0.0)",
+ jakarta.ws.rs.core;version="[3.1.0,4.0.0)",
  jakarta.xml.bind;version="[4.0.0,5.0.0)",
  jakarta.xml.bind.annotation;version="[4.0.0,5.0.0)",
  org.eclipse.emf.common;version="[2.41.0,3.0.0)"

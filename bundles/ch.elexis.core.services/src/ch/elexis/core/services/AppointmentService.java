@@ -69,7 +69,6 @@ public class AppointmentService implements IAppointmentService {
 	public static final String AG_BEREICH_TYPE_POSTFIX = "/type"; //$NON-NLS-1$
 	public static final String AG_TIMEPREFERENCES = "agenda/zeitvorgaben"; //$NON-NLS-1$
 	public static final String AG_KOMBITERMINE = "agenda/kombitermine/"; // $NON-NLS-1$
-
 	private static final int TYPE_FREE = 0; // frei
 	private static final int TYPE_RESERVED = 1; // reserviert
 	private static final int TYPE_DEFAULT = 2; // standard
@@ -271,9 +270,9 @@ public class AppointmentService implements IAppointmentService {
 		query.and("tag", COMPARATOR.EQUALS, date);
 		String typReserved = getType(AppointmentType.BOOKED);
 		query.and(ModelPackage.Literals.IAPPOINTMENT__TYPE, COMPARATOR.EQUALS, typReserved);
+		query.and(ModelPackage.Literals.IAPPOINTMENT__CREATED_BY, COMPARATOR.EQUALS, null);
 		List<IAppointment> resList = query.execute();
 		if (resList.isEmpty()) {
-
 			// we did not find any entries of type reserved for this day,
 			// thus we initialize them
 			String stateEmpty = getState(AppointmentState.EMPTY);
@@ -427,8 +426,13 @@ public class AppointmentService implements IAppointmentService {
 		if (userContact == null) {
 			userContact = contextService.getActiveUserContact().orElse(null);
 		}
-		String ret = "#" + configService // $NON-NLS-1$
-				.get(userContact, "agenda/farben/typ/" + appointmentType, "3a87ad", false); //$NON-NLS-1$
+
+		String prefKey = AG_SERIES_COLOR.equals(appointmentType) ? AG_SERIES_COLOR
+				: "agenda/farben/typ/" + appointmentType;
+
+		String coldesc = configService.get(userContact, prefKey, "3a87ad", false);
+
+		String ret = coldesc.startsWith("#") ? coldesc : "#" + coldesc;
 		if (isValidColor(ret)) {
 			return ret;
 		} else {
@@ -456,7 +460,6 @@ public class AppointmentService implements IAppointmentService {
 
 	private boolean isValidColor(String colorString) {
 		if (StringUtils.isNotBlank(colorString)) {
-			// ffffff or #ffffff
 			return colorString.length() == 6 || colorString.length() == 7;
 		}
 		return false;
@@ -695,11 +698,18 @@ public class AppointmentService implements IAppointmentService {
 					}
 				}
 			}
-			if (ret.get("std") == null) { //$NON-NLS-1$
-				ret.put("std", 30); //$NON-NLS-1$
-			}
 		}
+		ret.putIfAbsent(AG_KEY_STD, 30);
 		return ret;
+	}
+
+	@Override
+	public void setPreferredDurations(String areaName, Map<String, Integer> durations) {
+		if (StringUtils.isNotBlank(areaName) && durations != null) {
+			String formattedString = durations.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue())
+					.collect(Collectors.joining("::"));
+			configService.set(AG_TIMEPREFERENCES + "/" + areaName, formattedString);
+		}
 	}
 
 	@Override

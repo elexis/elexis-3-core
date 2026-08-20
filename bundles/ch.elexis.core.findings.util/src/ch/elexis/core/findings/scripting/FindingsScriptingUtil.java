@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.scripting;
 
-import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -8,6 +7,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class FindingsScriptingUtil {
 					if (iObservation.getObservationType() == ObservationType.TEXT) {
 						iObservation.setStringValue((String) result);
 					} else if (iObservation.getObservationType() == ObservationType.NUMERIC) {
-						if (NumberUtils.isNumber((String) result)) {
+						if (NumberUtils.isCreatable((String) result)) {
 							BigDecimal newValue = new BigDecimal((String) result);
 							iObservation.setNumericValue(applyDecimal(newValue, iObservation.getDecimalPlace()),
 									iObservation.getNumericValueUnit().orElse(StringUtils.EMPTY));

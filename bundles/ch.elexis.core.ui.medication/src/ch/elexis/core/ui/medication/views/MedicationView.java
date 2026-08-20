@@ -19,6 +19,7 @@ import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.events.RefreshingPartListener;
+import ch.elexis.core.ui.medication.IMedicationInteractionUi;
 import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.core.ui.views.IRefreshable;
 import jakarta.inject.Inject;
@@ -75,6 +76,8 @@ public class MedicationView extends ViewPart implements IRefreshable {
 			} else {
 				refreshForceUpdate = true;
 			}
+		} else if (IMedicationInteractionUi.class.equals(clazz)) {
+			tpc.refresh();
 		}
 	}
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.findings.util.fhir.transformer.EncounterModelIEncounterTransformer">
+   <service>
+      <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
+   </service>
+   <reference cardinality="1..1" field="encounterService" interface="ch.elexis.core.services.IEncounterService" name="encounterService"/>
+   <implementation class="ch.elexis.core.findings.util.fhir.transformer.EncounterModelIEncounterTransformer"/>
+</scr:component>

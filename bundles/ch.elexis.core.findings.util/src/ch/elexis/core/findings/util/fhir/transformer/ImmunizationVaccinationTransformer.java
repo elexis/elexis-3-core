@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IVaccinationImmunizationAttributeMapper;
 import ch.elexis.core.findings.codes.MedicamentCoding;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IVaccinationImmunizationAttributeMapper;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IVaccination;
@@ -29,22 +29,30 @@ import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.utils.CoreUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ImmunizationVaccinationTransformer implements IFhirTransformer<Immunization, IVaccination> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IContextService contextService;
+	IContextService contextService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private ICodeElementService codeElemetService;
+	ICodeElementService codeElemetService;
 
 	private IVaccinationImmunizationAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		attributeMapper = new IVaccinationImmunizationAttributeMapper(modelService);
@@ -54,7 +62,7 @@ public class ImmunizationVaccinationTransformer implements IFhirTransformer<Immu
 	public Optional<Immunization> getFhirObject(IVaccination localObject, SummaryEnum summaryEnum,
 			Set<Include> includes) {
 		Immunization fhirObject = new Immunization();
-		attributeMapper.elexisToFhir(localObject, fhirObject, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, fhirObject, summaryEnum);
 		return Optional.of(fhirObject);
 	}
 

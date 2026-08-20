@@ -49,12 +49,10 @@ public class ConfigServiceHolder {
 		return raw.split(",");
 	}
 
-	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, String value) {
 		return ConfigServiceHolder.get().set(key, value);
 	}
 
-	@Deprecated(forRemoval = true)
 	public static boolean setGlobal(String key, boolean value) {
 		return ConfigServiceHolder.get().set(key, value);
 	}

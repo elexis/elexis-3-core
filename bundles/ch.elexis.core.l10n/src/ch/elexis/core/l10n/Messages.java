@@ -400,6 +400,24 @@ public class Messages extends NLS {
 	public static String ArtikelContextMenu_propertiesTooltip;
 	public static String ArtikelDetailDialog_enterArticleDetails;
 	public static String ArtikelSelector_stockArticles;
+	public static String ArtikelstammPref_MargeGroup_Title;
+	public static String ArtikelstammPref_Marge_Label;
+	public static String ArtikelstammPref_Marge_FromCHF;
+	public static String ArtikelstammPref_Marge_ToCHF;
+	public static String ArtikelstammPref_Marge_AdditionPercent;
+	public static String ArtikelstammPref_Marge_IgnoreInfo;
+	public static String ArtikelstammPref_ATCLang_Label;
+	public static String ArtikelstammPref_ATCLang_de;
+	public static String ArtikelstammPref_ATCLang_en;
+	public static String ArtikelstammPref_ShowPriceInOverview;
+	public static String ArtikelstammPref_ShowEmptyATCGroups;
+	public static String ArtikelstammPref_ShowGenericWarning;
+	public static String ArtikelstammPref_ShowGenericWarning_MediList;
+	public static String ArtikelstammPref_ShowGenericWarning_Recipe;
+	public static String ArtikelstammPref_RDUS_Group;
+	public static String ArtikelstammPref_RDUS_EnableAutoImport;
+	public static String ArtikelstammPref_RDUS_CheckInterval_Label;
+	public static String ArtikelstammPref_RDUS_AutoAdjust;
 	public static String Artikeldetail_EAN;
 	public static String Artikeldetail_Einkaufspreis;
 	public static String Artikeldetail_Verkaufspreis;
@@ -994,6 +1012,7 @@ public class Messages extends NLS {
 	public static String Core_Number;
 	public static String Core_Ok;
 	public static String Core_Open;
+	public static String Core_OperatingSystem;
 	public static String Core_Open_Template;
 	public static String Core_Organisation;
 	public static String Core_Other;
@@ -1434,6 +1453,8 @@ public class Messages extends NLS {
 	public static String DeviceView_tblclmnNoKommastellen_toolTipText;
 	public static String DiagnoseSelektorDialog_Message;
 	public static String DiagnoseSelektorDialog_Title;
+	public static String ServiceSelektorDialog_Message;
+	public static String ServiceSelektorDialog_Title;
 	public static String DiagnosenDisplay_AddDiagnosis;
 	public static String DiagnosenDisplay_AddTextDiagnosis;
 	public static String DiagnosenDisplay_Diagnoses;
@@ -1929,6 +1950,7 @@ public class Messages extends NLS {
 	public static String FeedbackPreferencePage_ElexisLogLabel;
 	public static String FeedbackPreferencePage_EnableAutoLabel;
 	public static String FeedbackPreferencePage_Include_ID;
+	public static String FeedbackPreferencePage_Global_Include_ID;
 	public static String FeedbackPreferencePage_RedmineURLLabel;
 	public static String FeedbackPreferencePage_With_DBcheck;
 	public static String FieldDisplayView_BadDefinitionBody;
@@ -2367,6 +2389,7 @@ public class Messages extends NLS {
 	public static String InvoiceListView_tblclmnInvoiceNo_text;
 	public static String InvoiceListView_tblclmnReceiver_text;
 	public static String InvoiceListView_tblclmnTreatmentperiod_text;
+	public static String InvoiceOutputter_Copy;
 	public static String InvoiceOutputter_Error;
 	public static String InvoiceOutputter_ErrorCreateZip;
 	public static String InvoiceOutputter_ErrorHttpPost;
@@ -3504,6 +3527,7 @@ public class Messages extends NLS {
 	public static String Patientenblatt2_kindOfRelation;
 	public static String Patientenblatt2_legalGuardian;
 	public static String Patientenblatt2_persAnamnesisLbl;
+	public static String Patientenblatt2_socialAnamnesisLbl;
 	public static String Patientenblatt2_famAnamnesisLbl;
 	public static String Patientenblatt2_phone1;
 	public static String Patientenblatt2_phone2;
@@ -5440,6 +5464,10 @@ public class Messages extends NLS {
 	public static String AgendaFarben_PastAppointments;
 	public static String AgendaFarben_FutureAppointments;
 	public static String AgendaFarben_DoubleClickToChange;
+	public static String TerminListeView_PrintSelected;
+	public static String TerminListeView_PrintSelectedTooltip;
+	public static String TerminListeView_PrintSeries;
+	public static String TerminListeView_PrintSeriesTooltip;
 	public static String RegiomedSender_AlternativeNotFoundLocally;
 	public static String RegiomedCheckTemplate_AvailableAlternatives;
 	public static String RegiomedCheckTemplate_NoAlternativeAvailable;
@@ -5551,7 +5579,6 @@ public class Messages extends NLS {
 	public static String MedformListSelectionDialog_AddToFavorites;
 	public static String MedformListSelectionDialog_DeactivateAddressQuery;
 	public static String MedformListSelectionDialog_ActivateAddressQuery;
-	// --- NEU: Strings für den MedformDialogTitleHelper ---
 	public static String MedformDialogTitleHelper_SelectPhysio;
 	public static String MedformDialogTitleHelper_SelectErgo;
 	public static String MedformDialogTitleHelper_SelectLogo;
@@ -5583,6 +5610,23 @@ public class Messages extends NLS {
 	public static String MedformDialogTitleHelper_SelectAuthority;
 	public static String MedformDialogTitleHelper_SelectHospital;
 	public static String MedformDialogTitleHelper_SelectRecipient;
+	public static String AgendaDefinitionen_useColorizedPatientSearch;
+	public static String Zeitvorgaben_LegendBlueDeviations;
+	public static String Zeitvorgaben_HintRightClickReset;
+	public static String Zeitvorgaben_RestoreDefaultsForArea;
+	public static String Zeitvorgaben_SelectAreaToReset;
+	public static String PreferencesServer_suffixModeLabel;
+	public static String ReminderPrefences_DatePast;
+	public static String ReminderPrefences_DateToday;
+	public static String ReminderPrefences_DateFuture;
+	public static String ReminderPrefences_DateNoDate;
+	public static String ReminderPrefences_CustomStatusesTitle;
+	public static String ReminderPrefences_NewStatusMessage;
+	public static String ReminderPrefences_AddStatusTooltip;
+	public static String ReminderPrefences_RemoveStatusTooltip;
+	public static String ReminderStatusSubMenu_NoSelection;
+	public static String AgendaFarben_SpecialAppointments;
+	public static String AgendaFarben_RecurringAppointment;
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

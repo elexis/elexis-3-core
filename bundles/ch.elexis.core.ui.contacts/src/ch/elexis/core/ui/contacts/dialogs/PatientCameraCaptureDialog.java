@@ -401,6 +401,7 @@ public class PatientCameraCaptureDialog {
 					names[count] = Messages.PatientCameraCaptureDialog_DeviceName + (count + 1);
 					count++;
 				} catch (Exception e) {
+					LoggerFactory.getLogger(PatientCameraCaptureDialog.class).warn("initCameraCacheAsync() ", e);
 					break;
 				}
 			}

@@ -395,6 +395,8 @@ public class LabeledInputField extends Composite {
 		private org.eclipse.jface.viewers.IContentProvider contentProvider;
 		private ILabelProvider labelProvider;
 		private IStructuredSelectionResolver selectionResolver;
+		
+		private boolean alwaysEdit = false;
 
 		/**
 		 * create control of different types.
@@ -550,6 +552,10 @@ public class LabeledInputField extends Composite {
 		}
 
 		public void setEditable(boolean ed) {
+			// override if always edit field
+			if (alwaysEdit) {
+				ed = true;
+			}
 			mine.lbl.setEnabled(ed);
 			if (tFeldTyp == Typ.EXECSTRING || tFeldTyp == Typ.HYPERLINK) {
 				mine.lbl.setEnabled(true);
@@ -573,6 +579,11 @@ public class LabeledInputField extends Composite {
 				mine.ctl.setToolTipText(label);
 				mine.fixedTooltip = true;
 			}
+		}
+
+		public InputData alwaysEdit() {
+			this.alwaysEdit = true;
+			return this;
 		}
 	}
 

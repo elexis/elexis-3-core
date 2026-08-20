@@ -31,6 +31,7 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	public static final String EXTINFO_VAL_VAT_OVERRIDEN = "VAT_OVERRIDE";
 	public static final String EXTINFO_VAL_PPUB_OVERRIDE_STORE = "PPUB_OVERRIDE_STORE";
 	public static final String EXTINFO_VAL_PKG_SIZE_OVERRIDE_STORE = "PKG_SIZE_OVERRIDE_STORE";
+	public static final String EXTINFO_VAL_INDICATIONS = "INDICATIONS";
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -138,6 +139,9 @@ public class ArtikelstammItem extends AbstractEntityWithId
 
 	@Column(length = 10)
 	private String prodno;
+
+	@Convert(converter = BooleanCharacterConverterSafe.class)
+	private boolean pm;
 
 	public String getType() {
 		return type;
@@ -401,5 +405,13 @@ public class ArtikelstammItem extends AbstractEntityWithId
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	public boolean isPm() {
+		return pm;
+	}
+
+	public void setPm(boolean value) {
+		pm = value;
 	}
 }

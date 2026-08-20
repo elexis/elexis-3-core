@@ -11,7 +11,9 @@ import org.osgi.service.component.annotations.Component;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class LocationStringTransformer implements IFhirTransformer<Location, String> {
 

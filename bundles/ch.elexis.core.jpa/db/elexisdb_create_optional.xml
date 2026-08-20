@@ -1838,7 +1838,7 @@ DROP TABLE TEMP_ETIKETTEN_OBJCLASS_LINK;
             </column>
             <column name="LASTUPDATE" type="BIGINT"/>
             <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
-            <column name="FORMTITLE" type="VARCHAR(25)"/>
+            <column name="FORMTITLE" type="VARCHAR(255)"/>
             <column name="FROMAGE" type="VARCHAR(11)"/>
             <column name="TOAGE" type="VARCHAR(11)"/>
         </createTable>
@@ -3235,5 +3235,86 @@ WHERE kontakt.id IN (
 			<column name="BILLED" />
 		</createIndex>
 	</changeSet>	
+	
+	<changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_REFDATA">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_REFDATA" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_REFDATA">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_REFDATA"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+
+            <column name="SEX" type="CHAR(1)"/>
+            <column name="TYPE" type="VARCHAR(10)"/>
+            <column name="AGE" type="VARCHAR(8)"/>
+
+            <column name="VALUE_3" type="VARCHAR(8)"/>
+            <column name="VALUE_10" type="VARCHAR(8)"/>
+            <column name="VALUE_25" type="VARCHAR(8)"/>
+            <column name="VALUE_50" type="VARCHAR(8)"/>
+            <column name="VALUE_75" type="VARCHAR(8)"/>
+            <column name="VALUE_90" type="VARCHAR(8)"/>
+            <column name="VALUE_97" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_REFDATA_IDX1">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_REFDATA"
+					indexName="NET_MEDSHARE_PERCENTILE_REFDATA_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_REFDATA_IDX1" tableName="NET_MEDSHARE_PERCENTILE_REFDATA">
+            <column name="SEX"/>
+            <column name="TYPE"/>
+        </createIndex>
+    </changeSet>
+
+	<changeSet author="thomas" id="manual_table_NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F" />
+			</not>
+		</preConditions>
+        <createTable tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F">
+            <column name="ID" type="VARCHAR(25)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_PK_NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F"/>
+            </column>
+            <column name="LASTUPDATE" type="BIGINT"/>
+            <column defaultValue="0" name="DELETED" type="CHAR(1)"/>
+
+            <column name="QUESTIONID" type="VARCHAR(25)"/>
+            <column name="FORMID" type="VARCHAR(25)"/>
+            <column name="SORTORDER" type="VARCHAR(11)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX1">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX1" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX1" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F">
+            <column name="FORMID"/>
+            <column name="QUESTIONID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="thomas" id="manual_index_NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX_FORM">
+    	<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F"
+					indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX_FORM" />
+			</not>
+		</preConditions>
+        <createIndex indexName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F_IDX_FORM" tableName="NET_MEDSHARE_PERCENTILE_CHECKLIST_Q2F">
+            <column name="FORMID"/>
+        </createIndex>
+    </changeSet>
 	
 </databaseChangeLog>

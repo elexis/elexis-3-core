@@ -81,6 +81,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.constants.ExtensionPointConstantsData;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.interfaces.IRnOutputter;
+import ch.elexis.core.data.interfaces.IRnOutputter.TYPE;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
@@ -252,7 +253,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Optional
 	@Inject
 	void deletedInvoice(@UIEventTopic(ElexisEventTopics.EVENT_DELETE) IInvoice invoice) {
-		if (actRn != null && actRn.getId().equals(invoice.getId())) {
+		if (actRn != null && invoice != null && actRn.getId().equals(invoice.getId())) {
 			doSelect(null);
 		}
 	}
@@ -260,7 +261,9 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 	@Optional
 	@Inject
 	void updateInvoice(@UIEventTopic(ElexisEventTopics.EVENT_UPDATE) IInvoice invoice) {
-		doSelect(invoice);
+		if (actRn != null && invoice != null && actRn.getId().equals(invoice.getId())) {
+			doSelect(invoice);
+		}
 	}
 
 	@Inject
@@ -529,7 +532,10 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 					for (String trace : selectedOutputTraces) {
 						getOutputterForTrace(trace).ifPresent(o -> {
 							getOutputDateTime(trace).ifPresent(ot -> {
-								o.openOutput(actRn.toIInvoice(), ot.toLocalDateTime(), getOutputInvoiceState(trace));
+								InvoiceState invoiceState = getOutputInvoiceState(trace);
+								boolean isCopy = isCopy(trace);
+								o.openOutput(actRn.toIInvoice(), ot.toLocalDateTime(), invoiceState,
+										isCopy ? TYPE.COPY : TYPE.ORIG);
 							});
 						});
 					}
@@ -560,8 +566,23 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				return null;
 			}
 
+			private boolean isCopy(String trace) {
+				return trace.contains("(" + ch.elexis.core.l10n.Messages.InvoiceOutputter_Copy + ")");
+			}
+
+			private String stripCopy(String trace) {
+				if (trace.indexOf("(" + ch.elexis.core.l10n.Messages.InvoiceOutputter_Copy + ")") > -1) {
+					return trace.substring(0,
+							trace.indexOf("(" + ch.elexis.core.l10n.Messages.InvoiceOutputter_Copy + ")") - 1);
+				}
+				return trace;
+			}
+
 			private InvoiceState getOutputInvoiceState(String trace) {
 				if (trace != null) {
+					if (isCopy(trace)) {
+						trace = stripCopy(trace);
+					}
 					String[] parts = trace.split(": ");
 					if (parts != null && parts.length >= 3) {
 						for (InvoiceState state : InvoiceState.values()) {
@@ -573,6 +594,7 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 				}
 				return null;
 			}
+
 
 			private java.util.Optional<TimeTool> getOutputDateTime(String trace) {
 				if (trace != null) {
@@ -859,7 +881,8 @@ public class RechnungsBlatt extends Composite implements IActivationListener {
 						}
 					}
 				}
-				if (actRn.getInvoiceState() == InvoiceState.DEFECTIVE) {
+				if (actRn.getInvoiceState() == InvoiceState.DEFECTIVE
+						|| actRn.getInvoiceState() == InvoiceState.REJECTED) {
 					List<String> rejects = actRn.getTrace(Rechnung.REJECTED);
 					StringBuilder rjj = new StringBuilder();
 					for (String r : rejects) {

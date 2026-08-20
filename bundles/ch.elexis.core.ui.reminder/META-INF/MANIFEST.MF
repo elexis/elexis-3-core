@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Reminder UI
 Bundle-SymbolicName: ch.elexis.core.ui.reminder;singleton:=true
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Vendor: medevit.at
-Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
- ch.elexis.core.ui;bundle-version="3.13.0",
- ch.elexis.core.ui.e4;bundle-version="3.13.0",
+Require-Bundle: ch.elexis.core;bundle-version="3.14.0",
+ ch.elexis.core.ui;bundle-version="3.14.0",
+ ch.elexis.core.ui.e4;bundle-version="3.14.0",
  org.eclipse.nebula.widgets.nattable.core;bundle-version="2.5.0",
  org.eclipse.nebula.widgets.nattable.extension.nebula;bundle-version="2.5.0",
  org.eclipse.nebula.widgets.richtext;bundle-version="1.5.1",

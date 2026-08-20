@@ -54,21 +54,27 @@ import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class MedicationRequestPrescriptionTransformer implements IFhirTransformer<MedicationRequest, IPrescription> {
 
 	public static final String EXTENSION_PRESCRIPTION_ENTRYTYPE_URL = "www.elexis.info/extensions/prescription/entrytype";
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IContextService contextService;
+	IContextService contextService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private ICodeElementService codeElemetService;
+	ICodeElementService codeElemetService;
 
 	private PrescriptionEntryTypeFactory entryTypeFactory = new PrescriptionEntryTypeFactory();
 
@@ -344,8 +350,8 @@ public class MedicationRequestPrescriptionTransformer implements IFhirTransforme
 						medicationCodes.add(coding.getSystem() + "|" + coding.getCode());
 					}
 				}
-				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown medication ["
-						+ medicationCodes.toString() + "]");
+				LoggerFactory.getLogger(getClass())
+						.error("MedicationRequest with unknown medication [" + medicationCodes.toString() + "]");
 			}
 			if (!patient.isPresent()) {
 				LoggerFactory.getLogger(getClass()).error("MedicationRequest with unknown patient ["

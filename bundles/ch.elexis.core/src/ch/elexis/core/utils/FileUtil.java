@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.rgw.tools.TimeTool;
 
@@ -122,4 +125,30 @@ public class FileUtil {
 		}
 		return subDir;
 	}
+
+	/**
+	 * Sanitize characters that are not allowed in Windows for file creation.
+	 * 
+	 * @param input
+	 * @param logger if set, log potential changes to to input
+	 * @return
+	 */
+	//@formatter:off
+	public static String sanitizeFilename(String input, @Nullable Logger logger) {
+	    String output = input
+	        .replace("\\", "_")
+	        .replace("/", "_")
+	        .replace(":", "_")
+	        .replace("*", "_")
+	        .replace("?", "_")
+	        .replace("\"", "_")
+	        .replace("<", "_")
+	        .replace(">", "_")
+	        .replace("|", "_");
+	    if(logger != null && !Strings.CS.equals(output, input)) {
+	    	logger.info("Sanitized [%s] to [%s[", input, output);
+	    }
+	    return output;
+	}
+	//@formatter:on
 }

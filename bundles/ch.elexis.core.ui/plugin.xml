@@ -113,16 +113,6 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:ch.elexis.BehandlungenVerrechnenView">
-         <command
-               commandId="ch.elexis.core.command.linkViews"
-               icon="icon://IMG_SYNC"
-               label="%command.label.1"
-               style="toggle">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
             locationURI="toolbar:ch.elexis.FallDetailView">
          <command
                commandId="ch.elexis.core.command.copyFall"
@@ -363,6 +353,11 @@
                commandId="ch.elexis.core.ui.command.encounter.create"
                icon="icon://IMG_NEW"
                style="push">
+         </command>
+         <command
+               commandId="ch.elexis.core.ui.command.filterHistoryByMandator"
+               icon="icon://IMG_PERSON"
+               style="toggle">
          </command>
       </menuContribution>
       <menuContribution
@@ -678,15 +673,6 @@
             name="%command.name.5">
       </command>
       <command
-            defaultHandler="ch.elexis.core.ui.commands.KonsZumVerrechnenLinkCommand"
-            id="ch.elexis.core.command.linkViews"
-            name="%command.name.6">
-         <state
-               class="org.eclipse.ui.handlers.RegistryToggleState:true"
-               id="org.eclipse.ui.commands.toggleState">
-         </state>
-      </command>
-      <command
             id="ch.elexis.core.command.copyFall"
             name="%command.name.7">
       </command>
@@ -873,6 +859,15 @@
             id="ch.elexis.core.ui.commands.SendInvoiceAsMail"
             name="%command.name.28">
       </command>
+      <command
+            defaultHandler="ch.elexis.core.ui.commands.HistoryFilterByActiveMandator"
+            id="ch.elexis.core.ui.command.filterHistoryByMandator"
+            name="%command.name.29">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
    </extension>
       <extension
             point="ch.elexis.core.ui.KonsExtension">
@@ -1036,6 +1031,16 @@
                   </test>
                </and>
             </enabledWhen>
+         </handler>
+         <handler
+               class="ch.elexis.core.ui.commands.ShowViewHandler"
+               commandId="org.eclipse.ui.views.showView">
+            <activeWhen>
+                  <test
+                        args="ACL_VIEW_SELECTION"
+                        property="ch.elexis.commands.propertyTester.ACE">
+                  </test>
+            </activeWhen>
          </handler>
       </extension>
       <extension

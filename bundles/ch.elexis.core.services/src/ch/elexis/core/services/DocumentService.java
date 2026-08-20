@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentTemplate;
@@ -199,5 +201,32 @@ public class DocumentService implements IDocumentService {
 					.warn("Direct template consumer [" + template + "] replaced with [" + textTemplateConsumer + "]");
 		}
 		directTemplateReplacement.put(template, textTemplateConsumer);
+	}
+
+	@Override
+	public IDocument createCopy(IDocument source) {
+		if (source != null && StringUtils.isNotBlank(source.getStoreId())) {
+			try {
+				IDocumentStore documentStore = getDocumentStore(source.getStoreId());
+				IDocument ret = documentStore.createDocument(source.getPatient().getId(), source.getTitle(),
+						source.getCategory().getName());
+
+				ret.setCreated(new Date());
+				ret.setAuthor(source.getAuthor());
+				ret.setDescription(source.getDescription());
+				ret.setExtension(source.getExtension());
+				ret.setKeywords(source.getKeywords());
+				ret.setMimeType(source.getMimeType());
+				if (source.getStatus() != null && !source.getStatus().isEmpty()) {
+					ret.setStatus(source.getStatus().get(0), true);
+				}
+
+				documentStore.saveDocument(ret, source.getContent());
+				return ret;
+			} catch (ElexisException e) {
+				LoggerFactory.getLogger(DocumentService.class).error("Exception creating copy of document.", e);
+			}
+		}
+		return null;
 	}
 }

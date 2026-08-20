@@ -4,13 +4,14 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.PlatformUI;
 
@@ -41,6 +42,9 @@ import ch.rgw.tools.Result;
 
 public class BillingProcessor {
 
+	private static final List<EntryType> MEDICATION_ENTRY_TYPES = Arrays.asList(EntryType.FIXED_MEDICATION,
+			EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION);
+
 	private final IEncounter actEncounter;
 
 	public BillingProcessor(IEncounter actEncounter) {
@@ -69,8 +73,7 @@ public class BillingProcessor {
 	}
 
 	private void billArticleDirectly(IArticle selectedArticle) {
-		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter,
-				getSellingAmount(selectedArticle));
+		Result<IBilled> billResult = BillingServiceHolder.get().bill(selectedArticle, actEncounter, 1.0);
 		if (billResult.isOK()) {
 			IBilled billed = billResult.get();
 			CoreModelServiceHolder.get().refresh(actEncounter, true);
@@ -79,15 +82,6 @@ public class BillingProcessor {
 		} else {
 			ResultDialog.show(billResult);
 		}
-	}
-
-	private double getSellingAmount(IArticle article) {
-		double pkgSize = Math.abs(article.getPackageSize());
-		double vkUnits = article.getSellingSize();
-		if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
-			return 1.0 * (vkUnits / pkgSize);
-		}
-		return 1.0;
 	}
 
 	private void handleArticleBillingDialog(IArticle selectedArticle) {
@@ -111,17 +105,27 @@ public class BillingProcessor {
 			return;
 		}
 		IBilled billed = billResult.get();
-		String prescId = billed.getExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID).toString();
-		if (prescId != null) {
+		Object prescIdValue = billed.getExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID);
+		if (prescIdValue != null) {
+			String prescId = prescIdValue.toString();
 			Optional<IPrescription> prescriptionOpt = CoreModelServiceHolder.get().load(prescId, IPrescription.class);
 			if (prescriptionOpt.isPresent()) {
 				IPrescription prescription = prescriptionOpt.get();
 				prescription.setDosageInstruction(signature.getSignatureAsDosisString());
 				prescription.setRemark(signature.getComment());
+				String disposalComment = signature.getDisposalComment();
+				if (disposalComment != null && !disposalComment.isEmpty()) {
+					prescription.setDisposalComment(disposalComment);
+				}
 				prescription.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID,
 						billed.getId());
-				prescription.setEntryType(signature.getDisposalType());
+				prescription.setEntryType(signature.getMedicationType());
 				prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
+				if (signature.getEndDate() != null) {
+					prescription.setDateTo(signature.getEndDate().atStartOfDay());
+				} else {
+					prescription.setDateTo(null);
+				}
 				CoreModelServiceHolder.get().save(prescription);
 			}
 		}
@@ -149,36 +153,49 @@ public class BillingProcessor {
 	}
 
 	public void updatePrescriptionsWithDosage(IBilled billed) {
-		List<IPrescription> prescriptions = getRecentPatientPrescriptions(actEncounter.getPatient(),
-				actEncounter.getDate().atStartOfDay());
-	    List<IPrescription> reversedPrescriptions = new ArrayList<>(prescriptions);
-	    Collections.reverse(reversedPrescriptions);
-	    Optional<IPrescription> lastPrescriptionWithDosage = reversedPrescriptions.stream()
-	    	    .filter(prescription -> isMatchingPrescription(prescription, billed))
-	    	    .findFirst();
-	    lastPrescriptionWithDosage.ifPresent(lastPrescription -> prescriptions.stream()
-	        .filter(prescription -> {
-	            IArticle article = prescription.getArticle();
-	            return article != null && article.getGtin() != null && billed.getCode().equals(article.getGtin());
-	        })
-	        .filter(prescription -> {
-	            String dosageInstruction = prescription.getDosageInstruction();
-	            return dosageInstruction == null || dosageInstruction.isEmpty()
-	                    || !dosageInstruction.equals(lastPrescription.getDosageInstruction());
-	        })
-	        .forEach(prescription -> {
-					prescription.setDosageInstruction(lastPrescription.getDosageInstruction());
-	            prescription.setRemark(lastPrescription.getRemark());
-	            prescription.setDateFrom(actEncounter.getDate().atStartOfDay());
-	            CoreModelServiceHolder.get().save(prescription);
-	        }));
+		Optional<IPrescription> dispensation = getDispensationPrescription(billed);
+		if (!dispensation.isPresent()) {
+			return;
+		}
+		IPrescription target = dispensation.get();
+		if (StringUtils.isNotBlank(target.getDosageInstruction())) {
+			return;
+		}
+		findDosageSource(billed, target).ifPresent(source -> {
+			target.setDosageInstruction(source.getDosageInstruction());
+			target.setRemark(source.getRemark());
+			CoreModelServiceHolder.get().save(target);
+		});
 	}
 
-	private boolean isMatchingPrescription(IPrescription prescription, IBilled billed) {
-	    IArticle article = prescription.getArticle();
-	    String dosage = prescription.getDosageInstruction();
-	    return article != null && article.getGtin() != null && billed.getCode().equals(article.getGtin())
-	            && dosage != null && !dosage.isEmpty();
+	private Optional<IPrescription> getDispensationPrescription(IBilled billed) {
+		Object prescriptionId = billed.getExtInfo(ch.elexis.core.model.verrechnet.Constants.FLD_EXT_PRESC_ID);
+		if (prescriptionId == null) {
+			return Optional.empty();
+		}
+		return CoreModelServiceHolder.get().load(prescriptionId.toString(), IPrescription.class)
+				.filter(prescription -> prescription.getEntryType() == EntryType.SELF_DISPENSED);
+	}
+
+	private Optional<IPrescription> findDosageSource(IBilled billed, IPrescription dispensation) {
+		return actEncounter.getPatient().getMedication(MEDICATION_ENTRY_TYPES).stream()
+				.filter(prescription -> !prescription.getId().equals(dispensation.getId()))
+				.filter(prescription -> isSameArticle(prescription, billed))
+				.filter(prescription -> StringUtils.isNotBlank(prescription.getDosageInstruction()))
+				.filter(BillingProcessor::isStillRunning)
+				.max(Comparator
+						.comparing(IPrescription::getDateFrom, Comparator.nullsFirst(Comparator.naturalOrder()))
+						.thenComparing(IPrescription::getId));
+	}
+
+	private boolean isSameArticle(IPrescription prescription, IBilled billed) {
+		IArticle article = prescription.getArticle();
+		return article != null && article.getGtin() != null && billed.getCode().equals(article.getGtin());
+	}
+
+	private static boolean isStillRunning(IPrescription prescription) {
+		LocalDateTime dateTo = prescription.getDateTo();
+		return dateTo == null || dateTo.isAfter(LocalDateTime.now());
 	}
 
 	public static List<IPrescription> getRecentPatientPrescriptions(IPatient patient, LocalDateTime referenceDate) {

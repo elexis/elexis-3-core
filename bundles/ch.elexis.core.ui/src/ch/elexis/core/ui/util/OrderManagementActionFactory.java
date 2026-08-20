@@ -1,8 +1,8 @@
 package ch.elexis.core.ui.util;
 
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,8 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.CoreModelServiceHolder;
-import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -58,10 +56,12 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.OrderEntryState;
+import ch.elexis.core.model.builder.IOrderBuilder;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.OrderServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.UiDesk;
@@ -77,8 +77,9 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.dnd.OrderDropReceiver;
 import ch.elexis.core.ui.views.BestellBlatt;
 import ch.elexis.core.ui.views.Messages;
-import ch.elexis.core.ui.views.OrderManagementView;
 import ch.elexis.core.ui.views.codesystems.LeistungenView;
+import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
+import ch.elexis.core.utils.Extensions;
 import ch.elexis.data.Bestellung;
 import ch.rgw.tools.ExHandler;
 
@@ -166,9 +167,7 @@ public class OrderManagementActionFactory {
 		if (reuseExistingOrder) {
 			orderToUse = actOrder;
 		} else {
-			orderToUse = CoreModelServiceHolder.get().create(IOrder.class);
-			orderToUse.setTimestamp(LocalDateTime.now());
-			orderToUse.setName(Messages.BestellView_AutomaticDaily);
+			orderToUse = new IOrderBuilder(CoreModelServiceHolder.get(), Messages.BestellView_AutomaticDaily).build();
 		}
 
 		DailyConsumptionOrderDialog doDlg = new DailyConsumptionOrderDialog(view.getSite().getShell(), orderToUse);
@@ -198,7 +197,7 @@ public class OrderManagementActionFactory {
 	}
 
 	private IOrder findReusableStockOrder() {
-		for (IOrder o : OrderManagementUtil.getOpenOrders()) {
+		for (IOrder o : orderService.getOpenOrders()) {
 			if (isStockOrder(o) && isUnsent(o)) {
 				return o;
 			}
@@ -229,7 +228,8 @@ public class OrderManagementActionFactory {
 			actOrder = reusableStockOrder;
 			clearOpenEntries(actOrder);
 		} else {
-			actOrder = OrderManagementUtil.createOrder(Messages.OrderManagement_StockOrder_DefaultName, orderService);
+			actOrder = new IOrderBuilder(CoreModelServiceHolder.get(), Messages.OrderManagement_StockOrder_DefaultName)
+					.buildAndSave();
 		}
 		int trigger = ConfigServiceHolder.get().get(Preferences.INVENTORY_ORDER_TRIGGER,
 				Preferences.INVENTORY_ORDER_TRIGGER_DEFAULT);
@@ -270,7 +270,7 @@ public class OrderManagementActionFactory {
 		NeueBestellungDialog nbDlg = new NeueBestellungDialog(view.getSite().getShell(),
 				Messages.BestellView_CreateNewOrder, Messages.BestellView_EnterOrderTitle);
 		if (nbDlg.open() == Dialog.OK) {
-			actOrder = OrderManagementUtil.createOrder(nbDlg.getTitle(), orderService);
+			actOrder = new IOrderBuilder(CoreModelServiceHolder.get(), nbDlg.getTitle()).buildAndSave();
 			view.setActOrder(actOrder);
 			OrderManagementView.setBarcodeScannerActivated(true);
 			view.reload();
@@ -378,7 +378,6 @@ public class OrderManagementActionFactory {
 					try {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
-
 						if (sender.canHandle(actOrder)) {
 							try {
 								sender.store(actOrder);
@@ -733,7 +732,7 @@ public class OrderManagementActionFactory {
 			order = (IOrder) selectedElement;
 		}
 		if (order != null) {
-			new HistoryDialog(UiDesk.getTopShell(), order).open();
+			new HistoryDialog(UiDesk.getTopShell(), order, orderService).open();
 		}
 	}
 

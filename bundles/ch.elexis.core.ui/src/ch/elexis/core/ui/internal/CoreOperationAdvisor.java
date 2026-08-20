@@ -27,6 +27,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
@@ -188,8 +189,8 @@ public class CoreOperationAdvisor implements ICoreOperationAdvisor {
 			CoreOperationAdvisorHolder.get().adaptForUser();
 			CoreHub.heart.resume(true);
 			// run access control
-			ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/reset", user);
-			ContextServiceHolder.get().sendEvent("info/elexis/ui/accesscontrol/update", user);
+			ContextServiceHolder.get().sendEvent(ElexisEventTopics.BASE_UI_ACCESSCONTROL + "reset", user);
+			ContextServiceHolder.get().sendEvent(ElexisEventTopics.BASE_UI_ACCESSCONTROL + "update", user);
 			return true;
 		}
 

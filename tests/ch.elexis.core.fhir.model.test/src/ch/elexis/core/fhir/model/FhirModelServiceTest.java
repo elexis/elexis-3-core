@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.uhn.fhir.rest.gclient.IQuery;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.fhir.model.test.AllPluginTests;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -24,7 +25,6 @@ import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -36,7 +36,7 @@ public class FhirModelServiceTest {
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
-		coreModelService = OsgiServiceUtil
+		coreModelService = PortableServiceLoader
 				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 	}
 

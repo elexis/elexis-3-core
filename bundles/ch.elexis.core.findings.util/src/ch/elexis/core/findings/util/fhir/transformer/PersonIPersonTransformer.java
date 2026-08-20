@@ -10,29 +10,32 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IPersonPersonAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IPersonPersonAttributeMapper;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.IXidService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Person.IPerson")
 public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerson> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IXidService xidService;
-
-	@Reference
-	private IUserService userService;
+	IXidService xidService;
 
 	private IPersonPersonAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IPersonPersonAttributeMapper(modelService, xidService);
@@ -46,7 +49,7 @@ public class PersonIPersonTransformer implements IFhirTransformer<Person, IPerso
 	@Override
 	public Optional<Person> getFhirObject(IPerson localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Person person = new Person();
-		attributeMapper.elexisToFhir(localObject, person, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, person, summaryEnum);
 		return Optional.of(person);
 	}
 

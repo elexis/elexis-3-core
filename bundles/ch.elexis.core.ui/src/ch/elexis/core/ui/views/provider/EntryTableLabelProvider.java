@@ -1,5 +1,7 @@
 package ch.elexis.core.ui.views.provider;
 
+
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -11,7 +13,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.util.OrderManagementUtil;
-import ch.elexis.core.ui.views.OrderManagementView;
+import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
 
 public class EntryTableLabelProvider extends ColumnLabelProvider {
 

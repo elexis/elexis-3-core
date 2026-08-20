@@ -100,6 +100,14 @@ public interface IUserService {
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user);
 
 	/**
+	 * Retrieve the default executive doctors this contact is working for.
+	 * 
+	 * @return
+	 * @since 3.14
+	 */
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact);
+
+	/**
 	 * Set the default executive doctor this user is working for.
 	 * 
 	 * @param userContact

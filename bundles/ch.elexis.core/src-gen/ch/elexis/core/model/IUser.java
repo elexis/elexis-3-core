@@ -28,6 +28,8 @@ import java.util.List;
  *   <li>{@link ch.elexis.core.model.IUser#isActive <em>Active</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#isAllowExternal <em>Allow External</em>}</li>
  *   <li>{@link ch.elexis.core.model.IUser#isAdministrator <em>Administrator</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getAssociatedContactId <em>Associated Contact Id</em>}</li>
+ *   <li>{@link ch.elexis.core.model.IUser#getRoleIds <em>Role Ids</em>}</li>
  * </ul>
  *
  * @see ch.elexis.core.model.ModelPackage#getIUser()
@@ -123,8 +125,10 @@ public interface IUser extends Deleteable, Identifiable {
 	 * @see #setAssignedContact(IContact)
 	 * @see ch.elexis.core.model.ModelPackage#getIUser_AssignedContact()
 	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='kontakt'"
-	 * @generated
+	 * @generated not
+	 * @deprecated replace with {@link #getAssociatedContactId()}
 	 */
+	@Deprecated(since = "3.14")
 	IContact getAssignedContact();
 	
 	/**
@@ -132,8 +136,10 @@ public interface IUser extends Deleteable, Identifiable {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Assigned Contact</em>' reference.
 	 * @see #getAssignedContact()
-	 * @generated
+	 * @generated not
+	 * @deprecated not supported anymore, value is set in IdP
 	 */
+	@Deprecated(since = "3.14")
 	void setAssignedContact(IContact value);
 	
 	/**
@@ -227,6 +233,29 @@ public interface IUser extends Deleteable, Identifiable {
 	 */
 	void setAdministrator(boolean value);
 	
+	/**
+	 * Returns the value of the '<em><b>Associated Contact Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Associated Contact Id</em>' attribute.
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_AssociatedContactId()
+	 * @model required="true" changeable="false"
+	 * @generated
+	 */
+	String getAssociatedContactId();
+
+	/**
+	 * Returns the value of the '<em><b>Role Ids</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Role Ids</em>' attribute list.
+	 * @see ch.elexis.core.model.ModelPackage#getIUser_RoleIds()
+	 * @model changeable="false"
+	 * @generated
+	 */
+	List<String> getRoleIds();
+
 	/**
 	 * <!-- begin-user-doc --> Add a role to the user. Do not use
 	 * {@link #getRoles()#addRole(IRole)}, as it will not be stored. <!-- end-user-doc -->

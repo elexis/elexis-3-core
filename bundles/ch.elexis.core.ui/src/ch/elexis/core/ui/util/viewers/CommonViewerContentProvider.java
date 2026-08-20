@@ -197,4 +197,8 @@ public abstract class CommonViewerContentProvider implements ICommonViewerConten
 	protected void setIgnoreLimit(boolean value) {
 		this.ignoreLimit = value;
 	}
+
+	public void resetLimit() {
+		setIgnoreLimit(false);
+	}
 }

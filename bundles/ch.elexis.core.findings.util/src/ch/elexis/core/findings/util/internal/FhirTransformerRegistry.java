@@ -1,6 +1,5 @@
 package ch.elexis.core.findings.util.internal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -9,36 +8,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.model.Identifiable;
+import io.quarkus.arc.All;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class FhirTransformerRegistry implements IFhirTransformerRegistry {
 
-	private List<IFhirTransformer<?, ?>> transformers;
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IFhirTransformer<?, ?>> transformers;
 
 	private HashMap<String, IFhirTransformer<?, ?>> cache = new HashMap<>();
 
 	private HashMap<String, IFhirTransformer<?, ?>> fhirClassCache = new HashMap<>();
-
-	@Reference(cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, policyOption = ReferencePolicyOption.GREEDY)
-	public synchronized void bindFhirTransformer(IFhirTransformer<?, ?> transformer) {
-		if (transformers == null) {
-			transformers = new ArrayList<>();
-		}
-		transformers.add(transformer);
-	}
-
-	public void unbindFhirTransformer(IFhirTransformer<?, ?> transformer) {
-		if (transformers == null) {
-			transformers = new ArrayList<>();
-		}
-		transformers.remove(transformer);
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -64,7 +54,7 @@ public class FhirTransformerRegistry implements IFhirTransformerRegistry {
 			if (fhirReference.indexOf("/") > -1) {
 				String[] parts = fhirReference.split("/");
 				IFhirTransformer<?, ?> transformer = fhirClassCache.get(parts[0]);
-				if(transformer != null) {
+				if (transformer != null) {
 					return transformer.getLocalObjectForReference(fhirReference);
 				}
 				for (IFhirTransformer<?, ?> iFhirTransformer : transformers) {

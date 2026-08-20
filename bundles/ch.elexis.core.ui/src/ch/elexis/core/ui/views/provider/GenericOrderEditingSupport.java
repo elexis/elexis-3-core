@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.views.provider;
 
+
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +29,7 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.editors.ContactSelectionDialogCellEditor;
 import ch.elexis.core.ui.util.OrderManagementUtil;
-import ch.elexis.core.ui.views.OrderManagementView;
+import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
 
 public class GenericOrderEditingSupport extends EditingSupport {
 

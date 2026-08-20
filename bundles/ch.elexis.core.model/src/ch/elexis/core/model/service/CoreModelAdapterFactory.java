@@ -80,7 +80,6 @@ import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
-import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.ISticker;
@@ -110,7 +109,6 @@ import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.RelatedContact;
 import ch.elexis.core.model.Reminder;
 import ch.elexis.core.model.ReminderResponsibleLink;
-import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.SickCertificate;
 import ch.elexis.core.model.TextTemplate;
@@ -226,7 +224,6 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 				ch.elexis.core.jpa.entities.Vaccination.class));
 
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
-		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
 
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
 				ch.elexis.core.jpa.entities.LabItem.class));

@@ -24,7 +24,8 @@ import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.OrderHistoryAction;
 import ch.elexis.core.model.OrderHistoryEntry;
-import ch.elexis.core.ui.util.OrderManagementUtil;
+import ch.elexis.core.services.IOrderService;
+
 
 public class HistoryDialog extends Dialog {
 
@@ -72,10 +73,10 @@ public class HistoryDialog extends Dialog {
     private IOrder order;
     private String historyContent;
 
-    public HistoryDialog(Shell parentShell, IOrder order) {
+	public HistoryDialog(Shell parentShell, IOrder order, IOrderService orderService) {
         super(parentShell);
         this.order = order;
-        this.historyContent = generateHistoryContent(order);
+		this.historyContent = generateHistoryContent(order, orderService);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class HistoryDialog extends Dialog {
         return super.getShellStyle() | SWT.RESIZE;
     }
 
-    private String generateHistoryContent(IOrder order) {
+	private String generateHistoryContent(IOrder order, IOrderService orderService) {
         if (order == null) {
 			return String.format("""
                    <html><body style="font-family: Arial;">
@@ -110,7 +111,7 @@ public class HistoryDialog extends Dialog {
 					""", Messages.HistoryDialog_NoHistoryAvailable); //$NON-NLS-1$
         }
 
-        IOutputLog logEntry = OrderManagementUtil.getOrderLogEntry(order);
+		IOutputLog logEntry = orderService.getOrderLogEntry(order);
         String jsonLog = (logEntry != null) ? logEntry.getOutputterStatus() : "[]"; //$NON-NLS-1$
 
         OrderHistoryEntry[] historyEntries;

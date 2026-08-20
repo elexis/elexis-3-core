@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -19,7 +20,10 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import ch.elexis.core.ee.OpenIdUser;
+import ch.elexis.core.ee.json.KeycloakAccessTokenJwt;
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.status.ObjectStatus;
 
 public class AccessTokenUtil {
@@ -40,11 +44,12 @@ public class AccessTokenUtil {
 
 		String accessToken = obtainAccessToken.getToken();
 		String[] accessTokenParts = accessToken.split("\\.");
-		JsonObject payload = gson.fromJson(decode(accessTokenParts[1]), JsonObject.class);
+		KeycloakAccessTokenJwt accessTokenJwt = gson.fromJson(decode(accessTokenParts[1]),
+				KeycloakAccessTokenJwt.class);
 
-		long accessTokenExp = payload.get("exp").getAsLong();
-		Date accessTokenExpirationTime = new Date(accessTokenExp * 1000);
-		String username = payload.get("preferred_username").getAsString();
+		Date issuedAtDate = new Date(accessTokenJwt.iat * 1000);
+
+		Date accessTokenExpirationTime = new Date(accessTokenJwt.exp * 1000);
 
 		String refreshToken = obtainAccessToken.getRefreshToken();
 		Date refreshTokenExpirationDate = null;
@@ -55,9 +60,38 @@ public class AccessTokenUtil {
 			refreshTokenExpirationDate = new Date(refreshTokenExp * 1000);
 		}
 
-		AccessToken keycloakAccessToken = new AccessToken(accessToken, accessTokenExpirationTime, username,
-				refreshToken, refreshTokenExpirationDate, tokenEndpoint, clientId);
+		AccessToken keycloakAccessToken = new AccessToken(accessToken, issuedAtDate, accessTokenExpirationTime,
+				accessTokenJwt.preferredUsername, refreshToken, refreshTokenExpirationDate, tokenEndpoint, clientId);
+
 		return keycloakAccessToken;
+	}
+
+	/**
+	 * Generate an {@link IUser} out of the information provided in the AccessToken.
+	 * Throws exception if token does not provide required information.
+	 * 
+	 * @param accessToken
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public static IUser validateCreateIUser(AccessToken accessToken) {
+		String _accessToken = accessToken.getToken();
+		String[] accessTokenParts = _accessToken.split("\\.");
+		KeycloakAccessTokenJwt accessTokenJwt = new Gson().fromJson(decode(accessTokenParts[1]),
+				KeycloakAccessTokenJwt.class);
+
+		String preferredUsername = accessToken.getUsername();
+		String name = accessTokenJwt.givenName;
+		String familyName = accessTokenJwt.familyName;
+		String associatedContactId = accessTokenJwt.associatedContactId;
+		Set<String> roles = Set.of(accessTokenJwt.realmAccess.roles);
+
+		if (StringUtils.isBlank(associatedContactId)) {
+			throw new IllegalArgumentException("User has no associated contact");
+		}
+
+		return new OpenIdUser(preferredUsername, name, familyName, accessToken.getTokenIssuedAt().getTime(),
+				accessToken.getAccessTokenExpiration().getTime(), associatedContactId, roles);
 	}
 
 	public static ObjectStatus<AccessToken> invokeRefresh(AccessToken accessToken, String clientSecret) {

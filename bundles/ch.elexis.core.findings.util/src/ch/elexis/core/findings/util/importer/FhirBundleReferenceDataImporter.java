@@ -47,12 +47,12 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 
 	@Override
 	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion) {
-		return performImport(ipm, input, newVersion, null);
+		return performImport(ipm, input, newVersion, null, null);
 	}
 
 	public IStatus performImport(IProgressMonitor ipm, InputStream input, Integer newVersion,
-			BiConsumer<Object, BaseResource> updateLocalObjectConsumer) {
-		if(input != null) {
+			List<String> ignoreLocalIdentifierSystems, BiConsumer<Object, BaseResource> updateLocalObjectConsumer) {
+		if (input != null) {
 			try {
 				String jsonString = IOUtils.toString(input, "UTF-8");
 				IBaseResource resource = ModelUtil.getAsResource(jsonString);
@@ -65,7 +65,8 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 							Organization fhirObject = (Organization) entryResource;
 							IFhirTransformer<Organization, IOrganization> transformer = transformerRegistry
 									.getTransformerFor(Organization.class, IOrganization.class);
-							localObject = getLocalObjectByIdentifiers(fhirObject, IOrganization.class);
+							localObject = getLocalObjectByIdentifiers(fhirObject, IOrganization.class,
+									ignoreLocalIdentifierSystems);
 							if (localObject.isEmpty()) {
 								localObject = transformer.createLocalObject(fhirObject);
 							} else {
@@ -84,23 +85,29 @@ public class FhirBundleReferenceDataImporter extends AbstractReferenceDataImport
 				return Status.OK_STATUS;
 			} catch (IOException e) {
 				LoggerFactory.getLogger(getClass()).error("Error importing FHIR bundle", e);
-			}			
+			}
 		} else {
 			LoggerFactory.getLogger(getClass()).warn("No input to import");
 		}
 		return Status.CANCEL_STATUS;
 	}
 
-	private <T> Optional<T> getLocalObjectByIdentifiers(Resource fhirObject, Class<T> clazz) {
+	private <T> Optional<T> getLocalObjectByIdentifiers(Resource fhirObject, Class<T> clazz,
+			List<String> ignoreLocalIdentifierSystems) {
 		List<Identifier> identifiers = getIdentifiersReflective(fhirObject);
 		for (Identifier identifier : identifiers) {
 			String localSystem = toLocalSystem(identifier.getSystem());
+			if (ignoreLocalIdentifierSystems != null && ignoreLocalIdentifierSystems.contains(localSystem)) {
+				continue;
+			}
 			List<T> found = xidService.findObjects(localSystem, identifier.getValue(), clazz);
 			if (!found.isEmpty()) {
 				if (found.size() > 1) {
-					LoggerFactory.getLogger(getClass()).warn("Found ["
-							+ found.stream().map(f -> ((Identifiable) f).getId()).collect(Collectors.joining(","))
-							+ "] for [" + localSystem + "|" + identifier.getValue() + "] using first.");
+					LoggerFactory.getLogger(getClass())
+							.warn("Found ["
+									+ found.stream().map(f -> ((Identifiable) f).getId())
+											.collect(Collectors.joining(","))
+									+ "] for [" + localSystem + "|" + identifier.getValue() + "] using first.");
 				}
 				return Optional.of(found.get(0));
 			}

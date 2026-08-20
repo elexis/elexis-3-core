@@ -222,6 +222,11 @@ public class MedicationService implements IMedicationService {
 		if (extInfoValue != null && !extInfoValue.isEmpty()) {
 			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_VERRECHNET_ID, extInfoValue);
 		}
+		extInfoValue = (String) prescription
+				.getExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_INDICATIONCODE);
+		if (extInfoValue != null && !extInfoValue.isEmpty()) {
+			ret.setExtInfo(ch.elexis.core.model.prescription.Constants.FLD_EXT_INDICATIONCODE, extInfoValue);
+		}
 		ret.setDateFrom(LocalDateTime.now());
 		ret.setPrescriptor(PortableServiceLoader.get(IContextService.class).getActiveUserContact().orElse(null));
 		return ret;
@@ -255,12 +260,15 @@ public class MedicationService implements IMedicationService {
 			copy.setDateTo(now);
 			copy.setRecipe(ret);
 			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(i));
+			copy.setExtInfo(Constants.FLD_EXT_INDICATIONCODE,
+					iPrescription.getExtInfo(Constants.FLD_EXT_INDICATIONCODE));
 			entries.add(copy);
 		}
 		PortableServiceLoader.getCoreModelService().save(ret);
 		PortableServiceLoader.getCoreModelService().save(entries);
 		return ret;
 	}
+
 
 	private int getNextRecipeOrder(IRecipe recipe) {
 		List<IPrescription> prescriptions = recipe.getPrescriptions();

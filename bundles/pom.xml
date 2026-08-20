@@ -5,14 +5,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>ch.elexis.core.bundles</artifactId>
-	<version>3.13.0-SNAPSHOT</version>
+	<version>3.14.0-SNAPSHOT</version>
 	<name>Elexis-Core bundles</name>
 	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>elexis-3-core</artifactId>
-		<version>3.13.0-SNAPSHOT</version>
+		<version>3.14.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -20,11 +20,13 @@
 		<org.apache.poi.version>5.5.1</org.apache.poi.version>
 		<docx4j.version>11.5.11</docx4j.version>
 		<jcifs-ng.version>2.1.10</jcifs-ng.version>
+		<hapi-fhir.version>8.6.7</hapi-fhir.version>
 	</properties>
 
 	<modules>
 		<module>ch.elexis.core</module>
 		<module>ch.elexis.core.cdi</module>
+		<module>ch.elexis.core.ee.openapi</module>
 		<module>ch.elexis.core.rcp</module>
 		<module>ch.elexis.core.test</module>
 		<module>ch.elexis.core.test.context</module>
@@ -45,6 +47,7 @@
 		<module>ch.elexis.core.eigenartikel</module>
 		<module>ch.elexis.core.eigendiagnosen</module>
 		<module>ch.elexis.core.fhir.model</module>
+		<module>ch.elexis.core.fhir.mapper.r4</module>
 		<module>ch.elexis.core.findings.fhir.model</module>
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.templates.edit</module>
@@ -55,6 +58,7 @@
 		<module>ch.elexis.core.findings.util</module>
 		<module>ch.elexis.core.findings</module>
 		<module>ch.elexis.core.hl7.v2x</module>
+		<module>ch.elexis.core.httpclient</module>
 		<module>ch.elexis.core.importer.div</module>
 		<module>ch.elexis.core.jcifs</module>
 		<module>ch.elexis.core.webdav</module>

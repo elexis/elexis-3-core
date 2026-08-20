@@ -107,7 +107,6 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.MaritalStatus;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.PatientConstants;
@@ -115,7 +114,6 @@ import ch.elexis.core.model.StickerConstants;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.Hub;
 import ch.elexis.core.ui.UiDesk;
@@ -123,9 +121,9 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
-import ch.elexis.core.ui.dialogs.DiagnoseSelektor;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
 import ch.elexis.core.ui.dialogs.KontaktExtDialog;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -235,7 +233,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	}
 
 	private ArrayList<String> lbExpandable = new ArrayList<>(Arrays.asList(Messages.Core_Diagnosis,
-			Messages.Patientenblatt2_persAnamnesisLbl, Messages.Patientenblatt2_famAnamnesisLbl, Messages.Allergies,
+			Messages.Patientenblatt2_persAnamnesisLbl,
+			Messages.Patientenblatt2_famAnamnesisLbl,
+			Messages.Allergies,
 			Messages.Patientenblatt2_risksLbl, Messages.Core_Remarks));
 	private final List<Text> txExpandable = new ArrayList<>();
 	private ArrayList<String> dfExpandable = new ArrayList<>(
@@ -267,9 +267,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private boolean bLocked = true;
 	private Composite cUserfields;
 	Hyperlink hHA;
-	private Hyperlink billingDiagnosisLink;
-	private FormText billingDiagnosisText;
+
+	private BillingDiagnosisComposite billingDiagnosisComponent;
+
 	private InputData comboGeschlecht;
+	private InputData dobField;
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
@@ -293,7 +295,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields = new ArrayList<>(20);
 		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
+		dobField = new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null); // $NON-NLS-1$
+		fields.add(dobField);
 		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
 			@Override
 			public StructuredSelection resolveStructuredSelection(String value) {
@@ -523,6 +526,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp = new InputPanel(cUserfields, COLUMNCOUNT, COLUMNCOUNT, fields.toArray(new InputData[0]));
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
+		applyInputRestrictions();
 		// cUserfields.setRedraw(true);
 		cUserfields.setBounds(ipp.getBounds());
 
@@ -534,6 +538,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			setToolTipTextListeners();
 		}
 		layout(true);
+	}
+
+	private void applyInputRestrictions() {
+		if (dobField != null && dobField.getWidget() != null && dobField.getWidget().getControl() instanceof Text) {
+			FilterFieldInputRestrictions.applyBirthdateFilterFormatting((Text) dobField.getWidget().getControl(), true);
+		}
+		if (comboGeschlecht != null && comboGeschlecht.getWidget() != null
+				&& comboGeschlecht.getWidget().getControl() instanceof Combo) {
+			FilterFieldInputRestrictions.restrictToValues((Combo) comboGeschlecht.getWidget().getControl(),
+					Messages.Patient_male_short, Messages.Patient_female_short);
+		}
 	}
 
 	Patientenblatt2(final Composite parent, final IViewSite site) {
@@ -760,32 +775,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		inpData.widthHint = CoreUiUtil.getStringExtent(hHA, hHA.getText()).x;
 		inpAdresse.setLayoutData(inpData);
 
-		billingDiagnosisLink = tk.createHyperlink(cPersonalien, Messages.Core_BillingDiagnosis, SWT.NONE); // $NON-NLS-1$
-		billingDiagnosisLink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				DiagnoseSelektor dsl = new DiagnoseSelektor(getShell());
-				if (dsl.open() == Dialog.OK) {
-					Object[] sel = dsl.getResult();
-					if (sel != null && sel.length > 0) {
-						Identifiable diagnose = (Identifiable) sel[0];
-						String storeToString = StoreToStringServiceHolder.getStoreToString(diagnose);
-						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS,
-								storeToString);
-						billingDiagnosisText.setText(diagnose.getLabel(), false, false);
-					} else {
-						actPatient.setExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS, null);
-						billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
-					}
-				}
-			}
-		});
-		billingDiagnosisLink.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
-		billingDiagnosisText = tk.createFormText(cPersonalien, false);
-		billingDiagnosisText.setText(StringUtils.EMPTY, false, false); // $NON-NLS-1$
-		inpData = SWTHelper.getFillGridData(1, true, 1, false);
-		inpData.widthHint = CoreUiUtil.getStringExtent(billingDiagnosisLink, billingDiagnosisLink.getText()).x;
-		billingDiagnosisText.setLayoutData(inpData);
+		billingDiagnosisComponent = new BillingDiagnosisComposite(cPersonalien, SWT.NONE);
+		billingDiagnosisComponent.setLayoutData(SWTHelper.getFillGridData(2, true, 1, false));
 
 		IExpansionListener ecExpansionListener = new ExpansionAdapter() {
 			@Override
@@ -823,9 +814,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					}
 				}
 			}
-			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			String titleKey = ivc.getLocalizedTitle();
+			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, titleKey);
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			// MacOs specific redraw bug workaround since 3.9
@@ -835,10 +826,12 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			// end
 			tk.adapt(ret);
 			ec.setClient(ret);
+			ec.setExpanded(true);
+			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + titleKey);
 		}
 
 		ecZA = WidgetFactory.createExpandableComposite(tk, form, Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
-		UserSettings.setExpandedState(ecZA, Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, KEY_PATIENTENBLATT + Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 
 		ecZA.addExpansionListener(ecExpansionListener);
 
@@ -925,6 +918,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		// zusatz adressen
 		compAdditionalAddresses = WidgetFactory.createExpandableComposite(tk, form,
 				Messages.Patientenblatt2_additionalAdresses); // $NON-NLS-1$
+		UserSettings.setExpandedState(compAdditionalAddresses,
+				KEY_PATIENTENBLATT + Messages.Patientenblatt2_additionalAdresses);
 		compAdditionalAddresses.addExpansionListener(ecExpansionListener);
 
 		additionalAddresses = new ListDisplay<>(compAdditionalAddresses, SWT.NONE,
@@ -970,7 +965,6 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
-			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i)); //$NON-NLS-1$
@@ -1019,23 +1013,27 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			});
 
 			ec.get(i).setClient(txExpandable.get(i));
+			ec.get(i).setExpanded(true);
+			UserSettings.setExpandedState(ec.get(i), KEY_PATIENTENBLATT + lbExpandable.get(i));
 		}
 		ecdm = WidgetFactory.createExpandableComposite(tk, form, FIXMEDIKATION);
-		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
 		ecdm.addExpansionListener(ecExpansionListener);
 		dmd = new FixMediDisplay(ecdm, site);
 		ecdm.setClient(dmd);
-
+		ecdm.setExpanded(true);
+		UserSettings.setExpandedState(ecdm, KEY_PATIENTENBLATT + FIXMEDIKATION);
 		List<IViewContribution> lContrib = ViewContributionHelper
 				.getFilteredAndPositionSortedContributions(detailComposites, 1);
 		for (IViewContribution ivc : lContrib) {
-			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, ivc.getLocalizedTitle());
+			String titleKey = ivc.getLocalizedTitle();
+			ExpandableComposite ec = WidgetFactory.createExpandableComposite(tk, form, titleKey);
 			ec.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + ec.getText());
 			ec.addExpansionListener(ecExpansionListener);
 			Composite ret = ivc.initComposite(ec);
 			tk.adapt(ret);
 			ec.setClient(ret);
+			ec.setExpanded(true);
+			UserSettings.setExpandedState(ec, KEY_PATIENTENBLATT + titleKey);
 		}
 
 		Menu popup = new Menu(photoLabel);
@@ -1204,10 +1202,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		detailComposites.forEach(dc -> dc.setDetailObject(actPatient, null));
 		buttonTabContributions.forEach(dc -> dc.setDetailObject(actPatient, null));
 
+		billingDiagnosisComponent.setPatient(NoPoUtil.loadAsIdentifiable(actPatient, IPatient.class).orElse(null));
+
 		if (actPatient == null) {
 			titleLabel.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
 			inpAdresse.setText(StringConstants.EMPTY, false, false);
-			billingDiagnosisText.setText(StringConstants.EMPTY, false, false);
 			deceasedBtn.setSelection(false);
 			palliativeCareBtn.setSelection(false);
 			inpZusatzAdresse.clear();
@@ -1301,21 +1300,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				+ StringTool.unNull(actPatient.getGeburtsdatum()) + " (" //$NON-NLS-1$
 				+ actPatient.getPatCode() + ")"); //$NON-NLS-1$
 		inpAdresse.setText(actPatient.getPostAnschrift(false), false, false);
-		if (actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS) instanceof String) {
-			java.util.Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(
-					(String) actPatient.getExtInfoStoredObjectByKey(PatientConstants.FLD_EXTINFO_BILLINGDIAGNOSIS));
-			if (diagnose.isPresent()) {
-				billingDiagnosisText.setText(diagnose.get().getLabel(), false, false);
-			}
-		} else {
-			billingDiagnosisText.setText(StringUtils.EMPTY, false, false);
-		}
-		UserSettings.setExpandedState(ecZA, "Patientenblatt/Zusatzadressen"); //$NON-NLS-1$
+		UserSettings.setExpandedState(ecZA, KEY_PATIENTENBLATT + Messages.Patientenblatt2_contactForAdditionalAddress); // $NON-NLS-1$
 		inpZusatzAdresse.clear();
 		for (BezugsKontakt za : actPatient.getBezugsKontakte()) {
 			inpZusatzAdresse.add(za);
 		}
-
+		UserSettings.setExpandedState(compAdditionalAddresses,
+				KEY_PATIENTENBLATT + Messages.Patientenblatt2_additionalAdresses);
 		additionalAddresses.clear();
 		for (ZusatzAdresse zusatzAdresse : actPatient.getZusatzAdressen()) {
 			additionalAddresses.add(zusatzAdresse);
@@ -2018,7 +2009,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp.setUnlocked(unlocked);
 		inpZusatzAdresse.setUnlocked(unlocked);
 		hHA.setEnabled(unlocked);
-		billingDiagnosisLink.setEnabled(unlocked);
+		billingDiagnosisComponent.setEnabled(unlocked);
 		// delZA.setEnabled(!bLock);
 		removeZAAction.setEnabled(unlocked);
 		removeAdditionalAddressAction.setEnabled(unlocked);
@@ -2026,10 +2017,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		dmd.setUnlocked(unlocked);
 		if (unlocked) {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
-			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_BLUE));
 		} else {
 			hHA.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
-			billingDiagnosisLink.setForeground(UiDesk.getColor(UiDesk.COL_GREY));
 		}
 	}
 

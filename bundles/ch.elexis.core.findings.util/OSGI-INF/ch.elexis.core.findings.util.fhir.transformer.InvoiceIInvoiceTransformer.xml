@@ -3,7 +3,7 @@
    <service>
       <provide interface="ch.elexis.core.findings.util.fhir.IFhirTransformer"/>
    </service>
-   <reference cardinality="1..1" field="chargeItemTransformer" interface="ch.elexis.core.findings.util.fhir.IFhirTransformer" name="chargeItemTransformer" target="(transformer.id=ChargeItem.IBilled)"/>
+   <reference cardinality="1..1" field="chargeItemTransformer" interface="ch.elexis.core.findings.util.fhir.transformer.ChargeItemIBilledTransformer" name="chargeItemTransformer"/>
    <reference cardinality="1..1" field="coreModelService" interface="ch.elexis.core.services.IModelService" name="coreModelService" target="(service.model.name=ch.elexis.core.model)"/>
    <implementation class="ch.elexis.core.findings.util.fhir.transformer.InvoiceIInvoiceTransformer"/>
 </scr:component>

@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.application.feature"
       label="Elexis OpenSource Application Feature"
-      version="3.13.0.qualifier"
+      version="3.14.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -846,6 +846,14 @@
 
    <plugin
          id="org.freemarker.freemarker"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.commons-net"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.jsoup"
          version="0.0.0"/>
 
 </feature>
