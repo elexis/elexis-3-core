@@ -52,6 +52,7 @@ public class AufPrintListHandler extends AbstractHandler {
 			GenericPrintDialog gpl = new GenericPrintDialog(activeShell, Messages.AUF_LISTE, Messages.AUF_LISTE);
 			gpl.create();
 			gpl.insertTable(PLACEHOLDER, aufData, null);
+			gpl.save();
 			gpl.open();
 		} else {
 			MessageDialog.openInformation(activeShell, Messages.INFORMATION, Messages.AUF_No_List);
