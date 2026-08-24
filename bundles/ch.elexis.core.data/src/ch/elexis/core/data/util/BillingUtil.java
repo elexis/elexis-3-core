@@ -14,6 +14,7 @@ import static ch.elexis.core.constants.XidConstants.DOMAIN_AHV;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -607,7 +608,31 @@ public class BillingUtil {
 					}
 					return null;
 				}
-			} };
+			}, new IBillableCheck() {
+				@Override
+				public boolean isBillable(Konsultation konsultation, Result<Konsultation> result) {
+					IEncounter encounter = NoPoUtil.loadAsIdentifiable(konsultation, IEncounter.class).orElse(null);
+					if (encounter.getDate() != null) {
+						if (encounter.getDate().isAfter(LocalDate.now())) {
+							result.add(SEVERITY.ERROR, CODE_ERROR, "Konsultation Datum in der Zukunft", konsultation,
+									false);
+							return false;
+						}
+					}
+					return true;
+				}
+
+				@Override
+				public String getId() {
+					return "futureDate";
+				}
+
+				@Override
+				public String getDescription() {
+					return "Datum in der Zukunft";
+				}
+			}
+	};
 
 	private static String getSSN(IPerson p) {
 		IXid ahv = p.getXid(DOMAIN_AHV);
