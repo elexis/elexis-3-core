@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,6 +36,7 @@ import ch.elexis.core.model.MimeType;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.ui.contacts.views.util.FaceDetectionUtil;
 import ch.elexis.core.ui.contacts.views.util.ImageDataFactory;
+import ch.elexis.core.ui.contacts.views.util.MacOSCameraSupport;
 
 /**
  * Dialog for capturing a patient photo from a webcam device. Displays live
@@ -58,6 +60,7 @@ public class PatientCameraCaptureDialog {
 	private volatile Rectangle liveFaceRect = null;
 	private static final int FRAME_DELAY_MS = 33; // ~30 FPS
 	private static final int CAMERA_COUNT_POLL_INTERVAL_MS = 40;
+	private static final int CAMERA_SCAN_LIMIT = 6;
 
 	public byte[] openAndCaptureImage(Shell parentShell) {
 		Shell realParent = (parentShell != null ? parentShell : Display.getDefault().getActiveShell());
@@ -173,6 +176,8 @@ public class PatientCameraCaptureDialog {
 
 			stopGrabberQuietly();
 
+			final AtomicBoolean grabFailureLogged = new AtomicBoolean(false);
+
 			CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
 				try {
 					grabber = createGrabber(cameraIndex);
@@ -214,7 +219,13 @@ public class PatientCameraCaptureDialog {
 							}
 						}
 						Thread.sleep(FRAME_DELAY_MS);
-					} catch (Exception ignored) {
+					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
+						break;
+					} catch (Exception ex) {
+						if (grabFailureLogged.compareAndSet(false, true)) {
+							logger.debug("Camera frame could not be processed: {}", ex.getMessage(), ex);
+						}
 					}
 				}
 
@@ -228,8 +239,12 @@ public class PatientCameraCaptureDialog {
 
 			int cameraCount = cachedCameraCount != null ? cachedCameraCount : 0;
 			if (cameraCount == 0) {
-				logger.warn("No camera found on this system.");
-				showError(shell, Messages.PatientCameraCaptureDialog_NoCameraFound);
+				if (MacOSCameraSupport.isCameraAccessDenied()) {
+					showError(shell, Messages.PatientCameraCaptureDialog_CameraAccessDenied);
+				} else {
+					logger.warn("No camera found on this system.");
+					showError(shell, Messages.PatientCameraCaptureDialog_NoCameraFound);
+				}
 				camCombo.setEnabled(false);
 				chkDefault.setEnabled(false);
 				btnCapture.setEnabled(false);
@@ -269,25 +284,9 @@ public class PatientCameraCaptureDialog {
 			camCombo.addListener(SWT.Selection, e -> display.asyncExec(startGrabber));
 		};
 
-		if (cachedCameraCount != null) {
-			display.asyncExec(afterCount);
-		} else {
-			CompletableFuture.runAsync(() -> {
-				if (cameraCountingInProgress()) {
-					while (cachedCameraCount == null) {
-						try {
-							Thread.sleep(CAMERA_COUNT_POLL_INTERVAL_MS);
-						} catch (InterruptedException ignored) {
-						}
-					}
-				} else {
-					setCameraCountingInProgress(true);
-					int count = getCameraCount();
-					cachedCameraCount = count;
-					setCameraCountingInProgress(false);
-				}
-			}).thenRunAsync(() -> display.asyncExec(afterCount));
-		}
+		MacOSCameraSupport.ensureCameraAccess(display);
+
+		resolveCameraCount(display, afterCount);
 
 		btnCapture.addListener(SWT.MouseUp, e -> {
 			if (e.button == 1) {
@@ -371,49 +370,95 @@ public class PatientCameraCaptureDialog {
 		}
 	}
 
-	private int getCameraCount() {
+	private static int countCameras() {
 		try {
 			if (System.getProperty("os.name").toLowerCase().contains("win")) {
 				String[] names = VideoInputFrameGrabber.getDeviceDescriptions();
 				cachedCameraNames = names;
 				return (names != null) ? names.length : 0;
-			} else {
-				return (cachedCameraNames != null) ? cachedCameraNames.length : 0;
 			}
+			return probeCameras();
 		} catch (Exception e) {
 			logger.warn("Could not read camera device descriptions: {}", e.getMessage(), e);
 			return 0;
 		}
 	}
 
+	private static int probeCameras() {
+		int count = 0;
+		String[] names = new String[CAMERA_SCAN_LIMIT];
+		while (count < CAMERA_SCAN_LIMIT) {
+			try (var g = new OpenCVFrameGrabber(count)) {
+				g.start();
+				g.grab();
+				g.stop();
+				names[count] = Messages.PatientCameraCaptureDialog_DeviceName + (count + 1);
+				count++;
+			} catch (Exception e) {
+				logger.debug("Camera probe stopped at index {}: {}", Integer.valueOf(count), e.getMessage());
+				break;
+			}
+		}
+		cachedCameraNames = new String[count];
+		System.arraycopy(names, 0, cachedCameraNames, 0, count);
+		return count;
+	}
+
 	public static void initCameraCacheAsync(Display display) {
 		if (cachedCameraCount != null || cameraCountingInProgress())
 			return;
+		if (MacOSCameraSupport.isMacOS()) {
+			return;
+		}
 		setCameraCountingInProgress(true);
 		CompletableFuture.runAsync(() -> {
-			int count = 0, maxTry = 6;
-			String[] names = new String[maxTry];
-			while (count < maxTry) {
-				try (var g = new OpenCVFrameGrabber(count)) {
-					g.start();
-					g.grab();
-					g.stop();
-					names[count] = Messages.PatientCameraCaptureDialog_DeviceName + (count + 1);
-					count++;
-				} catch (Exception e) {
-					LoggerFactory.getLogger(PatientCameraCaptureDialog.class).warn("initCameraCacheAsync() ", e);
-					break;
-				}
+			try {
+				cachedCameraCount = Integer.valueOf(probeCameras());
+			} finally {
+				setCameraCountingInProgress(false);
 			}
-			cachedCameraCount = count;
-			cachedCameraNames = new String[count];
-			System.arraycopy(names, 0, cachedCameraNames, 0, count);
-			setCameraCountingInProgress(false);
 		}).thenRunAsync(() -> {
 			if (display != null && !display.isDisposed()) {
 				display.asyncExec(() -> logger.info("Camera cache loaded: {} devices.", cachedCameraCount));
 			}
 		});
+	}
+
+	private static boolean cameraCountUnknown() {
+		Integer count = cachedCameraCount;
+		return count == null || count.intValue() == 0;
+	}
+
+	private static void resolveCameraCount(Display display, Runnable afterCount) {
+		if (!cameraCountUnknown()) {
+			display.asyncExec(afterCount);
+			return;
+		}
+		CompletableFuture.runAsync(() -> {
+			if (cameraCountingInProgress()) {
+				while (cameraCountingInProgress()) {
+					if (!sleepBetweenPolls())
+						break;
+				}
+			} else {
+				setCameraCountingInProgress(true);
+				try {
+					cachedCameraCount = Integer.valueOf(countCameras());
+				} finally {
+					setCameraCountingInProgress(false);
+				}
+			}
+		}).thenRunAsync(() -> display.asyncExec(afterCount));
+	}
+
+	private static boolean sleepBetweenPolls() {
+		try {
+			Thread.sleep(CAMERA_COUNT_POLL_INTERVAL_MS);
+			return true;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		}
 	}
 
 	private static volatile boolean cameraCountingFlag = false;
