@@ -6,6 +6,7 @@ import org.osgi.framework.BundleContext;
 
 import ch.elexis.core.ui.contacts.dialogs.PatientCameraCaptureDialog;
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
+import ch.elexis.core.ui.contacts.views.util.MacOSCameraSupport;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -36,6 +37,7 @@ public class Activator extends AbstractUIPlugin {
 
 		// Initialize geonames content proposal
 		ContactGeonamesExtensionPoint.init();
+		MacOSCameraSupport.disableOpenCvAuthRequest();
 		PatientCameraCaptureDialog.initCameraCacheAsync(Display.getDefault());
 	}
 
