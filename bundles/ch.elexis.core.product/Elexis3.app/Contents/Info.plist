@@ -26,6 +26,8 @@
 		<string>3.0.0.v20131220-1153</string>
 	<key>NSHighResolutionCapable</key>
 		<true/>
+	<key>NSCameraUsageDescription</key>
+		<string>Elexis benötigt Zugriff auf die Kamera, um Patientenfotos aufzunehmen.</string>
 	<key>CFBundleDevelopmentRegion</key>
 		<string>English</string>
 	<key>CFBundleLocalizations</key>

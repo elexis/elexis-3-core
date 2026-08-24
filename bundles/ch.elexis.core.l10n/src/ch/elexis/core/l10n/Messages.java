@@ -5216,6 +5216,7 @@ public class Messages extends NLS {
 	public static String PatientCameraCaptureDialog_CaptureButtonText;
 	public static String PatientCameraCaptureDialog_CameraErrorTitle;
 	public static String PatientCameraCaptureDialog_NoCameraFound;
+	public static String PatientCameraCaptureDialog_CameraAccessDenied;
 	public static String PatientCameraCaptureDialog_DeviceName;
 	public static String PatientCameraCaptureDialog_NoFaceDetected;
 	public static String PatientCameraCaptureDialog_SaveError;
