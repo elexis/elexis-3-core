@@ -52,6 +52,23 @@ public class TextUtil {
 	}
 
 	/**
+	 * Test if an {@link IObservation} represents a social anamnesis.
+	 *
+	 * @param iFinding
+	 * @return
+	 */
+	public static boolean isSocialAnamnese(IObservation iFinding) {
+		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
+			for (ICoding code : iFinding.getCoding()) {
+				if (ObservationCode.ANAM_SOCIAL.isSame(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Get text representation of an {@link ICondition}.
 	 *
 	 * @param condition
@@ -105,8 +122,13 @@ public class TextUtil {
 	 * @return
 	 */
 	public static String getText(IObservation observation, ICodingService codingService) {
-		if (isPersAnamnese(observation) || isRiskfactor(observation)) {
-			return observation.getText().orElse(StringUtils.EMPTY);
+		StringBuilder sb = new StringBuilder();
+		if (isPersAnamnese(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
+		} else if (isSocialAnamnese(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
+		} else if (isRiskfactor(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
 		}
 		return StringUtils.EMPTY;
 	}
