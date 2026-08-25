@@ -23,6 +23,11 @@
             type="ch.elexis.data.Patient">
       </TextPlaceHolder>
       <TextPlaceHolder
+            name="SozialAnamnese"
+            resolver="ch.elexis.core.findings.fhir.po.text.SocialAnamnesisResolver"
+            type="ch.elexis.data.Patient">
+      </TextPlaceHolder>
+      <TextPlaceHolder
             name="Allergien"
             resolver="ch.elexis.core.findings.fhir.po.text.AllergiesResolver"
             type="ch.elexis.data.Patient">
