@@ -136,6 +136,11 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	public List<IMandator> findAllExecutiveDoctors() {
+		return modelService.getQuery(IMandator.class).execute();
+	}
+
+	@Override
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact) {
 		String defaultMandatorId = (String) contact.getExtInfo("StdMandant");
 		if (StringUtils.isNotEmpty(defaultMandatorId)) {
