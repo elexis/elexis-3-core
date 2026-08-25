@@ -32,6 +32,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -112,6 +113,14 @@ public class KonsListe extends ViewPart implements IRefreshable {
 			restart(false);
 			actEncounter = iEncounter;
 		} else if (iEncounter != null && iEncounter.isDeleted()) {
+			restart(false);
+		}
+	}
+
+	@Optional
+	@Inject
+	void activeMandator(IMandator mandator) {
+		if (ConfigServiceHolder.getUser(Preferences.USR_KONSLIST_FILTERMANDATOR, false)) {
 			restart(false);
 		}
 	}
