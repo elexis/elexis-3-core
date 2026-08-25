@@ -135,7 +135,8 @@ public class DocumentLetterUtil {
 			IVirtualFilesystemHandle externalStoragePath, IDocumentLetter documentLetter) throws IOException {
 		IVirtualFilesystemHandle systemSubDir = externalStoragePath.subDir("system");
 		IVirtualFilesystemHandle typedSystemSubDir = null;
-		String _systemSubDir = documentLetter.getCategory().getName();
+		String _systemSubDir = documentLetter.getCategory() != null ? documentLetter.getCategory().getName()
+				: StringUtils.EMPTY;
 		if (StringUtils.isNotBlank(_systemSubDir)) {
 			// replace any character that isn't a number, letter or underscore with nothing
 			_systemSubDir = _systemSubDir.replaceAll("\\W+", "").toLowerCase();
