@@ -565,6 +565,7 @@ public class Messages extends NLS {
 	public static String BriefAuswahlCreateNewDocument;
 	public static String BriefAuswahlDeleteConfirmText;
 	public static String BriefAuswahlLoadButtonText;
+	public static String BriefAuswahlLoadMoreButtonText;
 	public static String BriefAuswahlNewSubjectHeading;
 	public static String BriefAuswahlNewSubjectText;
 	public static String BriefAuswahlNotAllowedToRunStresstess;
