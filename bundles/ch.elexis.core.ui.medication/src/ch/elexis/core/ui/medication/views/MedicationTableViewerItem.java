@@ -345,13 +345,6 @@ public class MedicationTableViewerItem {
 			}
 		}
 
-		private void resolveInteractionImage() {
-			if (item.interactionUi != null) {
-				item.interactionImage = item.interactionUi.getImage(item.getPrescription());
-				item.interactionText = item.interactionUi.getText(item.getPrescription());
-			}
-		}
-
 		private void resolveLastDisposed() {
 			IRecipe recipe = item.prescription.getRecipe();
 			IBilled billed = item.prescription.getBilled();
