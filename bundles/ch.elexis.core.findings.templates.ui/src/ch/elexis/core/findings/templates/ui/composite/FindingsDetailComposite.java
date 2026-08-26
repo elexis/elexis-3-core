@@ -46,7 +46,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import ch.elexis.core.data.interfaces.ICodeElement;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.findings.codes.CodingSystem;
-import ch.elexis.core.findings.codes.TransientCoding;
+import ch.elexis.core.findings.model.TransientCoding;
 import ch.elexis.core.findings.templates.model.CodeElement;
 import ch.elexis.core.findings.templates.model.DataType;
 import ch.elexis.core.findings.templates.model.FindingsTemplate;

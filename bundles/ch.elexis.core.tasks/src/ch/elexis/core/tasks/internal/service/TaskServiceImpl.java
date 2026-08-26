@@ -9,11 +9,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.osgi.service.component.annotations.Component;
@@ -136,7 +140,22 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Deactivate
-	private void deactivateComponent() {
+	protected void deactivateComponent() {
+		if (fileSystemChangeWatcher != null) {
+			fileSystemChangeWatcher.stopPolling();
+		}
+
+		parallelExecutorService.shutdown();
+		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
+
+		if (quartzExecutor != null) {
+			try {
+				quartzExecutor.shutdown();
+				quartzExecutor = null;
+			} catch (SchedulerException e) {
+				logger.warn("Error stopping quartz scheduler", e);
+			}
+		}
 
 		List<ITask> runningTasks = getRunningTasks();
 		long start = System.currentTimeMillis();
@@ -157,22 +176,6 @@ public class TaskServiceImpl implements ITaskService {
 		}
 
 		getRunningTasks().forEach(task -> logger.warn("Could not gracefully stop task " + task.getLabel()));
-
-		if (quartzExecutor != null) {
-			try {
-				quartzExecutor.shutdown();
-				quartzExecutor = null;
-			} catch (SchedulerException e) {
-				logger.warn("Error stopping quartz scheduler", e);
-			}
-		}
-
-		parallelExecutorService.shutdown();
-		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
-
-		if (fileSystemChangeWatcher != null) {
-			fileSystemChangeWatcher.stopPolling();
-		}
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (taskDescriptor != null && !taskDescriptor.isDeleted() && taskDescriptor.isActive()) {
 			String runner = taskDescriptor.getRunner();
 			if (StringUtils.isNotBlank(runner)) {
-				return StringUtils.equalsIgnoreCase(runner, contextService.getStationIdentifier());
+				return Strings.CI.equals(runner, contextService.getStationIdentifier());
 			}
 			return true;
 		}
@@ -548,7 +551,9 @@ public class TaskServiceImpl implements ITaskService {
 					// singleton tasks/runnables must not run in multiple instances in parallel
 					// hence we hold a separate thread for each of them
 					if (!perRunnableSingletonExecutorService.containsKey(identifiedRunnableId)) {
-						ExecutorService executorService = Executors.newSingleThreadExecutor();
+						// Do NOT accept more than 10 tasks in the queue
+						ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+								new ArrayBlockingQueue<>(10));
 						perRunnableSingletonExecutorService.put(identifiedRunnableId, executorService);
 					}
 					ExecutorService executorService = perRunnableSingletonExecutorService.get(identifiedRunnableId);

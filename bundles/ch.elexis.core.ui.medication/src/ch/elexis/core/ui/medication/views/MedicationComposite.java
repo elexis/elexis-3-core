@@ -1,5 +1,9 @@
 package ch.elexis.core.ui.medication.views;
 
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS;
+import static ch.elexis.core.ui.constants.ExtensionPointConstantsUi.VIEWCONTRIBUTION_VIEWID;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,6 +66,7 @@ import org.eclipse.ui.commands.ICommandService;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IPatient;
@@ -82,6 +87,8 @@ import ch.elexis.core.ui.medication.views.provider.MedicationFilter;
 import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 import ch.elexis.core.ui.util.GenericObjectDragSource;
 import ch.elexis.core.ui.util.GenericObjectDropTarget;
+import ch.elexis.core.ui.views.contribution.IViewContribution;
+import ch.elexis.core.ui.views.contribution.ViewContributionHelper;
 import ch.elexis.core.ui.views.controls.InteractionLink;
 
 public class MedicationComposite extends Composite implements ISelectionProvider, ISelectionChangedListener {
@@ -141,6 +148,10 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 	private InteractionLink interactionLink;
 
 	private ViewerSortOrder sortOrder;
+
+	@SuppressWarnings("unchecked")
+	private final List<IViewContribution> detailComposites = Extensions.getClasses(VIEWCONTRIBUTION,
+			VIEWCONTRIBUTION_CLASS, VIEWCONTRIBUTION_VIEWID, MedicationComposite.class.getName());
 
 	/**
 	 * Create the composite.
@@ -677,6 +688,25 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			}
 		});
 
+		List<IViewContribution> filtered = ViewContributionHelper
+				.getFilteredAndPositionSortedContributions(detailComposites, 0);
+		filtered.forEach(vc -> {
+			Composite contributionComposite = vc.initComposite(compositeMedicationDetail);
+			contributionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 7, 1));
+		});
+		compositeMedicationDetail.layout();
+
+		selectedMedication.addChangeListener(new IChangeListener() {
+			@Override
+			public void handleChange(ChangeEvent event) {
+				MedicationTableViewerItem value = selectedMedication.getValue();
+				if (value != null && value.getPrescription() != null) {
+					detailComposites.forEach(dc -> dc.setDetailObject(value.getPrescription(), null));
+				} else {
+					detailComposites.forEach(dc -> dc.setDetailObject(null, null));
+				}
+			}
+		});
 	}
 
 	private void applyDetailChanges() {

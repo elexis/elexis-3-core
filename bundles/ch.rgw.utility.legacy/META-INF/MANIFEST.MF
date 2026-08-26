@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Legacy artifacts from ch.rgw.utility
 Bundle-SymbolicName: ch.rgw.utility.legacy;singleton:=true
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Export-Package: ch.rgw.io,
  ch.rgw.tools
 Import-Package: org.apache.commons.codec;version="[1.16.0,2.0.0)",

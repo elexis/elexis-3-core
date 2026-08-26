@@ -30,6 +30,7 @@ public class FindingsDataAccessor implements IDataAccess {
 	public static final String FINDINGS_PATIENT_ALLERGIES = "Patient Allergien";
 	public static final String FINDINGS_PATIENT_FAMANAM = "Patient FamAnam";
 	public static final String FINDINGS_PATIENT_RISK = "Patient Risk";
+	public static final String FINDINGS_PATIENT_SOCANAM = "Patient SozialAnam";
 
 	private IFindingsService findingsService;
 	private ICodingService codingService;
@@ -40,6 +41,8 @@ public class FindingsDataAccessor implements IDataAccess {
 					"[Befunde:-:-:" + FINDINGS_PATIENT_DIAGNOSIS + "]", null, 0),
 			new Element(IDataAccess.TYPE.STRING, FINDINGS_PATIENT_PERSANAM,
 					"[Befunde:-:-:" + FINDINGS_PATIENT_PERSANAM + "]", null, 0),
+			new Element(IDataAccess.TYPE.STRING, FINDINGS_PATIENT_SOCANAM,
+					"[Befunde:-:-:" + FINDINGS_PATIENT_SOCANAM + "]", null, 0),
 			new Element(IDataAccess.TYPE.STRING, FINDINGS_PATIENT_ALLERGIES,
 					"[Befunde:-:-:" + FINDINGS_PATIENT_ALLERGIES + "]", null, 0),
 			new Element(IDataAccess.TYPE.STRING, FINDINGS_PATIENT_FAMANAM,
@@ -108,6 +111,8 @@ public class FindingsDataAccessor implements IDataAccess {
 				result = getFamAnamText(patient);
 			} else if (FINDINGS_PATIENT_RISK.equalsIgnoreCase(descriptor)) {
 				result = getRisk(patient);
+			} else if (FINDINGS_PATIENT_SOCANAM.equalsIgnoreCase(descriptor)) {
+				result = getSocialAnamText(patient);
 			}
 		}
 		return result;
@@ -156,6 +161,20 @@ public class FindingsDataAccessor implements IDataAccess {
 	private Result<Object> getPersAnamText(Patient patient) {
 		List<IObservation> observations = findingsService.getPatientsFindings(patient.getId(), IObservation.class);
 		observations = observations.parallelStream().filter(iFinding -> TextUtil.isPersAnamnese(iFinding))
+				.collect(Collectors.toList());
+		StringBuilder sb = new StringBuilder();
+		observations.stream().forEach(observation -> {
+			if (sb.length() > 0) {
+				sb.append(StringUtils.LF);
+			}
+			sb.append(TextUtil.getText(observation, codingService));
+		});
+		return new Result<>(sb.toString());
+	}
+
+	private Result<Object> getSocialAnamText(Patient patient) {
+		List<IObservation> observations = findingsService.getPatientsFindings(patient.getId(), IObservation.class);
+		observations = observations.parallelStream().filter(iFinding -> TextUtil.isSocialAnamnese(iFinding))
 				.collect(Collectors.toList());
 		StringBuilder sb = new StringBuilder();
 		observations.stream().forEach(observation -> {

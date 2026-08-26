@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
@@ -20,6 +21,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.common.InstanceStatus;
@@ -31,7 +33,6 @@ import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.server.IEventService;
 import ch.elexis.core.server.IInstanceService;
 import ch.elexis.core.server.ILockService;
@@ -78,7 +79,7 @@ public class ElexisServerService implements IElexisServerService {
 
 	@Activate
 	public void activate() {
-		if (StringUtils.equals(contextService.getStationIdentifier(), IElexisEnvironmentService.ES_STATION_ID_DEFAULT)
+		if (Strings.CI.equals(contextService.getStationIdentifier(), IElexisEnvironmentService.ES_STATION_ID_DEFAULT)
 				&& !(CoreUtil.isTestMode() && System
 						.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL) != null)) {
 			// this is ES do not activate
@@ -120,7 +121,7 @@ public class ElexisServerService implements IElexisServerService {
 		// can be set by ch.elexis.core.services.eenv.ElexisEnvironmentServiceActivator
 		// or ch.medelexis.application.license.internal.LicenseManager or vmargs
 		restUrl = System.getProperty(ElexisSystemPropertyConstants.ELEXIS_SERVER_REST_INTERFACE_URL);
-		if (StringUtils.equals(restUrl, "disconnected")) {
+		if (Strings.CI.equals(restUrl, "disconnected")) {
 			// administratively disconnected - i.e. standalone
 			standalone = true;
 			connectionStatus = ConnectionStatus.STANDALONE;
@@ -140,13 +141,13 @@ public class ElexisServerService implements IElexisServerService {
 		}
 		if (restUrl == null) {
 			// Auto-Config via EE OR Standalone
-			Optional<IElexisEnvironmentService> eeService = OsgiServiceUtil.getService(IElexisEnvironmentService.class);
+			Optional<IElexisEnvironmentService> eeService = PortableServiceLoader
+					.getOptional(IElexisEnvironmentService.class);
 			if (eeService.isPresent()) {
 				connectionStatus = ConnectionStatus.LOCAL;
 				restUrl = eeService.get().getBaseUrl() + "/services";
 				lockServiceAdministrativelyDisabled = !eeService.get().getWellKnownRcp().config.enableLockService;
 				log.info("Bound to ES via EE " + restUrl);
-				OsgiServiceUtil.ungetService(eeService.get());
 				return;
 			}
 		}
@@ -172,6 +173,7 @@ public class ElexisServerService implements IElexisServerService {
 		instanceStatus.setState(InstanceStatus.STATE.ACTIVE);
 		instanceStatus.setUuid(getSystemUuid().toString());
 		instanceStatus.setVersion(Elexis.VERSION);
+		instanceStatus.setSystemTime(System.currentTimeMillis());
 		instanceStatus.setOperatingSystem(System.getProperty("os.name") + "/" + System.getProperty("os.version") + "/"
 				+ System.getProperty("os.arch") + "/J" + System.getProperty("java.version"));
 		String identId = configService.getLocal(Preferences.STATION_IDENT_ID, StringUtils.EMPTY);

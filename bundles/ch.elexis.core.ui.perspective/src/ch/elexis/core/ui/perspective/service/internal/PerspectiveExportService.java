@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.ui.compatibility.ElexisFastViewUtil;
 import ch.elexis.core.ui.perspective.service.IPerspectiveExportService;
 
@@ -59,60 +60,72 @@ public class PerspectiveExportService implements IPerspectiveExportService {
 		return clone;
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void exportPerspective(String pathToExport, String newCode, String newLabel) throws IOException {
-
 		try (OutputStream outputStream = new FileOutputStream(pathToExport)) {
-			EModelService modelService = getService(EModelService.class);
-
-			MApplication mApplication = getService(MApplication.class);
-			MTrimmedWindow window = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
-			if (window == null) {
-				List<MWindow> windows = mApplication.getChildren();
-				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
-					window = (MTrimmedWindow) windows.get(0);
-				}
-			}
-
-			// store model of the active perspective
-			MPerspective activePerspective = modelService.getActivePerspective(window);
-
-			// create a resource, which is able to store e4 model elements
-			E4XMIResourceFactory e4xmiResourceFactory = new E4XMIResourceFactory();
-			Resource resource = e4xmiResourceFactory.createResource(null);
-
-			// clone the perspective and replace the placeholder ref with element ids of
-			// their content
-			MPerspective clone = clonePerspectiveWithWorkaround(modelService, activePerspective);
-
-			if (newLabel != null) {
-				clone.setLabel(newLabel);
-			}
-
-			if (newCode != null) {
-				clone.setElementId(newCode);
-			}
-
-			List<MPlaceholder> placeholderClones = modelService.findElements(clone, null, MPlaceholder.class, null,
-					EModelService.IN_ANY_PERSPECTIVE);
-			for (MPlaceholder placeholder : placeholderClones) {
-				/*
-				 * MUIElement ref = placeholder.getRef(); if placeholder elementid is not the
-				 * view id then use tags if (ref != null &&
-				 * !placeholder.getTags().contains(ref.getElementId())) {
-				 * placeholder.getTags().add(0, ref.getElementId()); }
-				 */
-				placeholder.setRef(null);
-			}
-
-			ElexisFastViewUtil.transferFastViewPersistedState(window, clone);
-
-			// add the cloned model element to the resource so that it may be stored
-			resource.getContents().add((EObject) clone);
-
-			resource.save(outputStream, null);
+			exportPerspecitve(outputStream, newCode, newLabel);
 		}
 	}
 
+	@Override
+	public void exportPerspective(IVirtualFilesystemHandle handleToExport, String newCode, String newLabel)
+			throws IOException {
+		try (OutputStream out = handleToExport.openOutputStream()) {
+			exportPerspecitve(out, newCode, newLabel);
+		}
+	}
+
+	@SuppressWarnings("restriction")
+	private void exportPerspecitve(OutputStream outputStream, String newCode, String newLabel) throws IOException {
+
+		EModelService modelService = getService(EModelService.class);
+
+		MApplication mApplication = getService(MApplication.class);
+		MTrimmedWindow window = (MTrimmedWindow) modelService.find("IDEWindow", mApplication); //$NON-NLS-1$
+		if (window == null) {
+			List<MWindow> windows = mApplication.getChildren();
+			if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
+				window = (MTrimmedWindow) windows.get(0);
+			}
+		}
+
+		// store model of the active perspective
+		MPerspective activePerspective = modelService.getActivePerspective(window);
+
+		// create a resource, which is able to store e4 model elements
+		E4XMIResourceFactory e4xmiResourceFactory = new E4XMIResourceFactory();
+		Resource resource = e4xmiResourceFactory.createResource(null);
+
+		// clone the perspective and replace the placeholder ref with element ids of
+		// their content
+		MPerspective clone = clonePerspectiveWithWorkaround(modelService, activePerspective);
+
+		if (newLabel != null) {
+			clone.setLabel(newLabel);
+		}
+
+		if (newCode != null) {
+			clone.setElementId(newCode);
+		}
+
+		List<MPlaceholder> placeholderClones = modelService.findElements(clone, null, MPlaceholder.class, null,
+				EModelService.IN_ANY_PERSPECTIVE);
+		for (MPlaceholder placeholder : placeholderClones) {
+			/*
+			 * MUIElement ref = placeholder.getRef(); if placeholder elementid is not the
+			 * view id then use tags if (ref != null &&
+			 * !placeholder.getTags().contains(ref.getElementId())) {
+			 * placeholder.getTags().add(0, ref.getElementId()); }
+			 */
+			placeholder.setRef(null);
+		}
+
+		ElexisFastViewUtil.transferFastViewPersistedState(window, clone);
+
+		// add the cloned model element to the resource so that it may be stored
+		resource.getContents().add((EObject) clone);
+
+		resource.save(outputStream, null);
+	
+	}
 }

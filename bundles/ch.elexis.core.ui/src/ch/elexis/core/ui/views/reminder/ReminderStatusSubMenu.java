@@ -14,6 +14,7 @@ import org.eclipse.swt.SWT;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.Reminder;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.issue.ProcessStatus;
@@ -22,6 +23,7 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.locks.LockRequestingAction;
 import ch.elexis.core.ui.util.viewers.CommonViewer;
+import ch.elexis.data.PersistentObject;
 
 public class ReminderStatusSubMenu extends MenuManager {
 
@@ -55,6 +57,10 @@ public class ReminderStatusSubMenu extends MenuManager {
 				Object[] selection = legacyViewer.getSelection();
 				if (selection != null && selection.length == 1) {
 					selectedElement = selection[0];
+					if (selectedElement instanceof PersistentObject) {
+						selectedElement = NoPoUtil.loadAsIdentifiable((PersistentObject) selectedElement,
+								IReminder.class).orElse(null);
+					}
 				}
 			} else if (e4Viewer != null) {
 				ISelection sel = e4Viewer.getSelection();

@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: ch.elexis.core.importer.div
 Bundle-Name: Shared importer data
 Bundle-SymbolicName: ch.elexis.core.importer.div
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: elexis.info
 Require-Bundle: ch.elexis.core.l10n;bundle-version="3.10.0",
  ch.rgw.utility;bundle-version="3.13.0",
- ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core;bundle-version="3.14.0",
  ch.elexis.core.cdi;bundle-version="3.13.0",
  ch.elexis.core.tasks.model;bundle-version="3.13.0",
  ch.elexis.core.hl7.v2x;bundle-version="3.13.0",

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.bundles</artifactId>
-		<version>3.13.0-SNAPSHOT</version>
+		<version>3.14.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core.findings.util</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -54,6 +54,11 @@
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.services</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core.fhir.mapper.r4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

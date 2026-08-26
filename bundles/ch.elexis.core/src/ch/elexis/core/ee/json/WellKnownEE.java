@@ -1,5 +1,7 @@
 package ch.elexis.core.ee.json;
 
+import java.beans.Transient;
+
 import com.google.gson.annotations.SerializedName;
 
 public class WellKnownEE {
@@ -26,5 +28,10 @@ public class WellKnownEE {
 
 		@SerializedName("organisation-name")
 		public String organisationName;
+
+		@Transient
+		public String getFormattedOrganisationName() {
+			return organisationName.replaceAll("__", " ");
+		}
 	}
 }

@@ -23,6 +23,7 @@ public class InstanceStatus {
 	private Date firstSeen;
 	private Date lastUpdate;
 	private String remoteAddress;
+	private long systemTime;
 
 	public String getUuid() {
 		return uuid;
@@ -94,6 +95,14 @@ public class InstanceStatus {
 
 	public void setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
+	}
+
+	public long getSystemTime() {
+		return systemTime;
+	}
+
+	public void setSystemTime(long systemTime) {
+		this.systemTime = systemTime;
 	}
 
 	@Override

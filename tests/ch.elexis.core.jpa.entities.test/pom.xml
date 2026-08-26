@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ch.elexis.core</groupId>
 		<artifactId>ch.elexis.core.tests</artifactId>
-		<version>3.13.0-SNAPSHOT</version>
+		<version>3.14.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>ch.elexis.core.jpa.entities.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
@@ -43,11 +43,6 @@
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>javax.transaction</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.eclipse.persistence.oracle</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
 							<requirement>

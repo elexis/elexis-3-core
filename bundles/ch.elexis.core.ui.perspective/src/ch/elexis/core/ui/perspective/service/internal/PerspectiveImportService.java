@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.e4.ui.internal.workbench.E4XMIResourceFactory;
 import org.eclipse.e4.ui.model.application.MApplication;
@@ -44,8 +43,10 @@ import org.osgi.service.component.annotations.Component;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.perspective.service.IPerspectiveImportService;
 import ch.elexis.core.ui.perspective.service.IStateCallback;
@@ -57,7 +58,6 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 	@Override
 	public IPerspectiveDescriptor importPerspective(String uri, IStateCallback iStateHandle,
 			boolean openPerspectiveIfAdded) {
-
 		try {
 			if (uri != null) {
 				if (uri.toLowerCase().startsWith("http")) { //$NON-NLS-1$
@@ -65,11 +65,12 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 					InputStream in = new URL(uri).openStream();
 					return importPerspectiveFromStream(in, iStateHandle, openPerspectiveIfAdded);
 				} else if (uri.toLowerCase().endsWith("xmi")) { //$NON-NLS-1$
+					IVirtualFilesystemHandle vfsHandle = VirtualFilesystemServiceHolder.get().of(uri);
 					// import from file
-					File f = new File(uri);
-					if (f != null && f.exists()) {
-						InputStream in = FileUtils.openInputStream(f);
-						return importPerspectiveFromStream(in, iStateHandle, openPerspectiveIfAdded);
+					if (vfsHandle != null && vfsHandle.exists()) {
+						try (InputStream in = vfsHandle.openInputStream()) {
+							return importPerspectiveFromStream(in, iStateHandle, openPerspectiveIfAdded);
+						}
 					}
 				}
 
@@ -155,6 +156,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		}
 	}
 
+	@Override
 	public int closePerspective(IPerspectiveDescriptor iPerspectiveDescriptor) {
 		int idx = isPerspectiveInsideStack(iPerspectiveDescriptor);
 		if (idx > -1) {
@@ -185,6 +187,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 		return idx;
 	}
 
+	@Override
 	public int isPerspectiveInStack(String perspectiveId) {
 		IPerspectiveRegistry iPerspectiveRegistry = PlatformUI.getWorkbench().getPerspectiveRegistry();
 		return isPerspectiveInsideStack(iPerspectiveRegistry.findPerspectiveWithId(perspectiveId));
@@ -305,7 +308,7 @@ public class PerspectiveImportService implements IPerspectiveImportService {
 			if (window == null) {
 				List<MWindow> windows = mApplication.getChildren();
 				if (!windows.isEmpty() && windows.get(0) instanceof MTrimmedWindow) {
-					window = (MWindow) windows.get(0);
+					window = windows.get(0);
 				}
 			}
 

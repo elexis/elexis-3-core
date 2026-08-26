@@ -27,8 +27,17 @@ public interface IUserService {
 	 *
 	 * @param user
 	 * @param password
+	 * @deprecated
 	 */
 	public void setPasswordForUser(IUser user, String password);
+
+	/**
+	 * Returns all executive doctors (i.e. Practitioners)
+	 * 
+	 * @return
+	 * @since 3.14
+	 */
+	public List<IMandator> findAllExecutiveDoctors();
 
 	/**
 	 * Retrieve the set of {@link IMandator}s this user is working for.
@@ -98,6 +107,14 @@ public interface IUserService {
 	 * @return
 	 */
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IUser user);
+
+	/**
+	 * Retrieve the default executive doctors this contact is working for.
+	 * 
+	 * @return
+	 * @since 3.14
+	 */
+	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact);
 
 	/**
 	 * Set the default executive doctor this user is working for.

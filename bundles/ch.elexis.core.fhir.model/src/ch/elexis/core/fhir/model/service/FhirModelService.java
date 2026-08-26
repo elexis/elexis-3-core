@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.BaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.osgi.service.component.annotations.Activate;
@@ -14,31 +16,43 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.SummaryEnum;
+import ca.uhn.fhir.rest.client.apache.ApacheHttp5RestfulClientFactory;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.rest.gclient.IFetchConformanceUntyped;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.eenv.IElexisEnvironmentService;
 import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ElexisTypeMap;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactory;
 import ch.elexis.core.fhir.model.impl.AbstractFhirModelAdapter;
+import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IStoreToStringContribution;
-import ch.elexis.core.utils.CoreUtil;
 
 @Component
-public class FhirModelService implements IFhirModelService, IStoreToStringContribution {
+public class FhirModelService implements IFhirModelService, ICompositeModelService, IStoreToStringContribution {
+
+	/**
+	 * THOUGHTS: How to be prepare for R5? Queries should not fetch whole objects ->
+	 * https://hl7.org/fhir/search.html#summary
+	 * https://hl7.org/fhir/elementdefinition-definitions.html#ElementDefinition.isSummary
+	 * https://hl7.org/fhir/search.html#_elements The object should carry the info
+	 * if it is complete -> see https://hl7.org/fhir/search.html#_summary SUBSETTED
+	 */
 
 	private static FhirContext context = FhirContext.forR4();
 
 	@Reference
-	private IElexisServerService elexisServer;
+	CloseableHttpClient httpClient;
+
+	@Reference
+	private IElexisEnvironmentService elexisEnvironmentService;
 
 	@Reference
 	private IContextService contextService;
@@ -54,20 +68,19 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 
 	private IGenericClient getGenericClient() {
 		if (client == null) {
-			context.setRestfulClientFactory(new CustomOkHttpRestfulClientFactory(context));
+			ApacheHttp5RestfulClientFactory apacheHttp5RestfulClientFactory = new ApacheHttp5RestfulClientFactory(
+					context);
+			apacheHttp5RestfulClientFactory.setHttpClient(httpClient);
+			context.setRestfulClientFactory(apacheHttp5RestfulClientFactory);
 
-			client = context.newRestfulGenericClient(elexisServer.getConnectionUrl().replace("/services", "/fhir"));
-			if (CoreUtil.isTestMode()) {
-				// Create a logging interceptor
-				LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
-				loggingInterceptor.setLogRequestSummary(true);
-				loggingInterceptor.setLogRequestBody(true);
-				client.registerInterceptor(loggingInterceptor);
-			}
-			contextService.getTyped(AccessToken.class).ifPresent(accessToken -> {
-				BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken.getToken());
-				client.registerInterceptor(authInterceptor);
-			});
+			client = context.newRestfulGenericClient(elexisEnvironmentService.getBaseUrl() + "/fhir/r4");
+//			if (Boolean.valueOf(System.getProperty("log.http"))) {
+//				// Create a logging interceptor
+//				LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
+//				loggingInterceptor.setLogRequestSummary(true);
+//				loggingInterceptor.setLogRequestBody(true);
+//				client.registerInterceptor(loggingInterceptor);
+//			}
 		}
 		return client;
 	}
@@ -100,6 +113,21 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 					return adapt(fhirObject, clazz);
 				}
 			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).warn(e.getMessage(), e);
+			}
+		}
+		return Optional.empty();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <U> Optional<U> loadFhir(String id, Class<U> fhirClazz) {
+		if (StringUtils.isNotBlank(id)) {
+			try {
+				IBaseResource fhirObject = getGenericClient().read().resource(fhirClazz.getSimpleName()).withId(id)
+						.execute();
+				return Optional.of((U) fhirObject);
+			} catch (Exception e) {
 				LoggerFactory.getLogger(getClass()).warn(e.getMessage());
 			}
 		}
@@ -109,7 +137,7 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	@Override
 	public void save(Identifiable identifiable) throws AccessControlException {
 		if (identifiable instanceof AbstractFhirModelAdapter) {
-			getGenericClient().update().resource(((AbstractFhirModelAdapter<?>) identifiable).getFhirResource())
+			getGenericClient().update().resource(((AbstractFhirModelAdapter<?, ?>) identifiable).getFhirResource())
 					.execute();
 		}
 	}
@@ -122,18 +150,17 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	}
 
 	@Override
-	public void delete(Identifiable identifiable) throws AccessControlException {
-		if (identifiable instanceof AbstractFhirModelAdapter) {
-			getGenericClient().delete()
-					.resource(((AbstractFhirModelAdapter<?>) identifiable).getFhirResource())
+	public void delete(Deleteable deletable) throws AccessControlException {
+		if (deletable instanceof AbstractFhirModelAdapter) {
+			getGenericClient().delete().resource(((AbstractFhirModelAdapter<?, ?>) deletable).getFhirResource())
 					.execute();
 		}
 	}
 
 	@Override
-	public void delete(List<? extends Identifiable> identifiables) throws AccessControlException {
-		if (identifiables != null) {
-			identifiables.stream().forEach(i -> delete(i));
+	public void delete(List<? extends Deleteable> deleteables) throws AccessControlException {
+		if (deleteables != null) {
+			deleteables.stream().forEach(i -> delete(i));
 		}
 	}
 
@@ -145,21 +172,10 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 
 	@Override
 	public ConnectionStatus getConnectionStatus() {
-		ConnectionStatus status = elexisServer.getConnectionStatus();
-		if (status != null) {
-			if (CoreUtil.isTestMode() || (elexisServer.getConnectionUrl() == null
-					|| elexisServer.getConnectionUrl().contains("localhost"))) {
-				return status;
-			} else {
-				Optional<AccessToken> accessToken = contextService.getTyped(AccessToken.class);
-				if (accessToken.isPresent()) {
-					return status;
-				} else {
-					LoggerFactory.getLogger(getClass()).warn("Elexis Server connected but no access token available");
-				}
-			}
-		}
-		return ConnectionStatus.LOCAL;
+		// if we can sucessfully fetch the capabilities, all should be well
+		// we simply assume access tokens etc. to be valid
+		IFetchConformanceUntyped capabilities = getGenericClient().capabilities();
+		return ConnectionStatus.REMOTE;
 	}
 
 	@Override
@@ -175,19 +191,20 @@ public class FhirModelService implements IFhirModelService, IStoreToStringContri
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> IQuery<IBaseBundle> getQuery(Class<T> clazz) {
-		return getGenericClient().search()
+		IQuery<IBaseBundle> forResource = getGenericClient().search()
 				.forResource(adapterFactory.getFhirType((Class<? extends Identifiable>) clazz));
+		return forResource.summaryMode(SummaryEnum.TEXT);
 	}
 
 	@Override
 	public IQuery<IBaseBundle> getQuery(String byUrl) {
-		return getGenericClient().search().byUrl(byUrl);
+		return getGenericClient().search().byUrl(byUrl).summaryMode(SummaryEnum.TEXT);
 	}
 
 	@Override
 	public Optional<String> storeToString(Identifiable identifiable) {
 		if (identifiable instanceof AbstractFhirModelAdapter) {
-			AbstractFhirModelAdapter<?> fhirModelAdapter = (AbstractFhirModelAdapter<?>) identifiable;
+			AbstractFhirModelAdapter<?, ?> fhirModelAdapter = (AbstractFhirModelAdapter<?, ?>) identifiable;
 			String classKey = ElexisTypeMap.getKeyForObject(fhirModelAdapter);
 			if (classKey != null) {
 				return Optional.of(classKey + StringConstants.DOUBLECOLON + identifiable.getId());

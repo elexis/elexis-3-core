@@ -1094,7 +1094,7 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 					double oldAnzahl = billed.getAmount();
 					double difference = changeAnzahl - oldAnzahl;
 					if (isChangedSellingAmount(billable)) {
-						BillingServiceHolder.get().changeAmount(billed, changeAnzahl);
+						BillingServiceHolder.get().changeAmount(billed, getSellingAmount(billable, changeAnzahl));
 					} else {
 						IStatus status = BillingServiceHolder.get().changeAmountValidated(billed, changeAnzahl);
 						if (!status.isOK()) {
@@ -1130,6 +1130,17 @@ public class VerrechnungsDisplay extends Composite implements IUnlockable {
 			return ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits));
 		}
 		return false;
+	}
+
+	private double getSellingAmount(IBillable billable, double defaultAmount) {
+		if (billable instanceof IArticle) {
+			double pkgSize = Math.abs(((IArticle) billable).getPackageSize());
+			double vkUnits = ((IArticle) billable).getSellingSize();
+			if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
+				return defaultAmount * (vkUnits / pkgSize);
+			}
+		}
+		return defaultAmount;
 	}
 
 	@Override

@@ -33,7 +33,6 @@ public class ReminderFilterManager {
 			Action showNotYetDueReminderToggleAction, Action showPastDueReminderToggleAction,
 			Action showOnlyOwnDueReminderToggleAction,
 			Action showSelfCreatedReminderAction, RestrictedAction showOthersRemindersAction) {
-// WICHTIG: showPastDueReminderToggleAction wurde hier im Record und in der reload()/reset() Liste hinzugefügt!
 
 		public void reload() {
 			for (Object action : new Object[] { showAssignedToMeAction, popupOnPatientSelectionReminderToggleAction,
@@ -52,7 +51,8 @@ public class ReminderFilterManager {
 		public void reset() {
 			for (Object action : new Object[] { showAssignedToMeAction, popupOnPatientSelectionReminderToggleAction,
 					popupOnLoginReminderToggleAction, showNotYetDueReminderToggleAction,
-					showOnlyOwnDueReminderToggleAction, showSelfCreatedReminderAction, showOthersRemindersAction }) {
+					showPastDueReminderToggleAction, showOnlyOwnDueReminderToggleAction, showSelfCreatedReminderAction,
+					showOthersRemindersAction }) {
 				try {
 					Method refreshMethod = action.getClass().getMethod("reset"); //$NON-NLS-1$
 					refreshMethod.invoke(action);
@@ -132,6 +132,17 @@ public class ReminderFilterManager {
 							.getUser(Preferences.USR_REMINDEROTHERS + "/" + ReminderListsView.GLOBALFILTERS, false)); //$NON-NLS-1$
 				} else {
 					this.setChecked(ConfigServiceHolder.getUser(Preferences.USR_REMINDEROTHERS + "/" + config, false)); //$NON-NLS-1$
+				}
+			}
+
+			@SuppressWarnings("unused")
+			public void reset() {
+				this.setChecked(false);
+				if (view.isUseGlobalFilters()) {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + ReminderListsView.GLOBALFILTERS, //$NON-NLS-1$
+							false);
+				} else {
+					ConfigServiceHolder.setUser(Preferences.USR_REMINDEROTHERS + "/" + config, false); //$NON-NLS-1$
 				}
 			}
 

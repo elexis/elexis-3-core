@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core JPA Entities
 Bundle-SymbolicName: ch.elexis.core.jpa.entities
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.jpa.entities
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: ch.elexis.core.jpa.entities
 Bundle-ActivationPolicy: lazy
 Require-Bundle: ch.rgw.utility;bundle-version="3.13.0",
- ch.elexis.core;bundle-version="3.13.0",
+ ch.elexis.core;bundle-version="3.14.0",
  org.eclipse.persistence.core;bundle-version="4.0.5";resolution:=optional
 Import-Package: jakarta.persistence;version="[3.1.0,4.0.0)",
  jakarta.persistence.criteria;version="[3.1.0,4.0.0)",

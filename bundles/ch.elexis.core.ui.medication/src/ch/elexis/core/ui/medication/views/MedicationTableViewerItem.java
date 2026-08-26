@@ -57,9 +57,6 @@ public class MedicationTableViewerItem {
 	private Image image;
 	private Image articleImage;
 
-	private Image interactionImage;
-	private String interactionText;
-
 	private Date endTime;
 
 	private boolean resolved = false;
@@ -245,24 +242,17 @@ public class MedicationTableViewerItem {
 	}
 
 	public Image getInteractionImage() {
-		if (interactionImage == null) {
-			if (!resolved && !resolving) {
-				resolving = true;
-				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
-			}
+		if (interactionUi != null) {
+			return interactionUi.getImage(getPrescription());
 		}
-		return interactionImage != null ? interactionImage : Images.IMG_EMPTY_TRANSPARENT.getImage();
+		return null;
 	}
 
 	public String getInteractionText() {
-		if (interactionText == null) {
-			if (!resolved && !resolving) {
-				resolving = true;
-				executorService.execute(new ResolveLazyFieldsRunnable(viewer, this));
-			}
-
+		if (interactionUi != null) {
+			return interactionUi.getText(getPrescription());
 		}
-		return interactionText;
+		return null;
 	}
 
 	/**
@@ -285,7 +275,6 @@ public class MedicationTableViewerItem {
 
 		@Override
 		public void run() {
-			resolveInteractionImage();
 			resolveImage();
 			resolveArticleImage();
 			resolveArticleLabel();

@@ -1,6 +1,5 @@
 package ch.elexis.core.fhir.model;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +12,7 @@ import org.hl7.fhir.r4.model.Task;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactory;
 import ch.elexis.core.fhir.model.test.AllPluginTests;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
@@ -25,7 +25,6 @@ import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.builder.IUserGroupBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
@@ -35,11 +34,11 @@ public class FhirReminderTest {
 	private static IFhirTransformerRegistry transformerRegistry;
 
 	private static IModelService coreModelService;
-	
+
 	@BeforeClass
 	public static void beforeClass() {
-		transformerRegistry = OsgiServiceUtil.getService(IFhirTransformerRegistry.class).get();
-		coreModelService = OsgiServiceUtil
+		transformerRegistry = PortableServiceLoader.get(IFhirTransformerRegistry.class);
+		coreModelService = PortableServiceLoader
 				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 	}
 

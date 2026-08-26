@@ -29,6 +29,7 @@
 		"ch.elexis.base.ch.arzttarife.nutrition.INutritionLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.occupational.IOccupationalLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.pandemie.IPandemieLeistung": "cruvdxie",
+		"ch.elexis.base.ch.arzttarife.ps25.IPs25Leistung": "cruvdxie",		
 		"ch.elexis.base.ch.arzttarife.physio.IPhysioLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.psycho.IPsychoLeistung": "cruvdxie",
 		"ch.elexis.base.ch.arzttarife.rfe.IReasonForEncounter": "cruvdx",

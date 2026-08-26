@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -673,10 +674,21 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 				String orderString = ConfigServiceHolder.getUser("reminder.column.order." + cfg, null);
 				if (orderString != null) {
 					int[] order = Arrays.stream(orderString.split(",")).mapToInt(Integer::parseInt).toArray();
-					try {
-						tbl.setColumnOrder(order);
-					} catch (IllegalArgumentException ex) {
-						LoggerFactory.getLogger(getClass()).warn("Invalid column order for " + cfg, ex);
+					if (order.length == tbl.getColumnCount()) {
+						try {
+							tbl.setColumnOrder(order);
+						} catch (IllegalArgumentException ex) {
+							LoggerFactory.getLogger(getClass()).warn("Invalid column order for " + cfg, ex);
+						}
+					} else {
+						// Veralteten Eintrag direkt mit der aktuell gueltigen Reihenfolge ueberschreiben,
+						// damit er nicht bei jedem Start erneut verworfen werden muss.
+						String currentOrder = Arrays.stream(tbl.getColumnOrder()).mapToObj(String::valueOf)
+								.collect(Collectors.joining(","));
+						ConfigServiceHolder.setUser("reminder.column.order." + cfg, currentOrder);
+						LoggerFactory.getLogger(getClass()).info(
+								"Veraltete Spalten-Order fuer {} bereinigt (gespeichert: {}, aktuell: {} Spalten)", cfg,
+								order.length, tbl.getColumnCount());
 					}
 				}
 			}
@@ -763,45 +775,58 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	@Override
 	public void refresh() {
 		Display.getDefault().asyncExec(() -> {
-
+			if (viewersScrolledComposite != null && !viewersScrolledComposite.isDisposed()) {
 				filterManager.reloadAllFilters();
 
-			patientRefresh();
-			generalRefresh();
-			generalRemindersRefresh();
-			myRemindersRefresh();
-			groupRemindersRefresh();
-			int width = viewersScrolledComposite.getClientArea().width;
-			viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
-			viewParent.layout(true, true);
+				patientRefresh();
+				generalRefresh();
+				generalRemindersRefresh();
+				myRemindersRefresh();
+				groupRemindersRefresh();
+				int width = viewersScrolledComposite.getClientArea().width;
+				viewersScrolledComposite.setMinSize(viewersParent.computeSize(width, SWT.DEFAULT));
+				viewParent.layout(true, true);
+			}
 		});
 	}
 
 	private void patientRefresh() {
-		if (actPatient != null) {
-			if (currentPatientViewer.getTable().isVisible()) {
-				refreshCurrentPatientInput(CURRENTPATIENT);
+		if (viewerAvailable(currentPatientViewer)) {
+			if (actPatient != null) {
+				if (currentPatientViewer.getTable().isVisible()) {
+					refreshCurrentPatientInput(CURRENTPATIENT);
+				}
+			} else {
+				currentPatientViewer.setInput(Collections.emptyList());
 			}
-		} else {
-			currentPatientViewer.setInput(Collections.emptyList());
 		}
 	}
 
+	private boolean viewerAvailable(StructuredViewer viewer) {
+		return viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed();
+	}
+
 	private void generalRefresh() {
-		if (generalPatientViewer.getTable().isVisible()) {
-			refreshGeneralPatientInput(ALLPATIENTS);
+		if (viewerAvailable(generalPatientViewer)) {
+			if (generalPatientViewer.getTable().isVisible()) {
+				refreshGeneralPatientInput(ALLPATIENTS);
+			}
 		}
 	}
 
 	private void generalRemindersRefresh() {
-		if (generalRemindersViewer.getTable().isVisible()) {
-			refreshGeneralInput(GENERALREMINDERS);
+		if (viewerAvailable(generalRemindersViewer)) {
+			if (generalRemindersViewer.getTable().isVisible()) {
+				refreshGeneralInput(GENERALREMINDERS);
+			}
 		}
 	}
 
 	private void myRemindersRefresh() {
-		if (myViewer.getTable().isVisible()) {
-			refreshMyRemindersInput(MYREMINDERS);
+		if (viewerAvailable(myViewer)) {
+			if (myViewer.getTable().isVisible()) {
+				refreshMyRemindersInput(MYREMINDERS);
+			}
 		}
 	}
 	
@@ -846,6 +871,9 @@ public class ReminderListsView extends ViewPart implements HeartListener, IRefre
 	 */
 	private void refreshViewerInput(String configKey, TableViewer viewer, String counterId, IPatient patient,
 			IUserGroup group, boolean visibleOnly) {
+		if (!viewerAvailable(viewer)) {
+			return;
+		}
 
 		if (visibleOnly && !viewer.getTable().isVisible()) {
 	        return;

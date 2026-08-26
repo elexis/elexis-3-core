@@ -10,10 +10,11 @@ import org.hl7.fhir.r4.model.DomainResource;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.primitive.IdDt;
+import ch.elexis.core.fhir.mapper.r4.findings.EncounterAccessor;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IEncounter;
-import ch.elexis.core.findings.util.fhir.accessor.EncounterAccessor;
+import ch.elexis.core.findings.fhir.model.service.FindingsModelServiceHolder;
 import ch.elexis.core.model.IXid;
 
 public class Encounter extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.Encounter>
@@ -131,7 +132,7 @@ public class Encounter extends AbstractFindingModelAdapter<ch.elexis.core.jpa.en
 	public List<ICondition> getIndication() {
 		Optional<IBaseResource> resource = loadResource();
 		if (resource.isPresent()) {
-			return accessor.getIndication((DomainResource) resource.get());
+			return accessor.getIndication(FindingsModelServiceHolder.get(), (DomainResource) resource.get());
 		}
 		return new ArrayList<>();
 	}
