@@ -9,9 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
@@ -27,8 +25,6 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	private Optional<ICondition> condition = Optional.empty();
 	private ConditionCategory category;
 
-	private boolean reusable;
-
 	public ConditionEditDialog(ConditionCategory category, Shell parentShell) {
 		super(parentShell);
 		this.category = category;
@@ -42,55 +38,10 @@ public class ConditionEditDialog extends TitleAreaDialog {
 		setShellStyle(DEFAULT_SHELL_STYLE);
 	}
 
-
-	public void setReusable(boolean reusable) {
-		this.reusable = reusable;
-	}
-
-
-	public boolean canReuseFor(Shell parentShell, ConditionCategory category) {
-		return reusable && this.category == category && getParentShell() == parentShell && parentShell != null
-				&& !parentShell.isDisposed() && getShell() != null && !getShell().isDisposed();
-	}
-
-
-	public void preload() {
-		if (getShell() == null || getShell().isDisposed()) {
-			create();
-		}
-		if (conditionComposite != null && !conditionComposite.isDisposed()) {
-			conditionComposite.preload();
-		}
-	}
-
-	public boolean isOpen() {
-		Shell shell = getShell();
-		return shell != null && !shell.isDisposed() && shell.isVisible();
-	}
-
-	public ConditionCategory getCategory() {
-		return category;
-	}
-
-
-	public void setCondition(ICondition condition) {
-		this.condition = Optional.ofNullable(condition);
-		if (conditionComposite != null && !conditionComposite.isDisposed()) {
-			conditionComposite.setCondition(condition);
-		}
-		updateTitle();
-	}
-
 	@Override
 	public void create() {
 		super.create();
-		updateTitle();
-	}
-
-	private void updateTitle() {
-		if (getShell() != null && !getShell().isDisposed()) {
-			setTitle(category.getLocalized() + " Daten " + (condition.isPresent() ? "editieren" : "anlegen") + ".");
-		}
+		setTitle(category.getLocalized() + " Daten " + (condition.isPresent() ? "editieren" : "anlegen") + ".");
 	}
 
 	@Override
@@ -106,55 +57,6 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(900, 950);
-	}
-
-	@Override
-	public int open() {
-		if (!reusable) {
-			return super.open();
-		}
-		setReturnCode(CANCEL);
-		setBlockOnOpen(false);
-		super.open();
-		return runUntilHidden();
-	}
-
-
-	private int runUntilHidden() {
-		Shell shell = getShell();
-		if (shell == null || shell.isDisposed()) {
-			return getReturnCode();
-		}
-		Display display = shell.getDisplay();
-		while (!shell.isDisposed() && shell.isVisible()) {
-			try {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			} catch (Exception e) {
-				LoggerFactory.getLogger(getClass()).error("Exception while editing condition", e);
-			}
-		}
-		if (!display.isDisposed()) {
-			display.update();
-		}
-		return getReturnCode();
-	}
-
-	@Override
-	public boolean close() {
-		if (reusable && getShell() != null && !getShell().isDisposed()) {
-			getShell().setVisible(false);
-			return true;
-		}
-		return super.close();
-	}
-
-	public void dispose() {
-		reusable = false;
-		if (getShell() != null && !getShell().isDisposed()) {
-			super.close();
-		}
 	}
 
 	@Override
