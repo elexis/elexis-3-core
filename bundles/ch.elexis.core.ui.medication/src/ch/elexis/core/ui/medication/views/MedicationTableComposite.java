@@ -44,7 +44,7 @@ public class MedicationTableComposite extends Composite {
 	private List<IPrescription> pendingInput;
 
 	private IMedicationInteractionUi interactionUi;
-	private IArticleImageResolverUi articleImageResolverUi;
+
 	private TableViewerColumn articleMarkingColumn;
 
 	public MedicationTableComposite(Composite parent, int style) {
@@ -101,7 +101,8 @@ public class MedicationTableComposite extends Composite {
 			MedicationViewerHelper.createInteractionColumn(viewer, 10);
 			contentProvider.setInteractionUi(interactionUi);
 		}
-		articleImageResolverUi = OsgiServiceUtil.getService(IArticleImageResolverUi.class).orElse(null);
+		IArticleImageResolverUi articleImageResolverUi = OsgiServiceUtil.getService(IArticleImageResolverUi.class)
+				.orElse(null);
 		if (articleImageResolverUi != null) {
 			contentProvider.setArticleImageResolverUi(articleImageResolverUi);
 		}
