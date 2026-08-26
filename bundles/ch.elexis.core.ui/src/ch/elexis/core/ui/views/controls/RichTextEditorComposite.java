@@ -29,10 +29,13 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.FrameworkUtil;
 import org.slf4j.LoggerFactory;
 
@@ -54,11 +57,16 @@ public class RichTextEditorComposite extends Composite {
 
 	private static final String PARAGRAPH_SPACING = "2px";
 
+	/** Give up on the warm up instance if it never reports itself ready. */
+	private static final int WARMUP_TIMEOUT_MILLIS = 30000;
+
 	private static String customizationScript;
 
 	private boolean editorLoaded;
 	private String pendingText;
-	private boolean plainDisplay;
+
+	/** Only set for the warm up instance, see {@link #warmUp()}. */
+	private Runnable editorLoadedCallback;
 
 	public RichTextEditorComposite(Composite parent) {
 		this(parent, SWT.NONE);
@@ -66,39 +74,53 @@ public class RichTextEditorComposite extends Composite {
 
 
 	public RichTextEditorComposite(Composite parent, int style) {
-		this(parent, style, false);
-	}
-
-	/**
-	 * Creates a new rich text editor composite.
-	 *
-	 * @param parent       the parent composite
-	 * @param style        the SWT style bits
-	 * @param plainDisplay if {@code true} the toolbar is hidden and character formatting
-	 *                     is not shown (still editable, structure preserved)
-	 */
-	public RichTextEditorComposite(Composite parent, int style, boolean plainDisplay) {
 		super(parent, SWT.NONE);
-		this.plainDisplay = plainDisplay;
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		setLayout(layout);
 
 		addListener(SWT.Resize, e -> getDisplay().asyncExec(this::maximizeEditorHeight));
-		addListener(SWT.Paint, e -> createBrowser(plainDisplay));
-		addListener(SWT.Show, e -> createBrowser(plainDisplay));
+		addListener(SWT.Paint, e -> createBrowser());
+		addListener(SWT.Show, e -> createBrowser());
 	}
 
-	public void preload() {
-		createBrowser(plainDisplay);
+	/**
+	 * Loads one editor into a shell that is never shown and disposes both as soon as it is
+	 * ready. Only what Chromium keeps per application survives, so later editors start fast
+	 * without anything being held open.
+	 */
+	public static void warmUp() {
+		Display display = Display.getDefault();
+		if (display == null || display.isDisposed()) {
+			return;
+		}
+		long start = System.currentTimeMillis();
+		Shell shell = new Shell(display, SWT.NO_TRIM);
+		shell.setLayout(new FillLayout());
+		shell.setSize(800, 600);
+		Runnable disposeShell = () -> {
+			if (!shell.isDisposed()) {
+				shell.dispose();
+			}
+		};
+		RichTextEditorComposite editor = new RichTextEditorComposite(shell, SWT.NONE);
+		// dispose asynchronously: the callback runs inside the browser's own progress event
+		editor.editorLoadedCallback = () -> display.asyncExec(() -> {
+			disposeShell.run();
+			LoggerFactory.getLogger(RichTextEditorComposite.class).info("Rich text editor warmed up in {} ms", //$NON-NLS-1$
+					System.currentTimeMillis() - start);
+		});
+		display.timerExec(WARMUP_TIMEOUT_MILLIS, disposeShell);
+		editor.createBrowser();
 	}
 
-	private void createBrowser(boolean plainDisplay) {
+	private void createBrowser() {
 		if (browserCreated || isDisposed()) {
 			return;
 		}
 		browserCreated = true;
+		long browserCreationStart = System.currentTimeMillis();
 
 		browser = new Browser(this, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -133,12 +155,17 @@ public class RichTextEditorComposite extends Composite {
 
 					verifyBridgeContract();
 
-					browser.execute("window.elexisRichTextConfig = { paragraphSpacing: '" + PARAGRAPH_SPACING
-							+ "', plainDisplay: " + plainDisplay + " };");
+					browser.execute(
+							"window.elexisRichTextConfig = { paragraphSpacing: '" + PARAGRAPH_SPACING + "' };");
 					browser.execute(getCustomizationScript());
 
 					browser.evaluate("initEditor();");
 					editorLoaded = true;
+					LoggerFactory.getLogger(RichTextEditorComposite.class).info("Editor ready in {} ms", //$NON-NLS-1$
+							System.currentTimeMillis() - browserCreationStart);
+					if (editorLoadedCallback != null) {
+						editorLoadedCallback.run();
+					}
 				} catch (Exception e) {
 					LoggerFactory.getLogger(RichTextEditorComposite.class)
 							.error("Could not initialize CKEditor", e);

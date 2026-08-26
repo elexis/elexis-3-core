@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document.OutputSettings.Syntax;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
 import org.jvnet.jaxb2_commons.ppp.Child;
 import org.slf4j.LoggerFactory;
 
@@ -341,6 +342,27 @@ public class TextUtil {
 			return html;
 		}
 		return html.replaceAll("(?i)</?(?:strong|b|em|i|u|s|strike|del|span|font)(?:\\s[^>]*)?>", "");
+	}
+
+	/**
+	 * Converts stored markup into plain text for a simple text widget: block ends become line
+	 * breaks, list items become dash lines (so {@link #sanitizeHtmlForNebula(String)} shows
+	 * them as bullets again), remaining tags are dropped and entities decoded. Text without
+	 * markup is returned unchanged.
+	 */
+	public static String htmlToPlainText(String html) {
+		if (html == null || html.isEmpty()) {
+			return html;
+		}
+		// newlines and indentation next to a tag are pretty-printing, not content
+		String s = html.replaceAll("[ \\t]*[\\r\\n]+[ \\t]*(?=<)|(?<=>)[ \\t]*[\\r\\n]+[ \\t]*", StringUtils.EMPTY);
+		s = s.replaceAll("(?i)<li(?:\\s[^>]*)?>", "\n- ").replaceAll("(?i)</li>", StringUtils.EMPTY);
+		s = s.replaceAll("(?i)</(?:p|div|h[1-6]|ul|ol)>|<br\\s*/?>", "\n");
+		s = s.replaceAll("(?i)</?[a-z][^>]*>", StringUtils.EMPTY);
+		// the no-break space of an empty paragraph is just a blank in plain text
+		s = Parser.unescapeEntities(s, false).replace('\u00A0', ' ');
+		s = s.replaceAll("[ \\t]+\\n", "\n").replaceAll("\\n{2,}(?=- )", "\n").replaceAll("\\n{3,}", "\n\n");
+		return s.trim();
 	}
 
 	/** Prepares stored condition HTML for the Nebula rich text painter (decode quotes, flatten lists). */
