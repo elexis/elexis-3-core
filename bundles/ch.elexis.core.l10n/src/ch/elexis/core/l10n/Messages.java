@@ -5180,6 +5180,7 @@ public class Messages extends NLS {
 	public static String MedicationSettings_PreselectSignatureDispensation;
 	public static String MedicationSettings_CheckAndConvertItemMaster;
 	public static String MedicationSettings_ShowCustomSorting;
+	public static String MedicationSettings_ShowArticleMarking;
 	public static String MedicationSettings_EnablePredefinedSymptomDays;
 	public static String MedicationSettings_NumberOfStopDays;
 	public static String MedicationSettings_ShowCommentOnEMediplan;

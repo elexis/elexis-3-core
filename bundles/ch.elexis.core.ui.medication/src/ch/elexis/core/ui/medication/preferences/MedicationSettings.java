@@ -10,6 +10,7 @@ import org.eclipse.ui.PlatformUI;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.ui.medication.PreferenceConstants;
 import ch.elexis.core.ui.medication.property.MedicationUiTester;
 import ch.elexis.core.ui.medication.views.MedicationView;
 import ch.elexis.core.ui.medication.views.ViewerSortOrder;
@@ -21,6 +22,7 @@ import ch.elexis.core.ui.util.CreatePrescriptionHelper;
 public class MedicationSettings extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private BooleanFieldEditor sortingFieldEditor;
+	private BooleanFieldEditor articleMarkingFieldEditor;
 	private BooleanFieldEditor predefinedSymptomDaysFieldEditor;
 	private IntegerFieldEditor symptomDurationFieldEditor;
 
@@ -43,6 +45,11 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 		sortingFieldEditor = new BooleanFieldEditor(MedicationUiTester.MEDICATION_SETTINGS_SHOW_CUSTOM_SORT,
 				ch.elexis.core.l10n.Messages.MedicationSettings_ShowCustomSorting, getFieldEditorParent());
 		addField(sortingFieldEditor);
+		getPreferenceStore().setDefault(PreferenceConstants.PREF_MEDICATIONLIST_SHOW_ARTICLE_MARKING, true);
+		articleMarkingFieldEditor = new BooleanFieldEditor(
+				PreferenceConstants.PREF_MEDICATIONLIST_SHOW_ARTICLE_MARKING,
+				ch.elexis.core.l10n.Messages.MedicationSettings_ShowArticleMarking, getFieldEditorParent());
+		addField(articleMarkingFieldEditor);
 		addField(new BooleanFieldEditor(Preferences.USR_SUPPRESS_INTERACTION_CHECK,
 				ch.elexis.core.l10n.Messages.UserSettings2_SuppressInteractionCheck, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.MEDICATION_SETTINGS_SHOW_DIALOG_ON_BILLING,
@@ -76,6 +83,13 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 				if (event.getNewValue() == Boolean.FALSE) {
 					view.setMedicationTableViewerComparator(ViewerSortOrder.DEFAULT);
 				}
+			}
+		}
+		if (event.getSource() == articleMarkingFieldEditor) {
+			MedicationView view = (MedicationView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.findView(MedicationView.PART_ID);
+			if (view != null) {
+				view.setArticleMarkingColumnVisible((Boolean) event.getNewValue());
 			}
 		}
 	}
