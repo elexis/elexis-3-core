@@ -8,7 +8,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -65,8 +68,9 @@ public class DeprecatedViewsEventHandler implements EventHandler {
 			}
 
 			List<String> lines = new ArrayList<>();
-			for (MPart part : modelService.findElements(mApplication, null, MPart.class, null)) {
-				if (!part.isToBeRendered()) {
+			MUIElement searchRoot = getSearchRoot(mApplication, modelService);
+			for (MPart part : modelService.findElements(searchRoot, null, MPart.class, null)) {
+				if (!isOpen(part)) {
 					continue;
 				}
 				DeprecatedViews.Entry entry = DeprecatedViews.get(part.getElementId());
@@ -106,6 +110,19 @@ public class DeprecatedViewsEventHandler implements EventHandler {
 		}
 		String title = getTitle(part);
 		Display.getDefault().asyncExec(() -> info.showInfo(title));
+	}
+
+	private MUIElement getSearchRoot(MApplication mApplication, EModelService modelService) {
+		MWindow window = mApplication.getSelectedElement();
+		if (window == null) {
+			return mApplication;
+		}
+		MPerspective perspective = modelService.getActivePerspective(window);
+		return perspective != null ? perspective : window;
+	}
+
+	private boolean isOpen(MPart part) {
+		return part.isToBeRendered() && part.getWidget() != null;
 	}
 
 	private DeprecatedViewInfo getInfo(String elementId, DeprecatedViews.Entry entry) {
