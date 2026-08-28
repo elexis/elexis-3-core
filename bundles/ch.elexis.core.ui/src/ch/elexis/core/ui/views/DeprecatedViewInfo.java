@@ -28,9 +28,9 @@ public class DeprecatedViewInfo {
 	 */
 	public void showInfo(String viewTitle) {
 		if (!isOldShown) {
+			isOldShown = true;
 			MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.DeprecatedView_Title,
 					getMessage(viewTitle));
-			isOldShown = true;
 		}
 	}
 
