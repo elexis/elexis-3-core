@@ -510,10 +510,6 @@
             icon="rechnung_perspective"
             name="%sidebar.bills"/>
       <Perspektive
-            ID="ch.elexis.SchwarzesBrettV1.0"
-            icon="bbs_perspective"
-            name="%sidebar.bbs"/>
-      <Perspektive
             ID="ch.elexis.bestellperspektive"
             icon="bestell_perspective"
             name="%sidebar.orders"/>
