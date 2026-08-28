@@ -5637,6 +5637,14 @@ public class Messages extends NLS {
 	public static String DiagnoseListComposite_StatusPrefix;
 	public static String DiagnoseListComposite_Create;
 	public static String DiagnoseListComposite_Remove;
+	public static String DeprecatedView_Title;
+	public static String DeprecatedView_TitlePlural;
+	public static String DeprecatedView_Message;
+	public static String DeprecatedView_MessageWithSuccessor;
+	public static String DeprecatedView_ListHeader;
+	public static String DeprecatedView_ListHeaderPlural;
+	public static String DeprecatedView_ListEntry;
+	public static String DeprecatedView_ListEntryWithSuccessor;	
 
 	static { // load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
