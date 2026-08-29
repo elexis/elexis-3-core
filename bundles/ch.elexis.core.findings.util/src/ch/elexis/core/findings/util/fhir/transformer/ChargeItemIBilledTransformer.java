@@ -18,6 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.IFhirTransformerException;
 import ch.elexis.core.findings.util.fhir.transformer.helper.CodeSystemUtil;
@@ -56,6 +57,9 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 	@Inject
 	@Reference
 	IContextService contextService;
+
+	@Reference
+	private IFindingsService findingsService;
 
 	@Override
 	public Optional<ChargeItem> getFhirObject(IBilled localObject, SummaryEnum summaryEnum, Set<Include> includes) {
@@ -173,7 +177,18 @@ public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem
 			throw new IFhirTransformerException("WARNING", "Missing encounter parameter", 412);
 		}
 
-		IEncounter encounter = coreModelService.load(encounterId, IEncounter.class).orElse(null);
+		// Patch: a FHIR Encounter id refers to a findings-store IEncounter,
+		// whose consultationId points at the actual Elexis Behandlung
+		// (ch.elexis.core.model.IEncounter). Loading the FHIR id directly as
+		// a Behandlung returns null because the id-spaces are distinct, which
+		// caused ChargeItems to be billed against the wrong / no consultation
+		// and never persisted into the "leistungen" table. Mirror the
+		// two-step lookup used by ClaimVerrechnetTransformer.
+		Optional<ch.elexis.core.findings.IEncounter> finding = findingsService.findById(encounterId,
+				ch.elexis.core.findings.IEncounter.class);
+		IEncounter encounter = finding
+				.flatMap(f -> coreModelService.load(f.getConsultationId(), IEncounter.class))
+				.orElse(null);
 		if (encounter == null) {
 			throw new IFhirTransformerException("WARNING", "Invalid encounter", 412);
 		}
