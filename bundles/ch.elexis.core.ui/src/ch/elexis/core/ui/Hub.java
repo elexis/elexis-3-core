@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005-2011, G. Weirich and Elexis
+ * Copyright (c) 2005-2026, G. Weirich and Elexis
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.BundleContext;
@@ -48,7 +47,6 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.time.TimeUtil;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
@@ -59,7 +57,6 @@ import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Reminder;
 import ch.elexis.data.VerrechenbarFavorites;
-import ch.rgw.tools.TimeTool;
 import jakarta.inject.Inject;
 
 /**
@@ -70,6 +67,7 @@ import jakarta.inject.Inject;
  * angelegt.
  *
  * @since 3.0.0 major rewrites
+ * @since 3.14 cleanup, removal of unused methods
  */
 public class Hub extends AbstractUIPlugin {
 	// Globale Konstanten
@@ -77,7 +75,6 @@ public class Hub extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "ch.elexis.core.ui"; //$NON-NLS-1$
 	public static final String COMMAND_PREFIX = PLUGIN_ID + ".commands."; //$NON-NLS-1$
 	public static final String SWTBOTTEST_KEY = "ch.elexis.swtbottest.key"; //$NON-NLS-1$
-	static final String[] mine = { "ch.elexis", "ch.rgw" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static Logger log = LoggerFactory.getLogger(Hub.class.getName());
 
@@ -101,11 +98,6 @@ public class Hub extends AbstractUIPlugin {
 
 	@Inject
 	private ISourceProviderService sps;
-
-	@Inject
-	private ICommandService commandService;
-
-	private Anwender lastLoggedInContact;
 
 	@Inject
 	public void activePatient(@Optional IPatient patient) {
@@ -161,27 +153,23 @@ public class Hub extends AbstractUIPlugin {
 
 	private void updateUser(IUser user) {
 		// reminder
-		if (CoreHub.getLoggedInContact() != null) {
-			Anwender loggedInContact = CoreHub.getLoggedInContact();
-			if (lastLoggedInContact == null || !lastLoggedInContact.equals(loggedInContact)) {
-				CompletableFuture.runAsync(() -> {
-					final List<Reminder> reminderList = Reminder.findToShowOnStartup(loggedInContact);
+		if (user != null) {
+			CompletableFuture.runAsync(() -> {
+				final List<Reminder> reminderList = Reminder.findToShowOnStartup();
 
-					if (!reminderList.isEmpty()) {
-						// must be called inside display thread
-						UiDesk.runIfWorkbenchRunning(() -> {
-							Display.getDefault().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									new ReminderListSelectionDialog(reminderList,
-											Messages.ReminderView_importantRemindersOnLogin).open();
-								}
-							});
+				if (!reminderList.isEmpty()) {
+					// must be called inside display thread
+					UiDesk.runIfWorkbenchRunning(() -> {
+						Display.getDefault().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								new ReminderListSelectionDialog(reminderList,
+										Messages.ReminderView_importantRemindersOnLogin).open();
+							}
 						});
-					}
-				});
-				lastLoggedInContact = loggedInContact;
-			}
+					});
+				}
+			});
 		}
 		// favorites
 		VerrechenbarFavorites.reset();
@@ -195,7 +183,7 @@ public class Hub extends AbstractUIPlugin {
 
 		// set unique chromium cache path to support multiple running instances #27014
 		System.setProperty("chromium.cache_path", Files.createTempDirectory("chromium").toFile().getAbsolutePath());
-		
+
 		CoreUiUtil.injectServicesWithContext(this);
 
 		// add UI ClassLoader to default Script Interpreter
@@ -233,21 +221,19 @@ public class Hub extends AbstractUIPlugin {
 		}
 	}
 
-	public static void setMandant(final Mandant m) {
-		CoreHub.setMandant(m);
-	}
-
 	/*
 	 * Sets the window title to a nicely formatted string containt the family name,
 	 * name, age and its code
 	 */
 	public static void setWindowText(IPatient patient) {
+		IUser activeUser = ContextServiceHolder.get().getActiveUser().orElse(null);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Elexis ").append(Elexis.VERSION).append(" - "); //$NON-NLS-1$ //$NON-NLS-2$
-		if (CoreHub.getLoggedInContact() == null) {
+		if (activeUser == null) {
 			sb.append(Messages.Hub_nouserloggedin);
 		} else {
-			sb.append(StringUtils.SPACE).append(CoreHub.getLoggedInContact().getLabel());
+			sb.append(StringUtils.SPACE).append(activeUser.getLabel());
 		}
 		if (ContextServiceHolder.getActiveMandatorOrNull() == null) {
 			sb.append(Messages.Hub_nomandantor);
@@ -270,10 +256,8 @@ public class Hub extends AbstractUIPlugin {
 					CoreHub.getLoggedInContact()).isEmpty()) {
 				sb.append(Messages.Hub_message_reminders);
 			}
-			String act = new TimeTool().toString(TimeTool.DATE_COMPACT);
 			LocalDateTime ttPatg = patient.getDateOfBirth();
 			if (ttPatg != null) {
-				String patg = TimeUtil.formatSafe(ttPatg.toLocalDate());
 				if (LocalDate.now().equals(ttPatg.toLocalDate().withYear(LocalDate.now().getYear()))) {
 					sb.append(Messages.Hub_message_birthday);
 				}
