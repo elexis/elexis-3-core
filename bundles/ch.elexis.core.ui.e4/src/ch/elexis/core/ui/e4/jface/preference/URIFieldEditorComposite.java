@@ -94,6 +94,12 @@ public class URIFieldEditorComposite extends Composite {
 		});
 	}
 
+	public void setDefaultPreference(String defaultPreference) {
+		this.defaultPreference = defaultPreference;
+		storePath.setPreferenceName(PreferencesUtil.getOsSpecificPreferenceName(operatingSystem, defaultPreference));
+		loadWithLegacyFallback();
+	}
+
 	private void loadWithLegacyFallback() {
 		storePath.load();
 		if (storePath.getPreferenceStore() == null || StringUtils.isNotBlank(storePath.getStringValue())) {
@@ -101,7 +107,7 @@ public class URIFieldEditorComposite extends Composite {
 		}
 		String legacyValue = storePath.getPreferenceStore().getString(defaultPreference);
 		if (StringUtils.isNotBlank(legacyValue)) {
-			storePath.getTextControl(this).setText(legacyValue);
+			storePath.setStringValue(legacyValue);
 		}
 	}
 
