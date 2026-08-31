@@ -48,6 +48,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.ui.UiDesk;
+import ch.elexis.core.ui.e4.jface.preference.URIFieldEditorComposite;
 import ch.elexis.core.ui.laboratory.controls.util.HL7AutoGroupImporter;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
@@ -61,6 +62,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 	private String daysKeepUnseen;
 	private Text txtAnzahlMonate;
 	private Font histogramFont;
+	private BooleanFieldEditor bStorePathsGlobal;
+	private URIFieldEditorComposite importDirEditor;
 
 	public LabSettings() {
 		super(GRID);
@@ -71,7 +74,18 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 
 	@Override
 	protected Control createContents(final Composite parent) {
-			return super.createContents(parent);
+		Control control = super.createContents(parent);
+		bStorePathsGlobal.setPreferenceStore(new ConfigServicePreferenceStore(Scope.GLOBAL));
+		bStorePathsGlobal.load();
+		updatePathStore(LabImportSettings.isStoreGlobal());
+		return control;
+	}
+
+	private void updatePathStore(boolean global) {
+		if (importDirEditor == null || importDirEditor.isDisposed()) {
+			return;
+		}
+		importDirEditor.setPreferenceStore(new ConfigServicePreferenceStore(global ? Scope.GLOBAL : Scope.USER));
 	}
 
 	@Override
@@ -158,31 +172,27 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		Label separator2 = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
 		separator2.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
+		bStorePathsGlobal = new BooleanFieldEditor(LabImportSettings.CFG_PATHS_GLOBAL,
+				Messages.PreferencesServer_storeFSGlobal, getFieldEditorParent()) {
+			@Override
+			protected void fireValueChanged(String property, Object oldValue, Object newValue) {
+				super.fireValueChanged(property, oldValue, newValue);
+				if (FieldEditor.VALUE.equals(property)) {
+					boolean global = Boolean.TRUE.equals(newValue);
+					ConfigServiceHolder.setGlobal(LabImportSettings.CFG_PATHS_GLOBAL, global);
+					updatePathStore(global);
+				}
+			}
+		};
+		addField(bStorePathsGlobal);
+
 		Composite importComposite = new Composite(getFieldEditorParent(), SWT.NONE);
 		importComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		importComposite.setLayout(new GridLayout(3, false));
 
-		Label lblImport = new Label(importComposite, SWT.NONE);
-		lblImport.setText(Messages.LabSettings_importDirLabel);
-
-		Text txtImportPath = new Text(importComposite, SWT.BORDER);
-		txtImportPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		txtImportPath.setText(getPreferenceStore().getString("CFG_HL7_IMPORT_DIR")); //$NON-NLS-1$
-
-		Button btnBrowse = new Button(importComposite, SWT.PUSH);
-		btnBrowse.setText(Messages.LabSettings_browseButton);
-		btnBrowse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				org.eclipse.swt.widgets.DirectoryDialog dialog = new org.eclipse.swt.widgets.DirectoryDialog(
-						getShell());
-				String selectedDir = dialog.open();
-				if (selectedDir != null) {
-					txtImportPath.setText(selectedDir);
-					getPreferenceStore().setValue("CFG_HL7_IMPORT_DIR", selectedDir); //$NON-NLS-1$
-				}
-			}
-		});
+		importDirEditor = new URIFieldEditorComposite(LabImportSettings.IMPORT_DIR,
+				Messages.LabSettings_importDirLabel, importComposite, SWT.NONE);
+		importDirEditor.setEmptyStringAllowed(true);
 		Composite profileComposite = new Composite(getFieldEditorParent(), SWT.NONE);
 		profileComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		profileComposite.setLayout(new GridLayout(2, false));
@@ -209,8 +219,8 @@ public class LabSettings extends FieldEditorPreferencePage implements IWorkbench
 		btnAutoGroup.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String pfad = txtImportPath.getText();
-				if (pfad == null || pfad.isEmpty()) {
+				String pfad = LabImportSettings.getImportDirectory();
+				if (pfad.isEmpty()) {
 					MessageDialog.openWarning(getShell(), Messages.LabSettings_pathMissingTitle,
 							Messages.LabSettings_pathMissingMessage);
 					return;
