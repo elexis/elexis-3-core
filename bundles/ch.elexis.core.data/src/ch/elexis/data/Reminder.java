@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +24,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -512,8 +513,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * Alle Reminder holen, die beim Progammstart gezeigt werden sollen
 	 *
 	 * @return
+	 * @since 3.14 remove unnecessary parameter
 	 */
-	public static List<Reminder> findToShowOnStartup(final Anwender a) {
+	public static List<Reminder> findToShowOnStartup() {
 		Query<Reminder> qbe = new Query<>(Reminder.class);
 		qbe.add(FLD_DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
 		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
