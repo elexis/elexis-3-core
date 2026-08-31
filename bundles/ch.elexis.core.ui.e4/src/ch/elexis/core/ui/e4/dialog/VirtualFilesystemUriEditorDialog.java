@@ -467,11 +467,25 @@ public class VirtualFilesystemUriEditorDialog extends TitleAreaDialog {
 			return null;
 		}
 
+		private boolean isDriveLetterAuthority(URI uri) {
+			String authority = uri.getAuthority();
+			return "file".equalsIgnoreCase(uri.getScheme()) && authority != null && authority.length() == 2
+					&& Character.isLetter(authority.charAt(0)) && authority.charAt(1) == ':';
+		}
+
 		public void setUri(URI uri) {
 			setScheme(uri.getScheme());
-			setHost(uri.getHost());
-			setPort(uri.getPort());
-			setPath(uri.getPath());
+			if (isDriveLetterAuthority(uri)) {
+				// legacy file://C:/ uri, the drive letter is read as host name although it
+				// belongs into the path
+				setHost(null);
+				setPort(null);
+				setPath("/" + uri.getAuthority() + uri.getPath());
+			} else {
+				setHost(uri.getHost());
+				setPort(uri.getPort());
+				setPath(uri.getPath());
+			}
 			String userInfo = uri.getUserInfo();
 			if (StringUtils.isNotBlank(userInfo)) {
 				int indexOf = userInfo.indexOf(':');
