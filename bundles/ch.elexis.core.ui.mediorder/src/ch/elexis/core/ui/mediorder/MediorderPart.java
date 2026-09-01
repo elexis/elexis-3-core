@@ -1,9 +1,5 @@
 package ch.elexis.core.ui.mediorder;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,11 +32,11 @@ import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -55,13 +51,9 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -76,7 +68,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -128,7 +119,7 @@ import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder;
-import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder.JsonExport;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryLinkListener;
 import ch.elexis.core.ui.mediorder.internal.MediorderHistoryRenderer;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import jakarta.annotation.PostConstruct;
@@ -186,6 +177,7 @@ public class MediorderPart implements IRefreshablePart {
 	private MediorderActiveView mediorderActiveView = MediorderActiveView.DETAILS;
 
 	private SashForm mainSashForm;
+	private SashForm orderSashForm;
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
@@ -199,6 +191,8 @@ public class MediorderPart implements IRefreshablePart {
 
 	private Composite cDetails_table;
 	private Composite cHistory_table;
+	private Composite cHistory_timeline;
+	private Composite cPatientorder_area;
 	private Composite cPatientError_table;
 	private Composite cPatientList;
 	private StackLayout stackLayout;
@@ -316,7 +310,7 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	@Optional
 	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
-		if (IStock.class.equals(clazz)) {
+		if (IStock.class.equals(clazz) || IStockEntry.class.equals(clazz)) {
 			refresh();
 		}
 	}
@@ -355,12 +349,14 @@ public class MediorderPart implements IRefreshablePart {
 			topStackLayout.topControl = cPatientError_table;
 			getImportedPatients();
 			refreshImportedPatientsTable();
-			mainSashForm.setWeights(new int[] { 100, 0 });
+			orderSashForm.setWeights(new int[] { 100, 0 });
 			viewComposite.setVisible(false);
+			showHistoryTimeline(false);
 		} else {
 			topStackLayout.topControl = cPatientList;
 			viewComposite.setVisible(true);
-			mainSashForm.setWeights(new int[] { 50, 50 });
+			orderSashForm.setWeights(new int[] { 50, 50 });
+			showHistoryTimeline(isDetailsViewActive);
 			refreshStockTable();
 		}
 		topViewComposite.layout();
@@ -395,26 +391,12 @@ public class MediorderPart implements IRefreshablePart {
 
 		mainSashForm = new SashForm(parent, SWT.VERTICAL);
 		mainSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		mainSashForm.setSashWidth(5);
-		topViewComposite = new Composite(mainSashForm, SWT.NONE);
-		topStackLayout = new StackLayout();
-		topViewComposite.setLayout(topStackLayout);
-		createPatientorderListViewer(extensionRegistry, topViewComposite);
-		createPatientErrorViewer(topViewComposite);
+		mainSashForm.setSashWidth(10);
 
-		topStackLayout.topControl = cPatientList;
-		topViewComposite.layout();
+		createPatientorderArea(mainSashForm, extensionRegistry);
+		createPatientorderTimeline(mainSashForm);
 
-		viewComposite = new Composite(mainSashForm, SWT.NONE);
-		stackLayout = new StackLayout();
-		viewComposite.setLayout(stackLayout);
-
-		createPatientorderDetailViewer(viewComposite);
-		createPatientorderHistory(viewComposite);
-
-		stackLayout.topControl = cDetails_table;
-		mainSashForm.setWeights(new int[] { 50, 50 });
-		viewComposite.layout();
+		mainSashForm.setWeights(new int[] { 65, 35 });
 		addDragAndDrop();
 
 		menuService.registerContextMenu(tableViewer.getTable(), "ch.elexis.core.ui.mediorder.popupmenu.viewer"); //$NON-NLS-1$
@@ -428,6 +410,74 @@ public class MediorderPart implements IRefreshablePart {
 		refresh();
 
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
+	}
+
+	private void createPatientorderArea(Composite parent, IExtensionRegistry extensionRegistry) {
+		cPatientorder_area = new Composite(parent, SWT.BORDER);
+		GridLayout glOrder = new GridLayout(1, false);
+		glOrder.marginWidth = 2;
+		glOrder.marginHeight = 2;
+		cPatientorder_area.setLayout(glOrder);
+
+		orderSashForm = new SashForm(cPatientorder_area, SWT.VERTICAL);
+		orderSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		orderSashForm.setSashWidth(5);
+
+		topViewComposite = new Composite(orderSashForm, SWT.NONE);
+		topStackLayout = new StackLayout();
+		topViewComposite.setLayout(topStackLayout);
+		createPatientorderListViewer(extensionRegistry, topViewComposite);
+		createPatientErrorViewer(topViewComposite);
+
+		topStackLayout.topControl = cPatientList;
+		topViewComposite.layout();
+
+		viewComposite = new Composite(orderSashForm, SWT.NONE);
+		stackLayout = new StackLayout();
+		viewComposite.setLayout(stackLayout);
+
+		createPatientorderDetailViewer(viewComposite);
+		createPatientorderHistory(viewComposite);
+
+		stackLayout.topControl = cDetails_table;
+		viewComposite.layout();
+
+		orderSashForm.setWeights(new int[] { 50, 50 });
+	}
+
+	private void createPatientorderTimeline(Composite parent) {
+		cHistory_timeline = new Composite(parent, SWT.NONE);
+		GridLayout glTimeline = new GridLayout(1, false);
+		glTimeline.marginWidth = 2;
+		glTimeline.marginHeight = 0;
+		cHistory_timeline.setLayout(glTimeline);
+
+		setCompositeTitle(cHistory_timeline, Messages.Mediorder_history_timeline);
+
+		Label separator = new Label(cHistory_timeline, SWT.SEPARATOR | SWT.HORIZONTAL);
+		separator.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		historyRenderer = new MediorderHistoryRenderer();
+		historyBuilder = new MediorderHistoryBuilder(coreModelService, orderService, codeElementService, contextService,
+				dateFormatter, timeFormatter);
+		try {
+			historyBrowser = new Browser(cHistory_timeline, SWT.NONE);
+			historyBrowser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			historyBrowser.addLocationListener(
+					LocationListener.changingAdapter(new MediorderHistoryLinkListener(historyBuilder)::handleHistoryLink));
+		} catch (SWTError e) {
+			LoggerFactory.getLogger(getClass()).error("Failed to create the browser widget for the history.", e);
+			historyBrowser = null;
+		}
+
+		selectedDetailStock.addChangeListener(sel -> updateHistoryTimeline(selectedDetailStock.getValue()));
+	}
+
+	private void showHistoryTimeline(boolean show) {
+		if (cHistory_timeline == null || cHistory_timeline.isDisposed()) {
+			return;
+		}
+		mainSashForm.setMaximizedControl(show ? null : cPatientorder_area);
 	}
 
 	private Button createFilterButton(Composite parent, String text, List<Integer> states) {
@@ -452,6 +502,7 @@ public class MediorderPart implements IRefreshablePart {
 		};
 		isDetailsViewActive = mediorderActiveView == MediorderActiveView.DETAILS;
 		viewComposite.layout();
+		showHistoryTimeline(isDetailsViewActive);
 		saveFilterStatus();
 		return mediorderActiveView;
 	}
@@ -529,7 +580,7 @@ public class MediorderPart implements IRefreshablePart {
 		});
 
 		TableColumn tblclmntvcOrderState = tvcOrderState.getColumn();
-		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnWeightData(0, 20, true));
+		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnPixelData(22, false));
 		tblclmntvcOrderState.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -548,7 +599,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientNumber = tvcPatientNumber.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnWeightData(10, 70, true));
+		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(120, true));
 		tblclmntvcPatientNumber.setText(Messages.Core_Patient_Number);
 		tblclmntvcPatientNumber.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -563,7 +614,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientLastName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getLastName()));
 		TableColumn tblclmntvcPatientLastName = tvcPatientLastName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnWeightData(30, 200, true));
+		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(200, true));
 		tblclmntvcPatientLastName.setText(Messages.Core_Name);
 		tblclmntvcPatientLastName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -578,7 +629,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientFirstName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getFirstName()));
 		TableColumn tblclmntvcPatientFirstName = tvcPatientFirstName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnWeightData(30, 200, true));
+		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(200, true));
 		tblclmntvcPatientFirstName.setText(Messages.Core_Firstname);
 		tblclmntvcPatientFirstName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -599,7 +650,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientBirthdate = tvcPatientBirthdate.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnWeightData(10, 90, true));
+		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(170, true));
 		tblclmntvcPatientBirthdate.setText(Messages.Core_Enter_Birthdate);
 		tblclmntvcPatientBirthdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1278,11 +1329,8 @@ public class MediorderPart implements IRefreshablePart {
 
 		setCompositeTitle(cDetails_table, Messages.Mediorder_details);
 
-		SashForm detailSashForm = new SashForm(cDetails_table, SWT.VERTICAL);
-		detailSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		detailSashForm.setSashWidth(5);
-
-		Composite tableComposite = new Composite(detailSashForm, SWT.NONE);
+		Composite tableComposite = new Composite(cDetails_table, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcLayout_cDetails = new TableColumnLayout();
 		tableComposite.setLayout(tcLayout_cDetails);
 
@@ -1324,7 +1372,7 @@ public class MediorderPart implements IRefreshablePart {
 		// Medication type symbol
 		TableViewerColumn tvcMedicationTypeSymbol = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcMedicationTypeSymbol = tvcMedicationTypeSymbol.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationTypeSymbol, new ColumnWeightData(2, 2, false));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationTypeSymbol, new ColumnPixelData(22, false));
 		tvcMedicationTypeSymbol.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -1373,7 +1421,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnWeightData(10, 120, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(120, true));
 		tblclmntvcMedicationOrdered.setText(Messages.Mediorder_Order_status);
 		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
 		tblclmntvcMedicationOrdered.setToolTipText(Messages.Mediorder_Order_status_Tooltip);
@@ -1385,7 +1433,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMedication.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IStockEntry) e).getArticle().getLabel()));
 		TableColumn tblclmntvcMedication = tvcMedication.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnWeightData(30, 400, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(400, true));
 		tblclmntvcMedication.setText(Messages.Core_Article);
 		tblclmntvcMedication.addSelectionListener(new SelectionAdapter() {
 
@@ -1411,7 +1459,7 @@ public class MediorderPart implements IRefreshablePart {
 			return "";
 		}));
 		TableColumn tblclmntvcMedicationDosage = tvcMedicationDosage.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnWeightData(10, 70, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(70, true));
 		tblclmntvcMedicationDosage.setText(Messages.Core_Dosage);
 
 		// medication no days consumption per dosage
@@ -1419,7 +1467,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderEntryOutreach.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
 		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnWeightData(10, 100, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(100, true));
 		tblclmntvcMedicationAmountDay.setText(Messages.Mediorder_sufficient_for);
 
 		// medication designated amount for ordering
@@ -1464,7 +1512,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationAmount = tvcMedicationAmount.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnWeightData(10, 110, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnPixelData(110, true));
 		tblclmntvcMedicationAmount.setText(Messages.Mediorder_requested);
 		tblclmntvcMedicationAmount.setImage(Images.IMG_ACHTUNG.getImage());
 		tblclmntvcMedicationAmount.setToolTipText(Messages.Mediorder_requested_Tooltip);
@@ -1510,7 +1558,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationClearance = tvcMedicationClearance.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnWeightData(10, 110, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnPixelData(110, true));
 		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
 		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
 		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
@@ -1518,7 +1566,7 @@ public class MediorderPart implements IRefreshablePart {
 		// use from default stock
 		TableViewerColumn tvcArticleFromDefaultStock = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcArticleFromDefaultStock = tvcArticleFromDefaultStock.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnWeightData(0, 70, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnPixelData(70, true));
 		tblclmntvcArticleFromDefaultStock.setText(Messages.Mediorder_from_stock);
 		tblclmntvcArticleFromDefaultStock.setToolTipText(Messages.Mediorder_from_stock_Tooltip);
 		tvcArticleFromDefaultStock.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
@@ -1564,7 +1612,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		TableViewerColumn tvcOrderDate = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcOrderDate = tvcOrderDate.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnWeightData(10, 80, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnPixelData(90, true));
 		tblclmntvcOrderDate.setText(Messages.Mediorder_order_date);
 		tblclmntvcOrderDate.setToolTipText(Messages.Mediorder_order_date_Tooltip);
 		tvcOrderDate.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
@@ -1580,28 +1628,6 @@ public class MediorderPart implements IRefreshablePart {
 			}
 			return null;
 		}));
-
-		Composite historyComposite = new Composite(detailSashForm, SWT.NONE);
-		GridLayout glHistory = new GridLayout(1, false);
-		glHistory.marginWidth = 0;
-		glHistory.marginHeight = 0;
-		historyComposite.setLayout(glHistory);
-
-		historyRenderer = new MediorderHistoryRenderer();
-		historyBuilder = new MediorderHistoryBuilder(coreModelService, orderService, codeElementService,
-				dateFormatter, timeFormatter);
-		try {
-			historyBrowser = new Browser(historyComposite, SWT.NONE);
-			historyBrowser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			historyBrowser.addLocationListener(LocationListener.changingAdapter(this::handleHistoryJsonLink));
-		} catch (SWTError e) {
-			LoggerFactory.getLogger(getClass()).error("Failed to create the browser widget for the history.", e);
-			historyBrowser = null;
-		}
-
-		detailSashForm.setWeights(new int[] { 60, 40 });
-
-		selectedDetailStock.addChangeListener(sel -> updateHistoryTimeline(selectedDetailStock.getValue()));
 	}
 
 	private void createPatientorderHistory(Composite parent) {
@@ -1691,43 +1717,6 @@ public class MediorderPart implements IRefreshablePart {
 			return;
 		}
 		historyBrowser.setText(historyRenderer.renderSections(historyBuilder.buildSections(stock)));
-	}
-
-	private void handleHistoryJsonLink(LocationEvent event) {
-		if (!MediorderHistoryBuilder.isJsonLink(event.location)) {
-			return;
-		}
-		event.doit = false;
-		String location = event.location;
-		Display.getDefault().asyncExec(() -> historyBuilder.resolveJsonExport(location).ifPresent(export -> {
-			if (export.download()) {
-				downloadJsonData(export);
-			} else {
-				copyJsonData(export.json());
-			}
-		}));
-	}
-
-	private void downloadJsonData(JsonExport export) {
-		if (historyBrowser == null || historyBrowser.isDisposed()) {
-			return;
-		}
-		FileDialog dialog = new FileDialog(historyBrowser.getShell(), SWT.SAVE);
-		dialog.setText("JSON speichern");
-		dialog.setFilterExtensions(new String[] { "*.json", "*.*" });
-		dialog.setFileName(export.fileName());
-		dialog.setOverwrite(true);
-		String selected = dialog.open();
-		if (selected == null) {
-			return;
-		}
-		try {
-			Files.writeString(Path.of(selected), export.json(), StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			LoggerFactory.getLogger(getClass()).error("Failed to save the JSON for blob {}.", export.blobId(), e);
-			MessageDialog.openError(historyBrowser.getShell(), "JSON speichern",
-					"Die Datei konnte nicht geschrieben werden.");
-		}
 	}
 
 	private TextCellEditor createTextCellEditor() {
@@ -1907,18 +1896,6 @@ public class MediorderPart implements IRefreshablePart {
 				.toList();
 	}
 
-	private void copyJsonData(String json) {
-		if (StringUtils.isBlank(json)) {
-			return;
-		}
-		Clipboard clipboard = new Clipboard(Display.getDefault());
-		try {
-			clipboard.setContents(new Object[] { json }, new Transfer[] { TextTransfer.getInstance() });
-		} finally {
-			clipboard.dispose();
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<IPatient> getSelectedImportedPatients() {
 		return tableViewerImportedPatients.getStructuredSelection().toList();
@@ -2039,6 +2016,7 @@ public class MediorderPart implements IRefreshablePart {
 		mediorderActiveView = isDetailsViewActive ? MediorderActiveView.DETAILS : MediorderActiveView.HISTORY;
 		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
 		viewComposite.layout();
+		showHistoryTimeline(isDetailsViewActive);
 	}
 
 	private void applyStockFilter(Button source, List<Integer> states) {

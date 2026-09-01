@@ -43,6 +43,7 @@ import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.OrderHistoryAction;
 import ch.elexis.core.model.OrderHistoryEntry;
 import ch.elexis.core.services.ICodeElementService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IQuery;
@@ -51,23 +52,27 @@ import ch.elexis.core.ui.mediorder.MediorderPartUtil;
 
 public class MediorderHistoryBuilder {
 
-	private static final String HISTORY_JSON_LINK = "http://mediorder.elexis/json/";
+	private static final String HISTORY_LINK = "http://mediorder.elexis/";
+	private static final String HISTORY_JSON_LINK = HISTORY_LINK + "json/";
 	private static final String HISTORY_JSON_COPY = HISTORY_JSON_LINK + "copy/";
 	private static final String HISTORY_JSON_DOWNLOAD = HISTORY_JSON_LINK + "download/";
+	private static final String HISTORY_ORDER_LINK = HISTORY_LINK + "order/";
 
 	private final IModelService coreModelService;
 	private final IOrderService orderService;
 	private final ICodeElementService codeElementService;
+	private final IContextService contextService;
 	private final DateTimeFormatter dateFormatter;
 	private final DateTimeFormatter timeFormatter;
 	private final Map<String, String> historyJsonRefs = new HashMap<>();
 
 	public MediorderHistoryBuilder(IModelService coreModelService, IOrderService orderService,
-			ICodeElementService codeElementService, DateTimeFormatter dateFormatter,
+			ICodeElementService codeElementService, IContextService contextService, DateTimeFormatter dateFormatter,
 			DateTimeFormatter timeFormatter) {
 		this.coreModelService = coreModelService;
 		this.orderService = orderService;
 		this.codeElementService = codeElementService;
+		this.contextService = contextService;
 		this.dateFormatter = dateFormatter;
 		this.timeFormatter = timeFormatter;
 	}
@@ -82,8 +87,23 @@ public class MediorderHistoryBuilder {
 		return location != null && location.startsWith(HISTORY_JSON_LINK);
 	}
 
+	public static boolean isOrderLink(String location) {
+		return location != null && location.startsWith(HISTORY_ORDER_LINK);
+	}
+
+	public Optional<IOrder> resolveOrder(String location) {
+		if (!isOrderLink(location)) {
+			return Optional.empty();
+		}
+		String orderId = StringUtils.strip(location.substring(HISTORY_ORDER_LINK.length()), "/");
+		if (StringUtils.isBlank(orderId)) {
+			return Optional.empty();
+		}
+		return coreModelService.load(orderId, IOrder.class);
+	}
+
 	public Optional<JsonExport> resolveJsonExport(String location) {
-		if (!isJsonLink(location)) {
+		if (!isJsonLink(location) || !isAdministrator()) {
 			return Optional.empty();
 		}
 		boolean download = location.startsWith(HISTORY_JSON_DOWNLOAD);
@@ -108,11 +128,34 @@ public class MediorderHistoryBuilder {
 	}
 
 	public List<Map<String, Object>> buildSections(IStock stock) {
+		IPatient patient = stock != null && stock.getOwner() != null ? stock.getOwner().asIPatient() : null;
+		return buildSections(patient, stock, null);
+	}
+
+	/**
+	 * Build the history of a patient.
+	 *
+	 * @param patient the patient whose history is built
+	 * @param stock   the patient stock, may be <code>null</code>
+	 * @param blobId  id of the online order to restrict the history to, or
+	 *                <code>null</code> for the complete history. If the order is no
+	 *                longer available, the complete history is built instead.
+	 * @return the sections to render
+	 */
+	public List<Map<String, Object>> buildSections(IPatient patient, IStock stock, String blobId) {
+		List<Map<String, Object>> sections = collectSections(patient, stock, blobId);
+		if (sections.isEmpty() && blobId != null) {
+			sections = collectSections(patient, stock, null);
+		}
+		return sections;
+	}
+
+	private List<Map<String, Object>> collectSections(IPatient patient, IStock stock, String blobId) {
 		historyJsonRefs.clear();
-		if (stock == null || stock.getOwner() == null) {
+		if (patient == null) {
 			return List.of();
 		}
-		List<OrderRound> rounds = loadRounds(stock);
+		List<OrderRound> rounds = loadRounds(patient);
 		if (rounds.isEmpty()) {
 			rounds = List.of(new OrderRound(null, null, List.of()));
 		}
@@ -120,8 +163,11 @@ public class MediorderHistoryBuilder {
 		List<Map<String, Object>> sections = new ArrayList<>();
 		for (int i = newest; i >= 0; i--) {
 			OrderRound round = rounds.get(i);
+			if (blobId != null && (round.blob() == null || !blobId.equals(round.blob().getId()))) {
+				continue;
+			}
 			boolean isOpenRound = i == newest && !isClosed(round.events());
-			List<TimelineEntry> collected = collectRoundEntries(stock, round, isOpenRound);
+			List<TimelineEntry> collected = collectRoundEntries(patient, stock, round, isOpenRound);
 			if (collected.isEmpty()) {
 				continue;
 			}
@@ -130,12 +176,13 @@ public class MediorderHistoryBuilder {
 		return sections;
 	}
 
-	private List<TimelineEntry> collectRoundEntries(IStock stock, OrderRound round, boolean isOpenRound) {
+	private List<TimelineEntry> collectRoundEntries(IPatient patient, IStock stock, OrderRound round,
+			boolean isOpenRound) {
 		List<TimelineEntry> collected = new ArrayList<>();
 		if (round.blob() != null) {
-			addOnlineOrderEntry(collected, stock, round.blob(), round.receivedAt());
+			addOnlineOrderEntry(collected, patient, round.blob(), round.receivedAt());
 		}
-		if (isOpenRound) {
+		if (isOpenRound && stock != null) {
 			if (round.blob() != null) {
 				addArticleDiffEntries(collected, stock, round.blob(), round.events());
 			}
@@ -168,18 +215,29 @@ public class MediorderHistoryBuilder {
 		section.put("summary", describeSummary(round.events(), collected));
 		section.put("expanded", expanded);
 		section.put("entries", collected.stream().map(TimelineEntry::model).collect(Collectors.toList()));
-		addJsonLinks(section, round.blob());
 		return section;
 	}
 
+	private void addOrderLink(Map<String, Object> model, IOrder order) {
+		if (model == null || order == null || StringUtils.isBlank(order.getId())) {
+			return;
+		}
+		model.put("orderHref", HISTORY_ORDER_LINK + order.getId());
+		model.put("orderLabel", StringUtils.defaultIfBlank(order.getLabel(), order.getId()));
+	}
+
 	private void addJsonLinks(Map<String, Object> model, IBlob blob) {
-		if (blob == null || StringUtils.isBlank(blob.getId())) {
+		if (blob == null || StringUtils.isBlank(blob.getId()) || !isAdministrator()) {
 			return;
 		}
 		String token = "j" + historyJsonRefs.size();
 		historyJsonRefs.put(token, blob.getId());
 		model.put("jsonCopyHref", HISTORY_JSON_COPY + token);
 		model.put("jsonDownloadHref", HISTORY_JSON_DOWNLOAD + token);
+	}
+
+	private boolean isAdministrator() {
+		return contextService != null && contextService.getActiveUser().map(IUser::isAdministrator).orElse(false);
 	}
 	
 	private String describeTitle(int number, OrderRound round, boolean isOpenRound) {
@@ -222,11 +280,7 @@ public class MediorderHistoryBuilder {
 				.sorted(byReceived).toList();
 	}
 
-	private List<OrderRound> loadRounds(IStock stock) {
-		if (stock == null || stock.getOwner() == null) {
-			return List.of();
-		}
-		IPatient patient = stock.getOwner().asIPatient();
+	private List<OrderRound> loadRounds(IPatient patient) {
 		if (patient == null) {
 			return List.of();
 		}
@@ -278,7 +332,7 @@ public class MediorderHistoryBuilder {
 		return round.stream().anyMatch(e -> OrderHistoryAction.PICKEDUP.equals(e.getAction()));
 	}
 
-	private void addOnlineOrderEntry(List<TimelineEntry> collected, IStock stock, IBlob blob,
+	private void addOnlineOrderEntry(List<TimelineEntry> collected, IPatient patient, IBlob blob,
 			LocalDateTime receivedAt) {
 		LocalDateTime timestamp = receivedAt != null ? receivedAt
 				: MediorderBlobId.resolveTimestamp(blob).orElse(null);
@@ -289,7 +343,7 @@ public class MediorderHistoryBuilder {
 			entry.put("description", medications.stream().map(m -> m.name() + " (" + m.count() + ")")
 					.collect(Collectors.joining(", ")));
 		}
-		entry.put("actor", stock.getOwner().getLabel());
+		entry.put("actor", patient.getLabel());
 		addJsonLinks(entry, blob);
 		if (!timeKnown) {
 			entry.put("timeLabel", "");
@@ -423,6 +477,7 @@ public class MediorderHistoryBuilder {
 			if (log == null) {
 				continue;
 			}
+			List<TimelineEntry> orderTimeline = new ArrayList<>();
 			for (OrderHistoryEntry logged : parseOrderHistory(log)) {
 				OrderHistoryAction action = logged.getAction();
 				if (action == null) {
@@ -439,9 +494,31 @@ public class MediorderHistoryBuilder {
 				Map<String, Object> model = createModel(type, timestamp, action.getTranslation());
 				model.put("description", StringUtils.defaultString(logged.getDetails()));
 				model.put("actor", resolveUserLabel(logged.getUserId()));
-				collected.add(new TimelineEntry(timestamp, model));
+				orderTimeline.add(new TimelineEntry(timestamp, model));
+			}
+			addOrderLink(getNewestOrder(orderTimeline), order);
+			collected.addAll(orderTimeline);
+		}
+	}
+
+	/**
+	 * Determine the model of the most recent entry, so that only this one carries
+	 * the link to the order.
+	 *
+	 * @param entries the entries of a single order, in the order they were logged
+	 * @return the model to link, or <code>null</code> if there is none
+	 */
+	private Map<String, Object> getNewestOrder(List<TimelineEntry> entries) {
+		TimelineEntry newest = null;
+		for (TimelineEntry entry : entries) {
+			if (newest == null) {
+				newest = entry;
+			} else if (entry.sortKey() != null
+					&& (newest.sortKey() == null || entry.sortKey().isAfter(newest.sortKey()))) {
+				newest = entry;
 			}
 		}
+		return newest != null ? newest.model() : null;
 	}
 
 	private String mapOrderActionToType(OrderHistoryAction action) {

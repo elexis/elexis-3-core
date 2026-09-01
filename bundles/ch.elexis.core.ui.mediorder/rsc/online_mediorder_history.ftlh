@@ -12,7 +12,7 @@
           <div class="tl-marker" aria-hidden="true"><span class="tl-dot"></span></div>
 
           <div class="tl-content">
-            <p class="tl-title">${entry.title!entry.action!''}<@jsonLinks target=entry /></p>
+            <p class="tl-title">${entry.title!entry.action!''}<@orderLink target=entry /><@jsonLinks target=entry /></p>
             <#if (entry.description)?has_content>
               <p class="tl-desc">${entry.description}</p>
             </#if>
@@ -26,6 +26,23 @@
     </ol>
   <#else>
     <p class="tl-empty">${emptyText}</p>
+  </#if>
+</#macro>
+
+<#--
+  Link auf die Bestellung in Elexis.
+  Erwartet im Modell 'orderHref' (Ziel) und optional 'orderLabel' (Bezeichnung
+  der Bestellung, wird als Tooltip angezeigt). Der Link wird nicht wirklich
+  geoeffnet, sondern vom LocationListener der View abgefangen (siehe
+  MediorderPart), der die Bestellansicht oeffnet und die Bestellung selektiert.
+-->
+<#macro orderLink target label="Bestellung anzeigen">
+  <#if (target.orderHref)?has_content>
+    <span class="order-actions">
+      <a class="order-link" href="${target.orderHref}"
+         title="${(target.orderLabel)!label} in Elexis oeffnen"
+         onclick="event.stopPropagation();">${label}</a>
+    </span>
   </#if>
 </#macro>
 

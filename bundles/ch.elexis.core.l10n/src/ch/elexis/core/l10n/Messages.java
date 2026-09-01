@@ -3037,6 +3037,7 @@ public class Messages extends NLS {
 	public static String Medication_headerComment;
 	public static String Mediorder_details;
 	public static String Mediorder_history;
+	public static String Mediorder_history_timeline;
 	public static String Mediorder_inactive_patient_stock;
 	public static String Mediorder_no_activated_articles;
 	public static String Mediorder_Order_status;
@@ -5474,6 +5475,7 @@ public class Messages extends NLS {
 	public static String RegiomedSender_AlternativeNotFoundLocally;
 	public static String RegiomedCheckTemplate_AvailableAlternatives;
 	public static String RegiomedCheckTemplate_NoAlternativeAvailable;
+	public static String RegiomedCheckTemplate_NotInArticleStock;
 	public static String RegiomedCheckTemplate_BtnReplace;
 	public static String RegiomedCheckTemplate_BadgeReplaced;
 	public static String RegiomedCheckDialog_ErrorLabel;
@@ -5487,6 +5489,7 @@ public class Messages extends NLS {
 	public static String RegiomedCheckDialog_ItemRejected;
 	public static String RegiomedCheckDialog_Reason;
 	public static String RegiomedCheckDialog_NotOrderable;
+	public static String RegiomedCheckDialog_NotInArticleStock;
 	public static String RegiomedCheckDialog_ConfirmOrderTitle;
 	public static String RegiomedCheckDialog_ConfirmOrderMsgPrefix;
 	public static String RegiomedCheckDialog_ConfirmOrderMsgSuffix;

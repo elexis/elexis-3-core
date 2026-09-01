@@ -1,9 +1,11 @@
 package ch.elexis.core.services;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,22 @@ public class OrderHistoryService implements IOrderHistoryService {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderHistoryService.class);
 
+	private static final Gson GSON = new Gson();
+
+	private static final Type ENTRY_LIST_TYPE = new TypeToken<List<OrderHistoryEntry>>() {
+	}.getType();
+
 	public static final String MEDIORDER_OBJECT_TYPE = "ch.elexis.core.mediorder"; //$NON-NLS-1$
+
+	/**
+	 * Object type of the {@link IOutputLog} entries written for an {@link IOrder}.
+	 * Deliberately not derived from the runtime class of the order, as
+	 * {@link IOrder} has more than one implementation
+	 * ({@link ch.elexis.core.model.Order} and the legacy ch.elexis.data.Bestellung)
+	 * and the same order would otherwise be logged under two different types. The
+	 * value must stay stable, as it is used to look up already persisted logs.
+	 */
+	public static final String ORDER_OBJECT_TYPE = "ch.elexis.core.model.Order"; //$NON-NLS-1$
 
 	@Override
 	public void logCreateOrder(IOrder order) {
@@ -171,7 +188,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (patient == null) {
 			return new ArrayList<>();
 		}
-		return readEntries(findLog(patient.getId(), MEDIORDER_OBJECT_TYPE));
+		return findLog(patient.getId(), MEDIORDER_OBJECT_TYPE).map(this::readEntries).orElseGet(ArrayList::new);
 	}
 
 	private String joinArticles(List<String> articles) {
@@ -182,8 +199,8 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (patient == null) {
 			return;
 		}
-		OrderHistoryEntry entry = new OrderHistoryEntry(action, activeUserId(), details, extraInfo);
-		appendEntry(patient.getId(), MEDIORDER_OBJECT_TYPE, MEDIORDER_OBJECT_TYPE, entry, false);
+		OrderHistoryEntry entry = new OrderHistoryEntry(action, getActiveUserId(), details, extraInfo);
+		appendEntry(patient.getId(), MEDIORDER_OBJECT_TYPE, entry);
 	}
 
 	private void logOrderStatus(IOrder order, OrderHistoryAction action, String details) {
@@ -193,41 +210,57 @@ public class OrderHistoryService implements IOrderHistoryService {
 	private void logOrderStatus(IOrder order, OrderHistoryAction action, String details, String extraInfo) {
 		if (order == null)
 			return;
-		OrderHistoryEntry entry = new OrderHistoryEntry(action, activeUserId(), details, extraInfo);
+		OrderHistoryEntry entry = new OrderHistoryEntry(action, getActiveUserId(), details, extraInfo);
 		saveLogEntry(order, entry);
 	}
 
 	private void saveLogEntry(IOrder order, OrderHistoryEntry entry) {
-		if (order == null)
+		if (order == null) {
 			return;
-		appendEntry(order.getId(), order.getClass().getName(), null, entry, true);
+		}
+		Optional<IOutputLog> existingLog = findLog(order.getId(), ORDER_OBJECT_TYPE);
+		if (existingLog.flatMap(log -> findEntry(log, entry)).isPresent()) {
+			return;
+		}
+		appendEntry(existingLog, order.getId(), ORDER_OBJECT_TYPE, entry);
 	}
 
-	private String activeUserId() {
+	/**
+	 * Look for an entry already present in the log, matching action, user, details
+	 * and extra info of the provided entry. Used to avoid logging the very same
+	 * information twice, as order events may be triggered repeatedly.
+	 *
+	 * @param log
+	 * @param entry
+	 * @return
+	 */
+	private Optional<OrderHistoryEntry> findEntry(IOutputLog log, OrderHistoryEntry entry) {
+		return readEntries(log).stream()
+				.filter(e -> Objects.equals(e.getAction(), entry.getAction())
+						&& Objects.equals(e.getUserId(), entry.getUserId())
+						&& Objects.equals(e.getDetails(), entry.getDetails())
+						&& Objects.equals(e.getExtraInfo(), entry.getExtraInfo()))
+				.findFirst();
+	}
+
+	private String getActiveUserId() {
 		return PortableServiceLoader.get(IContextService.class).getActiveUser().map(user -> user.getId())
 				.orElse("Unknown"); //$NON-NLS-1$
 	}
 
-	private IOutputLog findLog(String objectId, String objectType) {
+	private Optional<IOutputLog> findLog(String objectId, String objectType) {
 		IQuery<IOutputLog> query = PortableServiceLoader.getCoreModelService().getQuery(IOutputLog.class);
 		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, objectId);
-		if (objectType != null) {
-			query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_TYPE, COMPARATOR.EQUALS, objectType);
-		}
-		List<IOutputLog> results = query.execute();
-		return results.isEmpty() ? null : results.get(0);
+		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_TYPE, COMPARATOR.EQUALS, objectType);
+		return query.execute().stream().findFirst();
 	}
 
 	private List<OrderHistoryEntry> readEntries(IOutputLog log) {
 		List<OrderHistoryEntry> logList = new ArrayList<>();
-		if (log == null) {
-			return logList;
-		}
 		try {
 			JsonElement jsonElement = JsonParser.parseString(log.getOutputterStatus());
 			if (jsonElement.isJsonArray()) {
-				logList = new Gson().fromJson(jsonElement, new TypeToken<List<OrderHistoryEntry>>() {
-				}.getType());
+				logList = GSON.fromJson(jsonElement, ENTRY_LIST_TYPE);
 			}
 		} catch (Exception e) {
 			logger.error("Error when parsing the existing logs: " + e.getMessage()); //$NON-NLS-1$
@@ -235,32 +268,25 @@ public class OrderHistoryService implements IOrderHistoryService {
 		return logList;
 	}
 
-	private void appendEntry(String objectId, String objectType, String lookupType, OrderHistoryEntry entry,
-			boolean suppressDuplicates) {
-		IOutputLog existingLog = findLog(objectId, lookupType);
-		List<OrderHistoryEntry> logList = readEntries(existingLog);
+	private void appendEntry(String objectId, String objectType, OrderHistoryEntry entry) {
+		appendEntry(findLog(objectId, objectType), objectId, objectType, entry);
+	}
 
-		if (suppressDuplicates) {
-			boolean exists = logList.stream()
-					.anyMatch(e -> e.getAction() != null && e.getAction().equals(entry.getAction())
-							&& e.getUserId().equals(entry.getUserId())
-							&& Objects.equals(e.getDetails(), entry.getDetails())
-							&& Objects.equals(e.getExtraInfo(), entry.getExtraInfo()));
-			if (exists) {
-				return;
-			}
-		}
+	private void appendEntry(Optional<IOutputLog> existingLog, String objectId, String objectType,
+			OrderHistoryEntry entry) {
+		List<OrderHistoryEntry> logList = existingLog.map(this::readEntries).orElseGet(ArrayList::new);
 		logList.add(entry);
 
-		String updatedJson = new Gson().toJson(logList);
-		if (existingLog != null) {
-			existingLog.setOutputterStatus(updatedJson);
-			PortableServiceLoader.getCoreModelService().save(existingLog);
+		String updatedJson = GSON.toJson(logList);
+		if (existingLog.isPresent()) {
+			IOutputLog log = existingLog.get();
+			log.setOutputterStatus(updatedJson);
+			PortableServiceLoader.getCoreModelService().save(log);
 		} else {
 			IOutputLog outputLog = PortableServiceLoader.getCoreModelService().create(IOutputLog.class);
 			outputLog.setObjectId(objectId);
 			outputLog.setObjectType(objectType);
-			outputLog.setCreatorId(activeUserId());
+			outputLog.setCreatorId(getActiveUserId());
 			outputLog.setOutputter(OrderHistoryService.class.getName());
 			outputLog.setDate(LocalDate.now());
 			outputLog.setOutputterStatus(updatedJson);

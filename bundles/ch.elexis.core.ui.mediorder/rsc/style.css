@@ -117,10 +117,6 @@ body {
   margin-left: 0.625rem;
 }
 
-.acc-head .json-actions {
-  margin-left: auto;
-}
-
 .tl-title .json-actions {
   margin-left: 0.5rem;
 }
@@ -133,6 +129,27 @@ body {
 }
 
 .json-link:hover {
+  border-bottom-style: solid;
+}
+
+.order-actions {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tl-title .order-actions {
+  margin-left: 0.5rem;
+}
+
+.order-link {
+  color: var(--acc-open, #2563eb);
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+  cursor: pointer;
+}
+
+.order-link:hover {
   border-bottom-style: solid;
 }
 

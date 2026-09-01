@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
@@ -25,6 +26,7 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOutputLog;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
@@ -42,6 +44,7 @@ public class OrderService implements IOrderService {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 	private static final int RECENT_ORDERS_YEARS = 2;
+	private static final String PATIENT_STOCK_ID_PREFIX = "PatientStock-"; //$NON-NLS-1$
 
 	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
@@ -92,6 +95,126 @@ public class OrderService implements IOrderService {
 			return entry;
 		}
 		return null;
+	}
+
+	@Override
+	public void syncMediorderArticleReplacement(IOrderEntry entry, IArticle previousArticle) {
+		if (entry == null || previousArticle == null) {
+			return;
+		}
+		IArticle newArticle = entry.getArticle();
+		IStock stock = entry.getStock();
+		if (newArticle == null || previousArticle.getId().equals(newArticle.getId()) || !isPatientStock(stock)) {
+			return;
+		}
+		try {
+			moveStockEntryAmounts(stock, previousArticle, newArticle, entry.getAmount());
+			logArticleReplacement(stock, previousArticle, newArticle);
+		} catch (RuntimeException e) {
+			log.error("Could not follow the replacement of article [{}] by [{}] on stock [{}]",
+					previousArticle.getId(), newArticle.getId(), stock.getId(), e);
+		}
+	}
+
+	@Override
+	public void syncMediorderAmount(IOrderEntry entry, int previousAmount) {
+		if (entry == null || entry.getAmount() == previousAmount) {
+			return;
+		}
+		try {
+			if (entry.getOrder() != null) {
+				getHistoryService().logChangedAmount(entry.getOrder(), entry, previousAmount, entry.getAmount());
+			}
+			adjustStockEntryReservation(entry, entry.getAmount() - previousAmount);
+		} catch (RuntimeException e) {
+			log.error("Could not follow the amount change of order entry [{}]", entry.getId(), e);
+		}
+	}
+
+	/**
+	 * Move the amount covered by the replaced order entry from the stock entry of
+	 * the old article to the stock entry of the new one.
+	 */
+	private void moveStockEntryAmounts(IStock stock, IArticle oldArticle, IArticle newArticle, int amount) {
+		IStockEntry source = findStockEntry(stock, oldArticle);
+		if (source == null) {
+			return;
+		}
+		int minimumToMove = Math.min(source.getMinimumStock(), amount);
+		int maximumToMove = Math.min(source.getMaximumStock(), amount);
+
+		IStockEntry target = findStockEntry(stock, newArticle);
+		if (target == null) {
+			target = modelService.create(IStockEntry.class);
+			target.setStock(stock);
+			target.setArticle(newArticle);
+			target.setCurrentStock(0);
+			target.setProvider(source.getProvider());
+		}
+		target.setMinimumStock(target.getMinimumStock() + minimumToMove);
+		target.setMaximumStock(target.getMaximumStock() + maximumToMove);
+		modelService.save(target);
+
+		source.setMinimumStock(source.getMinimumStock() - minimumToMove);
+		source.setMaximumStock(source.getMaximumStock() - maximumToMove);
+		if (source.getCurrentStock() > 0) {
+			source.setMinimumStock(Math.max(source.getMinimumStock(), source.getCurrentStock()));
+			source.setMaximumStock(Math.max(source.getMaximumStock(), source.getMinimumStock()));
+		}
+		if (source.getMinimumStock() == 0 && source.getMaximumStock() == 0 && source.getCurrentStock() == 0) {
+			modelService.remove(source);
+		} else {
+			modelService.save(source);
+		}
+	}
+
+	/**
+	 * Adjusts the patient stock reservation to match the actual order quantity. The
+	 * minimum stock changes with the order so the entry can reach
+	 * {@link MediorderEntryState#IN_STOCK} when the delivery arrives. The maximum
+	 * stock remains unchanged, allowing any quantity reduced by the supplier to be
+	 * ordered again later.
+	 */
+	private void adjustStockEntryReservation(IOrderEntry entry, int amountDifference) {
+		IStock stock = entry.getStock();
+		if (amountDifference == 0 || entry.getArticle() == null || !isPatientStock(stock)) {
+			return;
+		}
+		IStockEntry stockEntry = findStockEntry(stock, entry.getArticle());
+		if (stockEntry == null) {
+			return;
+		}
+		int minimumStock = Math.max(stockEntry.getMinimumStock() + amountDifference, stockEntry.getCurrentStock());
+		minimumStock = Math.min(minimumStock, stockEntry.getMaximumStock());
+		if (minimumStock == stockEntry.getMinimumStock()) {
+			return;
+		}
+		stockEntry.setMinimumStock(minimumStock);
+		modelService.save(stockEntry);
+	}
+
+	private IStockEntry findStockEntry(IStock stock, IArticle article) {
+		try {
+			return StockServiceHolder.get().findStockEntryForArticleInStock(stock, article);
+		} catch (RuntimeException e) {
+			log.error("Could not resolve stock entry of article [{}] in stock [{}]",
+					article != null ? article.getId() : null, stock != null ? stock.getId() : null, e);
+			return null;
+		}
+	}
+
+	private boolean isPatientStock(IStock stock) {
+		return stock != null && stock.getId() != null && stock.getId().startsWith(PATIENT_STOCK_ID_PREFIX);
+	}
+
+	private void logArticleReplacement(IStock stock, IArticle oldArticle, IArticle newArticle) {
+		if (stock == null || stock.getOwner() == null || !stock.getOwner().isPatient()) {
+			return;
+		}
+		IPatient patient = stock.getOwner().asIPatient();
+		IOrderHistoryService historyService = getHistoryService();
+		historyService.logMediorderArticleRemoved(patient, oldArticle);
+		historyService.logMediorderArticleAdded(patient, newArticle);
 	}
 
 	@Override

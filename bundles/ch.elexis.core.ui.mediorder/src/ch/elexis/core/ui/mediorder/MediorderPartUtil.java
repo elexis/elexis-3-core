@@ -2,10 +2,12 @@ package ch.elexis.core.ui.mediorder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +21,7 @@ import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -32,12 +35,41 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 
 public class MediorderPartUtil {
 
+	/**
+	 * Resolve the {@link IPatient} owning the stock of the provided
+	 * {@link IStockEntry}.
+	 *
+	 * @param entry
+	 * @return the patient, or {@link Optional#empty()} if the entry has no stock or
+	 *         the stock is not owned by a patient
+	 */
+	public static Optional<IPatient> getPatient(IStockEntry entry) {
+		return entry != null ? getPatient(entry.getStock()) : Optional.empty();
+	}
+
+	/**
+	 * Resolve the {@link IPatient} owning the provided {@link IStock}. The owner of
+	 * a stock is not necessarily a patient, therefore the result may be empty.
+	 *
+	 * @param stock
+	 * @return the patient, or {@link Optional#empty()} if the stock has no owner or
+	 *         the owner is not a patient
+	 */
+	public static Optional<IPatient> getPatient(IStock stock) {
+		IPerson owner = stock != null ? stock.getOwner() : null;
+		if (owner == null || !owner.isPatient()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(owner.asIPatient());
+	}
+
 	public static String createMediorderEntryOutreachLabel(Object object) {
 		if (object instanceof IStockEntry stockEntry) {
 			Double resultDays = null;
-			IPatient patient = stockEntry.getStock().getOwner().asIPatient();
-			List<IPrescription> lMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
-					EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			List<IPrescription> lMedication = getPatient(stockEntry)
+					.map(patient -> patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+							EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION)))
+					.orElseGet(Collections::emptyList);
 			for (IPrescription prescription : lMedication) {
 				if (prescription.getArticle().equals(stockEntry.getArticle())) {
 					float dailyDosageAsFloat = MedicationServiceHolder.get().getDailyDosageAsFloat(prescription);
@@ -74,10 +106,7 @@ public class MediorderPartUtil {
 		}
 		Map<IPatient, List<String>> articlesByPatient = new LinkedHashMap<>();
 		for (IStockEntry entry : entries) {
-			if (entry == null || entry.getStock() == null || entry.getStock().getOwner() == null) {
-				continue;
-			}
-			IPatient patient = entry.getStock().getOwner().asIPatient();
+			IPatient patient = getPatient(entry).orElse(null);
 			if (patient == null) {
 				continue;
 			}
@@ -100,7 +129,7 @@ public class MediorderPartUtil {
 			stockService.performSingleReturn(entry.getArticle(), entry.getCurrentStock(), mandatorId);
 		}
 		IStock stock = entry.getStock();
-		IPatient patient = stock != null && stock.getOwner() != null ? stock.getOwner().asIPatient() : null;
+		IPatient patient = getPatient(stock).orElse(null);
 		IArticle article = entry.getArticle();
 
 		coreModelService.remove(entry);

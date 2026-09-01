@@ -24,7 +24,6 @@ ${(css!'')?no_esc}
           <#if (section.rangeLabel)?has_content>
             <span class="acc-range">${section.rangeLabel}</span>
           </#if>
-          <@tl.jsonLinks target=section />
           <#if (section.summary)?has_content>
             <span class="acc-summary">${section.summary}</span>
           </#if>
