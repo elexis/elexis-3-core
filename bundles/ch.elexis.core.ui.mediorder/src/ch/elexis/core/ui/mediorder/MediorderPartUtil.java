@@ -2,9 +2,13 @@ package ch.elexis.core.ui.mediorder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,26 +18,58 @@ import com.google.gson.JsonObject;
 
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 
 public class MediorderPartUtil {
 
+	/**
+	 * Resolve the {@link IPatient} owning the stock of the provided
+	 * {@link IStockEntry}.
+	 *
+	 * @param entry
+	 * @return the patient, or {@link Optional#empty()} if the entry has no stock or
+	 *         the stock is not owned by a patient
+	 */
+	public static Optional<IPatient> getPatient(IStockEntry entry) {
+		return entry != null ? getPatient(entry.getStock()) : Optional.empty();
+	}
+
+	/**
+	 * Resolve the {@link IPatient} owning the provided {@link IStock}. The owner of
+	 * a stock is not necessarily a patient, therefore the result may be empty.
+	 *
+	 * @param stock
+	 * @return the patient, or {@link Optional#empty()} if the stock has no owner or
+	 *         the owner is not a patient
+	 */
+	public static Optional<IPatient> getPatient(IStock stock) {
+		IPerson owner = stock != null ? stock.getOwner() : null;
+		if (owner == null || !owner.isPatient()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(owner.asIPatient());
+	}
+
 	public static String createMediorderEntryOutreachLabel(Object object) {
 		if (object instanceof IStockEntry stockEntry) {
 			Double resultDays = null;
-			IPatient patient = stockEntry.getStock().getOwner().asIPatient();
-			List<IPrescription> lMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
-					EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+			List<IPrescription> lMedication = getPatient(stockEntry)
+					.map(patient -> patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+							EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION)))
+					.orElseGet(Collections::emptyList);
 			for (IPrescription prescription : lMedication) {
 				if (prescription.getArticle().equals(stockEntry.getArticle())) {
 					float dailyDosageAsFloat = MedicationServiceHolder.get().getDailyDosageAsFloat(prescription);
@@ -54,8 +90,37 @@ public class MediorderPartUtil {
 		return "?";
 	}
 
+	public static void logBilled(IOrderService orderService, List<IStockEntry> entries) {
+		forEachPatient(entries,
+				(patient, articles) -> orderService.getHistoryService().logMediorderBilled(patient, articles));
+	}
+
+	public static void logPickedUp(IOrderService orderService, List<IStockEntry> entries) {
+		forEachPatient(entries,
+				(patient, articles) -> orderService.getHistoryService().logMediorderPickedUp(patient, articles));
+	}
+
+	private static void forEachPatient(List<IStockEntry> entries, BiConsumer<IPatient, List<String>> consumer) {
+		if (entries == null || entries.isEmpty()) {
+			return;
+		}
+		Map<IPatient, List<String>> articlesByPatient = new LinkedHashMap<>();
+		for (IStockEntry entry : entries) {
+			IPatient patient = getPatient(entry).orElse(null);
+			if (patient == null) {
+				continue;
+			}
+			String label = entry.getArticle() != null ? entry.getArticle().getLabel() : null;
+			List<String> articles = articlesByPatient.computeIfAbsent(patient, p -> new ArrayList<>());
+			if (StringUtils.isNotBlank(label)) {
+				articles.add(label);
+			}
+		}
+		articlesByPatient.forEach(consumer);
+	}
+
 	public static void removeStockEntry(IStockEntry entry, IModelService coreModelService,
-			IContextService contextService, IStockService stockService) {
+			IContextService contextService, IStockService stockService, IOrderService orderService) {
 		if (entry.getCurrentStock() > 0) {
 			String mandatorId = contextService.getActiveMandator().map(IMandator::getId).orElse(null);
 			if (mandatorId == null) {
@@ -63,9 +128,15 @@ public class MediorderPartUtil {
 			}
 			stockService.performSingleReturn(entry.getArticle(), entry.getCurrentStock(), mandatorId);
 		}
-		coreModelService.remove(entry);
 		IStock stock = entry.getStock();
-		if (stock.getStockEntries().isEmpty()) {
+		IPatient patient = getPatient(stock).orElse(null);
+		IArticle article = entry.getArticle();
+
+		coreModelService.remove(entry);
+		if (patient != null) {
+			orderService.getHistoryService().logMediorderArticleRemoved(patient, article);
+		}
+		if (stock != null && stock.getStockEntries().isEmpty()) {
 			coreModelService.remove(stock);
 		}
 	}

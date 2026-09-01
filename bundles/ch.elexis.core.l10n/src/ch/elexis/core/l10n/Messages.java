@@ -3038,6 +3038,7 @@ public class Messages extends NLS {
 	public static String Medication_headerComment;
 	public static String Mediorder_details;
 	public static String Mediorder_history;
+	public static String Mediorder_history_timeline;
 	public static String Mediorder_inactive_patient_stock;
 	public static String Mediorder_no_activated_articles;
 	public static String Mediorder_Order_status;
@@ -5251,6 +5252,8 @@ public class Messages extends NLS {
 	public static String OrderHistory_RemovedMedi;
 	public static String OrderHistory_SupplierAdded;
 	public static String OrderHistory_CompleteDelivery;
+	public static String OrderHistory_Billed;
+	public static String OrderHistory_PickedUp;
 	public static String HistoryDialog_NoHistoryAvailable;
 	public static String HistoryDialog_Header;
 	public static String HistoryDialog_Description;
@@ -5297,6 +5300,7 @@ public class Messages extends NLS {
 	public static String OrderHistory_Added;
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
+	public static String OrderHistory_AmountAdjusted;
 	public static String HttpOrderTransportService_OrderAlreadySent_Title;
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;
 	public static String HttpOrderTransportService_LinkText;
@@ -5474,6 +5478,7 @@ public class Messages extends NLS {
 	public static String RegiomedSender_AlternativeNotFoundLocally;
 	public static String RegiomedCheckTemplate_AvailableAlternatives;
 	public static String RegiomedCheckTemplate_NoAlternativeAvailable;
+	public static String RegiomedCheckTemplate_NotInArticleStock;
 	public static String RegiomedCheckTemplate_BtnReplace;
 	public static String RegiomedCheckTemplate_BadgeReplaced;
 	public static String RegiomedCheckDialog_ErrorLabel;
@@ -5487,6 +5492,7 @@ public class Messages extends NLS {
 	public static String RegiomedCheckDialog_ItemRejected;
 	public static String RegiomedCheckDialog_Reason;
 	public static String RegiomedCheckDialog_NotOrderable;
+	public static String RegiomedCheckDialog_NotInArticleStock;
 	public static String RegiomedCheckDialog_ConfirmOrderTitle;
 	public static String RegiomedCheckDialog_ConfirmOrderMsgPrefix;
 	public static String RegiomedCheckDialog_ConfirmOrderMsgSuffix;

@@ -1,16 +1,22 @@
 package ch.elexis.core.mediorder;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
@@ -25,8 +31,12 @@ import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
+import ch.elexis.core.text.XRefExtensionConstants;
+import ch.elexis.core.text.model.Samdas;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.VersionedResource;
 
@@ -117,7 +127,7 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 					new IEncounterBuilder(coreModelService, coverage.get(), contextService.getActiveMandator().get())
 							.buildAndSave());
 		}
-		setBillingText(encounter.get());
+		setBillingText(encounter.get(), patient);
 		return billAndAdjustArticleStock(encounter.get(), articles, removeStockEntry);
 	}
 
@@ -131,11 +141,61 @@ public abstract class AbstractBillAndCloseMediorderHandler {
 		return coverage;
 	}
 
-	private void setBillingText(IEncounter encounter) {
-		VersionedResource vr = VersionedResource.load(null);
-		vr.update(Messages.Mediorder_Billing_Text, contextService.getActiveUser().get().getId());
-		encounter.setVersionedEntry(vr);
+	/**
+	 * Append the billing text to the encounter and turn it into a cross reference
+	 * pointing at the history of the order which is being billed. Nothing is
+	 * appended if the encounter already carries that reference, which happens as
+	 * soon as obligatory and non obligatory articles are billed onto the same
+	 * encounter.
+	 *
+	 * @param encounter the encounter the articles are billed on
+	 * @param patient   the patient the order belongs to
+	 */
+	private void setBillingText(IEncounter encounter, IPatient patient) {
+		String reference = MediorderHistoryRef.encode(patient.getId(), findCurrentOrderBlobId(patient));
+		VersionedResource resource = encounter.getVersionedEntry();
+		if (resource == null) {
+			resource = VersionedResource.load(null);
+		}
+		Samdas samdas = new Samdas(StringUtils.defaultString(resource.getHead()));
+		Samdas.Record record = samdas.getRecord();
+		if (hasBillingXRef(record, reference)) {
+			return;
+		}
+		String text = StringUtils.defaultString(record.getText());
+		String separator = text.isEmpty() ? StringUtils.EMPTY : StringUtils.LF;
+		record.setText(text + separator + Messages.Mediorder_Billing_Text);
+		if (reference != null) {
+			record.add(new Samdas.XRef(XRefExtensionConstants.providerMediorderID, reference,
+					text.length() + separator.length(), Messages.Mediorder_Billing_Text.length()));
+		}
+		resource.update(samdas.toString(), contextService.getActiveUser().get().getId());
+		encounter.setVersionedEntry(resource);
 		coreModelService.save(encounter);
+		contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, encounter);
+	}
+
+	private boolean hasBillingXRef(Samdas.Record record, String reference) {
+		return record.getXrefs().stream()
+				.anyMatch(xref -> XRefExtensionConstants.providerMediorderID.equals(xref.getProvider())
+						&& Objects.equals(reference, xref.getID()));
+	}
+
+	/**
+	 * Determine the online order the billing belongs to, which is the most recent
+	 * one received for this patient.
+	 *
+	 * @param patient the patient the order belongs to
+	 * @return the id of the order blob, or <code>null</code> if the patient has no
+	 *         online order
+	 */
+	private String findCurrentOrderBlobId(IPatient patient) {
+		IQuery<IBlob> query = coreModelService.getQuery(IBlob.class);
+		query.and("id", COMPARATOR.LIKE, MediorderBlobId.idPrefix(patient.getId()) + "%"); //$NON-NLS-1$ //$NON-NLS-2$
+		return query.execute().stream().filter(blob -> MediorderBlobId.belongsTo(blob.getId(), patient.getId()))
+				.max(Comparator.comparing(
+						(IBlob blob) -> MediorderBlobId.resolveTimestamp(blob).orElse(LocalDateTime.MIN)))
+				.map(IBlob::getId).orElse(null);
 	}
 
 	private IStatus billAndAdjustArticleStock(IEncounter encounter, List<IStockEntry> entries,
