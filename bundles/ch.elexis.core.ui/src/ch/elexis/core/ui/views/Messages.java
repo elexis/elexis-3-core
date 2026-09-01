@@ -129,6 +129,7 @@ public class Messages {
 
 	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 	public static String BriefAuswahlLoadButtonText = ch.elexis.core.l10n.Messages.BriefAuswahlLoadButtonText;
+	public static String BriefAuswahlLoadMoreButtonText = ch.elexis.core.l10n.Messages.BriefAuswahlLoadMoreButtonText;
 
 	public static String BriefAuswahlNewSubjectHeading = ch.elexis.core.l10n.Messages.BriefAuswahlNewSubjectHeading;
 	public static String BriefAuswahlNewSubjectText = ch.elexis.core.l10n.Messages.BriefAuswahlNewSubjectText;

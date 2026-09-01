@@ -7,7 +7,6 @@ import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -16,8 +15,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
@@ -25,22 +26,25 @@ import org.eclipse.ui.handlers.IHandlerService;
 
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.ui.medication.IArticleImageResolverUi;
+import ch.elexis.core.ui.medication.PreferenceConstants;
 
 public class MedicationHistoryTableComposite extends Composite {
 
 	private TableViewer viewer;
-	private TableColumnLayout layout;
 
 	private MedicationComposite medicationComposite;
 	private List<IPrescription> pendingInput;
+	private TableViewerColumn articleMarkingColumn;
 
 	public MedicationHistoryTableComposite(Composite parent, int style) {
 		super(parent, style);
 
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		layout = new TableColumnLayout();
-		setLayout(layout);
+		setLayout(new FillLayout());
 
 		viewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		viewer.getTable().setHeaderVisible(true);
@@ -83,17 +87,38 @@ public class MedicationHistoryTableComposite extends Composite {
 
 		});
 
-		MedicationViewerHelper.createTypeColumn(viewer, layout, 0);
-		MedicationViewerHelper.createArticleColumn(viewer, layout, 1);
-		MedicationViewerHelper.createDosageColumn(viewer, layout, 2);
-		MedicationViewerHelper.createBeginColumn(viewer, layout, 3);
-		MedicationViewerHelper.createIntakeCommentColumn(viewer, layout, 4);
+		IArticleImageResolverUi articleImageResolverUi = OsgiServiceUtil.getService(IArticleImageResolverUi.class)
+				.orElse(null);
 
-		MedicationViewerHelper.createStopColumn(viewer, layout, 5);
-		MedicationViewerHelper.createStopReasonColumn(viewer, layout, 6);
-		MedicationViewerHelper.createMandantColumn(viewer, layout, 7);
+		MedicationViewerHelper.createTypeColumn(viewer, 0);
+		MedicationViewerHelper.createArticleColumn(viewer, 1);
+		if (articleImageResolverUi != null) {
+			articleMarkingColumn = MedicationViewerHelper.createArticleMarkingColumn(viewer);
+			MedicationViewerHelper.setColumnVisible(articleMarkingColumn, ConfigServiceHolder.getUser(
+					PreferenceConstants.PREF_MEDICATIONLIST_SHOW_ARTICLE_MARKING, true));
+		}
+		MedicationViewerHelper.createDosageColumn(viewer, 2);
+		MedicationViewerHelper.createBeginColumn(viewer, 3);
+		MedicationViewerHelper.createIntakeCommentColumn(viewer, 4);
 
-		viewer.setContentProvider(new MedicationTableViewerContentProvider(viewer));
+		MedicationViewerHelper.createStopColumn(viewer, 5);
+		MedicationViewerHelper.createStopReasonColumn(viewer, 6);
+		MedicationViewerHelper.createMandantColumn(viewer, 7);
+
+		MedicationTableViewerContentProvider contentProvider = new MedicationTableViewerContentProvider(viewer);
+		if (articleImageResolverUi != null) {
+			contentProvider.setArticleImageResolverUi(articleImageResolverUi);
+		}
+		viewer.setContentProvider(contentProvider);
+
+		MedicationViewerHelper.enablePersistentColumns(viewer,
+				PreferenceConstants.PREF_MEDICATIONLIST_COLUMN_ORDER + "history"); //$NON-NLS-1$
+	}
+
+	public void setArticleMarkingColumnVisible(boolean visible) {
+		if (articleMarkingColumn != null) {
+			MedicationViewerHelper.setColumnVisible(articleMarkingColumn, visible);
+		}
 	}
 
 	public void setMedicationComposite(MedicationComposite medicationComposite) {
