@@ -5,20 +5,20 @@ import java.util.Set;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.events.MessageEvent;
-import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.PatientConstants;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.ILocalLockService;
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IUserService;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -27,7 +27,7 @@ import ch.elexis.data.PersistentObject;
 
 public class TypedModifier {
 
-	private IModelService coreModelService;
+	private ICompositeModelService coreModelService;
 
 	private IUserService userService;
 
@@ -69,7 +69,7 @@ public class TypedModifier {
 		if (object instanceof IUser user) {
 			// also set active user contact
 			String associatedContactId = user.getAssociatedContactId();
-			IContact userContact = getCoreModelService().load(associatedContactId, IContact.class).orElse(null);
+			IPerson userContact = getCoreModelService().load(associatedContactId, IPerson.class).orElse(null);
 			context.setNamed(IContext.ACTIVE_USERCONTACT, userContact);
 
 			Optional<IMandator> defaultWorkingFor = getUserService().getDefaultExecutiveDoctorWorkingFor(userContact);
@@ -115,11 +115,9 @@ public class TypedModifier {
 		return coverageService;
 	}
 
-	private IModelService getCoreModelService() {
+	private ICompositeModelService getCoreModelService() {
 		if (coreModelService == null) {
-			coreModelService = OsgiServiceUtil
-					.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-					.orElse(null);
+			coreModelService = OsgiServiceUtil.getService(ICompositeModelService.class).orElse(null);
 		}
 		return coreModelService;
 	}
