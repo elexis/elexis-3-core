@@ -15,7 +15,7 @@ jobs:
       - name: pull docker image ${{ env.DOCKER_BUILD_IMAGE }}
         run: docker pull ${{ env.DOCKER_BUILD_IMAGE }}
       - name: build using docker image ${{ env.DOCKER_BUILD_IMAGE }}
-        run: docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
+        run: docker run --rm --init -v "$(pwd)":/usr/src/mymaven -v "$(eval echo ~$USER)/m2-${{ env.BRANCH_NAME }}":/root/.m2 -w /usr/src/mymaven -e MAVEN_OPTS="-javaagent:ch.elexis.sdk/lombok-1.18.48.jar" ${{ env.DOCKER_BUILD_IMAGE }} xvfb-run mvn -V -T 1C clean verify -B -Dmaterialize-products
       - name: upload artifacts
         run: |
           eval $(ssh-agent -s)
