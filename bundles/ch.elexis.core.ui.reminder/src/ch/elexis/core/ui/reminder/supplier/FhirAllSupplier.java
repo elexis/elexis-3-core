@@ -26,7 +26,7 @@ public class FhirAllSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?owner=ALL&code:not=http://www.elexis.info/task/visibility|popup&status"
+				.getFhirQuery("Task?owner=ALL&code:not=http://www.elexis.info/task/visibility|popup&status"
 						+ (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
