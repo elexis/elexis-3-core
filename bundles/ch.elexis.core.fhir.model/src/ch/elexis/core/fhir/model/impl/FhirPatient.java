@@ -1,6 +1,5 @@
 package ch.elexis.core.fhir.model.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
-import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
@@ -26,10 +24,9 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRelatedContact;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.MaritalStatus;
-import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.model.prescription.EntryType;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 
@@ -45,93 +42,312 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public Class<?> getModelType() {
+	public Class<? extends Identifiable> getModelType() {
 		return IPatient.class;
 	}
 
+	// ========== GETTERS - All delegate to getLoaded() ==========
+
 	@Override
 	public IContact getFamilyDoctor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setFamilyDoctor(IContact value) {
-		// TODO Auto-generated method stub
-
+		return getLoaded().getFamilyDoctor();
 	}
 
 	@Override
 	public String getDiagnosen() {
+		return getLoaded().getDiagnosen();
+	}
+
+	@Override
+	public String getRisk() {
+		return getLoaded().getRisk();
+	}
+
+	@Override
+	public String getFamilyAnamnese() {
+		return getLoaded().getFamilyAnamnese();
+	}
+
+	@Override
+	public String getPersonalAnamnese() {
+		return getLoaded().getPersonalAnamnese();
+	}
+
+	@Override
+	public String getAllergies() {
+		return getLoaded().getAllergies();
+	}
+
+	@Override
+	public List<ICoverage> getCoverages() {
+		return getLoaded().getCoverages();
+	}
+
+	@Override
+	public String getPatientNr() {
+		return getLoaded().getPatientNr();
+	}
+
+	@Override
+	public List<IPrescription> getMedication(List<EntryType> filterType) {
+		return getLoaded().getMedication(filterType);
+	}
+
+	@Override
+	public LocalDateTime getDateOfBirth() {
+		return getLoaded().getDateOfBirth();
+	}
+
+	@Override
+	public Gender getGender() {
+		return getLoaded().getGender();
+	}
+
+	@Override
+	public String getTitel() {
+		return getLoaded().getTitel();
+	}
+
+	@Override
+	public String getTitelSuffix() {
+		return getLoaded().getTitelSuffix();
+	}
+
+	@Override
+	public String getFirstName() {
+		return getLoaded().getFirstName();
+	}
+
+	@Override
+	public String getLastName() {
+		return getLoaded().getLastName();
+	}
+
+	@Override
+	public MaritalStatus getMaritalStatus() {
+		return getLoaded().getMaritalStatus();
+	}
+
+	@Override
+	public IContact getLegalGuardian() {
+		return getLoaded().getLegalGuardian();
+	}
+
+	@Override
+	public LocalDateTime getDateOfDeath() {
+		return getLoaded().getDateOfDeath();
+	}
+
+	@Override
+	public int getAgeInYears() {
+		return getLoaded().getAgeInYears();
+	}
+
+	@Override
+	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit) {
+		return getLoaded().getAgeAtIn(reference, chronoUnit);
+	}
+
+	@Override
+	public String getDescription1() {
+		return getLoaded().getDescription1();
+	}
+
+	@Override
+	public String getDescription2() {
+		return getLoaded().getDescription2();
+	}
+
+	@Override
+	public String getDescription3() {
+		return getLoaded().getDescription3();
+	}
+
+	@Override
+	public String getCode() {
+		return getLoaded().getCode();
+	}
+
+	@Override
+	public Country getCountry() {
+		return getLoaded().getCountry();
+	}
+
+	@Override
+	public String getZip() {
+		return getLoaded().getZip();
+	}
+
+	@Override
+	public String getCity() {
+		return getLoaded().getCity();
+	}
+
+	@Override
+	public String getStreet() {
+		return getLoaded().getStreet();
+	}
+
+	@Override
+	public String getPhone1() {
+		return getLoaded().getPhone1();
+	}
+
+	@Override
+	public String getPhone2() {
+		return getLoaded().getPhone2();
+	}
+
+	@Override
+	public String getFax() {
+		return getLoaded().getFax();
+	}
+
+	@Override
+	public String getEmail() {
+		return getLoaded().getEmail();
+	}
+
+	@Override
+	public String getWebsite() {
+		return getLoaded().getWebsite();
+	}
+
+	@Override
+	public String getMobile() {
+		return getLoaded().getMobile();
+	}
+
+	@Override
+	public String getComment() {
+		return getLoaded().getComment();
+	}
+
+	@Override
+	public List<IAddress> getAddress() {
+		return getLoaded().getAddress();
+	}
+
+	@Override
+	public String getGroup() {
+		return getLoaded().getGroup();
+	}
+
+	@Override
+	public String getPostalAddress() {
+		return getLoaded().getPostalAddress();
+	}
+
+	@Override
+	public IImage getImage() {
+		return getLoaded().getImage();
+	}
+
+	@Override
+	public List<IRelatedContact> getRelatedContacts() {
+		return getLoaded().getRelatedContacts();
+	}
+
+	@Override
+	public boolean isDeceased() {
+		return getLoaded().isDeceased();
+	}
+
+	@Override
+	public String getEmail2() {
+		return getLoaded().getEmail2();
+	}
+
+	@Override
+	public IOrganization asIOrganization() {
+		return getLoaded().asIOrganization();
+	}
+
+	@Override
+	public boolean isMandator() {
+		return getLoaded().isMandator();
+	}
+
+	@Override
+	public boolean isUser() {
+		return getLoaded().isUser();
+	}
+
+	@Override
+	public boolean isPatient() {
+		return getLoaded().isPatient();
+	}
+
+	@Override
+	public boolean isPerson() {
+		return getLoaded().isPerson();
+	}
+
+	@Override
+	public boolean isLaboratory() {
+		return getLoaded().isLaboratory();
+	}
+
+	@Override
+	public boolean isOrganization() {
+		return getLoaded().isOrganization();
+	}
+
+	@Override
+	public boolean isDeleted() {
+		return getLoaded().isDeleted();
+	}
+
+	@Override
+	public Object getExtInfo(Object key) {
+		return getLoaded().getExtInfo(key);
+	}
+
+	@Override
+	public Map<Object, Object> getMap() {
+		return getLoaded().getMap();
+	}
+
+	@Override
+	public IPerson asIPerson() {
+		return getLoaded().asIPerson();
+	}
+
+	@Override
+	public IPatient asIPatient() {
+		return getLoaded().asIPatient();
+	}
+
+	// ========== SETTERS - Keep existing FHIR modification logic ==========
+
+	@Override
+	public void setFamilyDoctor(IContact value) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setDiagnosen(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getRisk() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setRisk(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getFamilyAnamnese() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setFamilyAnamnese(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPersonalAnamnese() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setPersonalAnamnese(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getAllergies() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setAllergies(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<ICoverage> getCoverages() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getPatientNr() {
-		return getFhirResource().getIdentifier().stream()
-				.filter(i -> IdentifierSystem.ELEXIS_PATNR.getSystem().equals(i.getSystem())).map(i -> i.getValue())
-				.findAny().orElse(null);
 	}
 
 	@Override
@@ -142,42 +358,11 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public List<IPrescription> getMedication(List<EntryType> filterType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public LocalDateTime getDateOfBirth() {
-		if (getFhirResource().getBirthDate() != null) {
-			return LocalDateTime.ofInstant(getFhirResource().getBirthDate().toInstant(), ZoneId.systemDefault());
-		}
-		return null;
-	}
-
-	@Override
 	public void setDateOfBirth(LocalDateTime value) {
 		if (value != null) {
 			getFhirResource().setBirthDate(Date.from(value.atZone(ZoneId.systemDefault()).toInstant()));
 		}
 		getFhirResource().setBirthDate(null);
-	}
-
-	@Override
-	public Gender getGender() {
-		if (getFhirResource().getGender() != null) {
-			switch (getFhirResource().getGender()) {
-			case FEMALE:
-				return Gender.FEMALE;
-			case MALE:
-				return Gender.MALE;
-			case UNKNOWN:
-				return Gender.UNKNOWN;
-			default:
-				return Gender.UNDEFINED;
-			}
-		}
-		return Gender.UNDEFINED;
 	}
 
 	@Override
@@ -203,32 +388,12 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public String getTitel() {
-		for (HumanName humanName : getFhirResource().getName()) {
-			if (getFhirResource().getName().size() == 1 || HumanName.NameUse.OFFICIAL.equals(humanName.getUse())) {
-				return humanName.getPrefixAsSingleString();
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public void setTitel(String value) {
 		if (value != null) {
 			getFhirResource().getNameFirstRep().setPrefix(Collections.singletonList(new StringType(value)));
 		} else {
 			getFhirResource().getNameFirstRep().setPrefix(null);
 		}
-	}
-
-	@Override
-	public String getTitelSuffix() {
-		for (HumanName humanName : getFhirResource().getName()) {
-			if (getFhirResource().getName().size() == 1 || HumanName.NameUse.OFFICIAL.equals(humanName.getUse())) {
-				return humanName.getSuffixAsSingleString();
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -241,16 +406,6 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public String getFirstName() {
-		for (HumanName humanName : getFhirResource().getName()) {
-			if (getFhirResource().getName().size() == 1 || HumanName.NameUse.OFFICIAL.equals(humanName.getUse())) {
-				return humanName.getGivenAsSingleString();
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public void setFirstName(String value) {
 		if (value != null) {
 			getFhirResource().getNameFirstRep().setGiven(Collections.singletonList(new StringType(value)));
@@ -260,137 +415,23 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public String getLastName() {
-		for (HumanName humanName : getFhirResource().getName()) {
-			if (getFhirResource().getName().size() == 1 || HumanName.NameUse.OFFICIAL.equals(humanName.getUse())) {
-				return humanName.getFamily();
-			}
-		}
-		return null;
-
-	}
-
-	@Override
 	public void setLastName(String value) {
 		getFhirResource().getNameFirstRep().setFamily(value);
 	}
 
 	@Override
-	public MaritalStatus getMaritalStatus() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setMaritalStatus(MaritalStatus value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public IContact getLegalGuardian() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setLegalGuardian(IContact value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public LocalDateTime getDateOfDeath() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setDateOfDeath(LocalDateTime value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int getAgeInYears() {
-		LocalDateTime dateOfBirth = getDateOfBirth();
-		if (dateOfBirth != null) {
-			LocalDate now = LocalDate.now();
-			long years = ChronoUnit.YEARS.between(dateOfBirth.toLocalDate(), now);
-			return (int) years;
-		}
-		return -1;
-	}
-
-	@Override
-	public long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isMandator() {
-		return false;
-	}
-
-	@Override
-	public void setMandator(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isUser() {
-		return false;
-	}
-
-	@Override
-	public void setUser(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isPatient() {
-		return true;
-	}
-
-	@Override
-	public void setPatient(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isPerson() {
-		return true;
-	}
-
-	@Override
-	public void setPerson(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isLaboratory() {
-		return false;
-	}
-
-	@Override
-	public void setLaboratory(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isOrganization() {
-		return false;
-	}
-
-	@Override
-	public void setOrganization(boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getDescription1() {
-		return getLastName();
 	}
 
 	@Override
@@ -399,257 +440,138 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 	}
 
 	@Override
-	public String getDescription2() {
-		return getFirstName();
-	}
-
-	@Override
 	public void setDescription2(String value) {
 		setFirstName(value);
 	}
 
 	@Override
-	public String getDescription3() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setDescription3(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getCode() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setCode(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Country getCountry() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setCountry(Country value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getZip() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setZip(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getCity() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setCity(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getStreet() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setStreet(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPhone1() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setPhone1(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPhone2() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setPhone2(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getFax() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setFax(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setEmail(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getWebsite() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setWebsite(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getMobile() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setMobile(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getComment() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setComment(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<IAddress> getAddress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getGroup() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setGroup(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPostalAddress() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setPostalAddress(String value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public IImage getImage() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setImage(IImage value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<IRelatedContact> getRelatedContacts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isDeceased() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
 	public void setDeceased(boolean value) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getEmail2() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public void setEmail2(String value) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public IPerson asIPerson() {
-		return CoreModelServiceHolder.get().load(this.getId(), IPerson.class).get();
+	public void setMandator(boolean value) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public IPatient asIPatient() {
-		return CoreModelServiceHolder.get().load(this.getId(), IPatient.class).get();
+	public void setUser(boolean value) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public IOrganization asIOrganization() {
+	public void setPatient(boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setPerson(boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setLaboratory(boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setOrganization(boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setDeleted(boolean value) {
 		// TODO Auto-generated method stub
-		return null;
+	}
+
+	@Override
+	public void setExtInfo(Object key, Object value) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -657,40 +579,4 @@ public class FhirPatient extends AbstractFhirModelAdapter<IPatient, Patient> imp
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public boolean isDeleted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setDeleted(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Object getExtInfo(Object key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setExtInfo(Object key, Object value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Map<Object, Object> getMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getLabel() {
-		return PersonFormatUtil.getPersonalia(this);
-	}
-
 }

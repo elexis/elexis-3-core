@@ -96,14 +96,14 @@ public class FhirModelServiceTest {
 			reminder.setDue(LocalDate.now().plusDays(i));
 			coreModelService.save(reminder);
 		}
-		IQuery<IBaseBundle> query = AllPluginTests.getModelService().getQuery(IReminder.class);
+		IQuery<IBaseBundle> query = AllPluginTests.getModelService().getFhirQuery(IReminder.class);
 		query.and(Task.STATUS.exactly().code(TaskStatus.COMPLETED.name()));
 		List<IReminder> closedResults = AllPluginTests.getModelService().getQueryResults(query, IReminder.class);
 		assertNotNull(closedResults);
 		assertFalse(closedResults.isEmpty());
 		assertEquals(5, closedResults.size());
 
-		query = AllPluginTests.getModelService().getQuery(IReminder.class);
+		query = AllPluginTests.getModelService().getFhirQuery(IReminder.class);
 		query.and(Task.STATUS.exactly().code(TaskStatus.ACCEPTED.name()));
 		List<IReminder> openResults = AllPluginTests.getModelService().getQueryResults(query, IReminder.class);
 		assertNotNull(openResults);

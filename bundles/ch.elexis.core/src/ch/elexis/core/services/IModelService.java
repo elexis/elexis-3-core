@@ -132,27 +132,11 @@ public interface IModelService extends ICompositeModelService {
 			Set<String> eagerLoadAttributes) throws AccessControlException;
 
 	/**
-	 * Save the model object.
-	 *
-	 * @param object
-	 * @throws IllegalStateException
-	 */
-	public void save(Identifiable identifiable) throws AccessControlException;
-
-	/**
 	 * Update {@link Identifiable#getLastupdate()} to current
 	 * 
 	 * @param identifiable
 	 */
 	public void touch(Identifiable identifiable);
-
-	/**
-	 * Save the model objects.
-	 *
-	 * @param objects
-	 * @throws IllegalStateException
-	 */
-	public void save(List<? extends Identifiable> identifiables) throws AccessControlException;
 
 	/**
 	 * Remove the {@link Identifiable} from the database.

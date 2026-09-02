@@ -30,6 +30,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.issue.Priority;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Type;
@@ -43,6 +44,16 @@ public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> impl
 
 	public FhirReminder(Task fhirResource) {
 		super(fhirResource);
+	}
+
+	@Override
+	public Class<Task> getFhirType() {
+		return Task.class;
+	}
+
+	@Override
+	public Class<? extends Identifiable> getModelType() {
+		return IReminder.class;
 	}
 
 	@Override
@@ -203,7 +214,7 @@ public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> impl
 	public void setVisibility(Visibility value) {
 		getFhirResource().getCode().setCoding(new ArrayList<>(getFhirResource().getCode().getCoding().stream()
 				.filter(c -> !"http://www.elexis.info/task/visibility".equals(c.getSystem())).toList()));
-		if(value != null) {
+		if (value != null) {
 			getFhirResource().getCode().addCoding(
 					new Coding("http://www.elexis.info/task/visibility", value.name(), value.getLocaleText()));
 		}
@@ -314,8 +325,7 @@ public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> impl
 					.equals(getFhirResource().getOwner().getReferenceElement().getResourceType())) {
 				if (!"all".equalsIgnoreCase(getFhirResource().getOwner().getReferenceElement().getIdPart())) {
 					Optional<IUserGroup> ownerGroup = FhirModelServiceHolder.get()
-							.load(getFhirResource().getOwner().getReferenceElement().getIdPart(),
-							IUserGroup.class);
+							.load(getFhirResource().getOwner().getReferenceElement().getIdPart(), IUserGroup.class);
 					if (ownerGroup.isPresent()) {
 						return ownerGroup.get();
 					}
@@ -338,12 +348,13 @@ public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> impl
 	@Override
 	public List<IContact> getResponsible() {
 		if (getFhirResource().hasOwner()) {
-			if(Practitioner.class.getSimpleName().equals(getFhirResource().getOwner().getReferenceElement().getResourceType())) {
+			if (Practitioner.class.getSimpleName()
+					.equals(getFhirResource().getOwner().getReferenceElement().getResourceType())) {
 				Optional<IContact> ownerContact = FhirModelServiceHolder.get()
 						.load(getFhirResource().getOwner().getReferenceElement().getIdPart(), IContact.class);
 				if (ownerContact.isPresent()) {
 					return Collections.singletonList(ownerContact.get());
-				}				
+				}
 			}
 		}
 		return Collections.emptyList();
@@ -404,13 +415,4 @@ public class FhirReminder extends AbstractFhirModelAdapter<IReminder, Task> impl
 		return null;
 	}
 
-	@Override
-	public Class<Task> getFhirType() {
-		return Task.class;
-	}
-
-	@Override
-	public Class<?> getModelType() {
-		return IReminder.class;
-	}
 }
