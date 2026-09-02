@@ -43,8 +43,8 @@ public class IPersonPersonAttributeMapper extends IdentifiableDomainResourceAttr
 		target.setBirthDate(personHelper.getBirthDate(source));
 		target.setAddress(personHelper.getAddresses(source));
 		target.setTelecom(personHelper.getContactPoints(source));
-
 		target.setPhoto(personHelper.mapContactImage(source));
+		personHelper.mapComments(source, target);
 
 		if (source.isPatient()) {
 			target.addLink().setTarget(new Reference(new IdDt(Patient.class.getSimpleName(), source.getId())));
@@ -64,6 +64,7 @@ public class IPersonPersonAttributeMapper extends IdentifiableDomainResourceAttr
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
+		personHelper.mapComments(source, target);
 		personHelper.mapContactImage(modelService, source.getPhoto(), target);
 	}
 

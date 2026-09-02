@@ -13,6 +13,8 @@ import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
+import org.hl7.fhir.r4.model.DomainResource;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
@@ -242,4 +244,21 @@ public class IContactHelper extends AbstractHelper {
 		}
 	}
 
+	public void mapComments(DomainResource source, IContact target) {
+		List<Extension> extensionsByUrl = source.getExtensionsByUrl("www.elexis.info/extensions/contact/notes");
+		if (!extensionsByUrl.isEmpty()) {
+			target.setComment(extensionsByUrl.get(0).getValue().toString());
+		} else {
+			target.setComment(null);
+		}
+	}
+
+	public void mapComments(IContact source, DomainResource target) {
+		if (StringUtils.isNotBlank(source.getComment())) {
+			Extension elexisPatientNote = new Extension();
+			elexisPatientNote.setUrl("www.elexis.info/extensions/contact/notes");
+			elexisPatientNote.setValue(new StringType(source.getComment()));
+			target.addExtension(elexisPatientNote);
+		}
+	}
 }
