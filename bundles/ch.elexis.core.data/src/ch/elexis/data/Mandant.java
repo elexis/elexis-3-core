@@ -12,8 +12,9 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.rgw.tools.JdbcLink;

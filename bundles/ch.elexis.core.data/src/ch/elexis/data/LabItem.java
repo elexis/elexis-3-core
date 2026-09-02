@@ -12,12 +12,13 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.constants.TextContainerConstants;

@@ -12,6 +12,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Konsultation;
 
 @Component(service = {})

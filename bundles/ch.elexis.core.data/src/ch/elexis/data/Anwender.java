@@ -34,6 +34,7 @@ import ch.elexis.core.model.RoleConstants;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.JdbcLink;
 import ch.rgw.tools.StringTool;
 
@@ -270,16 +271,16 @@ public class Anwender extends Person {
 			}
 		}
 		if (initialMandator != null) {
-			CoreHub.setMandant(initialMandator);
+			ContextServiceHolder.setActiveMandatorById(initialMandator.getId());
 		} else {
 			Mandant m = Mandant.load(CoreHub.getLoggedInContact().getId());
 			if ((m != null) && m.isValid()) {
-				CoreHub.setMandant(m);
+				ContextServiceHolder.setActiveMandatorById(m.getId());
 			} else {
 				List<Mandant> ml = new Query<Mandant>(Mandant.class).execute();
 				if ((ml != null) && (!ml.isEmpty())) {
 					m = ml.get(0);
-					CoreHub.setMandant(m);
+					ContextServiceHolder.setActiveMandatorById(m.getId());
 
 				} else {
 					MessageEvent.fireError("Kein Mandant definiert",

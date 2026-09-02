@@ -10,8 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.data.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.utils.FileUtil;
 

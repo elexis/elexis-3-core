@@ -10,8 +10,9 @@
  ******************************************************************************/
 package ch.elexis.core.data.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.beans.base.BeanPersistentObject;

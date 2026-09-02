@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ClassToModelInterfaceService;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
@@ -22,6 +21,7 @@ import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;

@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.extension.CoreOperationAdvisorHolder;
 import ch.elexis.core.data.extension.ICoreOperationAdvisor;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.IRunnableWithProgress;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.ILoginContributor;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 
 @Component

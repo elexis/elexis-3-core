@@ -18,10 +18,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.importer.div.importers.HL7Parser;
 import ch.elexis.core.model.LabResultConstants;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.LabItemTyp;
 import ch.elexis.core.types.PathologicDescription;
 import ch.elexis.core.types.PathologicDescription.Description;

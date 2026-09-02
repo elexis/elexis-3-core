@@ -2,8 +2,8 @@ package ch.elexis.core.data.server;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.data.events.ElexisEvent;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.PersistentObject;
 
 /**

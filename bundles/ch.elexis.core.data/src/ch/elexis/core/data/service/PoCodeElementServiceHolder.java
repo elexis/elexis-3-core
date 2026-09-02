@@ -8,6 +8,7 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.data.services.ICodeElementService;
 import ch.elexis.core.data.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
 

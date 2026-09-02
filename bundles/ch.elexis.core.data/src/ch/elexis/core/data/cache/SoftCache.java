@@ -12,13 +12,14 @@
 
 package ch.elexis.core.data.cache;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ch.rgw.tools.Log;
 
