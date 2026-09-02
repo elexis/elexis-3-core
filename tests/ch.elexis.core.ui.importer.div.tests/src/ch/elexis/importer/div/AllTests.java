@@ -16,11 +16,11 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.data.Labor;
 import ch.rgw.tools.TimeTool;

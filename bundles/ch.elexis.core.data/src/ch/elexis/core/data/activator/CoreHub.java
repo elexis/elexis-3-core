@@ -35,23 +35,21 @@ import ch.elexis.core.constants.Elexis;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
-import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat;
 import ch.elexis.core.data.interfaces.ShutdownJob;
 import ch.elexis.core.data.interfaces.scripting.Interpreter;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.jdt.Nullable;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IMandator;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ILocalConfigService;
+import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Kontakt;
@@ -133,6 +131,7 @@ public class CoreHub implements BundleActivator {
 	 * @return the {@link Anwender} or null if no contact is present
 	 * @since 3.8
 	 */
+	@Deprecated(forRemoval = true)
 	public static @Nullable Anwender getLoggedInContact() {
 		Optional<IContact> userContact = ContextServiceHolder.get().getActiveUserContact();
 		if (userContact.isPresent()) {
@@ -276,8 +275,11 @@ public class CoreHub implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		log.debug("Stopping " + CoreHub.class.getName());
 
-		LocalLockServiceHolder.get().releaseAllLocks();
-		LocalLockServiceHolder.get().shutdown();
+		ILocalLockService iLocalLockService = LocalLockServiceHolder.get();
+		if (iLocalLockService != null) {
+			iLocalLockService.releaseAllLocks();
+			iLocalLockService.shutdown();
+		}
 
 		CoreHub.logoffAnwender();
 
@@ -344,27 +346,6 @@ public class CoreHub implements BundleActivator {
 		SysSettings cfg = SysSettings.getOrCreate(SysSettings.USER_SETTINGS, Desk.class);
 		cfg.read_xml(LocalCfgFile);
 		CoreHub.localCfg = cfg;
-	}
-
-	/**
-	 * 
-	 * @param newMandant
-	 * 
-	 * @deprecated set the active {@link IMandator} using the
-	 *             {@link IContextService} impl.
-	 */
-	@Deprecated
-	public static void setMandant(Mandant newMandant) {
-		actMandant = newMandant;
-
-		ElexisEventDispatcher.getInstance()
-				.fire(new ElexisEvent(newMandant, Mandant.class, ElexisEvent.EVENT_MANDATOR_CHANGED));
-		if (newMandant != null) {
-			ContextServiceHolder.get()
-					.setActiveMandator(NoPoUtil.loadAsIdentifiable(newMandant, IMandator.class).get());
-		} else {
-			ContextServiceHolder.get().setActiveMandator(null);
-		}
 	}
 
 	/**
@@ -436,6 +417,7 @@ public class CoreHub implements BundleActivator {
 	 * Perform the required tasks to log off the current {@link Anwender}
 	 *
 	 * @since 3.1 moved from {@link Anwender} class
+	 * @since 3.14 remove CoreHub#setMandant
 	 */
 	public static void logoffAnwender() {
 		if (CoreHub.getLoggedInContact() == null)
@@ -443,7 +425,6 @@ public class CoreHub implements BundleActivator {
 
 		LocalLockServiceHolder.get().releaseAllLocks();
 
-		CoreHub.setMandant(null);
 		CoreHub.heart.suspend();
 		ContextServiceHolder.get().setActiveMandator(null);
 		ContextServiceHolder.get().setActiveUser(null);

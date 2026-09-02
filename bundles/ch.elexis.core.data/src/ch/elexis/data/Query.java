@@ -13,7 +13,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,15 +23,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.jdt.NonNull;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.status.ElexisStatus;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.JdbcLink;

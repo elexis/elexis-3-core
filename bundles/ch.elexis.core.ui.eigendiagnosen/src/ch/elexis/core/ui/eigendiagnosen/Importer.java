@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Composite;
 import com.opencsv.CSVReader;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.util.ResultAdapter;
 import ch.elexis.core.importer.div.importers.ExcelWrapper;
 import ch.elexis.core.model.ICustomDiagnosis;
 import ch.elexis.core.model.IDiagnosisTree;
 import ch.elexis.core.services.INamedQuery;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.util.ImporterPage;
 import ch.elexis.core.ui.util.Log;
 import ch.elexis.core.ui.util.SWTHelper;

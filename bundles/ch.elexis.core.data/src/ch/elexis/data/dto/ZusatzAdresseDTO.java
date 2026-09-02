@@ -2,6 +2,7 @@
 package ch.elexis.data.dto;
 
 import org.apache.commons.lang3.StringUtils;
+
 import ch.elexis.core.types.AddressType;
 
 public class ZusatzAdresseDTO {

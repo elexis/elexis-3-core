@@ -24,12 +24,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.documents.FilterCategory;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.documents.service.DocumentStoreServiceHolder;
 import ch.elexis.core.ui.util.SWTHelper;
 

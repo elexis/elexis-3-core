@@ -8,12 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.activator.CoreHub;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ch.BillingLaw;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.JdbcLink;
 
 public class Test_Konsultation extends AbstractPersistentObjectTest {
@@ -29,7 +28,7 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 		ContextServiceHolder.get()
 				.setActiveUser(CoreModelServiceHolder.get().load(user.getId(), IUser.class).orElse(null));
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
-		CoreHub.setMandant(m);
+		ContextServiceHolder.setActiveMandatorById(m.getId());
 
 		pat = new Patient("Name", "Vorname", "26.8.2011", "m");
 		fall = new Fall(pat.getId(), "Bezeichnung", "Grund", "KVG");

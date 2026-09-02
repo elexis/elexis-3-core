@@ -27,10 +27,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.IUnlockable;

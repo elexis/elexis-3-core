@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.localarticle.Constants;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.Money;
 
 public class Test_Verrechnet extends AbstractPersistentObjectTest {
@@ -33,7 +34,7 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 		art.setEKPreis(new Money(14.20));
 		art.setVKPreis(new Money(20.10));
 
-		CoreHub.setMandant(mandant);
+		ContextServiceHolder.setActiveMandatorById(mandant.getId());
 		Konsultation cons = new Konsultation(fall);
 
 		cons.addLeistung(art);
@@ -64,7 +65,7 @@ public class Test_Verrechnet extends AbstractPersistentObjectTest {
 		art.setEKPreis(new Money(14.20));
 		art.setVKPreis(new Money(20.10));
 
-		CoreHub.setMandant(mandant);
+		ContextServiceHolder.setActiveMandatorById(mandant.getId());
 		Konsultation cons = new Konsultation(fall);
 
 		cons.addLeistung(art);

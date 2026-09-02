@@ -52,9 +52,12 @@ public class FhirPersonTest {
 		assertEquals(1999, person.getDateOfBirth().getYear());
 		assertEquals("71042abe54b7453cba4eabfc8", person.getId());
 
-		person.setComment("testvalue: " + System.currentTimeMillis());
+		long timeMillis = System.currentTimeMillis();
+		person.setComment(System.currentTimeMillis() + " testvalue");
 		compositeModelService.save(person);
 
+		person = compositeModelService.load("71042abe54b7453cba4eabfc8", IPerson.class).get();
+		assertTrue(person.getComment(), person.getComment().startsWith(Long.toString(timeMillis)));
 	}
 
 }

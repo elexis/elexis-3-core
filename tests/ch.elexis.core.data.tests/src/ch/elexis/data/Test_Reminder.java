@@ -19,6 +19,7 @@ import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.rgw.tools.TimeTool;
 
 public class Test_Reminder extends AbstractPersistentObjectTest {
@@ -40,7 +41,7 @@ public class Test_Reminder extends AbstractPersistentObjectTest {
 		}
 		Mandant m = new Mandant("Mandant", "Erwin", "26.07.1979", "m");
 		patient = new Patient("Mia", "Krank", "22041982", "w");
-		CoreHub.setMandant(m);
+		ContextServiceHolder.setActiveMandatorById(m.getId());
 	}
 
 	@After
