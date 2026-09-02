@@ -7,18 +7,17 @@ import org.hl7.fhir.r4.model.Practitioner;
 
 import ch.elexis.core.model.IAddress;
 import ch.elexis.core.model.IContact;
-import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IRelatedContact;
-import ch.elexis.core.types.Country;
+import ch.elexis.core.model.Identifiable;
 
-public class FhirPractitionerContact extends AbstractFhirModelAdapter<IMandator, Practitioner>
+public class FhirPractitioner extends AbstractFhirContactModelAdapter<IMandator, Practitioner>
 		implements IContact, IMandator {
 
-	public FhirPractitionerContact(Practitioner fhirResource) {
+	public FhirPractitioner(Practitioner fhirResource) {
 		super(fhirResource);
 	}
 
@@ -28,8 +27,8 @@ public class FhirPractitionerContact extends AbstractFhirModelAdapter<IMandator,
 	}
 
 	@Override
-	public Class<?> getModelType() {
-		return IContact.class;
+	public Class<? extends Identifiable> getModelType() {
+		return IMandator.class;
 	}
 
 	@Override
@@ -149,177 +148,9 @@ public class FhirPractitionerContact extends AbstractFhirModelAdapter<IMandator,
 	}
 
 	@Override
-	public Country getCountry() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCountry(Country value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getZip() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setZip(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getCity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCity(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getStreet() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setStreet(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPhone1() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPhone1(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPhone2() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPhone2(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getFax() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setFax(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setEmail(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getWebsite() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setWebsite(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getMobile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setMobile(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getComment() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setComment(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public List<IAddress> getAddress() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String getGroup() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setGroup(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getPostalAddress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPostalAddress(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public IImage getImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setImage(IImage value) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -336,18 +167,6 @@ public class FhirPractitionerContact extends AbstractFhirModelAdapter<IMandator,
 
 	@Override
 	public void setDeceased(boolean value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String getEmail2() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setEmail2(String value) {
 		// TODO Auto-generated method stub
 
 	}

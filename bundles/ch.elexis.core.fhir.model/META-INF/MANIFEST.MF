@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: FHIR core model
 Bundle-SymbolicName: ch.elexis.core.fhir.model
 Bundle-Version: 3.14.0.qualifier
-Export-Package: ch.elexis.core.fhir.model
+Export-Package: ch.elexis.core.fhir.model,
+ ch.elexis.core.fhir.model.dto
 Bundle-Vendor: medevit.at
 Automatic-Module-Name: ch.elexis.core.fhir.model
 Bundle-RequiredExecutionEnvironment: JavaSE-21
@@ -28,7 +29,10 @@ Import-Package: ch.elexis.core.findings,
 Service-Component: OSGI-INF/ch.elexis.core.fhir.model.service.FhirModelService.xml
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/hapi-fhir-client-okhttp-8.2.0.jar,
+ lib/hapi-fhir-caching-api-7.2.3.jar,
  lib/hapi-fhir-client-apache-http5-8.6.0.jar,
+ lib/hapi-fhir-caching-caffeine-7.2.3.jar,
+ lib/caffeine-3.2.4.jar,
  lib/kotlin-stdlib-2.1.21.jar,
  lib/kotlin-stdlib-jdk8-1.8.21.jar,
  lib/okhttp-4.12.0.jar,

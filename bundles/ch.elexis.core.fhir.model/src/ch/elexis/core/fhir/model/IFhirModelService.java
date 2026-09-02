@@ -7,8 +7,6 @@ import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.Resource;
 
 import ca.uhn.fhir.rest.gclient.IQuery;
-import ch.elexis.core.exceptions.AccessControlException;
-import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IModelService;
@@ -22,14 +20,6 @@ public interface IFhirModelService extends ICompositeModelService {
 	 * @return
 	 */
 	public ConnectionStatus getConnectionStatus();
-
-	/**
-	 * Create a new transient model instance of type clazz.
-	 *
-	 * @param clazz
-	 * @return
-	 */
-	public <T> T create(Class<T> clazz) throws AccessControlException;
 
 	/**
 	 * Directly load the fhir resource
@@ -55,22 +45,6 @@ public interface IFhirModelService extends ICompositeModelService {
 	public <T> Optional<T> adapt(Object fhirObject, Class<T> clazz);
 
 	/**
-	 * Save the model object.
-	 *
-	 * @param object
-	 * @throws IllegalStateException
-	 */
-	public void save(Identifiable identifiable) throws AccessControlException;
-
-	/**
-	 * Save the model objects.
-	 *
-	 * @param objects
-	 * @throws IllegalStateException
-	 */
-	public void save(List<? extends Identifiable> identifiables) throws AccessControlException;
-
-	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including
 	 * the object is also available to the e4 IEventBroker in the UI.
 	 *
@@ -78,17 +52,6 @@ public interface IFhirModelService extends ICompositeModelService {
 	 * @param object
 	 */
 	public void postEvent(String topic, Object object);
-
-	/**
-	 * Get a HAPI FHIR {@link IQuery} from the FHIR client of this
-	 * {@link IFhirModelService}. For search of the FHIR class matching the provided
-	 * model interface.
-	 * 
-	 * @param <T>
-	 * @param clazz
-	 * @return
-	 */
-	public <T> IQuery<IBaseBundle> getQuery(Class<T> clazz);
 
 	/**
 	 * Execute the HAPI FHIR {@link IQuery} and adapt the resulting
@@ -102,6 +65,15 @@ public interface IFhirModelService extends ICompositeModelService {
 	public <T> List<T> getQueryResults(IQuery<IBaseBundle> query, Class<T> clazz);
 
 	/**
+	 * Return a FHIR based query
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @return
+	 */
+	<T> IQuery<IBaseBundle> getFhirQuery(Class<T> clazz);
+
+	/**
 	 * Get a HAPI FHIR {@link IQuery} from the FHIR client of this
 	 * {@link IFhirModelService} for search by the provided url.
 	 * 
@@ -109,5 +81,5 @@ public interface IFhirModelService extends ICompositeModelService {
 	 * @param byUrl
 	 * @return
 	 */
-	public IQuery<IBaseBundle> getQuery(String byUrl);
+	public IQuery<IBaseBundle> getFhirQuery(String byUrl);
 }

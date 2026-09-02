@@ -10,6 +10,7 @@ import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.BaseResource;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DomainResource;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -27,6 +28,9 @@ import ch.elexis.core.exceptions.AccessControlException;
 import ch.elexis.core.fhir.model.IFhirModelService;
 import ch.elexis.core.fhir.model.adapter.ElexisTypeMap;
 import ch.elexis.core.fhir.model.adapter.ModelAdapterFactory;
+import ch.elexis.core.fhir.model.adapter.query.FhirQueryAdapter;
+import ch.elexis.core.fhir.model.adapter.query.FhirQueryAdapterFactory;
+import ch.elexis.core.fhir.model.adapter.query.IQueryAttributeMapper;
 import ch.elexis.core.fhir.model.impl.AbstractFhirModelAdapter;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.Identifiable;
@@ -52,10 +56,10 @@ public class FhirModelService implements IFhirModelService, ICompositeModelServi
 	CloseableHttpClient httpClient;
 
 	@Reference
-	private IElexisEnvironmentService elexisEnvironmentService;
+	IElexisEnvironmentService elexisEnvironmentService;
 
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
 	private IGenericClient client;
 
@@ -87,8 +91,9 @@ public class FhirModelService implements IFhirModelService, ICompositeModelServi
 
 	@Override
 	public <T> T create(Class<T> clazz) throws AccessControlException {
-		// TODO Auto-generated method stub
-		return null;
+		// HACK Creating the local DTO is not the target of this access control check
+		// it is when actually instantiation the remote POST operation
+		return adapterFactory.createAdapter(clazz);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -136,9 +141,9 @@ public class FhirModelService implements IFhirModelService, ICompositeModelServi
 
 	@Override
 	public void save(Identifiable identifiable) throws AccessControlException {
-		if (identifiable instanceof AbstractFhirModelAdapter) {
-			getGenericClient().update().resource(((AbstractFhirModelAdapter<?, ?>) identifiable).getFhirResource())
-					.execute();
+		if (identifiable instanceof AbstractFhirModelAdapter _identifiable) {
+			DomainResource fhirResource = _identifiable.getFhirResource();
+			getGenericClient().update().resource(fhirResource).execute();
 		}
 	}
 
@@ -189,15 +194,27 @@ public class FhirModelService implements IFhirModelService, ICompositeModelServi
 	}
 
 	@Override
+	public <T> ch.elexis.core.services.IQuery<T> getQuery(Class<T> clazz, boolean refreshCache,
+			boolean includeDeleted) {
+
+		IQueryAttributeMapper mapper = FhirQueryAdapterFactory.getMapper(clazz);
+
+		if (mapper == null) {
+			throw new IllegalArgumentException("No attribute mapper found for model class: " + clazz.getName());
+		}
+
+		return new FhirQueryAdapter<>(clazz, this, mapper);
+	}
+
 	@SuppressWarnings("unchecked")
-	public <T> IQuery<IBaseBundle> getQuery(Class<T> clazz) {
+	public <T> IQuery<IBaseBundle> getFhirQuery(Class<T> clazz) {
 		IQuery<IBaseBundle> forResource = getGenericClient().search()
 				.forResource(adapterFactory.getFhirType((Class<? extends Identifiable>) clazz));
 		return forResource.summaryMode(SummaryEnum.TEXT);
 	}
 
 	@Override
-	public IQuery<IBaseBundle> getQuery(String byUrl) {
+	public IQuery<IBaseBundle> getFhirQuery(String byUrl) {
 		return getGenericClient().search().byUrl(byUrl).summaryMode(SummaryEnum.TEXT);
 	}
 

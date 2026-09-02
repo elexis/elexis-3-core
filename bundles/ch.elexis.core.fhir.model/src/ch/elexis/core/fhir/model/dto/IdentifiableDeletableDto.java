@@ -3,11 +3,17 @@ package ch.elexis.core.fhir.model.dto;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.LoggerFactory;
+
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithExtInfo {
 
 	String id;
@@ -19,12 +25,16 @@ public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithE
 
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists) {
-		throw new UnsupportedOperationException();
+		// FIXME
+		LoggerFactory.getLogger(getClass()).warn("addXid find solution: " + domain + " " + id);
+		return true;
 	}
 
 	@Override
 	public IXid getXid(String domain) {
-		throw new UnsupportedOperationException();
+		// FIXME
+		LoggerFactory.getLogger(getClass()).warn("getXid find solution: " + domain);
+		return null;
 	}
 
 	@Override
@@ -40,38 +50,6 @@ public class IdentifiableDeletableDto implements Identifiable, Deleteable, WithE
 	@Override
 	public Map<Object, Object> getMap() {
 		return extInfo;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public Long getLastupdate() {
-		return lastupdate;
-	}
-
-	public void setLastupdate(Long lastupdate) {
-		this.lastupdate = lastupdate;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public Map<Object, Object> getExtInfo() {

@@ -24,6 +24,7 @@ import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.XidServiceHolder;
 import ch.myelexis.server.client.ApiException;
 
 // TODO add WithExtInfo -> via internal service
@@ -43,13 +44,22 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 
 		if (!isSubsetted()) {
 			// we received a full FHIR object - load it
-			localObject = FhirDtoProvider.createDto(getModelType());
+			String id = fhirResource.getIdElement().getIdPart();
+			Long lastUpdate = Long.valueOf(fhirResource.getMeta().getVersionId());
+			localObject = FhirDtoProvider.createDto(getModelType(), id, lastUpdate);
 			FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).fhirToElexis(fhirResource,
 					localObject);
 		}
 	}
 
 	public U getFhirResource() {
+		synchronized (fhirResource) {
+			if (isDirty) {
+				FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).elexisToFhir(localObject,
+						fhirResource, null);
+				isDirty = false;
+			}
+		}
 		return fhirResource;
 	}
 
@@ -107,12 +117,12 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 
 	@Override
 	public boolean addXid(String domain, String id, boolean updateIfExists) {
-		throw new UnsupportedOperationException();
+		return XidServiceHolder.get().addXid(this, domain, id, updateIfExists);
 	}
 
 	@Override
 	public IXid getXid(String domain) {
-		throw new UnsupportedOperationException();
+		return XidServiceHolder.get().getXid(this, domain);
 	}
 
 	@Override
@@ -142,7 +152,10 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 			if (loaded.isPresent()) {
 
 				fhirResource = loaded.get();
-				localObject = FhirDtoProvider.createDto(getModelType());
+
+				String id = fhirResource.getIdElement().getIdPart();
+				Long lastUpdate = Long.valueOf(fhirResource.getMeta().getVersionId());
+				localObject = FhirDtoProvider.createDto(getModelType(), id, lastUpdate);
 				FhirAttributeMapperProvider.getMapper(getModelType(), getFhirType()).fhirToElexis(fhirResource,
 						localObject);
 
@@ -173,7 +186,7 @@ public abstract class AbstractFhirModelAdapter<T extends Identifiable, U extends
 
 	public abstract Class<U> getFhirType();
 
-	public abstract Class<?> getModelType();
+	public abstract Class<? extends Identifiable> getModelType();
 
 	public Identifiable toEntityModelAdapter() {
 		return (Identifiable) CoreModelServiceHolder.get().load(getId(), getModelType()).orElse(null);

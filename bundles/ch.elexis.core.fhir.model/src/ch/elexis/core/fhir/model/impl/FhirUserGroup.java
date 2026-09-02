@@ -8,11 +8,22 @@ import org.hl7.fhir.r4.model.CareTeam;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IUserGroup;
+import ch.elexis.core.model.Identifiable;
 
 public class FhirUserGroup extends AbstractFhirModelAdapter<IUserGroup, CareTeam> implements IUserGroup {
 
 	public FhirUserGroup(CareTeam fhirResource) {
 		super(fhirResource);
+	}
+
+	@Override
+	public Class<CareTeam> getFhirType() {
+		return CareTeam.class;
+	}
+
+	@Override
+	public Class<? extends Identifiable> getModelType() {
+		return IUserGroup.class;
 	}
 
 	@Override
@@ -100,16 +111,6 @@ public class FhirUserGroup extends AbstractFhirModelAdapter<IUserGroup, CareTeam
 	@Override
 	public String getLabel() {
 		return getGroupname();
-	}
-
-	@Override
-	public Class<CareTeam> getFhirType() {
-		return CareTeam.class;
-	}
-
-	@Override
-	public Class<?> getModelType() {
-		return IUserGroup.class;
 	}
 
 }
