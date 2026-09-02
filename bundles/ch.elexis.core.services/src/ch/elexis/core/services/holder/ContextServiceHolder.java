@@ -2,6 +2,7 @@ package ch.elexis.core.services.holder;
 
 import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IMandator;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IContextService;
 
 public class ContextServiceHolder {
@@ -27,5 +28,10 @@ public class ContextServiceHolder {
 					.orElseThrow(() -> new IllegalStateException("No active IMandator found")); //$NON-NLS-1$
 		}
 		throw new IllegalStateException("No IContextService available"); //$NON-NLS-1$
+	}
+
+	public static void setActiveMandatorById(String id) {
+		IMandator iMandator = PortableServiceLoader.get(ICompositeModelService.class).load(id, IMandator.class).get();
+		get().setActiveMandator(iMandator);
 	}
 }
