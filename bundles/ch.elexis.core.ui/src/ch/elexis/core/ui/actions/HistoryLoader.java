@@ -27,9 +27,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IFilter;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.data.Konsultation;
 import ch.rgw.tools.VersionedResource;
