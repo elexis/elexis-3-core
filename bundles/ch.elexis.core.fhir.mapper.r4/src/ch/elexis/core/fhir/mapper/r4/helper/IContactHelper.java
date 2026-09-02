@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.hl7.fhir.instance.model.api.IBaseExtension;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
@@ -18,6 +19,8 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.StringType;
 
+import ca.uhn.fhir.util.ExtensionUtil;
+import ch.elexis.core.fhir.ExtensionConstants;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IOrganization;
@@ -245,7 +248,7 @@ public class IContactHelper extends AbstractHelper {
 	}
 
 	public void mapComments(DomainResource source, IContact target) {
-		List<Extension> extensionsByUrl = source.getExtensionsByUrl("www.elexis.info/extensions/contact/notes");
+		List<Extension> extensionsByUrl = source.getExtensionsByUrl(ExtensionConstants.CONTACT_COMMENT_URL);
 		if (!extensionsByUrl.isEmpty()) {
 			target.setComment(extensionsByUrl.get(0).getValue().toString());
 		} else {
@@ -255,10 +258,11 @@ public class IContactHelper extends AbstractHelper {
 
 	public void mapComments(IContact source, DomainResource target) {
 		if (StringUtils.isNotBlank(source.getComment())) {
-			Extension elexisPatientNote = new Extension();
-			elexisPatientNote.setUrl("www.elexis.info/extensions/contact/notes");
+			IBaseExtension<?, ?> elexisPatientNote = ExtensionUtil.getOrCreateExtension(target,
+					ExtensionConstants.CONTACT_COMMENT_URL);
 			elexisPatientNote.setValue(new StringType(source.getComment()));
-			target.addExtension(elexisPatientNote);
+		} else {
+			ExtensionUtil.clearExtensionsByUrl(target, ExtensionConstants.CONTACT_COMMENT_URL);
 		}
 	}
 }

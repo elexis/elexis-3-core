@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import ch.elexis.core.fhir.model.interfaces.IFhirBased;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.data.PersistentObject;
 
@@ -33,22 +34,24 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		if (element instanceof PersistentObject) {
-			PersistentObject po = (PersistentObject) element;
+		if (element instanceof PersistentObject po) {
 			return po.getLabel();
-		} else if (element instanceof Identifiable) {
-			return ((Identifiable) element).getLabel();
+		} else if (element instanceof IFhirBased fhirBased) {
+			return fhirBased.getNarrativeLabel();
+		} else if (element instanceof Identifiable identifiable) {
+			return identifiable.getLabel();
 		}
 		return element.toString();
 	}
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof PersistentObject) {
-			PersistentObject po = (PersistentObject) element;
+		if (element instanceof PersistentObject po) {
 			return po.getLabel();
-		} else if (element instanceof Identifiable) {
-			return ((Identifiable) element).getLabel();
+		} else if (element instanceof IFhirBased fhirBased) {
+			return fhirBased.getNarrativeLabel();
+		} else if (element instanceof Identifiable identifiable) {
+			return identifiable.getLabel();
 		}
 		return element.toString();
 	}

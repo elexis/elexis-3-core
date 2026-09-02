@@ -25,6 +25,11 @@ import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 
+/**
+ * For additional helper classes see e.g.
+ * 
+ * @see ca.uhn.fhir.util.ExtensionUtil
+ */
 public class FhirUtil {
 
 	public static Money toFhir(ch.rgw.tools.Money total) {
@@ -227,4 +232,5 @@ public class FhirUtil {
 			return existing.get();
 		}
 	}
+
 }
