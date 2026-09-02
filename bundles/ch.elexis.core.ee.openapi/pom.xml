@@ -17,13 +17,28 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.46</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<!-- RELEASE_VERSION -->
 				<version>7.17.0</version>
 				<!-- /RELEASE_VERSION -->
-				<!-- https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-maven-plugin/README.md-->
-				<!-- https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/java.md -->
+				<!--
+				https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-maven-plugin/README.md-->
+				<!--
+				https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/java.md -->
 				<executions>
 					<execution>
 						<goals>
@@ -53,5 +68,14 @@
 
 		</plugins>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.46</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
 </project>
