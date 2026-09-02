@@ -254,6 +254,7 @@ public class Preferences {
 
 	// Medication
 	public static final String MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT = "medication/settings/emediplanHeaderComment";
+	public static final String MEDICATION_SETTINGS_EMEDIPLAN_ASK_REMARK = "medication/settings/emediplanAskRemark";
 	public static final String MEDICATION_SETTINGS_DEFAULT_SYMPTOMS = "medicationSettingsDefaultSymptoms";
 	public static final String MEDICATION_SETTINGS_SYMPTOM_DURATION = "medicationSettingsSymptomDuration";
 	public static final String MEDICATION_SETTINGS_SHOW_DIALOG_ON_BILLING = "medication/settings/showDialogOnBilling";
