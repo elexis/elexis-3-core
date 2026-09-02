@@ -10,21 +10,21 @@ import org.hl7.fhir.r4.model.Practitioner;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.fhir.mapper.r4.helper.IPersonHelper;
 import ch.elexis.core.model.IPerson;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IXidService;
 
 public class IPersonPractitionerAttributeMapper
 		extends IdentifiableDomainResourceAttributeMapper<IPerson, Practitioner> {
 
-	private IModelService coreModelService;
+	private ICompositeModelService modelService;
 	private IXidService xidService;
 	private IPersonHelper personHelper;
 
-	public IPersonPractitionerAttributeMapper(IModelService coreModelService, IXidService xidService) {
+	public IPersonPractitionerAttributeMapper(ICompositeModelService coreModelService, IXidService xidService) {
 		super(Practitioner.class);
 
 		this.xidService = xidService;
-		this.coreModelService = coreModelService;
+		this.modelService = coreModelService;
 		personHelper = new IPersonHelper();
 	}
 
@@ -39,6 +39,7 @@ public class IPersonPractitionerAttributeMapper
 		target.setBirthDate(personHelper.getBirthDate(source));
 		target.setAddress(personHelper.getAddresses(source));
 		target.setTelecom(personHelper.getContactPoints(source));
+		personHelper.mapComments(source, target);
 
 		Attachment mapContactImage = personHelper.mapContactImage(source);
 		target.setPhoto(mapContactImage != null ? Collections.singletonList(mapContactImage) : null);
@@ -48,12 +49,13 @@ public class IPersonPractitionerAttributeMapper
 	@Override
 	public void fullFhirToElexis(Practitioner source, IPerson target) {
 		target.setMandator(true);
-		personHelper.mapIdentifiers(coreModelService, source.getIdentifier(), target);
+		personHelper.mapIdentifiers(modelService, source.getIdentifier(), target);
 		personHelper.mapHumanName(source.getName(), target);
 		personHelper.mapAddress(source.getAddress(), target);
 		personHelper.mapGender(source.getGender(), target);
 		personHelper.mapBirthDate(source.getBirthDate(), target);
 		personHelper.mapTelecom(source.getTelecom(), target);
+		personHelper.mapComments(source, target);
 //		personHelper.mapContactImage(modelService, source.getPhoto(), target);
 	}
 

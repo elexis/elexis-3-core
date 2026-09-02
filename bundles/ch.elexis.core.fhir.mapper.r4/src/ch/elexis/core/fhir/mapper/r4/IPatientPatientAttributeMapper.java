@@ -10,12 +10,10 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Patient.ContactComponent;
-import org.hl7.fhir.r4.model.StringType;
 
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ch.elexis.core.fhir.mapper.r4.helper.IPersonHelper;
@@ -25,7 +23,7 @@ import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.MaritalStatus;
-import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.ICompositeModelService;
 import ch.elexis.core.services.IXidService;
 
 /**
@@ -34,15 +32,23 @@ import ch.elexis.core.services.IXidService;
 public class IPatientPatientAttributeMapper extends IdentifiableDomainResourceAttributeMapper<IPatient, Patient> {
 
 	private IPersonHelper personHelper;
-	private IModelService coreModelService;
+	private ICompositeModelService coreModelService;
 	private IXidService xidService;
 
-	public IPatientPatientAttributeMapper(IModelService coreModelService, IXidService xidService) {
+	public IPatientPatientAttributeMapper(ICompositeModelService coreModelService, IXidService xidService) {
 		super(Patient.class);
 
 		this.personHelper = new IPersonHelper();
 		this.coreModelService = coreModelService;
 		this.xidService = xidService;
+	}
+
+	// TODO
+	@Override
+	public void mapNarrative(IPatient source, Patient target) {
+		super.mapNarrative(source, target);
+		// Sticker Service related information
+		// add tag?
 	}
 
 	@Override
@@ -58,7 +64,7 @@ public class IPatientPatientAttributeMapper extends IdentifiableDomainResourceAt
 		target.setAddress(personHelper.getAddresses(source));
 		target.setTelecom(personHelper.getContactPoints(source));
 
-		mapComments(source, target);
+		personHelper.mapComments(source, target);
 		mapMaritalStatus(source, target);
 		mapRelatedContacts(source, target);
 
@@ -76,7 +82,7 @@ public class IPatientPatientAttributeMapper extends IdentifiableDomainResourceAt
 		personHelper.mapTelecom(source.getTelecom(), target);
 		personHelper.mapContactImage(coreModelService,
 				(source.getPhoto() != null && !source.getPhoto().isEmpty()) ? source.getPhoto().get(0) : null, target);
-		mapComments(source, target);
+		personHelper.mapComments(source, target);
 		mapMaritalStatus(source, target);
 
 	}
@@ -126,20 +132,6 @@ public class IPatientPatientAttributeMapper extends IdentifiableDomainResourceAt
 			String code = maritalStatus.getCoding().get(0).getCode();
 			target.setMaritalStatus(MaritalStatus.byFhirCodeSafe(code));
 		}
-	}
-
-	private void mapComments(Patient source, IPatient target) {
-		List<Extension> extensionsByUrl = source.getExtensionsByUrl("www.elexis.info/extensions/patient/notes");
-		if (!extensionsByUrl.isEmpty()) {
-			target.setComment(extensionsByUrl.get(0).getValue().toString());
-		}
-	}
-
-	private void mapComments(IPatient source, Patient target) {
-		Extension elexisPatientNote = new Extension();
-		elexisPatientNote.setUrl("www.elexis.info/extensions/patient/notes");
-		elexisPatientNote.setValue(new StringType(source.getComment()));
-		target.addExtension(elexisPatientNote);
 	}
 
 	private Identifier getPatientNumberIdentifier(IPatient source) {
