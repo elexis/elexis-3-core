@@ -8,6 +8,7 @@ public class Messages {
 	public static String Core_Parameter = ch.elexis.core.l10n.Messages.Core_Parameter;
 	public static String Core_Status = ch.elexis.core.l10n.Messages.Core_Status;
 	public static String Core_Value = ch.elexis.core.l10n.Messages.Core_Value;
+	public static String Core_loading = ch.elexis.core.l10n.Messages.Core_loading;
 	public static String LaborOrdersComposite_validatorNotNumber = ch.elexis.core.l10n.Messages.LaborOrdersComposite_validatorNotNumber;
 	public static String Core_No_patient_selected = ch.elexis.core.l10n.Messages.Core_No_patient_selected;
 	public static String LaborOrdersComposite_actionTooltipShowHistory = ch.elexis.core.l10n.Messages.LaborOrdersComposite_actionTooltipShowHistory;
