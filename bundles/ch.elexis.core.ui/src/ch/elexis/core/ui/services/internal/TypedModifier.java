@@ -5,11 +5,11 @@ import java.util.Set;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.PatientConstants;
@@ -69,7 +69,7 @@ public class TypedModifier {
 		if (object instanceof IUser user) {
 			// also set active user contact
 			String associatedContactId = user.getAssociatedContactId();
-			IPerson userContact = getCoreModelService().load(associatedContactId, IPerson.class).orElse(null);
+			IContact userContact = getCoreModelService().load(associatedContactId, IContact.class).orElse(null);
 			context.setNamed(IContext.ACTIVE_USERCONTACT, userContact);
 
 			Optional<IMandator> defaultWorkingFor = getUserService().getDefaultExecutiveDoctorWorkingFor(userContact);
