@@ -372,8 +372,8 @@ public class TextUtil {
 	}
 
 	/**
-	 * Turns a line that starts with a "- " (dash + space) into a bullet line ("&#8226; "),
-	 * so notes/text typed with a leading dash are shown with a real bullet - the same bullet
+	 * Turns a line that starts with a dash, with or without a following space, into a bullet
+	 * line ("&#8226; "), so text typed with a leading dash gets a real bullet - the same bullet
 	 * the flattened {@code <ul>} lists use. Only matches the dash at the very start of a line -
 	 * start of string, right after a {@code <br/>}, or at the start/end of a block element
 	 * ({@code <p>}, {@code <div>}, {@code <li>}) - so ranges like "start - end" inside a line
@@ -384,7 +384,7 @@ public class TextUtil {
 			return html;
 		}
 		return html.replaceAll(
-				"(?i)(^|<br\\s*/?>|<(?:p|div|li)(?:\\s[^>]*)?>|</(?:p|div|li)>)([ \\t\\u00A0]*)-[ \\t]",
+				"(?i)(^|<br\\s*/?>|<(?:p|div|li)(?:\\s[^>]*)?>|</(?:p|div|li)>)([ \\t\\u00A0]*)-[ \\t]?",
 				"$1$2&#8226; ");
 	}
 
