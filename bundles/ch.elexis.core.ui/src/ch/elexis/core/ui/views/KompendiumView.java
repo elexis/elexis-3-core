@@ -15,8 +15,6 @@ package ch.elexis.core.ui.views;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.LocationAdapter;
-import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -32,26 +30,13 @@ import jakarta.inject.Named;
  */
 public class KompendiumView extends ViewPart {
 	public static final String ID = "ch.elexis.Kompendium"; //$NON-NLS-1$
-	static Browser browser;
+	Browser browser;
 
 	@Override
 	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
-		browser.addLocationListener(new LocationAdapter() {
-
-			@Override
-			public void changed(LocationEvent arg0) {
-				String text = browser.getText();
-				// System.out.println(text);
-			}
-
-		});
 		browser.setUrl("http://www.compendium.ch/search/de"); //$NON-NLS-1$
 
-	}
-
-	public static String getText() {
-		return browser.getText();
 	}
 
 	@Override
