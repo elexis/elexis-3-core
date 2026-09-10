@@ -237,6 +237,11 @@ public class InvoiceService implements IInvoiceService {
 				&& "402".equals(billable.getCodeSystemCode())) {
 			return false;
 		}
+		// skip tardoc if allowance is present
+		if (billable != null && isAllowanceEncounter(billed.getEncounter())
+				&& "007".equals(billable.getCodeSystemCode())) {
+			return false;
+		}
 		return true;
 	}
 
