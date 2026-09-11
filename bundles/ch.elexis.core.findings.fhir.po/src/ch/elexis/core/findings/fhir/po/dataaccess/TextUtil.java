@@ -2,6 +2,7 @@ package ch.elexis.core.findings.fhir.po.dataaccess;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,12 +65,11 @@ public class TextUtil {
 		Optional<String> end = condition.getEnd();
 
 		if (wordFormat) {
-			start.ifPresent(s -> sb.append("<strong>").append(s).append("</strong>").append(StringUtils.LF)
-					.append(StringUtils.LF));
-			condition.getText().filter(StringUtils::isNotBlank).ifPresent(t -> sb.append(t).append(StringUtils.LF));
+			start.ifPresent(s -> sb.append("<p><strong>").append(escapeHtml(s)).append("</strong></p>"));
+			condition.getText().filter(StringUtils::isNotBlank).ifPresent(t -> sb.append(toBlockHtml(t)));
 			for (String note : condition.getNotes()) {
 				if (StringUtils.isNotBlank(note)) {
-					sb.append(note).append(StringUtils.LF);
+					sb.append(toBlockHtml(note));
 				}
 			}
 		} else {
@@ -89,6 +89,45 @@ public class TextUtil {
 		}
 
 		return sb.toString();
+	}
+
+	/** The tags the rich text editor writes, tells its markup from plain text of earlier versions. */
+	private static final Pattern HTML_TAG = Pattern
+			.compile("(?i)</?(?:p|br|div|ul|ol|li|strong|b|em|i|u|s|strike|del|span|font|h[1-6]|sub|sup)"
+					+ "(?:\\s[^>]*)?\\s*/?>");
+
+	private static String toBlockHtml(String text) {
+		if (StringUtils.isBlank(text)) {
+			return StringUtils.EMPTY;
+		}
+		if (HTML_TAG.matcher(text).find()) {
+			return text;
+		}
+		StringBuilder html = new StringBuilder();
+		boolean inList = false;
+		for (String line : text.split("\\r?\\n")) {
+			String content = line.trim();
+			boolean item = content.startsWith("-");
+			if (item) {
+				content = content.substring(1).trim();
+			}
+			if (content.isEmpty()) {
+				continue;
+			}
+			if (item != inList) {
+				html.append(item ? "<ul>" : "</ul>");
+				inList = item;
+			}
+			html.append(item ? "<li>" : "<p>").append(escapeHtml(content)).append(item ? "</li>" : "</p>");
+		}
+		if (inList) {
+			html.append("</ul>");
+		}
+		return html.toString();
+	}
+
+	private static String escapeHtml(String text) {
+		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 
 	/**
