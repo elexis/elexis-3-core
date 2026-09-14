@@ -198,7 +198,7 @@ public class TextUtil {
 		RPr baseRPr = cursor.getRPr() != null ? (RPr) XmlUtils.deepCopy(cursor.getRPr()) : null;
 		List<Object> converted;
 		try {
-			converted = XHtmlDocxConverter.convert(pkg, html);
+			converted = XHtmlDocxConverter.convert(pkg, DashListConverter.toHtmlLists(html));
 		} catch (Exception e) {
 			LoggerFactory.getLogger(TextUtil.class).error("ImportXHTML conversion failed", e);
 			return cursor;
