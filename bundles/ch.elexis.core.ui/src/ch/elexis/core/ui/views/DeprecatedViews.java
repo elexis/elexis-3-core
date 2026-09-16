@@ -61,7 +61,7 @@ public class DeprecatedViews {
 		views.put("ch.elexis.dbfielddisplay", notice("Patientendetails")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.PatientDetailView", notice("Patientendetails Neu")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.views.SearchView", notice("Spotlight")); //$NON-NLS-1$ //$NON-NLS-2$
-		views.put("ch.elexis.FallListeView", notice("Falldetail")); //$NON-NLS-1$ //$NON-NLS-2$
+		views.put("ch.elexis.FallListeView", notice("Fälle")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.LabNotSeenView", notice("Labor oder Labor Roche")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.BBSView", notice("Pendenzen")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.ODDBView", hidden("Artikelstamm")); //$NON-NLS-1$ //$NON-NLS-2$
