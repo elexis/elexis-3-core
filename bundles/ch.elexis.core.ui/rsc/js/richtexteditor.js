@@ -4,7 +4,6 @@
  * Executed once in the browser widget before initEditor() is called. Reads its
  * configuration from window.elexisRichTextConfig:
  *   paragraphSpacing - CSS margin below paragraphs (e.g. '2px')
- *   plainDisplay     - hide toolbar and character formatting (structure kept)
  *
  * Everything is hooked on CKEditor's instanceReady event, so no timers on the
  * Java side are needed: the document is revealed and the editor height is
@@ -77,21 +76,6 @@
 				'@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}}');
 		addContentStyle(ev.editor,
 				'p{margin-top:0 !important;margin-bottom:' + (cfg.paragraphSpacing || '2px') + ' !important;}');
-		if (cfg.plainDisplay) {
-			addContentStyle(ev.editor,
-					'body,body *{font-weight:normal !important;font-style:normal !important;'
-					+ 'text-decoration:none !important;color:inherit !important;'
-					+ 'background-color:transparent !important;font-family:inherit !important;'
-					+ 'font-size:inherit !important;text-align:left !important;}'
-					+ 'p,div{text-indent:0 !important;margin-left:0 !important;padding-left:0 !important;}');
-			try {
-				var style = document.createElement('style');
-				style.appendChild(document.createTextNode('.cke_top,.cke_bottom{display:none !important;}'));
-				document.head.appendChild(style);
-			} catch (e) {
-				// best effort
-			}
-		}
 		try {
 			document.documentElement.style.visibility = 'visible';
 		} catch (e) {
