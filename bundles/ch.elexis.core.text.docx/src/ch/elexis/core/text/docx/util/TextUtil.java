@@ -225,10 +225,9 @@ public class TextUtil {
 	}
 
 	/**
-	 * Adapts ImportXHTML output to the template: overrides the font family on every run
-	 * (CKEditor sets none, so ImportXHTML's default is never intentional) and snaps the
-	 * body baseline size (the most frequent run size) to the template size, while keeping
-	 * deliberately different sizes and all character formatting (bold, colour, ...).
+	 * Adapts ImportXHTML output to the template: snaps the body baseline font and size (the
+	 * most frequent run font and size) to the template, while keeping fonts and sizes the
+	 * editor set deliberately and all character formatting (bold, colour, ...).
 	 */
 	private static void applyTemplateFont(List<Object> converted, RPr baseRPr) {
 		if (baseRPr == null) {
@@ -242,6 +241,7 @@ public class TextUtil {
 			return;
 		}
 		BigInteger baselineSize = modalRunSize(runs);
+		String baselineFont = modalRunFont(runs);
 		RFonts templateFonts = baseRPr.getRFonts();
 		HpsMeasure templateSz = baseRPr.getSz();
 		HpsMeasure templateSzCs = baseRPr.getSzCs();
@@ -252,7 +252,12 @@ public class TextUtil {
 				run.setRPr(rpr);
 			}
 			if (templateFonts != null) {
-				rpr.setRFonts((RFonts) XmlUtils.deepCopy(templateFonts));
+				RFonts currentFonts = rpr.getRFonts();
+				boolean isBaseline = currentFonts == null || currentFonts.getAscii() == null
+						|| currentFonts.getAscii().equals(baselineFont);
+				if (isBaseline) {
+					rpr.setRFonts((RFonts) XmlUtils.deepCopy(templateFonts));
+				}
 			}
 			if (templateSz != null) {
 				HpsMeasure currentSz = rpr.getSz();
@@ -278,6 +283,26 @@ public class TextUtil {
 				collectRuns(child, runs);
 			}
 		}
+	}
+
+	/** The most frequent explicit run font among the runs, or {@code null} if none set one. */
+	private static String modalRunFont(List<R> runs) {
+		Map<String, Integer> counts = new HashMap<>();
+		for (R run : runs) {
+			if (run.getRPr() != null && run.getRPr().getRFonts() != null
+					&& run.getRPr().getRFonts().getAscii() != null) {
+				counts.merge(run.getRPr().getRFonts().getAscii(), 1, Integer::sum);
+			}
+		}
+		String modal = null;
+		int best = 0;
+		for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+			if (entry.getValue() > best) {
+				best = entry.getValue();
+				modal = entry.getKey();
+			}
+		}
+		return modal;
 	}
 
 	/** The most frequent explicit run size among the runs, or {@code null} if none set one. */
@@ -369,7 +394,7 @@ public class TextUtil {
 		if (rawHtml == null || rawHtml.isEmpty()) {
 			return rawHtml;
 		}
-		String sanitized = rawHtml.replace("&quot;", "\"").replace("&apos;", "'");
+		String sanitized = BulletConverter.decodeQuotes(rawHtml);
 		sanitized = XHtmlDocxConverter.quoteUnquotedStyles(sanitized);
 		sanitized = dropInvalidAttributes(sanitized);
 		sanitized = BulletConverter.toBulletChars(sanitized);
