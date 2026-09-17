@@ -5504,6 +5504,13 @@ public class Messages extends NLS {
 	public static String ReminderStatusSubMenu_NoSelection;
 	public static String AgendaFarben_SpecialAppointments;
 	public static String AgendaFarben_RecurringAppointment;
+	public static String ConditionComposite_StartHint;
+	public static String ConditionComposite_EndHint;
+	public static String ConditionComposite_TabText;
+	public static String ConditionComposite_TabCoding;
+	public static String DiagnoseListComposite_StatusPrefix;
+	public static String DiagnoseListComposite_Create;
+	public static String DiagnoseListComposite_Remove;
 	public static String DeprecatedView_Title;
 	public static String DeprecatedView_TitlePlural;
 	public static String DeprecatedView_Message;

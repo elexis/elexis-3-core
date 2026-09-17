@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -17,6 +18,8 @@ import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
 
 public class ConditionEditDialog extends TitleAreaDialog {
 
+	private static final int DEFAULT_SHELL_STYLE = SWT.DIALOG_TRIM | SWT.MODELESS | SWT.RESIZE | SWT.MIN | SWT.MAX;
+
 	private ConditionComposite conditionComposite;
 
 	private Optional<ICondition> condition = Optional.empty();
@@ -25,14 +28,14 @@ public class ConditionEditDialog extends TitleAreaDialog {
 	public ConditionEditDialog(ConditionCategory category, Shell parentShell) {
 		super(parentShell);
 		this.category = category;
-		setShellStyle(SWT.DIALOG_TRIM | SWT.MODELESS | SWT.RESIZE);
+		setShellStyle(DEFAULT_SHELL_STYLE);
 	}
 
 	public ConditionEditDialog(ICondition condition, Shell parentShell) {
 		super(parentShell);
 		this.condition = Optional.of(condition);
 		this.category = condition.getCategory();
-		setShellStyle(SWT.DIALOG_TRIM | SWT.MODELESS | SWT.RESIZE);
+		setShellStyle(DEFAULT_SHELL_STYLE);
 	}
 
 	@Override
@@ -49,6 +52,11 @@ public class ConditionEditDialog extends TitleAreaDialog {
 		conditionComposite = new ConditionComposite(category, ret, SWT.NONE);
 		condition.ifPresent(c -> conditionComposite.setCondition(c));
 		return ret;
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		return new Point(900, 950);
 	}
 
 	@Override

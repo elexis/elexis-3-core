@@ -19,6 +19,15 @@
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-core-4.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/docx4j-core-11.5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/docx4j-openxml-objects-11.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docx4j-ImportXHTML-11.4.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/openhtmltopdf-core-1.0.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache-mime4j-core-0.8.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jsoup-1.22.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/openhtmltopdf-pdfbox-1.0.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/pdfbox-2.0.24.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/fontbox-2.0.24.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmpbox-2.0.24.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/graphics2d-0.32.jar"/>
 	<classpathentry kind="src" output="bin" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>

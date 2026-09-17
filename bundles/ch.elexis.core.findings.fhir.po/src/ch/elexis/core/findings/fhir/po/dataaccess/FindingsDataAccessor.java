@@ -12,6 +12,8 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.data.interfaces.IDataAccess;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICondition;
@@ -20,6 +22,7 @@ import ch.elexis.core.findings.IFamilyMemberHistory;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.text.RichTextMarker;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.rgw.tools.Result;
@@ -187,6 +190,7 @@ public class FindingsDataAccessor implements IDataAccess {
 	}
 
 	private Result<Object> getDiagnosisText(Patient patient) {
+		boolean wordFormat = ConfigServiceHolder.getLocal(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
 		List<ICondition> findings = findingsService.getPatientsFindings(patient.getId(), ICondition.class);
 		List<ICondition> conditions = getDiagnosis(findings);
 		StringBuilder sb = new StringBuilder();
@@ -194,8 +198,13 @@ public class FindingsDataAccessor implements IDataAccess {
 			if (sb.length() > 0) {
 				sb.append(StringUtils.LF);
 			}
-			sb.append(TextUtil.getText(condition, codingService));
+			sb.append(TextUtil.getText(condition, codingService, wordFormat));
 		});
+		if (wordFormat && sb.length() > 0) {
+			// mark as rich text so the text plugin renders the markup;
+			// unmarked values are always inserted as plain text
+			return new Result<>(RichTextMarker.wrap(sb.toString()));
+		}
 		return new Result<>(sb.toString());
 	}
 
@@ -210,7 +219,13 @@ public class FindingsDataAccessor implements IDataAccess {
 		ret.sort((left, right) -> {
 			LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
 			LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-			return rRecorded.compareTo(lRecorded);
+			int byRecorded = rRecorded.compareTo(lRecorded);
+			if (byRecorded != 0) {
+				return byRecorded;
+			}
+			Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
+			Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
+			return rUpdated.compareTo(lUpdated);
 		});
 		return ret;
 	}
