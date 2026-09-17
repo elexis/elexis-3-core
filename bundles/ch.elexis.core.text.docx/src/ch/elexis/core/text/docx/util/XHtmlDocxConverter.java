@@ -18,6 +18,8 @@ import org.jsoup.nodes.Entities.EscapeMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.text.BulletConverter;
+
 /**
  * Converts CKEditor HTML into WordprocessingML using
  * {@code docx4j-ImportXHTML}. Uses Jsoup to normalize raw HTML into well-formed
@@ -63,7 +65,7 @@ public class XHtmlDocxConverter {
 	 */
 	public static String normalizeToXhtml(String html) {
 		String raw = html != null ? html : "";
-		raw = raw.replace("&quot;", "\"").replace("&apos;", "'");
+		raw = BulletConverter.decodeQuotes(raw);
 		raw = quoteUnquotedStyles(raw);
 		Document doc = Jsoup.parse(raw);
 		doc.outputSettings() //

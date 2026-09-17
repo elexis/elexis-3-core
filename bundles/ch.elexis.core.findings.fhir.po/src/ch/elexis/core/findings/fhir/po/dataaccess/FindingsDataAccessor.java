@@ -219,7 +219,13 @@ public class FindingsDataAccessor implements IDataAccess {
 		ret.sort((left, right) -> {
 			LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
 			LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-			return rRecorded.compareTo(lRecorded);
+			int byRecorded = rRecorded.compareTo(lRecorded);
+			if (byRecorded != 0) {
+				return byRecorded;
+			}
+			Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
+			Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
+			return rUpdated.compareTo(lUpdated);
 		});
 		return ret;
 	}

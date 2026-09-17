@@ -66,10 +66,18 @@ public final class BulletConverter {
 		if (StringUtils.isBlank(textOrHtml)) {
 			return textOrHtml;
 		}
-		if (HTML_TAG.matcher(textOrHtml).find()) {
-			return markupToLists(textOrHtml);
+		String markup = decodeQuotes(textOrHtml);
+		if (HTML_TAG.matcher(markup).find()) {
+			return markupToLists(markup);
 		}
-		return plainTextToLists(textOrHtml);
+		return plainTextToLists(markup);
+	}
+
+	public static String decodeQuotes(String textOrHtml) {
+		if (StringUtils.isBlank(textOrHtml)) {
+			return textOrHtml;
+		}
+		return textOrHtml.replace("&quot;", "\"").replace("&apos;", "'");
 	}
 
 	/** Builds the block markup from plain text, one block per line. */

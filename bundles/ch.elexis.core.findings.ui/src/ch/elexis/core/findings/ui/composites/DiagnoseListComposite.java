@@ -11,6 +11,8 @@
 package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +79,18 @@ public class DiagnoseListComposite extends Composite {
 	private ToolBarManager toolbarManager;
 
 	private EventList<ICondition> dataList = new BasicEventList<>();
+
+	private static final Comparator<ICondition> BY_DATE_RECORDED_DESC = (left, right) -> {
+		LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
+		LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
+		int byRecorded = rRecorded.compareTo(lRecorded);
+		if (byRecorded != 0) {
+			return byRecorded;
+		}
+		Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
+		Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
+		return rUpdated.compareTo(lUpdated);
+	};
 
 	@SuppressWarnings("deprecation")
 	public DiagnoseListComposite(Composite parent, int style) {
@@ -268,23 +282,7 @@ public class DiagnoseListComposite extends Composite {
 
 	public void setInput(List<ICondition> conditions) {
 		dataList.clear();
-		conditions.sort(new Comparator<ICondition>() {
-			@Override
-			public int compare(ICondition left, ICondition right) {
-				Optional<LocalDate> lrecorded = left.getDateRecorded();
-				Optional<LocalDate> rrecorded = right.getDateRecorded();
-				if (lrecorded.isPresent() && rrecorded.isPresent()) {
-					return rrecorded.get().compareTo(lrecorded.get());
-				} else {
-					Optional<String> lstart = left.getStart();
-					Optional<String> rstart = right.getStart();
-					if (lstart.isPresent() && rstart.isPresent()) {
-						return rstart.get().compareTo(lstart.get());
-					}
-				}
-				return 0;
-			}
-		});
+		conditions.sort(BY_DATE_RECORDED_DESC);
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
 
@@ -405,8 +403,9 @@ public class DiagnoseListComposite extends Composite {
 						FindingsServiceComponent.getService().saveFinding(c);
 						// touch after creation
 						LocalLockServiceHolder.get().acquireLock(c);
-						dataList.add(c);
-						natTableWrapper.getNatTable().refresh();
+						List<ICondition> updated = new ArrayList<>(dataList);
+						updated.add(c);
+						setInput(updated);
 					});
 				}
 			}
