@@ -215,6 +215,7 @@ public class Result<T> {
 	/**
 	 * Return the result as String, cr-separated list of entries
 	 */
+	@Override
 	public String toString() {
 		return "Result (" + severity + ") msgs: "
 				+ list.stream().map(x -> x.text + "/" + x.code + "/" + x.object).reduce((x, y) -> x + " , " + y).get();
@@ -227,7 +228,7 @@ public class Result<T> {
 	 *         {@link #get()} returns <code>null</code>)
 	 */
 	public static final <T> Result<T> OK() {
-		return (Result<T>) new Result<T>(null);
+		return new Result<T>(null);
 	}
 
 	public static final Result<String> OK(String text) {
@@ -254,6 +255,7 @@ public class Result<T> {
 			if (text.equals(msg.text) && code == msg.code) {
 				entry = msg;
 				iterator.remove();
+				break;
 			}
 		}
 		return entry;
