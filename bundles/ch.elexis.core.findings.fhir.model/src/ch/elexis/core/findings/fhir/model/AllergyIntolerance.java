@@ -8,9 +8,9 @@ import java.util.Optional;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.DomainResource;
 
+import ch.elexis.core.fhir.mapper.r4.findings.AllergyIntoleranceAccessor;
 import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICoding;
-import ch.elexis.core.findings.util.fhir.accessor.AllergyIntoleranceAccessor;
 import ch.elexis.core.model.IXid;
 
 public class AllergyIntolerance extends AbstractFindingModelAdapter<ch.elexis.core.jpa.entities.AllergyIntolerance>

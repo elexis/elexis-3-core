@@ -121,6 +121,7 @@ import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.contacts.dialogs.BezugsKontaktAuswahl;
 import ch.elexis.core.ui.contacts.views.util.CameraCaptureUtil;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.dialogs.AddBuchungDialog;
 import ch.elexis.core.ui.dialogs.AnschriftEingabeDialog;
 import ch.elexis.core.ui.dialogs.KontaktDetailDialog;
@@ -270,6 +271,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 	private BillingDiagnosisComposite billingDiagnosisComponent;
 
 	private InputData comboGeschlecht;
+	private InputData dobField;
 	StickerComposite stickerComposite;
 	private Button deceasedBtn;
 	private CDateTime deceasedDate;
@@ -293,7 +295,8 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		fields = new ArrayList<>(20);
 		fields.add(new InputData(Messages.Core_Name, Patient.FLD_NAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
 		fields.add(new InputData(Messages.Core_Firstname, Patient.FLD_FIRSTNAME, InputData.Typ.STRING, null)); // $NON-NLS-1$
-		fields.add(new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null)); // $NON-NLS-1$
+		dobField = new InputData(Messages.Core_Enter_Birthdate, Patient.BIRTHDATE, InputData.Typ.DATE, null); // $NON-NLS-1$
+		fields.add(dobField);
 		IStructuredSelectionResolver ssr = new IStructuredSelectionResolver() {
 			@Override
 			public StructuredSelection resolveStructuredSelection(String value) {
@@ -523,6 +526,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		ipp = new InputPanel(cUserfields, COLUMNCOUNT, COLUMNCOUNT, fields.toArray(new InputData[0]));
 		ipp.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 		ipp.changed(ipp.getChildren());
+		applyInputRestrictions();
 		// cUserfields.setRedraw(true);
 		cUserfields.setBounds(ipp.getBounds());
 
@@ -534,6 +538,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 			setToolTipTextListeners();
 		}
 		layout(true);
+	}
+
+	private void applyInputRestrictions() {
+		if (dobField != null && dobField.getWidget() != null && dobField.getWidget().getControl() instanceof Text) {
+			FilterFieldInputRestrictions.applyBirthdateFilterFormatting((Text) dobField.getWidget().getControl(), true);
+		}
+		if (comboGeschlecht != null && comboGeschlecht.getWidget() != null
+				&& comboGeschlecht.getWidget().getControl() instanceof Combo) {
+			FilterFieldInputRestrictions.restrictToValues((Combo) comboGeschlecht.getWidget().getControl(),
+					Messages.Patient_male_short, Messages.Patient_female_short);
+		}
 	}
 
 	Patientenblatt2(final Composite parent, final IViewSite site) {

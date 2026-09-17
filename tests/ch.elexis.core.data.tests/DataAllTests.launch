@@ -58,6 +58,8 @@
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
+        <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
+        <setEntry value="info.elexis.target.hapi.fhir@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
         <setEntry value="jakarta.el-api@default:default"/>
@@ -77,8 +79,9 @@
         <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-codec*1.17.0@default:default"/>
         <setEntry value="org.apache.commons.commons-collections4@default:default"/>
+        <setEntry value="org.apache.commons.commons-compress*1.27.1@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
-        <setEntry value="org.apache.commons.commons-io*2.18.0@default:default"/>
+        <setEntry value="org.apache.commons.commons-io*2.22.0@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.text@default:default"/>
@@ -145,19 +148,25 @@
         <setEntry value="slf4j.osgi@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="ch.elexis.core.cdi@default:default"/>
         <setEntry value="ch.elexis.core.data.tests@default:false"/>
         <setEntry value="ch.elexis.core.data@default:default"/>
-        <setEntry value="ch.elexis.core.jcifs.test@default:false"/>
+        <setEntry value="ch.elexis.core.ee.openapi@default:default"/>
+        <setEntry value="ch.elexis.core.fhir.mapper.r4@default:default"/>
+        <setEntry value="ch.elexis.core.fhir.model@default:default"/>
+        <setEntry value="ch.elexis.core.findings.util@default:default"/>
+        <setEntry value="ch.elexis.core.findings@default:default"/>
+        <setEntry value="ch.elexis.core.httpclient@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
         <setEntry value="ch.elexis.core.jpa.entities@default:false"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
-        <setEntry value="ch.elexis.core.jpa.test@default:false"/>
         <setEntry value="ch.elexis.core.jpa@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.model@default:false"/>
         <setEntry value="ch.elexis.core.rcp@default:default"/>
+        <setEntry value="ch.elexis.core.services.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>

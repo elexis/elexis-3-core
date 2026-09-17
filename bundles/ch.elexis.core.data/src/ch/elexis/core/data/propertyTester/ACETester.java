@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.UserServiceHolder;
 
 public class ACETester extends PropertyTester {

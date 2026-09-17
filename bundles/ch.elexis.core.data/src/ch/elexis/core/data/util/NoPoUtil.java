@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.events.ClassToModelInterfaceService;
 import ch.elexis.core.data.interfaces.IPersistentObject;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.Identifiable;
@@ -22,6 +21,7 @@ import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.PersistentObjectFactory;
@@ -233,8 +233,11 @@ public class NoPoUtil {
 			int dotCount = StringUtils.countMatches(ret, ".");
 			String[] parts = ret.split("\\.");
 			StringJoiner sj = new StringJoiner(StringUtils.EMPTY);
-			for (String string : parts) {
-				if (string.length() == 1 && Character.isDigit(string.charAt(0))) {
+			for (int p = 0; p < parts.length; p++) {
+				String string = parts[p];
+				// the year part must not be padded, otherwise a partial year like the
+				// "1" in "15.10.1" would become "01" and shift the whole pattern
+				if (p < 2 && string.length() == 1 && Character.isDigit(string.charAt(0))) {
 					sj.add("0" + string);
 				} else {
 					sj.add(string);

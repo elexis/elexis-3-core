@@ -26,6 +26,7 @@
 	<modules>
 		<module>ch.elexis.core</module>
 		<module>ch.elexis.core.cdi</module>
+		<module>ch.elexis.core.ee.openapi</module>
 		<module>ch.elexis.core.rcp</module>
 		<module>ch.elexis.core.test</module>
 		<module>ch.elexis.core.test.context</module>
@@ -46,6 +47,7 @@
 		<module>ch.elexis.core.eigenartikel</module>
 		<module>ch.elexis.core.eigendiagnosen</module>
 		<module>ch.elexis.core.fhir.model</module>
+		<module>ch.elexis.core.fhir.mapper.r4</module>
 		<module>ch.elexis.core.findings.fhir.model</module>
 		<module>ch.elexis.core.findings.fhir.po</module>
 		<module>ch.elexis.core.findings.templates.edit</module>

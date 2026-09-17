@@ -12,6 +12,7 @@
 package ch.elexis.core.ui.coolbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +39,8 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IUser;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IUserService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.UserServiceHolder;
 import ch.elexis.core.ui.data.UiMandant;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.data.Mandant;
@@ -65,13 +64,18 @@ public class MandantSelectionContributionItem {
 	private ToolBar fParent;
 
 	@Inject
+	IContextService contextService;
+
+	@Inject
+	IUserService userService;
+
+	@Inject
 	public void activeMandator(@Optional IMandator mandator) {
 		if (fParent != null && !fParent.isDisposed() && mandator != null) {
 			CoreUiUtil.runAsyncIfActive(() -> {
-				CoreModelServiceHolder.get().load(mandator.getId(), IMandator.class).ifPresent(m -> {
 					if (item != null) {
-						item.setText(m.getLabel());
-						fParent.setBackground(UiMandant.getColorForIMandator(m));
+					item.setText(mandator.getLabel());
+					fParent.setBackground(UiMandant.getColorForIMandator(mandator));
 						if (menuItems == null) {
 							// We have a read-only coolbar item entry
 							fParent.pack();
@@ -79,7 +83,7 @@ public class MandantSelectionContributionItem {
 						}
 						for (int i = 0; i < menuItems.length; i++) {
 							String id = (String) menuItems[i].getData();
-							if (m.getId().equalsIgnoreCase(id)) {
+						if (mandator.getId().equalsIgnoreCase(id)) {
 								fParent.pack();
 								// TODO: Anordnung Elemente in Coolbar speicherbar?
 								// TODO: Programmatische Anordnung Elemente coolbar
@@ -90,11 +94,9 @@ public class MandantSelectionContributionItem {
 						}
 					}
 					fParent.getParent().layout();
-				});
 			}, fParent);
 		}
 	}
-
 
 	@Inject
 	void activeUser(@Optional IUser user) {
@@ -107,13 +109,13 @@ public class MandantSelectionContributionItem {
 
 	private void adaptForUser(IUser user) {
 		if (user == null) {
-			user = ContextServiceHolder.get().getActiveUser().orElse(null);
+			user = contextService.getActiveUser().orElse(null);
 			if (user == null) {
 				return;
 			}
 		}
-		List<String> workingForIds = UserServiceHolder.get().getExecutiveDoctorsWorkingFor(user).stream()
-				.map(a -> a.getId()).collect(Collectors.toList());
+		List<String> workingForIds = userService.getExecutiveDoctorsWorkingFor(user).stream().map(a -> a.getId())
+				.collect(Collectors.toList());
 
 		rebuildMenuItems(workingForIds);
 	}
@@ -137,15 +139,15 @@ public class MandantSelectionContributionItem {
 		fParent = toolbar;
 		menu = new Menu(fParent);
 
-		List<IMandator> lMandator = CoreModelServiceHolder.get().getQuery(IMandator.class).execute();
-		lMandator.sort(new Comparator<IMandator>() {
+		List<IMandator> lMandator = userService.findAllExecutiveDoctors();
+		mandants = lMandator.toArray(new IMandator[] {});
+		Arrays.sort(mandants, new Comparator<IMandator>() {
 
 			@Override
 			public int compare(IMandator m1, IMandator m2) {
 				return m1.getLabel().compareTo(m2.getLabel());
 			}
 		});
-		mandants = lMandator.toArray(new IMandator[] {});
 		if (mandants.length < 2)
 			return null;
 
@@ -161,10 +163,9 @@ public class MandantSelectionContributionItem {
 
 		item.addListener(SWT.Selection, selectionListener);
 
-		if (ContextServiceHolder.getActiveMandatorOrNull() != null && item != null) {
-			item.setText(ContextServiceHolder.getActiveMandatorOrNull().getLabel());
-			fParent.setBackground(
-					UiMandant.getColorForIMandator(ContextServiceHolder.getActiveMandatorOrNull()));
+		if (contextService.getActiveMandatorOrNull() != null && item != null) {
+			item.setText(contextService.getActiveMandatorOrNull().getLabel());
+			fParent.setBackground(UiMandant.getColorForIMandator(contextService.getActiveMandatorOrNull()));
 		}
 
 		adaptForUser(null);
@@ -208,11 +209,11 @@ public class MandantSelectionContributionItem {
 		menuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ContextServiceHolder.get().setActiveMandator(m);
+				contextService.setActiveMandator(m);
 			}
 		});
 
-		IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+		IMandator activeMandator = contextService.getActiveMandatorOrNull();
 		if (activeMandator != null) {
 			menuItem.setSelection(activeMandator.equals(m));
 		}
@@ -249,7 +250,7 @@ public class MandantSelectionContributionItem {
 
 	public static Image getBoxSWTColorImage(Color color) {
 		String colorName = String.valueOf(color.hashCode());
-	
+
 		if (JFaceResources.getImageRegistry().get(colorName) == null) {
 			Display display = Display.getCurrent();
 			Image image = new Image(display, 16, 16);
@@ -260,7 +261,7 @@ public class MandantSelectionContributionItem {
 			gc.dispose();
 			JFaceResources.getImageRegistry().put(colorName, image);
 		}
-		
+
 		return JFaceResources.getImageRegistry().get(colorName);
 	}
 }

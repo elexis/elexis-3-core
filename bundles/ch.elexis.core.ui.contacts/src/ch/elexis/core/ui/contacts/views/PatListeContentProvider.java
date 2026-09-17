@@ -52,6 +52,7 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	Object[] pats;
 	boolean bValid = false;
 	boolean bUpdating = false;
+	volatile boolean bReloadPending = false;
 	String[] orderLabels;
 	String[] orderFields;
 	String firstOrder;
@@ -141,6 +142,11 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 					commonViewer.setLimitReached(pats.length == QUERY_LIMIT, QUERY_LIMIT);
 				}
 				bUpdating = false;
+				if (bReloadPending) {
+					bReloadPending = false;
+					bValid = false;
+					getElements(null);
+				}
 			}
 		});
 	}
@@ -181,6 +187,10 @@ public class PatListeContentProvider extends CommonViewerContentProvider impleme
 	public void changed(HashMap<String, String> values) {
 		super.setIgnoreLimit(false);
 		bValid = false;
+		if (bUpdating) {
+			bReloadPending = true;
+			return;
+		}
 		// trigger loading pats
 		getElements(null);
 	}

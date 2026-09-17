@@ -2,7 +2,6 @@ package ch.elexis.core.findings.fhir.po.dataaccess;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,6 +13,7 @@ import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.IObservation.ObservationCategory;
 import ch.elexis.core.findings.IObservation.ObservationCode;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.text.BulletConverter;
 
 public class TextUtil {
 
@@ -52,6 +52,23 @@ public class TextUtil {
 	}
 
 	/**
+	 * Test if an {@link IObservation} represents a social anamnesis.
+	 *
+	 * @param iFinding
+	 * @return
+	 */
+	public static boolean isSocialAnamnese(IObservation iFinding) {
+		if (iFinding.getCategory() == ObservationCategory.SOCIALHISTORY) {
+			for (ICoding code : iFinding.getCoding()) {
+				if (ObservationCode.ANAM_SOCIAL.isSame(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Get text representation of an {@link ICondition}.
 	 *
 	 * @param condition
@@ -66,10 +83,11 @@ public class TextUtil {
 
 		if (wordFormat) {
 			start.ifPresent(s -> sb.append("<p><strong>").append(escapeHtml(s)).append("</strong></p>"));
-			condition.getText().filter(StringUtils::isNotBlank).ifPresent(t -> sb.append(toBlockHtml(t)));
+			condition.getText().filter(StringUtils::isNotBlank)
+					.ifPresent(t -> sb.append(BulletConverter.toHtmlLists(t)));
 			for (String note : condition.getNotes()) {
 				if (StringUtils.isNotBlank(note)) {
-					sb.append(toBlockHtml(note));
+					sb.append(BulletConverter.toHtmlLists(note));
 				}
 			}
 		} else {
@@ -91,41 +109,6 @@ public class TextUtil {
 		return sb.toString();
 	}
 
-	/** The tags the rich text editor writes, tells its markup from plain text of earlier versions. */
-	private static final Pattern HTML_TAG = Pattern
-			.compile("(?i)</?(?:p|br|div|ul|ol|li|strong|b|em|i|u|s|strike|del|span|font|h[1-6]|sub|sup)"
-					+ "(?:\\s[^>]*)?\\s*/?>");
-
-	private static String toBlockHtml(String text) {
-		if (StringUtils.isBlank(text)) {
-			return StringUtils.EMPTY;
-		}
-		if (HTML_TAG.matcher(text).find()) {
-			return text;
-		}
-		StringBuilder html = new StringBuilder();
-		boolean inList = false;
-		for (String line : text.split("\\r?\\n")) {
-			String content = line.trim();
-			boolean item = content.startsWith("-");
-			if (item) {
-				content = content.substring(1).trim();
-			}
-			if (content.isEmpty()) {
-				continue;
-			}
-			if (item != inList) {
-				html.append(item ? "<ul>" : "</ul>");
-				inList = item;
-			}
-			html.append(item ? "<li>" : "<p>").append(escapeHtml(content)).append(item ? "</li>" : "</p>");
-		}
-		if (inList) {
-			html.append("</ul>");
-		}
-		return html.toString();
-	}
-
 	private static String escapeHtml(String text) {
 		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
@@ -139,8 +122,13 @@ public class TextUtil {
 	 * @return
 	 */
 	public static String getText(IObservation observation, ICodingService codingService) {
-		if (isPersAnamnese(observation) || isRiskfactor(observation)) {
-			return observation.getText().orElse(StringUtils.EMPTY);
+		StringBuilder sb = new StringBuilder();
+		if (isPersAnamnese(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
+		} else if (isSocialAnamnese(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
+		} else if (isRiskfactor(observation)) {
+			sb.append(observation.getText().orElse(StringUtils.EMPTY));
 		}
 		return StringUtils.EMPTY;
 	}

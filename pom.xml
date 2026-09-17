@@ -139,6 +139,11 @@
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>aarch64</arch>
+						</environment>
 					</environments>
 					<dependency-resolution>
 						<profileProperties>
@@ -212,6 +217,23 @@
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.eclipse.jdt</groupId>
+							<artifactId>ecj</artifactId>
+							<version>3.38.0</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.jdt</groupId>
+							<artifactId>org.eclipse.jdt.core</artifactId>
+							<version>3.38.0</version>
+						</dependency>
+						<dependency>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.48</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>

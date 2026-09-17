@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.eenv.IElexisEnvironmentService;
@@ -38,6 +37,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.ILoginNews;
 import ch.elexis.core.ui.actions.GlobalActions;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;

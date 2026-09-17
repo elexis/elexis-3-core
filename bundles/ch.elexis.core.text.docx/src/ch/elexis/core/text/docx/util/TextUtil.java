@@ -22,13 +22,12 @@ import org.docx4j.wml.Text;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings.Syntax;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities.EscapeMode;
-import org.jsoup.nodes.Node;
 import org.jsoup.parser.Parser;
 import org.jvnet.jaxb2_commons.ppp.Child;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.text.BulletConverter;
 import ch.elexis.core.text.RichTextMarker;
 
 public class TextUtil {
@@ -199,7 +198,7 @@ public class TextUtil {
 		RPr baseRPr = cursor.getRPr() != null ? (RPr) XmlUtils.deepCopy(cursor.getRPr()) : null;
 		List<Object> converted;
 		try {
-			converted = XHtmlDocxConverter.convert(pkg, html);
+			converted = XHtmlDocxConverter.convert(pkg, BulletConverter.toHtmlLists(html));
 		} catch (Exception e) {
 			LoggerFactory.getLogger(TextUtil.class).error("ImportXHTML conversion failed", e);
 			return cursor;
@@ -309,7 +308,7 @@ public class TextUtil {
 	 * newline-to-{@code <br/>} conversion would turn that into {@code <br/><br/>} and show a blank
 	 * line between every paragraph. This drops the formatting newlines and turns each closing
 	 * paragraph/div/heading into exactly one {@code <br/>}. Lists ({@code <ul>/<ol>}) are left
-	 * intact for {@link #flattenHtmlLists}.
+	 * intact for {@link BulletConverter#flattenLists(String)}.
 	 */
 	public static String blocksToNebulaBreaks(String html) {
 		if (html == null || html.isEmpty()) {
@@ -373,8 +372,8 @@ public class TextUtil {
 		String sanitized = rawHtml.replace("&quot;", "\"").replace("&apos;", "'");
 		sanitized = XHtmlDocxConverter.quoteUnquotedStyles(sanitized);
 		sanitized = dropInvalidAttributes(sanitized);
-		sanitized = bulletizeDashLines(sanitized);
-		return flattenHtmlLists(sanitized);
+		sanitized = BulletConverter.toBulletChars(sanitized);
+		return BulletConverter.flattenLists(sanitized);
 	}
 
 	/**
@@ -391,82 +390,6 @@ public class TextUtil {
 		doc.outputSettings().prettyPrint(false).syntax(Syntax.xml).escapeMode(EscapeMode.xhtml);
 		XHtmlDocxConverter.removeInvalidAttributes(doc);
 		return doc.body().html();
-	}
-
-	/**
-	 * Turns a line that starts with a dash, with or without a following space, into a bullet
-	 * line ("&#8226; "), so text typed with a leading dash gets a real bullet - the same bullet
-	 * the flattened {@code <ul>} lists use. Only matches the dash at the very start of a line -
-	 * start of string, right after a {@code <br/>}, or at the start/end of a block element
-	 * ({@code <p>}, {@code <div>}, {@code <li>}) - so ranges like "start - end" inside a line
-	 * are kept untouched.
-	 */
-	private static String bulletizeDashLines(String html) {
-		if (html == null || html.isEmpty()) {
-			return html;
-		}
-		return html.replaceAll(
-				"(?i)(^|<br\\s*/?>|<(?:p|div|li)(?:\\s[^>]*)?>|</(?:p|div|li)>)([ \\t\\u00A0]*)-[ \\t]?",
-				"$1$2&#8226; ");
-	}
-
-	/** Four non-breaking spaces per nesting level, so the Nebula painter keeps the indent. */
-	private static final String LIST_INDENT = "&#160;&#160;&#160;&#160;";
-
-	/**
-	 * Flattens {@code <ul>}/{@code <ol>} into indented text lines for the Nebula painter
-	 * (which has no list support): nested lists are indented, ordered lists numbered
-	 * continuously, empty items dropped; inline markup is kept.
-	 */
-	private static String flattenHtmlLists(String html) {
-		if (html == null) {
-			return null;
-		}
-		String lower = html.toLowerCase();
-		if (!lower.contains("<ul") && !lower.contains("<ol")) {
-			return html;
-		}
-		Document doc = Jsoup.parseBodyFragment(html);
-		doc.outputSettings().prettyPrint(false).syntax(Syntax.xml).escapeMode(EscapeMode.xhtml);
-		StringBuilder sb = new StringBuilder();
-		for (Node node : doc.body().childNodes()) {
-			if (node instanceof Element && isListElement((Element) node)) {
-				renderList((Element) node, sb, 0);
-			} else {
-				sb.append(node.outerHtml());
-			}
-		}
-		return sb.toString();
-	}
-
-	private static boolean isListElement(Element element) {
-		return "ul".equalsIgnoreCase(element.tagName()) || "ol".equalsIgnoreCase(element.tagName());
-	}
-
-	/** Renders a list into indented text lines; indentation follows the nesting depth only. */
-	private static void renderList(Element list, StringBuilder sb, int parentIndent) {
-		int indent = parentIndent + 1;
-		boolean ordered = "ol".equalsIgnoreCase(list.tagName());
-		int counter = 1;
-		for (Element li : list.children()) {
-			if (!"li".equalsIgnoreCase(li.tagName())) {
-				continue;
-			}
-			Element clone = li.clone();
-			clone.children().stream().filter(TextUtil::isListElement).forEach(Element::remove);
-			String itemText = clone.html().trim();
-			if (!itemText.isEmpty()) {
-				sb.append(LIST_INDENT.repeat(indent)) //
-						.append(ordered ? (counter + ". ") : "&#8226; ") //
-						.append(itemText).append("<br/>");
-				counter++;
-			}
-			for (Element child : li.children()) {
-				if (isListElement(child)) {
-					renderList(child, sb, indent);
-				}
-			}
-		}
 	}
 
 	// --- run helpers used by RegexTextVisitor ----------------------------------------------------

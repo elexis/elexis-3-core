@@ -29,7 +29,7 @@ public class FhirGroupSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?owner=" + group.getId() + "&status" + (showCompleted ? "" : ":not") + "=COMPLETED");
+				.getFhirQuery("Task?owner=" + group.getId() + "&status" + (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);
 		List<IReminder> ret = FhirModelServiceHolder.get().getQueryResults(query, IReminder.class);

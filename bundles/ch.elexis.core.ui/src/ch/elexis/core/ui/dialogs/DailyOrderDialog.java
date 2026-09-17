@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.StockServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.model.IArticle;
@@ -49,6 +48,7 @@ import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.ui.e4.providers.IdentifiableLabelProvider;
 import ch.elexis.core.ui.util.SWTHelper;

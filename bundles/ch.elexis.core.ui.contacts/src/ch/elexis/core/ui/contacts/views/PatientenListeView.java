@@ -22,6 +22,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -41,6 +42,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
@@ -72,6 +74,7 @@ import ch.elexis.core.ui.actions.RestrictedAction;
 import ch.elexis.core.ui.constants.UiResourceConstants;
 import ch.elexis.core.ui.contacts.command.StickerFilterCommand;
 import ch.elexis.core.ui.contacts.dialogs.PatientErfassenDialog;
+import ch.elexis.core.ui.contacts.views.util.FilterFieldInputRestrictions;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.util.SWTHelper;
@@ -117,11 +120,11 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 	private IContextService contextService;
 
 	@Inject
-	void activeUser(@Optional IUser user) {
+	void activeUser(@Optional IUser user, @Optional EPartService partService) {
 		actUser = user;
 		if (created) {
 			Display.getDefault().asyncExec(() -> {
-				userChanged(user);
+				userChanged(user, partService);
 			});
 		}
 	}
@@ -183,6 +186,7 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 		makeActions();
 
 		dcfp = new DefaultControlFieldProvider(cv, currentUserFields) {
+
 			@Override
 			public void setQuery(IQuery<?> query) {
 				for (int i = 0; i < dbFields.length; i++) {
@@ -195,6 +199,35 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 						} else {
 							query.and(dbFields[i], COMPARATOR.LIKE, lastFiltered[i] + "%", true); //$NON-NLS-1$
 						}
+					}
+				}
+			}
+
+			@Override
+			public Composite createControl(final Composite parent) {
+				Composite ret = super.createControl(parent);
+				restrictFilterFields();
+				return ret;
+			}
+
+			@Override
+			public void updateFields(String[] flds, boolean redraw) {
+				super.updateFields(flds, redraw);
+				if (redraw) {
+					restrictFilterFields();
+				}
+			}
+
+			private void restrictFilterFields() {
+				for (int i = 0; i < selectors.length; i++) {
+					if (selectors[i] == null || !(selectors[i].getWidget() instanceof Text)) {
+						continue;
+					}
+					Text field = (Text) selectors[i].getWidget();
+					if ("code".equals(dbFields[i])) { //$NON-NLS-1$
+						FilterFieldInputRestrictions.restrictToDigits(field);
+					} else if ("dob".equals(dbFields[i])) { //$NON-NLS-1$
+						FilterFieldInputRestrictions.applyBirthdateFilterFormatting(field);
 					}
 				}
 			}
@@ -556,15 +589,16 @@ public class PatientenListeView extends ViewPart implements IActivationListener,
 			if ((elements != null) && (elements.length > 0)) {
 				Object element = elements[0];
 				if (element instanceof IPatient) {
-					ContextServiceHolder.get().getRootContext().setTyped((IPatient) element);
+					ContextServiceHolder.get().getRootContext().setTyped(element);
 				}
 			}
 		}
 	}
 
-	public void userChanged(IUser user) {
+	public void userChanged(IUser user, EPartService partService) {
 		if (!Objects.equals(actUser, user)) {
-			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID);
+			// refresh whole parts to get correct toolbar
+			SWTHelper.reloadViewPart(UiResourceConstants.PatientenListeView_ID, partService);
 		}
 		if (!cv.getViewerWidget().getControl().isDisposed()) {
 			cv.getViewerWidget().getControl().setFont(UiDesk.getFont(Preferences.USR_DEFAULTFONT));

@@ -31,8 +31,6 @@ import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.services.IContext;
 import ch.elexis.core.services.IContextService;
-import ch.elexis.core.services.IModelService;
-import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.dialogs.SelectFallNoObligationDialog;
 
 /**
@@ -55,10 +53,6 @@ public class ContextService implements IContextService {
 
 	private static Logger logger = LoggerFactory.getLogger(ContextService.class);
 
-	// do not use holder, if not direct dep. service is started too early
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
-
 	private Context root;
 
 	private ConcurrentHashMap<String, Context> contexts;
@@ -77,11 +71,11 @@ public class ContextService implements IContextService {
 			delayedRunAndTrack.forEach(rt -> runAndTrackConsumer.accept(rt));
 		}
 	}
-	
+
 	@Activate
 	public void activate() {
 		logger.info("ACTIVATE"); //$NON-NLS-1$
-		root = new Context(this);
+		root = new Context();
 		contexts = new ConcurrentHashMap<>();
 		getRootContext().setNamed(IContext.STATION_IDENTIFIER, CoreHub.getStationIdentifier());
 
@@ -95,8 +89,8 @@ public class ContextService implements IContextService {
 			@Override
 			public synchronized ICoverage get() {
 				ret = null;
-				Optional<?> coverage = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.coverage"); //$NON-NLS-1$
-				Optional<?> billable = ContextServiceHolder.get().getNamed("SelectFallNoObligationDialog.billable"); //$NON-NLS-1$
+				Optional<?> coverage = ContextService.this.getNamed("SelectFallNoObligationDialog.coverage"); //$NON-NLS-1$
+				Optional<?> billable = ContextService.this.getNamed("SelectFallNoObligationDialog.billable"); //$NON-NLS-1$
 				if (coverage.isPresent() && billable.isPresent()) {
 					Display.getDefault().syncExec(() -> {
 						SelectFallNoObligationDialog dlg = new SelectFallNoObligationDialog((ICoverage) coverage.get(),
@@ -160,7 +154,7 @@ public class ContextService implements IContextService {
 
 	@Override
 	public IContext createNamedContext(String name) {
-		Context context = new Context(root, name, this);
+		Context context = new Context(root, name);
 		contexts.put(name, context);
 		return context;
 	}

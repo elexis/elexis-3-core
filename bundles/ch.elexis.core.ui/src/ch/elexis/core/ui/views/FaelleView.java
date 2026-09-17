@@ -48,6 +48,7 @@ import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry;
 import ch.elexis.core.ui.actions.ObjectFilterRegistry.IObjectFilterProvider;
@@ -217,6 +218,9 @@ public class FaelleView extends ViewPart implements IRefreshable {
 				}
 			}
 		});
+		if (filterClosedAction.isChecked()) {
+			tv.addFilter(closedFilter);
+		}
 		// ElexisEventDispatcher.getInstance().addListeners(eeli_fall, eeli_pat);
 		getSite().getPage().addPartListener(udpateOnVisible);
 	}
@@ -245,6 +249,17 @@ public class FaelleView extends ViewPart implements IRefreshable {
 		CoreUiUtil.updateFixLayout(part, currentState);
 	}
 
+	private ViewerFilter closedFilter = new ViewerFilter() {
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (element instanceof ICoverage) {
+				ICoverage fall = (ICoverage) element;
+				return fall.isOpen();
+			}
+			return false;
+		}
+	};
+
 	private void makeActions() {
 		konsFilterAction = new Action(Messages.FaelleView_FilterConsultations, // $NON-NLS-1$
 				Action.AS_CHECK_BOX) {
@@ -266,28 +281,23 @@ public class FaelleView extends ViewPart implements IRefreshable {
 
 		};
 		filterClosedAction = new Action(StringUtils.EMPTY, Action.AS_CHECK_BOX) {
-			private ViewerFilter closedFilter;
 			{
 				setToolTipText(Messages.FaelleView_ShowOnlyOpenCase); // $NON-NLS-1$
 				setImageDescriptor(Images.IMG_DOCUMENT_WRITE.getImageDescriptor());
-				closedFilter = new ViewerFilter() {
-					@Override
-					public boolean select(Viewer viewer, Object parentElement, Object element) {
-						if (element instanceof ICoverage) {
-							ICoverage fall = (ICoverage) element;
-							return fall.isOpen();
-						}
-						return false;
-					}
-				};
+
+				if (ConfigServiceHolder.getUser(Preferences.USR_FALLLIST_FILTEROPEN, false)) {
+					setChecked(true);
+				}
 			}
 
 			@Override
 			public void run() {
 				if (!isChecked()) {
 					tv.removeFilter(closedFilter);
+					ConfigServiceHolder.setUser(Preferences.USR_FALLLIST_FILTEROPEN, false);
 				} else {
 					tv.addFilter(closedFilter);
+					ConfigServiceHolder.setUser(Preferences.USR_FALLLIST_FILTEROPEN, true);
 				}
 			}
 		};

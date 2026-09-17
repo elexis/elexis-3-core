@@ -124,6 +124,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	public Money getScaledPrice() {
 		// do not include secondary as it is either 1 or the amount
 		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
+		if (isALTLScale()) {
+			double alAmountExact = getAL() * getFactor() * getALScaleFactor();
+			double tlAmountExact = getTL() * getFactor() * getTLScaleFactor();
+			cents = (int) Math.round(alAmountExact + tlAmountExact);
+		}
 		return new Money(cents);
 	}
 
@@ -218,7 +223,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	@Override
 	public String getCode() {
 		IBillable billable = getBillable();
-		return billable != null ? billable.getCode() : getBillableStoreToString().orElse("?");
+		return billable != null ? StringUtils.defaultString(billable.getCode())
+				: getBillableStoreToString().orElse("?");
 	}
 
 	@Override
@@ -231,10 +237,18 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		// special handling for swiss specific AL TL based billed
 		int cents = 0;
 		if (isALTL()) {
-			long roundedAmount = Math.round(getAL() * getFactor() * getEntity().getZahl())
-					+ Math.round(getTL() * getFactor() * getEntity().getZahl());
-			cents = Math
-					.toIntExact(Math.round(roundedAmount * getPrimaryScaleFactor() * getSecondaryScaleFactor()));
+			if (isALTLScale()) {
+				// calc al tl based price with al tl based scaling if information is present
+				double alAmountExact = getAL() * getFactor() * getEntity().getZahl() * getALScaleFactor();
+				double tlAmountExact = getTL() * getFactor() * getEntity().getZahl() * getTLScaleFactor();
+				cents = (int) Math.round(alAmountExact + tlAmountExact);
+			} else {
+				// fallback calc al tl based price with single scale factor
+				long roundedAmount = Math.round(getAL() * getFactor() * getEntity().getZahl())
+						+ Math.round(getTL() * getFactor() * getEntity().getZahl());
+				cents = Math
+						.toIntExact(Math.round(roundedAmount * getPrimaryScaleFactor() * getSecondaryScaleFactor()));
+			}
 		} else {
 			cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
 					* getSecondaryScaleFactor() * getEntity().getZahl()));
@@ -246,6 +260,15 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		String className = getEntity().getKlasse();
 		return className != null && !className.isEmpty()
 				&& (className.endsWith("TarmedLeistung") || className.endsWith("TardocLeistung"));
+	}
+
+	private boolean isALTLScale() {
+		if (isALTL()) {
+			String alScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL_SCALE);
+			String tlScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL_SCALE);
+			return StringUtils.isNotBlank(alScaleString) && StringUtils.isNotBlank(tlScaleString);
+		}
+		return false;
 	}
 
 	private double getAL() {
@@ -265,6 +288,18 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		return 0;
 	}
 
+	private double getALScaleFactor() {
+		String alScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL_SCALE);
+		if (StringUtils.isNotBlank(alScaleString)) {
+			try {
+				return Double.parseDouble(alScaleString) / 100;
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 1.0;
+	}
+
 	public double getTL() {
 		// if price was changed to 0, use TP as TL
 		boolean changedPrice = isChangedPrice();
@@ -282,6 +317,18 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		return 0;
 	}
 
+	private double getTLScaleFactor() {
+		String tlScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL_SCALE);
+		if (StringUtils.isNotBlank(tlScaleString)) {
+			try {
+				return Double.parseDouble(tlScaleString) / 100;
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 1.0;
+	}
+	
 	@Override
 	public boolean isChangedPrice() {
 		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);

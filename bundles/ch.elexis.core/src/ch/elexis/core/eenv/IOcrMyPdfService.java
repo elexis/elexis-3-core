@@ -12,7 +12,7 @@ public interface IOcrMyPdfService {
 	 *
 	 * @param input
 	 * @param parameters to pass to the OcrMyPdf service, defaults to
-	 *                   <code>-l deu</code>
+	 *                   <code>-l deu --invalidate-digital-signatures</code>
 	 * @return
 	 * @throws IOException
 	 * @see https://github.com/jbarlow83/OCRmyPDF/blob/master/misc/webservice.py

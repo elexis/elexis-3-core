@@ -104,6 +104,13 @@ public interface IContextService {
 	}
 
 	/**
+	 * @since 3.14
+	 */
+	default public IMandator getActiveMandatorOrNull() {
+		return getActiveMandator().orElse(null);
+	}
+
+	/**
 	 * Set the active {@link IMandator} of the root context.
 	 *
 	 * @param mandator or <code>null</code> to unset

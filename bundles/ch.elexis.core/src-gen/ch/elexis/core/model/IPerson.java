@@ -10,6 +10,7 @@
  */
 package ch.elexis.core.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.time.temporal.ChronoUnit;
@@ -268,19 +269,30 @@ public interface IPerson extends IContact {
 	void setDateOfDeath(LocalDateTime value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model kind="operation"
-	 * @generated
+	 * @generated not
 	 */
-	int getAgeInYears();
+	default int getAgeInYears() {
+		LocalDateTime dateOfBirth = getDateOfBirth();
+		if (dateOfBirth != null) {
+			LocalDate now = LocalDate.now();
+			long years = ChronoUnit.YEARS.between(dateOfBirth.toLocalDate(), now);
+			return (int) years;
+		}
+		return -1;
+	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model referenceDataType="ch.elexis.core.types.LocalDateTime" chronoUnitDataType="ch.elexis.core.types.ChronoUnit"
-	 * @generated
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model referenceDataType="ch.elexis.core.types.LocalDateTime"
+	 *        chronoUnitDataType="ch.elexis.core.types.ChronoUnit"
+	 * @generated not
 	 */
-	long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit);
+	default long getAgeAtIn(LocalDateTime reference, ChronoUnit chronoUnit) {
+		return chronoUnit.between(getDateOfBirth(), reference);
+	}
 
 } // IPerson

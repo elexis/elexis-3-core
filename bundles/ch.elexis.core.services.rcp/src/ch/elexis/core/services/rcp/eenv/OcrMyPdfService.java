@@ -44,7 +44,7 @@ public class OcrMyPdfService implements IOcrMyPdfService {
 		}
 	}
 
-	private final String PARAMS = "-l deu";
+	private final String PARAMS = "-l deu --invalidate-digital-signatures";
 
 	/**
 	 * The OCRMyPdf service we use currently accepts one request only. We can assert
