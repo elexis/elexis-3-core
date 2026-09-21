@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
@@ -147,6 +148,102 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		IOrderEntry added = order.getEntries().get(order.getEntries().size() - 1);
 		assertEquals(article, added.getArticle());
 		assertEquals(3, added.getAmount());
+	}
+
+	@Test
+	public void syncMediorderArticleReplacement_movesReservationOnPatientStock() {
+		IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
+		IStock patientStock = createPatientStock("PatientStock-99001");
+		IArticle requested = new IArticleBuilder(coreModelService, "requested article", "8000001",
+				ArticleTyp.ARTIKELSTAMM).buildAndSave();
+		IArticle alternative = new IArticleBuilder(coreModelService, "alternative article", "8000002",
+				ArticleTyp.ARTIKELSTAMM).buildAndSave();
+		createStockEntry(patientStock, requested, 1, 1);
+		IOrder patientOrder = coreModelService.create(IOrder.class);
+		coreModelService.save(patientOrder);
+		IOrderEntry entry = patientOrder.addEntry(requested, patientStock, null, 1);
+		coreModelService.save(entry);
+
+		entry.setArticle(alternative);
+		coreModelService.save(entry);
+		orderService.syncMediorderArticleReplacement(entry, requested);
+
+		assertEquals(alternative, entry.getArticle());
+		assertNull(stockService.findStockEntryForArticleInStock(patientStock, requested));
+		IStockEntry moved = stockService.findStockEntryForArticleInStock(patientStock, alternative);
+		assertNotNull(moved);
+		assertEquals(1, moved.getMinimumStock());
+		assertEquals(1, moved.getMaximumStock());
+		assertEquals(0, moved.getCurrentStock());
+		assertEquals(entry, orderService.findOpenOrderEntryForStockEntry(moved));
+	}
+
+	@Test
+	public void syncMediorderArticleReplacement_keepsThresholdsOnRegularStock() {
+		IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
+		IArticle stocked = new IArticleBuilder(coreModelService, "stocked article", "8000003", ArticleTyp.ARTIKELSTAMM)
+				.buildAndSave();
+		IArticle alternative = new IArticleBuilder(coreModelService, "stocked alternative", "8000004",
+				ArticleTyp.ARTIKELSTAMM).buildAndSave();
+		createStockEntry(stock, stocked, 2, 5);
+		IOrder regularOrder = coreModelService.create(IOrder.class);
+		coreModelService.save(regularOrder);
+		IOrderEntry entry = regularOrder.addEntry(stocked, stock, null, 3);
+		coreModelService.save(entry);
+
+		entry.setArticle(alternative);
+		coreModelService.save(entry);
+		orderService.syncMediorderArticleReplacement(entry, stocked);
+
+		IStockEntry unchanged = stockService.findStockEntryForArticleInStock(stock, stocked);
+		assertNotNull(unchanged);
+		assertEquals(2, unchanged.getMinimumStock());
+		assertEquals(5, unchanged.getMaximumStock());
+		assertNull(stockService.findStockEntryForArticleInStock(stock, alternative));
+	}
+
+	@Test
+	public void syncMediorderAmount_followsReducedAmountOnPatientStock() {
+		IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
+		IStock patientStock = createPatientStock("PatientStock-99002");
+		IArticle requested = new IArticleBuilder(coreModelService, "partially deliverable article", "8000005",
+				ArticleTyp.ARTIKELSTAMM).buildAndSave();
+		createStockEntry(patientStock, requested, 2, 2);
+		IOrder patientOrder = coreModelService.create(IOrder.class);
+		coreModelService.save(patientOrder);
+		IOrderEntry entry = patientOrder.addEntry(requested, patientStock, null, 2);
+		coreModelService.save(entry);
+
+		entry.setAmount(1);
+		coreModelService.save(entry);
+		orderService.syncMediorderAmount(entry, 2);
+
+		assertEquals(1, entry.getAmount());
+		IStockEntry reserved = stockService.findStockEntryForArticleInStock(patientStock, requested);
+		assertNotNull(reserved);
+		assertEquals(1, reserved.getMinimumStock());
+		assertEquals(2, reserved.getMaximumStock());
+	}
+
+	private static IStock createPatientStock(String id) {
+		IStock patientStock = coreModelService.create(IStock.class);
+		patientStock.setId(id);
+		patientStock.setCode(id);
+		patientStock.setPriority(0);
+		patientStock.setDescription("Test patient stock");
+		coreModelService.save(patientStock);
+		return patientStock;
+	}
+
+	private static IStockEntry createStockEntry(IStock targetStock, IArticle targetArticle, int minimum, int maximum) {
+		IStockEntry entry = coreModelService.create(IStockEntry.class);
+		entry.setStock(targetStock);
+		entry.setArticle(targetArticle);
+		entry.setCurrentStock(0);
+		entry.setMinimumStock(minimum);
+		entry.setMaximumStock(maximum);
+		coreModelService.save(entry);
+		return entry;
 	}
 
 }

@@ -7,7 +7,9 @@ public enum OrderHistoryAction {
 	ORDERED("📤", Messages.OrderHistory_Ordered), DELETED("🗑️", Messages.OrderHistory_Deleted),
 	REMOVEDMEDI("❌💊", Messages.OrderHistory_RemovedMedi), SUPPLIERADDED("🏭", Messages.OrderHistory_SupplierAdded),
 	COMPLETEDELIVERY("✅", Messages.OrderHistory_CompleteDelivery), ADDED("🆕", Messages.OrderHistory_Added),
-	INCREASED("🔼", Messages.OrderHistory_Increased), DECREASED("🔽", Messages.OrderHistory_Decreased);
+	INCREASED("🔼", Messages.OrderHistory_Increased), DECREASED("🔽", Messages.OrderHistory_Decreased),
+	BILLED("💰", Messages.OrderHistory_Billed), PICKEDUP("🤝", Messages.OrderHistory_PickedUp),
+	AMOUNTADJUSTED("🔢", Messages.OrderHistory_AmountAdjusted);
 
 	private final String icon;
 	private final String translation;

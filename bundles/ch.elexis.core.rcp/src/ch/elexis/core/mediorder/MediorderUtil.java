@@ -8,6 +8,7 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
@@ -39,6 +40,8 @@ public class MediorderUtil {
 	 * approved for ordering.</li>
 	 * <li>1/1/0 {@code REQUESTED} / {@code ORDERED}: If the stock has been
 	 * requested or ordered but is not yet received.</li>
+	 * <li>{@code ON_ORDER}: If the article is on an order entry that has not yet
+	 * been sent to the supplier.</li>
 	 * <li>2/5/0 {@code PARTIALLY_REQUESTED} / {@code PARTIALLY_ORDERED}: If part of
 	 * the stock is requested or ordered.</li>
 	 * <li>1/1/1 {@code IN_STOCK}: If the current stock equals the minimum
@@ -56,6 +59,20 @@ public class MediorderUtil {
 		int currentStock = stockEntry.getCurrentStock();
 
 		MediorderEntryState state = MediorderEntryState.INVALID;
+		IOrderEntry order = null;
+		if (minimumStock > 0 && maximumStock > 0 && currentStock >= 0 && currentStock <= maximumStock) {
+			IOrderService orderService = OsgiServiceUtil.getService(IOrderService.class)
+					.orElseThrow(() -> new IllegalStateException("no order service found"));
+			order = orderService.findOpenOrderEntryForStockEntry(stockEntry);
+			OsgiServiceUtil.ungetService(orderService);
+			if (order != null && OrderEntryState.OPEN.equals(order.getState())) {
+				state = MediorderEntryState.ON_ORDER;
+				state.setOrderEntry(order);
+				state.setStockEntry(stockEntry);
+				return state;
+			}
+		}
+
 		if (minimumStock > 0 && maximumStock > 0 && currentStock > 0) {
 			if (currentStock > maximumStock) {
 				state = MediorderEntryState.INVALID;
@@ -65,11 +82,6 @@ public class MediorderUtil {
 				state = MediorderEntryState.PARTIALLY_IN_STOCK;
 			}
 		} else if (minimumStock > 0 && maximumStock > 0 && currentStock == 0) {
-			// determine if already ordered
-			IOrderService orderService = OsgiServiceUtil.getService(IOrderService.class)
-					.orElseThrow(() -> new IllegalStateException("no order service found"));
-			IOrderEntry order = orderService.findOpenOrderEntryForStockEntry(stockEntry);
-			OsgiServiceUtil.ungetService(orderService);
 			if (order != null) {
 				if (minimumStock == maximumStock) {
 					state = MediorderEntryState.ORDERED;
@@ -77,6 +89,8 @@ public class MediorderUtil {
 					state = MediorderEntryState.PARTIALLY_ORDERED;
 				}
 				state.setOrderEntry(order);
+				state.setStockEntry(stockEntry);
+				return state;
 			}
 
 			ICoverageService coverageService = OsgiServiceUtil.getService(ICoverageService.class)
@@ -94,7 +108,7 @@ public class MediorderUtil {
 
 			if (minimumStock == maximumStock) {
 				state = MediorderEntryState.REQUESTED;
-			} else if (minimumStock > maximumStock) {
+			} else if (minimumStock < maximumStock) {
 				state = MediorderEntryState.PARTIALLY_REQUESTED;
 			} else {
 				state = MediorderEntryState.INVALID;
@@ -142,7 +156,7 @@ public class MediorderUtil {
 				hasPartiallyInStock = true;
 				allEnabledForPea = false;
 			}
-			case ORDERED, PARTIALLY_ORDERED, INVALID -> {
+			case ON_ORDER, ORDERED, PARTIALLY_ORDERED, INVALID -> {
 				allEnabledForPea = false;
 				hasOtherStatus = true;
 			}

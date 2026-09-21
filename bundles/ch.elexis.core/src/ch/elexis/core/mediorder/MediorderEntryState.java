@@ -6,7 +6,8 @@ import ch.elexis.core.model.IStockEntry;
 
 public enum MediorderEntryState implements ILocalizedEnum {
 
-	INVALID, AWAITING_REQUEST, REQUESTED, PARTIALLY_REQUESTED, ORDERED, PARTIALLY_ORDERED, IN_STOCK, PARTIALLY_IN_STOCK;
+	INVALID, AWAITING_REQUEST, REQUESTED, PARTIALLY_REQUESTED, ON_ORDER, ORDERED, PARTIALLY_ORDERED, IN_STOCK,
+	PARTIALLY_IN_STOCK;
 
 	private IOrderEntry orderEntry;
 	private IStockEntry stockEntry;
@@ -34,6 +35,7 @@ public enum MediorderEntryState implements ILocalizedEnum {
 		case AWAITING_REQUEST -> "Erwarte Anforderung";
 		case REQUESTED -> "Angefordert";
 		case PARTIALLY_REQUESTED -> "Teilanforderung";
+		case ON_ORDER -> "Auf Bestellung";
 		case ORDERED -> "Bestellt";
 		case PARTIALLY_ORDERED -> orderEntry.getAmount() + " Stk. bestellt";
 		case IN_STOCK -> "Auf Lager";

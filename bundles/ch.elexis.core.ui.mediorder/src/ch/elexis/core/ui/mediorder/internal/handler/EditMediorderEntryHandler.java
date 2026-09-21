@@ -12,9 +12,12 @@ import org.eclipse.ui.PlatformUI;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.IOrderHistoryService;
+import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.actions.CodeSelectorHandler;
@@ -32,6 +35,9 @@ public class EditMediorderEntryHandler {
 	@Inject
 	@Service(filterExpression = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
 	private IModelService coreModelService;
+
+	@Inject
+	IOrderService orderService;
 
 	private static final String TAB_ARTIKELSTAMM = "Artikelstamm";
 	private static final String TARGET_NAME = "Mediorder";
@@ -57,6 +63,9 @@ public class EditMediorderEntryHandler {
 				@Override
 				public void codeSelected(Object code) {
 					if (code instanceof IArticle) {
+						IArticle previousArticle = stockEntry.getArticle();
+						IPatient patient = stock.getOwner() != null ? stock.getOwner().asIPatient() : null;
+
 						stockService.unstoreArticleFromStock(stock,
 								StoreToStringServiceHolder.getStoreToString(stockEntry.getArticle()));
 
@@ -66,6 +75,12 @@ public class EditMediorderEntryHandler {
 						entry.setCurrentStock(stockEntry.getCurrentStock());
 						entry.setMaximumStock(stockEntry.getMaximumStock());
 						coreModelService.save(entry);
+
+						if (patient != null) {
+							IOrderHistoryService historyService = orderService.getHistoryService();
+							historyService.logMediorderArticleRemoved(patient, previousArticle);
+							historyService.logMediorderArticleAdded(patient, article);
+						}
 						mediOrderPart.refresh();
 					}
 				}
