@@ -45,6 +45,25 @@ public interface IOrderService {
 	public @Nullable IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order);
 
 	/**
+	 * Synchronizes the mediorder order with the actual order placed with the
+	 * supplier. This is used when items are replaced, as is the case with Regiomed,
+	 * for example.
+	 * 
+	 * @param entry           the order entry, already carrying the new article
+	 * @param previousArticle the article that was previously in this post
+	 */
+	public void syncMediorderArticleReplacement(IOrderEntry entry, IArticle previousArticle);
+
+	/**
+	 * Follow an amount change done on an order entry, e.g. because the supplier can
+	 * only deliver a part of the requested quantity.
+	 *
+	 * @param entry          the order entry, already carrying the new amount
+	 * @param previousAmount the amount the entry carried before
+	 */
+	public void syncMediorderAmount(IOrderEntry entry, int previousAmount);
+
+	/**
 	 * Calculate the number of consumed articles (billables) on a given date.
 	 * 
 	 * @param date      the selected date

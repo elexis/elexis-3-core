@@ -294,10 +294,7 @@ public class OrderManagementActionFactory {
 						BestellBlatt bb = (BestellBlatt) view.getViewSite().getPage().showView(BestellBlatt.ID,
 								receiver.getId(), IWorkbenchPage.VIEW_CREATE);
 						bb.createOrder(receiver, entries);
-						entries.forEach(oe -> {
-							oe.setState(OrderEntryState.ORDERED);
-							CoreModelServiceHolder.get().save(oe);
-						});
+						markAsOrdered(entries);
 						orderService.getHistoryService().logOrderSent(actOrder, false);
 						view.reload();
 					} catch (Exception e) {
@@ -382,6 +379,7 @@ public class OrderManagementActionFactory {
 							try {
 								sender.store(actOrder);
 								sender.finalizeExport();
+								markAsOrdered(orderableItems);
 							} catch (XChangeException xe) {
 								if ("ABORT_BY_USER".equals(xe.getMessage())) { //$NON-NLS-1$
 									continue;
@@ -777,6 +775,13 @@ public class OrderManagementActionFactory {
 		if (editableColumn != -1) {
 			view.tableViewer.editElement(entry, editableColumn);
 		}
+	}
+
+	private void markAsOrdered(List<IOrderEntry> entries) {
+		entries.stream().filter(entry -> OrderEntryState.OPEN.equals(entry.getState())).forEach(entry -> {
+			entry.setState(OrderEntryState.ORDERED);
+			CoreModelServiceHolder.get().save(entry);
+		});
 	}
 
 	public void handleMouseWheelScroll(Event event, ScrolledComposite scrollComposite) {
