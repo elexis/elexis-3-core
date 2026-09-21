@@ -25,6 +25,7 @@ public class FallDTO implements IFall {
 	private String endDatum;
 	private TimeTool billingDate;
 	private Kontakt garant;
+	private Kontakt costBearer;
 	private Map extInfo = new HashMap<>();
 	private boolean copyForPatient;
 	private String bezeichnung;
@@ -43,6 +44,7 @@ public class FallDTO implements IFall {
 		endDatum = iFall.getEndDatum();
 		billingDate = iFall.getBillingDate();
 		garant = iFall.getGarant();
+		costBearer = iFall.getCostBearer();
 		copyForPatient = iFall.getCopyForPatient();
 		extInfo = iFall.getMap(PersistentObject.FLD_EXTINFO);
 		bezeichnung = iFall.getBezeichnung();
@@ -258,12 +260,13 @@ public class FallDTO implements IFall {
 
 	@Override
 	public void setCostBearer(Kontakt costBearer) {
-		iFall.setCostBearer(costBearer);
+		this.costBearer = costBearer;
+		informChanged(false);
 	}
 
 	@Override
 	public Kontakt getCostBearer() {
-		return iFall.getCostBearer();
+		return costBearer;
 	}
 
 	@Override
