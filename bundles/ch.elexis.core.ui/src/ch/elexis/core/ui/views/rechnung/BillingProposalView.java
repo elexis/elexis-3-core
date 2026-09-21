@@ -52,6 +52,7 @@ import ch.elexis.core.data.util.BillingUtil;
 import ch.elexis.core.data.util.BillingUtil.IBillableCheck;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -247,6 +248,8 @@ public class BillingProposalView extends ViewPart {
 							contextService.setActiveCoverage(encounter.getCoverage());
 							contextService.setTyped(encounter);
 						}
+						// invoice proposal selected, deselect invoice
+						contextService.removeTyped(IInvoice.class);
 					}
 				}
 			}
