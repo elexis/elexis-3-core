@@ -83,8 +83,12 @@ public class AttachmentsUtil {
 		return null;
 	}
 
-	private static String getFileName(IImage iImage) {
-		return iImage.getTitle();
+	static String getFileName(IImage iImage) {
+		String title = iImage.getTitle();
+		if (title != null && title.startsWith("elexismailpraxislogo.")) {
+			return "logo" + title.substring(title.lastIndexOf('.'));
+		}
+		return title;
 	}
 
 	public static String getFileName(IDocument iDocument) {

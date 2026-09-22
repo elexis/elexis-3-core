@@ -325,7 +325,8 @@ public class MailClient implements IMailClient {
 							messageBodyPart = new MimeBodyPart();
 							DataSource source = new FileDataSource(image);
 							messageBodyPart.setDataHandler(new DataHandler(source));
-							messageBodyPart.setHeader("Content-ID", "<" + message.getImageContentId(imageString) + ">");
+							messageBodyPart.setHeader("Content-ID", "<" + message.getImageMimeContentId(imageString) + ">");
+							messageBodyPart.setHeader("Content-Location", image.getName());
 							messageBodyPart.setDisposition(MimeBodyPart.INLINE);
 							messageBodyPart.setFileName(image.getName());
 							multipart.addBodyPart(messageBodyPart);
