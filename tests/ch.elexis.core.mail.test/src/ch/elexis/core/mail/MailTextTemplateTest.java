@@ -55,7 +55,7 @@ public class MailTextTemplateTest {
 					public IImage get() {
 						IImage ret = PortableServiceLoader.getCoreModelService().create(IImage.class);
 						ret.setImage(new byte[1]);
-						ret.setTitle("test");
+						ret.setTitle("test.png");
 						return ret;
 					}
 				});
@@ -68,5 +68,10 @@ public class MailTextTemplateTest {
 		assertTrue(message.hasImage());
 		assertEquals(2, message.getImageStrings().size());
 		assertNotNull(message.getImage("cid:elexismailappointmentqr"));
+		assertTrue(message.getHtmlText().contains("cid:test.png"));
+		assertEquals("test.png", message.getImageMimeContentId("cid:elexismailappointmentqr"));
+		IImage praxisLogo = PortableServiceLoader.getCoreModelService().create(IImage.class);
+		praxisLogo.setTitle("elexismailpraxislogo.png");
+		assertEquals("logo.png", AttachmentsUtil.getFileName(praxisLogo));
 	}
 }
