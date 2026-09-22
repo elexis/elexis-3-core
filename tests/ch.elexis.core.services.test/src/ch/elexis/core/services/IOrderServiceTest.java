@@ -153,7 +153,7 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@Test
 	public void syncMediorderArticleReplacement_movesReservationOnPatientStock() {
 		IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
-		IStock patientStock = createPatientStock("PatientStock-99001");
+		IStock patientStock = createPatientStock("99001");
 		IArticle requested = new IArticleBuilder(coreModelService, "requested article", "8000001",
 				ArticleTyp.ARTIKELSTAMM).buildAndSave();
 		IArticle alternative = new IArticleBuilder(coreModelService, "alternative article", "8000002",
@@ -205,7 +205,7 @@ public class IOrderServiceTest extends AbstractServiceTest {
 	@Test
 	public void syncMediorderAmount_followsReducedAmountOnPatientStock() {
 		IStockService stockService = OsgiServiceUtil.getService(IStockService.class).get();
-		IStock patientStock = createPatientStock("PatientStock-99002");
+		IStock patientStock = createPatientStock("99002");
 		IArticle requested = new IArticleBuilder(coreModelService, "partially deliverable article", "8000005",
 				ArticleTyp.ARTIKELSTAMM).buildAndSave();
 		createStockEntry(patientStock, requested, 2, 2);
@@ -225,10 +225,10 @@ public class IOrderServiceTest extends AbstractServiceTest {
 		assertEquals(2, reserved.getMaximumStock());
 	}
 
-	private static IStock createPatientStock(String id) {
+	private static IStock createPatientStock(String patientNr) {
 		IStock patientStock = coreModelService.create(IStock.class);
-		patientStock.setId(id);
-		patientStock.setCode(id);
+		patientStock.setId("PatientStock-" + patientNr);
+		patientStock.setCode("P" + patientNr);
 		patientStock.setPriority(0);
 		patientStock.setDescription("Test patient stock");
 		coreModelService.save(patientStock);
