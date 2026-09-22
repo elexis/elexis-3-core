@@ -167,7 +167,13 @@ public class MailMessage implements Serializable {
 	}
 
 	public String getHtmlText() {
-		return text.replace(StringUtils.LF, "<br />\n");
+		String htmlText = text.replace(StringUtils.LF, "<br />\n");
+		if (imageStrings != null) {
+			for (String imageString : imageStrings) {
+				htmlText = htmlText.replace(imageString, "cid:" + getImageMimeContentId(imageString));
+			}
+		}
+		return htmlText;
 	}
 
 	public void setText(String text) {
@@ -262,5 +268,10 @@ public class MailMessage implements Serializable {
 
 	public String getImageContentId(String imageString) {
 		return imageString.substring(imageString.indexOf("cid:") + "cid:".length(), imageString.length());
+	}
+
+	public String getImageMimeContentId(String imageString) {
+		return loadImage(imageString).map(IImage::getTitle).filter(StringUtils::isNotBlank)
+				.orElseGet(() -> getImageContentId(imageString));
 	}
 }

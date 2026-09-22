@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+    <booleanAttribute key="add_console" value="false"/>
     <booleanAttribute key="append.args" value="true"/>
     <stringAttribute key="application" value="org.eclipse.pde.junit.runtime.coretestapplication"/>
     <booleanAttribute key="askclear" value="false"/>
@@ -64,6 +65,7 @@
         <setEntry value="com.icegreen.greenmail@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
+        <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
         <setEntry value="io.curity.oauth-filter@default:default"/>
         <setEntry value="jakarta.activation-api@2:true"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
@@ -87,7 +89,7 @@
         <setEntry value="org.apache.commons.commons-collections4@default:default"/>
         <setEntry value="org.apache.commons.commons-compress*1.27.1@default:default"/>
         <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
-        <setEntry value="org.apache.commons.commons-io*2.18.0@default:default"/>
+        <setEntry value="org.apache.commons.commons-io*2.22.0@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.text@default:default"/>
@@ -162,11 +164,17 @@
         <setEntry value="slf4j.osgi@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="ch.elexis.core.cdi@default:default"/>
         <setEntry value="ch.elexis.core.documents@default:default"/>
+        <setEntry value="ch.elexis.core.ee.openapi@default:default"/>
+        <setEntry value="ch.elexis.core.hl7.v2x.tests@default:default"/>
         <setEntry value="ch.elexis.core.hl7.v2x@default:default"/>
+        <setEntry value="ch.elexis.core.httpclient@default:default"/>
         <setEntry value="ch.elexis.core.importer.div@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs.test@default:default"/>
         <setEntry value="ch.elexis.core.jcifs@default:default"/>
         <setEntry value="ch.elexis.core.jpa.datasource@3:true"/>
+        <setEntry value="ch.elexis.core.jpa.entities.test@default:default"/>
         <setEntry value="ch.elexis.core.jpa.entities@default:default"/>
         <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
         <setEntry value="ch.elexis.core.jpa.test@default:false"/>
@@ -177,7 +185,9 @@
         <setEntry value="ch.elexis.core.mail@default:default"/>
         <setEntry value="ch.elexis.core.model@default:default"/>
         <setEntry value="ch.elexis.core.rcp@default:default"/>
+        <setEntry value="ch.elexis.core.services.rcp@default:default"/>
         <setEntry value="ch.elexis.core.services@default:default"/>
+        <setEntry value="ch.elexis.core.tasks.model@default:default"/>
         <setEntry value="ch.elexis.core.tasks.test@default:false"/>
         <setEntry value="ch.elexis.core.tasks@default:default"/>
         <setEntry value="ch.elexis.core.test.context@default:default"/>
@@ -185,7 +195,10 @@
         <setEntry value="ch.elexis.core.webdav@default:default"/>
         <setEntry value="ch.elexis.core@default:default"/>
         <setEntry value="ch.rgw.utility.legacy@default:default"/>
+        <setEntry value="ch.rgw.utility.tests@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
+        <setEntry value="es.gogo.shell@default:default"/>
+        <setEntry value="info.elexis.server.core.logging@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="true"/>
     <booleanAttribute key="tracing" value="false"/>
