@@ -130,7 +130,9 @@ public class Order extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.entit
 		String id = (name != null ? name : StringUtils.EMPTY) + ":"
 				+ (timestamp != null ? timestamp.format(timestampFormatter) : StringUtils.EMPTY) + ":"
 				+ (activeUser.isPresent() ? activeUser.get().getId() : StringUtils.EMPTY);
-		getEntityMarkDirty().setId(id);
+		Bestellung entity = getEntityMarkDirty();
+		entity.setId(id);
+		entity.setDate(timestamp.toLocalDate());
 	}
 
 	@Override
