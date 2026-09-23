@@ -38,7 +38,8 @@ public class Bestellung extends PersistentObject implements IOrder {
 	};
 
 	static {
-		addMapping(TABLENAME, FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
+		addMapping(TABLENAME, FLD_DATE,
+				FLD_JOINT_BESTELLUNGEN_ENTRIES + "=LIST:BESTELLUNG:" + BestellungEntry.TABLENAME);
 	}
 
 	@Override
@@ -59,7 +60,8 @@ public class Bestellung extends PersistentObject implements IOrder {
 
 	public Bestellung(String name, Anwender an) {
 		TimeTool t = new TimeTool();
-		create(name + StringConstants.COLON + t.toString(TimeTool.TIMESTAMP) + StringConstants.COLON + an.getId());
+		create(name + StringConstants.COLON + t.toString(TimeTool.TIMESTAMP) + StringConstants.COLON + an.getId(),
+				new String[] { FLD_DATE }, new String[] { t.toString(TimeTool.DATE_COMPACT) });
 	}
 
 	@Override

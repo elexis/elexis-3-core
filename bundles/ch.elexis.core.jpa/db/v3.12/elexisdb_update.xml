@@ -330,5 +330,47 @@ SET KEYWORDS = SUBSTR(CONCAT(COALESCE(KEYWORDS, ''), COALESCE((SELECT D.KEYWORDS
 		<createIndex indexName="CH_ELEXIS_ARZTTARIFE_CH_PS25_IDX1" tableName="CH_ELEXIS_ARZTTARIFE_CH_PS25">
 			<column name="CODE" />
 		</createIndex>
-	</changeSet>	
+	</changeSet>
+	
+	<changeSet author="thomas" id="manual_init_bestellung_datum" dbms="h2, mysql, mariadb">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="BESTELLUNGEN" />
+				<columnExists tableName="BESTELLUNGEN" columnName="DATUM" />
+			</and>
+		</preConditions>
+		<sql><![CDATA[
+UPDATE BESTELLUNGEN
+SET DATUM = SUBSTRING(ID FROM POSITION(':' IN ID) + 1 FOR 8)
+WHERE DATUM IS NULL
+  AND ID REGEXP '^[^:]*:[0-9]{14}:';
+]]></sql>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_init_bestellung_datum" dbms="postgresql">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="BESTELLUNGEN" />
+				<columnExists tableName="BESTELLUNGEN" columnName="DATUM" />
+			</and>
+		</preConditions>
+		<sql><![CDATA[
+UPDATE BESTELLUNGEN
+SET DATUM = SUBSTRING(ID FROM POSITION(':' IN ID) + 1 FOR 8)
+WHERE DATUM IS NULL
+  AND ID ~ '^[^:]*:[0-9]{14}:';
+]]></sql>
+	</changeSet>
+
+	<changeSet author="thomas" id="manual_idx1_BESTELLUNGEN">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="BESTELLUNGEN_IDX1" />
+			</not>
+		</preConditions>
+		<createIndex indexName="BESTELLUNGEN_IDX1" tableName="BESTELLUNGEN">
+			<column name="DATUM" />
+		</createIndex>
+	</changeSet>
+
 </databaseChangeLog>
